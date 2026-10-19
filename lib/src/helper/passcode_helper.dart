@@ -47,14 +47,14 @@ class PasscodeHelper {
   }
 
   /// True when the user has an active server-side passcode.
-  /// Prefer [hasPasscodeFromStatus] when set; else user JSON sentinel.
+  /// Prioritizes explicit positive confirmation from status, field, or stored string.
   static bool userHasPasscode(String? stored, [bool? hasPasscodeField]) {
-    if (hasPasscodeField != null) return hasPasscodeField;
-    if (hasPasscodeFromStatus != null) return hasPasscodeFromStatus!;
-    if (stored == null) return false;
-    final v = stored.trim();
-    if (v.isEmpty || v == '0') return false;
-    return true;
+    if (hasPasscodeFromStatus == true) return true;
+    if (hasPasscodeField == true) return true;
+    if (stored != null && stored.trim().isNotEmpty && stored.trim() != '0') return true;
+    if (hasPasscodeFromStatus == false) return false;
+    if (hasPasscodeField == false) return false;
+    return false;
   }
 
   /// Client-side format: digits only, length in [minDigits, maxDigits].

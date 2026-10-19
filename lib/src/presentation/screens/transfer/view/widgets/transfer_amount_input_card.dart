@@ -162,8 +162,8 @@ class TransferAmountInputCard extends StatelessWidget {
                   child: TextField(
                     controller: controller,
                     focusNode: focusNode,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
+                    keyboardType: TextInputType.numberWithOptions(decimal: decimals > 0),
+                    inputFormatters: [AmountInputFormatter(maxDecimals: decimals)],
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Plus Jakarta Sans',
@@ -173,7 +173,7 @@ class TransferAmountInputCard extends StatelessWidget {
                       letterSpacing: -0.5,
                     ),
                     decoration: InputDecoration(
-                      hintText: '0.00',
+                      hintText: decimals == 0 ? '0' : '0.00',
                       hintStyle: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 36,

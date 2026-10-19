@@ -42,6 +42,7 @@ class AmountInputFormatter extends TextInputFormatter {
     var decimals = 0;
     for (final ch in normalize(newValue.text).split('')) {
       if (ch == '.') {
+        if (maxDecimals <= 0) continue;
         if (dotSeen) continue;
         dotSeen = true;
         cleaned.add(ch);

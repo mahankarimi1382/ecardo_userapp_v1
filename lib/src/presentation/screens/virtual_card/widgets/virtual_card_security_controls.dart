@@ -371,6 +371,11 @@ class VirtualCardSecurityControls extends StatelessWidget {
   }
 
   void _showCardOtpModal(BuildContext context) {
+    showCardOtp(context);
+  }
+
+  /// Public entry point to open the 90-second dynamic OTP modal from cards list or dashboard.
+  static void showCardOtp(BuildContext context) {
     HapticFeedback.lightImpact();
     showModalBottomSheet(
       context: context,

@@ -18,6 +18,7 @@ import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/vir
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_cards_model.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/epay_cards_section.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart';
+import 'package:ecardo_user/src/presentation/screens/virtual_card/widgets/virtual_card_security_controls.dart';
 
 /// Locale-aware fallback string helper for virtual cards.
 String _vcL(
@@ -265,6 +266,7 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
   }
 
   Widget _cardItem(VirtualCardsData card, int index) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final rawNumber = card.cardNumber ?? '';
     final maskedNumber = card.displayNumber ??
         (rawNumber.isNotEmpty ? _maskNumber(rawNumber) : '');
@@ -288,6 +290,7 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
 
     final status =
         card.lifecycleStatus ?? card.virtualStatus ?? card.status ?? '';
+    final isCardFrozen = status.toLowerCase() == 'frozen' || status.toLowerCase() == 'inactive';
 
     return Padding(
       padding: EdgeInsetsDirectional.only(
@@ -295,46 +298,162 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
         end: 18.w,
         bottom: 16.h,
       ),
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.lightImpact();
-          Get.toNamed(
-            BaseRoute.virtualCardDetails,
-            arguments: {
-              'id': card.id.toString(),
-              'card_id': card.cardId.toString(),
-              'provider': card.provider,
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              HapticFeedback.lightImpact();
+              Get.toNamed(
+                BaseRoute.virtualCardDetails,
+                arguments: {
+                  'id': card.id.toString(),
+                  'card_id': card.cardId.toString(),
+                  'provider': card.provider,
+                },
+              );
             },
-          );
-        },
-        child: CommonVirtualCardView(
-          title: card.display?.title ?? 'Virtual Card',
-          value: value,
-          firstLabel: showExpiry
-              ? card.display?.expiryLabel ?? 'Expiry'
-              : card.display?.balanceLabel ?? 'Balance',
-          firstValue: showExpiry
-              ? '${card.expirationMonth}/${card.expirationYear.toString().substring(2)}'
-              : '${card.amount ?? '0'} ${card.currency ?? ''}',
-          secondLabel: showCvc
-              ? card.display?.cvcLabel ?? 'CVC'
-              : card.display?.currencyLabel ?? 'Currency',
-          secondValue: showCvc ? card.cvc! : card.currency ?? '',
-          status: status,
-          canReveal: canReveal,
-          isRevealed: revealed,
-          onReveal: canReveal
-              ? () {
-                  controller.showAccountNumberList[index].value = !revealed;
-                }
-              : null,
-          backgroundImage:
-              card.display?.backgroundImage ??
-              controller.cardBackgroundImage.value,
-          brandImage: card.display?.brandImage,
-          network: card.display?.network,
-          primaryColor: card.display?.primaryColor,
-          secondaryColor: card.display?.secondaryColor,
+            child: CommonVirtualCardView(
+              title: card.display?.title ?? 'Virtual Card',
+              value: value,
+              firstLabel: showExpiry
+                  ? card.display?.expiryLabel ?? 'Expiry'
+                  : card.display?.balanceLabel ?? 'Balance',
+              firstValue: showExpiry
+                  ? '${card.expirationMonth}/${card.expirationYear.toString().substring(2)}'
+                  : '${card.amount ?? '0'} ${card.currency ?? ''}',
+              secondLabel: showCvc
+                  ? card.display?.cvcLabel ?? 'CVC'
+                  : card.display?.currencyLabel ?? 'Currency',
+              secondValue: showCvc ? card.cvc! : card.currency ?? '',
+              status: status,
+              isFrozen: isCardFrozen,
+              canReveal: canReveal,
+              isRevealed: revealed,
+              onReveal: canReveal
+                  ? () {
+                      controller.showAccountNumberList[index].value = !revealed;
+                    }
+                  : null,
+              backgroundImage:
+                  card.display?.backgroundImage ??
+                  controller.cardBackgroundImage.value,
+              brandImage: card.display?.brandImage,
+              network: card.display?.network,
+              primaryColor: card.display?.primaryColor,
+              secondaryColor: card.display?.secondaryColor,
+            ),
+          ),
+          _buildCardQuickActions(context, card, isCardFrozen, isDark),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCardQuickActions(
+    BuildContext context,
+    VirtualCardsData card,
+    bool isFrozen,
+    bool isDark,
+  ) {
+    return Padding(
+      padding: EdgeInsets.only(top: 8.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildQuickActionPill(
+            icon: Icons.timer_outlined,
+            label: _vcL(
+              context,
+              en: 'Dynamic OTP',
+              fa: 'رمز پویا (۹۰ثانیه)',
+              ar: 'رمز مؤقت (OTP)',
+            ),
+            color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+            isDark: isDark,
+            onTap: () => VirtualCardSecurityControls.showCardOtp(context),
+          ),
+          _buildQuickActionPill(
+            icon: isFrozen ? Icons.lock_open_rounded : Icons.ac_unit_rounded,
+            label: isFrozen
+                ? _vcL(context, en: 'Unfreeze', fa: 'فعال‌سازی', ar: 'إلغاء التجميد')
+                : _vcL(context, en: 'Freeze', fa: 'مسدودسازی', ar: 'تجميد البطاقة'),
+            color: isFrozen ? AppColors.success : const Color(0xFF29B6F6),
+            isDark: isDark,
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              Get.toNamed(
+                BaseRoute.virtualCardDetails,
+                arguments: {
+                  'id': card.id.toString(),
+                  'card_id': card.cardId.toString(),
+                  'provider': card.provider,
+                },
+              );
+            },
+          ),
+          _buildQuickActionPill(
+            icon: Icons.receipt_long_rounded,
+            label: _vcL(
+              context,
+              en: 'History',
+              fa: 'تراکنش‌ها',
+              ar: 'سجل العمليات',
+            ),
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            isDark: isDark,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              Get.toNamed(
+                BaseRoute.virtualCardDetails,
+                arguments: {
+                  'id': card.id.toString(),
+                  'card_id': card.cardId.toString(),
+                  'provider': card.provider,
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionPill({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+        decoration: BoxDecoration(
+          color: isDark
+              ? AppColors.darkSurface.withValues(alpha: 0.7)
+              : AppColors.lightSecondaryContainer.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+            width: 0.8,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14.sp, color: color),
+            SizedBox(width: 4.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
         ),
       ),
     );
