@@ -18,7 +18,6 @@ import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/home
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/referral_stats_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/sign_up_bonus_pop_up.dart';
-import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/top_header_section.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/dashboard_sliver_header.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/balance_hero_section.dart';
 
@@ -179,10 +178,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }),
                       ),
-                      // --- TopHeader (UID only) ---
-                      const SliverToBoxAdapter(child: TopHeaderSection()),
                       const SliverToBoxAdapter(
-                        child: SizedBox(height: AppSpacing.sectionGap),
+                        child: SizedBox(height: 8),
                       ),
                       // --- Balance Hero (replaces old action buttons) ---
                       const SliverToBoxAdapter(child: BalanceHeroSection()),

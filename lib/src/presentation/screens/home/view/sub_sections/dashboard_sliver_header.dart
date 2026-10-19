@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/services/notification_history_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 
 /// Collapsing dashboard greeting header (no dual-layout overflow).
@@ -172,24 +173,55 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                                   height: 1.15,
                                 ),
                               ),
-                              Text(
-                                l10nPick(
-                                  context,
-                                  en: '👋 Welcome back',
-                                  fa: '👋 خوش آمدید',
-                                  ar: '👋 أهلاً بعودتك',
-                                  zh: '👋 欢迎回来',
-                                  tr: '👋 Tekrar hoş geldiniz',
-                                  ru: '👋 С возвращением',
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: AppColors.white.withValues(
-                                    alpha: 0.75,
+                              const SizedBox(height: 3),
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  final uid = home.dashboardModel.value.data?.user?.accountNumber ?? '';
+                                  if (uid.isNotEmpty) {
+                                    HapticFeedback.lightImpact();
+                                    Clipboard.setData(ClipboardData(text: uid));
+                                    ToastHelper().showSuccessToast(
+                                      l10nPick(
+                                        context,
+                                        en: 'UID copied to clipboard',
+                                        fa: 'شناسه کاربری (UID) کپی شد',
+                                        ar: 'تم نسخ معرف الحساب',
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.18),
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(alpha: 0.3),
+                                      width: 0.7,
+                                    ),
                                   ),
-                                  fontSize: 11,
-                                  height: 1.15,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        'UID: ${home.dashboardModel.value.data?.user?.accountNumber ?? "—"}',
+                                        style: const TextStyle(
+                                          fontFamily: 'monospace',
+                                          color: Colors.white,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: 0.6,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      const Icon(
+                                        Icons.copy_rounded,
+                                        color: Colors.white70,
+                                        size: 11,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

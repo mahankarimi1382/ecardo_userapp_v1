@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
-/// PREMIER SERVICES HUB ENTRY
+/// PREMIER SERVICES HUB & QUICK ACTION MATRIX (Super-App Style).
 ///
-/// An interactive card on the dashboard leading to the All-Services Hub.
-/// Features category preview pills, micro-scale tap interaction, and
-/// smooth light/dark adaptation.
-class ServicesEntrySection extends StatefulWidget {
+/// Designed in accordance with top fintech super-apps (Asan Pardakht, Top, Revolut):
+/// - High-visibility access to core services right on the dashboard.
+/// - 8 essential quick service tiles (Licenses, Bills, Gift Cards, Travel, Transfers, Exchange, Cards, More).
+/// - Tactile micro-bounce animations with haptic feedback on tap.
+/// - Direct deep routing without forcing user through nested menus.
+class ServicesEntrySection extends StatelessWidget {
   const ServicesEntrySection({super.key});
-
-  @override
-  State<ServicesEntrySection> createState() => _ServicesEntrySectionState();
-}
-
-class _ServicesEntrySectionState extends State<ServicesEntrySection> {
-  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -26,255 +24,371 @@ class _ServicesEntrySectionState extends State<ServicesEntrySection> {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Padding(
-      padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        child: AnimatedScale(
-          scale: _isPressed ? 0.98 : 1.0,
-          duration: const Duration(milliseconds: 120),
-          curve: Curves.easeOutCubic,
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurface : AppColors.white,
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.08)
-                    : AppColors.brandViolet.withValues(alpha: 0.12),
-                width: 1.2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: (isDark ? Colors.black : AppColors.brandViolet)
-                      .withValues(alpha: isDark ? 0.35 : 0.06),
-                  blurRadius: 18,
-                  offset: const Offset(0, 6),
+      padding: EdgeInsets.symmetric(horizontal: 18.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 1. Section Header: Title & "View All" Button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 28.r,
+                      height: 28.r,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF7C3AED), Color(0xFF6366F1)],
+                        ),
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Icon(
+                        Icons.widgets_rounded,
+                        color: Colors.white,
+                        size: 16.r,
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Flexible(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Essential Services',
+                          fa: 'خدمات و امکانات',
+                          ar: 'الخدمات الأساسية',
+                          tr: 'Temel Hizmetler',
+                          ru: 'Сервисы و услуги',
+                          zh: '核心服务',
+                        ),
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(22),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
+              ),
+              InkWell(
                 onTap: () {
                   HapticFeedback.lightImpact();
                   Get.toNamed(BaseRoute.services);
                 },
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                  child: Row(
                     children: [
-                      // Top Row: Icon, Title & View All Arrow
-                      Row(
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF7445FF),
-                                  Color(0xFF5E2BFF),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: const Color(0xFF7445FF).withValues(alpha: 0.35),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.grid_view_rounded,
-                              color: Colors.white,
-                              size: 26,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        l10nPick(
-                                          context,
-                                          en: 'All Services',
-                                          fa: 'کل خدمات',
-                                          ar: 'جميع الخدمات',
-                                          zh: '全部服务',
-                                          ru: 'Все сервисы',
-                                          tr: 'Tüm Hizmetler',
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w900,
-                                          color: isDark
-                                              ? AppColors.darkTextPrimary
-                                              : AppColors.lightTextPrimary,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF10B981).withValues(alpha: 0.15),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text(
-                                        l10nPick(
-                                          context,
-                                          en: 'Super App',
-                                          fa: 'سوپراپ',
-                                          ar: 'سوبر آب',
-                                          zh: '超级应用',
-                                          ru: 'Супер-апп',
-                                          tr: 'Süper Uygulama',
-                                        ),
-                                        style: const TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w800,
-                                          color: Color(0xFF10B981),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  l10nPick(
-                                    context,
-                                    en: 'Financial, travel & business tools',
-                                    fa: 'ابزارهای مالی، سفر، گردشگری و کسب‌وکار',
-                                    ar: 'أدوات مالية وسياحية وتجارية متكاملة',
-                                    zh: '一站式集成金融、出行与商务工具',
-                                    ru: 'Финансовые, туристические и бизнес-инструменты',
-                                    tr: 'Finansal, seyahat ve işletme araçları',
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: isDark
-                                        ? AppColors.darkTextSecondary
-                                        : AppColors.lightTextSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isDark
-                                  ? Colors.white.withValues(alpha: 0.06)
-                                  : AppColors.brandViolet.withValues(alpha: 0.08),
-                            ),
-                            child: Icon(
-                              isRtl
-                                  ? Icons.chevron_left_rounded
-                                  : Icons.chevron_right_rounded,
-                              size: 22,
-                              color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.brandViolet,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'All Services',
+                          fa: 'مشاهده همه',
+                          ar: 'جميع الخدمات',
+                          tr: 'Tümü',
+                          ru: 'Все',
+                          zh: '全部',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        ),
                       ),
-
-                      const SizedBox(height: 14),
-
-                      // Bottom Row: Category Quick Pills Preview
-                      Row(
-                        children: [
-                          _buildCategoryPill(
-                            icon: Icons.payments_rounded,
-                            label: l10nPick(context, en: 'Financial', fa: 'مالی', ar: 'مالية'),
-                            color: const Color(0xFF10B981),
-                            isDark: isDark,
-                          ),
-                          const SizedBox(width: 8),
-                          _buildCategoryPill(
-                            icon: Icons.flight_rounded,
-                            label: l10nPick(context, en: 'Travel', fa: 'سفر', ar: 'سفر'),
-                            color: const Color(0xFF0284C7),
-                            isDark: isDark,
-                          ),
-                          const SizedBox(width: 8),
-                          _buildCategoryPill(
-                            icon: Icons.business_center_rounded,
-                            label: l10nPick(context, en: 'Business', fa: 'کسب‌وکار', ar: 'أعمال'),
-                            color: const Color(0xFF8B5CF6),
-                            isDark: isDark,
-                          ),
-                          const SizedBox(width: 8),
-                          _buildCategoryPill(
-                            icon: Icons.flash_on_rounded,
-                            label: l10nPick(context, en: 'Instant', fa: 'آنی', ar: 'فوري'),
-                            color: const Color(0xFFF59E0B),
-                            isDark: isDark,
-                          ),
-                        ],
+                      SizedBox(width: 2.w),
+                      Icon(
+                        isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+                        size: 18.r,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                       ),
                     ],
                   ),
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 14.h),
+
+          // 2. Services Grid Container (Glassmorphic Container)
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 14.h),
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkCard : AppColors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                color: isDark
+                    ? AppColors.darkBorder
+                    : AppColors.lightBorder.withValues(alpha: 0.6),
+                width: 1.0,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: isDark
+                      ? Colors.black.withValues(alpha: 0.25)
+                      : AppColors.brandViolet.withValues(alpha: 0.05),
+                  blurRadius: 14,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // Row 1 (Top 4 Core Services)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _ServiceTileItem(
+                      icon: Icons.verified_outlined,
+                      label: l10nPick(
+                        context,
+                        en: 'Licenses',
+                        fa: 'فروشگاه لایسنس',
+                        ar: 'التراخيص',
+                        tr: 'Lisanslar',
+                        ru: 'Лицензии',
+                      ),
+                      gradient: const [Color(0xFF7C3AED), Color(0xFF6366F1)],
+                      isDark: isDark,
+                      badge: l10nPick(context, en: 'VIP', fa: 'ویژه', ar: 'مميز'),
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.services);
+                      },
+                    ),
+                    _ServiceTileItem(
+                      icon: Icons.receipt_long_rounded,
+                      label: l10nPick(
+                        context,
+                        en: 'Bills',
+                        fa: 'پرداخت قبوض',
+                        ar: 'دفع الفواتير',
+                        tr: 'Faturalar',
+                        ru: 'Счета',
+                      ),
+                      gradient: const [Color(0xFFD97706), Color(0xFFF59E0B)],
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.billPayment);
+                      },
+                    ),
+                    _ServiceTileItem(
+                      icon: Icons.card_giftcard_rounded,
+                      label: l10nPick(
+                        context,
+                        en: 'Gift Cards',
+                        fa: 'کارت هدیه',
+                        ar: 'بطاقات الهدايا',
+                        tr: 'Hediye Kartı',
+                        ru: 'Подарки',
+                      ),
+                      gradient: const [Color(0xFFE11D48), Color(0xFFFB7185)],
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.giftCard);
+                      },
+                    ),
+                    _ServiceTileItem(
+                      icon: Icons.flight_takeoff_rounded,
+                      label: l10nPick(
+                        context,
+                        en: 'Travel',
+                        fa: 'سفر و پرواز',
+                        ar: 'السياحة والطيران',
+                        tr: 'Seyahat',
+                        ru: 'Путешествия',
+                      ),
+                      gradient: const [Color(0xFF0284C7), Color(0xFF38BDF8)],
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.services);
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 14.h),
+
+                // Row 2 (Bottom 4 Core Services)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _ServiceTileItem(
+                      icon: Icons.swap_horiz_rounded,
+                      label: l10nPick(
+                        context,
+                        en: 'Transfer',
+                        fa: 'انتقال وجه',
+                        ar: 'تحويل أموال',
+                        tr: 'Transfer',
+                        ru: 'Перевод',
+                      ),
+                      gradient: const [Color(0xFF059669), Color(0xFF10B981)],
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.transfer);
+                      },
+                    ),
+                    _ServiceTileItem(
+                      icon: Icons.currency_exchange_rounded,
+                      label: l10nPick(
+                        context,
+                        en: 'Exchange',
+                        fa: 'تبدیل ارز',
+                        ar: 'تبادل العملات',
+                        tr: 'Döviz',
+                        ru: 'Обмен',
+                      ),
+                      gradient: const [Color(0xFF2563EB), Color(0xFF60A5FA)],
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.exchange);
+                      },
+                    ),
+                    _ServiceTileItem(
+                      icon: Icons.credit_card_rounded,
+                      label: l10nPick(
+                        context,
+                        en: 'Cards',
+                        fa: 'کارت مجازی',
+                        ar: 'البطاقات',
+                        tr: 'Kartlar',
+                        ru: 'Карты',
+                      ),
+                      gradient: const [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.virtualCard);
+                      },
+                    ),
+                    _ServiceTileItem(
+                      icon: Icons.apps_rounded,
+                      label: l10nPick(
+                        context,
+                        en: 'More Hub',
+                        fa: 'کل خدمات',
+                        ar: 'المزيد',
+                        tr: 'Daha Fazla',
+                        ru: 'Еще',
+                      ),
+                      gradient: const [Color(0xFF475569), Color(0xFF64748B)],
+                      isDark: isDark,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.toNamed(BaseRoute.services);
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildCategoryPill({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required bool isDark,
-  }) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 7),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: isDark ? 0.12 : 0.08),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: color.withValues(alpha: 0.2),
-            width: 0.8,
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+class _ServiceTileItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final List<Color> gradient;
+  final bool isDark;
+  final VoidCallback onTap;
+  final String? badge;
+
+  const _ServiceTileItem({
+    required this.icon,
+    required this.label,
+    required this.gradient,
+    required this.isDark,
+    required this.onTap,
+    this.badge,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: 72.w,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 13, color: color),
-            const SizedBox(width: 4),
-            Flexible(
-              child: Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 10.5,
-                  fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white.withValues(alpha: 0.9) : color,
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  width: 50.r,
+                  height: 50.r,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: gradient,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: gradient.first.withValues(alpha: isDark ? 0.35 : 0.25),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 24.r,
+                  ),
                 ),
+                if (badge != null)
+                  Positioned(
+                    top: -4.h,
+                    right: -4.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEF4444),
+                        borderRadius: BorderRadius.circular(6.r),
+                        border: Border.all(
+                          color: isDark ? AppColors.darkCard : Colors.white,
+                          width: 1.2,
+                        ),
+                      ),
+                      child: Text(
+                        badge!,
+                        style: TextStyle(
+                          fontSize: 8.5.sp,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            SizedBox(height: 7.h),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
           ],
