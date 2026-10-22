@@ -190,7 +190,7 @@ class CommonButton extends StatelessWidget {
         child: Container(
           padding: EdgeInsetsGeometry.symmetric(horizontal: 8.w, vertical: 4.h),
           width: width == double.infinity ? double.infinity : width?.w,
-          constraints: BoxConstraints(minHeight: (height ?? 48).h),
+          height: height?.h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius.r),

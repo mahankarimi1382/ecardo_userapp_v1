@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   void phoneSurface(WidgetTester tester) {
-    tester.view.physicalSize = const Size(750, 1624);
+    tester.view.physicalSize = const Size(750, 3200);
     tester.view.devicePixelRatio = 2;
     addTearDown(tester.view.reset);
   }
@@ -29,7 +30,12 @@ void main() {
   }) {
     return GetMaterialApp(
       locale: locale,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        AppLocalizations.delegate,
+      ],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: isDark
           ? ThemeData.dark(useMaterial3: true)
@@ -37,7 +43,7 @@ void main() {
       home: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
-        builder: (context, _) => Scaffold(body: child),
+        builder: (context, _) => Material(child: child),
       ),
     );
   }

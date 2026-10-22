@@ -799,10 +799,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 14),
+            const SizedBox(height: 8),
             // Magnetic Stripe
-            Container(height: 32, color: Colors.black87),
-            const SizedBox(height: 12),
+            Container(height: 30, color: Colors.black87),
+            const SizedBox(height: 8),
             // Signature and Account Details
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(18, 0, 18, 0),

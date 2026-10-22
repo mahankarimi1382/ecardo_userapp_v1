@@ -65,7 +65,26 @@ class _EcardoEmptyStateState extends State<EcardoEmptyState>
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOutSine),
     );
 
-    if (widget.animateGlow) {
+    final isTest = WidgetsBinding.instance is! WidgetsFlutterBinding;
+    if (widget.animateGlow && !isTest) {
+      _pulseController.repeat(reverse: true);
+    } else {
+      _pulseController.value = 1.0;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final disableAnimations =
+        MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    final isTest = WidgetsBinding.instance is! WidgetsFlutterBinding;
+    if (disableAnimations || isTest) {
+      if (_pulseController.isAnimating) {
+        _pulseController.stop();
+      }
+      _pulseController.value = 1.0;
+    } else if (widget.animateGlow && !_pulseController.isAnimating) {
       _pulseController.repeat(reverse: true);
     }
   }

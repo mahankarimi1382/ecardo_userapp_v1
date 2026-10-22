@@ -174,8 +174,8 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(SupportTickets), findsOneWidget);
-        // Floating action button exists
-        expect(find.text('ثبت تیکت جدید'), findsOneWidget);
+        // Action buttons exist (FAB and empty-state action)
+        expect(find.text('ثبت تیکت جدید'), findsWidgets);
       },
     );
 
