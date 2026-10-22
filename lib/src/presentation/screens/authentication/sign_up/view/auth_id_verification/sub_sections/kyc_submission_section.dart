@@ -86,7 +86,7 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                     autoCycle: true,
                     backgroundColor: isDark
                         ? AppColors.darkSurface
-                        : const Color(0xFFF8FAFC),
+                        : AppColors.lightSurfaceVariant,
                   ),
                   SizedBox(height: 14.h),
 
@@ -220,7 +220,7 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                                   ? AppColors.darkDivider
                                   : AppColors.lightBorder,
                               valueColor: const AlwaysStoppedAnimation<Color>(
-                                Color(0xFF10B981),
+                                AppColors.brandViolet,
                               ),
                             ),
                           ),
@@ -249,29 +249,35 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
       }
     }
 
-    return CommonButton(
-      width: double.infinity,
-      text: allFieldsProcessed
-          ? localizations.kycSubmissionSubmit
-          : localizations.kycSubmissionNext,
-      onPressed: () async {
-        if (allFieldsProcessed) {
-          await controller.submitIdVerification();
-          return;
-        }
+    final buttonLabel = allFieldsProcessed
+        ? localizations.kycSubmissionSubmit
+        : localizations.kycSubmissionNext;
 
-        final Fields? fieldToProcess = nextUnprocessedField;
-        if (fieldToProcess != null) {
-          final result = await _navigateToFieldScreen(fieldToProcess);
-
-          if (result != null) {
-            controller.fieldFiles[fieldToProcess.name ?? ""] = result;
-            controller.currentFieldIndex.value = controller.fields.indexOf(
-              fieldToProcess,
-            );
+    return Semantics(
+      button: true,
+      label: buttonLabel,
+      child: CommonButton(
+        width: double.infinity,
+        text: buttonLabel,
+        onPressed: () async {
+          if (allFieldsProcessed) {
+            await controller.submitIdVerification();
+            return;
           }
-        }
-      },
+
+          final Fields? fieldToProcess = nextUnprocessedField;
+          if (fieldToProcess != null) {
+            final result = await _navigateToFieldScreen(fieldToProcess);
+
+            if (result != null) {
+              controller.fieldFiles[fieldToProcess.name ?? ""] = result;
+              controller.currentFieldIndex.value = controller.fields.indexOf(
+                fieldToProcess,
+              );
+            }
+          }
+        },
+      ),
     );
   }
 
@@ -315,7 +321,7 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           width: 1.5,
-          color: const Color(0xFF10B981).withValues(alpha: 0.45),
+          color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(alpha: 0.45),
         ),
         boxShadow: !isDark
             ? [
@@ -335,8 +341,8 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             decoration: BoxDecoration(
               color: isDark
-                  ? const Color(0xFF1E293B)
-                  : const Color(0xFFF1F5F9),
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightSurfaceVariant,
               borderRadius: BorderRadiusDirectional.only(
                 topStart: Radius.circular(18.r),
                 topEnd: Radius.circular(18.r),
@@ -373,8 +379,8 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                   decoration: BoxDecoration(
                     color: (isValidSize
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626))
+                            ? AppColors.success
+                            : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -387,8 +393,8 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                             : Icons.error_outline_rounded,
                         size: 12.sp,
                         color: isValidSize
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626),
+                            ? AppColors.success
+                            : AppColors.error,
                       ),
                       SizedBox(width: 4.w),
                       Text(
@@ -397,8 +403,8 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                           fontSize: 9.5.sp,
                           fontWeight: FontWeight.w700,
                           color: isValidSize
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFDC2626),
+                              ? AppColors.success
+                              : AppColors.error,
                         ),
                       ),
                     ],
@@ -413,79 +419,89 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
             child: Column(
               children: [
                 // Clear Thumbnail Preview with Zoom tap
-                GestureDetector(
-                  onTap: () {
-                    final decodedImage = Image.file(file);
-                    decodedImage.image
-                        .resolve(const ImageConfiguration())
-                        .addListener(
-                          ImageStreamListener((ImageInfo info, bool _) {
-                            final imageHeight = info.image.height.toDouble();
-                            final imageWidth = info.image.width.toDouble();
-                            final screenWidth =
-                                MediaQuery.of(context).size.width - 36;
-                            final scaledHeight =
-                                (imageHeight / imageWidth) * screenWidth;
-                            Get.bottomSheet(
-                              DynamicAttachmentPreview(
-                                file: file,
-                                scaledHeight: scaledHeight,
-                                bottomExtraHeight: 50.0,
+                Semantics(
+                  button: true,
+                  label: l10nPick(
+                    context,
+                    en: 'Preview document image full screen',
+                    fa: 'پیش‌نمایش تصویر مدرک در نمای تمام‌صفحه',
+                    ar: 'معاينة صورة المستند بملء الشاشة',
+                    zh: '全屏预览证件图片',
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      final decodedImage = Image.file(file);
+                      decodedImage.image
+                          .resolve(const ImageConfiguration())
+                          .addListener(
+                            ImageStreamListener((ImageInfo info, bool _) {
+                              final imageHeight = info.image.height.toDouble();
+                              final imageWidth = info.image.width.toDouble();
+                              final screenWidth =
+                                  MediaQuery.of(context).size.width - 36;
+                              final scaledHeight =
+                                  (imageHeight / imageWidth) * screenWidth;
+                              Get.bottomSheet(
+                                DynamicAttachmentPreview(
+                                  file: file,
+                                  scaledHeight: scaledHeight,
+                                  bottomExtraHeight: 50.0,
+                                ),
+                                isScrollControlled: true,
+                                enableDrag: true,
+                                backgroundColor: AppColors.transparent,
+                              );
+                            }),
+                          );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16.r),
+                      child: Stack(
+                        children: [
+                          SizedBox(
+                            height: 180.h,
+                            width: double.infinity,
+                            child: Image.file(
+                              file,
+                              fit: BoxFit.cover,
+                              cacheWidth: 800,
+                            ),
+                          ),
+                          Positioned(
+                            top: 8.h,
+                            right: 8.w,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.h,
                               ),
-                              isScrollControlled: true,
-                              enableDrag: true,
-                              backgroundColor: AppColors.transparent,
-                            );
-                          }),
-                        );
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16.r),
-                    child: Stack(
-                      children: [
-                        SizedBox(
-                          height: 180.h,
-                          width: double.infinity,
-                          child: Image.file(
-                            file,
-                            fit: BoxFit.cover,
-                            cacheWidth: 800,
-                          ),
-                        ),
-                        Positioned(
-                          top: 8.h,
-                          right: 8.w,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.zoom_in_rounded,
-                                  size: 13,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 4.w),
-                                Text(
-                                  l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
+                              decoration: BoxDecoration(
+                                color: AppColors.black.withValues(alpha: 0.7),
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.zoom_in_rounded,
+                                    size: 13,
+                                    color: AppColors.white,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
+                                    style: const TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -498,19 +514,19 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                     _buildQualityCheck(
                       Icons.crop_free_rounded,
                       l10nPick(context, en: '4 Corners Visible', fa: '۴ گوشه مشخص'),
-                      const Color(0xFF10B981),
+                      AppColors.success,
                       secondaryText,
                     ),
                     _buildQualityCheck(
                       Icons.wb_sunny_outlined,
                       l10nPick(context, en: 'No Glare', fa: 'بدون بازتاب'),
-                      const Color(0xFF10B981),
+                      AppColors.success,
                       secondaryText,
                     ),
                     _buildQualityCheck(
                       Icons.text_fields_rounded,
                       l10nPick(context, en: 'Text Legible', fa: 'متن خوانا'),
-                      const Color(0xFF10B981),
+                      AppColors.success,
                       secondaryText,
                     ),
                   ],
@@ -520,49 +536,55 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                 // Retake / Re-upload Button
                 SizedBox(
                   width: double.infinity,
-                  height: 44.h,
-                  child: OutlinedButton.icon(
-                    onPressed: () async {
-                      if (type == "file") {
-                        await controller.pickFile(field.name ?? "");
-                      } else if (type == "camera") {
-                        final result = await Get.to(
-                          () => BackCameraCapture(fieldName: field.name ?? ""),
-                        );
-                        if (result != null) {
-                          controller.fieldFiles[field.name ?? ""] = result;
+                  height: 46.h,
+                  child: Semantics(
+                    button: true,
+                    label: type == "file"
+                        ? localizations.kycSubmissionReUpload
+                        : localizations.kycSubmissionRetake,
+                    child: OutlinedButton.icon(
+                      onPressed: () async {
+                        if (type == "file") {
+                          await controller.pickFile(field.name ?? "");
+                        } else if (type == "camera") {
+                          final result = await Get.to(
+                            () => BackCameraCapture(fieldName: field.name ?? ""),
+                          );
+                          if (result != null) {
+                            controller.fieldFiles[field.name ?? ""] = result;
+                          }
+                        } else if (type == "front_camera") {
+                          final result = await Get.to(
+                            () => FrontCameraCapture(fieldName: field.name ?? ""),
+                          );
+                          if (result != null) {
+                            controller.fieldFiles[field.name ?? ""] = result;
+                          }
                         }
-                      } else if (type == "front_camera") {
-                        final result = await Get.to(
-                          () => FrontCameraCapture(fieldName: field.name ?? ""),
-                        );
-                        if (result != null) {
-                          controller.fieldFiles[field.name ?? ""] = result;
-                        }
-                      }
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        color: isDark ? borderCol : AppColors.lightPrimary.withValues(alpha: 0.6),
-                        width: 1.2,
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: isDark ? borderCol : AppColors.brandViolet.withValues(alpha: 0.6),
+                          width: 1.2,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                      icon: Icon(
+                        Icons.refresh_rounded,
+                        size: 18.sp,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                       ),
-                    ),
-                    icon: Icon(
-                      Icons.refresh_rounded,
-                      size: 18.sp,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
-                    ),
-                    label: Text(
-                      type == "file"
-                          ? localizations.kycSubmissionReUpload
-                          : localizations.kycSubmissionRetake,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      label: Text(
+                        type == "file"
+                            ? localizations.kycSubmissionReUpload
+                            : localizations.kycSubmissionRetake,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        ),
                       ),
                     ),
                   ),

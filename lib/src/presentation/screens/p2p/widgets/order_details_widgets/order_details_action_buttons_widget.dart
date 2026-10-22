@@ -34,8 +34,6 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final status = (data.status ?? '').toLowerCase();
-    final emeraldGreen = const Color(0xFF10B981);
-    final rubyRed = const Color(0xFFEF4444);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Seller Actions
@@ -44,16 +42,21 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
         case 'pending_payment':
           return Column(
             children: [
-              Obx(
-                () => CommonButton(
-                  text: localization.p2pCancelOrder,
-                  width: double.infinity,
-                  isLoading: controller.isCancellingOrder.value,
-                  backgroundColor: AppColors.transparent,
-                  textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                  borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  borderWidth: 1.2,
-                  onPressed: () => _showCancelConfirmation(),
+              Semantics(
+                button: true,
+                label: localization.p2pCancelOrder,
+                child: Obx(
+                  () => CommonButton(
+                    height: 48,
+                    text: localization.p2pCancelOrder,
+                    width: double.infinity,
+                    isLoading: controller.isCancellingOrder.value,
+                    backgroundColor: AppColors.transparent,
+                    textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    borderWidth: 1.2,
+                    onPressed: () => _showCancelConfirmation(),
+                  ),
                 ),
               ),
               SizedBox(height: 20.h),
@@ -63,74 +66,88 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
           return Column(
             children: [
               Obx(
-                () => MicroScaleTap(
-                  onTap: controller.isReleasingOrder.value
-                      ? null
-                      : () => _showReleaseConfirmation(context),
-                  child: Container(
-                    height: 48.h,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: emeraldGreen,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: emeraldGreen.withValues(alpha: 0.35),
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: controller.isReleasingOrder.value
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(Icons.check_circle_outline_rounded, color: Colors.white, size: 20),
-                                  SizedBox(width: 8.w),
-                                  Flexible(
-                                    child: Text(
-                                      l10nPick(
-                                        context,
-                                        en: 'Payment Received, Release Crypto',
-                                        fa: 'تایید دریافت وجه و آزادسازی ارز',
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        letterSpacing: 0,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 14.sp,
-                                        color: Colors.white,
+                () => Semantics(
+                  button: true,
+                  label: l10nPick(
+                    context,
+                    en: 'Payment Received, Release Crypto',
+                    fa: 'تایید دریافت وجه و آزادسازی ارز',
+                  ),
+                  child: MicroScaleTap(
+                    onTap: controller.isReleasingOrder.value
+                        ? null
+                        : () => _showReleaseConfirmation(context),
+                    child: Container(
+                      height: 48.h,
+                      constraints: BoxConstraints(minHeight: 48.h),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.success,
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.success.withValues(alpha: 0.35),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: controller.isReleasingOrder.value
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: AppColors.white,
+                                ),
+                              )
+                            : Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.check_circle_outline_rounded, color: AppColors.white, size: 20),
+                                    SizedBox(width: 8.w),
+                                    Flexible(
+                                      child: Text(
+                                        l10nPick(
+                                          context,
+                                          en: 'Payment Received, Release Crypto',
+                                          fa: 'تایید دریافت وجه و آزادسازی ارز',
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          letterSpacing: 0,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 14.sp,
+                                          color: AppColors.white,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
                 ),
               ),
               SizedBox(height: 12.h),
-              CommonButton(
-                text: localization.p2pDisputeOrder,
-                width: double.infinity,
-                backgroundColor: AppColors.transparent,
-                textColor: rubyRed,
-                borderColor: rubyRed.withValues(alpha: 0.5),
-                borderWidth: 1.2,
-                onPressed: () => _showDisputeReasonBottomSheet(),
+              Semantics(
+                button: true,
+                label: localization.p2pDisputeOrder,
+                child: CommonButton(
+                  height: 48,
+                  text: localization.p2pDisputeOrder,
+                  width: double.infinity,
+                  backgroundColor: AppColors.transparent,
+                  textColor: AppColors.error,
+                  borderColor: AppColors.error.withValues(alpha: 0.5),
+                  borderWidth: 1.2,
+                  onPressed: () => _showDisputeReasonBottomSheet(),
+                ),
               ),
               SizedBox(height: 20.h),
             ],
@@ -147,76 +164,90 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
           children: [
             // "I have paid" confirmation button with confirmation dialog
             Obx(
-              () => MicroScaleTap(
-                onTap: controller.isMarkingPaid.value
-                    ? null
-                    : () => _showMarkPaidConfirmation(context),
-                child: Container(
-                  height: 48.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: emeraldGreen,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: emeraldGreen.withValues(alpha: 0.35),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: controller.isMarkingPaid.value
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.5,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
-                                SizedBox(width: 8.w),
-                                Flexible(
-                                  child: Text(
-                                    l10nPick(
-                                      context,
-                                      en: 'Transferred, Notify Seller',
-                                      fa: 'پرداخت کردم، اطلاع به فروشنده',
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      letterSpacing: 0,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 14.sp,
-                                      color: Colors.white,
+              () => Semantics(
+                button: true,
+                label: l10nPick(
+                  context,
+                  en: 'Transferred, Notify Seller',
+                  fa: 'پرداخت کردم، اطلاع به فروشنده',
+                ),
+                child: MicroScaleTap(
+                  onTap: controller.isMarkingPaid.value
+                      ? null
+                      : () => _showMarkPaidConfirmation(context),
+                  child: Container(
+                    height: 48.h,
+                    constraints: BoxConstraints(minHeight: 48.h),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.brandViolet,
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.brandViolet.withValues(alpha: 0.35),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: controller.isMarkingPaid.value
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: AppColors.white,
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.check_circle_rounded, color: AppColors.white, size: 20),
+                                  SizedBox(width: 8.w),
+                                  Flexible(
+                                    child: Text(
+                                      l10nPick(
+                                        context,
+                                        en: 'Transferred, Notify Seller',
+                                        fa: 'پرداخت کردم، اطلاع به فروشنده',
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        letterSpacing: 0,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 14.sp,
+                                        color: AppColors.white,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                    ),
                   ),
                 ),
               ),
             ),
             SizedBox(height: 12.h),
-            Obx(
-              () => CommonButton(
-                text: localization.p2pCancelOrder,
-                width: double.infinity,
-                isLoading: controller.isCancellingOrder.value,
-                backgroundColor: AppColors.transparent,
-                textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                borderWidth: 1.2,
-                onPressed: () => _showCancelConfirmation(),
+            Semantics(
+              button: true,
+              label: localization.p2pCancelOrder,
+              child: Obx(
+                () => CommonButton(
+                  height: 48,
+                  text: localization.p2pCancelOrder,
+                  width: double.infinity,
+                  isLoading: controller.isCancellingOrder.value,
+                  backgroundColor: AppColors.transparent,
+                  textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  borderWidth: 1.2,
+                  onPressed: () => _showCancelConfirmation(),
+                ),
               ),
             ),
             SizedBox(height: 20.h),
@@ -225,13 +256,18 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
       case 'paid':
         return Column(
           children: [
-            Obx(
-              () => CommonButton(
-                text: localization.p2pDisputeOrder,
-                width: double.infinity,
-                isLoading: controller.isDisputingOrder.value,
-                backgroundColor: rubyRed,
-                onPressed: () => _showDisputeReasonBottomSheet(),
+            Semantics(
+              button: true,
+              label: localization.p2pDisputeOrder,
+              child: Obx(
+                () => CommonButton(
+                  height: 48,
+                  text: localization.p2pDisputeOrder,
+                  width: double.infinity,
+                  isLoading: controller.isDisputingOrder.value,
+                  backgroundColor: AppColors.error,
+                  onPressed: () => _showDisputeReasonBottomSheet(),
+                ),
               ),
             ),
             SizedBox(height: 20.h),
@@ -249,7 +285,6 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final emeraldGreen = const Color(0xFF10B981);
 
     final totalPayAmount = data.totalFiatAmount ?? data.fiatAmount ?? '--';
     final isConfirmed = false.obs;
@@ -278,7 +313,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       width: 44.w,
                       height: 5.h,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkBorder : Colors.grey.shade300,
+                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         borderRadius: BorderRadius.circular(30.r),
                       ),
                     ),
@@ -292,13 +327,13 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       width: 40.r,
                       height: 40.r,
                       decoration: BoxDecoration(
-                        color: emeraldGreen.withValues(alpha: isDark ? 0.22 : 0.12),
+                        color: AppColors.brandViolet.withValues(alpha: isDark ? 0.22 : 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.verified_user_rounded,
                         size: 22.r,
-                        color: emeraldGreen,
+                        color: AppColors.brandViolet,
                       ),
                     ),
                     SizedBox(width: 12.w),
@@ -330,7 +365,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                               letterSpacing: 0,
                               fontSize: 12.5.sp,
                               fontWeight: FontWeight.w700,
-                              color: emeraldGreen,
+                              color: AppColors.brandViolet,
                             ),
                           ),
                         ],
@@ -349,10 +384,10 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF59E0B).withValues(alpha: isDark ? 0.15 : 0.08),
+                    color: AppColors.warning.withValues(alpha: isDark ? 0.15 : 0.08),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                     border: Border.all(
-                      color: const Color(0xFFF59E0B).withValues(alpha: isDark ? 0.35 : 0.25),
+                      color: AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.25),
                     ),
                   ),
                   child: Row(
@@ -361,7 +396,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       Icon(
                         Icons.warning_amber_rounded,
                         size: 18.r,
-                        color: const Color(0xFFF59E0B),
+                        color: AppColors.warning,
                       ),
                       SizedBox(width: 8.w),
                       Expanded(
@@ -375,7 +410,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                             letterSpacing: 0,
                             fontSize: 11.5.sp,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? const Color(0xFFFDE68A) : const Color(0xFFB45309),
+                            color: isDark ? AppColors.warningContainer : AppColors.warning,
                             height: 1.4,
                           ),
                         ),
@@ -398,7 +433,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       children: [
                         Checkbox(
                           value: isConfirmed.value,
-                          activeColor: emeraldGreen,
+                          activeColor: AppColors.brandViolet,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.r),
                           ),
@@ -437,6 +472,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CommonButton(
+                        height: 48,
                         text: l10nPick(context, en: 'Cancel', fa: 'انصراف'),
                         backgroundColor: AppColors.transparent,
                         textColor: textSecondary,
@@ -449,11 +485,12 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                     Expanded(
                       child: Obx(
                         () => CommonButton(
+                          height: 48,
                           text: l10nPick(context, en: 'I Have Paid', fa: 'پرداخت کردم'),
                           backgroundColor: isConfirmed.value
-                              ? emeraldGreen
-                              : (isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300),
-                          textColor: isConfirmed.value ? Colors.white : AppColors.softGray,
+                              ? AppColors.brandViolet
+                              : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBorder),
+                          textColor: isConfirmed.value ? AppColors.white : AppColors.softGray,
                           onPressed: isConfirmed.value
                               ? () {
                                   Get.back();
@@ -482,7 +519,6 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final emeraldGreen = const Color(0xFF10B981);
     final isConfirmed = false.obs;
 
     Get.bottomSheet(
@@ -508,7 +544,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       width: 44.w,
                       height: 5.h,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkBorder : Colors.grey.shade300,
+                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         borderRadius: BorderRadius.circular(30.r),
                       ),
                     ),
@@ -520,13 +556,13 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       width: 40.r,
                       height: 40.r,
                       decoration: BoxDecoration(
-                        color: emeraldGreen.withValues(alpha: isDark ? 0.22 : 0.12),
+                        color: AppColors.success.withValues(alpha: isDark ? 0.22 : 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.account_balance_wallet_rounded,
                         size: 22.r,
-                        color: emeraldGreen,
+                        color: AppColors.success,
                       ),
                     ),
                     SizedBox(width: 12.w),
@@ -558,7 +594,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                               letterSpacing: 0,
                               fontSize: 12.5.sp,
                               fontWeight: FontWeight.w700,
-                              color: emeraldGreen,
+                              color: AppColors.success,
                             ),
                           ),
                         ],
@@ -577,10 +613,10 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEF4444).withValues(alpha: isDark ? 0.15 : 0.08),
+                    color: AppColors.error.withValues(alpha: isDark ? 0.15 : 0.08),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                     border: Border.all(
-                      color: const Color(0xFFEF4444).withValues(alpha: isDark ? 0.35 : 0.25),
+                      color: AppColors.error.withValues(alpha: isDark ? 0.35 : 0.25),
                     ),
                   ),
                   child: Row(
@@ -589,7 +625,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       Icon(
                         Icons.warning_rounded,
                         size: 18.r,
-                        color: const Color(0xFFEF4444),
+                        color: AppColors.error,
                       ),
                       SizedBox(width: 8.w),
                       Expanded(
@@ -603,7 +639,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                             letterSpacing: 0,
                             fontSize: 11.5.sp,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? const Color(0xFFFCA5A5) : const Color(0xFFB91C1C),
+                            color: isDark ? AppColors.errorContainer : AppColors.error,
                             height: 1.4,
                           ),
                         ),
@@ -625,7 +661,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                       children: [
                         Checkbox(
                           value: isConfirmed.value,
-                          activeColor: emeraldGreen,
+                          activeColor: AppColors.success,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4.r),
                           ),
@@ -663,6 +699,7 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CommonButton(
+                        height: 48,
                         text: l10nPick(context, en: 'Cancel', fa: 'انصراف'),
                         backgroundColor: AppColors.transparent,
                         textColor: textSecondary,
@@ -675,11 +712,12 @@ class OrderDetailsActionButtonsWidget extends StatelessWidget {
                     Expanded(
                       child: Obx(
                         () => CommonButton(
+                          height: 48,
                           text: l10nPick(context, en: 'Release Crypto', fa: 'آزادسازی ارز'),
                           backgroundColor: isConfirmed.value
-                              ? emeraldGreen
-                              : (isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300),
-                          textColor: isConfirmed.value ? Colors.white : AppColors.softGray,
+                              ? AppColors.success
+                              : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBorder),
+                          textColor: isConfirmed.value ? AppColors.white : AppColors.softGray,
                           onPressed: isConfirmed.value
                               ? () {
                                   Get.back();

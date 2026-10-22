@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -7,6 +8,7 @@ import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -343,6 +345,10 @@ class WithdrawController extends GetxController {
         AppEventBus.emit(BalanceChangedEvent(sourceModule: 'withdraw'));
         ToastHelper().showSuccessToast(response.data!["message"]);
       } else if (response.status == Status.error) {
+        final msg = response.message?.toLowerCase() ?? '';
+        if (msg.contains('timed out') || msg.contains('timeout')) {
+          throw Exception(response.message ?? 'Request timed out');
+        }
         if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
           isWithdrawLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
@@ -370,6 +376,27 @@ class WithdrawController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ submitWithdraw() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
+      final errStr = e.toString().toLowerCase();
+      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+          errStr.contains('timed out') ||
+          errStr.contains('timeout') ||
+          errStr.contains('connectiontimeout') ||
+          errStr.contains('receivetimeout') ||
+          (e is DioException &&
+              (e.type == DioExceptionType.connectionTimeout ||
+                  e.type == DioExceptionType.sendTimeout ||
+                  e.type == DioExceptionType.receiveTimeout));
+      if (isTimeout) {
+        ToastHelper().showWarningToast(
+          l10nPickAuto(
+            en: 'Request timed out on response. Please verify in Transaction History before trying again to prevent duplicate withdrawal.',
+            fa: 'زمان پاسخ درخواست به پایان رسید. لطفاً قبل از تلاش مجدد، تاریخچه تراکنش‌ها را بررسی کنید تا از برداشت تکراری جلوگیری شود.',
+            ar: 'انتهت مهلة استجابة الطلب. يرجى التحقق من سجل المعاملات قبل المحاولة مرة أخرى لمنع تكرار السحب.',
+            zh: '请求响应超时。请在重试前在交易记录中核实，以避免重复提现。',
+          ),
+        );
+        return;
+      }
       if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
         isWithdrawLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(

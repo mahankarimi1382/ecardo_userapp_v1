@@ -29,6 +29,16 @@ class _MakePaymentSuccessStepSectionState
   final settingsService = Get.find<SettingsService>();
   double totalAmount = 0.0;
 
+  /// Trimmed value, or null when the backend did not supply one. Never
+  /// synthesize a reference — a fabricated ID on a receipt is indistinguishable
+  /// from a real one and misleads both the user and support.
+  static String? _nonEmpty(String? value) {
+    final trimmed = value?.trim();
+    return (trimmed == null || trimmed.isEmpty || trimmed == 'null')
+        ? null
+        : trimmed;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +66,7 @@ class _MakePaymentSuccessStepSectionState
     final walletCode = currentWallet?.code ?? 'USD';
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: currentWallet?.name ?? 'USD',
+      currencyCode: walletCode,
       siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
       siteCurrencyDecimals: settingsService.getSetting(
         "site_currency_decimals",
@@ -70,8 +80,7 @@ class _MakePaymentSuccessStepSectionState
     final rawCharge = txData?["charge"];
     final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? controller.charge.value;
 
-    final tnxId = txData?["tnx"]?.toString() ??
-        'PAY-${DateTime.now().millisecondsSinceEpoch}';
+    final tnxId = _nonEmpty(txData?["tnx"]?.toString());
     final createdAt = txData?["created_at"]?.toString() ?? '';
     final merchantMid = controller.merchantMidController.text.trim();
 
@@ -96,6 +105,7 @@ class _MakePaymentSuccessStepSectionState
                         ar: 'تمت معالجة الدفع بنجاح',
                         tr: 'Ödeme başarıyla işlendi',
                         ru: 'Оплата успешно проведена',
+                        zh: '向商户付款已成功处理',
                       ),
                       dateTime: createdAt.isNotEmpty ? createdAt : null,
                     ),
@@ -111,6 +121,7 @@ class _MakePaymentSuccessStepSectionState
                         ar: 'إيصال دفع التاجر',
                         tr: 'Üye İşyeri Ödeme Makbuzu',
                         ru: 'Квитанция оплаты мерчанту',
+                        zh: '商户付款凭证',
                       ),
                       transactionReference: tnxId,
                       formattedTimestamp: createdAt.isNotEmpty ? createdAt : null,
@@ -127,6 +138,7 @@ class _MakePaymentSuccessStepSectionState
                             ar: 'حساب التاجر',
                             tr: 'Üye İşyeri Hesabı',
                             ru: 'Счет мерчанта',
+                            zh: '商户账户',
                           ),
                           value: merchantMid,
                           isCopyable: true,
@@ -162,6 +174,7 @@ class _MakePaymentSuccessStepSectionState
                         ar: 'مشغل بواسطة شبكة إيكاردو الآمنة',
                         tr: 'eCardo Güvenli Ağı Tarafından Desteklenmektedir',
                         ru: 'На базе защищенной сети eCardo',
+                        zh: '由 eCardo 安全网络支持',
                       ),
                       showBarcode: true,
                       showWatermark: true,

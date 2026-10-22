@@ -19,6 +19,7 @@
 //    usable if the API call failed.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -372,57 +373,64 @@ class _Field extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark ? AppColors.brandViolet : AppColors.brandViolet;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      onChanged: onChanged,
-      style: TextStyle(
-        fontSize: 14.sp,
-        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-      ),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
-        hintText: hint,
-        hintStyle: TextStyle(
-          fontSize: 14.sp,
-          color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
-        ),
-        errorText: errorText,
-        errorMaxLines: 2,
-        errorStyle: TextStyle(
-          fontSize: 11.sp,
-          color: AppColors.error,
-          fontWeight: FontWeight.w500,
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: borderColor),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: errorText != null ? AppColors.error : borderColor,
+    return Semantics(
+      textField: true,
+      label: hint,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: 48.h),
+        child: TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          onChanged: onChanged,
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: errorText != null ? AppColors.error : primaryColor,
-            width: 1.5,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+            hintText: hint,
+            hintStyle: TextStyle(
+              fontSize: 14.sp,
+              color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+            ),
+            errorText: errorText,
+            errorMaxLines: 2,
+            errorStyle: TextStyle(
+              fontSize: 11.sp,
+              color: AppColors.error,
+              fontWeight: FontWeight.w500,
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: borderColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: errorText != null ? AppColors.error : borderColor,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(
+                color: errorText != null ? AppColors.error : primaryColor,
+                width: 1.5,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+            ),
           ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
         ),
       ),
     );
@@ -446,29 +454,48 @@ class _CountryDropdown extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
-        border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: countries.any((c) => c.$1 == value) && value.isNotEmpty
-              ? value
-              : null,
-          dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
-          hint: Text(hint, style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint)),
-          isExpanded: true,
-          items: countries
-              .map((c) => DropdownMenuItem(
-                    value: c.$1,
-                    child: Text('${c.$1} — ${c.$2}',
-                        style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-                  ))
-              .toList(),
-          onChanged: onChanged,
+    return Semantics(
+      button: true,
+      label: hint,
+      child: Container(
+        constraints: BoxConstraints(minHeight: 48.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: countries.any((c) => c.$1 == value) && value.isNotEmpty
+                ? value
+                : null,
+            dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
+            hint: Text(
+              hint,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+              ),
+            ),
+            isExpanded: true,
+            items: countries
+                .map((c) => DropdownMenuItem(
+                      value: c.$1,
+                      child: Text(
+                        '${c.$1} — ${c.$2}',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                    ))
+                .toList(),
+            onChanged: (val) {
+              HapticFeedback.lightImpact();
+              onChanged(val);
+            },
+          ),
         ),
       ),
     );

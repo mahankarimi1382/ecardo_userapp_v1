@@ -50,16 +50,16 @@ class MonogramAvatar extends StatelessWidget {
     final hash = key.codeUnits.fold<int>(0, (prev, elem) => prev + elem);
     final palettes = isDark
         ? [
-            [const Color(0xFF1E2E42), const Color(0xFF263345)],
-            [const Color(0xFF2A2421), const Color(0xFF382F2B)],
-            [const Color(0xFF1B2F2A), const Color(0xFF253E38)],
-            [const Color(0xFF2A2333), const Color(0xFF372E43)],
+            [AppColors.darkSurfaceVariant, AppColors.darkCard],
+            [AppColors.darkSurfaceVariant, AppColors.darkSurface],
+            [AppColors.darkSecondaryContainer, AppColors.darkCard],
+            [AppColors.darkPrimaryContainer, AppColors.darkCard],
           ]
         : [
-            [const Color(0xFFE3EDFC), const Color(0xFFCFE1FA)],
-            [const Color(0xFFF7EBE1), const Color(0xFFEEDCCF)],
-            [const Color(0xFFE2F5EC), const Color(0xFFCDEFE0)],
-            [const Color(0xFFEFE6FA), const Color(0xFFE3D4F5)],
+            [AppColors.infoContainer, AppColors.lightSurfaceVariant],
+            [AppColors.warningContainer, AppColors.lightSurfaceVariant],
+            [AppColors.successContainer, AppColors.lightSecondaryContainer],
+            [AppColors.brandVioletContainer, AppColors.lightSurfaceVariant],
           ];
     return palettes[hash % palettes.length];
   }
@@ -68,10 +68,10 @@ class MonogramAvatar extends StatelessWidget {
     if (isDark) return AppColors.warmWhite;
     final hash = key.codeUnits.fold<int>(0, (prev, elem) => prev + elem);
     const lightTextColors = [
-      AppColors.mutedBlue,
+      AppColors.info,
       AppColors.warmBrown,
       AppColors.success,
-      Color(0xFF6B4FA0),
+      AppColors.brandViolet,
     ];
     return lightTextColors[hash % lightTextColors.length];
   }

@@ -100,8 +100,8 @@ class P2pAdCard extends StatelessWidget {
             ? l10nPick(context, en: 'Sell $assetCode', fa: 'فروش $assetCode')
             : l10nPick(context, en: 'Buy $assetCode', fa: 'خرید $assetCode');
 
-    final emeraldGreen = const Color(0xFF10B981);
-    final rubyRed = const Color(0xFFEF4444);
+    final emeraldGreen = AppColors.success;
+    final rubyRed = AppColors.error;
 
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
@@ -141,15 +141,15 @@ class P2pAdCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: isDark
-                            ? const [Color(0xFF312E81), Color(0xFF4338CA)]
-                            : const [Color(0xFF1E293B), Color(0xFF334155)],
+                            ? const [AppColors.darkPrimaryContainer, AppColors.brandVioletDeep]
+                            : const [AppColors.darkGray, AppColors.deepBlack],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: (isDark ? const Color(0xFF4338CA) : Colors.black)
+                          color: (isDark ? AppColors.brandVioletDeep : AppColors.black)
                               .withValues(alpha: 0.20),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
@@ -283,7 +283,7 @@ class P2pAdCard extends StatelessWidget {
                     Icon(
                       Icons.bolt_rounded,
                       size: 13.r,
-                      color: const Color(0xFFF59E0B),
+                      color: AppColors.warning,
                     ),
                     SizedBox(width: 2.w),
                     Text(
@@ -381,7 +381,7 @@ class P2pAdCard extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       decoration: BoxDecoration(
                         color: isOwnAd
-                            ? (isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300)
+                            ? (isDark ? AppColors.darkSurfaceVariant : AppColors.lightOutlineVariant)
                             : isAdTypeBuy
                                 ? rubyRed
                                 : emeraldGreen,
@@ -427,14 +427,14 @@ class P2pAdCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 5.5.w, vertical: 2.h),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFFFFB800), Color(0xFFF59E0B)],
+          colors: [AppColors.warning, AppColors.warmBrown],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(4.r),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+            color: AppColors.warning.withValues(alpha: 0.35),
             blurRadius: 4,
             offset: const Offset(0, 1),
           ),
@@ -446,7 +446,7 @@ class P2pAdCard extends StatelessWidget {
           Icon(
             Icons.verified_rounded,
             size: 11.5.r,
-            color: Colors.black87,
+            color: AppColors.deepBlack,
           ),
           SizedBox(width: 3.w),
           Text(
@@ -455,7 +455,7 @@ class P2pAdCard extends StatelessWidget {
               letterSpacing: 0.4,
               fontSize: 9.5.sp,
               fontWeight: FontWeight.w900,
-              color: Colors.black87,
+              color: AppColors.deepBlack,
             ),
           ),
         ],
@@ -544,7 +544,7 @@ class P2pAdCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade200,
+              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
               borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
             ),
             child: Text(
@@ -617,12 +617,11 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('internal') ||
         lower.contains('کیف پول') ||
         lower.contains('wallet')) {
-      const violet = Color(0xFF7445FF);
       return _PaymentBadgeTheme(
-        bg: isDark ? const Color(0xFF2B1B54) : const Color(0xFFF3E8FF),
-        text: isDark ? const Color(0xFFC4B5FD) : violet,
-        border: isDark ? const Color(0xFF5B30D9) : const Color(0xFFDDD6FE),
-        accent: violet,
+        bg: isDark ? AppColors.darkPrimaryContainer : AppColors.brandVioletContainer,
+        text: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        border: isDark ? AppColors.darkPrimary : AppColors.lightBorder,
+        accent: AppColors.brandViolet,
       );
     }
 
@@ -634,12 +633,11 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('satna') ||
         lower.contains('ساتنا') ||
         lower.contains('iban')) {
-      const teal = Color(0xFF0D9488);
       return _PaymentBadgeTheme(
-        bg: isDark ? const Color(0xFF0F3935) : const Color(0xFFF0FDFA),
-        text: isDark ? const Color(0xFF2DD4BF) : teal,
-        border: isDark ? const Color(0xFF115E59) : const Color(0xFF99F6E4),
-        accent: teal,
+        bg: isDark ? AppColors.darkSecondaryContainer : AppColors.lightSecondaryContainer,
+        text: isDark ? AppColors.lightSecondary : AppColors.mutedBlue,
+        border: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        accent: AppColors.mutedBlue,
       );
     }
 
@@ -648,12 +646,11 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('کارت') ||
         lower.contains('c2c') ||
         lower.contains('debit')) {
-      const purple = Color(0xFF7C3AED);
       return _PaymentBadgeTheme(
-        bg: isDark ? const Color(0xFF2F1D50) : const Color(0xFFFAF5FF),
-        text: isDark ? const Color(0xFFA78BFA) : purple,
-        border: isDark ? const Color(0xFF6D28D9) : const Color(0xFFE9D5FF),
-        accent: purple,
+        bg: isDark ? AppColors.darkPrimaryContainer : AppColors.lightSurfaceVariant,
+        text: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
+        border: isDark ? AppColors.darkOutline : AppColors.lightOutline,
+        accent: AppColors.brandVioletDeep,
       );
     }
 
@@ -663,12 +660,11 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('transfer') ||
         lower.contains('انتقال') ||
         lower.contains('wire')) {
-      const blue = Color(0xFF2563EB);
       return _PaymentBadgeTheme(
-        bg: isDark ? const Color(0xFF142B59) : const Color(0xFFEFF6FF),
-        text: isDark ? const Color(0xFF60A5FA) : blue,
-        border: isDark ? const Color(0xFF1D4ED8) : const Color(0xFFBFDBFE),
-        accent: blue,
+        bg: isDark ? AppColors.darkSurfaceVariant : AppColors.infoContainer,
+        text: isDark ? AppColors.mainSoftBlue : AppColors.info,
+        border: isDark ? AppColors.darkOutline : AppColors.lightOutline,
+        accent: AppColors.info,
       );
     }
 
@@ -677,21 +673,20 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('نقد') ||
         lower.contains('dollar') ||
         lower.contains('دلار')) {
-      const orange = Color(0xFFEA580C);
       return _PaymentBadgeTheme(
-        bg: isDark ? const Color(0xFF451E11) : const Color(0xFFFFF7ED),
-        text: isDark ? const Color(0xFFFB923C) : orange,
-        border: isDark ? const Color(0xFFC2410C) : const Color(0xFFFED7AA),
-        accent: orange,
+        bg: isDark ? AppColors.darkSurfaceVariant : AppColors.warningContainer,
+        text: isDark ? AppColors.warning : AppColors.warning,
+        border: isDark ? AppColors.darkOutline : AppColors.lightOutline,
+        accent: AppColors.warning,
       );
     }
 
     // 6. Generic / Default
     return _PaymentBadgeTheme(
-      bg: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9),
-      text: isDark ? AppColors.darkTextSecondary : const Color(0xFF475569),
-      border: isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0),
-      accent: const Color(0xFF64748B),
+      bg: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+      text: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+      border: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+      accent: AppColors.softGray,
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -268,12 +269,20 @@ class AddMoneyController extends GetxController {
             currentStep.value = 2;
             AppEventBus.emit(BalanceChangedEvent(sourceModule: 'add_money'));
           } else if (paymentResult == null) {
-            // The user backed out of the gateway page. The deposit is still
-            // open server-side, so say so instead of silently resetting.
+            // The user backed out of the gateway page without confirmation.
+            // Do NOT celebrate as paid. Route to pending status and notify user.
             pendingPaymentData.value = payload;
             currentStep.value = 2;
-            AppEventBus.emit(BalanceChangedEvent(sourceModule: 'add_money'));
-            ToastHelper().showSuccessToast(localization!.addMoneySuccess);
+            ToastHelper().showWarningToast(
+              l10nPickAuto(
+                en: 'Payment pending gateway confirmation',
+                fa: 'پرداخت در انتظار تایید درگاه است',
+                ar: 'الدفع بانتظار تأكيد البوابة',
+                tr: 'Ödeme ağ geçidi onayını bekliyor',
+                ru: 'Платеж ожидает подтверждения',
+                zh: '支付等待网关确认',
+              ),
+            );
           }
         }
       }

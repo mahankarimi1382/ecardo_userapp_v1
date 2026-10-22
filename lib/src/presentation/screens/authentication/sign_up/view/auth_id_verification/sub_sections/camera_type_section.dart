@@ -169,7 +169,7 @@ class CameraTypeSection extends StatelessWidget {
                       autoCycle: true,
                       backgroundColor: isDark
                           ? AppColors.darkSurface
-                          : const Color(0xFFF8FAFC),
+                          : AppColors.lightSurfaceVariant,
                     ),
                     SizedBox(height: 16.h),
 
@@ -227,73 +227,102 @@ class CameraTypeSection extends StatelessWidget {
 
                               // Primary Action Button
                               if (!hasFile) ...[
-                                CommonButton(
-                                  text: localizations.cameraTypeButton,
-                                  width: double.infinity,
-                                  onPressed: () => _captureWithCamera(context, controller),
+                                Semantics(
+                                  button: true,
+                                  label: localizations.cameraTypeButton,
+                                  child: CommonButton(
+                                    text: localizations.cameraTypeButton,
+                                    width: double.infinity,
+                                    onPressed: () => _captureWithCamera(context, controller),
+                                  ),
                                 ),
                                 SizedBox(height: 10.h),
-                                OutlinedButton.icon(
-                                  onPressed: () => _pickFromGallery(context, controller),
-                                  style: OutlinedButton.styleFrom(
-                                    minimumSize: Size(double.infinity, 46.h),
-                                    side: BorderSide(
-                                      color: isDark
-                                          ? AppColors.darkBorder
-                                          : AppColors.lightBorder,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16.r),
-                                    ),
+                                Semantics(
+                                  button: true,
+                                  label: l10nPick(
+                                    context,
+                                    en: 'Upload from Gallery',
+                                    fa: 'انتخاب تصویر از گالری',
+                                    ar: 'التحميل من المعرض',
+                                    zh: '从相册选择',
                                   ),
-                                  icon: const Icon(Icons.photo_library_outlined, size: 18),
-                                  label: Text(
-                                    l10nPick(
-                                      context,
-                                      en: 'Or Upload from Gallery',
-                                      fa: 'یا انتخاب تصویر از گالری',
-                                      ar: 'أو التحميل من المعرض',
-                                      zh: '或从相册选择',
+                                  child: OutlinedButton.icon(
+                                    onPressed: () => _pickFromGallery(context, controller),
+                                    style: OutlinedButton.styleFrom(
+                                      minimumSize: Size(double.infinity, 48.h),
+                                      side: BorderSide(
+                                        color: isDark
+                                            ? AppColors.darkBorder
+                                            : AppColors.lightBorder,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16.r),
+                                      ),
                                     ),
-                                    style: TextStyle(
-                                      fontSize: 13.sp,
-                                      fontWeight: FontWeight.w700,
-                                      color: primaryTextColor,
+                                    icon: const Icon(Icons.photo_library_outlined, size: 18),
+                                    label: Text(
+                                      l10nPick(
+                                        context,
+                                        en: 'Or Upload from Gallery',
+                                        fa: 'یا انتخاب تصویر از گالری',
+                                        ar: 'أو التحميل من المعرض',
+                                        zh: '或从相册选择',
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 13.sp,
+                                        fontWeight: FontWeight.w700,
+                                        color: primaryTextColor,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ] else ...[
-                                CommonButton(
-                                  text: l10nPick(
+                                Semantics(
+                                  button: true,
+                                  label: l10nPick(
                                     context,
                                     en: 'Confirm & Continue',
                                     fa: 'تأیید و ادامه',
                                     ar: 'تأكيد ومتابعة',
                                     zh: '确认并继续',
                                   ),
-                                  width: double.infinity,
-                                  onPressed: () {
-                                    if (Navigator.canPop(context)) {
-                                      Navigator.pop(context, file);
-                                    } else {
-                                      _proceedToNext(context, controller);
-                                    }
-                                  },
+                                  child: CommonButton(
+                                    text: l10nPick(
+                                      context,
+                                      en: 'Confirm & Continue',
+                                      fa: 'تأیید و ادامه',
+                                      ar: 'تأكيد ومتابعة',
+                                      zh: '确认并继续',
+                                    ),
+                                    width: double.infinity,
+                                    onPressed: () {
+                                      if (Navigator.canPop(context)) {
+                                        Navigator.pop(context, file);
+                                      } else {
+                                        _proceedToNext(context, controller);
+                                      }
+                                    },
+                                  ),
                                 ),
                               ],
 
                               // Skip option if nullable
                               if (field.validation == "nullable") ...[
                                 SizedBox(height: 10.h),
-                                CommonButton(
-                                  backgroundColor: AppColors.transparent,
-                                  text: localizations.cameraTypeSkip,
-                                  width: 120.w,
-                                  textColor: secondaryTextColor,
-                                  onPressed: () {
-                                    controller.skipField(field.name ?? "");
-                                    _proceedToNext(context, controller);
-                                  },
+                                Semantics(
+                                  button: true,
+                                  label: localizations.cameraTypeSkip,
+                                  child: CommonButton(
+                                    backgroundColor: AppColors.transparent,
+                                    text: localizations.cameraTypeSkip,
+                                    width: 120.w,
+                                    height: 44.h,
+                                    textColor: secondaryTextColor,
+                                    onPressed: () {
+                                      controller.skipField(field.name ?? "");
+                                      _proceedToNext(context, controller);
+                                    },
+                                  ),
                                 ),
                               ],
                               SizedBox(height: 16.h),
@@ -320,82 +349,94 @@ class CameraTypeSection extends StatelessWidget {
     required Color primaryText,
     required Color secondaryText,
   }) {
-    return GestureDetector(
-      onTap: onCaptureTap,
-      child: Container(
-        width: double.infinity,
-        height: 220.h,
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isDark ? AppColors.darkBorder : const Color(0xFFCBD5E1),
-            width: 1.5,
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Corner alignment markers
-            _buildCornerBracket(top: 12.h, left: 12.w, isTop: true, isLeft: true),
-            _buildCornerBracket(top: 12.h, right: 12.w, isTop: true, isLeft: false),
-            _buildCornerBracket(bottom: 12.h, left: 12.w, isTop: false, isLeft: true),
-            _buildCornerBracket(bottom: 12.h, right: 12.w, isTop: false, isLeft: false),
+    final guideColor = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
 
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 64.w,
-                    height: 64.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color(0xFF10B981).withValues(alpha: 0.12),
+    return Semantics(
+      button: true,
+      label: l10nPick(
+        context,
+        en: 'Capture document with camera',
+        fa: 'عکس‌برداری از مدرک با دوربین',
+        ar: 'التقاط المستند بالكاميرا',
+        zh: '使用相机拍摄证件',
+      ),
+      child: GestureDetector(
+        onTap: onCaptureTap,
+        child: Container(
+          width: double.infinity,
+          height: 220.h,
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              width: 1.5,
+            ),
+          ),
+          child: Stack(
+            children: [
+              // Corner alignment markers
+              _buildCornerBracket(top: 12.h, left: 12.w, isTop: true, isLeft: true, color: guideColor),
+              _buildCornerBracket(top: 12.h, right: 12.w, isTop: true, isLeft: false, color: guideColor),
+              _buildCornerBracket(bottom: 12.h, left: 12.w, isTop: false, isLeft: true, color: guideColor),
+              _buildCornerBracket(bottom: 12.h, right: 12.w, isTop: false, isLeft: false, color: guideColor),
+
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 64.w,
+                      height: 64.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: guideColor.withValues(alpha: isDark ? 0.16 : 0.10),
+                      ),
+                      child: Icon(
+                        Icons.camera_alt_outlined,
+                        size: 32.sp,
+                        color: guideColor,
+                      ),
                     ),
-                    child: Icon(
-                      Icons.camera_alt_outlined,
-                      size: 32.sp,
-                      color: const Color(0xFF10B981),
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    l10nPick(
-                      context,
-                      en: 'Align Document Within Frame',
-                      fa: 'مدرک را در کادر تنظیم کنید',
-                      ar: 'قم بمحاذاة المستند داخل الإطار',
-                      zh: '将证件置于取景框内',
-                    ),
-                    style: TextStyle(
-                      fontSize: 14.5.sp,
-                      fontWeight: FontWeight.w800,
-                      color: primaryText,
-                    ),
-                  ),
-                  SizedBox(height: 6.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    child: Text(
+                    SizedBox(height: 12.h),
+                    Text(
                       l10nPick(
                         context,
-                        en: 'Place your National Card or Passport flat in good lighting',
-                        fa: 'کارت ملی، شناسنامه یا پاسپورت را در نور مناسب قرار دهید',
-                        ar: 'ضع بطاقة الهوية أو الجواز بشكل مستوٍ وإضاءة جيدة',
-                        zh: '请在光线充足处平放身份证或护照',
+                        en: 'Align Document Within Frame',
+                        fa: 'مدرک را در کادر تنظیم کنید',
+                        ar: 'قم بمحاذاة المستند داخل الإطار',
+                        zh: '将证件置于取景框内',
                       ),
-                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 11.5.sp,
-                        color: secondaryText,
-                        height: 1.3,
+                        fontSize: 14.5.sp,
+                        fontWeight: FontWeight.w800,
+                        color: primaryText,
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 6.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Place your National Card or Passport flat in good lighting',
+                          fa: 'کارت ملی، شناسنامه یا پاسپورت را در نور مناسب قرار دهید',
+                          ar: 'ضع بطاقة الهوية أو الجواز بشكل مستوٍ وإضاءة جيدة',
+                          zh: '请在光线充足处平放身份证或护照',
+                        ),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 11.5.sp,
+                          color: secondaryText,
+                          height: 1.3,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -408,6 +449,7 @@ class CameraTypeSection extends StatelessWidget {
     double? right,
     required bool isTop,
     required bool isLeft,
+    required Color color,
   }) {
     return Positioned(
       top: top,
@@ -420,16 +462,16 @@ class CameraTypeSection extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             top: isTop
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
             bottom: !isTop
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
             left: isLeft
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
             right: !isLeft
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
           ),
         ),
@@ -447,6 +489,7 @@ class CameraTypeSection extends StatelessWidget {
     required Color primaryText,
     required Color secondaryText,
   }) {
+    final guideColor = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
     final fileLength = file.lengthSync();
     final sizeInMB = fileLength / (1024 * 1024);
     final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
@@ -455,86 +498,96 @@ class CameraTypeSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
+        color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(
-          color: const Color(0xFF10B981).withValues(alpha: 0.5),
+          color: guideColor.withValues(alpha: 0.4),
           width: 1.5,
         ),
       ),
       child: Column(
         children: [
           // Thumbnail Preview with Zoom tap
-          GestureDetector(
-            onTap: () {
-              final decodedImage = Image.file(file);
-              decodedImage.image
-                  .resolve(const ImageConfiguration())
-                  .addListener(
-                    ImageStreamListener((ImageInfo info, bool _) {
-                      final imageHeight = info.image.height.toDouble();
-                      final imageWidth = info.image.width.toDouble();
-                      final screenWidth = MediaQuery.of(context).size.width - 36;
-                      final scaledHeight = (imageHeight / imageWidth) * screenWidth;
-                      Get.bottomSheet(
-                        DynamicAttachmentPreview(
-                          file: file,
-                          scaledHeight: scaledHeight,
-                          bottomExtraHeight: 50.0,
+          Semantics(
+            button: true,
+            label: l10nPick(
+              context,
+              en: 'Preview captured document full screen',
+              fa: 'پیش‌نمایش مدرک ثبت‌شده در نمای تمام‌صفحه',
+              ar: 'معاينة المستند الملتقط بملء الشاشة',
+              zh: '全屏预览已拍摄证件',
+            ),
+            child: GestureDetector(
+              onTap: () {
+                final decodedImage = Image.file(file);
+                decodedImage.image
+                    .resolve(const ImageConfiguration())
+                    .addListener(
+                      ImageStreamListener((ImageInfo info, bool _) {
+                        final imageHeight = info.image.height.toDouble();
+                        final imageWidth = info.image.width.toDouble();
+                        final screenWidth = MediaQuery.of(context).size.width - 36;
+                        final scaledHeight = (imageHeight / imageWidth) * screenWidth;
+                        Get.bottomSheet(
+                          DynamicAttachmentPreview(
+                            file: file,
+                            scaledHeight: scaledHeight,
+                            bottomExtraHeight: 50.0,
+                          ),
+                          isScrollControlled: true,
+                          enableDrag: true,
+                          backgroundColor: AppColors.transparent,
+                        );
+                      }),
+                    );
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      height: 180.h,
+                      width: double.infinity,
+                      child: Image.file(
+                        file,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Positioned(
+                      top: 8.h,
+                      right: 8.w,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
                         ),
-                        isScrollControlled: true,
-                        enableDrag: true,
-                        backgroundColor: AppColors.transparent,
-                      );
-                    }),
-                  );
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: 180.h,
-                    width: double.infinity,
-                    child: Image.file(
-                      file,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    top: 8.h,
-                    right: 8.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 4.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.7),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.zoom_in_rounded,
-                            size: 13,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 4.w),
-                          Text(
-                            l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                        decoration: BoxDecoration(
+                          color: AppColors.black.withValues(alpha: 0.7),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.zoom_in_rounded,
+                              size: 13,
+                              color: AppColors.white,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 4.w),
+                            Text(
+                              l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -550,8 +603,8 @@ class CameraTypeSection extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
                     color: (isValidSize
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626))
+                            ? AppColors.success
+                            : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -564,8 +617,8 @@ class CameraTypeSection extends StatelessWidget {
                             : Icons.error_outline_rounded,
                         size: 13.sp,
                         color: isValidSize
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626),
+                            ? AppColors.success
+                            : AppColors.error,
                       ),
                       SizedBox(width: 4.w),
                       Text(
@@ -574,8 +627,8 @@ class CameraTypeSection extends StatelessWidget {
                           fontSize: 10.5.sp,
                           fontWeight: FontWeight.w700,
                           color: isValidSize
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFDC2626),
+                              ? AppColors.success
+                              : AppColors.error,
                         ),
                       ),
                     ],
@@ -586,46 +639,78 @@ class CameraTypeSection extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    OutlinedButton.icon(
-                      onPressed: onRetakeTap,
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 6.h,
-                        ),
-                        side: BorderSide(
-                          color: isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                        ),
+                    Semantics(
+                      button: true,
+                      label: l10nPick(
+                        context,
+                        en: 'Retake photo',
+                        fa: 'عکس مجدد',
+                        ar: 'إعادة الالتقاط',
+                        zh: '重拍',
                       ),
-                      icon: const Icon(Icons.refresh_rounded, size: 15),
-                      label: Text(
-                        l10nPick(
-                          context,
-                          en: 'Retake',
-                          fa: 'عکس مجدد',
-                          ar: 'إعادة الالتقاط',
-                          zh: '重拍',
+                      child: OutlinedButton.icon(
+                        onPressed: onRetakeTap,
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size(88.w, 44.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
+                          ),
+                          side: BorderSide(
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                          ),
                         ),
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          fontWeight: FontWeight.w700,
-                          color: primaryText,
+                        icon: const Icon(Icons.refresh_rounded, size: 15),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Retake',
+                            fa: 'عکس مجدد',
+                            ar: 'إعادة الالتقاط',
+                            zh: '重拍',
+                          ),
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: primaryText,
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 6.w),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.delete_outline_rounded,
-                        color: AppColors.error,
-                        size: 20,
+                    Semantics(
+                      button: true,
+                      label: l10nPick(
+                        context,
+                        en: 'Delete photo',
+                        fa: 'حذف عکس',
+                        ar: 'حذف',
+                        zh: '删除',
                       ),
-                      onPressed: onDeleteTap,
+                      child: IconButton(
+                        constraints: const BoxConstraints(
+                          minWidth: 44,
+                          minHeight: 44,
+                        ),
+                        tooltip: l10nPick(
+                          context,
+                          en: 'Delete photo',
+                          fa: 'حذف عکس',
+                          ar: 'حذف',
+                          zh: '删除',
+                        ),
+                        icon: const Icon(
+                          Icons.delete_outline_rounded,
+                          color: AppColors.error,
+                          size: 20,
+                        ),
+                        onPressed: onDeleteTap,
+                      ),
                     ),
                   ],
                 ),

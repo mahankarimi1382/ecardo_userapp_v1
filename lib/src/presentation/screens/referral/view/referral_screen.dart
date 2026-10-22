@@ -46,11 +46,14 @@ class ReferralScreen extends StatefulWidget {
 class _ReferralScreenState extends State<ReferralScreen> {
   final ReferralController controller = Get.find<ReferralController>();
   bool _codeCopied = false;
+  bool _linkCopied = false;
   Timer? _copyTimer;
+  Timer? _linkCopyTimer;
 
   @override
   void dispose() {
     _copyTimer?.cancel();
+    _linkCopyTimer?.cancel();
     super.dispose();
   }
 
@@ -62,6 +65,17 @@ class _ReferralScreenState extends State<ReferralScreen> {
     _copyTimer?.cancel();
     _copyTimer = Timer(const Duration(milliseconds: 2000), () {
       if (mounted) setState(() => _codeCopied = false);
+    });
+  }
+
+  void _onCopyLink(String link, String successMessage) {
+    HapticFeedback.lightImpact();
+    Clipboard.setData(ClipboardData(text: link));
+    setState(() => _linkCopied = true);
+    ToastHelper().showSuccessToast(successMessage);
+    _linkCopyTimer?.cancel();
+    _linkCopyTimer = Timer(const Duration(milliseconds: 2000), () {
+      if (mounted) setState(() => _linkCopied = false);
     });
   }
 
@@ -128,6 +142,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 return Center(
                   child: EcardoEmptyState(
                     iconData: Icons.group_add_rounded,
+                    iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    glowColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                     title: _refL(
                       context,
                       en: 'Referral Program Unavailable',
@@ -149,7 +165,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
               // 4. Content State
               return RefreshIndicator(
                 onRefresh: controller.fetchReferral,
-                color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsetsDirectional.symmetric(
@@ -164,16 +180,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                       const SizedBox(height: AppSpacing.lg),
                       _buildCodeCard(context, referral, localization, isDark),
                       const SizedBox(height: AppSpacing.xl),
-                      CommonButton(
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          SharePlus.instance.share(
-                            ShareParams(text: referral.code ?? ''),
-                          );
-                        },
-                        width: double.infinity,
-                        text: localization.referralScreenShareButton,
-                      ),
+                      _buildActionButtons(context, referral, localization, isDark),
                       if (referral.isShownReferralRules == true &&
                           referral.rules != null &&
                           referral.rules!.isNotEmpty) ...[
@@ -202,18 +209,18 @@ class _ReferralScreenState extends State<ReferralScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.white,
+        color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         border: Border.all(
           color: isDark
               ? AppColors.mainSoftBlue.withValues(alpha: 0.22)
-              : AppColors.mutedBlue.withValues(alpha: 0.16),
+              : AppColors.brandViolet.withValues(alpha: 0.16),
         ),
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.3)
-                : AppColors.mutedBlue.withValues(alpha: 0.08),
+                ? AppColors.darkShadow
+                : AppColors.brandViolet.withValues(alpha: 0.08),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),
@@ -226,10 +233,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
               PngAssets.referralImage,
               height: 140,
               fit: BoxFit.contain,
-              errorBuilder: (_, _, _) => const Icon(
+              errorBuilder: (_, _, _) => Icon(
                 Icons.card_giftcard_rounded,
                 size: 72,
-                color: AppColors.mainSoftBlue,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
               ),
             ),
           ),
@@ -241,7 +248,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
               Text(
                 '${localization.referralScreenEarnAmount} ${referral.amount ?? '0'} ',
                 style: AppTextStyles.headlineMedium.copyWith(
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -280,8 +287,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   AppColors.darkCard,
                 ]
               : [
-                  AppColors.lightSecondaryContainer.withValues(alpha: 0.7),
-                  AppColors.white,
+                  AppColors.brandVioletContainer.withValues(alpha: 0.45),
+                  AppColors.lightCard,
                 ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -355,9 +362,9 @@ class _ReferralScreenState extends State<ReferralScreen> {
               minHeight: 6,
               backgroundColor: isDark
                   ? AppColors.darkBorder
-                  : AppColors.lightBorder.withValues(alpha: 0.5),
+                  : AppColors.lightOutlineVariant,
               valueColor: AlwaysStoppedAnimation<Color>(
-                isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+                isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
               ),
             ),
           ),
@@ -378,7 +385,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 ),
               ),
               GestureDetector(
-                onTap: () => Get.toNamed(BaseRoute.referralTree),
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  Get.toNamed(BaseRoute.referralTree);
+                },
                 child: Row(
                   children: [
                     Text(
@@ -389,14 +399,14 @@ class _ReferralScreenState extends State<ReferralScreen> {
                         ar: 'عرض الشجرة',
                       ),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 10,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                     ),
                   ],
                 ),
@@ -420,10 +430,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.white,
+        color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
         ),
       ),
       child: Column(
@@ -473,56 +483,72 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                      onTap: () => _onCopy(
-                        code,
-                        localization.referralScreenCodeCopied,
-                      ),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                          vertical: AppSpacing.sm,
+                  child: Semantics(
+                    button: true,
+                    label: _refL(
+                      context,
+                      en: 'Copy referral invite code',
+                      fa: 'کپی کد دعوت',
+                      ar: 'نسخ رمز الدعوة',
+                    ),
+                    child: Material(
+                      color: AppColors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        onTap: () => _onCopy(
+                          code,
+                          localization.referralScreenCodeCopied,
                         ),
-                        decoration: BoxDecoration(
-                          color: _codeCopied
-                              ? AppColors.success.withValues(alpha: 0.16)
-                              : (isDark
-                                  ? AppColors.mainSoftBlue.withValues(alpha: 0.14)
-                                  : AppColors.deepBlack.withValues(alpha: 0.08)),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              _codeCopied
-                                  ? Icons.check_circle_rounded
-                                  : Icons.copy_rounded,
-                              size: AppSpacing.iconSm,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            minWidth: 44,
+                            minHeight: 44,
+                          ),
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.sm,
+                            ),
+                            decoration: BoxDecoration(
                               color: _codeCopied
-                                  ? AppColors.success
+                                  ? AppColors.success.withValues(alpha: 0.16)
                                   : (isDark
-                                      ? AppColors.mainSoftBlue
-                                      : AppColors.lightPrimary),
+                                      ? AppColors.mainSoftBlue.withValues(alpha: 0.14)
+                                      : AppColors.brandViolet.withValues(alpha: 0.10)),
+                              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                             ),
-                            const SizedBox(width: AppSpacing.xs),
-                            Text(
-                              _codeCopied
-                                  ? _refL(context, en: 'Copied', fa: 'کپی شد', ar: 'تم')
-                                  : _refL(context, en: 'Copy', fa: 'کپی', ar: 'نسخ'),
-                              style: AppTextStyles.labelSmall.copyWith(
-                                fontWeight: FontWeight.w700,
-                                color: _codeCopied
-                                    ? AppColors.success
-                                    : (isDark
-                                        ? AppColors.mainSoftBlue
-                                        : AppColors.lightPrimary),
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  _codeCopied
+                                      ? Icons.check_circle_rounded
+                                      : Icons.copy_rounded,
+                                  size: AppSpacing.iconSm,
+                                  color: _codeCopied
+                                      ? AppColors.success
+                                      : (isDark
+                                          ? AppColors.mainSoftBlue
+                                          : AppColors.brandViolet),
+                                ),
+                                const SizedBox(width: AppSpacing.xs),
+                                Text(
+                                  _codeCopied
+                                      ? _refL(context, en: 'Copied', fa: 'کپی شد', ar: 'تم')
+                                      : _refL(context, en: 'Copy', fa: 'کپی', ar: 'نسخ'),
+                                  style: AppTextStyles.labelSmall.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: _codeCopied
+                                        ? AppColors.success
+                                        : (isDark
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.brandViolet),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
@@ -539,13 +565,110 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 referral.joinedText!,
                 style: AppTextStyles.bodySmall.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                 ),
               ),
             ),
           ],
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButtons(
+    BuildContext context,
+    ReferralData referral,
+    AppLocalizations localization,
+    bool isDark,
+  ) {
+    final code = referral.code ?? '';
+    final referralLink = code.isNotEmpty
+        ? 'https://ecardo.ir/register?ref=$code'
+        : 'https://ecardo.ir/register';
+
+    return Row(
+      children: [
+        Expanded(
+          child: Semantics(
+            button: true,
+            label: _refL(
+              context,
+              en: 'Copy referral link',
+              fa: 'کپی لینک دعوت',
+              ar: 'نسخ رابط الإحالة',
+            ),
+            child: SizedBox(
+              height: 48,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(44, 48),
+                  side: BorderSide(
+                    color: _linkCopied
+                        ? AppColors.success
+                        : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet),
+                    width: 1.5,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  ),
+                  backgroundColor: _linkCopied
+                      ? AppColors.success.withValues(alpha: 0.12)
+                      : (isDark
+                          ? AppColors.mainSoftBlue.withValues(alpha: 0.10)
+                          : AppColors.brandVioletContainer.withValues(alpha: 0.6)),
+                ),
+                onPressed: () => _onCopyLink(
+                  referralLink,
+                  _refL(
+                    context,
+                    en: 'Referral link copied to clipboard!',
+                    fa: 'لینک دعوت در کلیپ‌بورد کپی شد!',
+                    ar: 'تم نسخ رابط الإحالة إلى الحافظة!',
+                  ),
+                ),
+                icon: Icon(
+                  _linkCopied ? Icons.check_circle_rounded : Icons.link_rounded,
+                  size: AppSpacing.iconSm,
+                  color: _linkCopied
+                      ? AppColors.success
+                      : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet),
+                ),
+                label: Text(
+                  _linkCopied
+                      ? _refL(context, en: 'Link Copied', fa: 'لینک کپی شد', ar: 'تم النسخ')
+                      : _refL(context, en: 'Copy Link', fa: 'کپی لینک', ar: 'نسخ الرابط'),
+                  style: AppTextStyles.labelLarge.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: _linkCopied
+                        ? AppColors.success
+                        : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: SizedBox(
+            height: 48,
+            child: Semantics(
+              button: true,
+              label: localization.referralScreenShareButton,
+              child: CommonButton(
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  SharePlus.instance.share(
+                    ShareParams(text: referralLink),
+                  );
+                },
+                width: double.infinity,
+                text: localization.referralScreenShareButton,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -558,10 +681,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.white,
+        color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
         ),
       ),
       child: Column(
@@ -572,7 +695,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
               Icon(
                 Icons.rule_rounded,
                 size: AppSpacing.iconSm,
-                color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
@@ -609,7 +732,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: isDark
                             ? AppColors.darkTextSecondary
-                            : AppColors.lightTextTertiary,
+                            : AppColors.lightTextSecondary,
                         height: 1.35,
                       ),
                     ),
@@ -633,14 +756,14 @@ class _ReferralScreenState extends State<ReferralScreen> {
         width: double.infinity,
         padding: const EdgeInsets.all(AppSpacing.lg),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkCard : AppColors.white,
+          color: isDark ? AppColors.darkSurface : AppColors.lightCard,
           borderRadius: const BorderRadiusDirectional.only(
             topStart: Radius.circular(AppSpacing.radiusXl),
             topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.12),
+              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
               blurRadius: 30,
               offset: const Offset(0, -4),
             ),
@@ -657,7 +780,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 decoration: BoxDecoration(
                   color: isDark
                       ? AppColors.darkTextSecondary.withValues(alpha: 0.4)
-                      : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                      : AppColors.lightTextTertiary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
@@ -665,7 +788,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
               ListTile(
                 leading: Icon(
                   Icons.people_outline_rounded,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                 ),
                 title: Text(
                   localization.referralScreenReferredFriends,
@@ -676,9 +799,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 ),
                 trailing: Icon(
                   Icons.chevron_right_rounded,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
                 onTap: () {
+                  HapticFeedback.lightImpact();
                   Get.back();
                   Get.toNamed(BaseRoute.referredFriends);
                 },
@@ -686,7 +810,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
               ListTile(
                 leading: Icon(
                   Icons.account_tree_outlined,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                 ),
                 title: Text(
                   localization.referredFriendsScreenReferralTreeButton,
@@ -697,9 +821,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 ),
                 trailing: Icon(
                   Icons.chevron_right_rounded,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
                 onTap: () {
+                  HapticFeedback.lightImpact();
                   Get.back();
                   Get.toNamed(BaseRoute.referralTree);
                 },

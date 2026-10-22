@@ -27,6 +27,16 @@ class CashOutSuccessStepSection extends StatefulWidget {
 }
 
 class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
+  /// Trimmed value, or null when the backend did not supply one. Never
+  /// synthesize a reference — a fabricated ID on a receipt is indistinguishable
+  /// from a real one and misleads both the user and support.
+  static String? _nonEmpty(String? value) {
+    final trimmed = value?.trim();
+    return (trimmed == null || trimmed.isEmpty || trimmed == 'null')
+        ? null
+        : trimmed;
+  }
+
   final CashOutController controller = Get.find();
   final settingsService = Get.find<SettingsService>();
 
@@ -50,8 +60,7 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
         controller.amountController.text;
     final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
 
-    final tnxId = controller.successCashOutData.value?["tnx"]?.toString() ??
-        'CSH-${DateTime.now().millisecondsSinceEpoch}';
+    final tnxId = _nonEmpty(controller.successCashOutData.value?["tnx"]?.toString());
     final createdAt =
         controller.successCashOutData.value?["created_at"]?.toString() ?? '';
     final rawCharge = controller.successCashOutData.value?["charge"];
@@ -138,23 +147,38 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                           isHighlighted: true,
                           valueColor: AppColors.success,
                         ),
-                        EcardoReceiptItem(
-                          label: localizations.cashOutSuccessTransactionId,
-                          value: tnxId,
-                          isCopyable: true,
-                          copyText: tnxId,
-                        ),
+                        if (tnxId != null)
+                          EcardoReceiptItem(
+                            label: localizations.cashOutSuccessTransactionId,
+                            value: tnxId,
+                            isCopyable: true,
+                            copyText: tnxId,
+                          ),
                       ],
                       onShare: () {
                         HapticFeedback.lightImpact();
                         SharePlus.instance.share(
                           ShareParams(
                             text:
-                                'eCardo Cash-Out Receipt\nRef: $tnxId\nAmount: $amount $currency\nAgent: $agentAid\nStatus: Completed',
+                                'eCardo Cash-Out Receipt\n${tnxId != null ? 'Ref: $tnxId\n' : ''}Amount: $amount $currency\nAgent: $agentAid\nStatus: Completed',
                           ),
                         );
                       },
                       onDownload: () {
+                        if (tnxId == null) {
+                          ToastHelper().showWarningToast(
+                            l10nPick(
+                              context,
+                              en: 'Reference code is not available yet',
+                              fa: 'کد پیگیری هنوز در دسترس نیست',
+                              ar: 'رمز المرجع غير متوفر بعد',
+                              tr: 'Referans kodu henüz mevcut değil',
+                              ru: 'Код квитанции пока недоступен',
+                              zh: '单号暂不可用',
+                            ),
+                          );
+                          return;
+                        }
                         HapticFeedback.lightImpact();
                         Clipboard.setData(ClipboardData(text: tnxId));
                         ToastHelper().showSuccessToast(

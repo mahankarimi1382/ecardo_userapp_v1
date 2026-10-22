@@ -145,27 +145,27 @@ class _AddNewTicketState extends State<AddNewTicket> {
     _DepartmentOption(
       id: 'finance',
       icon: Icons.account_balance_wallet_rounded,
-      color: Color(0xFF10B981),
+      color: AppColors.success,
     ),
     _DepartmentOption(
       id: 'technical',
       icon: Icons.terminal_rounded,
-      color: Color(0xFF3B82F6),
+      color: AppColors.info,
     ),
     _DepartmentOption(
       id: 'identity',
       icon: Icons.verified_user_rounded,
-      color: Color(0xFF8B5CF6),
+      color: AppColors.brandViolet,
     ),
     _DepartmentOption(
       id: 'travel',
       icon: Icons.flight_takeoff_rounded,
-      color: Color(0xFF06B6D4),
+      color: AppColors.mutedBlue,
     ),
     _DepartmentOption(
       id: 'other',
       icon: Icons.support_agent_rounded,
-      color: Color(0xFFF59E0B),
+      color: AppColors.warning,
     ),
   ];
 
@@ -173,17 +173,17 @@ class _AddNewTicketState extends State<AddNewTicket> {
     _PriorityOption(
       id: 'low',
       icon: Icons.shield_outlined,
-      color: Color(0xFF10B981),
+      color: AppColors.success,
     ),
     _PriorityOption(
       id: 'medium',
       icon: Icons.priority_high_rounded,
-      color: Color(0xFFF59E0B),
+      color: AppColors.warning,
     ),
     _PriorityOption(
       id: 'high',
       icon: Icons.local_fire_department_rounded,
-      color: Color(0xFFEF4444),
+      color: AppColors.error,
     ),
   ];
 
@@ -236,7 +236,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
                         ? null
                         : [
                             BoxShadow(
-                              color: const Color(0xFF0F172A).withValues(alpha: 0.04),
+                              color: AppColors.deepBlack.withValues(alpha: 0.04),
                               blurRadius: 16,
                               offset: const Offset(0, -2),
                             ),
@@ -327,11 +327,11 @@ class _AddNewTicketState extends State<AddNewTicket> {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF6366F1).withValues(alpha: 0.08)
-            : const Color(0xFF6366F1).withValues(alpha: 0.05),
+            ? AppColors.brandViolet.withValues(alpha: 0.08)
+            : AppColors.brandViolet.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF6366F1).withValues(alpha: isDark ? 0.35 : 0.22),
+          color: AppColors.brandViolet.withValues(alpha: isDark ? 0.35 : 0.22),
           width: 1.0,
         ),
       ),
@@ -344,13 +344,13 @@ class _AddNewTicketState extends State<AddNewTicket> {
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6366F1).withValues(alpha: 0.16),
+                  color: AppColors.brandViolet.withValues(alpha: 0.16),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.lightbulb_outline_rounded,
                   size: 17,
-                  color: Color(0xFF6366F1),
+                  color: AppColors.brandViolet,
                 ),
               ),
               const SizedBox(width: 8),
@@ -366,7 +366,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
                     zh: '快速获得支持的小贴士',
                   ),
                   style: AppTextStyles.labelMedium.copyWith(
-                    color: const Color(0xFF6366F1),
+                    color: AppColors.brandViolet,
                     fontWeight: FontWeight.w800,
                     fontSize: 13,
                   ),
@@ -552,7 +552,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
           width: 5,
           height: 5,
           decoration: BoxDecoration(
-            color: const Color(0xFF6366F1).withValues(alpha: 0.8),
+            color: AppColors.brandViolet.withValues(alpha: 0.8),
             shape: BoxShape.circle,
           ),
         ),
@@ -1077,12 +1077,12 @@ class _AddNewTicketState extends State<AddNewTicket> {
             decoration: BoxDecoration(
               color: isDark
                   ? AppColors.darkBackground.withValues(alpha: 0.6)
-                  : const Color(0xFFF8FAFC),
+                  : AppColors.lightBackground,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isDark
                     ? AppColors.darkBorder
-                    : const Color(0xFFCBD5E1),
+                    : AppColors.lightBorder,
                 width: 1.2,
               ),
             ),
@@ -1332,15 +1332,15 @@ class _AddNewTicketState extends State<AddNewTicket> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: isDark
-              ? const [Color(0xFF4F46E5), Color(0xFF7C3AED)]
-              : const [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+              ? const [AppColors.brandVioletDeep, AppColors.brandViolet]
+              : const [AppColors.brandViolet, AppColors.brandVioletDeep],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6366F1).withValues(alpha: 0.38),
+            color: AppColors.brandViolet.withValues(alpha: 0.38),
             blurRadius: 16,
             spreadRadius: 1,
             offset: const Offset(0, 5),

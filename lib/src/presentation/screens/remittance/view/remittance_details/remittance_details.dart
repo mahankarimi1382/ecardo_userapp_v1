@@ -35,7 +35,7 @@ class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
         backgroundColor: AppColors.lightSurface,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary), onPressed: () => Get.back()),
+        leading: const BackButton(color: AppColors.lightTextPrimary),
         title: Text(l.remittanceDetailsTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
       ),
       body: Obx(() {

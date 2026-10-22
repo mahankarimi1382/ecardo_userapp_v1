@@ -103,15 +103,15 @@ enum _TicketCategory {
   Color get color {
     switch (this) {
       case _TicketCategory.finance:
-        return const Color(0xFF10B981);
+        return AppColors.success;
       case _TicketCategory.technical:
-        return const Color(0xFF3B82F6);
+        return AppColors.info;
       case _TicketCategory.identity:
-        return const Color(0xFF8B5CF6);
+        return AppColors.brandViolet;
       case _TicketCategory.travel:
-        return const Color(0xFF06B6D4);
+        return AppColors.mutedBlue;
       case _TicketCategory.other:
-        return const Color(0xFFF59E0B);
+        return AppColors.warning;
     }
   }
 
@@ -437,13 +437,7 @@ class _SupportTicketsState extends State<SupportTickets>
     required bool isDark,
     required VoidCallback onTap,
   }) {
-    final activeGradient = LinearGradient(
-      colors: isDark
-          ? const [Color(0xFF4F46E5), Color(0xFF7C3AED)]
-          : const [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    );
+    const activeGradient = AppColors.brandGradient;
 
     return InkWell(
       onTap: onTap,
@@ -469,7 +463,7 @@ class _SupportTicketsState extends State<SupportTickets>
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: const Color(0xFF6366F1).withValues(alpha: 0.35),
+                    color: AppColors.brandViolet.withValues(alpha: 0.35),
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -534,15 +528,11 @@ class _SupportTicketsState extends State<SupportTickets>
           height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: AppColors.brandGradient,
             borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF6366F1).withValues(alpha: 0.45),
+                color: AppColors.brandViolet.withValues(alpha: 0.45),
                 blurRadius: 18,
                 spreadRadius: 1,
                 offset: const Offset(0, 6),
@@ -604,14 +594,19 @@ class _SupportTicketsState extends State<SupportTickets>
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: EcardoEmptyState(
-                  animateGlow: false,
+                  animateGlow: true,
                   iconData: Icons.headset_mic_outlined,
+                  iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  glowColor: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                      .withValues(alpha: 0.35),
                   title: localization.supportTicketsScreenTitle,
                   description: l10nPick(
                     context,
                     en: 'No support tickets found. Tap below to create one.',
                     fa: 'هیچ تیکت پشتیبانی یافت نشد. برای ایجاد تیکت کلیک کنید.',
                     ar: 'لا توجد تذاكر دعم. انقر أدناه لإنشاء تذكرة.',
+                    tr: 'Destek talebi bulunamadı. Yeni bir talep oluşturun.',
+                    ru: 'Тикеты поддержки не найдены. Нажмите ниже, чтобы создать.',
                     zh: '暂无支持工单，点击下方创建。',
                   ),
                   primaryActionLabel: localization.supportTicketsCreateTicketButton,
@@ -638,8 +633,11 @@ class _SupportTicketsState extends State<SupportTickets>
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: EcardoEmptyState(
-                  animateGlow: false,
+                  animateGlow: true,
                   iconData: Icons.filter_list_off_rounded,
+                  iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  glowColor: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                      .withValues(alpha: 0.35),
                   title: l10nPick(
                     context,
                     en: 'No tickets in this section',
@@ -672,6 +670,11 @@ class _SupportTicketsState extends State<SupportTickets>
                     setState(() {
                       _selectedFilter = _TicketFilter.all;
                     });
+                  },
+                  secondaryActionLabel: localization.supportTicketsCreateTicketButton,
+                  onSecondaryAction: () {
+                    HapticFeedback.lightImpact();
+                    Get.toNamed(BaseRoute.addNewTicket);
                   },
                 ),
               ),
@@ -777,14 +780,14 @@ class _SupportTicketsState extends State<SupportTickets>
           boxShadow: isDark
               ? [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.22),
+                    color: AppColors.black.withValues(alpha: 0.22),
                     blurRadius: 14,
                     offset: const Offset(0, 4),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: const Color(0xFF0F172A).withValues(alpha: 0.04),
+                    color: AppColors.deepBlack.withValues(alpha: 0.04),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                     spreadRadius: -2,
@@ -971,12 +974,12 @@ class _SupportTicketsState extends State<SupportTickets>
                   decoration: BoxDecoration(
                     color: isDark
                         ? AppColors.darkBackground.withValues(alpha: 0.7)
-                        : const Color(0xFFF8FAFC),
+                        : AppColors.lightSurfaceVariant,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isDark
                           ? AppColors.darkBorder.withValues(alpha: 0.7)
-                          : const Color(0xFFE2E8F0),
+                          : AppColors.lightOutlineVariant,
                       width: 0.8,
                     ),
                   ),
@@ -991,7 +994,7 @@ class _SupportTicketsState extends State<SupportTickets>
                                 : Icons.person_outline_rounded,
                             size: 13,
                             color: isSupportReply
-                                ? const Color(0xFF8B5CF6)
+                                ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                                 : secondaryTextColor,
                           ),
                           const SizedBox(width: 4.5),
@@ -1017,7 +1020,7 @@ class _SupportTicketsState extends State<SupportTickets>
                                   ),
                             style: AppTextStyles.labelSmall.copyWith(
                               color: isSupportReply
-                                  ? const Color(0xFF8B5CF6)
+                                  ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                                   : secondaryTextColor,
                               fontWeight: FontWeight.w700,
                               fontSize: 11,

@@ -59,15 +59,15 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
 
     final cardBg = isDark
-        ? const Color(0xFF131A2B).withValues(alpha: 0.94)
+        ? AppColors.darkSurface.withValues(alpha: 0.94)
         : AppColors.white.withValues(alpha: 0.96);
     final cardBorder = isDark
-        ? Colors.white.withValues(alpha: 0.12)
+        ? AppColors.white.withValues(alpha: 0.12)
         : AppColors.lightBorder.withValues(alpha: 0.7);
 
     return Scaffold(
       backgroundColor:
-          isDark ? const Color(0xFF090D1A) : AppColors.lightBackground,
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: AmbientAuthBackground(
         child: Stack(
@@ -88,12 +88,17 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  onPressed: () => Get.back(),
-                                  icon: Icon(
-                                    Icons.arrow_back_ios_new_rounded,
-                                    size: 20.sp,
-                                    color: primaryTextColor,
+                                Semantics(
+                                  button: true,
+                                  label: 'Back',
+                                  child: IconButton(
+                                    tooltip: 'Back',
+                                    onPressed: () => Get.back(),
+                                    icon: Icon(
+                                      Icons.arrow_back_ios_new_rounded,
+                                      size: 20.sp,
+                                      color: primaryTextColor,
+                                    ),
                                   ),
                                 ),
                                 Container(
@@ -106,8 +111,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                     boxShadow: [
                                       BoxShadow(
                                         color: (isDark
-                                                ? const Color(0xFF38BDF8)
-                                                : AppColors.mainSoftBlue)
+                                                ? AppColors.darkAccent
+                                                : AppColors.brandViolet)
                                             .withValues(
                                                 alpha: isDark ? 0.16 : 0.25),
                                         blurRadius: 18,
@@ -151,16 +156,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? const Color(0xFF38BDF8)
-                                      .withValues(alpha: 0.10)
-                                  : AppColors.mainSoftBlue
-                                      .withValues(alpha: 0.18),
+                                  ? AppColors.darkAccent.withValues(alpha: 0.12)
+                                  : AppColors.brandVioletContainer,
                               borderRadius: BorderRadius.circular(20.r),
                               border: Border.all(
                                 color: isDark
-                                    ? const Color(0xFF38BDF8)
-                                        .withValues(alpha: 0.30)
-                                    : AppColors.mainSoftBlue,
+                                    ? AppColors.darkAccent.withValues(alpha: 0.35)
+                                    : AppColors.brandViolet.withValues(alpha: 0.35),
                                 width: 1,
                               ),
                             ),
@@ -171,8 +173,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                   Icons.mark_email_read_outlined,
                                   size: 16.sp,
                                   color: isDark
-                                      ? const Color(0xFF38BDF8)
-                                      : AppColors.lightPrimary,
+                                      ? AppColors.darkAccent
+                                      : AppColors.brandViolet,
                                 ),
                                 SizedBox(width: 8.w),
                                 Text(
@@ -181,8 +183,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                     fontSize: 13.sp,
                                     fontWeight: FontWeight.w700,
                                     color: isDark
-                                        ? const Color(0xFF38BDF8)
-                                        : AppColors.lightPrimary,
+                                        ? AppColors.darkAccent
+                                        : AppColors.brandViolet,
                                     letterSpacing: 0,
                                   ),
                                 ),
@@ -210,7 +212,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(
+                                    color: AppColors.black.withValues(
                                       alpha: isDark ? 0.35 : 0.08,
                                     ),
                                     blurRadius: 32,
@@ -240,8 +242,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                         fontWeight: FontWeight.w700,
                                         fontSize: 13.5.sp,
                                         color: isDark
-                                            ? const Color(0xFF38BDF8)
-                                            : AppColors.lightPrimary,
+                                            ? AppColors.darkAccent
+                                            : AppColors.brandViolet,
                                       ),
                                     ),
                                   ),
@@ -249,67 +251,73 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
                                   // PIN Code Input
                                   Obx(
-                                    () => Directionality(
-                                      textDirection: TextDirection.ltr,
-                                      child: PinCodeTextField(
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: [
-                                          const DigitNormalizationFormatter(maxLength: 6),
-                                          FilteringTextInputFormatter.digitsOnly,
-                                        ],
-                                        cursorColor: isDark
-                                            ? const Color(0xFF38BDF8)
-                                            : AppColors.lightPrimary,
-                                        textStyle: TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 18.sp,
-                                          color: primaryTextColor,
-                                          letterSpacing: 0,
+                                    () => Semantics(
+                                      label: localizations.verifyEmailEnterOtp,
+                                      textField: true,
+                                      child: Directionality(
+                                        textDirection: TextDirection.ltr,
+                                        child: PinCodeTextField(
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            const DigitNormalizationFormatter(maxLength: 6),
+                                            FilteringTextInputFormatter.digitsOnly,
+                                          ],
+                                          cursorColor: isDark
+                                              ? AppColors.darkAccent
+                                              : AppColors.brandViolet,
+                                          textStyle: TextStyle(
+                                            fontWeight: FontWeight.w900,
+                                            fontSize: 18.sp,
+                                            color: primaryTextColor,
+                                            letterSpacing: 0,
+                                          ),
+                                          controller: controller.pinCodeController,
+                                          enableActiveFill:
+                                              controller.isPinEnabled.value,
+                                          pinTheme: PinTheme(
+                                            borderWidth: 1.5.w,
+                                            activeBorderWidth: 1.5.w,
+                                            disabledBorderWidth: 1.5.w,
+                                            inactiveBorderWidth: 1.5.w,
+                                            shape: PinCodeFieldShape.box,
+                                            fieldHeight: 50.h,
+                                            fieldWidth: 44.w,
+                                            activeColor: isDark
+                                                ? AppColors.darkAccent
+                                                : AppColors.brandViolet,
+                                            activeFillColor: isDark
+                                                ? AppColors.white.withValues(alpha: 0.06)
+                                                : AppColors.lightSurfaceVariant,
+                                            inactiveColor: isDark
+                                                ? AppColors.white.withValues(alpha: 0.15)
+                                                : AppColors.lightBorder,
+                                            inactiveFillColor: isDark
+                                                ? AppColors.white.withValues(alpha: 0.03)
+                                                : AppColors.transparent,
+                                            selectedColor: isDark
+                                                ? AppColors.darkAccent
+                                                : AppColors.brandViolet,
+                                            selectedFillColor: isDark
+                                                ? AppColors.darkAccent
+                                                    .withValues(alpha: 0.12)
+                                                : AppColors.brandVioletContainer,
+                                            selectedBorderWidth: 1.5.w,
+                                            borderRadius:
+                                                BorderRadius.circular(14.r),
+                                          ),
+                                          appContext: context,
+                                          length: 6,
+                                          onCompleted: (_) async {
+                                            if (email != null &&
+                                                controller.pinCodeController.text
+                                                        .length ==
+                                                    6) {
+                                              await controller.validateVerifyEmail(
+                                                email: email!,
+                                              );
+                                            }
+                                          },
                                         ),
-                                        controller: controller.pinCodeController,
-                                        enableActiveFill:
-                                            controller.isPinEnabled.value,
-                                        pinTheme: PinTheme(
-                                          borderWidth: 1.5.w,
-                                          activeBorderWidth: 1.5.w,
-                                          disabledBorderWidth: 1.5.w,
-                                          inactiveBorderWidth: 1.5.w,
-                                          shape: PinCodeFieldShape.box,
-                                          fieldHeight: 50.h,
-                                          fieldWidth: 44.w,
-                                          activeColor: isDark
-                                              ? const Color(0xFF38BDF8)
-                                              : AppColors.lightPrimary,
-                                          activeFillColor: isDark
-                                              ? Colors.white.withValues(alpha: 0.06)
-                                              : const Color(0xFFF8FAFC),
-                                          inactiveColor: isDark
-                                              ? Colors.white.withValues(alpha: 0.15)
-                                              : AppColors.lightBorder,
-                                          inactiveFillColor: Colors.transparent,
-                                          selectedColor: isDark
-                                              ? const Color(0xFF38BDF8)
-                                              : AppColors.lightPrimary,
-                                          selectedFillColor: isDark
-                                              ? const Color(0xFF38BDF8)
-                                                  .withValues(alpha: 0.1)
-                                              : AppColors.lightSecondaryContainer,
-                                          selectedBorderWidth: 1.5.w,
-                                          borderRadius:
-                                              BorderRadius.circular(14.r),
-                                        ),
-                                        appContext: context,
-                                        length: 6,
-                                        onCompleted: (_) async {
-                                          if (email != null &&
-                                              controller.pinCodeController.text
-                                                      .length ==
-                                                  6) {
-                                            await controller.validateVerifyEmail(
-                                              email: email!,
-                                            );
-                                          }
-                                        },
                                       ),
                                     ),
                                   ),
@@ -364,18 +372,30 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                               );
                                             }
                                           },
-                                          child: Text(
-                                            localizations.verifyEmailResend,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w900,
-                                              fontSize: 14.sp,
-                                              color: controller
-                                                          .countdown.value >
-                                                      0
-                                                  ? secondaryTextColor
-                                                  : (isDark
-                                                      ? const Color(0xFF38BDF8)
-                                                      : AppColors.lightPrimary),
+                                          child: Semantics(
+                                            button: true,
+                                            enabled: controller.countdown.value == 0,
+                                            label: localizations.verifyEmailResend,
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                minHeight: 44.h,
+                                                minWidth: 44.w,
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                localizations.verifyEmailResend,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w900,
+                                                  fontSize: 14.sp,
+                                                  color: controller
+                                                              .countdown.value >
+                                                          0
+                                                      ? secondaryTextColor
+                                                      : (isDark
+                                                          ? AppColors.darkAccent
+                                                          : AppColors.brandViolet),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),

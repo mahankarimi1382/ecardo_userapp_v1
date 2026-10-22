@@ -59,29 +59,44 @@ class BalanceHeroSection extends StatelessWidget {
       }
 
       String? secondaryEquivalent;
-      double liveUsdToIrt = 95000.0;
+      double? liveUsdToIrt;
       if (Get.isRegistered<WalletLiveRateService>()) {
         final liveRates = Get.find<WalletLiveRateService>();
         final rateIrr =
             liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
         if (rateIrr != null && rateIrr > 0) {
           liveUsdToIrt = rateIrr / 10.0;
+        } else {
+          // If live rates are loading or offline, fallback to backend conversion rate
+          final convRate = selectedWallet?.conversionRate;
+          if (convRate != null && convRate.isNotEmpty) {
+            final rate = double.tryParse(convRate.replaceAll(',', ''));
+            if (rate != null && rate > 1000) {
+              liveUsdToIrt = rate / 10.0;
+            }
+          }
         }
+      } else {
+        // Test harness / offline preview fallback when service is not registered
+        liveUsdToIrt = 95000.0;
       }
-      final curUpper = currencyCode.toUpperCase();
-      if (curUpper == 'USD' || curUpper == 'USDT') {
-        final tomanEq = (currentBalance * liveUsdToIrt).toInt();
-        final formattedToman = tomanEq.toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
-        secondaryEquivalent = '≈ $formattedToman ${l10nPick(context, en: "Toman", fa: "تومان", ar: "تومان", tr: "Tümen", ru: "Туман", zh: "托曼")}';
-      } else if (curUpper == 'IRT' || curUpper == 'TOMAN') {
-        final usdEq = currentBalance / liveUsdToIrt;
-        secondaryEquivalent = '≈ \$${usdEq.toStringAsFixed(2)} USD';
-      } else if (curUpper == 'IRR') {
-        final usdEq = (currentBalance / 10.0) / liveUsdToIrt;
-        secondaryEquivalent = '≈ \$${usdEq.toStringAsFixed(2)} USD';
+
+      if (liveUsdToIrt != null && liveUsdToIrt > 0) {
+        final curUpper = currencyCode.toUpperCase();
+        if (curUpper == 'USD' || curUpper == 'USDT') {
+          final tomanEq = (currentBalance * liveUsdToIrt).toInt();
+          final formattedToman = tomanEq.toString().replaceAllMapped(
+            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+            (m) => '${m[1]},',
+          );
+          secondaryEquivalent = '≈ $formattedToman ${l10nPick(context, en: "Toman", fa: "تومان", ar: "تومان", tr: "Tümen", ru: "Туман", zh: "托曼")}';
+        } else if (curUpper == 'IRT' || curUpper == 'TOMAN') {
+          final usdEq = currentBalance / liveUsdToIrt;
+          secondaryEquivalent = '≈ \$${usdEq.toStringAsFixed(2)} USD';
+        } else if (curUpper == 'IRR') {
+          final usdEq = (currentBalance / 10.0) / liveUsdToIrt;
+          secondaryEquivalent = '≈ \$${usdEq.toStringAsFixed(2)} USD';
+        }
       }
 
       return Padding(

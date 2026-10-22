@@ -56,6 +56,7 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
             rightSideWidget: Padding(
               padding: EdgeInsetsDirectional.only(end: 16.w),
               child: IconButton(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                 onPressed: () {
                   HapticFeedback.lightImpact();
                   Get.to(() => const VisaListScreen());
@@ -317,30 +318,41 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                         ),
                       ),
                       SizedBox(height: AppSpacing.lg.h),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-                          foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                          ),
-                          padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: AppSpacing.xl.w,
-                            vertical: AppSpacing.sm.h,
-                          ),
+                      Semantics(
+                        button: true,
+                        label: l10nPick(
+                          context,
+                          en: 'Retry Connection',
+                          fa: 'تلاش مجدد',
+                          ar: 'إعادة المحاولة',
+                          zh: '重试连接',
                         ),
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          controller.loadCatalog();
-                        },
-                        icon: const Icon(Icons.refresh_rounded, size: 18),
-                        label: Text(
-                          l10nPick(
-                            context,
-                            en: 'Retry Connection',
-                            fa: 'تلاش مجدد',
-                            ar: 'إعادة المحاولة',
-                            zh: '重试连接',
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                            minimumSize: const Size(44, 44),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                            ),
+                            padding: EdgeInsetsDirectional.symmetric(
+                              horizontal: AppSpacing.xl.w,
+                              vertical: AppSpacing.sm.h,
+                            ),
+                          ),
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            controller.loadCatalog();
+                          },
+                          icon: const Icon(Icons.refresh_rounded, size: 18),
+                          label: Text(
+                            l10nPick(
+                              context,
+                              en: 'Retry Connection',
+                              fa: 'تلاش مجدد',
+                              ar: 'إعادة المحاولة',
+                              zh: '重试连接',
+                            ),
                           ),
                         ),
                       ),
@@ -434,8 +446,8 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
   }
 
   Widget _buildCatalogSkeleton(bool isDark) {
-    final baseColor = isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300;
-    final highlightColor = isDark ? AppColors.darkSurface : Colors.grey.shade100;
+    final baseColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+    final highlightColor = isDark ? AppColors.darkSurface : AppColors.lightOutlineVariant;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -465,41 +477,47 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        onTap();
-      },
-      borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 8.w),
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurface : AppColors.white,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(AppSpacing.sm.r),
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
+    final label = l10nPick(context, fa: titleFa, en: titleEn);
+    return Semantics(
+      button: true,
+      label: label,
+      child: InkWell(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onTap();
+        },
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+          padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 8.w),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSurface : AppColors.white,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(AppSpacing.sm.r),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: AppSpacing.iconSm.r),
               ),
-              child: Icon(icon, color: color, size: AppSpacing.iconSm.r),
-            ),
-            SizedBox(height: AppSpacing.sm.h),
-            Text(
-              l10nPick(context, fa: titleFa, en: titleEn),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              SizedBox(height: AppSpacing.sm.h),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -520,8 +538,13 @@ class VisaCatalogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VisaCard(
-      onTap: onTap,
+    final semanticsLabel =
+        '${item.countryName}, ${item.title}, ${formatVisaPrice(item.totalFee, item.currency, context: context)}';
+    return Semantics(
+      button: true,
+      label: semanticsLabel,
+      child: VisaCard(
+        onTap: onTap,
       padding: EdgeInsets.all(AppSpacing.lg.r),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -607,6 +630,6 @@ class VisaCatalogCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ),);
   }
 }

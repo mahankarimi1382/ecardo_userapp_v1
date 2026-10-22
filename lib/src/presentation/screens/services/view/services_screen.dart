@@ -121,129 +121,139 @@ class _QuickAccessTileState extends State<_QuickAccessTile> {
       accentColor,
       accentColor.withValues(alpha: 0.8),
     ];
+    final semanticLabel = disabled
+        ? '${tile.title}, ${widget.resolved.state == TileState.kycLocked ? "KYC verification required" : "unavailable"}'
+        : tile.title;
 
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: () {
-        HapticFeedback.lightImpact();
-        onTileTap(context, widget.resolved);
-      },
-      child: AnimatedScale(
-        scale: _isPressed ? 0.94 : 1.0,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOutCubic,
-        child: Opacity(
-          opacity: disabled ? 0.55 : 1.0,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-            decoration: BoxDecoration(
-              color: widget.isDark
-                  ? const Color(0xFF261D45).withValues(alpha: 0.75)
-                  : Colors.white.withValues(alpha: 0.88),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
+    return Semantics(
+      label: semanticLabel,
+      button: true,
+      enabled: !disabled,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onTileTap(context, widget.resolved);
+        },
+        child: AnimatedScale(
+          scale: _isPressed ? 0.94 : 1.0,
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOutCubic,
+          child: Opacity(
+            opacity: disabled ? 0.55 : 1.0,
+            child: Container(
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              decoration: BoxDecoration(
                 color: widget.isDark
-                    ? Colors.white.withValues(alpha: 0.12)
-                    : accentColor.withValues(alpha: 0.16),
-                width: 1.1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: (widget.isDark ? Colors.black : accentColor)
-                      .withValues(alpha: widget.isDark ? 0.25 : 0.06),
-                  blurRadius: 10,
-                  offset: const Offset(0, 3),
+                    ? AppColors.darkPrimaryContainer.withValues(alpha: 0.75)
+                    : AppColors.white.withValues(alpha: 0.88),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: widget.isDark
+                      ? AppColors.white.withValues(alpha: 0.12)
+                      : accentColor.withValues(alpha: 0.16),
+                  width: 1.1,
                 ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 38,
-                      height: 38,
-                      padding: tile.icon != null
-                          ? const EdgeInsets.all(7.5)
-                          : EdgeInsets.zero,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: gradientColors,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: gradientColors.first.withValues(alpha: 0.35),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: tile.iconData != null
-                          ? Icon(
-                              tile.iconData,
-                              color: Colors.white,
-                              size: 19,
-                            )
-                          : Image.asset(
-                              tile.icon!,
-                              width: 20,
-                              height: 20,
-                              color: Colors.white,
-                            ),
-                    ),
-                    if (widget.resolved.state == TileState.kycLocked ||
-                        widget.resolved.state == TileState.notBuilt)
-                      PositionedDirectional(
-                        top: -3,
-                        end: -3,
-                        child: Container(
-                          padding: const EdgeInsets.all(2.5),
-                          decoration: BoxDecoration(
-                            color: widget.isDark
-                                ? AppColors.darkGray
-                                : AppColors.white,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: widget.isDark
-                                  ? AppColors.warmWhite.withValues(alpha: 0.15)
-                                  : AppColors.black.withValues(alpha: 0.08),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.lock_rounded,
-                            size: 9,
-                            color: widget.isDark
-                                ? AppColors.darkTextSecondary
-                                : AppColors.lightTextTertiary,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  tile.title,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w800,
-                    color: widget.isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
+                boxShadow: [
+                  BoxShadow(
+                    color: (widget.isDark ? AppColors.black : accentColor)
+                        .withValues(alpha: widget.isDark ? 0.25 : 0.06),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
                   ),
-                ),
-              ],
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 38,
+                        height: 38,
+                        padding: tile.icon != null
+                            ? const EdgeInsets.all(7.5)
+                            : EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: gradientColors,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: gradientColors.first.withValues(alpha: 0.35),
+                              blurRadius: 8,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: tile.iconData != null
+                            ? Icon(
+                                tile.iconData,
+                                color: AppColors.white,
+                                size: 19,
+                              )
+                            : Image.asset(
+                                tile.icon!,
+                                width: 20,
+                                height: 20,
+                                color: AppColors.white,
+                              ),
+                      ),
+                      if (widget.resolved.state == TileState.kycLocked ||
+                          widget.resolved.state == TileState.notBuilt)
+                        PositionedDirectional(
+                          top: -3,
+                          end: -3,
+                          child: Container(
+                            padding: const EdgeInsets.all(2.5),
+                            decoration: BoxDecoration(
+                              color: widget.isDark
+                                  ? AppColors.darkGray
+                                  : AppColors.white,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: widget.isDark
+                                    ? AppColors.warmWhite.withValues(alpha: 0.15)
+                                    : AppColors.black.withValues(alpha: 0.08),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.lock_rounded,
+                              size: 9,
+                              color: widget.isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextTertiary,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    tile.title,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: widget.isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -280,180 +290,198 @@ class _InteractiveServiceCardState extends State<_InteractiveServiceCard> {
     final badgeText = widget.item.badgeText?.call(context);
     final badgeColor = widget.item.badgeColor ?? accentColor;
 
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
-      onTap: () {
-        HapticFeedback.lightImpact();
-        onTileTap(context, widget.resolved);
-      },
-      child: AnimatedScale(
-        scale: _isPressed ? 0.94 : 1.0,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOutCubic,
-        child: Opacity(
-          opacity: disabled ? 0.55 : 1.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.center,
-                children: [
-                  // Icon container with vibrant gradient/solid background and rounded corners (14-16r)
-                  Container(
-                    width: 46,
-                    height: 46,
-                    padding: tile.icon != null
-                        ? const EdgeInsets.all(9)
-                        : EdgeInsets.zero,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: widget.item.gradientColors != null
-                            ? [
-                                widget.item.gradientColors![0].withValues(
-                                  alpha: widget.isDark ? 0.30 : 0.16,
+    final semanticLabel = StringBuffer(tile.title)
+      ..write(badgeText != null ? ', $badgeText' : '')
+      ..write(disabled
+          ? ', ${widget.resolved.state == TileState.kycLocked ? "KYC verification required" : "unavailable"}'
+          : '');
+
+    return Semantics(
+      label: semanticLabel.toString(),
+      button: true,
+      enabled: !disabled,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) => setState(() => _isPressed = true),
+        onTapUp: (_) => setState(() => _isPressed = false),
+        onTapCancel: () => setState(() => _isPressed = false),
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onTileTap(context, widget.resolved);
+        },
+        child: AnimatedScale(
+          scale: _isPressed ? 0.94 : 1.0,
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOutCubic,
+          child: Opacity(
+            opacity: disabled ? 0.55 : 1.0,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      alignment: Alignment.center,
+                      children: [
+                        // Icon container with vibrant gradient/solid background and rounded corners (14-16r)
+                        Container(
+                          width: 46,
+                          height: 46,
+                          padding: tile.icon != null
+                              ? const EdgeInsets.all(9)
+                              : EdgeInsets.zero,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: widget.item.gradientColors != null
+                                  ? [
+                                      widget.item.gradientColors![0].withValues(
+                                        alpha: widget.isDark ? 0.30 : 0.16,
+                                      ),
+                                      widget.item.gradientColors![1].withValues(
+                                        alpha: widget.isDark ? 0.15 : 0.08,
+                                      ),
+                                    ]
+                                  : [
+                                      accentColor.withValues(
+                                        alpha: widget.isDark ? 0.28 : 0.14,
+                                      ),
+                                      accentColor.withValues(
+                                        alpha: widget.isDark ? 0.12 : 0.06,
+                                      ),
+                                    ],
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: accentColor.withValues(
+                                alpha: widget.isDark ? 0.35 : 0.20,
+                              ),
+                              width: 1.2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: accentColor.withValues(
+                                  alpha: widget.isDark ? 0.18 : 0.08,
                                 ),
-                                widget.item.gradientColors![1].withValues(
-                                  alpha: widget.isDark ? 0.15 : 0.08,
-                                ),
-                              ]
-                            : [
-                                accentColor.withValues(
-                                  alpha: widget.isDark ? 0.28 : 0.14,
-                                ),
-                                accentColor.withValues(
-                                  alpha: widget.isDark ? 0.12 : 0.06,
-                                ),
-                              ],
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: accentColor.withValues(
-                          alpha: widget.isDark ? 0.35 : 0.20,
-                        ),
-                        width: 1.2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: accentColor.withValues(
-                            alpha: widget.isDark ? 0.18 : 0.08,
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                           ),
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
+                          child: tile.iconData != null
+                              ? Icon(
+                                  tile.iconData,
+                                  color: widget.isDark
+                                      ? AppColors.darkPrimary
+                                      : accentColor,
+                                  size: 23,
+                                )
+                              : Image.asset(
+                                  tile.icon!,
+                                  width: 24,
+                                  height: 24,
+                                  color: disabled
+                                      ? (widget.isDark
+                                          ? AppColors.white.withValues(alpha: 0.30)
+                                          : AppColors.black.withValues(alpha: 0.30))
+                                      : (widget.isDark ? AppColors.white : null),
+                                ),
                         ),
+
+                        // Subtle status badge if applicable (e.g. "Instant / آنی", "New / جدید")
+                        if (badgeText != null &&
+                            widget.resolved.state == TileState.available)
+                          PositionedDirectional(
+                            top: -4,
+                            end: -6,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4.5,
+                                vertical: 1.5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: badgeColor,
+                                borderRadius: BorderRadius.circular(6),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: badgeColor.withValues(alpha: 0.45),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                badgeText,
+                                style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.2,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                        // Lock badge for KYC-gated or unbuilt modules
+                        if (widget.resolved.state == TileState.kycLocked ||
+                            widget.resolved.state == TileState.notBuilt)
+                          PositionedDirectional(
+                            top: -4,
+                            end: -4,
+                            child: Container(
+                              padding: const EdgeInsets.all(2.5),
+                              decoration: BoxDecoration(
+                                color: widget.isDark
+                                    ? AppColors.darkGray
+                                    : AppColors.white,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: widget.isDark
+                                      ? AppColors.warmWhite.withValues(alpha: 0.15)
+                                      : AppColors.black.withValues(alpha: 0.08),
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.lock_rounded,
+                                size: 9,
+                                color: widget.isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextTertiary,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
-                    child: tile.iconData != null
-                        ? Icon(
-                            tile.iconData,
-                            color: widget.isDark
-                                ? AppColors.darkPrimary
-                                : accentColor,
-                            size: 23,
-                          )
-                        : Image.asset(
-                            tile.icon!,
-                            width: 24,
-                            height: 24,
-                            color: disabled
-                                ? (widget.isDark
-                                    ? AppColors.white.withValues(alpha: 0.30)
-                                    : AppColors.black.withValues(alpha: 0.30))
-                                : (widget.isDark ? AppColors.white : null),
+                    const SizedBox(height: 6),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Text(
+                        tile.title,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 11,
+                          height: 1.25,
+                          color: (widget.isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary)
+                              .withValues(
+                            alpha: disabled ? 0.40 : (widget.isDark ? 0.92 : 0.88),
                           ),
-                  ),
-
-                  // Subtle status badge if applicable (e.g. "Instant / آنی", "New / جدید")
-                  if (badgeText != null &&
-                      widget.resolved.state == TileState.available)
-                    PositionedDirectional(
-                      top: -4,
-                      end: -6,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4.5,
-                          vertical: 1.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: badgeColor,
-                          borderRadius: BorderRadius.circular(6),
-                          boxShadow: [
-                            BoxShadow(
-                              color: badgeColor.withValues(alpha: 0.45),
-                              blurRadius: 4,
-                              offset: const Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          badgeText,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 8,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -0.2,
-                          ),
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
-
-                  // Lock badge for KYC-gated or unbuilt modules
-                  if (widget.resolved.state == TileState.kycLocked ||
-                      widget.resolved.state == TileState.notBuilt)
-                    PositionedDirectional(
-                      top: -4,
-                      end: -4,
-                      child: Container(
-                        padding: const EdgeInsets.all(2.5),
-                        decoration: BoxDecoration(
-                          color: widget.isDark
-                              ? AppColors.darkGray
-                              : AppColors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: widget.isDark
-                                ? AppColors.warmWhite.withValues(alpha: 0.15)
-                                : AppColors.black.withValues(alpha: 0.08),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.lock_rounded,
-                          size: 9,
-                          color: widget.isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextTertiary,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Text(
-                  tile.title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 11,
-                    height: 1.25,
-                    color: (widget.isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightTextPrimary)
-                        .withValues(
-                      alpha: disabled ? 0.40 : (widget.isDark ? 0.92 : 0.88),
-                    ),
-                    fontWeight: FontWeight.w700,
-                  ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -569,8 +597,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         isQuickAccess: true,
-        accentColor: const Color(0xFF7445FF),
-        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+        accentColor: AppColors.brandViolet,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         badgeText: (c) => l10nPick(
           c,
           en: 'Instant',
@@ -580,7 +608,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'Мгновенно',
           tr: 'Anında',
         ),
-        badgeColor: const Color(0xFF10B981),
+        badgeColor: AppColors.success,
         searchKeywords: const [
           'رمز',
           'پویا',
@@ -600,8 +628,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         isQuickAccess: true,
-        accentColor: const Color(0xFF10B981),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         badgeText: (c) => l10nPick(
           c,
           en: 'Fast',
@@ -611,7 +639,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'Быстро',
           tr: 'Hızlı',
         ),
-        badgeColor: const Color(0xFF059669),
+        badgeColor: AppColors.success,
         searchKeywords: const [
           'انتقال',
           'کارت به کارت',
@@ -632,8 +660,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         isQuickAccess: true,
-        accentColor: const Color(0xFF00BFA6),
-        gradientColors: const [Color(0xFF2DD4BF), Color(0xFF0D9488)],
+        accentColor: AppColors.mutedBlue,
+        gradientColors: const [AppColors.mutedBlue, AppColors.darkSecondaryContainer],
         searchKeywords: const [
           'واریز',
           'شارژ کیف پول',
@@ -652,8 +680,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFFEF4444),
-        gradientColors: const [Color(0xFFF87171), Color(0xFFDC2626)],
+        accentColor: AppColors.error,
+        gradientColors: const [AppColors.error, AppColors.brandVioletDeep],
         searchKeywords: const [
           'برداشت',
           'تسویه',
@@ -672,8 +700,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         isQuickAccess: true,
-        accentColor: const Color(0xFF0284C7),
-        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0369A1)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         badgeText: (c) => l10nPick(
           c,
           en: 'Live',
@@ -683,7 +711,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'Курс',
           tr: 'Canlı',
         ),
-        badgeColor: const Color(0xFF0284C7),
+        badgeColor: AppColors.info,
         searchKeywords: const [
           'صرافی',
           'تبدیل ارز',
@@ -703,8 +731,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFF6366F1),
-        gradientColors: const [Color(0xFF818CF8), Color(0xFF4F46E5)],
+        accentColor: AppColors.brandViolet,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         searchKeywords: const [
           'کیف پول',
           'موجودی',
@@ -721,8 +749,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFF8B5CF6),
-        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
+        accentColor: AppColors.mainSoftBlue,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         searchKeywords: const [
           'تراکنش',
           'تاریخچه',
@@ -740,8 +768,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFF3B82F6),
-        gradientColors: const [Color(0xFF60A5FA), Color(0xFF2563EB)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandViolet],
         searchKeywords: const [
           'کیو آر',
           'بارکد',
@@ -760,8 +788,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFFEC4899),
-        gradientColors: const [Color(0xFFF472B6), Color(0xFFDB2777)],
+        accentColor: AppColors.brandViolet,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         badgeText: (c) => l10nPick(
           c,
           en: 'Instant',
@@ -771,7 +799,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'Мгновенно',
           tr: 'Anında',
         ),
-        badgeColor: const Color(0xFFEC4899),
+        badgeColor: AppColors.brandViolet,
         searchKeywords: const [
           'کارت',
           'کارت مجازی',
@@ -792,8 +820,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFFF59E0B),
-        gradientColors: const [Color(0xFFFBBF24), Color(0xFFD97706)],
+        accentColor: AppColors.warning,
+        gradientColors: const [AppColors.warning, AppColors.warmBrown],
         searchKeywords: const [
           'قبض',
           'پرداخت قبض',
@@ -814,8 +842,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFF14B8A6),
-        gradientColors: const [Color(0xFF2DD4BF), Color(0xFF0F766E)],
+        accentColor: AppColors.mutedBlue,
+        gradientColors: const [AppColors.mutedBlue, AppColors.success],
         searchKeywords: const [
           'درخواست پول',
           'مطالبه',
@@ -832,8 +860,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFF0EA5E9),
-        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0284C7)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         searchKeywords: const [
           'لینک پرداخت',
           'درگاه',
@@ -851,8 +879,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFF4F46E5),
-        gradientColors: const [Color(0xFF6366F1), Color(0xFF4338CA)],
+        accentColor: AppColors.brandVioletDeep,
+        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
         searchKeywords: const [
           'پرداخت',
           'خرید',
@@ -870,8 +898,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFFE11D48),
-        gradientColors: const [Color(0xFFFB7185), Color(0xFFBE123C)],
+        accentColor: AppColors.error,
+        gradientColors: const [AppColors.error, AppColors.brandVioletDeep],
         searchKeywords: const [
           'نقد کردن',
           'دریافت وجه',
@@ -888,8 +916,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFFD946EF),
-        gradientColors: const [Color(0xFFE879F9), Color(0xFFC026D3)],
+        accentColor: AppColors.brandViolet,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         searchKeywords: const [
           'هدیه',
           'کد هدیه',
@@ -908,8 +936,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFFA855F7),
-        gradientColors: const [Color(0xFFC084FC), Color(0xFF9333EA)],
+        accentColor: AppColors.mainSoftBlue,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         searchKeywords: const [
           'کارت هدیه',
           'گیفت کارت',
@@ -927,8 +955,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.financial,
-        accentColor: const Color(0xFF059669),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF047857)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         badgeText: (c) => l10nPick(
           c,
           en: 'Bonus',
@@ -938,7 +966,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'Бонус',
           tr: 'Ödül',
         ),
-        badgeColor: const Color(0xFF10B981),
+        badgeColor: AppColors.success,
         searchKeywords: const [
           'دعوت',
           'معرف',
@@ -961,8 +989,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         isQuickAccess: true,
-        accentColor: const Color(0xFF0284C7),
-        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0284C7)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         searchKeywords: const [
           'پرواز',
           'هواپیما',
@@ -983,8 +1011,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFFF97316),
-        gradientColors: const [Color(0xFFFB923C), Color(0xFFEA580C)],
+        accentColor: AppColors.warning,
+        gradientColors: const [AppColors.warning, AppColors.warmBrown],
         searchKeywords: const [
           'هتل',
           'اقامتگاه',
@@ -1006,8 +1034,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         isQuickAccess: true,
-        accentColor: const Color(0xFF10B981),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         badgeText: (c) => l10nPick(
           c,
           en: 'Global',
@@ -1017,7 +1045,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'Глобал',
           tr: 'Küresel',
         ),
-        badgeColor: const Color(0xFF06B6D4),
+        badgeColor: AppColors.info,
         searchKeywords: const [
           'ای سیم',
           'سیم کارت الکترونیکی',
@@ -1036,8 +1064,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFFEAB308),
-        gradientColors: const [Color(0xFFFACC15), Color(0xFFCA8A04)],
+        accentColor: AppColors.warning,
+        gradientColors: const [AppColors.warning, AppColors.warmBrown],
         searchKeywords: const [
           'تاکسی',
           'اسنپ',
@@ -1058,8 +1086,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF8B5CF6),
-        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
+        accentColor: AppColors.mainSoftBlue,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         searchKeywords: const [
           'قطار',
           'بلیط قطار',
@@ -1079,8 +1107,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF3B82F6),
-        gradientColors: const [Color(0xFF60A5FA), Color(0xFF1D4ED8)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         searchKeywords: const [
           'اجاره خودرو',
           'کرایه ماشین',
@@ -1098,8 +1126,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF14B8A6),
-        gradientColors: const [Color(0xFF2DD4BF), Color(0xFF0F766E)],
+        accentColor: AppColors.mutedBlue,
+        gradientColors: const [AppColors.mutedBlue, AppColors.success],
         searchKeywords: const [
           'ویزا',
           'روادید',
@@ -1119,8 +1147,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF06B6D4),
-        gradientColors: const [Color(0xFF22D3EE), Color(0xFF0891B2)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.mutedBlue],
         searchKeywords: const [
           'تور',
           'تور گردشگری',
@@ -1140,8 +1168,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF0EA5E9),
-        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0284C7)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         searchKeywords: const [
           'کشتی',
           'قایق',
@@ -1163,8 +1191,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF7445FF),
-        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+        accentColor: AppColors.brandViolet,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         badgeText: (c) => l10nPick(
           c,
           en: 'VIP',
@@ -1174,7 +1202,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'VIP',
           tr: 'VIP',
         ),
-        badgeColor: const Color(0xFF7445FF),
+        badgeColor: AppColors.brandViolet,
         searchKeywords: const [
           'سی آی پی',
           'تشریفات فرودگاه',
@@ -1200,8 +1228,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFFEC4899),
-        gradientColors: const [Color(0xFFF472B6), Color(0xFFDB2777)],
+        accentColor: AppColors.brandViolet,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         searchKeywords: const [
           'مکان دیدنی',
           'گردشگری محلی',
@@ -1221,8 +1249,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFFF43F5E),
-        gradientColors: const [Color(0xFFFB7185), Color(0xFFE11D48)],
+        accentColor: AppColors.error,
+        gradientColors: const [AppColors.error, AppColors.warning],
         searchKeywords: const [
           'غذا',
           'دلیوری',
@@ -1243,8 +1271,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF10B981),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         searchKeywords: const [
           'سوپرمارکت',
           'خرید آنلاین',
@@ -1264,8 +1292,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFFF97316),
-        gradientColors: const [Color(0xFFFB923C), Color(0xFFEA580C)],
+        accentColor: AppColors.warning,
+        gradientColors: const [AppColors.warning, AppColors.warmBrown],
         searchKeywords: const [
           'رستوران',
           'کافه',
@@ -1285,8 +1313,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF6366F1),
-        gradientColors: const [Color(0xFF818CF8), Color(0xFF4F46E5)],
+        accentColor: AppColors.brandVioletDeep,
+        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
         searchKeywords: const [
           'فروشگاه',
           'خرید کالا',
@@ -1306,8 +1334,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF8B5CF6),
-        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
+        accentColor: AppColors.mainSoftBlue,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         searchKeywords: const [
           'مترجم',
           'ترجمه',
@@ -1328,8 +1356,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFFEF4444),
-        gradientColors: const [Color(0xFFF87171), Color(0xFFDC2626)],
+        accentColor: AppColors.error,
+        gradientColors: const [AppColors.error, AppColors.brandVioletDeep],
         searchKeywords: const [
           'اورژانس',
           'امداد',
@@ -1349,8 +1377,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF1677FF),
-        gradientColors: const [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         badgeText: (c) => l10nPick(
           c,
           en: 'CNY',
@@ -1360,7 +1388,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'CNY',
           tr: 'CNY',
         ),
-        badgeColor: const Color(0xFF1677FF),
+        badgeColor: AppColors.info,
         searchKeywords: const [
           'علی پی',
           'چین',
@@ -1376,16 +1404,16 @@ class _ServicesScreenState extends State<ServicesScreen>
           beforeNavigate: _ensureTravelController,
           pageBuilder: () => WalletServiceScreen(
             serviceKey: 'aliPay',
-            brandStart: const Color(0xFF1677FF),
-            brandEnd: const Color(0xFF0E42A8),
+            brandStart: AppColors.info,
+            brandEnd: AppColors.brandVioletDeep,
             description: (localization) => localization.travelAliPayDescription,
           ),
         ),
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF2BB673),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF15803D)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.darkSecondaryContainer],
         badgeText: (c) => l10nPick(
           c,
           en: 'RUB',
@@ -1395,7 +1423,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'RUB',
           tr: 'RUB',
         ),
-        badgeColor: const Color(0xFF2BB673),
+        badgeColor: AppColors.success,
         searchKeywords: const [
           'میر پی',
           'روسیه',
@@ -1412,16 +1440,16 @@ class _ServicesScreenState extends State<ServicesScreen>
           beforeNavigate: _ensureTravelController,
           pageBuilder: () => WalletServiceScreen(
             serviceKey: 'mirPay',
-            brandStart: const Color(0xFF2BB673),
-            brandEnd: const Color(0xFF157A4A),
+            brandStart: AppColors.success,
+            brandEnd: AppColors.darkSecondaryContainer,
             description: (localization) => localization.travelMirPayDescription,
           ),
         ),
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF059669),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF047857)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         searchKeywords: const [
           'شارژ',
           'شارژ سیم کارت',
@@ -1445,8 +1473,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.travel,
-        accentColor: const Color(0xFF0284C7),
-        gradientColors: const [Color(0xFF38BDF8), Color(0xFF0369A1)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         searchKeywords: const [
           'بیمه',
           'بیمه مسافرتی',
@@ -1471,8 +1499,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       // ══════════════════════════════════════════════════════════
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFF4F46E5),
-        gradientColors: const [Color(0xFF6366F1), Color(0xFF4338CA)],
+        accentColor: AppColors.brandVioletDeep,
+        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
         searchKeywords: const [
           'حواله',
           'حواله ارزی',
@@ -1491,8 +1519,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFF10B981),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF059669)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         searchKeywords: const [
           'انتقال تجاری',
           'حواله بیزنس',
@@ -1507,8 +1535,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFF8B5CF6),
-        gradientColors: const [Color(0xFFA78BFA), Color(0xFF7C3AED)],
+        accentColor: AppColors.mainSoftBlue,
+        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
         badgeText: (c) => l10nPick(
           c,
           en: 'P2P',
@@ -1518,7 +1546,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'P2P',
           tr: 'P2P',
         ),
-        badgeColor: const Color(0xFF8B5CF6),
+        badgeColor: AppColors.brandViolet,
         searchKeywords: const [
           'پی تو پی',
           'ترید',
@@ -1536,18 +1564,18 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFFD97706),
-        gradientColors: const [Color(0xFFF59E0B), Color(0xFFB45309)],
+        accentColor: AppColors.warning,
+        gradientColors: const [AppColors.warning, AppColors.warmBrown],
         badgeText: (c) => l10nPick(
           c,
           en: 'Escrow',
           fa: 'ضمانت',
           ar: 'أمانة',
           zh: '担保',
-          ru: 'Эскроу',
+          ru: 'Эскроو',
           tr: 'Emanet',
         ),
-        badgeColor: const Color(0xFFD97706),
+        badgeColor: AppColors.warning,
         searchKeywords: const [
           'اسکرو',
           'معامله امن',
@@ -1565,8 +1593,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFF059669),
-        gradientColors: const [Color(0xFF34D399), Color(0xFF047857)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         searchKeywords: const [
           'ضمانت',
           'گارانتی',
@@ -1583,8 +1611,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFF2563EB),
-        gradientColors: const [Color(0xFF3B82F6), Color(0xFF1E40AF)],
+        accentColor: AppColors.info,
+        gradientColors: const [AppColors.info, AppColors.brandVioletDeep],
         searchKeywords: const [
           'وام',
           'تسهیلات',
@@ -1604,8 +1632,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFF16A34A),
-        gradientColors: const [Color(0xFF22C55E), Color(0xFF15803D)],
+        accentColor: AppColors.success,
+        gradientColors: const [AppColors.success, AppColors.mutedBlue],
         searchKeywords: const [
           'بورس',
           'سهام',
@@ -1624,8 +1652,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFF7C3AED),
-        gradientColors: const [Color(0xFF8B5CF6), Color(0xFF6D28D9)],
+        accentColor: AppColors.brandVioletDeep,
+        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
         searchKeywords: const [
           'سرمایه گذاری',
           'پروژه تجاری',
@@ -1651,8 +1679,8 @@ class _ServicesScreenState extends State<ServicesScreen>
       ),
       _HubItem(
         category: ServiceCategory.business,
-        accentColor: const Color(0xFFEA580C),
-        gradientColors: const [Color(0xFFF97316), Color(0xFFC2410C)],
+        accentColor: AppColors.warning,
+        gradientColors: const [AppColors.warning, AppColors.warmBrown],
         searchKeywords: const [
           'لایسنس',
           'مجوز نرم افزار',
@@ -1701,7 +1729,7 @@ class _ServicesScreenState extends State<ServicesScreen>
                   : AppColors.lightSurfaceVariant,
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withValues(alpha: 0.08)
+                    ? AppColors.white.withValues(alpha: 0.08)
                     : AppColors.lightOutlineVariant.withValues(alpha: 0.6),
                 width: 1,
               ),
@@ -1906,7 +1934,7 @@ class _ServicesScreenState extends State<ServicesScreen>
                     tr: 'Uçuşlar, Oteller, eSIM, Taksi ve CIP',
                   ),
                   icon: Icons.flight_takeoff_rounded,
-                  iconColor: const Color(0xFF0284C7),
+                  iconColor: AppColors.info,
                   items: allHubItems
                       .where((i) => i.category == ServiceCategory.travel)
                       .toList(),
@@ -1937,7 +1965,7 @@ class _ServicesScreenState extends State<ServicesScreen>
                     tr: 'P2P İşlemler, Emanet, Kredi ve Lisanslar',
                   ),
                   icon: Icons.store_rounded,
-                  iconColor: const Color(0xFF4F46E5),
+                  iconColor: AppColors.brandVioletDeep,
                   items: allHubItems
                       .where((i) => i.category == ServiceCategory.business)
                       .toList(),
@@ -1982,13 +2010,13 @@ class _ServicesScreenState extends State<ServicesScreen>
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
+              ? AppColors.white.withValues(alpha: 0.08)
               : AppColors.lightOutlineVariant.withValues(alpha: 0.9),
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+            color: AppColors.black.withValues(alpha: isDark ? 0.25 : 0.035),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -2148,114 +2176,117 @@ class _ServicesScreenState extends State<ServicesScreen>
           final isSelected = _selectedCategory == chip.category;
 
           return GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () {
               HapticFeedback.lightImpact();
               setState(() => _selectedCategory = chip.category);
             },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 220),
-              curve: Curves.easeOutCubic,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                gradient: isSelected
-                    ? LinearGradient(
-                        colors: isDark
-                            ? [
-                                const Color(0xFF382A6E),
-                                const Color(0xFF271C54),
-                              ]
-                            : [
-                                AppColors.brandViolet,
-                                const Color(0xFF5E2BFF),
-                              ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
-                    : null,
-                color: isSelected
-                    ? null
-                    : (isDark ? AppColors.darkSurface : AppColors.white),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(
+            child: Semantics(
+              button: true,
+              selected: isSelected,
+              label: chip.label,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(
+                  gradient: isSelected
+                      ? LinearGradient(
+                          colors: isDark
+                              ? const [
+                                  AppColors.darkPrimaryContainer,
+                                  AppColors.darkSurfaceVariant,
+                                ]
+                              : const [
+                                  AppColors.brandViolet,
+                                  AppColors.brandVioletDeep,
+                                ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
                   color: isSelected
-                      ? (isDark
-                          ? const Color(0xFF9065FF)
-                          : AppColors.brandViolet)
-                      : (isDark
-                          ? AppColors.darkBorder
-                          : AppColors.lightOutlineVariant),
-                  width: 1.2,
-                ),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: (isDark
-                                  ? const Color(0xFF7445FF)
-                                  : AppColors.brandViolet)
-                              .withValues(alpha: isDark ? 0.35 : 0.30),
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ]
-                    : [
-                        BoxShadow(
-                          color: Colors.black.withValues(
-                            alpha: isDark ? 0.15 : 0.02,
-                          ),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    chip.icon,
-                    size: 16,
+                      ? null
+                      : (isDark ? AppColors.darkSurface : AppColors.white),
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
                     color: isSelected
-                        ? (isDark ? const Color(0xFFD8C7FF) : Colors.white)
+                        ? (isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet)
                         : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary),
+                            ? AppColors.darkBorder
+                            : AppColors.lightOutlineVariant),
+                    width: 1.2,
                   ),
-                  const SizedBox(width: 6),
-                  Text(
-                    chip.label,
-                    style: TextStyle(
-                      fontSize: 12.5,
-                      fontWeight:
-                          isSelected ? FontWeight.w800 : FontWeight.w600,
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: AppColors.brandViolet
+                                .withValues(alpha: isDark ? 0.35 : 0.30),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: AppColors.black.withValues(
+                              alpha: isDark ? 0.15 : 0.02,
+                            ),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      chip.icon,
+                      size: 16,
                       color: isSelected
-                          ? (isDark ? const Color(0xFFF1EBFF) : Colors.white)
+                          ? (isDark ? AppColors.brandVioletContainer : AppColors.white)
                           : (isDark
-                              ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary),
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary),
                     ),
-                  ),
-                  if (chip.count > 0) ...[
                     const SizedBox(width: 6),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 1.5,
-                      ),
-                      decoration: BoxDecoration(
+                    Text(
+                      chip.label,
+                      style: TextStyle(
+                        fontSize: 12.5,
+                        fontWeight:
+                            isSelected ? FontWeight.w800 : FontWeight.w600,
                         color: isSelected
-                            ? Colors.white
-                                .withValues(alpha: isDark ? 0.20 : 0.25)
+                            ? (isDark ? AppColors.warmWhite : AppColors.white)
                             : (isDark
-                                ? AppColors.darkSurfaceVariant
-                                : AppColors.brandVioletContainer),
-                        borderRadius: BorderRadius.circular(10),
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                       ),
+                    ),
+                    if (chip.count > 0) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 1.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.white
+                                  .withValues(alpha: isDark ? 0.20 : 0.25)
+                              : (isDark
+                                  ? AppColors.darkSurfaceVariant
+                                  : AppColors.brandVioletContainer),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       child: Text(
                         '${chip.count}',
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
                           color: isSelected
-                              ? Colors.white
+                              ? AppColors.white
                               : (isDark
                                   ? AppColors.darkAccent
                                   : AppColors.brandViolet),
@@ -2266,7 +2297,8 @@ class _ServicesScreenState extends State<ServicesScreen>
                 ],
               ),
             ),
-          );
+          ),
+        );
         },
       ),
     );
@@ -2289,26 +2321,22 @@ class _ServicesScreenState extends State<ServicesScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: isDark
-              ? [
-                  const Color(0xFF221743),
-                  const Color(0xFF191333),
-                  const Color(0xFF130F26),
-                ]
-              : [
-                  const Color(0xFFF9F7FF),
-                  const Color(0xFFF1ECFF),
-                  const Color(0xFFE8E2FF),
+              ? AppColors.heroNightGradient
+              : const [
+                  AppColors.lightSurface,
+                  AppColors.brandVioletContainer,
+                  AppColors.lightSurfaceVariant,
                 ],
         ),
         border: Border.all(
           color: isDark
-              ? const Color(0xFF9065FF).withValues(alpha: 0.28)
+              ? AppColors.mainSoftBlue.withValues(alpha: 0.28)
               : AppColors.brandViolet.withValues(alpha: 0.18),
           width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? const Color(0xFF7445FF) : AppColors.brandViolet)
+            color: AppColors.brandViolet
                 .withValues(alpha: isDark ? 0.22 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, 6),
@@ -2330,9 +2358,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF7445FF)
+                      AppColors.brandViolet
                           .withValues(alpha: isDark ? 0.35 : 0.16),
-                      Colors.transparent,
+                      AppColors.transparent,
                     ],
                   ),
                 ),
@@ -2348,9 +2376,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF00BFA6)
+                      AppColors.mutedBlue
                           .withValues(alpha: isDark ? 0.25 : 0.12),
-                      Colors.transparent,
+                      AppColors.transparent,
                     ],
                   ),
                 ),
@@ -2371,8 +2399,8 @@ class _ServicesScreenState extends State<ServicesScreen>
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [
-                              Color(0xFF7445FF),
-                              Color(0xFF9065FF),
+                              AppColors.brandViolet,
+                              AppColors.mainSoftBlue,
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -2380,7 +2408,7 @@ class _ServicesScreenState extends State<ServicesScreen>
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF7445FF)
+                              color: AppColors.brandViolet
                                   .withValues(alpha: 0.35),
                               blurRadius: 8,
                               offset: const Offset(0, 3),
@@ -2390,7 +2418,7 @@ class _ServicesScreenState extends State<ServicesScreen>
                         child: const Icon(
                           Icons.bolt_rounded,
                           size: 18,
-                          color: Colors.white,
+                          color: AppColors.white,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -2444,14 +2472,12 @@ class _ServicesScreenState extends State<ServicesScreen>
                           vertical: 3.5,
                         ),
                         decoration: BoxDecoration(
-                          color: (isDark
-                                  ? const Color(0xFF7445FF)
-                                  : AppColors.brandViolet)
+                          color: AppColors.brandViolet
                               .withValues(alpha: isDark ? 0.22 : 0.12),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: (isDark
-                                    ? const Color(0xFF9065FF)
+                                    ? AppColors.mainSoftBlue
                                     : AppColors.brandViolet)
                                 .withValues(alpha: 0.25),
                             width: 1,
@@ -2464,7 +2490,7 @@ class _ServicesScreenState extends State<ServicesScreen>
                               Icons.auto_awesome_rounded,
                               size: 11,
                               color: isDark
-                                  ? const Color(0xFFB79CFF)
+                                  ? AppColors.mainSoftBlue
                                   : AppColors.brandViolet,
                             ),
                             const SizedBox(width: 4),
@@ -2474,7 +2500,7 @@ class _ServicesScreenState extends State<ServicesScreen>
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
                                 color: isDark
-                                    ? const Color(0xFFB79CFF)
+                                    ? AppColors.mainSoftBlue
                                     : AppColors.brandViolet,
                               ),
                             ),
@@ -2615,14 +2641,14 @@ class _ServicesScreenState extends State<ServicesScreen>
                 borderRadius: BorderRadius.circular(22),
                 border: Border.all(
                   color: isDark
-                      ? Colors.white.withValues(alpha: 0.06)
+                      ? AppColors.white.withValues(alpha: 0.06)
                       : AppColors.lightOutlineVariant.withValues(alpha: 0.8),
                   width: 1.2,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color:
-                        Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                        AppColors.black.withValues(alpha: isDark ? 0.25 : 0.035),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
@@ -2666,13 +2692,13 @@ class _ServicesScreenState extends State<ServicesScreen>
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
               color: isDark
-                  ? Colors.white.withValues(alpha: 0.06)
+                  ? AppColors.white.withValues(alpha: 0.06)
                   : AppColors.lightOutlineVariant.withValues(alpha: 0.8),
               width: 1.2,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                color: AppColors.black.withValues(alpha: isDark ? 0.25 : 0.035),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),
@@ -2830,13 +2856,13 @@ class _ServicesScreenState extends State<ServicesScreen>
               borderRadius: BorderRadius.circular(22),
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withValues(alpha: 0.06)
+                    ? AppColors.white.withValues(alpha: 0.06)
                     : AppColors.lightOutlineVariant.withValues(alpha: 0.8),
                 width: 1.2,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                  color: AppColors.black.withValues(alpha: isDark ? 0.25 : 0.035),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),

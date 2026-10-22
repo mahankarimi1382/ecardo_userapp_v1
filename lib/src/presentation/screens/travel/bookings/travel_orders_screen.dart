@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
@@ -85,14 +88,23 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                             icon: const Icon(Icons.close_rounded),
                           ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: TravelTheme.cardSurfaceFor(context),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.r),
-                      borderSide: const BorderSide(color: TravelTheme.border),
+                      borderSide: BorderSide(color: TravelTheme.borderFor(context)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.r),
-                      borderSide: const BorderSide(color: TravelTheme.border),
+                      borderSide: BorderSide(color: TravelTheme.borderFor(context)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.r),
+                      borderSide: BorderSide(
+                        color: TravelTheme.isDark(context)
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                        width: 1.5,
+                      ),
                     ),
                   ),
                 ),
@@ -125,7 +137,7 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                     child: Text(
                       '${localization.travelLastUpdated}: ${MaterialLocalizations.of(context).formatShortDate(controller.ordersLastUpdatedAt.value!)}',
                       style: TextStyle(
-                        color: TravelTheme.muted,
+                        color: TravelTheme.textSecondaryFor(context),
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w700,
                       ),
@@ -140,43 +152,109 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                       onPressed: _resetDiscovery,
                       icon: const Icon(Icons.filter_alt_off_rounded),
                       label: Text(localization.reset),
+                      style: TextButton.styleFrom(
+                        foregroundColor: TravelTheme.primaryFor(context),
+                      ),
                     ),
                   ),
                 ] else
                   SizedBox(height: 16.h),
               ],
               if (visibleOrders.isEmpty) ...[
-                SizedBox(height: typedOrders.isEmpty ? 120.h : 48.h),
-                TravelEmptyState(
-                  message: controller.ordersError.value != null
-                      ? localization.allControllerLoadError
-                      : switch (widget.initialType) {
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: typedOrders.isEmpty ? 40.h : 20.h,
+                  ),
+                  child: Builder(
+                    builder: (context) {
+                      final isError = controller.ordersError.value != null;
+                      final String emptyTitle;
+                      final String emptyDesc;
+                      final IconData emptyIcon;
+                      final String? primaryLabel;
+                      final VoidCallback? primaryAction;
+                      final String? secondaryLabel;
+                      final VoidCallback? secondaryAction;
+
+                      if (isError) {
+                        emptyTitle = localization.allControllerLoadError;
+                        emptyDesc = localization.noInternetConnectionMessage;
+                        emptyIcon = Icons.cloud_off_rounded;
+                        primaryLabel = localization.noInternetConnectionRetryButton;
+                        primaryAction = controller.isActivityLoading.value
+                            ? null
+                            : () => controller.refreshOrders();
+                        secondaryLabel = null;
+                        secondaryAction = null;
+                      } else if (hasDiscoveryFilters) {
+                        emptyTitle = switch (widget.initialType) {
+                          TravelProductType.hotel =>
+                            localization.travelNoHotelResults,
+                          TravelProductType.flight =>
+                            localization.travelNoFlightResults,
+                          TravelProductType.esim =>
+                            localization.travelNoEsimPackages,
+                          null => localization.travelNoBookings,
+                        };
+                        emptyDesc = l10nPick(
+                          context,
+                          en: 'No bookings match your active search or filters. Clear your filters to see all bookings.',
+                          fa: 'هیچ سفارشی با جستجو یا فیلترهای انتخابی شما مطابقت ندارد. فیلترها را پاک کنید.',
+                          ar: 'لا توجد حجوزات تطابق البحث أو الفلاتر المحددة. قم بإلغاء الفلاتر لعرض جميع الحجوزات.',
+                        );
+                        emptyIcon = Icons.filter_alt_off_rounded;
+                        primaryLabel = localization.reset;
+                        primaryAction = _resetDiscovery;
+                        secondaryLabel = localization.refresh;
+                        secondaryAction = controller.isActivityLoading.value
+                            ? null
+                            : () => controller.refreshOrders();
+                      } else {
+                        emptyTitle = switch (widget.initialType) {
                           TravelProductType.hotel =>
                             localization.travelNoHotels,
                           TravelProductType.flight =>
                             localization.travelNoFlights,
-                          TravelProductType.esim => localization.travelNoEsims,
+                          TravelProductType.esim =>
+                            localization.travelNoEsims,
                           null => localization.travelNoBookings,
-                        },
-                ),
-                SizedBox(height: 12.h),
-                Center(
-                  child: TextButton.icon(
-                    onPressed: hasDiscoveryFilters
-                        ? _resetDiscovery
-                        : controller.isActivityLoading.value
-                        ? null
-                        : controller.refreshOrders,
-                    icon: Icon(
-                      hasDiscoveryFilters
-                          ? Icons.filter_alt_off_rounded
-                          : Icons.refresh_rounded,
-                    ),
-                    label: Text(
-                      hasDiscoveryFilters
-                          ? localization.reset
-                          : localization.noInternetConnectionRetryButton,
-                    ),
+                        };
+                        emptyDesc = l10nPick(
+                          context,
+                          en: 'Your travel reservations, flight tickets, and hotel bookings will appear here once booked.',
+                          fa: 'رزروهای سفر، بلیط‌های پرواز و هتل‌های شما پس از ثبت در اینجا نمایش داده خواهند شد.',
+                          ar: 'ستظهر هنا حجوزات السفر وتذاكر الطيران والفنادق بعد إتمام الحجز.',
+                        );
+                        emptyIcon = switch (widget.initialType) {
+                          TravelProductType.hotel => Icons.hotel_outlined,
+                          TravelProductType.flight => Icons.flight_takeoff_rounded,
+                          TravelProductType.esim => Icons.sim_card_outlined,
+                          null => Icons.luggage_outlined,
+                        };
+                        primaryLabel = localization.refresh;
+                        primaryAction = controller.isActivityLoading.value
+                            ? null
+                            : () => controller.refreshOrders();
+                        secondaryLabel = null;
+                        secondaryAction = null;
+                      }
+
+                      return EcardoEmptyState(
+                        title: emptyTitle,
+                        description: emptyDesc,
+                        iconData: emptyIcon,
+                        glowColor: isError
+                            ? AppColors.error
+                            : (TravelTheme.isDark(context)
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet),
+                        iconColor: isError ? AppColors.error : null,
+                        primaryActionLabel: primaryLabel,
+                        onPrimaryAction: primaryAction,
+                        secondaryActionLabel: secondaryLabel,
+                        onSecondaryAction: secondaryAction,
+                      );
+                    },
                   ),
                 ),
               ] else
@@ -237,15 +315,24 @@ class _OrderGroupChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = TravelTheme.isDark(context);
+    final activeColor = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+    final activeBg = isDark
+        ? AppColors.darkPrimaryContainer
+        : AppColors.brandVioletContainer;
+
     return FilterChip(
       label: Text(label),
       selected: selected,
       onSelected: (_) => onSelected(),
       showCheckmark: false,
-      selectedColor: TravelTheme.blue.withValues(alpha: .14),
-      side: BorderSide(color: selected ? TravelTheme.blue : TravelTheme.border),
+      backgroundColor: TravelTheme.cardSurfaceFor(context),
+      selectedColor: activeBg,
+      side: BorderSide(
+        color: selected ? activeColor : TravelTheme.borderFor(context),
+      ),
       labelStyle: TextStyle(
-        color: selected ? TravelTheme.blue : TravelTheme.muted,
+        color: selected ? activeColor : TravelTheme.textSecondaryFor(context),
         fontSize: 11.sp,
         fontWeight: FontWeight.w800,
       ),
@@ -266,20 +353,24 @@ class _OrderSectionTitle extends StatelessWidget {
         Expanded(
           child: Text(
             title,
-            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900),
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w900,
+              color: TravelTheme.textPrimaryFor(context),
+            ),
           ),
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: TravelTheme.cardSurfaceFor(context),
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: TravelTheme.border),
+            border: Border.all(color: TravelTheme.borderFor(context)),
           ),
           child: Text(
             count.toString(),
             style: TextStyle(
-              color: TravelTheme.muted,
+              color: TravelTheme.textSecondaryFor(context),
               fontSize: 10.sp,
               fontWeight: FontWeight.w800,
             ),
@@ -298,83 +389,127 @@ class _TravelOrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = TravelTheme.isDark(context);
     final statusColor = travelOrderStatusColor(order.status);
+    final statusBgColor = travelOrderStatusContainerColor(order.status, isDark);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+    final prodColor = travelProductColor(order.type);
+
     return TravelCard(
       child: Column(
         children: [
-          InkWell(
-            onTap: () => Get.to(() => TravelConfirmationScreen(order: order)),
-            child: Row(
-              children: [
-                Container(
-                  width: 54.r,
-                  height: 54.r,
-                  decoration: BoxDecoration(
-                    color: travelProductColor(
-                      order.type,
-                    ).withValues(alpha: .14),
-                    borderRadius: BorderRadius.circular(18.r),
-                  ),
-                  child: Icon(
-                    travelProductIcon(order.type),
-                    color: travelProductColor(order.type),
-                  ),
-                ),
-                SizedBox(width: 14.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        travelLocalizedKey(localization, order.titleKey),
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
+          Semantics(
+            button: true,
+            label:
+                '${travelLocalizedKey(localization, order.titleKey)}, ${travelOrderStatusText(localization, order.status)}, ${order.reference}',
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16.r),
+              onTap: () => Get.to(() => TravelConfirmationScreen(order: order)),
+              child: Padding(
+                padding: EdgeInsets.all(4.r),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 52.r,
+                      height: 52.r,
+                      decoration: BoxDecoration(
+                        color: prodColor.withValues(alpha: isDark ? 0.22 : 0.12),
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: prodColor.withValues(alpha: isDark ? 0.35 : 0.2),
+                          width: 1.w,
                         ),
                       ),
-                      SizedBox(height: 5.h),
-                      Directionality(
-                        textDirection: TextDirection.ltr,
-                        child: Text(
-                          order.reference,
-                          style: TextStyle(
-                            color: TravelTheme.muted,
-                            fontSize: 10.sp,
+                      child: Icon(
+                        travelProductIcon(order.type),
+                        color: prodColor,
+                        size: 24.r,
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            travelLocalizedKey(localization, order.titleKey),
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w800,
+                              color: textPrimary,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Text(
+                              order.reference,
+                              style: TextStyle(
+                                color: textSecondary,
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: statusBgColor,
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: statusColor.withValues(
+                                alpha: isDark ? 0.4 : 0.25,
+                              ),
+                              width: 1.w,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                travelOrderStatusIcon(order.status),
+                                color: statusColor,
+                                size: 12.r,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                travelOrderStatusText(localization, order.status),
+                                style: TextStyle(
+                                  color: statusColor,
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: 8.w),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Icon(
-                      travelOrderStatusIcon(order.status),
-                      color: statusColor,
-                      size: 18.r,
+                        SizedBox(height: 6.h),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          color: textSecondary,
+                          size: 18.r,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      travelOrderStatusText(localization, order.status),
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: statusColor,
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    SizedBox(height: 3.h),
-                    const Icon(Icons.chevron_right_rounded),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
           if (order.hasIssuedVoucher) ...[
-            SizedBox(height: 14.h),
-            const Divider(),
+            SizedBox(height: 12.h),
+            Divider(color: TravelTheme.borderFor(context), height: 1),
             SizedBox(height: 10.h),
             TravelVoucherQr(order: order, size: 116.r),
             SizedBox(height: 8.h),
@@ -383,7 +518,7 @@ class _TravelOrderCard extends StatelessWidget {
               child: Text(
                 order.reference,
                 style: TextStyle(
-                  color: TravelTheme.muted,
+                  color: textSecondary,
                   fontSize: 10.sp,
                   fontWeight: FontWeight.w800,
                 ),
@@ -393,6 +528,9 @@ class _TravelOrderCard extends StatelessWidget {
               onPressed: () => downloadTravelVoucher(context, order),
               icon: const Icon(Icons.download_rounded),
               label: Text(localization.qrCodeScreenDownloadButton),
+              style: TextButton.styleFrom(
+                foregroundColor: TravelTheme.primaryFor(context),
+              ),
             ),
           ],
         ],
@@ -439,16 +577,41 @@ Color travelOrderStatusColor(TravelOrderStatus status) => switch (status) {
   TravelOrderStatus.paymentReceived ||
   TravelOrderStatus.supplierPending ||
   TravelOrderStatus.cancellationPending ||
-  TravelOrderStatus.refundPending => TravelTheme.warning,
+  TravelOrderStatus.refundPending => AppColors.warning,
   TravelOrderStatus.confirmed ||
   TravelOrderStatus.issued ||
   TravelOrderStatus.active ||
-  TravelOrderStatus.completed => TravelTheme.green,
+  TravelOrderStatus.completed => AppColors.success,
   TravelOrderStatus.cancelled ||
   TravelOrderStatus.refunded ||
   TravelOrderStatus.expired ||
-  TravelOrderStatus.unknown => TravelTheme.muted,
-  TravelOrderStatus.failed => TravelTheme.red,
+  TravelOrderStatus.unknown => AppColors.softGray,
+  TravelOrderStatus.failed => AppColors.error,
+};
+
+Color travelOrderStatusContainerColor(
+  TravelOrderStatus status,
+  bool isDark,
+) => switch (status) {
+  TravelOrderStatus.paymentPending ||
+  TravelOrderStatus.paymentProcessing ||
+  TravelOrderStatus.paymentReceived ||
+  TravelOrderStatus.supplierPending ||
+  TravelOrderStatus.cancellationPending ||
+  TravelOrderStatus.refundPending =>
+    isDark ? AppColors.darkSurfaceVariant : AppColors.warningContainer,
+  TravelOrderStatus.confirmed ||
+  TravelOrderStatus.issued ||
+  TravelOrderStatus.active ||
+  TravelOrderStatus.completed =>
+    isDark ? AppColors.darkSecondaryContainer : AppColors.successContainer,
+  TravelOrderStatus.cancelled ||
+  TravelOrderStatus.refunded ||
+  TravelOrderStatus.expired ||
+  TravelOrderStatus.unknown =>
+    isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+  TravelOrderStatus.failed =>
+    isDark ? AppColors.darkSurfaceVariant : AppColors.errorContainer,
 };
 
 IconData travelOrderStatusIcon(TravelOrderStatus status) => switch (status) {

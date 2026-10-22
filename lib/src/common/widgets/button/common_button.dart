@@ -176,47 +176,54 @@ class CommonButton extends StatelessWidget {
 
     final effectiveLoadingColor = loadingColor ?? effectiveTextColor;
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(borderRadius.r),
-      onTap: isLoading == true
-          ? null
-          : (onPressed == null
-              ? null
-              : () {
-                  AppHaptics.light();
-                  onPressed!();
-                }),
-      child: Container(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 8.w),
-        width: width == double.infinity ? double.infinity : width?.w,
-        height: height?.h,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius.r),
-          color: gradient == null ? effectiveBgColor : null,
-          gradient: gradient,
-          boxShadow: boxShadow,
-          border: effectiveBorderColor != null && effectiveBorderWidth > 0
-              ? Border.all(color: effectiveBorderColor, width: effectiveBorderWidth.w)
-              : null,
+    return Semantics(
+      button: true,
+      enabled: onPressed != null && isLoading != true,
+      label: text,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(borderRadius.r),
+        onTap: isLoading == true
+            ? null
+            : (onPressed == null
+                ? null
+                : () {
+                    AppHaptics.light();
+                    onPressed!();
+                  }),
+        child: Container(
+          padding: EdgeInsetsGeometry.symmetric(horizontal: 8.w, vertical: 4.h),
+          width: width == double.infinity ? double.infinity : width?.w,
+          constraints: BoxConstraints(
+            minHeight: (height ?? 48).h,
+          ),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(borderRadius.r),
+            color: gradient == null ? effectiveBgColor : null,
+            gradient: gradient,
+            boxShadow: boxShadow,
+            border: effectiveBorderColor != null && effectiveBorderWidth > 0
+                ? Border.all(color: effectiveBorderColor, width: effectiveBorderWidth.w)
+                : null,
+          ),
+          child: isLoading == true
+              ? Center(
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: effectiveLoadingColor,
+                    size: 32,
+                  ),
+                )
+              : Text(
+                  textAlign: TextAlign.center,
+                  text,
+                  style: TextStyle(
+                    fontWeight: fontWeight,
+                    fontSize: fontSize.sp,
+                    color: effectiveTextColor,
+                    letterSpacing: 0,
+                  ),
+                ),
         ),
-        child: isLoading == true
-            ? Center(
-                child: LoadingAnimationWidget.staggeredDotsWave(
-                  color: effectiveLoadingColor,
-                  size: 32,
-                ),
-              )
-            : Text(
-                textAlign: TextAlign.center,
-                text,
-                style: TextStyle(
-                  fontWeight: fontWeight,
-                  fontSize: fontSize.sp,
-                  color: effectiveTextColor,
-                  letterSpacing: 0,
-                ),
-              ),
       ),
     );
   }

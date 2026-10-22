@@ -98,14 +98,12 @@ class PublicLiveRateSource implements ExchangeRateSource {
       }
 
       double rateIrr = 0.0;
-      double changePct = 0.05; // Default modest positive 24h change
+      double? changePct; // Null when public source does not provide 24h ticker delta
 
       if (upper == 'USDT' || upper == 'USDT_IRT') {
         rateIrr = usdToIrr;
-        changePct = 0.12;
       } else if (upper == 'USD') {
         rateIrr = usdToIrr;
-        changePct = 0.10;
       } else if (fxAgainstUsd.containsKey(upper)) {
         final unitsPerUsd = fxAgainstUsd[upper]!;
         if (unitsPerUsd > 0) {

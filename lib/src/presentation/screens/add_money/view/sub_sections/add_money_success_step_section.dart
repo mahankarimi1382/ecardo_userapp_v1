@@ -28,6 +28,16 @@ class _AddMoneySuccessStepSectionState
   final AddMoneyController controller = Get.find();
   final SettingsService settingsService = Get.find();
 
+  /// Trimmed value, or null when the backend did not supply one. Never
+  /// synthesize a reference — a fabricated ID on a receipt is indistinguishable
+  /// from a real one and misleads both the user and support.
+  static String? _nonEmpty(String? value) {
+    final trimmed = value?.trim();
+    return (trimmed == null || trimmed.isEmpty || trimmed == 'null')
+        ? null
+        : trimmed;
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -49,8 +59,7 @@ class _AddMoneySuccessStepSectionState
     final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
     final rawCharge = controller.successPaymentData.value?["charge"];
     final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? 0.0;
-    final tnxId = controller.successPaymentData.value?["tnx"]?.toString() ??
-        'DEP-${DateTime.now().millisecondsSinceEpoch}';
+    final tnxId = _nonEmpty(controller.successPaymentData.value?["tnx"]?.toString());
     final txType = controller.successPaymentData.value?["type"]?.toString() ?? 'Deposit';
 
     return Obx(

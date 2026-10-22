@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/responsive.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -530,7 +531,7 @@ class _TransactionRowItem extends StatelessWidget {
             height: 16.0,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isPlus ? const Color(0xFF10B981) : const Color(0xFFDC2626),
+              color: isPlus ? AppColors.success : AppColors.error,
               border: Border.all(
                 color: isDark ? AppColors.darkCard : AppColors.white,
                 width: 1.6,
@@ -554,13 +555,36 @@ class _TransactionRowItem extends StatelessWidget {
     final code = transaction.trxCurrencyCode ?? '';
     final amountVal = transaction.amount ?? '0.00';
 
+    String cleanAmount = amountVal;
+    final parsed = double.tryParse(amountVal.replaceAll(',', ''));
+    if (parsed != null) {
+      final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+        currencyCode: code,
+        siteCurrencyCode: 'USD',
+        siteCurrencyDecimals: '2',
+        isCrypto: isCrypto,
+      );
+      if (decimals == 0) {
+        final intVal = parsed.toInt();
+        cleanAmount = intVal.toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]},',
+        );
+      } else {
+        cleanAmount = parsed.toStringAsFixed(decimals).replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]},',
+        );
+      }
+    }
+
     final Color amountColor = isPlus
-        ? const Color(0xFF10B981) // Luxury Emerald Green (#10B981)
-        : (isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626)); // Crimson Red
+        ? AppColors.success
+        : (isDark ? const Color(0xFFF87171) : AppColors.error);
 
     final formattedText = isCrypto
-        ? '$prefix$amountVal $code'
-        : '$prefix$symbol $amountVal';
+        ? '$prefix$cleanAmount $code'
+        : '$prefix$symbol $cleanAmount';
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -589,18 +613,18 @@ class _TransactionRowItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
         decoration: BoxDecoration(
           color: isDark
-              ? const Color(0xFFF59E0B).withValues(alpha: 0.20)
-              : const Color(0xFFFEF3C7),
+              ? AppColors.warning.withValues(alpha: 0.20)
+              : AppColors.warningContainer,
           borderRadius: BorderRadius.circular(6.0),
           border: Border.all(
-            color: const Color(0xFFF59E0B).withValues(alpha: 0.35),
+            color: AppColors.warning.withValues(alpha: 0.35),
             width: 0.6,
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const _PulsingDot(color: Color(0xFFD97706)),
+            const _PulsingDot(color: AppColors.warning),
             const SizedBox(width: 4.0),
             Text(
               l10nPick(
@@ -615,8 +639,7 @@ class _TransactionRowItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 9.5,
                 fontWeight: FontWeight.w700,
-                color:
-                    isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706),
+                color: isDark ? AppColors.warning : AppColors.darkGray,
               ),
             ),
           ],
@@ -627,11 +650,11 @@ class _TransactionRowItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
         decoration: BoxDecoration(
           color: isDark
-              ? const Color(0xFFEF4444).withValues(alpha: 0.20)
-              : const Color(0xFFFEF2F2),
+              ? AppColors.error.withValues(alpha: 0.20)
+              : AppColors.errorContainer,
           borderRadius: BorderRadius.circular(6.0),
           border: Border.all(
-            color: const Color(0xFFEF4444).withValues(alpha: 0.35),
+            color: AppColors.error.withValues(alpha: 0.35),
             width: 0.6,
           ),
         ),
@@ -641,9 +664,7 @@ class _TransactionRowItem extends StatelessWidget {
             Icon(
               Icons.cancel_rounded,
               size: 10.0,
-              color: isDark
-                  ? const Color(0xFFF87171)
-                  : const Color(0xFFDC2626),
+              color: AppColors.error,
             ),
             const SizedBox(width: 3.0),
             Text(
@@ -659,9 +680,7 @@ class _TransactionRowItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 9.5,
                 fontWeight: FontWeight.w700,
-                color: isDark
-                    ? const Color(0xFFF87171)
-                    : const Color(0xFFDC2626),
+                color: AppColors.error,
               ),
             ),
           ],
@@ -674,11 +693,11 @@ class _TransactionRowItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF10B981).withValues(alpha: 0.20)
-            : const Color(0xFFECFDF5),
+            ? AppColors.success.withValues(alpha: 0.20)
+            : AppColors.successContainer,
         borderRadius: BorderRadius.circular(6.0),
         border: Border.all(
-          color: const Color(0xFF10B981).withValues(alpha: 0.35),
+          color: AppColors.success.withValues(alpha: 0.35),
           width: 0.6,
         ),
       ),
@@ -688,9 +707,7 @@ class _TransactionRowItem extends StatelessWidget {
           Icon(
             Icons.check_rounded,
             size: 10.0,
-            color: isDark
-                ? const Color(0xFF34D399)
-                : const Color(0xFF059669),
+            color: AppColors.success,
           ),
           const SizedBox(width: 3.0),
           Text(
@@ -706,9 +723,7 @@ class _TransactionRowItem extends StatelessWidget {
             style: TextStyle(
               fontSize: 9.5,
               fontWeight: FontWeight.w700,
-              color: isDark
-                  ? const Color(0xFF34D399)
-                  : const Color(0xFF059669),
+              color: isDark ? AppColors.mainSoftBlue : AppColors.success,
             ),
           ),
         ],

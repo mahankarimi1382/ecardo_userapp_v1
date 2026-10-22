@@ -1,0 +1,13 @@
+# گزارش Visual Regression
+- SHA/branch/version:
+- Route/page/state:
+- Device/OS/DPR/size:
+- Locale/theme/text scale:
+- Before screenshot:
+- After screenshot:
+- Expected difference:
+- Actual difference:
+- Accessibility notes:
+- Performance notes:
+- Decision: PASS / FAIL / WAIVED with reason
+- Reviewer/Date:

@@ -209,7 +209,12 @@ class _ExchangeSuccessStepSectionState
     final charge = double.tryParse(t["charge"]?.toString() ?? '') ?? 0.0;
     final finalAmount =
         double.tryParse(t["final_amount"]?.toString() ?? '') ?? 0.0;
-    final tnx = t["tnx"]?.toString() ?? '';
+    // Backend reference. Null (not '') when absent so the receipt degrades to
+    // its "awaiting server reference" state instead of an empty copy chip.
+    final rawTnx = t["tnx"]?.toString().trim();
+    final tnx = (rawTnx == null || rawTnx.isEmpty || rawTnx == 'null')
+        ? null
+        : rawTnx;
 
     // Calculate approximate exchange rate if available
     String? exchangeRateText;
@@ -262,12 +267,13 @@ class _ExchangeSuccessStepSectionState
             ? '$receiveCurrencyCode Wallet'
             : '—',
       ),
-      EcardoReceiptItem(
-        label: 'Transaction ID',
-        value: tnx,
-        isCopyable: true,
-        copyText: tnx,
-      ),
+      if (tnx != null)
+        EcardoReceiptItem(
+          label: 'Transaction ID',
+          value: tnx,
+          isCopyable: true,
+          copyText: tnx,
+        ),
     ];
 
     return EcardoDigitalReceipt(

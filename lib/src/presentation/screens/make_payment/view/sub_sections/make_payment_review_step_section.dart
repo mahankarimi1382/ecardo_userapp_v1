@@ -40,6 +40,7 @@ class _MakePaymentReviewStepSectionState
       ar: 'التحقق لتأكيد دفع التاجر',
       tr: 'Üye işyeri ödemesini onaylamak için doğrulama yapın',
       ru: 'Подтвердите личность для оплаты мерчанту',
+      zh: '请进行身份验证以确认向商户付款',
     );
 
     // Step-up Security: Try biometric first if available
@@ -206,16 +207,25 @@ class _MakePaymentReviewStepSectionState
                   ar: 'اسحب لتأكيد الدفع',
                   tr: 'Ödemeyi Onaylamak İçin Kaydırın',
                   ru: 'Проведите для подтверждения оплаты',
+                  zh: '滑动以确认付款',
                 ),
                 loadingText: l10nPick(
                   context,
                   en: 'Processing...',
                   fa: 'در حال پردازش...',
+                  ar: 'جارٍ المعالجة...',
+                  tr: 'İşleniyor...',
+                  ru: 'Обработка...',
+                  zh: '处理中...',
                 ),
                 successText: l10nPick(
                   context,
                   en: 'Payment Confirmed',
                   fa: 'پرداخت تأیید شد',
+                  ar: 'تم تأكيد الدفع',
+                  tr: 'Ödeme Onaylandı',
+                  ru: 'Оплата подтверждена',
+                  zh: '付款已确认',
                 ),
                 isLoading: controller.isMakePaymentLoading.value,
                 onSwipeComplete: () => _handleConfirmPayment(context),

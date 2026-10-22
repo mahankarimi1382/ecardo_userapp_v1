@@ -71,15 +71,19 @@ class _BillPaymentResultStepSectionState
     return null;
   }
 
-  String get _referenceCode {
+  /// Backend reference, or null when the gateway response did not carry one.
+  /// Null renders the receipt's localized "awaiting server reference" state —
+  /// never fabricate an ID that support would treat as real.
+  String? get _referenceCode {
     final data = widget.result?['data'];
     if (data is Map) {
       final tnx = data['tnx'] ?? data['transaction_id'] ?? data['id'];
-      if (tnx != null && tnx.toString().isNotEmpty) {
-        return tnx.toString();
+      final trimmed = tnx?.toString().trim();
+      if (trimmed != null && trimmed.isNotEmpty && trimmed != 'null') {
+        return trimmed;
       }
     }
-    return 'BILL-${DateTime.now().millisecondsSinceEpoch}';
+    return null;
   }
 
   EcardoReceiptStatus get _receiptStatus {
@@ -107,6 +111,7 @@ class _BillPaymentResultStepSectionState
           ar: 'تم تقديم دفع الفاتورة بنجاح',
           tr: 'Fatura ödemesi gönderildi',
           ru: 'Оплата счета зарегистрирована',
+          zh: '账单支付已提交',
         );
 
     final subtitle = l10nPick(
@@ -116,6 +121,7 @@ class _BillPaymentResultStepSectionState
       ar: 'تمت معالجة طلب سداد الفاتورة بأمان.',
       tr: 'Fatura ödeme talebiniz güvenle işlendi.',
       ru: 'Ваш платеж успешно обработан.',
+      zh: '您的账单支付请求已安全处理。',
     );
 
     return SingleChildScrollView(
@@ -143,6 +149,7 @@ class _BillPaymentResultStepSectionState
                 ar: 'إيصال دفع الفاتورة',
                 tr: 'Fatura Ödeme Makbuzu',
                 ru: 'Квитанция оплаты счета',
+                zh: '账单支付凭证',
               ),
               transactionReference: _referenceCode,
               status: _receiptStatus,
@@ -177,6 +184,7 @@ class _BillPaymentResultStepSectionState
                 ar: 'يتم تسجيل الحالة المعتمدة في سجل دفع الفواتير.',
                 tr: 'Nihai durum Fatura Ödeme Geçmişinizde kaydedilir.',
                 ru: 'Окончательный статус отображается в истории платежей.',
+                zh: '最终状态记录在您的账单支付历史记录中。',
               ),
               showBarcode: true,
               showWatermark: true,

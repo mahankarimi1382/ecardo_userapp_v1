@@ -61,7 +61,10 @@ class EcardoReceiptItem {
 /// - Share and Export action buttons with tactile bounce press.
 class EcardoDigitalReceipt extends StatefulWidget {
   final String title;
-  final String transactionReference;
+  /// Authoritative backend reference (`tnx`). Null when the backend response
+  /// did not carry one yet — the receipt then shows a localized "pending"
+  /// placeholder instead of inventing an identifier.
+  final String? transactionReference;
   final DateTime? timestamp;
   final String? formattedTimestamp;
   final double? primaryAmount;
@@ -83,7 +86,7 @@ class EcardoDigitalReceipt extends StatefulWidget {
   const EcardoDigitalReceipt({
     super.key,
     required this.title,
-    required this.transactionReference,
+    this.transactionReference,
     this.timestamp,
     this.formattedTimestamp,
     this.primaryAmount,
@@ -271,7 +274,7 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
                       const SizedBox(height: AppSpacing.sm),
 
                       // Barcode & Cryptographic Security Note
-                      if (widget.showBarcode) ...[
+                      if (widget.showBarcode && _hasReference) ...[
                         _buildBarcodeSection(isDark),
                         const SizedBox(height: AppSpacing.sm),
                       ],
@@ -501,9 +504,30 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
     );
   }
 
+  /// True when the backend supplied a real reference. Everything that would
+  /// print, copy, share or barcode a reference must check this first.
+  bool get _hasReference {
+    final ref = widget.transactionReference?.trim();
+    return ref != null && ref.isNotEmpty;
+  }
+
+  String get _referenceLabel => _hasReference
+      ? widget.transactionReference!.trim()
+      : l10nPick(
+          context,
+          en: 'Awaiting server reference',
+          fa: 'در انتظار شناسه از سرور',
+          ar: 'بانتظار مرجع من الخادم',
+          tr: 'Sunucu referansı bekleniyor',
+          ru: 'Ожидание идентификатора от сервера',
+          zh: '等待服务器单号',
+        );
+
   Widget _buildReferenceCode(bool isDark) {
     return GestureDetector(
-      onTap: () => _triggerCopy(widget.transactionReference, 'Ref ID'),
+      onTap: _hasReference
+          ? () => _triggerCopy(widget.transactionReference!, 'Ref ID')
+          : null,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
@@ -536,12 +560,18 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    widget.transactionReference,
-                    style: const TextStyle(
-                      fontFamily: 'monospace',
+                    _referenceLabel,
+                    style: TextStyle(
+                      fontFamily: _hasReference ? 'monospace' : null,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
-                      letterSpacing: 1.0,
+                      letterSpacing: _hasReference ? 1.0 : 0,
+                      fontStyle: _hasReference ? FontStyle.normal : FontStyle.italic,
+                      color: _hasReference
+                          ? null
+                          : (isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary),
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -549,13 +579,14 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
               ),
             ),
             const SizedBox(width: 8),
-            Icon(
-              Icons.copy_rounded,
-              size: 16,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
+            if (_hasReference)
+              Icon(
+                Icons.copy_rounded,
+                size: 16,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
+              ),
           ],
         ),
       ),
@@ -674,7 +705,7 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
           ),
           const SizedBox(height: 4),
           Text(
-            widget.transactionReference,
+            _referenceLabel,
             style: TextStyle(
               fontFamily: 'monospace',
               fontSize: 10,
@@ -789,7 +820,7 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
         // Fallback to text share
         await SharePlus.instance.share(
           ShareParams(
-            text: '${widget.title}\nRef: ${widget.transactionReference}\nAmount: ${widget.primaryAmount ?? ""} ${widget.primaryCurrency ?? ""}',
+            text: '${widget.title}\n${_hasReference ? 'Ref: ${widget.transactionReference!.trim()}\n' : ''}Amount: ${widget.primaryAmount ?? ""} ${widget.primaryCurrency ?? ""}',
             subject: 'eCardo Receipt',
           ),
         );
@@ -803,14 +834,16 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
       if (byteData != null) {
         final tempDir = await getTemporaryDirectory();
         final file = File(
-          '${tempDir.path}/ecardo_receipt_${widget.transactionReference}_${DateTime.now().millisecondsSinceEpoch}.png',
+          '${tempDir.path}/ecardo_receipt_${_hasReference ? widget.transactionReference!.trim() : 'pending'}_${DateTime.now().millisecondsSinceEpoch}.png',
         );
         await file.writeAsBytes(byteData.buffer.asUint8List());
 
         await SharePlus.instance.share(
           ShareParams(
             files: [XFile(file.path)],
-            text: '${widget.title} (${widget.transactionReference})',
+            text: _hasReference
+                ? '${widget.title} (${widget.transactionReference!.trim()})'
+                : widget.title,
             subject: 'eCardo Receipt',
           ),
         );
@@ -839,9 +872,23 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
       widget.onDownload!();
       return;
     }
+    if (!_hasReference) {
+      ToastHelper().showWarningToast(
+        l10nPick(
+          context,
+          en: 'Reference code is not available yet',
+          fa: 'کد پیگیری هنوز در دسترس نیست',
+          ar: 'رمز المرجع غير متوفر بعد',
+          tr: 'Referans kodu henüz mevcut değil',
+          ru: 'Код квитанции пока недоступен',
+          zh: '单号暂不可用',
+        ),
+      );
+      return;
+    }
     HapticFeedback.selectionClick();
-    Clipboard.setData(ClipboardData(text: widget.transactionReference));
-    _triggerCopy(widget.transactionReference, 'Ref ID');
+    Clipboard.setData(ClipboardData(text: widget.transactionReference!));
+    _triggerCopy(widget.transactionReference!, 'Ref ID');
 
     ToastHelper().showSuccessToast(
       l10nPick(
@@ -864,7 +911,7 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
     Get.toNamed(
       BaseRoute.addNewTicket,
       arguments: {
-        'transaction_ref': widget.transactionReference,
+        'transaction_ref': _hasReference ? widget.transactionReference!.trim() : '',
         'amount': widget.primaryAmount,
         'currency': widget.primaryCurrency,
         'title': widget.title,

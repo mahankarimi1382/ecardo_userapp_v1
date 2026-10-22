@@ -26,6 +26,8 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance_model.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_model.dart';
@@ -261,10 +263,16 @@ class _MethodCard extends StatelessWidget {
           ? onTap
           : () {
               HapticFeedback.lightImpact();
-              Get.snackbar(
-                'Coming Soon',
-                'This payout method will be available soon.',
-                snackPosition: SnackPosition.BOTTOM,
+              ToastHelper().showWarningToast(
+                l10nPick(
+                  context,
+                  en: 'This payout method will be available soon',
+                  fa: 'این روش پرداخت به زودی فعال خواهد شد',
+                  ar: 'طريقة الدفع هذه ستكون متاحة قريباً',
+                  tr: 'Bu ödeme yöntemi yakında kullanıma sunulacaktır',
+                  ru: 'Этот способ выплаты скоро станет доступен',
+                  zh: '该结算方式即将推出',
+                ),
               );
             },
       child: Container(

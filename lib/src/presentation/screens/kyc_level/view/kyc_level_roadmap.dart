@@ -38,22 +38,35 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
 
+  bool _shouldReduceMotion(BuildContext context) {
+    return (MediaQuery.maybeDisableAnimationsOf(context) ?? false) ||
+        (WidgetsBinding.instance is! WidgetsFlutterBinding);
+  }
+
   @override
   void initState() {
     super.initState();
-    final isTest =
-        WidgetsBinding.instance.runtimeType.toString().contains('Test');
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1800),
     );
-    if (!isTest) {
-      _pulseController.repeat(reverse: true);
-    }
 
     _pulseAnimation = Tween<double>(begin: 0.65, end: 1.0).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_shouldReduceMotion(context)) {
+      if (_pulseController.isAnimating) {
+        _pulseController.stop();
+      }
+      _pulseController.value = 1.0;
+    } else if (!_pulseController.isAnimating) {
+      _pulseController.repeat(reverse: true);
+    }
   }
 
   @override
@@ -300,11 +313,11 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF450A0A).withValues(alpha: 0.4)
-            : const Color(0xFFFDE8E8),
+            ? AppColors.errorContainer.withValues(alpha: 0.2)
+            : AppColors.errorContainer,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: Border.all(
-          color: const Color(0xFFDC2626).withValues(alpha: 0.6),
+          color: AppColors.error.withValues(alpha: 0.6),
           width: 1.2,
         ),
       ),
@@ -317,12 +330,12 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
               Container(
                 padding: EdgeInsets.all(6.w),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFDC2626).withValues(alpha: 0.15),
+                  color: AppColors.error.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.error_outline_rounded,
-                  color: const Color(0xFFDC2626),
+                  color: AppColors.error,
                   size: 22.sp,
                 ),
               ),
@@ -341,7 +354,7 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                       ),
                       style: AppTextStyles.titleSmall.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFFDC2626),
+                        color: AppColors.error,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -360,12 +373,12 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
           SizedBox(height: AppSpacing.md),
           SizedBox(
             width: double.infinity,
-            height: 42.h,
+            height: 48.h,
             child: ElevatedButton.icon(
               onPressed: () => _handleRetry(controller),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDC2626),
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.error,
+                foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 ),
@@ -382,7 +395,7 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                 ),
                 style: AppTextStyles.labelMedium.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
               ),
             ),
@@ -399,11 +412,11 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
       padding: EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF78350F).withValues(alpha: 0.35)
-            : const Color(0xFFFFFBEB),
+            ? AppColors.warningContainer.withValues(alpha: 0.2)
+            : AppColors.warningContainer,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: Border.all(
-          color: const Color(0xFFF59E0B).withValues(alpha: 0.6),
+          color: AppColors.warning.withValues(alpha: 0.6),
           width: 1.2,
         ),
       ),
@@ -413,12 +426,12 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
           Container(
             padding: EdgeInsets.all(6.w),
             decoration: BoxDecoration(
-              color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+              color: AppColors.warning.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.hourglass_top_rounded,
-              color: const Color(0xFFD97706),
+              color: AppColors.warning,
               size: 20.sp,
             ),
           ),
@@ -437,7 +450,7 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                   ),
                   style: AppTextStyles.titleSmall.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFFD97706),
+                    color: AppColors.warning,
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -473,11 +486,11 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF064E3B).withValues(alpha: 0.35)
-            : const Color(0xFFECFDF5),
+            ? AppColors.successContainer.withValues(alpha: 0.2)
+            : AppColors.successContainer,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: Border.all(
-          color: const Color(0xFF10B981).withValues(alpha: 0.45),
+          color: AppColors.success.withValues(alpha: 0.45),
           width: 1,
         ),
       ),
@@ -486,12 +499,12 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
           Container(
             padding: EdgeInsets.all(6.w),
             decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withValues(alpha: 0.15),
+              color: AppColors.success.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.shield_rounded,
-              color: const Color(0xFF059669),
+              color: AppColors.success,
               size: 20.sp,
             ),
           ),
@@ -512,14 +525,14 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                       ),
                       style: AppTextStyles.labelMedium.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF059669),
+                        color: AppColors.success,
                       ),
                     ),
                     SizedBox(width: 6.w),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                        color: AppColors.success.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                       ),
                       child: Text(
@@ -527,7 +540,7 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                         style: AppTextStyles.labelSmall.copyWith(
                           fontSize: 9.sp,
                           fontWeight: FontWeight.w900,
-                          color: const Color(0xFF059669),
+                          color: AppColors.success,
                         ),
                       ),
                     ),
@@ -675,7 +688,7 @@ class _KycProgressionHeader extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   height: 8.h,
-                  color: isDark ? AppColors.darkBackground : const Color(0xFFE2E8F0),
+                  color: isDark ? AppColors.darkBackground : AppColors.lightOutlineVariant,
                 ),
                 FractionallySizedBox(
                   widthFactor: progressFraction,
@@ -684,8 +697,8 @@ class _KycProgressionHeader extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
-                          Color(0xFF7445FF),
-                          Color(0xFF10B981),
+                          AppColors.brandViolet,
+                          AppColors.success,
                         ],
                       ),
                       borderRadius: BorderRadius.circular(6.r),
@@ -758,7 +771,7 @@ class _KycProgressionHeader extends StatelessWidget {
                   value: currentLevel >= 3
                       ? '\$100,000 / نامحدود'
                       : (currentLevel == 2 ? '\$10,000' : '\$1,000'),
-                  color: const Color(0xFF10B981),
+                  color: AppColors.success,
                 ),
               ),
               SizedBox(width: 6.w),
@@ -769,7 +782,7 @@ class _KycProgressionHeader extends StatelessWidget {
                   value: currentLevel >= 3
                       ? l10nPick(context, en: 'Unlimited', fa: 'نامحدود')
                       : (currentLevel == 2 ? '۳ کارت' : '۱ کارت'),
-                  color: const Color(0xFF7445FF),
+                  color: AppColors.brandViolet,
                 ),
               ),
               SizedBox(width: 6.w),
@@ -781,7 +794,7 @@ class _KycProgressionHeader extends StatelessWidget {
                       ? l10nPick(context, en: 'Unlocked', fa: 'فعال')
                       : l10nPick(context, en: 'Locked', fa: 'قفل'),
                   color: currentLevel >= 2
-                      ? const Color(0xFF00BFA6)
+                      ? AppColors.mutedBlue
                       : AppColors.softGray,
                 ),
               ),
@@ -800,7 +813,7 @@ class _KycProgressionHeader extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 4.w),
         decoration: BoxDecoration(
           color: isPassed
-              ? const Color(0xFF10B981)
+              ? AppColors.success
               : (isDark ? AppColors.darkDivider : AppColors.lightDivider),
           borderRadius: BorderRadius.circular(2.r),
         ),
@@ -825,13 +838,13 @@ class _KycProgressionHeader extends StatelessWidget {
     IconData nodeIcon;
 
     if (isVerified) {
-      nodeColor = const Color(0xFF10B981); // Emerald green with shield
+      nodeColor = AppColors.success; // Emerald green with shield
       nodeIcon = Icons.shield_rounded;
     } else if (isNext && isPending) {
-      nodeColor = const Color(0xFFF59E0B); // Amber with clock/pulse
+      nodeColor = AppColors.warning; // Amber with clock/pulse
       nodeIcon = Icons.hourglass_top_rounded;
     } else if (isNext && isRejected) {
-      nodeColor = const Color(0xFFDC2626); // Crimson
+      nodeColor = AppColors.error; // Crimson
       nodeIcon = Icons.error_outline_rounded;
     } else if (isNext) {
       nodeColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
@@ -861,7 +874,7 @@ class _KycProgressionHeader extends StatelessWidget {
             boxShadow: isVerified
                 ? [
                     BoxShadow(
-                      color: const Color(0xFF10B981).withValues(alpha: 0.35),
+                      color: AppColors.success.withValues(alpha: 0.35),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -869,7 +882,7 @@ class _KycProgressionHeader extends StatelessWidget {
                 : (isPulsing
                     ? [
                         BoxShadow(
-                          color: const Color(0xFFF59E0B).withValues(
+                          color: AppColors.warning.withValues(
                             alpha: 0.45 * pulseFactor,
                           ),
                           blurRadius: 10 * pulseFactor,
@@ -917,10 +930,10 @@ class _KycProgressionHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
+        color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
           width: 0.8,
         ),
       ),
@@ -1038,7 +1051,7 @@ class _StepperLevelCard extends StatelessWidget {
                       width: 2.w,
                       margin: EdgeInsets.symmetric(vertical: 4.h),
                       color: level.isCompleted
-                          ? const Color(0xFF10B981).withValues(alpha: 0.6)
+                          ? AppColors.success.withValues(alpha: 0.6)
                           : (isDark ? AppColors.darkDivider : AppColors.lightDivider),
                     ),
                   ),
@@ -1050,6 +1063,7 @@ class _StepperLevelCard extends StatelessWidget {
             Expanded(
               child: Container(
                 margin: EdgeInsets.only(bottom: AppSpacing.md),
+                constraints: const BoxConstraints(minHeight: 44.0),
                 decoration: BoxDecoration(
                   color: cardBg,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -1068,7 +1082,7 @@ class _StepperLevelCard extends StatelessWidget {
                       : null,
                 ),
                 child: Material(
-                  color: Colors.transparent,
+                  color: AppColors.transparent,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   clipBehavior: Clip.antiAlias,
                   child: InkWell(
@@ -1302,8 +1316,8 @@ class _StepperLevelCard extends StatelessWidget {
     bool isDark,
     KycLevel level,
   ) {
-    final chipBg = isDark ? AppColors.darkBackground : const Color(0xFFF1F5F9);
-    final borderCol = isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0);
+    final chipBg = isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant;
+    final borderCol = isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant;
     final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     final (limitText, cardText, featureText) = switch (level.level) {
@@ -1367,9 +1381,9 @@ class _StepperLevelCard extends StatelessWidget {
   }
 
   Color _statusColor(KycLevel level, Color levelColor) {
-    if (level.isCompleted) return const Color(0xFF10B981); // Emerald green
+    if (level.isCompleted) return AppColors.success;
     if (level.isCurrent) return levelColor;
-    if (level.isAvailable) return const Color(0xFF2196F3);
+    if (level.isAvailable) return AppColors.info;
     return AppColors.lightTextHint;
   }
 

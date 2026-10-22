@@ -161,9 +161,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                         : controller.currentStep.value == 1
                         ? const AddMoneyReviewStepSection()
                         : controller.currentStep.value == 2
-                        ? controller.gatewayMethod.value!.type == "auto"
+                        ? (controller.successPaymentData.value != null
                             ? const AddMoneySuccessStepSection()
-                            : const AddMoneyPendingStepSection()
+                            : const AddMoneyPendingStepSection())
                         : const SizedBox.shrink();
                   }),
                 ),

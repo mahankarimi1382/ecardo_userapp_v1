@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import '../controller/license_controller.dart';
@@ -59,14 +60,22 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
             ),
             rightSideWidget: Padding(
               padding: EdgeInsetsDirectional.only(end: AppSpacing.lg.w),
-              child: IconButton(
-                tooltip: l10nPick(context, en: 'License Store', fa: 'فروشگاه لایسنس', ar: 'متجر التراخيص', zh: '授权商城'),
-                icon: Icon(
-                  Icons.shopping_bag_outlined,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                  size: AppSpacing.iconMd.sp,
+              child: Semantics(
+                button: true,
+                label: l10nPick(context, en: 'License Store', fa: 'فروشگاه لایسنس', ar: 'متجر التراخيص', zh: '授权商城'),
+                child: IconButton(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  tooltip: l10nPick(context, en: 'License Store', fa: 'فروشگاه لایسنس', ar: 'متجر التراخيص', zh: '授权商城'),
+                  icon: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    size: AppSpacing.iconMd.sp,
+                  ),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    Get.to(() => const LicenseStoreScreen());
+                  },
                 ),
-                onPressed: () => Get.to(() => const LicenseStoreScreen()),
               ),
             ),
           ),
@@ -189,64 +198,58 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
 
   Widget _buildList(BuildContext context, List<LicenseKeyItem> list, {required bool isActive, required bool isDark}) {
     if (list.isEmpty) {
-      return Center(
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.all(AppSpacing.xxl.r),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 80.w,
-                height: 80.w,
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightSecondaryContainer,
-                  shape: BoxShape.circle,
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: EcardoEmptyState(
+          iconData: isActive ? Icons.lock_outline_rounded : Icons.history_toggle_off_rounded,
+          glowColor: isActive
+              ? (isDark ? AppColors.brandViolet : AppColors.mainSoftBlue)
+              : (isDark ? AppColors.softGray : AppColors.lightWarmGray),
+          title: isActive
+              ? l10nPick(
+                  context,
+                  en: 'No Active Licenses in Vault',
+                  fa: 'هیچ لایسنس فعالی در صندوق نیست',
+                  ar: 'لا توجد تراخيص نشطة',
+                  zh: '保险库中暂无有效许可证',
+                )
+              : l10nPick(
+                  context,
+                  en: 'No Expired Licenses',
+                  fa: 'لایسنس منقضی‌شده‌ای وجود ندارد',
+                  ar: 'لا توجد تراخيص منتهية',
+                  zh: '暂无已过期许可证',
                 ),
-                child: Icon(
-                  isActive ? Icons.lock_outline_rounded : Icons.history_toggle_off_rounded,
-                  size: 40.sp,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+          description: isActive
+              ? l10nPick(
+                  context,
+                  en: 'Browse our genuine software license catalog for developer tools, OS, and AI subscriptions.',
+                  fa: 'از کاتالوگ لایسنس‌های معتبر برای ابزارهای توسعه، سیستم‌عامل و هوش مصنوعی بازدید نمایید.',
+                  ar: 'تصفح متجر التراخيص الأصلي لأدوات المطورين وأنظمة التشغيل والذكاء الاصطناعي.',
+                  zh: '浏览我们的正版软件许可证目录，获取开发工具、操作系统与AI订阅。',
+                )
+              : l10nPick(
+                  context,
+                  en: 'Past expired licenses and archived activation keys will appear here.',
+                  fa: 'کلیدهای منقضی‌شده قبلی در این قسمت آرشیو خواهند شد.',
+                  ar: 'ستظهر التراخيص المنتهية ومفاتيح التفعيل المؤرشفة هنا.',
+                  zh: '过期的许可证与已归档的激活密钥将显示在此处。',
                 ),
-              ),
-              SizedBox(height: AppSpacing.lg.h),
-              Text(
-                isActive
-                    ? l10nPick(context, en: 'No Active Licenses in Vault', fa: 'هیچ لایسنس فعالی در صندوق نیست', ar: 'لا توجد تراخيص نشطة', zh: '保险库中暂无有效许可证')
-                    : l10nPick(context, en: 'No Expired Licenses', fa: 'لایسنس منقضی‌شده‌ای وجود ندارد', ar: 'لا توجد تراخيص منتهية', zh: '暂无已过期许可证'),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                ),
-              ),
-              SizedBox(height: AppSpacing.sm.h),
-              Text(
-                isActive
-                    ? l10nPick(context,
-                        en: 'Browse our genuine software license catalog for developer tools, OS, and AI subscriptions.',
-                        fa: 'از کاتالوگ لایسنس‌های معتبر برای ابزارهای توسعه، سیستم‌عامل و هوش مصنوعی بازدید نمایید.')
-                    : l10nPick(context,
-                        en: 'Past expired licenses and archived activation keys will appear here.',
-                        fa: 'کلیدهای منقضی‌شده قبلی در این قسمت آرشیو خواهند شد.'),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                  height: 1.5,
-                ),
-              ),
-              if (isActive) ...[
-                SizedBox(height: AppSpacing.xl.h),
-                CommonButton(
-                  width: 200,
-                  height: 44,
-                  text: l10nPick(context, en: 'Explore License Store', fa: 'ورود به فروشگاه لایسنس', ar: 'تصفح المتجر', zh: '浏览授权商店'),
-                  onPressed: () => Get.to(() => const LicenseStoreScreen()),
-                ),
-              ],
-            ],
-          ),
+          primaryActionLabel: isActive
+              ? l10nPick(
+                  context,
+                  en: 'Explore License Store',
+                  fa: 'ورود به فروشگاه لایسنس',
+                  ar: 'تصفح المتجر',
+                  zh: '浏览授权商店',
+                )
+              : null,
+          onPrimaryAction: isActive
+              ? () {
+                  HapticFeedback.lightImpact();
+                  Get.to(() => const LicenseStoreScreen());
+                }
+              : null,
         ),
       );
     }
@@ -329,22 +332,25 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                           ),
                         ),
                         SizedBox(width: AppSpacing.sm.w),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.success.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.verified_user_rounded, size: 10.sp, color: AppColors.success),
-                              SizedBox(width: 3.w),
-                              Text(
-                                l10nPick(context, en: 'Genuine Retail', fa: 'اورجینال قانونی', ar: 'ترخيص أصلي', zh: '官方正版'),
-                                style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w700, color: AppColors.success),
-                              ),
-                            ],
+                        Semantics(
+                          label: l10nPick(context, en: 'Genuine Retail License', fa: 'لایسنس اورجینال قانونی', ar: 'ترخيص أصلي معتمد', zh: '官方正版授权'),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                            decoration: BoxDecoration(
+                              color: AppColors.success.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.verified_user_rounded, size: 10.sp, color: AppColors.success),
+                                SizedBox(width: 3.w),
+                                Text(
+                                  l10nPick(context, en: 'Genuine Retail', fa: 'اورجینال قانونی', ar: 'ترخيص أصلي', zh: '官方正版'),
+                                  style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w700, color: AppColors.success),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -352,22 +358,27 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: item.isExpired
-                      ? AppColors.error.withValues(alpha: 0.12)
-                      : AppColors.success.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                ),
-                child: Text(
-                  item.isExpired
-                      ? l10nPick(context, en: 'Expired', fa: 'منقضی‌شده', ar: 'منتهي', zh: '已过期')
-                      : '${item.daysRemaining ?? 30} ${l10nPick(context, en: 'Days Left', fa: 'روز باقی‌مانده', ar: 'يوم متبقي', zh: '天剩余')}',
-                  style: TextStyle(
-                    fontSize: 10.5.sp,
-                    fontWeight: FontWeight.bold,
-                    color: item.isExpired ? AppColors.error : AppColors.success,
+              Semantics(
+                label: item.isExpired
+                    ? l10nPick(context, en: 'Status: Expired', fa: 'وضعیت: منقضی‌شده', ar: 'الحالة: منتهي', zh: '状态: 已过期')
+                    : '${item.daysRemaining ?? 30} ${l10nPick(context, en: 'days remaining', fa: 'روز باقی‌مانده از اعتبار', ar: 'يوم متبقي', zh: '天剩余')}',
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: item.isExpired
+                        ? AppColors.error.withValues(alpha: 0.12)
+                        : AppColors.success.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                  ),
+                  child: Text(
+                    item.isExpired
+                        ? l10nPick(context, en: 'Expired', fa: 'منقضی‌شده', ar: 'منتهي', zh: '已过期')
+                        : '${item.daysRemaining ?? 30} ${l10nPick(context, en: 'Days Left', fa: 'روز باقی‌مانده', ar: 'يوم متبقي', zh: '天剩余')}',
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      fontWeight: FontWeight.bold,
+                      color: item.isExpired ? AppColors.error : AppColors.success,
+                    ),
                   ),
                 ),
               ),
@@ -380,7 +391,7 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
           Container(
             padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF3F4F6),
+              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
               border: Border.all(
                 color: isDark ? AppColors.darkOutline : AppColors.lightOutline,
@@ -395,52 +406,88 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                 ),
                 SizedBox(width: AppSpacing.sm.w),
                 Expanded(
-                  child: Text(
-                    displayedKey,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  child: Semantics(
+                    button: true,
+                    label: l10nPick(
+                      context,
+                      en: 'License key: $displayedKey. Tap to copy.',
+                      fa: 'کلید لایسنس: $displayedKey. برای کپی ضربه بزنید.',
+                      ar: 'مفتاح الترخيص: $displayedKey. اضغط للنسخ.',
+                      zh: '许可证密钥: $displayedKey。点击复制。',
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        final textToCopy = item.licenseKey.isNotEmpty ? item.licenseKey : item.keyMasked;
+                        Clipboard.setData(ClipboardData(text: textToCopy));
+                        ToastHelper().showSuccessToast(
+                          l10nPick(context, en: 'Digital license key copied!', fa: 'کلید لایسنس دیجیتال کپی شد!'),
+                        );
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.h),
+                        child: Text(
+                          displayedKey,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontFamily: 'monospace',
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                IconButton(
-                  tooltip: isRevealed
-                      ? l10nPick(context, en: 'Hide key', fa: 'مخفی‌سازی کلید')
-                      : l10nPick(context, en: 'Reveal key', fa: 'نمایش کلید'),
-                  icon: Icon(
-                    isRevealed ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                    size: 18.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                Semantics(
+                  button: true,
+                  label: isRevealed
+                      ? l10nPick(context, en: 'Hide license key', fa: 'مخفی‌سازی کلید لایسنس', ar: 'إخفاء المفتاح', zh: '隐藏密钥')
+                      : l10nPick(context, en: 'Reveal license key', fa: 'نمایش کلید لایسنس', ar: 'إظهار المفتاح', zh: '显示密钥'),
+                  child: IconButton(
+                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                    tooltip: isRevealed
+                        ? l10nPick(context, en: 'Hide key', fa: 'مخفی‌سازی کلید')
+                        : l10nPick(context, en: 'Reveal key', fa: 'نمایش کلید'),
+                    icon: Icon(
+                      isRevealed ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      size: 18.sp,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
+                    onPressed: () {
+                      HapticFeedback.selectionClick();
+                      setState(() {
+                        if (isRevealed) {
+                          _revealedKeys.remove(item.id);
+                        } else {
+                          _revealedKeys.add(item.id);
+                        }
+                      });
+                    },
                   ),
-                  onPressed: () {
-                    HapticFeedback.selectionClick();
-                    setState(() {
-                      if (isRevealed) {
-                        _revealedKeys.remove(item.id);
-                      } else {
-                        _revealedKeys.add(item.id);
-                      }
-                    });
-                  },
                 ),
-                IconButton(
-                  tooltip: l10nPick(context, en: 'Copy key', fa: 'کپی کلید'),
-                  icon: Icon(
-                    Icons.copy_rounded,
-                    size: 18.sp,
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                Semantics(
+                  button: true,
+                  label: l10nPick(context, en: 'Copy license key to clipboard', fa: 'کپی کلید لایسنس در حافظه', ar: 'نسخ المفتاح', zh: '复制密钥'),
+                  child: IconButton(
+                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                    tooltip: l10nPick(context, en: 'Copy key', fa: 'کپی کلید'),
+                    icon: Icon(
+                      Icons.copy_rounded,
+                      size: 18.sp,
+                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    ),
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      final textToCopy = item.licenseKey.isNotEmpty ? item.licenseKey : item.keyMasked;
+                      Clipboard.setData(ClipboardData(text: textToCopy));
+                      ToastHelper().showSuccessToast(
+                        l10nPick(context, en: 'Digital license key copied!', fa: 'کلید لایسنس دیجیتال کپی شد!'),
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    final textToCopy = item.licenseKey.isNotEmpty ? item.licenseKey : item.keyMasked;
-                    Clipboard.setData(ClipboardData(text: textToCopy));
-                    ToastHelper().showSuccessToast(
-                      l10nPick(context, en: 'Digital license key copied!', fa: 'کلید لایسنس دیجیتال کپی شد!'),
-                    );
-                  },
                 ),
               ],
             ),
@@ -471,29 +518,39 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                   ),
                 ],
               ),
-              CommonButton(
-                width: 140,
-                height: 38,
-                fontSize: 12,
-                text: l10nPick(
+              Semantics(
+                button: true,
+                label: l10nPick(
                   context,
-                  en: 'Renew License',
-                  fa: 'تمدید لایسنس',
-                  ar: 'تجديد الترخيص',
-                  zh: '续订许可证',
+                  en: 'Renew license for ${item.productName}',
+                  fa: 'تمدید لایسنس برای ${item.productName}',
+                  ar: 'تجديد ترخيص ${item.productName}',
+                  zh: '续订 ${item.productName} 许可证',
                 ),
-                onPressed: () async {
-                  HapticFeedback.lightImpact();
-                  final newOrd = await controller.renewLicense(item.id);
-                  if (!context.mounted) return;
-                  if (newOrd != null) {
-                    ToastHelper().showSuccessToast(l10nPick(
-                      context,
-                      en: 'Renewal order created!',
-                      fa: 'سفارش تمدید لایسنس ثبت شد!',
-                    ));
-                  }
-                },
+                child: CommonButton(
+                  width: 140,
+                  height: 44,
+                  fontSize: 12,
+                  text: l10nPick(
+                    context,
+                    en: 'Renew License',
+                    fa: 'تمدید لایسنس',
+                    ar: 'تجديد الترخيص',
+                    zh: '续订许可证',
+                  ),
+                  onPressed: () async {
+                    HapticFeedback.lightImpact();
+                    final newOrd = await controller.renewLicense(item.id);
+                    if (!context.mounted) return;
+                    if (newOrd != null) {
+                      ToastHelper().showSuccessToast(l10nPick(
+                        context,
+                        en: 'Renewal order created!',
+                        fa: 'سفارش تمدید لایسنس ثبت شد!',
+                      ));
+                    }
+                  },
+                ),
               ),
             ],
           ),

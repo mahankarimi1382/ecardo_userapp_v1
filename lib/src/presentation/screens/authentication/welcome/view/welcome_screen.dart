@@ -80,7 +80,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: isDark ? const Color(0xFF090D1A) : AppColors.lightBackground,
+        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
         appBar: const CommonDefaultAppBar(),
         body: AmbientAuthBackground(
           child: SafeArea(
@@ -164,8 +164,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                               icon: Icons.account_balance_wallet_rounded,
                                               imageAsset: PngAssets.walletsService,
                                               accentGradient: const [
-                                                Color(0xFF0284C7),
-                                                Color(0xFF38BDF8),
+                                                AppColors.info,
+                                                AppColors.mainSoftBlue,
                                               ],
                                               isDark: isDark,
                                             ),
@@ -210,8 +210,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                               icon: Icons.bolt_rounded,
                                               imageAsset: PngAssets.transferService,
                                               accentGradient: const [
-                                                Color(0xFF059669),
-                                                Color(0xFF10B981),
+                                                AppColors.success,
+                                                AppColors.mutedBlue,
                                               ],
                                               isDark: isDark,
                                             ),
@@ -256,8 +256,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                               icon: Icons.credit_card_rounded,
                                               imageAsset: PngAssets.virtualCardService,
                                               accentGradient: const [
-                                                Color(0xFF6366F1),
-                                                Color(0xFF818CF8),
+                                                AppColors.brandViolet,
+                                                AppColors.mainSoftBlue,
                                               ],
                                               isDark: isDark,
                                             ),

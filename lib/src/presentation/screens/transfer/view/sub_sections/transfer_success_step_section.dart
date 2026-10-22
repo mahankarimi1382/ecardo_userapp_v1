@@ -29,6 +29,16 @@ class _TransferSuccessStepSectionState
   final TransferController controller = Get.find();
   final settingsService = Get.find<SettingsService>();
 
+  /// Returns the trimmed value, or null when the backend did not supply one.
+  /// Never synthesize a reference — a fabricated ID on a receipt is
+  /// indistinguishable from a real one and misleads support and the user.
+  static String? _nonEmpty(String? value) {
+    final trimmed = value?.trim();
+    return (trimmed == null || trimmed.isEmpty || trimmed == 'null')
+        ? null
+        : trimmed;
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -54,7 +64,7 @@ class _TransferSuccessStepSectionState
         controller.amountController.text;
     final amount = double.tryParse(rawFinalAmount.toString()) ?? 0.0;
 
-    final tnxId = senderTx?["tnx"]?.toString() ?? 'TRX-ECAR-${DateTime.now().millisecondsSinceEpoch}';
+    final tnxId = _nonEmpty(senderTx?["tnx"]?.toString());
     final createdAt = senderTx?["created_at"]?.toString() ?? '';
     final description = senderTx?["description"]?.toString() ?? '';
     final rawCharge = senderTx?["charge"];

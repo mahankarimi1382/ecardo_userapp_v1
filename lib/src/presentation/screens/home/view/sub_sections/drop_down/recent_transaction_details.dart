@@ -13,6 +13,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/status_label_helper.dart';
@@ -72,7 +73,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
   }
 
   Color _getAmountColor(bool? isPlus) {
-    return isPlus == true ? const Color(0xFF10B981) : const Color(0xFFDC2626);
+    return isPlus == true ? AppColors.success : AppColors.error;
   }
 
   String _getAmountPrefix(bool? isPlus) {
@@ -85,10 +86,32 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     String? currencyCode,
     String? currencySymbol,
   ) {
-    if (isCrypto == true) {
-      return "$amount $currencyCode";
+    String clean = amount;
+    final parsed = double.tryParse(amount.replaceAll(',', ''));
+    if (parsed != null && currencyCode != null && currencyCode.isNotEmpty) {
+      final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+        currencyCode: currencyCode,
+        siteCurrencyCode: 'USD',
+        siteCurrencyDecimals: '2',
+        isCrypto: isCrypto == true,
+      );
+      if (decimals == 0) {
+        clean = parsed.toInt().toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]},',
+        );
+      } else {
+        clean = parsed.toStringAsFixed(decimals).replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (m) => '${m[1]},',
+        );
+      }
     }
-    return "$currencySymbol$amount";
+    if (isCrypto == true) {
+      return "$clean $currencyCode";
+    }
+    final sym = currencySymbol ?? '';
+    return sym.isNotEmpty ? "$sym$clean" : "$clean ${currencyCode ?? ''}".trim();
   }
 
   void _onRepeat() {
@@ -144,7 +167,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
       curve: Curves.easeOutQuart,
       margin: const EdgeInsetsDirectional.symmetric(horizontal: 10),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E24) : AppColors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: const BorderRadiusDirectional.only(
           topStart: Radius.circular(24),
           topEnd: Radius.circular(24),
@@ -175,7 +198,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                 child: RepaintBoundary(
                   key: _receiptKey,
                   child: Container(
-                    color: isDark ? const Color(0xFF1E1E24) : AppColors.white,
+                    color: isDark ? AppColors.darkSurface : AppColors.white,
                     child: Column(
                       children: [
                         _buildBrandedShareHeader(),

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -108,6 +109,9 @@ class ReceivedRequestController extends GetxController {
         isSubmittingAction.value = false;
         await fetchReceivedRequest(isRefresh: true);
         ToastHelper().showSuccessToast(response.data!["message"]);
+        if (action == 'accept') {
+          AppEventBus.emit(BalanceChangedEvent(sourceModule: 'request_money'));
+        }
       }
     } catch (e, stackTrace) {
       debugPrint('❌ loadMoreTransactions() error: $e');

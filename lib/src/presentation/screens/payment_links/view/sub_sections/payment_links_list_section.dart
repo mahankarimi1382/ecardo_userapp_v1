@@ -105,10 +105,17 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                         BoxConstraints(minHeight: constraints.maxHeight),
                     child: Center(
                       child: EcardoEmptyState(
-                        title: localizations.paymentLinksTabList,
-                        description: localizations.noDataFound,
+                        title: localizations.paymentLinksAppBarTitle,
+                        description: localizations.paymentLinksInstructionText,
                         iconData: Icons.link_rounded,
-                        primaryActionLabel: localizations.paymentLinksTabCreate,
+                        iconColor: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                        glowColor: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                        primaryActionLabel:
+                            localizations.paymentLinksCreateLinkButton,
                         onPrimaryAction: () {
                           HapticFeedback.lightImpact();
                           controller.selectedScreen.value = 1;
@@ -121,7 +128,7 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
             }
 
             return RefreshIndicator(
-              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
               onRefresh: _onRefresh,
               child: ListView.separated(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -183,46 +190,65 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                                 ),
                               ),
                             ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(
-                                AppSpacing.radiusSm,
-                              ),
-                              onTap: () {
-                                HapticFeedback.lightImpact();
-                                Clipboard.setData(
-                                  ClipboardData(
-                                    text: paymentLink.paymentLink ?? "",
-                                  ),
-                                );
-                                ToastHelper().showSuccessToast(
-                                  localizations.paymentLinksCopySuccessToast,
-                                );
-                              },
-                              child: Container(
-                                width: 34,
-                                height: 34,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    AppSpacing.radiusSm,
-                                  ),
-                                  color: (isDark
-                                          ? AppColors.darkPrimary
-                                          : AppColors.lightPrimary)
-                                      .withValues(alpha: 0.10),
-                                  border: Border.all(
-                                    color: (isDark
-                                            ? AppColors.darkPrimary
-                                            : AppColors.lightPrimary)
-                                        .withValues(alpha: 0.25),
-                                    width: 1,
-                                  ),
+                            Semantics(
+                              button: true,
+                              label: localizations
+                                  .paymentLinksCopySuccessToast,
+                              tooltip: localizations
+                                  .paymentLinksCopySuccessToast,
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusSm,
                                 ),
-                                padding: const EdgeInsets.all(AppSpacing.xs + 2),
-                                child: Image.asset(
-                                  PngAssets.commonGiftCopyIcon,
-                                  color: isDark
-                                      ? AppColors.darkPrimary
-                                      : AppColors.lightPrimary,
+                                onTap: () {
+                                  HapticFeedback.lightImpact();
+                                  Clipboard.setData(
+                                    ClipboardData(
+                                      text: paymentLink.paymentLink ?? "",
+                                    ),
+                                  );
+                                  ToastHelper().showSuccessToast(
+                                    localizations
+                                        .paymentLinksCopySuccessToast,
+                                  );
+                                },
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    minWidth: 44,
+                                    minHeight: 44,
+                                  ),
+                                  child: Center(
+                                    child: Container(
+                                      width: 36,
+                                      height: 36,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(
+                                          AppSpacing.radiusSm,
+                                        ),
+                                        color: (isDark
+                                                ? AppColors.darkPrimary
+                                                : AppColors.brandViolet)
+                                            .withValues(alpha: 0.10),
+                                        border: Border.all(
+                                          color: (isDark
+                                                  ? AppColors.darkPrimary
+                                                  : AppColors.brandViolet)
+                                              .withValues(alpha: 0.25),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      padding: const EdgeInsets.all(
+                                        AppSpacing.xs + 2,
+                                      ),
+                                      child: Image.asset(
+                                        PngAssets.commonGiftCopyIcon,
+                                        color: isDark
+                                            ? AppColors.darkPrimary
+                                            : AppColors.brandViolet,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),

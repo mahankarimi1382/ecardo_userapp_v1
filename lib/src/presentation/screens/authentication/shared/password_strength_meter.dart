@@ -67,10 +67,10 @@ class PasswordStrengthMeter extends StatelessWidget {
   }
 
   Color _strengthColor(int score) {
-    if (score == 0) return Colors.transparent;
-    if (score <= 1) return const Color(0xFFEF4444); // Weak - Red
-    if (score <= 3) return const Color(0xFFF59E0B); // Medium - Amber
-    return const Color(0xFF10B981); // Strong - Emerald
+    if (score == 0) return AppColors.transparent;
+    if (score <= 1) return AppColors.error; // Weak - Red
+    if (score <= 3) return AppColors.warning; // Medium - Amber
+    return AppColors.success; // Strong - Emerald
   }
 
   @override
@@ -123,35 +123,46 @@ class PasswordStrengthMeter extends StatelessWidget {
             ],
           ),
           SizedBox(height: 6.h),
-          // 4-segment progress bar
-          Row(
-            children: [
-              for (int i = 1; i <= 4; i++)
-                Expanded(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeOut,
-                    height: 4.h,
-                    margin: EdgeInsets.symmetric(horizontal: 2.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(2.r),
-                      color: i <= score
-                          ? color
-                          : (isDark
-                              ? Colors.white.withValues(alpha: 0.10)
-                              : const Color(0xFFE2E8F0)),
-                      boxShadow: i <= score
-                          ? [
-                              BoxShadow(
-                                color: color.withValues(alpha: 0.4),
-                                blurRadius: 4,
-                              ),
-                            ]
-                          : null,
+          // 4-segment progress bar with Semantics
+          Semantics(
+            label: l10nPick(
+              context,
+              en: 'Password security level: $label',
+              fa: 'سطح امنیت رمز عبور: $label',
+              ar: 'مستوى أمان كلمة المرور: $label',
+              zh: '密码安全级别: $label',
+              tr: 'Şifre güvenlik seviyesi: $label',
+              ru: 'Уровень безопасности пароля: $label',
+            ),
+            child: Row(
+              children: [
+                for (int i = 1; i <= 4; i++)
+                  Expanded(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeOut,
+                      height: 4.h,
+                      margin: EdgeInsets.symmetric(horizontal: 2.w),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2.r),
+                        color: i <= score
+                            ? color
+                            : (isDark
+                                ? AppColors.white.withValues(alpha: 0.10)
+                                : AppColors.lightOutlineVariant),
+                        boxShadow: i <= score
+                            ? [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.4),
+                                  blurRadius: 4,
+                                ),
+                              ]
+                            : null,
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
           SizedBox(height: 12.h),
         ],
@@ -223,60 +234,78 @@ class PasswordStrengthMeter extends StatelessWidget {
         // Confirm password match feedback
         if (showConfirmMatch) ...[
           SizedBox(height: 8.h),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: isMatch
-                  ? const Color(0xFF10B981).withValues(alpha: 0.12)
-                  : const Color(0xFFEF4444).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(
-                color: isMatch
-                    ? const Color(0xFF10B981).withValues(alpha: 0.40)
-                    : const Color(0xFFEF4444).withValues(alpha: 0.40),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  isMatch ? Icons.check_circle_rounded : Icons.cancel_rounded,
-                  size: 14.sp,
-                  color:
-                      isMatch ? const Color(0xFF10B981) : const Color(0xFFEF4444),
-                ),
-                SizedBox(width: 6.w),
-                Text(
-                  isMatch
-                      ? l10nPick(
-                          context,
-                          en: 'Passwords match',
-                          fa: 'رمزهای عبور مطابقت دارند',
-                          ar: 'كلمتا المرور متطابقتان',
-                          zh: '密码匹配',
-                          tr: 'Şifreler eşleşiyor',
-                          ru: 'Пароли совпадают',
-                        )
-                      : l10nPick(
-                          context,
-                          en: 'Passwords do not match',
-                          fa: 'رمزهای عبور مطابقت ندارند',
-                          ar: 'كلمتا المرور غير متطابقتين',
-                          zh: '密码不匹配',
-                          tr: 'Şifreler uyuşmuyor',
-                          ru: 'Пароли не совпадают',
-                        ),
-                  style: TextStyle(
-                    fontSize: 11.5.sp,
-                    fontWeight: FontWeight.w700,
-                    color: isMatch
-                        ? const Color(0xFF10B981)
-                        : const Color(0xFFEF4444),
+          Semantics(
+            label: isMatch
+                ? l10nPick(
+                    context,
+                    en: 'Passwords match',
+                    fa: 'رمزهای عبور مطابقت دارند',
+                    ar: 'كلمتا المرور متطابقتان',
+                    zh: '密码匹配',
+                    tr: 'Şifreler eşleşiyor',
+                    ru: 'Пароли совпадают',
+                  )
+                : l10nPick(
+                    context,
+                    en: 'Passwords do not match',
+                    fa: 'رمزهای عبور مطابقت ندارند',
+                    ar: 'كلمتا المرور غير متطابقتين',
+                    zh: '密码不匹配',
+                    tr: 'Şifreler uyuşmuyor',
+                    ru: 'Пароли не совпадают',
                   ),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+              decoration: BoxDecoration(
+                color: isMatch
+                    ? AppColors.success.withValues(alpha: 0.12)
+                    : AppColors.error.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(
+                  color: isMatch
+                      ? AppColors.success.withValues(alpha: 0.40)
+                      : AppColors.error.withValues(alpha: 0.40),
+                  width: 1,
                 ),
-              ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    isMatch ? Icons.check_circle_rounded : Icons.cancel_rounded,
+                    size: 14.sp,
+                    color: isMatch ? AppColors.success : AppColors.error,
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    isMatch
+                        ? l10nPick(
+                            context,
+                            en: 'Passwords match',
+                            fa: 'رمزهای عبور مطابقت دارند',
+                            ar: 'كلمتا المرور متطابقتان',
+                            zh: '密码匹配',
+                            tr: 'Şifreler eşleşiyor',
+                            ru: 'Пароли совпадают',
+                          )
+                        : l10nPick(
+                            context,
+                            en: 'Passwords do not match',
+                            fa: 'رمزهای عبور مطابقت ندارند',
+                            ar: 'كلمتا المرور غير متطابقتين',
+                            zh: '密码不匹配',
+                            tr: 'Şifreler uyuşmuyor',
+                            ru: 'Пароли не совпадают',
+                          ),
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w700,
+                      color: isMatch ? AppColors.success : AppColors.error,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -291,47 +320,51 @@ class PasswordStrengthMeter extends StatelessWidget {
     required bool isDark,
   }) {
     final chipBg = isMet
-        ? const Color(0xFF10B981).withValues(alpha: 0.12)
+        ? AppColors.success.withValues(alpha: 0.12)
         : (isDark
-            ? Colors.white.withValues(alpha: 0.05)
-            : const Color(0xFFF1F5F9));
+            ? AppColors.white.withValues(alpha: 0.05)
+            : AppColors.lightSurfaceVariant);
     final chipBorder = isMet
-        ? const Color(0xFF10B981).withValues(alpha: 0.40)
+        ? AppColors.success.withValues(alpha: 0.40)
         : (isDark
-            ? Colors.white.withValues(alpha: 0.10)
-            : const Color(0xFFE2E8F0));
+            ? AppColors.darkBorder
+            : AppColors.lightOutlineVariant);
     final textColor = isMet
-        ? (isDark ? const Color(0xFF34D399) : const Color(0xFF047857))
+        ? AppColors.success
         : (isDark
             ? AppColors.darkTextSecondary
             : AppColors.lightTextTertiary);
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: chipBg,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: chipBorder, width: 1),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isMet ? Icons.check_rounded : Icons.radio_button_unchecked_rounded,
-            size: 13.sp,
-            color: isMet ? const Color(0xFF10B981) : textColor,
-          ),
-          SizedBox(width: 4.w),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11.sp,
-              fontWeight: isMet ? FontWeight.w800 : FontWeight.w500,
-              color: textColor,
+    return Semantics(
+      label:
+          '$label: ${isMet ? l10nPick(context, en: 'fulfilled', fa: 'برقرار') : l10nPick(context, en: 'not fulfilled', fa: 'برقرار نشده')}',
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+        decoration: BoxDecoration(
+          color: chipBg,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(color: chipBorder, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isMet ? Icons.check_rounded : Icons.radio_button_unchecked_rounded,
+              size: 13.sp,
+              color: isMet ? AppColors.success : textColor,
             ),
-          ),
-        ],
+            SizedBox(width: 4.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: isMet ? FontWeight.w800 : FontWeight.w500,
+                color: textColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

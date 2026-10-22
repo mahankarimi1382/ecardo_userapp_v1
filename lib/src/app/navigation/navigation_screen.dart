@@ -1,5 +1,6 @@
 import 'dart:ui' show ImageFilter;
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -81,8 +82,24 @@ class _NavigationScreenState extends State<NavigationScreen> {
         SettingsScreen(),
       ];
 
-      return Scaffold(
-        key: _scaffoldKey,
+      return PopScope(
+        canPop: homeController.selectedIndex.value == 0,
+        onPopInvokedWithResult: (didPop, _) {
+          if (didPop) return;
+          if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+            _scaffoldKey.currentState?.closeDrawer();
+            return;
+          }
+          if (_scaffoldKey.currentState?.isEndDrawerOpen ?? false) {
+            _scaffoldKey.currentState?.closeEndDrawer();
+            return;
+          }
+          if (homeController.selectedIndex.value != 0) {
+            homeController.selectedIndex.value = 0;
+          }
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
         resizeToAvoidBottomInset: false,
         drawer: DrawerSection(),
         endDrawer: EndDrawerSection(),
@@ -101,9 +118,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ],
         ),
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
-            ? FloatingActionButton(
-                heroTag: null,
-                tooltip: l10nPick(
+            ? Semantics(
+                button: true,
+                enabled: true,
+                label: l10nPick(
                   context,
                   en: 'QR & Quick Actions',
                   fa: 'کیو‌آر و عملیات سریع',
@@ -112,19 +130,35 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   ru: 'QR и быстрые действия',
                   zh: '二维码与快捷操作',
                 ),
-                backgroundColor:
-                    isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
+                child: SizedBox(
+                  width: 56,
+                  height: 56,
+                  child: FloatingActionButton(
+                    heroTag: null,
+                    tooltip: l10nPick(
+                      context,
+                      en: 'QR & Quick Actions',
+                      fa: 'کیو‌آر و عملیات سریع',
+                      ar: 'رمز QR والإجراءات السريعة',
+                      tr: 'QR ve Hızlı İşlemler',
+                      ru: 'QR и быстрые действия',
+                      zh: '二维码与快捷操作',
+                    ),
+                    backgroundColor:
+                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Image.asset(
+                      PngAssets.commonScannerIcon,
+                      color: AppColors.white,
+                      width: 25,
+                      height: 25,
+                    ),
+                    onPressed: () => _showQrQuickActionsBottomSheet(context),
+                  ),
                 ),
-                child: Image.asset(
-                  PngAssets.commonScannerIcon,
-                  color: AppColors.white,
-                  width: 25,
-                  height: 25,
-                ),
-                onPressed: () => _showQrQuickActionsBottomSheet(context),
               )
             : null,
 
@@ -148,30 +182,42 @@ class _NavigationScreenState extends State<NavigationScreen> {
                         : AppColors.lightTextPrimary)
                     .withValues(alpha: 0.30);
 
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  iconList[index],
-                  color: color,
-                  width: index == 0
-                      ? 25
-                      : index == 1
-                      ? 26
-                      : index == 2
-                      ? 22
-                      : 28,
+            return Semantics(
+              button: true,
+              selected: isActive,
+              label: labelList[index],
+              excludeSemantics: true,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 48,
+                  minHeight: 48,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  labelList[index],
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w900,
-                    color: color,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      iconList[index],
+                      color: color,
+                      width: index == 0
+                          ? 25
+                          : index == 1
+                          ? 26
+                          : index == 2
+                          ? 22
+                          : 28,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      labelList[index],
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: color,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             );
           },
 
@@ -184,7 +230,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             color: AppColors.black.withValues(alpha: 0.10),
           ),
         ),
-      );
+      ));
     });
   }
 
@@ -337,33 +383,37 @@ class _QrQuickActionsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final surfaceColor = isDark
-        ? const Color(0xFF131722).withValues(alpha: 0.94)
-        : Colors.white.withValues(alpha: 0.95);
+    final disableAnimations =
+        MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    // When reduced motion is preferred or on low-end platforms, bypass the expensive
+    // 20-sigma blur with a tinted, hardware-friendly container to avoid GPU compositing jank.
+    final bool bypassBlur = disableAnimations || kIsWeb;
+
+    final surfaceColor = bypassBlur
+        ? (isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant)
+        : (isDark
+            ? const Color(0xFF131722).withValues(alpha: 0.94)
+            : Colors.white.withValues(alpha: 0.95));
     final borderColor = isDark
         ? Colors.white.withValues(alpha: 0.12)
         : AppColors.brandViolet.withValues(alpha: 0.15);
 
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          decoration: BoxDecoration(
-            color: surfaceColor,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-            border: Border(
-              top: BorderSide(color: borderColor, width: 1.2),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.12),
-                blurRadius: 30,
-                offset: const Offset(0, -6),
-              ),
-            ],
+    final sheetContent = Container(
+      decoration: BoxDecoration(
+        color: surfaceColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        border: Border(
+          top: BorderSide(color: borderColor, width: 1.2),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.12),
+            blurRadius: 30,
+            offset: const Offset(0, -6),
           ),
-          child: SafeArea(
+        ],
+      ),
+      child: SafeArea(
             top: false,
             child: ConstrainedBox(
               constraints: BoxConstraints(
@@ -465,22 +515,34 @@ class _QrQuickActionsBottomSheet extends StatelessWidget {
                             ],
                           ),
                         ),
-                        InkWell(
-                          onTap: () => Navigator.of(context).pop(),
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            padding: const EdgeInsets.all(7),
-                            decoration: BoxDecoration(
-                              color: (isDark ? Colors.white : Colors.black)
-                                  .withValues(alpha: 0.06),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.close_rounded,
-                              size: 18,
-                              color: isDark
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
+                        Semantics(
+                          button: true,
+                          label: MaterialLocalizations.of(context).closeButtonTooltip,
+                          child: InkWell(
+                            onTap: () => Navigator.of(context).pop(),
+                            borderRadius: BorderRadius.circular(20),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                minWidth: 48,
+                                minHeight: 48,
+                              ),
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(7),
+                                  decoration: BoxDecoration(
+                                    color: (isDark ? Colors.white : Colors.black)
+                                        .withValues(alpha: 0.06),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.close_rounded,
+                                    size: 18,
+                                    color: isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -623,8 +685,16 @@ class _QrQuickActionsBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ),
+        );
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      child: bypassBlur
+          ? sheetContent
+          : BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: sheetContent,
+            ),
     );
   }
 }
@@ -660,107 +730,121 @@ class _QuickActionTileState extends State<_QuickActionTile> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedScale(
-      scale: _isPressed ? 0.98 : 1.0,
-      duration: const Duration(milliseconds: 100),
-      curve: Curves.easeOutCubic,
-      child: Container(
-        decoration: BoxDecoration(
-          color: widget.isDark
-              ? Colors.white.withValues(alpha: 0.05)
-              : Colors.black.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
+    final disableAnimations =
+        MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+
+    return Semantics(
+      button: true,
+      label: '${widget.title}, ${widget.subtitle}',
+      child: AnimatedScale(
+        scale: disableAnimations ? 1.0 : (_isPressed ? 0.98 : 1.0),
+        duration: disableAnimations
+            ? Duration.zero
+            : const Duration(milliseconds: 100),
+        curve: Curves.easeOutCubic,
+        child: Container(
+          decoration: BoxDecoration(
             color: widget.isDark
-                ? Colors.white.withValues(alpha: 0.08)
-                : Colors.black.withValues(alpha: 0.06),
-            width: 1.1,
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.03),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: widget.isDark
+                  ? Colors.white.withValues(alpha: 0.08)
+                  : Colors.black.withValues(alpha: 0.06),
+              width: 1.1,
+            ),
           ),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(18),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTapDown: (_) => setState(() => _isPressed = true),
-            onTapUp: (_) => setState(() => _isPressed = false),
-            onTapCancel: () => setState(() => _isPressed = false),
-            onTap: () {
-              AppHaptics.light();
-              widget.onTap();
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              child: Row(
-                children: [
-                  Container(
-                    width: 46,
-                    height: 46,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: widget.gradientColors,
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+          child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(18),
+            clipBehavior: Clip.antiAlias,
+            child: InkWell(
+              onTapDown: (_) => setState(() => _isPressed = true),
+              onTapUp: (_) => setState(() => _isPressed = false),
+              onTapCancel: () => setState(() => _isPressed = false),
+              onTap: () {
+                AppHaptics.light();
+                widget.onTap();
+              },
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minHeight: 48,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: widget.gradientColors,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                          boxShadow: [
+                            BoxShadow(
+                              color: widget.shadowColor,
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          widget.icon,
+                          color: Colors.white,
+                          size: 24,
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: widget.shadowColor,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w800,
+                                color: widget.isDark
+                                    ? Colors.white
+                                    : AppColors.deepBlack,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              widget.subtitle,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w500,
+                                color: widget.isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Icon(
-                      widget.icon,
-                      color: Colors.white,
-                      size: 24,
-                    ),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        widget.isRtl
+                            ? Icons.chevron_left_rounded
+                            : Icons.chevron_right_rounded,
+                        color: widget.isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary.withValues(alpha: 0.6),
+                        size: 22,
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w800,
-                            color: widget.isDark
-                                ? Colors.white
-                                : AppColors.deepBlack,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          widget.subtitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w500,
-                            color: widget.isDark
-                                ? AppColors.darkTextSecondary
-                                : AppColors.lightTextSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    widget.isRtl
-                        ? Icons.chevron_left_rounded
-                        : Icons.chevron_right_rounded,
-                    color: widget.isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextSecondary.withValues(alpha: 0.6),
-                    size: 22,
-                  ),
-                ],
+                ),
               ),
             ),
           ),

@@ -1397,7 +1397,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         zh: '关于我们',
                       ),
                       subtitle: _versionLabel(),
-                      onTap: null,
+                      onTap: () => _showAboutBottomSheet(context, isDark),
                     ),
                     _navTile(
                       context: context,
@@ -2486,6 +2486,248 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
+
+  Future<void> _showAboutBottomSheet(BuildContext context, bool isDark) async {
+    HapticFeedback.lightImpact();
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final secondaryTextColor =
+        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: cardBg,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 4.h, bottom: 16.h),
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.softGray.withValues(alpha: 0.4)
+                        : AppColors.lightWarmGray,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              Center(
+                child: Container(
+                  width: 56.w,
+                  height: 56.w,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkPrimaryContainer
+                        : AppColors.brandVioletContainer,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.shield_rounded,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
+                    size: 30.sp,
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Center(
+                child: Text(
+                  'eCardo',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w800,
+                    color: primaryTextColor,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Center(
+                child: Text(
+                  _versionLabel(),
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.h),
+              Text(
+                l10nPick(
+                  context,
+                  en: 'Next-generation multi-currency financial ecosystem and secure digital wallet.',
+                  fa: 'اکوسیستم مالی چندارزی و کیف پول دیجیتال امن نسل جدید اکاردو.',
+                  ar: 'نظام بيئي مالي متعدد العملات ومحفظة رقمية آمنة.',
+                  tr: 'Yeni nesil çoklu para birimi finansal ekosistemi ve güvenli dijital cüzdan.',
+                  ru: 'Мультивалютная финансовая экосистема и безопасный цифровой кошелек нового поколения.',
+                  zh: '新一代多币种金融生态系统与安全数字钱包。',
+                ),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: secondaryTextColor,
+                  height: 1.45,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkBackground
+                      : AppColors.lightBackground,
+                  borderRadius: BorderRadius.circular(14.r),
+                  border: Border.all(color: borderColor, width: 0.9),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.verified_rounded,
+                          size: 16.sp,
+                          color: AppColors.success,
+                        ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Legal & Compliance',
+                            fa: 'اطلاعات حقوقی و انطباق',
+                            ar: 'المعلومات القانونية والامتثال',
+                            tr: 'Yasal ve Uyum Bilgileri',
+                            ru: 'Правовая информация',
+                            zh: '法律与合规',
+                          ),
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: primaryTextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Licensed financial technology services provider. Transactions and digital assets are secured with cryptographic protocols and strict AML/KYC standards.',
+                        fa: 'ارائه‌دهنده خدمات فناوری مالی دارای مجوز. تراکنش‌ها و دارایی‌های دیجیتال با پروتکل‌های رمزنگاری پیشرفته و استانداردهای AML/KYC محافظت می‌شوند.',
+                        ar: 'مزود خدمات التكنولوجيا المالية المرخص. تتم حماية المعاملات والأصول الرقمية ببروتوكولات التشفير ومعايير الامتثال.',
+                        tr: 'Lisanslı finansal teknoloji hizmet sağlayıcısı. İşlemler ve dijital varlıklar gelişmiş şifreleme ve AML/KYC standartlarıyla korunmaktadır.',
+                        ru: 'Лицензированный провайдер финансовых технологий. Транзакции защищены криптографическими протоколами.',
+                        zh: '持牌金融科技服务提供商。交易和数字资产受到加密协议和反洗钱/了解你的客户标准的严格保护。',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: secondaryTextColor,
+                        height: 1.4,
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      'Copyright © 2026 eCardo Inc. All rights reserved.',
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        color: secondaryTextColor.withValues(alpha: 0.8),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 14.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: borderColor),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 11.h),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        Get.toNamed(BaseRoute.privacyPolicy);
+                      },
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Privacy & Terms',
+                          fa: 'قوانین و حریم خصوصی',
+                          ar: 'الشروط والخصوصية',
+                          tr: 'Gizlilik ve Şartlar',
+                          ru: 'Условия и конфиденциальность',
+                          zh: '条款与隐私',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: primaryTextColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark
+                            ? AppColors.brandVioletDeep
+                            : AppColors.brandViolet,
+                        foregroundColor: AppColors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 11.h),
+                      ),
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Close',
+                          fa: 'بستن',
+                          ar: 'إغلاق',
+                          tr: 'Kapat',
+                          ru: 'Закрыть',
+                          zh: '关闭',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 8.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _BottomSheetItem<T> {
@@ -2518,101 +2760,38 @@ class SettingsIconStyle {
 /// Maps each setting category/tile to unified semantic color tokens supporting
 /// both light and dark mode variants gracefully.
 class SettingsIconTokens {
-  // ------------------ SEMANTIC PALETTE TOKENS ------------------
-  // Blue — Profile, Sound, About Us
-  static const Color _blue50 = Color(0xFFEFF6FF);
-  static const Color _blue300 = Color(0xFF93C5FD);
-  static const Color _blue400 = Color(0xFF60A5FA);
-  static const Color _blue600 = Color(0xFF2563EB);
-  static const Color _slate800 = Color(0xFF1E293B);
-
-  // Teal — Identity, Verification, Support
-  static const Color _teal50 = Color(0xFFF0FDFA);
-  static const Color _teal300 = Color(0xFF5EEAD4);
-  static const Color _teal400 = Color(0xFF2DD4BF);
-  static const Color _teal600 = Color(0xFF0D9488);
-  static const Color _teal900 = Color(0xFF134E4A);
-
-  // Violet / Purple — Testing Lab, Vibration, Theme
-  static const Color _violet50 = Color(0xFFF5F3FF);
-  static const Color _violet300 = Color(0xFFC4B5FD);
-  static const Color _violet400 = Color(0xFFA78BFA);
-  static const Color _violet600 = Color(0xFF7C3AED);
-  static const Color _violet950 = Color(0xFF2E1065);
-
-  // Indigo — Authentication, Device Management, Permissions
-  static const Color _indigo50 = Color(0xFFEEF2FF);
-  static const Color _indigo300 = Color(0xFFA5B4FC);
-  static const Color _indigo500 = Color(0xFF6366F1);
-  static const Color _indigo600 = Color(0xFF4F46E5);
-  static const Color _indigo900 = Color(0xFF312E81);
-
-  // Amber — Financial Authorization, Marketing
-  static const Color _amber50 = Color(0xFFFFFBEB);
-  static const Color _amber300 = Color(0xFFFCD34D);
-  static const Color _amber400 = Color(0xFFFBBF24);
-  static const Color _amber600 = Color(0xFFD97706);
-  static const Color _amber900 = Color(0xFF78350F);
-
-  // Emerald — Two-Factor, Transfers, Currency, App Updates
-  static const Color _emerald50 = Color(0xFFECFDF5);
-  static const Color _emerald300 = Color(0xFF6EE7B7);
-  static const Color _emerald400 = Color(0xFF34D399);
-  static const Color _emerald600 = Color(0xFF059669);
-  static const Color _emerald950 = Color(0xFF064E3B);
-
-  // Sky — OTP Generation, History Feeds, Localization
-  static const Color _sky50 = Color(0xFFF0F9FF);
-  static const Color _sky300 = Color(0xFF7DD3FC);
-  static const Color _sky400 = Color(0xFF38BDF8);
-  static const Color _sky600 = Color(0xFF0284C7);
-  static const Color _sky900 = Color(0xFF0C4A6E);
-
-  // Orange — Security Timers & Lockouts
-  static const Color _orange50 = Color(0xFFFFF7ED);
-  static const Color _orange400 = Color(0xFFFB923C);
-  static const Color _orange600 = Color(0xFFEA580C);
-  static const Color _orange900 = Color(0xFF7C2D12);
-
-  // Slate — Local PIN, Legal Policies & Documentation
-  static const Color _slate100 = Color(0xFFF1F5F9);
-  static const Color _slate300 = Color(0xFFCBD5E1);
-  static const Color _slate400 = Color(0xFF94A3B8);
-  static const Color _slate600 = Color(0xFF475569);
-  static const Color _slate700 = Color(0xFF334155);
-
-  // Danger Dark Background (Elevated Error Surface)
-  static const Color _red950 = Color(0xFF450A0A);
-
-  // Chevron Neutral Light
-  static const Color _chevronLight = Color(0xFF9CA3AF);
-
   // ------------------ SEMANTIC HELPERS ------------------
 
   /// Trailing chevron color respecting theme brightness
   static Color chevronColor({required bool isDark}) =>
-      isDark ? AppColors.softGray : _chevronLight;
+      isDark ? AppColors.softGray : AppColors.softGray.withValues(alpha: 0.7);
 
   // ------------------ CATEGORY: ACCOUNT ------------------
 
   /// Profile setting tile (name, photo)
   static SettingsIconStyle profile({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _blue300 : _blue600,
-        backgroundColor: isDark ? _slate800 : _blue50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   /// KYC / ID Verification tile (tier & document status)
   static SettingsIconStyle kyc({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _teal300 : _teal600,
-        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+        backgroundColor: isDark
+            ? AppColors.darkSecondaryContainer
+            : AppColors.lightSecondaryContainer,
       );
 
   // ------------------ CATEGORY: DEMO & QA LAB ------------------
 
   /// Tester control panel tile
   static SettingsIconStyle demoLab({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _violet300 : _violet600,
-        backgroundColor: isDark ? _violet950.withValues(alpha: 0.5) : _violet50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   // ------------------ CATEGORY: SECURITY ------------------
@@ -2620,66 +2799,86 @@ class SettingsIconTokens {
   /// Change account password tile
   static SettingsIconStyle changePassword({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _indigo300 : _indigo600,
-        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   /// Transaction PIN tile (transfers & payments)
   static SettingsIconStyle transactionPin({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _amber300 : _amber600,
-        backgroundColor: isDark ? _amber900.withValues(alpha: 0.5) : _amber50,
+        iconColor: AppColors.warning,
+        backgroundColor: isDark
+            ? AppColors.warning.withValues(alpha: 0.20)
+            : AppColors.warningContainer,
       );
 
   /// Two-factor authentication (Google Authenticator) tile
   static SettingsIconStyle twoFactor({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _emerald300 : _emerald600,
-        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+        iconColor: AppColors.success,
+        backgroundColor: isDark
+            ? AppColors.success.withValues(alpha: 0.20)
+            : AppColors.successContainer,
       );
 
   /// Dynamic payment OTP generator tile
   static SettingsIconStyle paymentOtp({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _sky300 : _sky600,
-        backgroundColor: isDark ? _sky900.withValues(alpha: 0.5) : _sky50,
+        iconColor: AppColors.info,
+        backgroundColor: isDark
+            ? AppColors.info.withValues(alpha: 0.20)
+            : AppColors.infoContainer,
       );
 
   /// Active devices & sessions tile
   static SettingsIconStyle deviceSessions({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _indigo300 : _indigo500,
-        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   /// Biometric authentication toggle tile
   static SettingsIconStyle biometric({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _teal400 : _teal600,
-        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+        iconColor: AppColors.mutedBlue,
+        backgroundColor: isDark
+            ? AppColors.darkSecondaryContainer
+            : AppColors.lightSecondaryContainer,
       );
 
   /// Auto app lock timer tile
   static SettingsIconStyle autoAppLock({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _orange400 : _orange600,
-        backgroundColor: isDark ? _orange900.withValues(alpha: 0.5) : _orange50,
+        iconColor: AppColors.warning,
+        backgroundColor: isDark
+            ? AppColors.warning.withValues(alpha: 0.20)
+            : AppColors.warningContainer,
       );
 
   /// App lock PIN tile (local device unlock)
   static SettingsIconStyle appLockPin({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _slate300 : _slate600,
-        backgroundColor: isDark ? _slate700.withValues(alpha: 0.5) : _slate100,
+        iconColor: isDark ? AppColors.warmWhite : AppColors.softGray,
+        backgroundColor: isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant,
       );
 
   /// Privacy mode toggle tile (masks balances across dashboard)
   static SettingsIconStyle privacyMode({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _teal300 : _teal600,
-        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+        iconColor: AppColors.mutedBlue,
+        backgroundColor: isDark
+            ? AppColors.darkSecondaryContainer
+            : AppColors.lightSecondaryContainer,
       );
 
   /// Auto-hide balance on background toggle tile
   static SettingsIconStyle hideBackground({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _indigo300 : _indigo600,
-        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   // ------------------ CATEGORY: NOTIFICATIONS ------------------
@@ -2693,56 +2892,66 @@ class SettingsIconTokens {
           ? SettingsIconStyle(
               iconColor: AppColors.success,
               backgroundColor: isDark
-                  ? _emerald950.withValues(alpha: 0.5)
+                  ? AppColors.success.withValues(alpha: 0.20)
                   : AppColors.successContainer,
             )
           : SettingsIconStyle(
               iconColor: AppColors.error,
               backgroundColor: isDark
-                  ? _red950.withValues(alpha: 0.5)
+                  ? AppColors.error.withValues(alpha: 0.20)
                   : AppColors.errorContainer,
             );
 
   /// Financial notification preferences tile
   static SettingsIconStyle notificationFinancial({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _emerald400 : _emerald600,
-        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+        iconColor: AppColors.success,
+        backgroundColor: isDark
+            ? AppColors.success.withValues(alpha: 0.20)
+            : AppColors.successContainer,
       );
 
   /// Promotional notification preferences tile
   static SettingsIconStyle notificationPromo({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _amber400 : _amber600,
-        backgroundColor: isDark ? _amber900.withValues(alpha: 0.5) : _amber50,
+        iconColor: AppColors.warning,
+        backgroundColor: isDark
+            ? AppColors.warning.withValues(alpha: 0.20)
+            : AppColors.warningContainer,
       );
 
   /// Security notifications tile (always active)
   static SettingsIconStyle notificationSecurity({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _emerald400 : AppColors.success,
+        iconColor: AppColors.success,
         backgroundColor: isDark
-            ? _emerald950.withValues(alpha: 0.5)
+            ? AppColors.success.withValues(alpha: 0.20)
             : AppColors.successContainer,
       );
 
   /// Notification sound toggle tile
   static SettingsIconStyle sound({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _blue400 : _blue600,
-        backgroundColor: isDark ? _slate800 : _blue50,
+        iconColor: AppColors.info,
+        backgroundColor: isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.infoContainer,
       );
 
   /// Notification vibration toggle tile
   static SettingsIconStyle vibration({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _violet400 : _violet600,
-        backgroundColor: isDark ? _violet950.withValues(alpha: 0.5) : _violet50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   /// Notification history and feed tile
   static SettingsIconStyle notificationFeed({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _sky400 : _sky600,
-        backgroundColor: isDark ? _sky900.withValues(alpha: 0.5) : _sky50,
+        iconColor: AppColors.info,
+        backgroundColor: isDark
+            ? AppColors.info.withValues(alpha: 0.20)
+            : AppColors.infoContainer,
       );
 
   // ------------------ CATEGORY: PERMISSIONS ------------------
@@ -2750,54 +2959,70 @@ class SettingsIconTokens {
   /// Manage device permissions tile
   static SettingsIconStyle permissions({required bool isDark}) =>
       SettingsIconStyle(
-        iconColor: isDark ? _indigo300 : _indigo600,
-        backgroundColor: isDark ? _indigo900.withValues(alpha: 0.5) : _indigo50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   // ------------------ CATEGORY: PERSONALIZATION ------------------
 
   /// Language selection tile
   static SettingsIconStyle language({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _sky400 : _sky600,
-        backgroundColor: isDark ? _sky900.withValues(alpha: 0.5) : _sky50,
+        iconColor: AppColors.info,
+        backgroundColor: isDark
+            ? AppColors.info.withValues(alpha: 0.20)
+            : AppColors.infoContainer,
       );
 
   /// Theme mode selection tile
   static SettingsIconStyle theme({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _violet400 : _violet600,
-        backgroundColor: isDark ? _violet950.withValues(alpha: 0.5) : _violet50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   /// Rate display unit tile
   static SettingsIconStyle rateUnit({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _emerald400 : _emerald600,
-        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+        iconColor: AppColors.success,
+        backgroundColor: isDark
+            ? AppColors.success.withValues(alpha: 0.20)
+            : AppColors.successContainer,
       );
 
   // ------------------ CATEGORY: GENERAL ------------------
 
   /// Support and tickets tile
   static SettingsIconStyle support({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _teal400 : _teal600,
-        backgroundColor: isDark ? _teal900.withValues(alpha: 0.5) : _teal50,
+        iconColor: AppColors.mutedBlue,
+        backgroundColor: isDark
+            ? AppColors.darkSecondaryContainer
+            : AppColors.lightSecondaryContainer,
       );
 
   /// About us tile
   static SettingsIconStyle about({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _blue400 : _blue600,
-        backgroundColor: isDark ? _slate800 : _blue50,
+        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+        backgroundColor: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
       );
 
   /// Terms and privacy tile
   static SettingsIconStyle terms({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _slate400 : _slate600,
-        backgroundColor: isDark ? _slate700.withValues(alpha: 0.5) : _slate100,
+        iconColor: isDark ? AppColors.warmWhite : AppColors.softGray,
+        backgroundColor: isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant,
       );
 
   /// Check for application updates tile
   static SettingsIconStyle appUpdate({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? _emerald400 : _emerald600,
-        backgroundColor: isDark ? _emerald950.withValues(alpha: 0.5) : _emerald50,
+        iconColor: AppColors.success,
+        backgroundColor: isDark
+            ? AppColors.success.withValues(alpha: 0.20)
+            : AppColors.successContainer,
       );
 
   // ------------------ DEMO & QA PANEL TILES ------------------
@@ -2806,7 +3031,7 @@ class SettingsIconTokens {
   static SettingsIconStyle demoKyc({required bool isDark}) => SettingsIconStyle(
         iconColor: AppColors.success,
         backgroundColor: isDark
-            ? _emerald950.withValues(alpha: 0.5)
+            ? AppColors.success.withValues(alpha: 0.20)
             : AppColors.successContainer,
       );
 
@@ -2814,7 +3039,7 @@ class SettingsIconTokens {
   static SettingsIconStyle demoExit({required bool isDark}) => SettingsIconStyle(
         iconColor: AppColors.error,
         backgroundColor: isDark
-            ? _red950.withValues(alpha: 0.5)
+            ? AppColors.error.withValues(alpha: 0.20)
             : AppColors.errorContainer,
       );
 }

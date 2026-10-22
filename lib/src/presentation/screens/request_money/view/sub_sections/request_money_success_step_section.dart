@@ -28,6 +28,16 @@ class _RequestMoneySuccessStepSectionState
   final RequestMoneyController controller = Get.find();
   final SettingsService settingsService = Get.find();
 
+  /// Trimmed value, or null when the backend did not supply one. Never
+  /// synthesize a reference — a fabricated ID on a receipt is indistinguishable
+  /// from a real one and misleads both the user and support.
+  static String? _nonEmpty(String? value) {
+    final trimmed = value?.trim();
+    return (trimmed == null || trimmed.isEmpty || trimmed == 'null')
+        ? null
+        : trimmed;
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -37,7 +47,7 @@ class _RequestMoneySuccessStepSectionState
     final walletCode = currentWallet?.code ?? 'USD';
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: currentWallet?.name ?? 'USD',
+      currencyCode: walletCode,
       siteCurrencyCode: settingsService.getSetting("site_currency")!,
       siteCurrencyDecimals: settingsService.getSetting(
         "site_currency_decimals",
@@ -79,6 +89,7 @@ class _RequestMoneySuccessStepSectionState
                         ar: 'تم إرسال الطلب إلى المستلم',
                         tr: 'Talep alıcıya gönderildi',
                         ru: 'Запрос отправлен получателю',
+                        zh: '请求已成功发送至对方',
                       ),
                     ),
 
@@ -93,8 +104,13 @@ class _RequestMoneySuccessStepSectionState
                         ar: 'إيصال طلب المال',
                         tr: 'Para Talebi Dekontu',
                         ru: 'Квитанция запроса средств',
+                        zh: '收款请求凭证',
                       ),
-                      transactionReference: 'REQ-${DateTime.now().millisecondsSinceEpoch}',
+                      // `MoneyRequestResource` exposes `id` (and no `tnx`); use
+                      // the server id when present and show a pending label
+                      // otherwise. Never invent a reference.
+                      transactionReference: _nonEmpty(requestData?["tnx"]?.toString()) ??
+                          _nonEmpty(requestData?["id"]?.toString()),
                       status: EcardoReceiptStatus.success,
                       items: [
                         EcardoReceiptItem(
@@ -135,6 +151,7 @@ class _RequestMoneySuccessStepSectionState
                         ar: 'مشغل بواسطة شبكة إيكاردو الآمنة',
                         tr: 'eCardo Güvenli Ağı Tarafından Desteklenmektedir',
                         ru: 'На базе защищенной сети eCardo',
+                        zh: '由 eCardo 安全网络支持',
                       ),
                       showBarcode: true,
                       showWatermark: true,

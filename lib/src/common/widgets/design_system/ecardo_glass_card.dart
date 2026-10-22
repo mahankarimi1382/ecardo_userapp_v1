@@ -34,6 +34,7 @@ enum EcardoGlassVariant {
 class EcardoGlassCard extends StatefulWidget {
   final Widget child;
   final double blur;
+  final bool disableBlur;
   final double borderRadius;
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
@@ -57,6 +58,7 @@ class EcardoGlassCard extends StatefulWidget {
     super.key,
     required this.child,
     this.blur = 12.0,
+    this.disableBlur = false,
     this.borderRadius = AppSpacing.radiusLg,
     this.padding = const EdgeInsets.all(AppSpacing.lg),
     this.margin,
@@ -116,7 +118,7 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
     if (_isInteractive) {
       HapticFeedback.lightImpact();
       final disableAnimations =
-          MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+          MediaQuery.maybeDisableAnimationsOf(context) ?? false;
       if (!disableAnimations) {
         _controller.forward();
       }
@@ -142,14 +144,16 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final disableAnimations =
-        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+        MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    final isBlurDisabled = widget.disableBlur || disableAnimations;
 
     // Resolve color styling dynamically based on theme and variant
-    final resolvedBg = widget.backgroundColor ?? _resolveBackgroundColor(isDark);
+    final resolvedBg = widget.backgroundColor ??
+        _resolveBackgroundColor(isDark, disableBlur: isBlurDisabled);
     final resolvedBorderGradient =
         widget.borderGradient ?? _resolveBorderGradient(isDark);
     final resolvedGlow = widget.glowColor ?? _resolveGlowColor(isDark);
-    final resolvedBlur = disableAnimations ? 0.0 : _resolveBlur();
+    final resolvedBlur = isBlurDisabled ? 0.0 : _resolveBlur();
 
     Widget innerContent = CustomPaint(
       foregroundPainter: _GradientBorderPainter(
@@ -237,7 +241,26 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
     };
   }
 
-  Color _resolveBackgroundColor(bool isDark) {
+  Color _resolveBackgroundColor(bool isDark, {bool disableBlur = false}) {
+    if (disableBlur) {
+      if (isDark) {
+        return switch (widget.variant) {
+          EcardoGlassVariant.standard => const Color(0xF01E1E1C),
+          EcardoGlassVariant.frosted => const Color(0xF5262625),
+          EcardoGlassVariant.accent => const Color(0xF01E2E42),
+          EcardoGlassVariant.neon => const Color(0xF01A2535),
+          EcardoGlassVariant.subtle => const Color(0xDD161614),
+        };
+      } else {
+        return switch (widget.variant) {
+          EcardoGlassVariant.standard => const Color(0xFFFFFFFF),
+          EcardoGlassVariant.frosted => const Color(0xFFF8F9FA),
+          EcardoGlassVariant.accent => const Color(0xFFF2F6FC),
+          EcardoGlassVariant.neon => const Color(0xFFFFFFFF),
+          EcardoGlassVariant.subtle => const Color(0xF2FFFFFF),
+        };
+      }
+    }
     if (isDark) {
       return switch (widget.variant) {
         EcardoGlassVariant.standard => const Color(0x381E1E1C),

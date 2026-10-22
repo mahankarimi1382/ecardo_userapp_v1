@@ -31,6 +31,16 @@ class _WithdrawSuccessStepSectionState
   final WithdrawController controller = Get.find();
   final SettingsService settingsService = Get.find();
 
+  /// Trimmed value, or null when the backend did not supply one. Never
+  /// synthesize a reference — a fabricated ID on a receipt is indistinguishable
+  /// from a real one and misleads both the user and support.
+  static String? _nonEmpty(String? value) {
+    final trimmed = value?.trim();
+    return (trimmed == null || trimmed.isEmpty || trimmed == 'null')
+        ? null
+        : trimmed;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -58,9 +68,8 @@ class _WithdrawSuccessStepSectionState
             controller.amountController.text;
     final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
 
-    final tnxId =
-        controller.successWithdrawData.value?["transaction"]?["tnx"]?.toString() ??
-            'WTH-${DateTime.now().millisecondsSinceEpoch}';
+    final tnxId = _nonEmpty(
+        controller.successWithdrawData.value?["transaction"]?["tnx"]?.toString());
     final createdAt = controller.successWithdrawData.value?["transaction"]
             ?["created_at"]
             ?.toString() ??
@@ -82,7 +91,17 @@ class _WithdrawSuccessStepSectionState
           ar: 'تسوية فورية ⚡ / بايا',
           tr: 'Anında ⚡ / Sonraki döngü',
           ru: 'Мгновенно ⚡ / след. цикл',
+          zh: '即时 ⚡ / 下个结算周期',
         );
+
+    final rawStatus = controller.successWithdrawData.value?["transaction"]
+            ?["status"]
+            ?.toString()
+            .toLowerCase() ??
+        '';
+    final receiptStatus = (rawStatus == '1' || rawStatus.contains('success') || rawStatus.contains('confirm'))
+        ? EcardoReceiptStatus.success
+        : EcardoReceiptStatus.pending;
 
     return Obx(
       () => controller.isWithdrawLoading.value
@@ -109,6 +128,7 @@ class _WithdrawSuccessStepSectionState
                         ar: 'تم تقديم طلب السحب بنجاح!',
                         tr: 'Çekim Talebi Başarıyla Alındı!',
                         ru: 'Запрос на вывод успешно отправлен!',
+                        zh: '提现请求已成功提交！',
                       ),
                       subtitle: l10nPick(
                         context,
@@ -117,6 +137,7 @@ class _WithdrawSuccessStepSectionState
                         ar: 'تتم معالجة السحب وفقاً لجدول التسوية',
                         tr: 'Çekiminiz takas takvimine göre işlenmektedir',
                         ru: 'Выплата обрабатывается по графику зачислений',
+                        zh: '您的提现款项将根据结算时间表处理并到账',
                       ),
                       dateTime: createdAt.isNotEmpty ? createdAt : null,
                     ),
@@ -132,6 +153,7 @@ class _WithdrawSuccessStepSectionState
                         ar: 'إيصال سحب الأموال',
                         tr: 'Para Çekme Makbuzu',
                         ru: 'Квитанция о выводе средств',
+                        zh: '提现电子凭证',
                       ),
                       transactionReference: tnxId,
                       formattedTimestamp:
@@ -139,7 +161,7 @@ class _WithdrawSuccessStepSectionState
                       primaryAmount: amount,
                       primaryCurrency: currency,
                       primaryDecimals: calculateDecimals,
-                      status: EcardoReceiptStatus.success,
+                      status: receiptStatus,
                       note: l10nPick(
                         context,
                         en: 'Funds will be deposited to your destination account per banking network settlement.',
@@ -147,6 +169,7 @@ class _WithdrawSuccessStepSectionState
                         ar: 'سيتم إيداع المبلغ في حسابك وفقاً لجدول التسوية المصرفية.',
                         tr: 'Tutar, banka takas sistemine göre hesabınıza aktarılacaktır.',
                         ru: 'Средства поступят на указанный счет согласно банковскому регламенту.',
+                        zh: '款项将根据银行清算网络结算存入您的目标账户。',
                       ),
                       items: [
                         EcardoReceiptItem(
@@ -157,6 +180,7 @@ class _WithdrawSuccessStepSectionState
                             ar: 'حساب الوجهة',
                             tr: 'Hedef Hesap',
                             ru: 'Счет назначения',
+                            zh: '目标账户',
                           ),
                           value: '$destinationName ($maskedDestination)',
                         ),
@@ -196,30 +220,45 @@ class _WithdrawSuccessStepSectionState
                           ),
                           value: settlementTime,
                         ),
-                        EcardoReceiptItem(
-                          label: l10nPick(
-                            context,
-                            en: 'Reference ID',
-                            fa: 'کد پیگیری تراکنش',
-                            ar: 'رقم المرجع',
-                            tr: 'İşlem Referansı',
-                            ru: 'Код транзакции',
+                        if (tnxId != null)
+                          EcardoReceiptItem(
+                            label: l10nPick(
+                              context,
+                              en: 'Reference ID',
+                              fa: 'کد پیگیری تراکنش',
+                              ar: 'رقم المرجع',
+                              tr: 'İşlem Referansı',
+                              ru: 'Код транзакции',
+                            ),
+                            value: tnxId,
+                            isCopyable: true,
+                            copyText: tnxId,
                           ),
-                          value: tnxId,
-                          isCopyable: true,
-                          copyText: tnxId,
-                        ),
                       ],
                       onShare: () {
                         HapticFeedback.lightImpact();
                         SharePlus.instance.share(
                           ShareParams(
                             text:
-                                'eCardo Withdrawal Receipt\nRef: $tnxId\nAmount: $amount $currency\nDestination: $destinationName\nStatus: Confirmed',
+                                'eCardo Withdrawal Receipt\n${tnxId != null ? 'Ref: $tnxId\n' : ''}Amount: $amount $currency\nDestination: $destinationName\nStatus: Confirmed',
                           ),
                         );
                       },
                       onDownload: () {
+                        if (tnxId == null) {
+                          ToastHelper().showWarningToast(
+                            l10nPick(
+                              context,
+                              en: 'Reference code is not available yet',
+                              fa: 'کد پیگیری هنوز در دسترس نیست',
+                              ar: 'رمز المرجع غير متوفر بعد',
+                              tr: 'Referans kodu هنوز mevcut değil',
+                              ru: 'Код квитанции пока недоступен',
+                              zh: '单号暂不可用',
+                            ),
+                          );
+                          return;
+                        }
                         HapticFeedback.lightImpact();
                         Clipboard.setData(ClipboardData(text: tnxId));
                         ToastHelper().showSuccessToast(

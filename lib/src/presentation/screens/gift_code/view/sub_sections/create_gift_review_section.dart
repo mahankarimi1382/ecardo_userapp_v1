@@ -19,6 +19,8 @@ class CreateGiftReviewSection extends StatelessWidget {
     final CreateGiftController controller = Get.find();
     final settingsService = Get.find<SettingsService>();
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: controller.wallet.value!.code!,
       siteCurrencyCode: settingsService.getSetting("site_currency")!,
@@ -30,37 +32,42 @@ class CreateGiftReviewSection extends StatelessWidget {
 
     return Obx(
       () => controller.isGiftConfigLoading.value
-          ? CommonLoading()
+          ? const CommonLoading()
           : SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
-                color: AppColors.lightBackground,
+                color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     Text(
                       localizations.createGiftReviewTitle,
                       style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
-                        color: AppColors.lightTextPrimary,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 16),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color: AppColors.white,
+                        color: isDark ? AppColors.darkCard : AppColors.white,
                         borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          width: 1,
+                        ),
                       ),
                       child: Column(
                         children: [
                           Obx(
                             () => _buildReviewDynamicContent(
                               context,
+                              isDark: isDark,
                               title: localizations.createGiftReviewAmount,
                               content:
                                   "${(double.tryParse(controller.amountController.text) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code!}",
@@ -70,25 +77,27 @@ class CreateGiftReviewSection extends StatelessWidget {
                           const SizedBox(height: 20),
                           Divider(
                             height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
+                            color: isDark ? AppColors.darkDivider : AppColors.black.withValues(alpha: 0.10),
                           ),
                           const SizedBox(height: 20),
                           Obx(
                             () => _buildReviewDynamicContent(
                               context,
+                              isDark: isDark,
                               title: localizations.createGiftReviewWalletName,
                               content: controller.wallet.value!.name!,
-                              contentColor: AppColors.black,
+                              contentColor: isDark ? AppColors.darkTextPrimary : AppColors.black,
                             ),
                           ),
                           const SizedBox(height: 20),
                           Divider(
                             height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
+                            color: isDark ? AppColors.darkDivider : AppColors.black.withValues(alpha: 0.10),
                           ),
                           const SizedBox(height: 20),
                           _buildReviewDynamicContent(
                             context,
+                            isDark: isDark,
                             title: localizations.createGiftReviewCharge,
                             content:
                                 "${(double.tryParse(controller.charge.value.toString()) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ""}",
@@ -97,11 +106,12 @@ class CreateGiftReviewSection extends StatelessWidget {
                           const SizedBox(height: 20),
                           Divider(
                             height: 0,
-                            color: AppColors.black.withValues(alpha: 0.10),
+                            color: isDark ? AppColors.darkDivider : AppColors.black.withValues(alpha: 0.10),
                           ),
                           const SizedBox(height: 20),
                           _buildReviewDynamicContent(
                             context,
+                            isDark: isDark,
                             title: localizations.createGiftReviewTotalAmount,
                             content:
                                 "${(double.tryParse(controller.totalAmount.value.toString()) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value?.code ?? ""}",
@@ -116,13 +126,17 @@ class CreateGiftReviewSection extends StatelessWidget {
                       children: [
                         Expanded(
                           child: CommonIconButton(
-                            backgroundColor: AppColors.lightPrimary.withValues(
-                              alpha: 0.04,
-                            ),
+                            backgroundColor: isDark
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.lightPrimary.withValues(
+                                    alpha: 0.04,
+                                  ),
                             borderWidth: 2,
-                            borderColor: AppColors.lightPrimary.withValues(
-                              alpha: 0.50,
-                            ),
+                            borderColor: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightPrimary.withValues(
+                                    alpha: 0.50,
+                                  ),
                             width: double.infinity,
                             height: 52,
                             text: localizations.createGiftReviewBack,
@@ -130,8 +144,8 @@ class CreateGiftReviewSection extends StatelessWidget {
                             iconWidth: 18,
                             iconHeight: 18,
                             iconAndTextSpace: 8,
-                            iconColor: AppColors.lightTextPrimary,
-                            textColor: AppColors.lightTextPrimary,
+                            iconColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             onPressed: () {
                               controller.currentStep.value = 0;
                               controller.amountController.clear();
@@ -196,6 +210,7 @@ class CreateGiftReviewSection extends StatelessWidget {
 
   static Widget _buildReviewDynamicContent(
     BuildContext context, {
+    required bool isDark,
     required String title,
     required String content,
     required Color contentColor,
@@ -212,7 +227,8 @@ class CreateGiftReviewSection extends StatelessWidget {
               letterSpacing: 0,
               fontWeight: FontWeight.w700,
               fontSize: 15,
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
+              color: (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                  .withValues(alpha: 0.60),
             ),
           ),
           Expanded(

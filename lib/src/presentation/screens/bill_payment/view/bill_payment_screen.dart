@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -72,7 +73,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'همراه اول، ایرانسل، رایتل',
         icon: PngAssets.commonAirtimeIcon,
         navigate: BaseRoute.airtime,
-        tintColor: const Color(0xFF2563EB),
+        tintColor: AppColors.info,
         badge: 'محبوب',
         keywords: 'airtime mci irancell rightel شارژ سیم کارت همراه اول ایرانسل رایتل شاتل اعتباری',
       ),
@@ -82,7 +83,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'بسته‌های 4G / 5G و TD-LTE',
         icon: PngAssets.commonDataBundleIcon,
         navigate: BaseRoute.dataBundle,
-        tintColor: const Color(0xFF6366F1),
+        tintColor: AppColors.brandViolet,
         badge: 'تخفیف',
         keywords: 'data bundle internet بسته اینترنت همراه دیتا گیگابایت مودم بسته',
       ),
@@ -92,7 +93,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'مخابرات، شاتل، آسیاتک',
         icon: PngAssets.commonInternetIcon,
         navigate: BaseRoute.internet,
-        tintColor: const Color(0xFF8B5CF6),
+        tintColor: AppColors.mainSoftBlue,
         keywords: 'internet adsl vdsl ftth شاتل مخابرات آسیاتک اینترنت ثابت پارس آنلاین',
       ),
       BillCategoryItem(
@@ -101,7 +102,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'سامانه سراسری توانیر',
         icon: PngAssets.commonElectricityIcon,
         navigate: BaseRoute.electricity,
-        tintColor: const Color(0xFFF59E0B),
+        tintColor: AppColors.warning,
         badge: 'فوری',
         keywords: 'electricity power توانیر برق قبض شناسه پرداخت برق سراسری کنتور',
       ),
@@ -111,7 +112,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'آب و فاضلاب استانی',
         icon: PngAssets.commonWaterBillIcon,
         navigate: BaseRoute.electricity,
-        tintColor: const Color(0xFF06B6D4),
+        tintColor: AppColors.mutedBlue,
         keywords: 'water bill آب و فاضلاب آبفا قبض آب کنتور آب مصرفی',
         onCustomTap: () {
           Get.toNamed(BaseRoute.electricity, arguments: {
@@ -126,7 +127,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'آزادراه‌ها و طرح ترافیک',
         icon: PngAssets.commonTollIcon,
         navigate: BaseRoute.toll,
-        tintColor: const Color(0xFF10B981),
+        tintColor: AppColors.success,
         badge: 'تسویه آنی',
         keywords: 'toll road freeway آزادراه عوارض طرح ترافیک پلاک خلافی عوارض خودرویی',
       ),
@@ -136,7 +137,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'تلویزیون و رسانه تعاملی',
         icon: PngAssets.commonCablesIcon,
         navigate: BaseRoute.cable,
-        tintColor: const Color(0xFFF43F5E),
+        tintColor: AppColors.error,
         keywords: 'cable tv iptv فیلمیو نماوا تلویزیون کابلی اشتراک استریم رسانه',
       ),
       BillCategoryItem(
@@ -145,7 +146,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         subtitle: 'پلیس راهور، مالیات، شهرداری',
         icon: PngAssets.commonEducationFeeIcon,
         navigate: BaseRoute.toll,
-        tintColor: const Color(0xFF64748B),
+        tintColor: AppColors.softGray,
         badge: 'ملی',
         keywords: 'government tax police خلافی پلیس راهور راهنمایی رانندگی مالیات شهرداری خدمات دولتی',
         onCustomTap: () {
@@ -204,7 +205,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               title: 'استعلام و پرداخت خلافی خودرو و موتور',
               subtitle: 'اتصال به سامانه پلیس راهور ناجا',
               icon: Icons.directions_car_rounded,
-              color: const Color(0xFFE11D48),
+              color: AppColors.error,
               onTap: () {
                 Get.back();
                 Get.toNamed(BaseRoute.toll);
@@ -215,7 +216,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               title: 'عوارض سالیانه شهرداری و نوسازی',
               subtitle: 'سامانه یکپارچه عوارض شهری',
               icon: Icons.location_city_rounded,
-              color: const Color(0xFF0D9488),
+              color: AppColors.mutedBlue,
               onTap: () {
                 Get.back();
                 Get.toNamed(BaseRoute.electricity, arguments: {
@@ -229,7 +230,7 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               title: 'مالیات نقل و انتقال و مالیات خودرو',
               subtitle: 'سامانه امور مالیاتی',
               icon: Icons.receipt_long_rounded,
-              color: const Color(0xFF4F46E5),
+              color: AppColors.brandViolet,
               onTap: () {
                 Get.back();
                 Get.toNamed(BaseRoute.electricity, arguments: {
@@ -255,37 +256,45 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return ListTile(
-      onTap: onTap,
-      contentPadding: EdgeInsets.symmetric(vertical: 4.h),
-      leading: Container(
-        width: 40.w,
-        height: 40.w,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: isDark ? 0.25 : 0.12),
-          borderRadius: BorderRadius.circular(10.r),
+    return Semantics(
+      button: true,
+      label: '$title، $subtitle',
+      child: ListTile(
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onTap();
+        },
+        minVerticalPadding: 8.h,
+        contentPadding: EdgeInsets.symmetric(vertical: 4.h),
+        leading: Container(
+          width: 44.w,
+          height: 44.w,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: isDark ? 0.25 : 0.12),
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          child: Icon(icon, color: color, size: 22.w),
         ),
-        child: Icon(icon, color: color, size: 20.w),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w700,
-          color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+        title: Text(
+          title,
+          style: TextStyle(
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w700,
+            color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+          ),
         ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(
-          fontSize: 10.sp,
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(
+            fontSize: 10.sp,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          ),
         ),
-      ),
-      trailing: Icon(
-        Icons.arrow_forward_ios_rounded,
-        size: 14.w,
-        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+        trailing: Icon(
+          Icons.arrow_forward_ios_rounded,
+          size: 14.w,
+          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+        ),
       ),
     );
   }
@@ -325,20 +334,39 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               backLogicFunction: () async {
                 SmartBackHelper.handleBack(context);
               },
-              rightSideWidget: GestureDetector(
-                onTap: () => Get.toNamed(BaseRoute.billPaymentHistory),
-                child: Container(
-                  padding: EdgeInsets.all(7.w),
-                  margin: EdgeInsetsDirectional.only(end: 18.w),
-                  decoration: BoxDecoration(
-                    color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                        .withValues(alpha: 0.10),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.asset(
-                    PngAssets.commonHistoryIcon,
-                    width: 22.w,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+              rightSideWidget: Semantics(
+                label: localization?.billPaymentHistoryTitle ?? 'سوابق پرداخت قبوض',
+                button: true,
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      Get.toNamed(BaseRoute.billPaymentHistory);
+                    },
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 44.w,
+                        minHeight: 44.w,
+                      ),
+                      child: Center(
+                        child: Container(
+                          padding: EdgeInsets.all(7.w),
+                          margin: EdgeInsetsDirectional.only(end: 18.w),
+                          decoration: BoxDecoration(
+                            color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
+                                .withValues(alpha: 0.10),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Image.asset(
+                            PngAssets.commonHistoryIcon,
+                            width: 22.w,
+                            color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -383,17 +411,27 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                       color: isDark ? AppColors.mainSoftBlue : AppColors.softGray,
                     ),
                     suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            icon: Icon(
-                              Icons.clear_rounded,
-                              size: 18.w,
-                              color: isDark
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
+                        ? Semantics(
+                            label: 'پاک کردن متن جستجو',
+                            button: true,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.clear_rounded,
+                                size: 18.w,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                              constraints: BoxConstraints(
+                                minWidth: 44.w,
+                                minHeight: 44.w,
+                              ),
+                              tooltip: 'پاک کردن',
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                _searchController.clear();
+                              },
                             ),
-                            onPressed: () {
-                              _searchController.clear();
-                            },
                           )
                         : null,
                     border: InputBorder.none,

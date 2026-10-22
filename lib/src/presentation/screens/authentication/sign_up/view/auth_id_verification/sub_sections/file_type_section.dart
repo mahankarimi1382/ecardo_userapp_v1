@@ -124,7 +124,7 @@ class FileTypeSection extends StatelessWidget {
                       autoCycle: true,
                       backgroundColor: isDark
                           ? AppColors.darkSurface
-                          : const Color(0xFFF8FAFC),
+                          : AppColors.lightSurfaceVariant,
                     ),
                     SizedBox(height: 16.h),
 
@@ -181,58 +181,77 @@ class FileTypeSection extends StatelessWidget {
 
                               // Primary Action Button
                               if (!hasFile)
-                                CommonButton(
-                                  text: localizations.fileTypeChooseFile,
-                                  width: double.infinity,
-                                  onPressed: () async {
-                                    final picked = await controller.pickFile(field.name ?? "");
-                                    if (picked != null) {
-                                      if (UploadHelper.exceedsSize(
-                                        picked,
-                                        UploadHelper.maxKycDocBytes,
-                                      )) {
-                                        controller.fieldFiles.remove(field.name ?? "");
-                                        ToastHelper().showErrorToast(
-                                          l10nPickAuto(
-                                            en: 'File size must not exceed 20MB',
-                                            fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
-                                          ),
-                                        );
+                                Semantics(
+                                  button: true,
+                                  label: localizations.fileTypeChooseFile,
+                                  child: CommonButton(
+                                    text: localizations.fileTypeChooseFile,
+                                    width: double.infinity,
+                                    onPressed: () async {
+                                      final picked = await controller.pickFile(field.name ?? "");
+                                      if (picked != null) {
+                                        if (UploadHelper.exceedsSize(
+                                          picked,
+                                          UploadHelper.maxKycDocBytes,
+                                        )) {
+                                          controller.fieldFiles.remove(field.name ?? "");
+                                          ToastHelper().showErrorToast(
+                                            l10nPickAuto(
+                                              en: 'File size must not exceed 20MB',
+                                              fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
+                                            ),
+                                          );
+                                        }
                                       }
-                                    }
-                                  },
+                                    },
+                                  ),
                                 )
                               else
-                                CommonButton(
-                                  text: l10nPick(
+                                Semantics(
+                                  button: true,
+                                  label: l10nPick(
                                     context,
                                     en: 'Confirm & Continue',
                                     fa: 'تأیید مدرک و ادامه',
                                     ar: 'تأكيد ومتابعة',
                                     zh: '确认并继续',
                                   ),
-                                  width: double.infinity,
-                                  onPressed: () {
-                                    if (Navigator.canPop(context)) {
-                                      Navigator.pop(context, file);
-                                    } else {
-                                      _proceedToNext(context, controller);
-                                    }
-                                  },
+                                  child: CommonButton(
+                                    text: l10nPick(
+                                      context,
+                                      en: 'Confirm & Continue',
+                                      fa: 'تأیید مدرک و ادامه',
+                                      ar: 'تأكيد ومتابعة',
+                                      zh: '确认并继续',
+                                    ),
+                                    width: double.infinity,
+                                    onPressed: () {
+                                      if (Navigator.canPop(context)) {
+                                        Navigator.pop(context, file);
+                                      } else {
+                                        _proceedToNext(context, controller);
+                                      }
+                                    },
+                                  ),
                                 ),
 
                               // Skip option if nullable
                               if (field.validation == "nullable") ...[
                                 SizedBox(height: 12.h),
-                                CommonButton(
-                                  backgroundColor: AppColors.transparent,
-                                  text: localizations.fileTypeSkip,
-                                  width: 120.w,
-                                  textColor: secondaryTextColor,
-                                  onPressed: () {
-                                    controller.skipField(field.name ?? "");
-                                    _proceedToNext(context, controller);
-                                  },
+                                Semantics(
+                                  button: true,
+                                  label: localizations.fileTypeSkip,
+                                  child: CommonButton(
+                                    backgroundColor: AppColors.transparent,
+                                    text: localizations.fileTypeSkip,
+                                    width: 120.w,
+                                    height: 44.h,
+                                    textColor: secondaryTextColor,
+                                    onPressed: () {
+                                      controller.skipField(field.name ?? "");
+                                      _proceedToNext(context, controller);
+                                    },
+                                  ),
                                 ),
                               ],
                               SizedBox(height: 16.h),
@@ -259,85 +278,97 @@ class FileTypeSection extends StatelessWidget {
     required Color primaryText,
     required Color secondaryText,
   }) {
-    return GestureDetector(
-      onTap: () async {
-        final picked = await controller.pickFile(field.name ?? "");
-        if (picked != null) {
-          if (UploadHelper.exceedsSize(picked, UploadHelper.maxKycDocBytes)) {
-            controller.fieldFiles.remove(field.name ?? "");
-            ToastHelper().showErrorToast(
-              l10nPickAuto(
-                en: 'File size must not exceed 20MB',
-                fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
-              ),
-            );
-          }
-        }
-      },
-      child: Container(
-        width: double.infinity,
-        height: 220.h,
-        decoration: BoxDecoration(
-          color: isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isDark ? AppColors.darkBorder : const Color(0xFFCBD5E1),
-            width: 1.5,
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Corner alignment markers
-            _buildCornerBracket(top: 12.h, left: 12.w, isTop: true, isLeft: true),
-            _buildCornerBracket(top: 12.h, right: 12.w, isTop: true, isLeft: false),
-            _buildCornerBracket(bottom: 12.h, left: 12.w, isTop: false, isLeft: true),
-            _buildCornerBracket(bottom: 12.h, right: 12.w, isTop: false, isLeft: false),
+    final guideColor = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
 
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 64.w,
-                    height: 64.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color(0xFF10B981).withValues(alpha: 0.12),
-                    ),
-                    child: Icon(
-                      Icons.cloud_upload_outlined,
-                      size: 32.sp,
-                      color: const Color(0xFF10B981),
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Text(
-                    l10nPick(
-                      context,
-                      en: 'Tap to upload document file',
-                      fa: 'برای بارگذاری فایل مدرک لمس کنید',
-                      ar: 'اضغط لتحميل مستند الهوية',
-                      zh: '点击上传证件文件',
-                    ),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
-                      color: primaryText,
-                    ),
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    'JPG, PNG, PDF, DOC — Max 20MB',
-                    style: TextStyle(
-                      fontSize: 11.5.sp,
-                      color: secondaryText,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+    return Semantics(
+      button: true,
+      label: l10nPick(
+        context,
+        en: 'Tap to upload document file',
+        fa: 'برای بارگذاری فایل مدرک لمس کنید',
+        ar: 'اضغط لتحميل مستند الهوية',
+        zh: '点击上传证件文件',
+      ),
+      child: GestureDetector(
+        onTap: () async {
+          final picked = await controller.pickFile(field.name ?? "");
+          if (picked != null) {
+            if (UploadHelper.exceedsSize(picked, UploadHelper.maxKycDocBytes)) {
+              controller.fieldFiles.remove(field.name ?? "");
+              ToastHelper().showErrorToast(
+                l10nPickAuto(
+                  en: 'File size must not exceed 20MB',
+                  fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
+                ),
+              );
+            }
+          }
+        },
+        child: Container(
+          width: double.infinity,
+          height: 220.h,
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
+            borderRadius: BorderRadius.circular(20.r),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              width: 1.5,
             ),
-          ],
+          ),
+          child: Stack(
+            children: [
+              // Corner alignment markers
+              _buildCornerBracket(top: 12.h, left: 12.w, isTop: true, isLeft: true, color: guideColor),
+              _buildCornerBracket(top: 12.h, right: 12.w, isTop: true, isLeft: false, color: guideColor),
+              _buildCornerBracket(bottom: 12.h, left: 12.w, isTop: false, isLeft: true, color: guideColor),
+              _buildCornerBracket(bottom: 12.h, right: 12.w, isTop: false, isLeft: false, color: guideColor),
+
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 64.w,
+                      height: 64.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: guideColor.withValues(alpha: isDark ? 0.16 : 0.10),
+                      ),
+                      child: Icon(
+                        Icons.cloud_upload_outlined,
+                        size: 32.sp,
+                        color: guideColor,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Tap to upload document file',
+                        fa: 'برای بارگذاری فایل مدرک لمس کنید',
+                        ar: 'اضغط لتحميل مستند الهوية',
+                        zh: '点击上传证件文件',
+                      ),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                        color: primaryText,
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      'JPG, PNG, PDF, DOC — Max 20MB',
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        color: secondaryText,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -350,6 +381,7 @@ class FileTypeSection extends StatelessWidget {
     double? right,
     required bool isTop,
     required bool isLeft,
+    required Color color,
   }) {
     return Positioned(
       top: top,
@@ -362,16 +394,16 @@ class FileTypeSection extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border(
             top: isTop
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
             bottom: !isTop
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
             left: isLeft
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
             right: !isLeft
-                ? const BorderSide(color: Color(0xFF10B981), width: 3)
+                ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
           ),
         ),
@@ -388,6 +420,7 @@ class FileTypeSection extends StatelessWidget {
     required Color primaryText,
     required Color secondaryText,
   }) {
+    final guideColor = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
     final fileLength = file.lengthSync();
     final sizeInMB = fileLength / (1024 * 1024);
     final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
@@ -401,10 +434,10 @@ class FileTypeSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBackground : const Color(0xFFF8FAFC),
+        color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(
-          color: const Color(0xFF10B981).withValues(alpha: 0.5),
+          color: guideColor.withValues(alpha: 0.4),
           width: 1.5,
         ),
       ),
@@ -414,76 +447,86 @@ class FileTypeSection extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
             child: isImage
-                ? GestureDetector(
-                    onTap: () {
-                      final decodedImage = Image.file(file);
-                      decodedImage.image
-                          .resolve(const ImageConfiguration())
-                          .addListener(
-                            ImageStreamListener((ImageInfo info, bool _) {
-                              final imageHeight = info.image.height.toDouble();
-                              final imageWidth = info.image.width.toDouble();
-                              final screenWidth =
-                                  MediaQuery.of(context).size.width - 36;
-                              final scaledHeight =
-                                  (imageHeight / imageWidth) * screenWidth;
-                              Get.bottomSheet(
-                                DynamicAttachmentPreview(
-                                  file: file,
-                                  scaledHeight: scaledHeight,
-                                  bottomExtraHeight: 50.0,
-                                ),
-                                isScrollControlled: true,
-                                enableDrag: true,
-                                backgroundColor: AppColors.transparent,
-                              );
-                            }),
-                          );
-                    },
-                    child: Stack(
-                      children: [
-                        SizedBox(
-                          height: 180.h,
-                          width: double.infinity,
-                          child: Image.file(
-                            file,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          top: 8.h,
-                          right: 8.w,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.zoom_in_rounded,
-                                  size: 13,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(width: 4.w),
-                                Text(
-                                  l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
+                ? Semantics(
+                    button: true,
+                    label: l10nPick(
+                      context,
+                      en: 'Preview document image full screen',
+                      fa: 'پیش‌نمایش تصویر مدرک در نمای تمام‌صفحه',
+                      ar: 'معاينة صورة المستند بملء الشاشة',
+                      zh: '全屏预览证件图片',
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        final decodedImage = Image.file(file);
+                        decodedImage.image
+                            .resolve(const ImageConfiguration())
+                            .addListener(
+                              ImageStreamListener((ImageInfo info, bool _) {
+                                final imageHeight = info.image.height.toDouble();
+                                final imageWidth = info.image.width.toDouble();
+                                final screenWidth =
+                                    MediaQuery.of(context).size.width - 36;
+                                final scaledHeight =
+                                    (imageHeight / imageWidth) * screenWidth;
+                                Get.bottomSheet(
+                                  DynamicAttachmentPreview(
+                                    file: file,
+                                    scaledHeight: scaledHeight,
+                                    bottomExtraHeight: 50.0,
                                   ),
-                                ),
-                              ],
+                                  isScrollControlled: true,
+                                  enableDrag: true,
+                                  backgroundColor: AppColors.transparent,
+                                );
+                              }),
+                            );
+                      },
+                      child: Stack(
+                        children: [
+                          SizedBox(
+                            height: 180.h,
+                            width: double.infinity,
+                            child: Image.file(
+                              file,
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ),
-                      ],
+                          Positioned(
+                            top: 8.h,
+                            right: 8.w,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.black.withValues(alpha: 0.7),
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.zoom_in_rounded,
+                                    size: 13,
+                                    color: AppColors.white,
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
+                                    style: const TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 : Container(
@@ -495,7 +538,7 @@ class FileTypeSection extends StatelessWidget {
                         Icon(
                           Icons.description_rounded,
                           size: 40.sp,
-                          color: const Color(0xFF10B981),
+                          color: guideColor,
                         ),
                         SizedBox(width: 12.w),
                         Column(
@@ -538,8 +581,8 @@ class FileTypeSection extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
                     color: (isValidSize
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626))
+                            ? AppColors.success
+                            : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -552,8 +595,8 @@ class FileTypeSection extends StatelessWidget {
                             : Icons.error_outline_rounded,
                         size: 13.sp,
                         color: isValidSize
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626),
+                            ? AppColors.success
+                            : AppColors.error,
                       ),
                       SizedBox(width: 4.w),
                       Text(
@@ -562,8 +605,8 @@ class FileTypeSection extends StatelessWidget {
                           fontSize: 10.5.sp,
                           fontWeight: FontWeight.w700,
                           color: isValidSize
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFDC2626),
+                              ? AppColors.success
+                              : AppColors.error,
                         ),
                       ),
                     ],
@@ -574,64 +617,96 @@ class FileTypeSection extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    OutlinedButton.icon(
-                      onPressed: () async {
-                        final picked = await controller.pickFile(field.name ?? "");
-                        if (picked != null) {
-                          if (UploadHelper.exceedsSize(
-                            picked,
-                            UploadHelper.maxKycDocBytes,
-                          )) {
-                            controller.fieldFiles.remove(field.name ?? "");
-                            ToastHelper().showErrorToast(
-                              l10nPickAuto(
-                                en: 'File size must not exceed 20MB',
-                                fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
-                              ),
-                            );
-                          }
-                        }
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 6.h,
-                        ),
-                        side: BorderSide(
-                          color: isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                        ),
+                    Semantics(
+                      button: true,
+                      label: l10nPick(
+                        context,
+                        en: 'Replace file',
+                        fa: 'تغییر فایل',
+                        ar: 'استبدال',
+                        zh: '更换',
                       ),
-                      icon: const Icon(Icons.refresh_rounded, size: 15),
-                      label: Text(
-                        l10nPick(
-                          context,
-                          en: 'Replace',
-                          fa: 'تغییر فایل',
-                          ar: 'استبدال',
-                          zh: '更换',
+                      child: OutlinedButton.icon(
+                        onPressed: () async {
+                          final picked = await controller.pickFile(field.name ?? "");
+                          if (picked != null) {
+                            if (UploadHelper.exceedsSize(
+                              picked,
+                              UploadHelper.maxKycDocBytes,
+                            )) {
+                              controller.fieldFiles.remove(field.name ?? "");
+                              ToastHelper().showErrorToast(
+                                l10nPickAuto(
+                                  en: 'File size must not exceed 20MB',
+                                  fa: 'حجم فایل نباید بیشتر از ۲۰ مگابایت باشد',
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: Size(88.w, 44.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
+                          ),
+                          side: BorderSide(
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                          ),
                         ),
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          fontWeight: FontWeight.w700,
-                          color: primaryText,
+                        icon: const Icon(Icons.refresh_rounded, size: 15),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: 'Replace',
+                            fa: 'تغییر فایل',
+                            ar: 'استبدال',
+                            zh: '更换',
+                          ),
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            fontWeight: FontWeight.w700,
+                            color: primaryText,
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 6.w),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.delete_outline_rounded,
-                        color: AppColors.error,
-                        size: 20,
+                    Semantics(
+                      button: true,
+                      label: l10nPick(
+                        context,
+                        en: 'Delete file',
+                        fa: 'حذف فایل',
+                        ar: 'حذف',
+                        zh: '删除',
                       ),
-                      onPressed: () {
-                        controller.fieldFiles.remove(field.name ?? "");
-                      },
+                      child: IconButton(
+                        constraints: const BoxConstraints(
+                          minWidth: 44,
+                          minHeight: 44,
+                        ),
+                        tooltip: l10nPick(
+                          context,
+                          en: 'Delete file',
+                          fa: 'حذف فایل',
+                          ar: 'حذف',
+                          zh: '删除',
+                        ),
+                        icon: const Icon(
+                          Icons.delete_outline_rounded,
+                          color: AppColors.error,
+                          size: 20,
+                        ),
+                        onPressed: () {
+                          controller.fieldFiles.remove(field.name ?? "");
+                        },
+                      ),
                     ),
                   ],
                 ),

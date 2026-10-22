@@ -23,8 +23,10 @@ class DynamicPasswordScreen extends StatefulWidget {
 class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
   String? _otpCode;
   int _secondsRemaining = 0;
+  int _totalSeconds = 60;
   Timer? _timer;
   bool _isLoading = false;
+  bool _isCopied = false;
 
   @override
   void initState() {
@@ -82,10 +84,13 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         final responseData = response.data!;
         if (responseData['status'] == 'success') {
           final data = responseData['data'];
+          final expiresIn = (data['expires_in'] as num?)?.toInt() ?? 60;
           setState(() {
             _otpCode = data['code']?.toString() ?? '';
-            _secondsRemaining = data['expires_in'] ?? 60;
+            _secondsRemaining = expiresIn;
+            _totalSeconds = expiresIn > 0 ? expiresIn : 60;
             _isLoading = false;
+            _isCopied = false;
           });
           HapticFeedback.mediumImpact();
           _startCountdown();
@@ -115,10 +120,27 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_secondsRemaining <= 0) {
         timer.cancel();
-        setState(() => _otpCode = null);
+        setState(() {
+          _otpCode = null;
+          _isCopied = false;
+        });
       } else {
         setState(() => _secondsRemaining--);
       }
+    });
+  }
+
+  void _copyCode() {
+    if (_otpCode == null || _otpCode!.isEmpty) return;
+    HapticFeedback.mediumImpact();
+    Clipboard.setData(ClipboardData(text: _otpCode!));
+    setState(() => _isCopied = true);
+    ToastHelper().showSuccessToast(
+      AppLocalizations.of(Get.context!)?.dynamicPasswordCopied ??
+          'Code copied to clipboard',
+    );
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _isCopied = false);
     });
   }
 
@@ -202,10 +224,10 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
           child: Column(
             children: [
-              SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.lg),
 
               // Animated payment OTP icon container
               Container(
@@ -225,7 +247,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                   color: iconStyle.iconColor,
                 ),
               ),
-              SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.lg),
 
               Text(
                 AppLocalizations.of(context)!.dynamicPasswordHeading,
@@ -235,7 +257,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: AppSpacing.xs),
+              const SizedBox(height: AppSpacing.xs),
               Text(
                 AppLocalizations.of(context)!.dynamicPasswordSubtitle,
                 style: AppTextStyles.bodyMedium.copyWith(
@@ -243,137 +265,30 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: AppSpacing.xxl),
+              const SizedBox(height: AppSpacing.xxl),
 
               if (_isLoading)
                 CircularProgressIndicator(
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                 )
               else if (_otpCode != null && _secondsRemaining > 0) ...[
-                // Active OTP Card with pulsating glow
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(AppSpacing.xxl),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.white,
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-                    border: Border.all(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                          .withValues(alpha: 0.35),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                            .withValues(alpha: 0.08),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Monospace OTP Digits
-                      Text(
-                        _otpCode!,
-                        style: AppTextStyles.headlineLarge.copyWith(
-                          fontSize: 40,
-                          fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
-                          letterSpacing: 8,
-                          fontFamily: 'monospace',
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.md),
+                // Active OTP Card with countdown timer ring & tap-to-copy
+                _buildActiveOtpCard(isDark, primaryTextColor, secondaryTextColor),
+                const SizedBox(height: AppSpacing.lg),
 
-                      // Countdown timer badge
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSpacing.lg,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _secondsRemaining <= 10
-                              ? AppColors.error.withValues(alpha: 0.12)
-                              : (isDark
-                                  ? AppColors.mainSoftBlue.withValues(alpha: 0.15)
-                                  : AppColors.lightPrimary.withValues(alpha: 0.10)),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.timer_outlined,
-                              size: 16,
-                              color: _secondsRemaining <= 10
-                                  ? AppColors.error
-                                  : (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary),
-                            ),
-                            SizedBox(width: AppSpacing.xs),
-                            Text(
-                              _formattedTime,
-                              style: AppTextStyles.labelMedium.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: _secondsRemaining <= 10
-                                    ? AppColors.error
-                                    : (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: AppSpacing.sm),
-                      Text(
-                        AppLocalizations.of(context)!.dynamicPasswordValidity,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontSize: 11,
-                          color: secondaryTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: AppSpacing.lg),
+                // Tokenized Copy code button
+                _buildCopyButton(isDark),
+                const SizedBox(height: AppSpacing.sm),
 
-                // Copy code button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    HapticFeedback.lightImpact();
-                    Clipboard.setData(ClipboardData(text: _otpCode!));
-                    ToastHelper().showSuccessToast(
-                      AppLocalizations.of(Get.context!)!.dynamicPasswordCopied,
-                    );
-                  },
-                  icon: const Icon(Icons.copy_rounded, size: 18),
-                  label: Text(
-                    AppLocalizations.of(context)!.dynamicPasswordCopy,
-                    style: AppTextStyles.labelMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
-                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xxl,
-                      vertical: AppSpacing.md,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    ),
-                    elevation: 0,
-                  ),
-                ),
-                SizedBox(height: AppSpacing.sm),
-
+                // Regenerate button
                 TextButton.icon(
-                  onPressed: _generateOtp,
+                  onPressed: _isLoading ? null : _generateOtp,
                   icon: const Icon(Icons.refresh_rounded, size: 16),
                   label: Text(
                     AppLocalizations.of(context)!.dynamicPasswordRegenerate,
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -383,7 +298,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton.icon(
-                    onPressed: _generateOtp,
+                    onPressed: _isLoading ? null : _generateOtp,
                     icon: const Icon(Icons.shield_outlined, size: 20),
                     label: Text(
                       AppLocalizations.of(context)!.dynamicPasswordGenerate,
@@ -392,7 +307,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                       foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -407,10 +322,10 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
 
               // Usage hint bottom card
               Container(
-                padding: EdgeInsets.all(AppSpacing.md),
+                padding: const EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
                   color: isDark
-                      ? const Color(0xFF78350F).withValues(alpha: 0.25)
+                      ? AppColors.warning.withValues(alpha: 0.15)
                       : AppColors.warningContainer,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   border: Border.all(
@@ -420,7 +335,7 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 child: Row(
                   children: [
                     const Icon(Icons.info_outline_rounded, color: AppColors.warning, size: 20),
-                    SizedBox(width: AppSpacing.sm),
+                    const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: Text(
                         AppLocalizations.of(context)!.dynamicPasswordUsageHint,
@@ -436,6 +351,208 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
               SizedBox(height: AppSpacing.bottomSafe(context, AppSpacing.lg)),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  /// Modern active OTP card with tap-to-copy and dynamic timer ring
+  Widget _buildActiveOtpCard(
+    bool isDark,
+    Color primaryTextColor,
+    Color secondaryTextColor,
+  ) {
+    final timerColor = _secondsRemaining <= 10
+        ? AppColors.error
+        : (_secondsRemaining <= 20
+            ? AppColors.warning
+            : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet));
+
+    final cardBorderColor = (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+        .withValues(alpha: 0.35);
+
+    final timerTrackColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightOutlineVariant.withValues(alpha: 0.60);
+
+    final timerProgress = _totalSeconds > 0
+        ? (_secondsRemaining / _totalSeconds).clamp(0.0, 1.0)
+        : 0.0;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+        border: Border.all(color: cardBorderColor, width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                .withValues(alpha: 0.08),
+            blurRadius: 18,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Monospace OTP Digits (interactive tap-to-copy)
+          Material(
+            color: AppColors.transparent,
+            child: InkWell(
+              onTap: _copyCode,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.xs,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      _otpCode!,
+                      style: AppTextStyles.headlineLarge.copyWith(
+                        fontSize: 38,
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        letterSpacing: 7,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Icon(
+                      _isCopied ? Icons.check_circle_rounded : Icons.copy_rounded,
+                      size: 18,
+                      color: _isCopied
+                          ? AppColors.success
+                          : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                              .withValues(alpha: 0.7),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+
+          // Tokenized OTP Generator Timer Ring
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Circular Timer Ring
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: timerProgress,
+                      strokeWidth: 4.0,
+                      strokeCap: StrokeCap.round,
+                      backgroundColor: timerTrackColor,
+                      valueColor: AlwaysStoppedAnimation<Color>(timerColor),
+                    ),
+                    Text(
+                      '$_secondsRemaining',
+                      style: AppTextStyles.labelSmall.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: timerColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+
+              // Countdown timer badge
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: timerColor.withValues(alpha: isDark ? 0.16 : 0.10),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                  border: Border.all(
+                    color: timerColor.withValues(alpha: 0.30),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.timer_outlined,
+                      size: 15,
+                      color: timerColor,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      _formattedTime,
+                      style: AppTextStyles.labelMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: timerColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            AppLocalizations.of(context)!.dynamicPasswordValidity,
+            style: AppTextStyles.bodySmall.copyWith(
+              fontSize: 11,
+              color: secondaryTextColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Tokenized Copy Code Action CTA
+  Widget _buildCopyButton(bool isDark) {
+    final buttonColor = _isCopied
+        ? AppColors.success
+        : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet);
+    final textColor = _isCopied
+        ? AppColors.white
+        : (isDark ? AppColors.deepBlack : AppColors.white);
+
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton.icon(
+        onPressed: _copyCode,
+        icon: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: Icon(
+            _isCopied ? Icons.check_circle_rounded : Icons.copy_rounded,
+            key: ValueKey(_isCopied),
+            size: 18,
+          ),
+        ),
+        label: Text(
+          _isCopied
+              ? (AppLocalizations.of(context)?.dynamicPasswordCopied ?? 'Copied')
+              : AppLocalizations.of(context)!.dynamicPasswordCopy,
+          style: AppTextStyles.labelMedium.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: buttonColor,
+          foregroundColor: textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          ),
+          elevation: 0,
+          shadowColor: buttonColor.withValues(alpha: 0.35),
         ),
       ),
     );

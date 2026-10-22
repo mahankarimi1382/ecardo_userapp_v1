@@ -990,14 +990,14 @@ class _HeroWalletCardState extends State<HeroWalletCard>
             height: 6,
             decoration: BoxDecoration(
               color: theme.isTrendPositive
-                  ? const Color(0xFF00E676)
-                  : const Color(0xFFFF5252),
+                  ? AppColors.success
+                  : AppColors.error,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
                   color: (theme.isTrendPositive
-                          ? const Color(0xFF00E676)
-                          : const Color(0xFFFF5252))
+                          ? AppColors.success
+                          : AppColors.error)
                       .withValues(alpha: 0.6),
                   blurRadius: 4,
                   spreadRadius: 1,
@@ -1025,8 +1025,8 @@ class _HeroWalletCardState extends State<HeroWalletCard>
             padding: const EdgeInsets.symmetric(horizontal: 4.5, vertical: 1),
             decoration: BoxDecoration(
               color: (theme.isTrendPositive
-                      ? const Color(0xFF00E676)
-                      : const Color(0xFFFF5252))
+                      ? AppColors.success
+                      : AppColors.error)
                   .withValues(alpha: 0.20),
               borderRadius: BorderRadius.circular(6),
             ),
@@ -1035,8 +1035,8 @@ class _HeroWalletCardState extends State<HeroWalletCard>
               textDirection: TextDirection.ltr,
               style: TextStyle(
                 color: theme.isTrendPositive
-                    ? const Color(0xFF69F0AE)
-                    : const Color(0xFFFF8A80),
+                    ? AppColors.success
+                    : AppColors.error,
                 fontSize: 9,
                 fontWeight: FontWeight.w800,
               ),
@@ -1349,7 +1349,7 @@ class _HeroWalletCardState extends State<HeroWalletCard>
                     ),
                     icon: const Icon(
                       Icons.delete_outline_rounded,
-                      color: Color(0xFFFF8A80),
+                      color: AppColors.error,
                       size: 19,
                     ),
                     onPressed: () {

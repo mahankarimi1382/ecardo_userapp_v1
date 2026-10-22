@@ -48,6 +48,7 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
       ar: 'تحقق من الهوية لتأكيد السحب',
       tr: 'Çekimi onaylamak için kimlik doğrulaması yapın',
       ru: 'Подтвердите личность для вывода средств',
+      zh: '请进行身份验证以确认提现',
     );
 
     // Step-up Security: Attempt Biometric first if enabled
@@ -302,6 +303,7 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
                           ar: 'محمي بكلمة المرور والأمان البيومتري',
                           tr: 'Şifre ve Biyometrik Güvenlik Korumalı',
                           ru: 'Защищено PIN-кодом и биометрией',
+                          zh: '受 eCardo 密码与生物识别安全保护',
                         ),
                         style: TextStyle(
                           fontSize: 11.5,
@@ -328,6 +330,7 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
                       ar: 'اسحب لتأكيد السحب',
                       tr: 'Çekimi Onaylamak İçin Kaydırın',
                       ru: 'Проведите для подтверждения',
+                      zh: '滑动以确认提现',
                     ),
                     loadingText: l10nPick(
                       context,
@@ -336,6 +339,7 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
                       ar: 'جار معالجة السحب...',
                       tr: 'Çekim İşleniyor...',
                       ru: 'Обработка вывода...',
+                      zh: '正在处理提现...',
                     ),
                     successText: l10nPick(
                       context,
@@ -344,6 +348,7 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
                       ar: 'تم تأكيد السحب',
                       tr: 'Çekim Onaylandı',
                       ru: 'Вывод подтвержден',
+                      zh: '提现已确认',
                     ),
                     isLoading: controller.isWithdrawLoading.value,
                     enabled: !controller.chargeLoadFailed.value &&

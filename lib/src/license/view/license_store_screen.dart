@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/common/widgets/financial_service_unavailable_banner.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../controller/license_controller.dart';
@@ -52,45 +53,57 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
             ),
             rightSideWidget: Padding(
               padding: EdgeInsetsDirectional.only(end: AppSpacing.lg.w),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  Get.to(() => const LicenseMyLicensesScreen());
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                    border: Border.all(
-                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.vpn_key_rounded,
-                        size: AppSpacing.iconXs.sp,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              child: Semantics(
+                button: true,
+                label: l10nPick(
+                  context,
+                  en: 'My Vault',
+                  fa: 'صندوق لایسنس‌های من',
+                  ar: 'خزينتي',
+                  zh: '我的保险库',
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Get.to(() => const LicenseMyLicensesScreen());
+                  },
+                  child: Container(
+                    constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
+                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      border: Border.all(
+                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.3),
                       ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'My Vault',
-                          fa: 'صندوق من',
-                          ar: 'خزينتي',
-                          zh: '我的保险库',
-                        ),
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.vpn_key_rounded,
+                          size: AppSpacing.iconXs.sp,
                           color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 4.w),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'My Vault',
+                            fa: 'صندوق من',
+                            ar: 'خزينتي',
+                            zh: '我的保险库',
+                          ),
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -118,68 +131,84 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: InkWell(
-                    onTap: () => Get.to(() => const LicenseIntroScreen()),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                        border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  child: Semantics(
+                    button: true,
+                    label: l10nPick(context, fa: 'راهنمای لایسنس‌ها', en: 'Licenses Guide', ar: 'دليل التراخيص', zh: '授权指南'),
+                    child: InkWell(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.to(() => const LicenseIntroScreen());
+                      },
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      child: Container(
+                        constraints: BoxConstraints(minHeight: 44.h),
+                        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          border: Border.all(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          ),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.info_outline_rounded,
-                            size: AppSpacing.iconXs.sp,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                          ),
-                          SizedBox(width: 6.w),
-                          Text(
-                            l10nPick(context, fa: 'راهنمای لایسنس‌ها', en: 'Licenses Guide', ar: 'دليل التراخيص', zh: '授权指南'),
-                            style: TextStyle(
-                              fontSize: 11.5.sp,
-                              fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              size: AppSpacing.iconXs.sp,
+                              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                             ),
-                          ),
-                        ],
+                            SizedBox(width: 6.w),
+                            Text(
+                              l10nPick(context, fa: 'راهنمای لایسنس‌ها', en: 'Licenses Guide', ar: 'دليل التراخيص', zh: '授权指南'),
+                              style: TextStyle(
+                                fontSize: 11.5.sp,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(width: AppSpacing.sm.w),
                 Expanded(
-                  child: InkWell(
-                    onTap: () => Get.to(() => const LicenseMyLicensesScreen()),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                        border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.shield_outlined, size: AppSpacing.iconXs.sp, color: AppColors.success),
-                          SizedBox(width: 6.w),
-                          Text(
-                            l10nPick(context, fa: 'صندوق لایسنس‌های من', en: 'Key Vault', ar: 'خزينة تراخيصي', zh: '我的授权库'),
-                            style: TextStyle(
-                              fontSize: 11.5.sp,
-                              fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                            ),
+                  child: Semantics(
+                    button: true,
+                    label: l10nPick(context, fa: 'صندوق لایسنس‌های من', en: 'Key Vault', ar: 'خزينة تراخيصي', zh: '我的授权库'),
+                    child: InkWell(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        Get.to(() => const LicenseMyLicensesScreen());
+                      },
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      child: Container(
+                        constraints: BoxConstraints(minHeight: 44.h),
+                        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.darkCard : AppColors.lightCard,
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          border: Border.all(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                           ),
-                        ],
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.shield_outlined, size: AppSpacing.iconXs.sp, color: AppColors.success),
+                            SizedBox(width: 6.w),
+                            Text(
+                              l10nPick(context, fa: 'صندوق لایسنس‌های من', en: 'Key Vault', ar: 'خزينة تراخيصي', zh: '我的授权库'),
+                              style: TextStyle(
+                                fontSize: 11.5.sp,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -195,54 +224,31 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
               }
 
               if (controller.products.isEmpty) {
-                return Center(
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: EdgeInsets.all(AppSpacing.xxl.r),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 80.w,
-                          height: 80.w,
-                          decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.inventory_2_outlined,
-                            size: 40.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                          ),
-                        ),
-                        SizedBox(height: AppSpacing.md.h),
-                        Text(
-                          l10nPick(
-                            context,
-                            en: 'No licenses available in this category.',
-                            fa: 'لایسنسی در این دسته‌بندی یافت نشد.',
-                            ar: 'لا توجد تراخيص متاحة في هذا التصنيف.',
-                            zh: '该分类下暂无可用许可证。',
-                          ),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                          ),
-                        ),
-                        SizedBox(height: AppSpacing.md.h),
-                        CommonButton(
-                          width: 140,
-                          height: 38,
-                          text: l10nPick(context, en: 'View All', fa: 'مشاهده همه', ar: 'عرض الكل', zh: '查看全部'),
-                          onPressed: () {
-                            controller.selectedCategory.value = 'all';
-                            controller.fetchCatalog(category: 'all');
-                          },
-                        ),
-                      ],
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: EcardoEmptyState(
+                    iconData: Icons.inventory_2_outlined,
+                    glowColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    title: l10nPick(
+                      context,
+                      en: 'No Licenses Found',
+                      fa: 'لایسنسی در این دسته‌بندی یافت نشد',
+                      ar: 'لا توجد تراخيص متاحة في هذا التصنيف',
+                      zh: '该分类下暂无可用许可证',
                     ),
+                    description: l10nPick(
+                      context,
+                      en: 'Try selecting a different category or browse all verified software licenses.',
+                      fa: 'دسته‌بندی دیگری را انتخاب نمایید یا تمامی لایسنس‌های نرم‌افزاری را بررسی کنید.',
+                      ar: 'حاول اختيار تصنيف آخر أو استكشف جميع التراخيص البرمجية المعتمدة.',
+                      zh: '请尝试选择其他分类或浏览全部官方正版软件许可证。',
+                    ),
+                    primaryActionLabel: l10nPick(context, en: 'View All', fa: 'مشاهده همه', ar: 'عرض الكل', zh: '查看全部'),
+                    onPrimaryAction: () {
+                      HapticFeedback.selectionClick();
+                      controller.selectedCategory.value = 'all';
+                      controller.fetchCatalog(category: 'all');
+                    },
                   ),
                 );
               }
@@ -337,33 +343,39 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
           final cat = categories[i];
           return Obx(() {
             final active = controller.selectedCategory.value == cat['key'];
-            return ChoiceChip(
-              label: Text(
-                l10nPick(
-                  context,
-                  en: cat['en']!,
-                  fa: cat['fa']!,
-                  ar: cat['ar'],
-                  zh: cat['zh'],
-                ),
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                  color: active
-                      ? (isDark ? AppColors.deepBlack : AppColors.white)
-                      : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-                ),
-              ),
+            final labelText = l10nPick(
+              context,
+              en: cat['en']!,
+              fa: cat['fa']!,
+              ar: cat['ar'],
+              zh: cat['zh'],
+            );
+            return Semantics(
+              button: true,
               selected: active,
-              selectedColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-              backgroundColor: isDark ? AppColors.darkCard : AppColors.lightCard,
-              onSelected: (val) {
-                if (val) {
-                  HapticFeedback.selectionClick();
-                  controller.selectedCategory.value = cat['key']!;
-                  controller.fetchCatalog(category: cat['key']);
-                }
-              },
+              label: labelText,
+              child: ChoiceChip(
+                label: Text(
+                  labelText,
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                    color: active
+                        ? (isDark ? AppColors.deepBlack : AppColors.white)
+                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                  ),
+                ),
+                selected: active,
+                selectedColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                backgroundColor: isDark ? AppColors.darkCard : AppColors.lightCard,
+                onSelected: (val) {
+                  if (val) {
+                    HapticFeedback.selectionClick();
+                    controller.selectedCategory.value = cat['key']!;
+                    controller.fetchCatalog(category: cat['key']);
+                  }
+                },
+              ),
             );
           });
         },
@@ -433,22 +445,27 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: product.isInStock
-                      ? AppColors.success.withValues(alpha: 0.12)
-                      : AppColors.error.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                ),
-                child: Text(
-                  product.isInStock
-                      ? l10nPick(context, en: 'In Stock (${product.stockCount})', fa: 'موجود (${product.stockCount})', ar: 'متوفر', zh: '现货')
-                      : l10nPick(context, en: 'Out of Stock', fa: 'ناموجود', ar: 'نفد', zh: '缺货'),
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w600,
-                    color: product.isInStock ? AppColors.success : AppColors.error,
+              Semantics(
+                label: product.isInStock
+                    ? l10nPick(context, en: 'In Stock, ${product.stockCount} available', fa: 'موجود در انبار، ${product.stockCount} عدد', ar: 'متوفر', zh: '现货')
+                    : l10nPick(context, en: 'Out of Stock', fa: 'ناموجود در انبار', ar: 'نفد', zh: '缺货'),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: product.isInStock
+                        ? AppColors.success.withValues(alpha: 0.12)
+                        : AppColors.error.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                  ),
+                  child: Text(
+                    product.isInStock
+                        ? l10nPick(context, en: 'In Stock (${product.stockCount})', fa: 'موجود (${product.stockCount})', ar: 'متوفر', zh: '现货')
+                        : l10nPick(context, en: 'Out of Stock', fa: 'ناموجود', ar: 'نفد', zh: '缺货'),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w600,
+                      color: product.isInStock ? AppColors.success : AppColors.error,
+                    ),
                   ),
                 ),
               ),
@@ -492,38 +509,58 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                 ],
               ),
               product.isInStock
-                  ? CommonButton(
-                      width: 120,
-                      height: 40,
-                      text: l10nPick(
+                  ? Semantics(
+                      button: true,
+                      label: l10nPick(
                         context,
-                        en: 'Buy License',
-                        fa: 'خرید لایسنس',
-                        ar: 'شراء الترخيص',
-                        zh: '购买许可证',
+                        en: 'Buy ${product.name} license',
+                        fa: 'خرید لایسنس ${product.name}',
+                        ar: 'شراء ترخيص ${product.name}',
+                        zh: '购买 ${product.name} 许可证',
                       ),
-                      fontSize: 13,
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        Get.to(() => LicenseDetailScreen(product: product));
-                      },
+                      child: CommonButton(
+                        width: 120,
+                        height: 44,
+                        text: l10nPick(
+                          context,
+                          en: 'Buy License',
+                          fa: 'خرید لایسنس',
+                          ar: 'شراء الترخيص',
+                          zh: '购买许可证',
+                        ),
+                        fontSize: 13,
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          Get.to(() => LicenseDetailScreen(product: product));
+                        },
+                      ),
                     )
-                  : CommonButton(
-                      width: 120,
-                      height: 40,
-                      backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
-                      textColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                      text: l10nPick(
+                  : Semantics(
+                      button: true,
+                      label: l10nPick(
                         context,
-                        en: 'Notify Me',
-                        fa: 'خبرم کن',
-                        ar: 'أعلمني',
-                        zh: '通知我',
+                        en: 'Notify when ${product.name} is in stock',
+                        fa: 'اطلاع‌رسانی موجودی ${product.name}',
+                        ar: 'إعلامي عند توفر ${product.name}',
+                        zh: '到货通知 ${product.name}',
                       ),
-                      fontSize: 13,
-                      onPressed: () {
-                        HapticFeedback.selectionClick();
-                      },
+                      child: CommonButton(
+                        width: 120,
+                        height: 44,
+                        backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                        textColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        text: l10nPick(
+                          context,
+                          en: 'Notify Me',
+                          fa: 'خبرم کن',
+                          ar: 'أعلمني',
+                          zh: '通知我',
+                        ),
+                        fontSize: 13,
+                        onPressed: () {
+                          HapticFeedback.selectionClick();
+                        },
+                      ),
                     ),
             ],
           ),

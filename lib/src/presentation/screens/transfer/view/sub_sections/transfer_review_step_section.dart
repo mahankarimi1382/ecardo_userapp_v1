@@ -148,7 +148,15 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                       _buildDivider(colorScheme),
                       _buildSummaryRow(
                         context,
-                        title: 'Exchange Rate',
+                        title: l10nPick(
+                          context,
+                          en: 'Exchange Rate',
+                          fa: 'نرخ تبدیل',
+                          ar: 'سعر الصرف',
+                          tr: 'Döviz Kuru',
+                          ru: 'Курс обмена',
+                          zh: '汇率',
+                        ),
                         content: '1 $walletCode ≈ ${currentWallet.conversionRate}',
                         contentColor: colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
@@ -156,8 +164,24 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                     _buildDivider(colorScheme),
                     _buildSummaryRow(
                       context,
-                      title: 'Estimated Arrival',
-                      content: 'Instant ⚡',
+                      title: l10nPick(
+                        context,
+                        en: 'Estimated Arrival',
+                        fa: 'زمان تقریبی رسیدن',
+                        ar: 'الوقت المقدر للوصول',
+                        tr: 'Tahmini Varış',
+                        ru: 'Ориентировочное время',
+                        zh: '预计到账时间',
+                      ),
+                      content: l10nPick(
+                        context,
+                        en: 'Instant ⚡',
+                        fa: 'آنی ⚡',
+                        ar: 'فوري ⚡',
+                        tr: 'Anında ⚡',
+                        ru: 'Мгновенно ⚡',
+                        zh: '即时 ⚡',
+                      ),
                       contentColor: AppColors.success,
                     ),
                     _buildDivider(colorScheme),
@@ -201,7 +225,15 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       Text(
-                        'Protected by eCardo Secure Passcode',
+                        l10nPick(
+                          context,
+                          en: 'Protected by eCardo Secure Passcode',
+                          fa: 'محافظت‌شده با رمز امنیتی eCardo',
+                          ar: 'محمي برمز المرور الآمن لـ eCardo',
+                          tr: 'eCardo Güvenli Parola ile Korunuyor',
+                          ru: 'Защищено безопасным паролем eCardo',
+                          zh: '受 eCardo 安全密码保护',
+                        ),
                         style: TextStyle(
                           fontFamily: 'Plus Jakarta Sans',
                           fontSize: 11,
@@ -219,7 +251,33 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
               // 3. Swipe to Confirm Button (Design System)
               EcardoSwipeButton(
                 key: _swipeKey,
-                text: 'Swipe to Confirm Transfer',
+                text: l10nPick(
+                  context,
+                  en: 'Swipe to Confirm Transfer',
+                  fa: 'برای تایید انتقال به راست بکشید',
+                  ar: 'اسحب لتأكيد التحويل',
+                  tr: 'Transferi Onaylamak İçin Kaydır',
+                  ru: 'Проведите для подтверждения перевода',
+                  zh: '滑动以确认转账',
+                ),
+                loadingText: l10nPick(
+                  context,
+                  en: 'Processing...',
+                  fa: 'در حال پردازش...',
+                  ar: 'جارٍ المعالجة...',
+                  tr: 'İşleniyor...',
+                  ru: 'Обработка...',
+                  zh: '处理中...',
+                ),
+                successText: l10nPick(
+                  context,
+                  en: 'Confirmed',
+                  fa: 'تایید شد',
+                  ar: 'تم التأكيد',
+                  tr: 'Onaylandı',
+                  ru: 'Подтверждено',
+                  zh: '已确认',
+                ),
                 onSwipeComplete: () async {
                   await _triggerPasscodeAndTransfer(context, controller);
                 },

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../models/loan_models.dart';
 import '../services/loan_service.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 
 /// GetX controller for the Loan & Credit service.
 /// Provides reactive state for products, user applications, calculations,
@@ -401,24 +402,27 @@ class LoanController extends GetxController {
       }
 
       if (result == null) {
-        // Fallback simulation: register the application locally
-        final newCase = LoanCaseModel(
-          id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-          caseNo: 'LN-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
-          borrowerId: 101,
-          product: product,
-          requestedAmount: amount,
-          tenureMonths: selectedTenure.value,
-          status: 'UNDER_ASSESSMENT',
-          customCoveragePct: 150.0,
-          customCollateralValueUsd: amount * 1.5,
-          collaterals: const [],
-          installments: const [],
-          events: const [],
-        );
-        myCases.insert(0, newCase);
-        selectedCase.value = newCase;
-        return null;
+        if (DemoAccountService.isDemoInterceptionAllowedNow) {
+          // Demo fallback simulation
+          final newCase = LoanCaseModel(
+            id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+            caseNo: 'LN-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+            borrowerId: 101,
+            product: product,
+            requestedAmount: amount,
+            tenureMonths: selectedTenure.value,
+            status: 'UNDER_ASSESSMENT',
+            customCoveragePct: 150.0,
+            customCollateralValueUsd: amount * 1.5,
+            collaterals: const [],
+            installments: const [],
+            events: const [],
+          );
+          myCases.insert(0, newCase);
+          selectedCase.value = newCase;
+          return null;
+        }
+        return 'ERR_NETWORK: برقراری ارتباط با سامانه تسهیلات با خطا مواجه شد. لطفاً مجدداً تلاش نمایید.';
       }
       await fetchMyCases();
       return null;

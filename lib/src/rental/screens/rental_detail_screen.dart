@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 import '../controllers/rental_controller.dart';
 import '../models/rental_models.dart';
@@ -54,7 +56,7 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
     switch (status) {
       case 'COMPLETED': return ECardoTokens.success(context);
       case 'ACTIVE': return ECardoTokens.brand500(context);
-      case 'CONFIRMED': return const Color(0xFF0D9488);
+      case 'CONFIRMED': return AppColors.mutedBlue;
       case 'DISPUTED': return ECardoTokens.danger(context);
       case 'CANCELLED': case 'REFUNDED': case 'EXPIRED': return ECardoTokens.inkMuted(context);
       case 'AWAITING_DOCS': case 'AWAITING_PAYMENT': case 'PENDING_CONFIRMATION':
@@ -82,35 +84,45 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text(
-            l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
-            style: TextStyle(color: ECardoTokens.inkMuted(context)),
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
+          child: TextButton(
+            style: TextButton.styleFrom(minimumSize: Size(80.w, 44.h)),
+            onPressed: () => Get.back(),
+            child: Text(
+              l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
+              style: TextStyle(color: ECardoTokens.inkMuted(context)),
+            ),
           ),
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: ECardoTokens.brand500(context),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
-          ),
-          onPressed: () async {
-            Get.back();
-            final ok = await action();
-            if (!mounted) return;
-            if (!ok) {
-              Get.snackbar(
-                l10nPick(context, en: 'Error', fa: 'خطا'),
-                l10nPick(context, en: 'Action failed.', fa: 'عملیات ناموفق بود.'),
-                backgroundColor: ECardoTokens.danger(context),
-                colorText: Colors.white,
-              );
-            }
-          },
-          child: Text(
-            l10nPick(context, en: 'Confirm', fa: 'تأیید', ar: 'تأكيد', zh: '确认'),
-            style: const TextStyle(fontWeight: FontWeight.w700),
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Confirm', fa: 'تأیید', ar: 'تأكيد', zh: '确认'),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ECardoTokens.brand500(context),
+              foregroundColor: AppColors.white,
+              minimumSize: Size(88.w, 44.h),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+            ),
+            onPressed: () async {
+              Get.back();
+              final ok = await action();
+              if (!mounted) return;
+              if (!ok) {
+                Get.snackbar(
+                  l10nPick(context, en: 'Error', fa: 'خطا'),
+                  l10nPick(context, en: 'Action failed.', fa: 'عملیات ناموفق بود.'),
+                  backgroundColor: ECardoTokens.danger(context),
+                  colorText: AppColors.white,
+                );
+              }
+            },
+            child: Text(
+              l10nPick(context, en: 'Confirm', fa: 'تأیید', ar: 'تأكيد', zh: '确认'),
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
         ),
       ],
@@ -202,43 +214,53 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text(
-            l10nPick(context, en: 'Cancel', fa: 'انصراف'),
-            style: TextStyle(color: ECardoTokens.inkMuted(context)),
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
+          child: TextButton(
+            style: TextButton.styleFrom(minimumSize: Size(80.w, 44.h)),
+            onPressed: () => Get.back(),
+            child: Text(
+              l10nPick(context, en: 'Cancel', fa: 'انصراف'),
+              style: TextStyle(color: ECardoTokens.inkMuted(context)),
+            ),
           ),
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: ECardoTokens.brand500(context),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
-          ),
-          onPressed: () async {
-            Get.back();
-            final ok = await controller.submitDocs(booking.id, [
-              {
-                'driver_role': 'PRIMARY',
-                'license_ref': licenseCtrl.text.trim(),
-                'license_years': int.tryParse(yearsCtrl.text) ?? 1,
-                'license_expiry': expiryCtrl.text.trim(),
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Submit Docs', fa: 'ارسال مدارک', ar: 'إرسال المستندات', zh: '提交文件'),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ECardoTokens.brand500(context),
+              foregroundColor: AppColors.white,
+              minimumSize: Size(110.w, 44.h),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+            ),
+            onPressed: () async {
+              Get.back();
+              final ok = await controller.submitDocs(booking.id, [
+                {
+                  'driver_role': 'PRIMARY',
+                  'license_ref': licenseCtrl.text.trim(),
+                  'license_years': int.tryParse(yearsCtrl.text) ?? 1,
+                  'license_expiry': expiryCtrl.text.trim(),
+                }
+              ]);
+              if (!mounted) return;
+              if (ok) {
+                Get.snackbar(
+                  l10nPick(context, en: 'Submitted', fa: 'ثبت شد'),
+                  l10nPick(context, en: 'Driver docs submitted for verification.',
+                    fa: 'مدارک راننده ثبت شد و در انتظار تأیید امتثال است.'),
+                  backgroundColor: ECardoTokens.success(context),
+                  colorText: AppColors.white,
+                );
               }
-            ]);
-            if (!mounted) return;
-            if (ok) {
-              Get.snackbar(
-                l10nPick(context, en: 'Submitted', fa: 'ثبت شد'),
-                l10nPick(context, en: 'Driver docs submitted for verification.',
-                  fa: 'مدارک راننده ثبت شد و در انتظار تأیید امتثال است.'),
-                backgroundColor: ECardoTokens.success(context),
-                colorText: Colors.white,
-              );
-            }
-          },
-          child: Text(
-            l10nPick(context, en: 'Submit Docs', fa: 'ارسال مدارک'),
-            style: const TextStyle(fontWeight: FontWeight.w700),
+            },
+            child: Text(
+              l10nPick(context, en: 'Submit Docs', fa: 'ارسال مدارک'),
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
         ),
       ],
@@ -338,50 +360,60 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Get.back(),
-          child: Text(
-            l10nPick(context, en: 'Cancel', fa: 'انصراف'),
-            style: TextStyle(color: ECardoTokens.inkMuted(context)),
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
+          child: TextButton(
+            style: TextButton.styleFrom(minimumSize: Size(80.w, 44.h)),
+            onPressed: () => Get.back(),
+            child: Text(
+              l10nPick(context, en: 'Cancel', fa: 'انصراف'),
+              style: TextStyle(color: ECardoTokens.inkMuted(context)),
+            ),
           ),
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: ECardoTokens.brand500(context),
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
-          ),
-          onPressed: () async {
-            Get.back();
-            final photos = List.generate(8, (i) => 'photo_${phase.toLowerCase()}_slot$i.jpg');
-            final ok = await controller.submitHandover(
-              booking.id,
-              phase,
-              photos,
-              int.tryParse(odoCtrl.text) ?? 45000,
-              int.tryParse(fuelCtrl.text) ?? 100,
-            );
-            if (!mounted) return;
-            if (ok) {
-              if (isPickup) {
-                await controller.confirmPickup(booking.id);
-              } else {
-                await controller.confirmReturn(booking.id);
-              }
-              if (!mounted) return;
-              Get.snackbar(
-                l10nPick(context, en: 'Completed', fa: 'ثبت شد'),
-                isPickup
-                  ? l10nPick(context, en: 'Vehicle picked up — trip is active!', fa: 'خودرو تحویل گرفته شد — سفر فعال است!')
-                  : l10nPick(context, en: 'Vehicle returned — settlement calculated.', fa: 'خودرو مسترد شد — تفاضل خودکار محاسبه گردید.'),
-                backgroundColor: ECardoTokens.success(context),
-                colorText: Colors.white,
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Record & Sign', fa: 'ثبت و امضای دیجیتال', ar: 'تسجيل وتوقيع', zh: '记录并签署'),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: ECardoTokens.brand500(context),
+              foregroundColor: AppColors.white,
+              minimumSize: Size(120.w, 44.h),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+            ),
+            onPressed: () async {
+              Get.back();
+              final photos = List.generate(8, (i) => 'photo_${phase.toLowerCase()}_slot$i.jpg');
+              final ok = await controller.submitHandover(
+                booking.id,
+                phase,
+                photos,
+                int.tryParse(odoCtrl.text) ?? 45000,
+                int.tryParse(fuelCtrl.text) ?? 100,
               );
-            }
-          },
-          child: Text(
-            l10nPick(context, en: 'Record & Sign', fa: 'ثبت و امضای دیجیتال'),
-            style: const TextStyle(fontWeight: FontWeight.w700),
+              if (!mounted) return;
+              if (ok) {
+                if (isPickup) {
+                  await controller.confirmPickup(booking.id);
+                } else {
+                  await controller.confirmReturn(booking.id);
+                }
+                if (!mounted) return;
+                Get.snackbar(
+                  l10nPick(context, en: 'Completed', fa: 'ثبت شد'),
+                  isPickup
+                    ? l10nPick(context, en: 'Vehicle picked up — trip is active!', fa: 'خودرو تحویل گرفته شد — سفر فعال است!')
+                    : l10nPick(context, en: 'Vehicle returned — settlement calculated.', fa: 'خودرو مسترد شد — تفاضل خودکار محاسبه گردید.'),
+                  backgroundColor: ECardoTokens.success(context),
+                  colorText: AppColors.white,
+                );
+              }
+            },
+            child: Text(
+              l10nPick(context, en: 'Record & Sign', fa: 'ثبت و امضای دیجیتال'),
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
           ),
         ),
       ],
@@ -450,41 +482,51 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(
-              l10nPick(context, en: 'Cancel', fa: 'انصراف'),
-              style: TextStyle(color: ECardoTokens.inkMuted(context)),
+          Semantics(
+            button: true,
+            label: l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
+            child: TextButton(
+              style: TextButton.styleFrom(minimumSize: Size(80.w, 44.h)),
+              onPressed: () => Get.back(),
+              child: Text(
+                l10nPick(context, en: 'Cancel', fa: 'انصراف'),
+                style: TextStyle(color: ECardoTokens.inkMuted(context)),
+              ),
             ),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: ECardoTokens.danger(context),
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
-            ),
-            onPressed: () async {
-              Get.back();
-              final ok = await controller.fileDispute(
-                booking.id,
-                disputeType,
-                double.tryParse(amountCtrl.text) ?? 0,
-              );
-              if (!mounted) return;
-              if (ok) {
-                Get.snackbar(
-                  l10nPick(context, en: 'Dispute Filed', fa: 'اختلاف ثبت شد'),
-                  l10nPick(context,
-                    en: 'Security deposit frozen — referee ruling in 5 days.',
-                    fa: 'ودیعه فریز شد و پرونده به داور ارجاع گردید (مهلت رأی ۵ روز).'),
-                  backgroundColor: ECardoTokens.warning(context),
-                  colorText: Colors.white,
+          Semantics(
+            button: true,
+            label: l10nPick(context, en: 'Submit Dispute', fa: 'ثبت اختلاف', ar: 'إرسال النزاع', zh: '提交争议'),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ECardoTokens.danger(context),
+                foregroundColor: AppColors.white,
+                minimumSize: Size(110.w, 44.h),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+              ),
+              onPressed: () async {
+                Get.back();
+                final ok = await controller.fileDispute(
+                  booking.id,
+                  disputeType,
+                  double.tryParse(amountCtrl.text) ?? 0,
                 );
-              }
-            },
-            child: Text(
-              l10nPick(context, en: 'Submit Dispute', fa: 'ثبت اختلاف'),
-              style: const TextStyle(fontWeight: FontWeight.w700),
+                if (!mounted) return;
+                if (ok) {
+                  Get.snackbar(
+                    l10nPick(context, en: 'Dispute Filed', fa: 'اختلاف ثبت شد'),
+                    l10nPick(context,
+                      en: 'Security deposit frozen — referee ruling in 5 days.',
+                      fa: 'ودیعه فریز شد و پرونده به داور ارجاع گردید (مهلت رأی ۵ روز).'),
+                    backgroundColor: ECardoTokens.warning(context),
+                    colorText: AppColors.white,
+                  );
+                }
+              },
+              child: Text(
+                l10nPick(context, en: 'Submit Dispute', fa: 'ثبت اختلاف'),
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
             ),
           ),
         ],
@@ -511,22 +553,33 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
           Obx(() {
             final b = controller.selectedBooking.value;
             if (b == null) return const SizedBox.shrink();
-            return IconButton(
-              tooltip: l10nPick(
+            return Semantics(
+              button: true,
+              label: l10nPick(
                 context,
                 en: 'View Voucher',
                 fa: 'مشاهده ووچر دیجیتال',
                 ar: 'عرض القسيمة',
                 zh: '查看凭证',
               ),
-              icon: Icon(
-                Icons.confirmation_number_outlined,
-                color: ECardoTokens.brand500(context),
+              child: IconButton(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                tooltip: l10nPick(
+                  context,
+                  en: 'View Voucher',
+                  fa: 'مشاهده ووچر دیجیتال',
+                  ar: 'عرض القسيمة',
+                  zh: '查看凭证',
+                ),
+                icon: Icon(
+                  Icons.confirmation_number_outlined,
+                  color: ECardoTokens.brand500(context),
+                ),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Get.to(() => RentalVoucherScreen(booking: b));
+                },
               ),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                Get.to(() => RentalVoucherScreen(booking: b));
-              },
             );
           }),
         ],
@@ -559,12 +612,55 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        b.bookingNo,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14.sp,
-                          color: ECardoTokens.ink(context),
+                      Semantics(
+                        button: true,
+                        label: l10nPick(
+                          context,
+                          en: 'Booking number ${b.bookingNo}, tap to copy',
+                          fa: 'شماره پیگیری رزرو ${b.bookingNo}، برای کپی ضربه بزنید',
+                          ar: 'رقم الحجز ${b.bookingNo}، اضغط للنسخ',
+                          zh: '预订编号 ${b.bookingNo}，点击复制',
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              Clipboard.setData(ClipboardData(text: b.bookingNo));
+                              ToastHelper().showSuccessToast(
+                                l10nPick(
+                                  context,
+                                  en: 'Booking number copied: ${b.bookingNo}',
+                                  fa: 'شماره رزرو کپی شد: ${b.bookingNo}',
+                                  ar: 'تم نسخ رقم الحجز: ${b.bookingNo}',
+                                  zh: '已复制预订编号: ${b.bookingNo}',
+                                ),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    b.bookingNo,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 14.sp,
+                                      color: ECardoTokens.ink(context),
+                                    ),
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Icon(
+                                    Icons.copy_rounded,
+                                    size: 14.sp,
+                                    color: ECardoTokens.inkMuted(context),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       Container(
@@ -728,18 +824,26 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       ),
                     ),
                     SizedBox(height: ECardoTokens.space3.h),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ECardoTokens.brand500(context),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                    Semantics(
+                      button: true,
+                      label: l10nPick(context, en: 'Upload Driver License', fa: 'بارگذاری گواهینامه راننده', ar: 'رفع رخصة القيادة', zh: '上传驾驶执照'),
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ECardoTokens.brand500(context),
+                          foregroundColor: AppColors.white,
+                          minimumSize: Size(0, 44.h),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                        ),
+                        icon: const Icon(Icons.badge, size: 18),
+                        label: Text(
+                          l10nPick(context, en: 'Upload License', fa: 'بارگذاری گواهینامه'),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          _showDriverDocsDialog(b);
+                        },
                       ),
-                      icon: const Icon(Icons.badge, size: 18),
-                      label: Text(
-                        l10nPick(context, en: 'Upload License', fa: 'بارگذاری گواهینامه'),
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      onPressed: () => _showDriverDocsDialog(b),
                     ),
                   ],
                 ),
@@ -749,26 +853,37 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
             // Step: Pay Rental + Lock Deposit
             if (b.status == 'AWAITING_PAYMENT') ...[
               SizedBox(height: ECardoTokens.space3.h),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ECardoTokens.brand500(context),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                ),
-                icon: const Icon(Icons.payment, size: 20),
-                label: Text(
-                  l10nPick(context,
-                    en: 'Pay Rental (\$${b.grandTotal}) + Lock Deposit (\$${car?.depositAmount ?? 0})',
-                    fa: 'پرداخت کرایه (\$${b.grandTotal}) + قفل ودیعه (\$${car?.depositAmount ?? 0})'),
-                  style: const TextStyle(fontWeight: FontWeight.w700),
-                ),
-                onPressed: () => _confirm(
-                  l10nPick(context, en: 'Confirm Payment', fa: 'تأیید پرداخت'),
-                  l10nPick(context,
-                    en: 'Pay rental fee and lock security deposit from your wallet?',
-                    fa: 'پرداخت کرایه قطعی و قفل اتمیک ودیعه از موجودی کیف پول؟'),
-                  () => controller.pay(b.id),
+              Semantics(
+                button: true,
+                label: l10nPick(
+                  context,
+                  en: 'Pay Rental (\$${b.grandTotal}) + Lock Deposit (\$${car?.depositAmount ?? 0})',
+                  fa: 'پرداخت کرایه (\$${b.grandTotal}) + قفل ودیعه (\$${car?.depositAmount ?? 0})'),
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ECardoTokens.brand500(context),
+                    foregroundColor: AppColors.white,
+                    minimumSize: Size(double.infinity, 48.h),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
+                    padding: EdgeInsets.symmetric(vertical: 14.h),
+                  ),
+                  icon: const Icon(Icons.payment, size: 20),
+                  label: Text(
+                    l10nPick(context,
+                      en: 'Pay Rental (\$${b.grandTotal}) + Lock Deposit (\$${car?.depositAmount ?? 0})',
+                      fa: 'پرداخت کرایه (\$${b.grandTotal}) + قفل ودیعه (\$${car?.depositAmount ?? 0})'),
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    _confirm(
+                      l10nPick(context, en: 'Confirm Payment', fa: 'تأیید پرداخت'),
+                      l10nPick(context,
+                        en: 'Pay rental fee and lock security deposit from your wallet?',
+                        fa: 'پرداخت کرایه قطعی و قفل اتمیک ودیعه از موجودی کیف پول؟'),
+                      () => controller.pay(b.id),
+                    );
+                  },
                 ),
               ),
             ],
@@ -809,9 +924,9 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
               Container(
                 padding: EdgeInsets.all(ECardoTokens.space4.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0D9488).withValues(alpha: 0.1),
+                  color: AppColors.mutedBlue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
-                  border: Border.all(color: const Color(0xFF0D9488)),
+                  border: Border.all(color: AppColors.mutedBlue),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -835,18 +950,26 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                       ),
                     ),
                     SizedBox(height: ECardoTokens.space3.h),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0D9488),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                    Semantics(
+                      button: true,
+                      label: l10nPick(context, en: 'Start Handover & Inspect', fa: 'شروع تحویل و ثبت وضعیت خودرو'),
+                      child: ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.mutedBlue,
+                          foregroundColor: AppColors.white,
+                          minimumSize: Size(0, 44.h),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                        ),
+                        icon: const Icon(Icons.camera_alt, size: 18),
+                        label: Text(
+                          l10nPick(context, en: 'Start Handover & Inspect', fa: 'شروع تحویل و ثبت وضعیت خودرو'),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                          _showHandoverDialog(b, 'PICKUP');
+                        },
                       ),
-                      icon: const Icon(Icons.camera_alt, size: 18),
-                      label: Text(
-                        l10nPick(context, en: 'Start Handover & Inspect', fa: 'شروع تحویل و ثبت وضعیت خودرو'),
-                        style: const TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      onPressed: () => _showHandoverDialog(b, 'PICKUP'),
                     ),
                   ],
                 ),
@@ -880,53 +1003,65 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: OutlinedButton.icon(
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: ECardoTokens.danger(context)),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                          child: Semantics(
+                            button: true,
+                            label: l10nPick(context, en: 'Emergency 24/7 hotline', fa: 'تماس اضطراری ۲۴ ساعته'),
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: ECardoTokens.danger(context)),
+                                minimumSize: Size(0, 44.h),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                              ),
+                              icon: Icon(Icons.phone_in_talk, color: ECardoTokens.danger(context), size: 16),
+                              label: Text(
+                                l10nPick(context, en: 'Emergency 24/7', fa: 'تماس اضطراری'),
+                                style: TextStyle(color: ECardoTokens.danger(context), fontSize: 11),
+                              ),
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                Get.snackbar(
+                                  l10nPick(context, en: 'Trip Support', fa: 'پشتیبانی سفر'),
+                                  l10nPick(context,
+                                    en: 'Connecting to 24/7 trip emergency hotline: +98-21-9100-ECAR',
+                                    fa: 'تماس با خط اضطراری ۲۴ ساعته سفر: ۰۲۱-۹۱۰۰-اکاردو'),
+                                  backgroundColor: ECardoTokens.danger(context),
+                                  colorText: AppColors.white,
+                                );
+                              },
                             ),
-                            icon: Icon(Icons.phone_in_talk, color: ECardoTokens.danger(context), size: 16),
-                            label: Text(
-                              l10nPick(context, en: 'Emergency 24/7', fa: 'تماس اضطراری'),
-                              style: TextStyle(color: ECardoTokens.danger(context), fontSize: 11),
-                            ),
-                            onPressed: () {
-                              Get.snackbar(
-                                l10nPick(context, en: 'Trip Support', fa: 'پشتیبانی سفر'),
-                                l10nPick(context,
-                                  en: 'Connecting to 24/7 trip emergency hotline: +98-21-9100-ECAR',
-                                  fa: 'تماس با خط اضطراری ۲۴ ساعته سفر: ۰۲۱-۹۱۰۰-اکاردو'),
-                                backgroundColor: ECardoTokens.danger(context),
-                                colorText: Colors.white,
-                              );
-                            },
                           ),
                         ),
                         SizedBox(width: ECardoTokens.space2.w),
                         Expanded(
-                          child: OutlinedButton.icon(
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: ECardoTokens.borderStrong(context)),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
-                            ),
-                            icon: Icon(Icons.report_problem, size: 16, color: ECardoTokens.ink(context)),
-                            label: Text(
-                              l10nPick(context, en: 'Report Incident', fa: 'گزارش حادثه'),
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: ECardoTokens.ink(context),
+                          child: Semantics(
+                            button: true,
+                            label: l10nPick(context, en: 'Report Incident', fa: 'گزارش حادثه'),
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: ECardoTokens.borderStrong(context)),
+                                minimumSize: Size(0, 44.h),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
                               ),
+                              icon: Icon(Icons.report_problem, size: 16, color: ECardoTokens.ink(context)),
+                              label: Text(
+                                l10nPick(context, en: 'Report Incident', fa: 'گزارش حادثه'),
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: ECardoTokens.ink(context),
+                                ),
+                              ),
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                Get.snackbar(
+                                  l10nPick(context, en: 'Incident', fa: 'ثبت حادثه'),
+                                  l10nPick(context,
+                                    en: 'Incident file opened — late fees paused.',
+                                    fa: 'پرونده حادثه ثبت شد — محاسبه دیرکرد متوقف گردید.'),
+                                  backgroundColor: ECardoTokens.warning(context),
+                                  colorText: AppColors.white,
+                                );
+                              },
                             ),
-                            onPressed: () {
-                              Get.snackbar(
-                                l10nPick(context, en: 'Incident', fa: 'ثبت حادثه'),
-                                l10nPick(context,
-                                  en: 'Incident file opened — late fees paused.',
-                                  fa: 'پرونده حادثه ثبت شد — محاسبه دیرکرد متوقف گردید.'),
-                                backgroundColor: ECardoTokens.warning(context),
-                                colorText: Colors.white,
-                              );
-                            },
                           ),
                         ),
                       ],
@@ -934,18 +1069,26 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                     SizedBox(height: ECardoTokens.space2.h),
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ECardoTokens.brand500(context),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                      child: Semantics(
+                        button: true,
+                        label: l10nPick(context, en: 'Start Return Handover', fa: 'شروع استرداد دیجیتال خودرو'),
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ECardoTokens.brand500(context),
+                            foregroundColor: AppColors.white,
+                            minimumSize: Size(double.infinity, 48.h),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                          ),
+                          icon: const Icon(Icons.assignment_turned_in, size: 18),
+                          label: Text(
+                            l10nPick(context, en: 'Start Return Handover', fa: 'شروع استرداد دیجیتال خودرو'),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            _showHandoverDialog(b, 'RETURN');
+                          },
                         ),
-                        icon: const Icon(Icons.assignment_turned_in, size: 18),
-                        label: Text(
-                          l10nPick(context, en: 'Start Return Handover', fa: 'شروع استرداد دیجیتال خودرو'),
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        onPressed: () => _showHandoverDialog(b, 'RETURN'),
                       ),
                     ),
                   ],
@@ -991,35 +1134,51 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: ECardoTokens.success(context),
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
-                            ),
-                            onPressed: () => _confirm(
-                              l10nPick(context, en: 'Accept Settlement', fa: 'پذیرش تسویه'),
-                              l10nPick(context,
-                                en: 'Accept settlement items and release remaining deposit to wallet?',
-                                fa: 'پذیرش اقلام تسویه و آزادسازی باقیمانده ودیعه به کیف پول؟'),
-                              () => controller.acceptSettlement(b.id),
-                            ),
-                            child: Text(
-                              l10nPick(context, en: 'Accept Settlement', fa: 'پذیرش تسویه'),
-                              style: const TextStyle(fontWeight: FontWeight.w700),
+                          child: Semantics(
+                            button: true,
+                            label: l10nPick(context, en: 'Accept Settlement', fa: 'پذیرش تسویه'),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ECardoTokens.success(context),
+                                foregroundColor: AppColors.white,
+                                minimumSize: Size(0, 44.h),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                              ),
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                _confirm(
+                                  l10nPick(context, en: 'Accept Settlement', fa: 'پذیرش تسویه'),
+                                  l10nPick(context,
+                                    en: 'Accept settlement items and release remaining deposit to wallet?',
+                                    fa: 'پذیرش اقلام تسویه و آزادسازی باقیمانده ودیعه به کیف پول؟'),
+                                  () => controller.acceptSettlement(b.id),
+                                );
+                              },
+                              child: Text(
+                                l10nPick(context, en: 'Accept Settlement', fa: 'پذیرش تسویه'),
+                                style: const TextStyle(fontWeight: FontWeight.w700),
+                              ),
                             ),
                           ),
                         ),
                         SizedBox(width: ECardoTokens.space2.w),
                         Expanded(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: ECardoTokens.danger(context),
-                              side: BorderSide(color: ECardoTokens.danger(context)),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                          child: Semantics(
+                            button: true,
+                            label: l10nPick(context, en: 'File Dispute', fa: 'ثبت اختلاف خسارت'),
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: ECardoTokens.danger(context),
+                                side: BorderSide(color: ECardoTokens.danger(context)),
+                                minimumSize: Size(0, 44.h),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r)),
+                              ),
+                              onPressed: () {
+                                HapticFeedback.selectionClick();
+                                _showDisputeDialog(b);
+                              },
+                              child: Text(l10nPick(context, en: 'File Dispute', fa: 'ثبت اختلاف خسارت')),
                             ),
-                            onPressed: () => _showDisputeDialog(b),
-                            child: Text(l10nPick(context, en: 'File Dispute', fa: 'ثبت اختلاف خسارت')),
                           ),
                         ),
                       ],
@@ -1032,17 +1191,25 @@ class _RentalDetailScreenState extends State<RentalDetailScreen> {
             // Cancel Booking
             if (['DRAFT', 'AWAITING_DOCS', 'AWAITING_PAYMENT', 'PENDING_CONFIRMATION', 'CONFIRMED'].contains(b.status)) ...[
               SizedBox(height: ECardoTokens.space3.h),
-              TextButton(
-                onPressed: () => _confirm(
-                  l10nPick(context, en: 'Cancel Booking', fa: 'لغو رزرو'),
-                  l10nPick(context,
-                    en: 'Tiered refund applies: >72h: 90% · 48-72h: 50% · 24-48h: 25% · <24h: 0%. Deposit fully released.',
-                    fa: 'جدول پلکانی لغو: بیش از ۷۲ ساعت: ۹۰٪ · ۴۸ تا ۷۲ ساعت: ۵۰٪ · ۲۴ تا ۴۸ ساعت: ۲۵٪ · کمتر از ۲۴ ساعت: ۰٪. ودیعه کامل آزاد می‌شود.'),
-                  () => controller.cancelBooking(b.id),
-                ),
-                child: Text(
-                  l10nPick(context, en: 'Cancel Booking (Tiered Refund)', fa: 'لغو رزرو (طبق جدول پلکانی)'),
-                  style: TextStyle(color: ECardoTokens.danger(context)),
+              Semantics(
+                button: true,
+                label: l10nPick(context, en: 'Cancel Booking', fa: 'لغو رزرو'),
+                child: TextButton(
+                  style: TextButton.styleFrom(minimumSize: Size(0, 44.h)),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    _confirm(
+                      l10nPick(context, en: 'Cancel Booking', fa: 'لغو رزرو'),
+                      l10nPick(context,
+                        en: 'Tiered refund applies: >72h: 90% · 48-72h: 50% · 24-48h: 25% · <24h: 0%. Deposit fully released.',
+                        fa: 'جدول پلکانی لغو: بیش از ۷۲ ساعت: ۹۰٪ · ۴۸ تا ۷۲ ساعت: ۵۰٪ · ۲۴ تا ۴۸ ساعت: ۲۵٪ · کمتر از ۲۴ ساعت: ۰٪. ودیعه کامل آزاد می‌شود.'),
+                      () => controller.cancelBooking(b.id),
+                    );
+                  },
+                  child: Text(
+                    l10nPick(context, en: 'Cancel Booking (Tiered Refund)', fa: 'لغو رزرو (طبق جدول پلکانی)'),
+                    style: TextStyle(color: ECardoTokens.danger(context)),
+                  ),
                 ),
               ),
             ],

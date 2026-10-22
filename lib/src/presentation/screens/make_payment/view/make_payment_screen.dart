@@ -97,20 +97,28 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                                           BaseRoute.makePaymentHistory,
                                         );
                                       },
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsetsDirectional.only(
-                                          end: AppSpacing.page,
-                                          start: AppSpacing.sm,
-                                          top: AppSpacing.sm,
-                                          bottom: AppSpacing.sm,
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          minWidth: 44,
+                                          minHeight: 44,
                                         ),
-                                        child: Image.asset(
-                                          PngAssets.commonHistoryIcon,
-                                          width: AppSpacing.iconLg,
-                                          color: isDark
-                                              ? AppColors.warmWhite
-                                              : null,
+                                        child: Center(
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsetsDirectional.only(
+                                              end: AppSpacing.page,
+                                              start: AppSpacing.sm,
+                                              top: AppSpacing.sm,
+                                              bottom: AppSpacing.sm,
+                                            ),
+                                            child: Image.asset(
+                                              PngAssets.commonHistoryIcon,
+                                              width: AppSpacing.iconLg,
+                                              color: isDark
+                                                  ? AppColors.warmWhite
+                                                  : null,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -225,56 +233,60 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
     final localization = AppLocalizations.of(context)!;
     final currentWallet = controller.wallet.value!;
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-      onTap: () {
-        HapticFeedback.lightImpact();
-        Get.bottomSheet(
-          CommonDropdownWalletBottomSheet(
-            notFoundText: localization.makePaymentScreenWalletsNotFound,
-            dropdownItems: controller.paymentWalletsList,
-            bottomSheetHeight: 450,
-            currentlySelectedValue: currentWallet.name,
-            onItemSelected: (value) async {
-              final selectedWallet = controller.paymentWalletsList.firstWhere(
-                (w) => w.name == value,
-              );
-              controller.wallet.value = selectedWallet;
-            },
-          ),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-          gradient: LinearGradient(
-            colors: isDark
-                ? [
-                    const Color(0xFF1E2836),
-                    const Color(0xFF151C26),
-                  ]
-                : [
-                    AppColors.deepBlack,
-                    const Color(0xFF2A2A28),
-                  ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          border: Border.all(
-            color: isDark
-                ? AppColors.darkBorder
-                : AppColors.mainSoftBlue.withValues(alpha: 0.25),
-            width: 1.2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-              blurRadius: AppSpacing.md,
-              offset: const Offset(0, 4),
+    return Semantics(
+      button: true,
+      label: '${localization.makePaymentScreenBalance}: ${currentWallet.formattedBalance} ${currentWallet.code}',
+      hint: localization.makePaymentScreenWalletsNotFound,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        onTap: () {
+          HapticFeedback.lightImpact();
+          Get.bottomSheet(
+            CommonDropdownWalletBottomSheet(
+              notFoundText: localization.makePaymentScreenWalletsNotFound,
+              dropdownItems: controller.paymentWalletsList,
+              bottomSheetHeight: 450,
+              currentlySelectedValue: currentWallet.name,
+              onItemSelected: (value) async {
+                final selectedWallet = controller.paymentWalletsList.firstWhere(
+                  (w) => w.name == value,
+                );
+                controller.wallet.value = selectedWallet;
+              },
             ),
-          ],
-        ),
+          );
+        },
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+            gradient: LinearGradient(
+              colors: isDark
+                  ? [
+                      AppColors.darkSurfaceVariant,
+                      AppColors.deepBlack,
+                    ]
+                  : [
+                      AppColors.deepBlack,
+                      AppColors.darkGray,
+                    ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.all(
+              color: isDark
+                  ? AppColors.darkBorder
+                  : AppColors.mainSoftBlue.withValues(alpha: 0.25),
+              width: 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                blurRadius: AppSpacing.md,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
         padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -396,6 +408,7 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }

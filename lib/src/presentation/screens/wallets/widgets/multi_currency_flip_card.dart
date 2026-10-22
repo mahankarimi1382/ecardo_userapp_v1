@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
@@ -227,6 +228,49 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
     );
   }
 
+  /// Formats wallet balance according to ISO/crypto precision rules via [DynamicDecimalsHelper].
+  /// Zero-decimal currencies (TOMAN, IRR, JPY, KRW, etc.) strictly omit decimal fractions.
+  static String formatWalletBalance(Wallets wallet) {
+    final rawBalance = wallet.balance ?? wallet.formattedBalance ?? '0';
+    final code = wallet.code ?? 'USD';
+    final isCrypto = wallet.isCrypto == true;
+
+    final cleanStr = rawBalance.replaceAll(',', '').trim();
+    final parsed = double.tryParse(cleanStr);
+    if (parsed == null) {
+      return wallet.formattedBalance ?? rawBalance;
+    }
+
+    final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: code,
+      siteCurrencyCode: 'USD',
+      siteCurrencyDecimals: '2',
+      isCrypto: isCrypto,
+    );
+
+    final isNegative = parsed < 0;
+    final absVal = parsed.abs();
+
+    String formatted;
+    if (decimals == 0) {
+      final intVal = absVal.round();
+      formatted = intVal.toString().replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (m) => '${m[1]},',
+      );
+    } else {
+      final fixed = absVal.toStringAsFixed(decimals);
+      final parts = fixed.split('.');
+      final intPart = parts[0].replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (m) => '${m[1]},',
+      );
+      formatted = parts.length > 1 ? '$intPart.${parts[1]}' : intPart;
+    }
+
+    return isNegative ? '-$formatted' : formatted;
+  }
+
   Widget _buildEmvChip() {
     return Container(
       width: 36,
@@ -333,7 +377,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
   Widget _buildFront(CurrencyCardTheme theme) {
     final symbol = widget.wallet.symbol ?? '';
     final code = widget.wallet.code ?? '';
-    final balance = widget.wallet.formattedBalance ?? '0';
+    final balance = formatWalletBalance(widget.wallet);
     final accountNo = widget.wallet.accountNo ?? '•••• •••• •••• ••••';
 
     return GestureDetector(
@@ -538,6 +582,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                                 Text(
                                   balance,
                                   textDirection: TextDirection.ltr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 22,
@@ -549,6 +595,8 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                                 Text(
                                   symbol.isNotEmpty ? symbol : code,
                                   textDirection: TextDirection.ltr,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: theme.accentColor,
                                     fontSize: 15,
@@ -649,6 +697,9 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
 
   Widget _buildBack(CurrencyCardTheme theme) {
     final accountNo = widget.wallet.accountNo ?? '0000 0000 0000 0000';
+    final symbol = widget.wallet.symbol ?? '';
+    final code = widget.wallet.code ?? '';
+    final balance = formatWalletBalance(widget.wallet);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -752,6 +803,68 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       zh: '显示卡正面',
                       tr: 'Kartın ön yüzünü göster',
                       ru: 'Показать лицевую сторону',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Balance & Currency Details Row on Back
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(18, 4, 18, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: Text(
+                      theme.currencyName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerEnd.resolve(
+                        Directionality.of(context),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        textDirection: TextDirection.ltr,
+                        children: [
+                          Text(
+                            balance,
+                            textDirection: TextDirection.ltr,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontFamily: 'monospace',
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            symbol.isNotEmpty ? symbol : code,
+                            textDirection: TextDirection.ltr,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              color: theme.accentColor,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

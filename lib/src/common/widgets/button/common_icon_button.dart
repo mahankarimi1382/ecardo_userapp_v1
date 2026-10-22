@@ -52,12 +52,19 @@ class CommonIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final bool isDirectional = icon.contains('arrow') || icon.contains('Back') || icon.contains('back');
+
     final iconWidget = Image.asset(
       icon,
       width: iconWidth.w,
       height: iconHeight.h,
       color: isIconColor == true ? iconColor : null,
     );
+
+    final effectiveIcon = (isRtl && isDirectional)
+        ? Transform.scale(scaleX: -1, child: iconWidget)
+        : iconWidget;
 
     final textWidget = Text(
       text,
@@ -69,47 +76,55 @@ class CommonIconButton extends StatelessWidget {
       ),
     );
 
-    return GestureDetector(
-      onTap: isLoading == true
-          ? null
-          : (onPressed == null
-              ? null
-              : () {
-                  AppHaptics.light();
-                  onPressed!();
-                }),
-      child: Container(
-        width: width?.w,
-        height: height?.h,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(borderRadius.r),
-          color: backgroundColor,
-          border: borderColor != null
-              ? Border.all(color: borderColor!, width: borderWidth)
-              : null,
-        ),
-        child: isLoading == true
-            ? Center(
-                child: LoadingAnimationWidget.staggeredDotsWave(
-                  color: loadingColor ?? AppColors.white,
-                  size: 32,
+    return Semantics(
+      button: true,
+      enabled: onPressed != null && isLoading != true,
+      label: text,
+      child: GestureDetector(
+        onTap: isLoading == true
+            ? null
+            : (onPressed == null
+                ? null
+                : () {
+                    AppHaptics.light();
+                    onPressed!();
+                  }),
+        child: Container(
+          width: width?.w,
+          constraints: BoxConstraints(
+            minHeight: (height ?? 48).h,
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(borderRadius.r),
+            color: backgroundColor,
+            border: borderColor != null
+                ? Border.all(color: borderColor!, width: borderWidth)
+                : null,
+          ),
+          child: isLoading == true
+              ? Center(
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: loadingColor ?? AppColors.white,
+                    size: 32,
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: isIconRight
+                      ? [
+                          textWidget,
+                          SizedBox(width: iconAndTextSpace.w),
+                          effectiveIcon,
+                        ]
+                      : [
+                          effectiveIcon,
+                          SizedBox(width: iconAndTextSpace.w),
+                          textWidget,
+                        ],
                 ),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: isIconRight
-                    ? [
-                        textWidget,
-                        SizedBox(width: iconAndTextSpace.w),
-                        iconWidget,
-                      ]
-                    : [
-                        iconWidget,
-                        SizedBox(width: iconAndTextSpace.w),
-                        textWidget,
-                      ],
-              ),
+        ),
       ),
     );
   }

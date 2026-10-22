@@ -178,8 +178,6 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
     required int state, // 2 = completed, 1 = active, 0 = pending, -1 = cancelled
     required bool isDark,
   }) {
-    final emeraldGreen = const Color(0xFF10B981);
-    final rubyRed = const Color(0xFFEF4444);
     final activeColor = isDark ? AppColors.darkPrimary : AppColors.brandViolet;
 
     Color nodeBg;
@@ -188,9 +186,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
 
     if (state == 2) {
       // Completed
-      nodeBg = emeraldGreen;
-      nodeBorder = emeraldGreen;
-      nodeContent = Icon(Icons.check_rounded, size: 14.r, color: Colors.white);
+      nodeBg = AppColors.success;
+      nodeBorder = AppColors.success;
+      nodeContent = Icon(Icons.check_rounded, size: 14.r, color: AppColors.white);
     } else if (state == 1) {
       // Active current step
       nodeBg = activeColor.withValues(alpha: isDark ? 0.25 : 0.15);
@@ -205,13 +203,13 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
       );
     } else if (state == -1) {
       // Cancelled
-      nodeBg = rubyRed.withValues(alpha: 0.15);
-      nodeBorder = rubyRed;
-      nodeContent = Icon(Icons.close_rounded, size: 14.r, color: rubyRed);
+      nodeBg = AppColors.error.withValues(alpha: 0.15);
+      nodeBorder = AppColors.error;
+      nodeContent = Icon(Icons.close_rounded, size: 14.r, color: AppColors.error);
     } else {
       // Pending
-      nodeBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9);
-      nodeBorder = isDark ? AppColors.darkBorder : const Color(0xFFCBD5E1);
+      nodeBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+      nodeBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
       nodeContent = Text(
         '$index',
         style: TextStyle(
@@ -255,7 +253,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
             color: state == 1
                 ? (isDark ? AppColors.darkPrimary : AppColors.brandViolet)
                 : state == 2
-                    ? emeraldGreen
+                    ? AppColors.success
                     : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
           ),
         ),
@@ -280,14 +278,13 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
     required bool isCompleted,
     required bool isDark,
   }) {
-    final emeraldGreen = const Color(0xFF10B981);
     return Container(
       width: 24.w,
       height: 2.h,
       margin: EdgeInsets.only(top: 13.h),
       color: isCompleted
-          ? emeraldGreen
-          : (isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0)),
+          ? AppColors.success
+          : (isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant),
     );
   }
 
@@ -409,7 +406,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
               letterSpacing: 0,
               fontSize: isHighlight ? 14.5.sp : 13.sp,
               fontWeight: isHighlight ? FontWeight.w800 : FontWeight.w700,
-              color: isHighlight ? const Color(0xFF10B981) : textPrimary,
+              color: isHighlight ? AppColors.success : textPrimary,
             ),
           ),
         ),
@@ -429,8 +426,8 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
   /// 3. Prominent Bank Account Details Card to Pay To
   Widget _buildProminentBankDetailsCard(BuildContext context, bool isDark) {
     final localization = AppLocalizations.of(context)!;
-    final cardBg = isDark ? const Color(0xFF1C1929) : const Color(0xFFFBFBFE);
-    final borderColor = isDark ? const Color(0xFF352B59) : const Color(0xFFE2E0F5);
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurfaceVariant;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
 
@@ -462,7 +459,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF241F3A) : const Color(0xFFF0EDFF),
+              color: isDark ? AppColors.darkPrimaryContainer : AppColors.brandVioletContainer,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(AppSpacing.radiusXl.r),
                 topRight: Radius.circular(AppSpacing.radiusXl.r),
@@ -554,7 +551,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                                 letterSpacing: 0,
                                 fontSize: 16.5.sp,
                                 fontWeight: FontWeight.w900,
-                                color: const Color(0xFF10B981),
+                                color: AppColors.success,
                               ),
                             ),
                           ],
@@ -604,10 +601,10 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                   width: double.infinity,
                   padding: EdgeInsets.all(10.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF59E0B).withValues(alpha: isDark ? 0.15 : 0.08),
+                    color: AppColors.warning.withValues(alpha: isDark ? 0.15 : 0.08),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                     border: Border.all(
-                      color: const Color(0xFFF59E0B).withValues(alpha: isDark ? 0.4 : 0.25),
+                      color: AppColors.warning.withValues(alpha: isDark ? 0.4 : 0.25),
                     ),
                   ),
                   child: Row(
@@ -616,7 +613,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                       Icon(
                         Icons.info_outline_rounded,
                         size: 16.r,
-                        color: const Color(0xFFF59E0B),
+                        color: AppColors.warning,
                       ),
                       SizedBox(width: 8.w),
                       Expanded(
@@ -630,7 +627,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                             letterSpacing: 0,
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? const Color(0xFFFDE68A) : const Color(0xFFB45309),
+                            color: isDark ? AppColors.warningContainer : AppColors.warmBrown,
                             height: 1.4,
                           ),
                         ),
@@ -782,7 +779,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
     if (imageUrl.trim().isEmpty) return;
     Get.dialog(
       Dialog(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         child: Container(
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
@@ -796,7 +793,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                 alignment: AlignmentDirectional.centerEnd,
                 child: GestureDetector(
                   onTap: Get.back,
-                  child: Icon(Icons.close_rounded, size: 22.r, color: Colors.black87),
+                  child: Icon(Icons.close_rounded, size: 22.r, color: AppColors.deepBlack),
                 ),
               ),
               SizedBox(height: 6.h),

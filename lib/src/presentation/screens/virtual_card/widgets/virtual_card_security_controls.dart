@@ -82,18 +82,18 @@ class CardFreezeOverlay extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: radius,
-                        color: const Color(0x384A90E2),
+                        color: AppColors.mainSoftBlue.withValues(alpha: 0.22),
                         border: Border.all(
                           color: AppColors.mainSoftBlue,
                           width: 2.2.w,
                         ),
-                        gradient: const LinearGradient(
+                        gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Color(0x40ABC3EA),
-                            Color(0x28849ACD),
-                            Color(0x45ABC3EA),
+                            AppColors.mainSoftBlue.withValues(alpha: 0.25),
+                            AppColors.brandVioletContainer.withValues(alpha: 0.16),
+                            AppColors.mainSoftBlue.withValues(alpha: 0.27),
                           ],
                         ),
                       ),
@@ -302,10 +302,22 @@ class CardFreezeOverlay extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 8.w),
-                Switch.adaptive(
-                  value: isFrozen,
-                  activeTrackColor: AppColors.mutedBlue,
-                  onChanged: _handleToggle,
+                Semantics(
+                  toggled: isFrozen,
+                  label: isFrozen ? 'Unfreeze card' : 'Freeze card',
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      minWidth: 44,
+                      minHeight: 44,
+                    ),
+                    child: Center(
+                      child: Switch.adaptive(
+                        value: isFrozen,
+                        activeTrackColor: AppColors.mutedBlue,
+                        onChanged: _handleToggle,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -334,6 +346,10 @@ class VirtualCardSecurityControls extends StatelessWidget {
   final VoidCallback? onTopUp;
   final bool canViewTransactions;
   final bool canTopUp;
+  final bool? isPanRevealed;
+  final ValueChanged<bool>? onTogglePanReveal;
+  final bool? isCvvRevealed;
+  final ValueChanged<bool>? onToggleCvvReveal;
 
   const VirtualCardSecurityControls({
     super.key,
@@ -349,6 +365,10 @@ class VirtualCardSecurityControls extends StatelessWidget {
     this.onTopUp,
     this.canViewTransactions = true,
     this.canTopUp = true,
+    this.isPanRevealed,
+    this.onTogglePanReveal,
+    this.isCvvRevealed,
+    this.onToggleCvvReveal,
   });
 
   void _showSpendingLimitsModal(BuildContext context) {
@@ -486,10 +506,10 @@ class VirtualCardSecurityControls extends StatelessWidget {
           _SecurityActionTile(
             isDark: isDark,
             icon: Icons.ac_unit_rounded,
-            iconColor: isFrozen ? Colors.white : const Color(0xFF29B6F6),
+            iconColor: isFrozen ? AppColors.white : AppColors.info,
             iconBgColor: isFrozen
                 ? AppColors.mainSoftBlue
-                : const Color(0xFFE1F5FE),
+                : AppColors.infoContainer,
             title: isFrozen
                 ? l10nPick(
                     context,
@@ -528,13 +548,25 @@ class VirtualCardSecurityControls extends StatelessWidget {
                     ru: 'Мгновенно приостановить операции',
                     zh: '即时暂停所有交易',
                   ),
-            trailing: Switch.adaptive(
-              value: isFrozen,
-              activeTrackColor: AppColors.mainSoftBlue,
-              onChanged: (val) {
-                HapticFeedback.mediumImpact();
-                onToggleFreeze?.call(val);
-              },
+            trailing: Semantics(
+              toggled: isFrozen,
+              label: isFrozen ? 'Unfreeze card' : 'Freeze card',
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 44,
+                  minHeight: 44,
+                ),
+                child: Center(
+                  child: Switch.adaptive(
+                    value: isFrozen,
+                    activeTrackColor: AppColors.mainSoftBlue,
+                    onChanged: (val) {
+                      HapticFeedback.mediumImpact();
+                      onToggleFreeze?.call(val);
+                    },
+                  ),
+                ),
+              ),
             ),
           ),
 
@@ -545,11 +577,11 @@ class VirtualCardSecurityControls extends StatelessWidget {
             isDark: isDark,
             icon: Icons.shopping_bag_outlined,
             iconColor: isOnlinePaymentsEnabled
-                ? const Color(0xFF00BFA6)
+                ? AppColors.mutedBlue
                 : AppColors.softGray,
             iconBgColor: isOnlinePaymentsEnabled
-                ? const Color(0xFFE0F8F5)
-                : (isDark ? const Color(0xFF333333) : const Color(0xFFF0F0F0)),
+                ? AppColors.lightSecondaryContainer
+                : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant),
             title: l10nPick(
               context,
               en: 'Online Payments',
@@ -578,13 +610,25 @@ class VirtualCardSecurityControls extends StatelessWidget {
                     ru: 'Онлайн-покупки заблокированы для безопасности',
                     zh: '为安全起见，在线购物已阻止',
                   ),
-            trailing: Switch.adaptive(
-              value: isOnlinePaymentsEnabled,
-              activeTrackColor: AppColors.mutedBlue,
-              onChanged: (val) {
-                HapticFeedback.mediumImpact();
-                onToggleOnlinePayments?.call(val);
-              },
+            trailing: Semantics(
+              toggled: isOnlinePaymentsEnabled,
+              label: 'Online payments',
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 44,
+                  minHeight: 44,
+                ),
+                child: Center(
+                  child: Switch.adaptive(
+                    value: isOnlinePaymentsEnabled,
+                    activeTrackColor: AppColors.mutedBlue,
+                    onChanged: (val) {
+                      HapticFeedback.mediumImpact();
+                      onToggleOnlinePayments?.call(val);
+                    },
+                  ),
+                ),
+              ),
             ),
           ),
 
@@ -594,8 +638,8 @@ class VirtualCardSecurityControls extends StatelessWidget {
           _SecurityActionTile(
             isDark: isDark,
             icon: Icons.speed_rounded,
-            iconColor: const Color(0xFFFFA000),
-            iconBgColor: const Color(0xFFFFF8E1),
+            iconColor: AppColors.warning,
+            iconBgColor: AppColors.warningContainer,
             title: l10nPick(
               context,
               en: 'Spending Limits',
@@ -620,8 +664,8 @@ class VirtualCardSecurityControls extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
                 color: isDark
-                    ? const Color(0xFF2A2A2A)
-                    : const Color(0xFFF3F4F6),
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightSurfaceVariant,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               ),
               child: Row(

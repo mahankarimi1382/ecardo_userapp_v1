@@ -91,8 +91,8 @@ class AuthStepProgressBar extends StatelessWidget {
 
     final activeGradient = LinearGradient(
       colors: isDark
-          ? const [Color(0xFF38BDF8), Color(0xFF6366F1)]
-          : const [AppColors.deepBlack, Color(0xFF3B82F6)],
+          ? const [AppColors.mainSoftBlue, AppColors.brandViolet]
+          : const [AppColors.brandViolet, AppColors.brandVioletDeep],
     );
 
     return Container(
@@ -100,18 +100,18 @@ class AuthStepProgressBar extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: isDark
-            ? Colors.white.withValues(alpha: 0.04)
+            ? AppColors.white.withValues(alpha: 0.04)
             : AppColors.white.withValues(alpha: 0.90),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           color: isDark
-              ? Colors.white.withValues(alpha: 0.08)
+              ? AppColors.darkBorder
               : AppColors.lightBorder.withValues(alpha: 0.6),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.04),
+            color: AppColors.black.withValues(alpha: isDark ? 0.20 : 0.04),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -159,34 +159,33 @@ class AuthStepProgressBar extends StatelessWidget {
     List<BoxShadow>? shadow;
 
     if (isCompleted) {
-      circleBg = const Color(0xFF10B981); // Emerald
-      iconColor = Colors.white;
+      circleBg = AppColors.success;
+      iconColor = AppColors.white;
       shadow = [
         BoxShadow(
-          color: const Color(0xFF10B981).withValues(alpha: 0.35),
+          color: AppColors.success.withValues(alpha: 0.35),
           blurRadius: 8,
           offset: const Offset(0, 2),
         ),
       ];
     } else if (isActive) {
-      circleBg = isDark ? const Color(0xFF1E293B) : AppColors.deepBlack;
-      iconColor = isDark ? const Color(0xFF38BDF8) : Colors.white;
+      circleBg = AppColors.brandViolet;
+      iconColor = AppColors.white;
       border = Border.all(
-        color: isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack,
+        color: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
         width: 2.2,
       );
       shadow = [
         BoxShadow(
-          color: (isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack)
-              .withValues(alpha: 0.30),
+          color: AppColors.brandViolet.withValues(alpha: 0.35),
           blurRadius: 12,
           offset: const Offset(0, 3),
         ),
       ];
     } else {
       circleBg = isDark
-          ? Colors.white.withValues(alpha: 0.06)
-          : const Color(0xFFE2E8F0);
+          ? AppColors.darkBorder
+          : AppColors.lightOutlineVariant;
       iconColor = isDark
           ? AppColors.darkTextSecondary
           : AppColors.lightTextTertiary;
@@ -208,7 +207,7 @@ class AuthStepProgressBar extends StatelessWidget {
           ),
           child: Center(
             child: isCompleted
-                ? Icon(Icons.check_rounded, size: 20.sp, color: Colors.white)
+                ? Icon(Icons.check_rounded, size: 20.sp, color: AppColors.white)
                 : Icon(step.icon, size: 18.sp, color: iconColor),
           ),
         ),
@@ -221,7 +220,7 @@ class AuthStepProgressBar extends StatelessWidget {
                 ? FontWeight.w900
                 : FontWeight.w600,
             color: isActive
-                ? (isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack)
+                ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                 : (isCompleted
                     ? (isDark
                         ? AppColors.darkTextPrimary
@@ -258,13 +257,13 @@ class AuthStepProgressBar extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(2.r),
           color: isPassed
-              ? const Color(0xFF10B981)
+              ? AppColors.brandViolet
               : (isDark
-                  ? Colors.white.withValues(alpha: 0.12)
-                  : const Color(0xFFE2E8F0)),
+                  ? AppColors.darkBorder
+                  : AppColors.lightOutlineVariant),
           gradient: isPassed
               ? const LinearGradient(
-                  colors: [Color(0xFF10B981), Color(0xFF34D399)],
+                  colors: [AppColors.brandViolet, AppColors.brandVioletDeep],
                 )
               : null,
         ),

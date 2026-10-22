@@ -803,14 +803,14 @@ class _FlightResultsScreenState extends State<FlightResultsScreen> {
 
 class _FlightOfferCard extends StatelessWidget {
   final TravelOffer offer;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final VoidCallback? onCompare;
   final bool isLoading;
   final bool isCompared;
 
   const _FlightOfferCard({
     required this.offer,
-    required this.onTap,
+    this.onTap,
     this.onCompare,
     this.isLoading = false,
     this.isCompared = false,
@@ -1618,7 +1618,7 @@ class _FlightDetailsScreenState extends State<FlightDetailsScreen> {
             SizedBox(height: 12.h),
             TravelSectionHeader(title: localization.travelOutboundFlight),
             SizedBox(height: 10.h),
-            _FlightOfferCard(offer: outboundOffer, onTap: () {}),
+            _FlightOfferCard(offer: outboundOffer, onTap: null),
             SizedBox(height: 12.h),
             TravelSectionHeader(title: localization.travelReturnFlight),
           ],

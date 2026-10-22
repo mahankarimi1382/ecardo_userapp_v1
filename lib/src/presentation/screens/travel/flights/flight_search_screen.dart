@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:shamsi_date/shamsi_date.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
@@ -513,11 +515,12 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
 
     return Semantics(
       button: true,
-      label: '$title $cityName ${airport.code}',
+      label: '$title: $cityName (${airport.code}), $countryName',
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
         child: Container(
+          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: ECardoTokens.surfaceSunken(context),
@@ -676,6 +679,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
               onTap: () => _pickDepartureDate(context),
               borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
               child: Container(
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                 decoration: BoxDecoration(
                   color: ECardoTokens.surfaceSunken(context),
@@ -721,6 +725,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                 onTap: () => _pickReturnDate(context),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                 child: Container(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                   decoration: BoxDecoration(
@@ -846,6 +851,12 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         IconButton(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                          tooltip: l10nPick(
+                            context,
+                            en: 'Remove flight ${idx + 1}',
+                            fa: 'حذف پرواز ${idx + 1}',
+                            ar: 'حذف الرحلة ${idx + 1}',
+                          ),
                           onPressed: () {
                             AppHaptics.light();
                             setState(() => _multiCityLegs.removeAt(idx));
@@ -862,28 +873,36 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: InkWell(
-                          onTap: () => _openAirportPicker(
-                            context,
-                            lang: lang,
-                            title: l10nPick(context, en: 'Origin', fa: 'مبدأ', ar: 'المغادرة'),
-                            onSelected: (airport) =>
-                                setState(() => leg.origin = airport.code),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 8.h),
-                            decoration: BoxDecoration(
-                              color: ECardoTokens.surfaceCard(context),
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusSm),
+                        child: Semantics(
+                          button: true,
+                          label: '${l10nPick(context, en: 'Origin', fa: 'مبدأ', ar: 'المغادرة')}: ${leg.origin}',
+                          child: InkWell(
+                            onTap: () => _openAirportPicker(
+                              context,
+                              lang: lang,
+                              title: l10nPick(context, en: 'Origin', fa: 'مبدأ', ar: 'المغادرة'),
+                              onSelected: (airport) =>
+                                  setState(() => leg.origin = airport.code),
                             ),
-                            child: Text(
-                              leg.origin,
-                              style: TextStyle(
-                                color: ECardoTokens.ink(context),
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13.sp,
+                            borderRadius:
+                                BorderRadius.circular(ECardoTokens.radiusSm),
+                            child: Container(
+                              constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 8.h),
+                              decoration: BoxDecoration(
+                                color: ECardoTokens.surfaceCard(context),
+                                borderRadius:
+                                    BorderRadius.circular(ECardoTokens.radiusSm),
+                              ),
+                              child: Text(
+                                leg.origin,
+                                style: TextStyle(
+                                  color: ECardoTokens.ink(context),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13.sp,
+                                ),
                               ),
                             ),
                           ),
@@ -898,28 +917,36 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                         ),
                       ),
                       Expanded(
-                        child: InkWell(
-                          onTap: () => _openAirportPicker(
-                            context,
-                            lang: lang,
-                            title: l10nPick(context, en: 'Destination', fa: 'مقصد', ar: 'الوصول'),
-                            onSelected: (airport) =>
-                                setState(() => leg.destination = airport.code),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 8.h),
-                            decoration: BoxDecoration(
-                              color: ECardoTokens.surfaceCard(context),
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusSm),
+                        child: Semantics(
+                          button: true,
+                          label: '${l10nPick(context, en: 'Destination', fa: 'مقصد', ar: 'الوصول')}: ${leg.destination}',
+                          child: InkWell(
+                            onTap: () => _openAirportPicker(
+                              context,
+                              lang: lang,
+                              title: l10nPick(context, en: 'Destination', fa: 'مقصد', ar: 'الوصول'),
+                              onSelected: (airport) =>
+                                  setState(() => leg.destination = airport.code),
                             ),
-                            child: Text(
-                              leg.destination,
-                              style: TextStyle(
-                                color: ECardoTokens.ink(context),
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13.sp,
+                            borderRadius:
+                                BorderRadius.circular(ECardoTokens.radiusSm),
+                            child: Container(
+                              constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 8.h),
+                              decoration: BoxDecoration(
+                                color: ECardoTokens.surfaceCard(context),
+                                borderRadius:
+                                    BorderRadius.circular(ECardoTokens.radiusSm),
+                              ),
+                              child: Text(
+                                leg.destination,
+                                style: TextStyle(
+                                  color: ECardoTokens.ink(context),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 13.sp,
+                                ),
                               ),
                             ),
                           ),
@@ -927,40 +954,48 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                       ),
                       SizedBox(width: 8.w),
                       Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            final picked = await showModalBottomSheet<DateTime>(
-                              context: context,
-                              isScrollControlled: true,
-                              backgroundColor: Colors.transparent,
-                              builder: (ctx) => _FlightDatePickerBottomSheet(
-                                initialDate: leg.date,
-                                firstDate: DateUtils.dateOnly(DateTime.now()),
-                                lastDate: DateTime.now().add(const Duration(days: 365)),
-                                title: '${l10nPick(context, en: 'Select Date for Leg', fa: 'انتخاب تاریخ مسیر', ar: 'تاريخ مسار')} ${idx + 1}',
-                                lang: lang,
+                        child: Semantics(
+                          button: true,
+                          label: '${l10nPick(context, en: 'Select Date for Leg', fa: 'انتخاب تاریخ مسیر', ar: 'تاريخ مسار')} ${idx + 1}',
+                          child: InkWell(
+                            onTap: () async {
+                              final picked = await showModalBottomSheet<DateTime>(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (ctx) => _FlightDatePickerBottomSheet(
+                                  initialDate: leg.date,
+                                  firstDate: DateUtils.dateOnly(DateTime.now()),
+                                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                                  title: '${l10nPick(context, en: 'Select Date for Leg', fa: 'انتخاب تاریخ مسیر', ar: 'تاريخ مسار')} ${idx + 1}',
+                                  lang: lang,
+                                ),
+                              );
+                              if (picked != null) {
+                                setState(() => leg.date = picked);
+                              }
+                            },
+                            borderRadius:
+                                BorderRadius.circular(ECardoTokens.radiusSm),
+                            child: Container(
+                              constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w, vertical: 8.h),
+                              decoration: BoxDecoration(
+                                color: ECardoTokens.surfaceCard(context),
+                                borderRadius:
+                                    BorderRadius.circular(ECardoTokens.radiusSm),
                               ),
-                            );
-                            if (picked != null) {
-                              setState(() => leg.date = picked);
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 8.h),
-                            decoration: BoxDecoration(
-                              color: ECardoTokens.surfaceCard(context),
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusSm),
-                            ),
-                            child: Text(
-                              lang == 'fa'
-                                  ? '${Jalali.fromDateTime(leg.date).day} ${Jalali.fromDateTime(leg.date).formatter.mN}'
-                                  : DateFormat('d MMM').format(leg.date),
-                              style: TextStyle(
-                                color: ECardoTokens.ink(context),
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12.sp,
+                              child: Text(
+                                lang == 'fa'
+                                    ? '${Jalali.fromDateTime(leg.date).day} ${Jalali.fromDateTime(leg.date).formatter.mN}'
+                                    : DateFormat('d MMM').format(leg.date),
+                                style: TextStyle(
+                                  color: ECardoTokens.ink(context),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12.sp,
+                                ),
                               ),
                             ),
                           ),
@@ -996,6 +1031,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                 onTap: () => _openPassengerSelector(context, lang),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                 child: Container(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                   decoration: BoxDecoration(
@@ -1062,6 +1098,7 @@ class _FlightSearchScreenState extends State<FlightSearchScreen> {
                 onTap: () => _openCabinSelector(context, lang),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                 child: Container(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                   padding:
                       EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                   decoration: BoxDecoration(
@@ -1682,10 +1719,15 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close_rounded),
-                    color: ECardoTokens.inkMuted(context),
-                    onPressed: () => Navigator.pop(context),
+                  Semantics(
+                    button: true,
+                    label: l10nPick(context, en: 'Close', fa: 'بستن', ar: 'إغلاق'),
+                    child: IconButton(
+                      constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                      icon: const Icon(Icons.close_rounded),
+                      color: ECardoTokens.inkMuted(context),
+                      onPressed: () => Navigator.pop(context),
+                    ),
                   ),
                 ],
               ),
@@ -1732,28 +1774,33 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
             Expanded(
               child: _filtered.isEmpty
                   ? Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.flight_takeoff_rounded,
-                            size: 48.r,
-                            color: ECardoTokens.inkMuted(context),
+                      child: SingleChildScrollView(
+                        child: EcardoEmptyState(
+                          title: l10nPick(
+                            context,
+                            en: 'No airports found',
+                            fa: 'فرودگاهی یافت نشد',
+                            ar: 'لم يتم العثور على مطارات',
                           ),
-                          SizedBox(height: 8.h),
-                          Text(
-                            l10nPick(
-                              context,
-                              en: 'No airports found',
-                              fa: 'فرودگاهی یافت نشد',
-                              ar: 'لم يتم العثور على مطارات',
-                            ),
-                            style: TextStyle(
-                              color: ECardoTokens.inkMuted(context),
-                              fontSize: 13.sp,
-                            ),
+                          description: l10nPick(
+                            context,
+                            en: 'No airports match your search query. Try searching by city name or IATA airport code.',
+                            fa: 'فرودگاهی با عبارت جستجوی شما مطابقت ندارد. نام شهر یا کد ۳ حرفی فرودگاه را امتحان کنید.',
+                            ar: 'لا توجد مطارات تطابق بحثك. جرب البحث باسم المدينة أو رمز إياتا للمطار.',
                           ),
-                        ],
+                          iconData: Icons.search_off_rounded,
+                          glowColor: AppColors.brandViolet,
+                          primaryActionLabel: l10nPick(
+                            context,
+                            en: 'Clear Search',
+                            fa: 'پاک کردن جستجو',
+                            ar: 'مسح البحث',
+                          ),
+                          onPrimaryAction: () {
+                            AppHaptics.selection();
+                            _searchCtrl.clear();
+                          },
+                        ),
                       ),
                     )
                   : ListView.separated(
@@ -1763,11 +1810,16 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
                           Divider(color: ECardoTokens.border(context), height: 1),
                       itemBuilder: (context, idx) {
                         final airport = _filtered[idx];
-                        return ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 8.w,
-                            vertical: 4.h,
-                          ),
+                        return Semantics(
+                          button: true,
+                          label:
+                              '${airport.code}, ${airport.localizedCity(widget.lang)}, ${airport.name}, ${airport.localizedCountry(widget.lang)}',
+                          child: ListTile(
+                            minVerticalPadding: 10.h,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
+                            ),
                           leading: Container(
                             width: 46.r,
                             height: 46.r,
@@ -1815,7 +1867,8 @@ class _AirportSearchBottomSheetState extends State<_AirportSearchBottomSheet> {
                             AppHaptics.selection();
                             widget.onSelected(airport);
                           },
-                        );
+                        ),
+                      );
                       },
                     ),
             ),
@@ -1947,32 +2000,36 @@ class _PassengerModalSheetState extends State<_PassengerModalSheet> {
               onChanged: (val) => setState(() => _infants = val),
             ),
             SizedBox(height: 24.h),
-            SizedBox(
-              width: double.infinity,
-              height: 48.h,
-              child: ElevatedButton(
-                onPressed: () {
-                  AppHaptics.medium();
-                  widget.onConfirm(
-                    PassengerBreakdown(
-                      adults: _adults,
-                      children: _children,
-                      infants: _infants,
+            Semantics(
+              button: true,
+              label: l10nPick(context, en: 'Apply Passengers', fa: 'تایید مسافران', ar: 'تأكيد المسافرين'),
+              child: SizedBox(
+                width: double.infinity,
+                height: 48.h,
+                child: ElevatedButton(
+                  onPressed: () {
+                    AppHaptics.medium();
+                    widget.onConfirm(
+                      PassengerBreakdown(
+                        adults: _adults,
+                        children: _children,
+                        infants: _infants,
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ECardoTokens.brand700(context),
+                    foregroundColor: ECardoTokens.inkOnBrand,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ECardoTokens.brand700(context),
-                  foregroundColor: ECardoTokens.inkOnBrand,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   ),
-                ),
-                child: Text(
-                  l10nPick(context, en: 'Apply Passengers', fa: 'تایید مسافران', ar: 'تأكيد المسافرين'),
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w800,
+                  child: Text(
+                    l10nPick(context, en: 'Apply Passengers', fa: 'تایید مسافران', ar: 'تأكيد المسافرين'),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
@@ -2020,7 +2077,13 @@ class _PassengerModalSheetState extends State<_PassengerModalSheet> {
           children: [
             Semantics(
               button: true,
-              label: 'Decrease $title',
+              enabled: count > min,
+              label: l10nPick(
+                context,
+                en: 'Decrease $title',
+                fa: 'کاهش $title',
+                ar: 'تقليل $title',
+              ),
               child: Material(
                 color: ECardoTokens.surfaceSunken(context),
                 shape: const CircleBorder(),
@@ -2036,6 +2099,7 @@ class _PassengerModalSheetState extends State<_PassengerModalSheet> {
             ),
             SizedBox(
               width: 44.w,
+              height: 44.h,
               child: Center(
                 child: Text(
                   '$count',
@@ -2049,7 +2113,13 @@ class _PassengerModalSheetState extends State<_PassengerModalSheet> {
             ),
             Semantics(
               button: true,
-              label: 'Increase $title',
+              enabled: count < max,
+              label: l10nPick(
+                context,
+                en: 'Increase $title',
+                fa: 'افزایش $title',
+                ar: 'زيادة $title',
+              ),
               child: Material(
                 color: ECardoTokens.surfaceSunken(context),
                 shape: const CircleBorder(),
@@ -2139,45 +2209,51 @@ class _CabinClassModalSheet extends StatelessWidget {
                         : ECardoTokens.border(context),
                   ),
                 ),
-                child: ListTile(
-                  leading: Icon(
-                    cabin == FlightCabinClass.firstClass
-                        ? Icons.workspace_premium_rounded
-                        : cabin == FlightCabinClass.business
-                            ? Icons.business_center_rounded
-                            : Icons.airline_seat_recline_normal_rounded,
-                    color: isSelected
-                        ? ECardoTokens.brand500(context)
-                        : ECardoTokens.inkMuted(context),
-                  ),
-                  title: Text(
-                    cabin.localizedLabel(lang),
-                    style: TextStyle(
+                child: Semantics(
+                  button: true,
+                  selected: isSelected,
+                  label: '${cabin.localizedLabel(lang)}, ${cabin.label}',
+                  child: ListTile(
+                    minVerticalPadding: 10.h,
+                    leading: Icon(
+                      cabin == FlightCabinClass.firstClass
+                          ? Icons.workspace_premium_rounded
+                          : cabin == FlightCabinClass.business
+                              ? Icons.business_center_rounded
+                              : Icons.airline_seat_recline_normal_rounded,
                       color: isSelected
                           ? ECardoTokens.brand500(context)
-                          : ECardoTokens.ink(context),
-                      fontWeight:
-                          isSelected ? FontWeight.w800 : FontWeight.w600,
-                      fontSize: 13.sp,
+                          : ECardoTokens.inkMuted(context),
                     ),
-                  ),
-                  subtitle: Text(
-                    cabin.label,
-                    style: TextStyle(
-                      color: ECardoTokens.inkMuted(context),
-                      fontSize: 10.sp,
+                    title: Text(
+                      cabin.localizedLabel(lang),
+                      style: TextStyle(
+                        color: isSelected
+                            ? ECardoTokens.brand500(context)
+                            : ECardoTokens.ink(context),
+                        fontWeight:
+                            isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontSize: 13.sp,
+                      ),
                     ),
+                    subtitle: Text(
+                      cabin.label,
+                      style: TextStyle(
+                        color: ECardoTokens.inkMuted(context),
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                    trailing: isSelected
+                        ? Icon(
+                            Icons.check_circle_rounded,
+                            color: ECardoTokens.brand500(context),
+                          )
+                        : null,
+                    onTap: () {
+                      AppHaptics.selection();
+                      onSelect(cabin);
+                    },
                   ),
-                  trailing: isSelected
-                      ? Icon(
-                          Icons.check_circle_rounded,
-                          color: ECardoTokens.brand500(context),
-                        )
-                      : null,
-                  onTap: () {
-                    AppHaptics.selection();
-                    onSelect(cabin);
-                  },
                 ),
               );
             }),
@@ -2271,19 +2347,30 @@ class _FlightDatePickerBottomSheetState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: const Icon(Icons.chevron_right_rounded),
-                color: canGoPrev
-                    ? ECardoTokens.ink(context)
-                    : ECardoTokens.inkMuted(context).withValues(alpha: 0.25),
-                onPressed: canGoPrev
-                    ? () {
-                        AppHaptics.light();
-                        setState(() {
-                          _viewJalaliMonth = _viewJalaliMonth.addMonths(-1);
-                        });
-                      }
-                    : null,
+              Semantics(
+                button: true,
+                enabled: canGoPrev,
+                label: l10nPick(
+                  context,
+                  en: 'Previous month',
+                  fa: 'ماه قبل',
+                  ar: 'الشهر السابق',
+                ),
+                child: IconButton(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  icon: const Icon(Icons.chevron_right_rounded),
+                  color: canGoPrev
+                      ? ECardoTokens.ink(context)
+                      : ECardoTokens.inkMuted(context).withValues(alpha: 0.25),
+                  onPressed: canGoPrev
+                      ? () {
+                          AppHaptics.light();
+                          setState(() {
+                            _viewJalaliMonth = _viewJalaliMonth.addMonths(-1);
+                          });
+                        }
+                      : null,
+                ),
               ),
               Text(
                 '${_viewJalaliMonth.formatter.mN} ${_viewJalaliMonth.year}',
@@ -2293,19 +2380,30 @@ class _FlightDatePickerBottomSheetState
                   color: ECardoTokens.ink(context),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.chevron_left_rounded),
-                color: canGoNext
-                    ? ECardoTokens.ink(context)
-                    : ECardoTokens.inkMuted(context).withValues(alpha: 0.25),
-                onPressed: canGoNext
-                    ? () {
-                        AppHaptics.light();
-                        setState(() {
-                          _viewJalaliMonth = _viewJalaliMonth.addMonths(1);
-                        });
-                      }
-                    : null,
+              Semantics(
+                button: true,
+                enabled: canGoNext,
+                label: l10nPick(
+                  context,
+                  en: 'Next month',
+                  fa: 'ماه بعد',
+                  ar: 'الشهر القادم',
+                ),
+                child: IconButton(
+                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  icon: const Icon(Icons.chevron_left_rounded),
+                  color: canGoNext
+                      ? ECardoTokens.ink(context)
+                      : ECardoTokens.inkMuted(context).withValues(alpha: 0.25),
+                  onPressed: canGoNext
+                      ? () {
+                          AppHaptics.light();
+                          setState(() {
+                            _viewJalaliMonth = _viewJalaliMonth.addMonths(1);
+                          });
+                        }
+                      : null,
+                ),
               ),
             ],
           ),
@@ -2396,29 +2494,40 @@ class _FlightDatePickerBottomSheetState
                 textColor = ECardoTokens.ink(context);
               }
 
-              return Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: isSelectable
-                      ? () {
-                          AppHaptics.selection();
-                          setState(() {
-                            _selectedDate = dayDate;
-                          });
-                        }
-                      : null,
-                  customBorder: const CircleBorder(),
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: decoration,
-                    child: Text(
-                      '$dayNumber',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: isSelected || isToday
-                            ? FontWeight.w800
-                            : FontWeight.w600,
-                        color: textColor,
+              return Semantics(
+                button: true,
+                selected: isSelected,
+                enabled: isSelectable,
+                label:
+                    '$dayNumber ${_viewJalaliMonth.formatter.mN} ${_viewJalaliMonth.year}',
+                child: ConstrainedBox(
+                  constraints:
+                      const BoxConstraints(minWidth: 44, minHeight: 44),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: isSelectable
+                          ? () {
+                              AppHaptics.selection();
+                              setState(() {
+                                _selectedDate = dayDate;
+                              });
+                            }
+                          : null,
+                      customBorder: const CircleBorder(),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: decoration,
+                        child: Text(
+                          '$dayNumber',
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: isSelected || isToday
+                                ? FontWeight.w800
+                                : FontWeight.w600,
+                            color: textColor,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -2475,10 +2584,15 @@ class _FlightDatePickerBottomSheetState
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.close_rounded),
-                      color: ECardoTokens.inkMuted(context),
-                      onPressed: () => Navigator.pop(context),
+                    Semantics(
+                      button: true,
+                      label: l10nPick(context, en: 'Close', fa: 'بستن', ar: 'إغلاق'),
+                      child: IconButton(
+                        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                        icon: const Icon(Icons.close_rounded),
+                        color: ECardoTokens.inkMuted(context),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                     ),
                   ],
                 ),
@@ -2492,78 +2606,100 @@ class _FlightDatePickerBottomSheetState
                   child: Row(
                     children: [
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _useShamsi = true;
-                              final j = Jalali.fromDateTime(_selectedDate);
-                              _viewJalaliMonth = Jalali(j.year, j.month, 1);
-                            });
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 8.h),
-                            decoration: BoxDecoration(
-                              color: _useShamsi
-                                  ? ECardoTokens.surfaceCard(context)
-                                  : Colors.transparent,
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusSm),
-                              boxShadow: _useShamsi
-                                  ? ECardoTokens.shadowCard(context)
-                                  : null,
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              l10nPick(
-                                context,
-                                en: 'Solar Hijri (Jalali)',
-                                fa: 'تقویم شمسی',
-                                ar: 'التقويم الشمسي',
-                              ),
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: _useShamsi
-                                    ? FontWeight.w800
-                                    : FontWeight.w600,
+                        child: Semantics(
+                          button: true,
+                          selected: _useShamsi,
+                          label: l10nPick(
+                            context,
+                            en: 'Solar Hijri (Jalali)',
+                            fa: 'تقویم شمسی',
+                            ar: 'التقويم الشمسي',
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _useShamsi = true;
+                                final j = Jalali.fromDateTime(_selectedDate);
+                                _viewJalaliMonth = Jalali(j.year, j.month, 1);
+                              });
+                            },
+                            child: Container(
+                              constraints: const BoxConstraints(minHeight: 44),
+                              padding: EdgeInsets.symmetric(vertical: 8.h),
+                              decoration: BoxDecoration(
                                 color: _useShamsi
-                                    ? ECardoTokens.brand700(context)
-                                    : ECardoTokens.inkMuted(context),
+                                    ? ECardoTokens.surfaceCard(context)
+                                    : Colors.transparent,
+                                borderRadius:
+                                    BorderRadius.circular(ECardoTokens.radiusSm),
+                                boxShadow: _useShamsi
+                                    ? ECardoTokens.shadowCard(context)
+                                    : null,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                l10nPick(
+                                  context,
+                                  en: 'Solar Hijri (Jalali)',
+                                  fa: 'تقویم شمسی',
+                                  ar: 'التقويم الشمسي',
+                                ),
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: _useShamsi
+                                      ? FontWeight.w800
+                                      : FontWeight.w600,
+                                  color: _useShamsi
+                                      ? ECardoTokens.brand700(context)
+                                      : ECardoTokens.inkMuted(context),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                       Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _useShamsi = false),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 8.h),
-                            decoration: BoxDecoration(
-                              color: !_useShamsi
-                                  ? ECardoTokens.surfaceCard(context)
-                                  : Colors.transparent,
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusSm),
-                              boxShadow: !_useShamsi
-                                  ? ECardoTokens.shadowCard(context)
-                                  : null,
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              l10nPick(
-                                context,
-                                en: 'Gregorian',
-                                fa: 'تقویم میلادی',
-                                ar: 'التقويم الميلادي',
-                              ),
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: !_useShamsi
-                                    ? FontWeight.w800
-                                    : FontWeight.w600,
+                        child: Semantics(
+                          button: true,
+                          selected: !_useShamsi,
+                          label: l10nPick(
+                            context,
+                            en: 'Gregorian',
+                            fa: 'تقویم میلادی',
+                            ar: 'التقويم الميلادي',
+                          ),
+                          child: GestureDetector(
+                            onTap: () => setState(() => _useShamsi = false),
+                            child: Container(
+                              constraints: const BoxConstraints(minHeight: 44),
+                              padding: EdgeInsets.symmetric(vertical: 8.h),
+                              decoration: BoxDecoration(
                                 color: !_useShamsi
-                                    ? ECardoTokens.brand700(context)
-                                    : ECardoTokens.inkMuted(context),
+                                    ? ECardoTokens.surfaceCard(context)
+                                    : Colors.transparent,
+                                borderRadius:
+                                    BorderRadius.circular(ECardoTokens.radiusSm),
+                                boxShadow: !_useShamsi
+                                    ? ECardoTokens.shadowCard(context)
+                                    : null,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                l10nPick(
+                                  context,
+                                  en: 'Gregorian',
+                                  fa: 'تقویم میلادی',
+                                  ar: 'التقويم الميلادي',
+                                ),
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: !_useShamsi
+                                      ? FontWeight.w800
+                                      : FontWeight.w600,
+                                  color: !_useShamsi
+                                      ? ECardoTokens.brand700(context)
+                                      : ECardoTokens.inkMuted(context),
+                                ),
                               ),
                             ),
                           ),
@@ -2657,32 +2793,41 @@ class _FlightDatePickerBottomSheetState
                         ),
                       ),
                 SizedBox(height: 14.h),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      AppHaptics.medium();
-                      Navigator.of(context).pop(_selectedDate);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ECardoTokens.brand700(context),
-                      foregroundColor: ECardoTokens.inkOnBrand,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(ECardoTokens.radiusLg),
+                Semantics(
+                  button: true,
+                  label: l10nPick(
+                    context,
+                    en: 'Confirm Date',
+                    fa: 'تأیید تاریخ',
+                    ar: 'تأكيد التاريخ',
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 48.h,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        AppHaptics.medium();
+                        Navigator.of(context).pop(_selectedDate);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ECardoTokens.brand700(context),
+                        foregroundColor: ECardoTokens.inkOnBrand,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(ECardoTokens.radiusLg),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      l10nPick(
-                        context,
-                        en: 'Confirm Date',
-                        fa: 'تأیید تاریخ',
-                        ar: 'تأكيد التاريخ',
-                      ),
-                      style: TextStyle(
-                        fontSize: 13.5.sp,
-                        fontWeight: FontWeight.w800,
+                      child: Text(
+                        l10nPick(
+                          context,
+                          en: 'Confirm Date',
+                          fa: 'تأیید تاریخ',
+                          ar: 'تأكيد التاريخ',
+                        ),
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),

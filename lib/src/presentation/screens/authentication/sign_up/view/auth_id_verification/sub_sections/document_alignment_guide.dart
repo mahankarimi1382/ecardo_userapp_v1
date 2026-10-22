@@ -24,8 +24,8 @@ class DocumentAlignmentGuideBox extends StatefulWidget {
   final KycDocumentType documentType;
   final bool showScannerLine;
   final bool isDark;
-  final Color frameColor;
-  final Color overlayColor;
+  final Color? frameColor;
+  final Color? overlayColor;
   final String? hintText;
   final Widget? child;
 
@@ -34,8 +34,8 @@ class DocumentAlignmentGuideBox extends StatefulWidget {
     this.documentType = KycDocumentType.nationalCard,
     this.showScannerLine = true,
     this.isDark = true,
-    this.frameColor = const Color(0xFF10B981), // Emerald green
-    this.overlayColor = const Color(0x99000000),
+    this.frameColor,
+    this.overlayColor,
     this.hintText,
     this.child,
   });
@@ -71,15 +71,23 @@ class _DocumentAlignmentGuideBoxState extends State<DocumentAlignmentGuideBox>
 
   @override
   Widget build(BuildContext context) {
+    final effectiveFrameColor = widget.frameColor ??
+        (widget.isDark ? AppColors.mainSoftBlue : AppColors.brandViolet);
+    final effectiveOverlayColor = widget.overlayColor ??
+        (widget.isDark
+            ? AppColors.black.withValues(alpha: 0.65)
+            : AppColors.deepBlack.withValues(alpha: 0.45));
+
     return AnimatedBuilder(
       animation: _scanAnimation,
       builder: (context, _) {
         return CustomPaint(
           painter: _DocumentGuidePainter(
             documentType: widget.documentType,
-            frameColor: widget.frameColor,
-            overlayColor: widget.overlayColor,
+            frameColor: effectiveFrameColor,
+            overlayColor: effectiveOverlayColor,
             scanProgress: widget.showScannerLine ? _scanAnimation.value : null,
+            isDark: widget.isDark,
           ),
           child: widget.child ?? const SizedBox.expand(),
         );
@@ -93,12 +101,14 @@ class _DocumentGuidePainter extends CustomPainter {
   final Color frameColor;
   final Color overlayColor;
   final double? scanProgress;
+  final bool isDark;
 
   _DocumentGuidePainter({
     required this.documentType,
     required this.frameColor,
     required this.overlayColor,
     this.scanProgress,
+    this.isDark = true,
   });
 
   @override
@@ -135,7 +145,7 @@ class _DocumentGuidePainter extends CustomPainter {
 
     // 2. Subtle bounding box border
     final borderPaint = Paint()
-      ..color = frameColor.withValues(alpha: 0.35)
+      ..color = frameColor.withValues(alpha: isDark ? 0.35 : 0.45)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
     canvas.drawRRect(cardRRect, borderPaint);
@@ -214,7 +224,8 @@ class _DocumentGuidePainter extends CustomPainter {
   void _paintCardWatermark(Canvas canvas, Rect rect) {
     // Subtle ghost watermark indicating document orientation
     final watermarkPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.10)
+      ..color = (isDark ? AppColors.white : AppColors.deepBlack)
+          .withValues(alpha: isDark ? 0.12 : 0.08)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -275,7 +286,8 @@ class _DocumentGuidePainter extends CustomPainter {
     return oldDelegate.documentType != documentType ||
         oldDelegate.frameColor != frameColor ||
         oldDelegate.overlayColor != overlayColor ||
-        oldDelegate.scanProgress != scanProgress;
+        oldDelegate.scanProgress != scanProgress ||
+        oldDelegate.isDark != isDark;
   }
 }
 
@@ -302,7 +314,7 @@ class _RealtimeTipsBannerState extends State<RealtimeTipsBanner> {
   final List<_TipItem> _tips = [
     _TipItem(
       icon: Icons.wb_sunny_outlined,
-      iconColor: const Color(0xFFF59E0B),
+      iconColor: AppColors.warning,
       enText: 'Avoid glare, reflections, and heavy shadows',
       faText: 'از بازتاب مستقیم نور و ایجاد سایه خودداری کنید',
       arText: 'تجنب الوهج والانعكاسات والظلال',
@@ -310,7 +322,7 @@ class _RealtimeTipsBannerState extends State<RealtimeTipsBanner> {
     ),
     _TipItem(
       icon: Icons.crop_free_rounded,
-      iconColor: const Color(0xFF10B981),
+      iconColor: AppColors.success,
       enText: 'Ensure all 4 corners are clearly visible',
       faText: 'مطمئن شوید هر ۴ گوشه مدرک داخل کادر باشد',
       arText: 'تأكد من وضوح وظهور جميع الزوايا الأربع',
@@ -318,7 +330,7 @@ class _RealtimeTipsBannerState extends State<RealtimeTipsBanner> {
     ),
     _TipItem(
       icon: Icons.text_fields_rounded,
-      iconColor: const Color(0xFF2196F3),
+      iconColor: AppColors.info,
       enText: 'All text and details must be crisp & legible',
       faText: 'متن و مندرجات مدرک باید کاملاً شفاف و خوانا باشد',
       arText: 'يجب أن تكون النصوص والبيانات مقروءة وواضحة',
@@ -349,8 +361,8 @@ class _RealtimeTipsBannerState extends State<RealtimeTipsBanner> {
   Widget build(BuildContext context) {
     final tip = _tips[_currentTipIndex];
     final defaultBg = widget.isDark
-        ? Colors.black.withValues(alpha: 0.65)
-        : Colors.white.withValues(alpha: 0.95);
+        ? AppColors.black.withValues(alpha: 0.65)
+        : AppColors.white.withValues(alpha: 0.95);
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
@@ -360,13 +372,13 @@ class _RealtimeTipsBannerState extends State<RealtimeTipsBanner> {
         borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
           color: widget.isDark
-              ? Colors.white.withValues(alpha: 0.18)
-              : const Color(0xFFE2E8F0),
+              ? AppColors.white.withValues(alpha: 0.18)
+              : AppColors.lightBorder,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
+            color: AppColors.black.withValues(alpha: 0.15),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -402,7 +414,7 @@ class _RealtimeTipsBannerState extends State<RealtimeTipsBanner> {
                   zh: tip.zhText,
                 ),
                 style: TextStyle(
-                  color: widget.isDark ? Colors.white : AppColors.deepBlack,
+                  color: widget.isDark ? AppColors.white : AppColors.deepBlack,
                   fontSize: 11.5.sp,
                   fontWeight: FontWeight.w600,
                   height: 1.25,
@@ -509,8 +521,8 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                   decoration: BoxDecoration(
                     color: (isSizeValid
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626))
+                            ? AppColors.success
+                            : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -523,8 +535,8 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
                             : Icons.error_outline_rounded,
                         size: 13.sp,
                         color: isSizeValid
-                            ? const Color(0xFF10B981)
-                            : const Color(0xFFDC2626),
+                            ? AppColors.success
+                            : AppColors.error,
                       ),
                       SizedBox(width: 4.w),
                       Text(
@@ -533,8 +545,8 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w700,
                           color: isSizeValid
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFFDC2626),
+                              ? AppColors.success
+                              : AppColors.error,
                         ),
                       ),
                     ],
@@ -551,7 +563,7 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: const Color(0xFF10B981).withValues(alpha: 0.4),
+                  color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(alpha: 0.4),
                   width: 1.5,
                 ),
               ),
@@ -575,21 +587,21 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
                   context,
                   Icons.crop_free_rounded,
                   l10nPick(context, en: '4 Corners Visible', fa: '۴ گوشه مشخص'),
-                  const Color(0xFF10B981),
+                  AppColors.success,
                   secondaryTextColor,
                 ),
                 _buildCheckPoint(
                   context,
                   Icons.wb_sunny_outlined,
                   l10nPick(context, en: 'No Glare', fa: 'بدون بازتاب نور'),
-                  const Color(0xFF10B981),
+                  AppColors.success,
                   secondaryTextColor,
                 ),
                 _buildCheckPoint(
                   context,
                   Icons.text_fields_rounded,
                   l10nPick(context, en: 'Text Legible', fa: 'متن کاملاً خوانا'),
-                  const Color(0xFF10B981),
+                  AppColors.success,
                   secondaryTextColor,
                 ),
               ],
@@ -600,30 +612,41 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: onRetake,
-                    style: OutlinedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      side: BorderSide(
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
+                  child: Semantics(
+                    button: true,
+                    label: l10nPick(
+                      context,
+                      en: 'Retake photo',
+                      fa: 'تصویربرداری مجدد',
+                      ar: 'إعادة الالتقاط',
+                      zh: '重新拍摄',
                     ),
-                    icon: const Icon(Icons.refresh_rounded, size: 18),
-                    label: Text(
-                      l10nPick(
-                        context,
-                        en: 'Retake',
-                        fa: 'تصویربرداری مجدد',
-                        ar: 'إعادة الالتقاط',
-                        zh: '重新拍摄',
+                    child: OutlinedButton.icon(
+                      onPressed: onRetake,
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: Size(0, 48.h),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        side: BorderSide(
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w700,
-                        color: primaryTextColor,
+                      icon: const Icon(Icons.refresh_rounded, size: 18),
+                      label: Text(
+                        l10nPick(
+                          context,
+                          en: 'Retake',
+                          fa: 'تصویربرداری مجدد',
+                          ar: 'إعادة الالتقاط',
+                          zh: '重新拍摄',
+                        ),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w700,
+                          color: primaryTextColor,
+                        ),
                       ),
                     ),
                   ),
@@ -631,30 +654,41 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
                 SizedBox(width: 12.w),
                 Expanded(
                   flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: isSizeValid ? onConfirm : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF10B981),
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      elevation: 0,
+                  child: Semantics(
+                    button: true,
+                    label: l10nPick(
+                      context,
+                      en: 'Confirm and use photo',
+                      fa: 'تأیید و استفاده از عکس',
+                      ar: 'تأكيد واستخدام الصورة',
+                      zh: '确认并使用此照片',
                     ),
-                    icon: const Icon(Icons.check_rounded, size: 18),
-                    label: Text(
-                      l10nPick(
-                        context,
-                        en: 'Confirm & Use Photo',
-                        fa: 'تأیید و استفاده از عکس',
-                        ar: 'تأكيد واستخدام الصورة',
-                        zh: '确认并使用此照片',
+                    child: ElevatedButton.icon(
+                      onPressed: isSizeValid ? onConfirm : null,
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(0, 48.h),
+                        backgroundColor: AppColors.brandViolet,
+                        foregroundColor: AppColors.white,
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        elevation: 0,
                       ),
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                      icon: const Icon(Icons.check_rounded, size: 18),
+                      label: Text(
+                        l10nPick(
+                          context,
+                          en: 'Confirm & Use Photo',
+                          fa: 'تأیید و استفاده از عکس',
+                          ar: 'تأكيد واستخدام الصورة',
+                          zh: '确认并使用此照片',
+                        ),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w800,
+                          color: AppColors.white,
+                        ),
                       ),
                     ),
                   ),

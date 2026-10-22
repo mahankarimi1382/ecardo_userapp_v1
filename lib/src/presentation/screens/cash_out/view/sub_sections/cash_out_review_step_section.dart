@@ -43,6 +43,7 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
       ar: 'التحقق لتأكيد السحب النقدي',
       tr: 'Nakit çekimi onaylamak için doğrulama yapın',
       ru: 'Подтвердите личность для выдачи наличных',
+      zh: '请进行身份验证以确认代理提现',
     );
 
     // Step-up Security: Try biometric first if available
@@ -225,7 +226,15 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                           ),
                           const SizedBox(width: 3),
                           Text(
-                            l10nPick(context, en: 'Verified', fa: 'تأییدشده'),
+                            l10nPick(
+                              context,
+                              en: 'Verified',
+                              fa: 'تأییدشده',
+                              ar: 'تم التحقق',
+                              tr: 'Doğrulandı',
+                              ru: 'Подтверждено',
+                              zh: '已验证',
+                            ),
                             style: const TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
@@ -255,6 +264,7 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                   ar: 'تسوية نقدية فورية ⚡',
                   tr: 'Anında Nakit ⚡',
                   ru: 'Мгновенная выдача ⚡',
+                  zh: '即时代理提现 ⚡',
                 ),
                 hasFeeError: controller.chargeLoadFailed.value,
                 isFeeLoading: controller.isCashoutConfigLoading.value,
@@ -337,6 +347,7 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                           ar: 'محمي بكلمة المرور والأمان البيومتري',
                           tr: 'Şifre ve Biyometrik Güvenlik Korumalı',
                           ru: 'Защищено PIN-кодом и биометрией',
+                          zh: '受 eCardo 密码与生物识别安全保护',
                         ),
                         style: TextStyle(
                           fontSize: 11.5,
@@ -363,6 +374,7 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                       ar: 'اسحب لتأكيد السحب',
                       tr: 'Nakit Çekimi Onaylamak İçin Kaydırın',
                       ru: 'Проведите для подтверждения',
+                      zh: '滑动以确认提现',
                     ),
                     loadingText: l10nPick(
                       context,
@@ -371,6 +383,7 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                       ar: 'جار معالجة السحب...',
                       tr: 'İşleniyor...',
                       ru: 'Обработка...',
+                      zh: '正在处理提现...',
                     ),
                     successText: l10nPick(
                       context,
@@ -379,6 +392,7 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                       ar: 'تم تأكيد السحب',
                       tr: 'Onaylandı',
                       ru: 'Подтверждено',
+                      zh: '提现已确认',
                     ),
                     isLoading: controller.isCashOutLoading.value,
                     enabled: !controller.chargeLoadFailed.value &&

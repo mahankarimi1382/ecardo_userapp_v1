@@ -20,6 +20,7 @@ import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_drop
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
+import 'package:ecardo_user/src/helper/upload_helper.dart';
 import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/profile_settings_controller.dart';
 
@@ -111,14 +112,32 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             children: [
               SizedBox(height: 16),
               CommonAppBar(title: localization.profileSettingsScreenTitle),
-              SizedBox(height: 30),
+              SizedBox(height: 24),
               Stack(
                 alignment: AlignmentDirectional.bottomEnd,
                 clipBehavior: Clip.none,
                 children: [
                   GestureDetector(
-                    onTap: () {
-                      imagePickerController.pickImageFromGallery();
+                    onTap: () async {
+                      await imagePickerController.pickImageFromGallery();
+                      if (!context.mounted) return;
+                      final file = imagePickerController.selectedImage.value;
+                      if (file != null &&
+                          UploadHelper.exceedsSize(
+                            file,
+                            UploadHelper.maxAvatarBytes,
+                          )) {
+                        imagePickerController.clearImage();
+                        ToastHelper().showErrorToast(
+                          l10nPick(
+                            context,
+                            en: 'Avatar image must not exceed 2MB',
+                            fa: 'حجم تصویر پروفایل نباید بیشتر از ۲ مگابایت باشد',
+                            ar: 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت',
+                            zh: '头像图片大小不能超过 2MB',
+                          ),
+                        );
+                      }
                     },
                     child: Obx(() {
                       final userData = controller.userModel.value.data;
@@ -126,59 +145,105 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           imagePickerController.selectedImage.value != null;
                       final hasAvatarPath =
                           userData?.avatarPath?.isNotEmpty == true;
+                      final isUpdating =
+                          controller.isProfileUpdateLoading.value;
 
-                      return Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurface : AppColors.white,
-                          borderRadius: BorderRadius.circular(100),
-                          border: !hasSelectedImage && !hasAvatarPath
-                              ? Border.all(
-                                  color: isDark
-                                      ? AppColors.lightWarmGray
-                                          .withValues(alpha: 0.20)
-                                      : AppColors.black.withValues(
-                                          alpha: 0.10,
-                                        ),
-                                )
-                              : const Border.fromBorderSide(BorderSide.none),
-                          image: hasSelectedImage
-                              ? DecorationImage(
-                                  image: FileImage(
-                                    imagePickerController.selectedImage.value!,
-                                  ),
-                                  fit: BoxFit.cover,
-                                )
-                              : hasAvatarPath
-                              ? DecorationImage(
-                                  image: NetworkImage(userData!.avatarPath!),
-                                  fit: BoxFit.cover,
-                                )
-                              : null,
-                        ),
-                        child: !hasSelectedImage && !hasAvatarPath
-                            ? Center(
-                                child: Text(
-                                  "${userData?.firstName?.trim().isNotEmpty == true ? userData!.firstName!.trim()[0].toUpperCase() : ''}"
-                                  "${userData?.lastName?.trim().isNotEmpty == true ? userData!.lastName!.trim()[0].toUpperCase() : ''}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 40,
-                                    color: isDark
-                                        ? AppColors.mainSoftBlue
-                                        : AppColors.lightPrimary,
-                                    letterSpacing: 0,
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: isDark ? AppColors.darkSurface : AppColors.white,
+                              borderRadius: BorderRadius.circular(100),
+                              border: !hasSelectedImage && !hasAvatarPath
+                                  ? Border.all(
+                                      color: isDark
+                                          ? AppColors.lightWarmGray
+                                              .withValues(alpha: 0.20)
+                                          : AppColors.black.withValues(
+                                              alpha: 0.10,
+                                            ),
+                                    )
+                                  : const Border.fromBorderSide(BorderSide.none),
+                              image: hasSelectedImage
+                                  ? DecorationImage(
+                                      image: FileImage(
+                                        imagePickerController.selectedImage.value!,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : hasAvatarPath
+                                  ? DecorationImage(
+                                      image: NetworkImage(userData!.avatarPath!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                            ),
+                            child: !hasSelectedImage && !hasAvatarPath
+                                ? Center(
+                                    child: Text(
+                                      "${userData?.firstName?.trim().isNotEmpty == true ? userData!.firstName!.trim()[0].toUpperCase() : ''}"
+                                      "${userData?.lastName?.trim().isNotEmpty == true ? userData!.lastName!.trim()[0].toUpperCase() : ''}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 40,
+                                        color: isDark
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.lightPrimary,
+                                        letterSpacing: 0,
+                                      ),
+                                    ),
+                                  )
+                                : null,
+                          ),
+                          if (isUpdating)
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                color: AppColors.black.withValues(alpha: 0.45),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Center(
+                                child: SizedBox(
+                                  width: 28,
+                                  height: 28,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.white,
+                                    ),
                                   ),
                                 ),
-                              )
-                            : null,
+                              ),
+                            ),
+                        ],
                       );
                     }),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      imagePickerController.pickImageFromGallery();
+                    onTap: () async {
+                      await imagePickerController.pickImageFromGallery();
+                      if (!context.mounted) return;
+                      final file = imagePickerController.selectedImage.value;
+                      if (file != null &&
+                          UploadHelper.exceedsSize(
+                            file,
+                            UploadHelper.maxAvatarBytes,
+                          )) {
+                        imagePickerController.clearImage();
+                        ToastHelper().showErrorToast(
+                          l10nPick(
+                            context,
+                            en: 'Avatar image must not exceed 2MB',
+                            fa: 'حجم تصویر پروفایل نباید بیشتر از ۲ مگابایت باشد',
+                            ar: 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت',
+                            zh: '头像图片大小不能超过 2MB',
+                          ),
+                        );
+                      }
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
@@ -210,7 +275,22 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   ),
                 ],
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 8),
+              Text(
+                l10nPick(
+                  context,
+                  en: 'JPG, PNG · Max 2MB',
+                  fa: 'JPG، PNG · حداکثر ۲ مگابایت',
+                  ar: 'JPG، PNG · بحد أقصى 2 ميجابايت',
+                  zh: 'JPG, PNG · 最大 2MB',
+                ),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: tertiaryTextColor,
+                ),
+              ),
+              const SizedBox(height: 18),
               Expanded(
                 child: Container(
                   margin: EdgeInsetsDirectional.symmetric(horizontal: 18),
@@ -307,41 +387,51 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 backgroundColor: AppColors.transparent,
                                 onTap: () {
                                   Get.bottomSheet(
-                                    CommonDropdownBottomSheet(
-                                      title: localization
-                                          .profileSettingsGenderTitle,
-                                      isShowTitle: true,
-                                      notFoundText: localization
-                                          .profileSettingsGenderNotFound,
-                                      textController:
-                                          controller.genderController,
-                                      dropdownItems: [
-                                        localization.profileSettingsGenderMale,
-                                        localization
-                                            .profileSettingsGenderFemale,
-                                        localization.profileSettingsGenderOther,
-                                      ],
-                                      selectedValue: [
-                                        localization.profileSettingsGenderMale,
-                                        localization
-                                            .profileSettingsGenderFemale,
-                                        localization.profileSettingsGenderOther,
-                                      ],
-                                      selectedItem: controller.gender.value,
-                                      bottomSheetHeight: 400,
-                                      currentlySelectedValue:
-                                          controller.gender.value,
-                                      onValueSelected: (value) {
-                                        controller.gender.value = value;
-                                        controller.genderController.text =
-                                            value;
-                                      },
+                                    Theme(
+                                      data: ThemeData.light(),
+                                      child: CommonDropdownBottomSheet(
+                                        title: localization
+                                            .profileSettingsGenderTitle,
+                                        isShowTitle: true,
+                                        notFoundText: localization
+                                            .profileSettingsGenderNotFound,
+                                        textController:
+                                            controller.genderController,
+                                        dropdownItems: [
+                                          localization.profileSettingsGenderMale,
+                                          localization
+                                              .profileSettingsGenderFemale,
+                                          localization.profileSettingsGenderOther,
+                                        ],
+                                        selectedValue: [
+                                          localization.profileSettingsGenderMale,
+                                          localization
+                                              .profileSettingsGenderFemale,
+                                          localization.profileSettingsGenderOther,
+                                        ],
+                                        selectedItem: controller.gender.value,
+                                        bottomSheetHeight: 400,
+                                        currentlySelectedValue:
+                                            controller.gender.value,
+                                        onValueSelected: (value) {
+                                          controller.gender.value = value;
+                                          controller.genderController.text =
+                                              value;
+                                        },
+                                      ),
                                     ),
+                                    backgroundColor: AppColors.transparent,
+                                    isScrollControlled: true,
                                   );
                                 },
                                 hintText:
                                     localization.profileSettingsSelectGender,
                                 controller: controller.genderController,
+                                suffixIcon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: tertiaryTextColor,
+                                  size: 22,
+                                ),
                                 suffixIconColor: tertiaryTextColor,
                                 readOnly: true,
                               ),
@@ -434,54 +524,64 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 backgroundColor: AppColors.transparent,
                                 onTap: () {
                                   Get.bottomSheet(
-                                    CommonDropdownBottomSheet(
-                                      title: localization
-                                          .profileSettingsCountryTitle,
-                                      isShowTitle: true,
-                                      showSearch: true,
-                                      notFoundText: localization
-                                          .profileSettingsCountryNotFound,
-                                      onValueSelected: (value) {
-                                        int index = controller.countryList
-                                            .indexWhere(
-                                              (item) => item.name == value,
-                                            );
+                                    Theme(
+                                      data: ThemeData.light(),
+                                      child: CommonDropdownBottomSheet(
+                                        title: localization
+                                            .profileSettingsCountryTitle,
+                                        isShowTitle: true,
+                                        showSearch: true,
+                                        notFoundText: localization
+                                            .profileSettingsCountryNotFound,
+                                        onValueSelected: (value) {
+                                          int index = controller.countryList
+                                              .indexWhere(
+                                                (item) => item.name == value,
+                                              );
 
-                                        if (index != -1) {
-                                          final selectedCountry =
-                                              controller.countryList[index];
-                                          controller.countryController.text =
-                                              selectedCountry.name ?? "";
-                                          controller.countryCode.value =
-                                              selectedCountry.code ?? "";
-                                          controller.countryDialCode.value =
-                                              selectedCountry.dialCode ?? "";
-                                          controller.updateCitiesForCountry(
-                                            selectedCountry.code ?? "",
-                                            name: selectedCountry.name,
-                                            resetCity: true,
-                                          );
-                                        }
-                                      },
-                                      selectedValue: controller.countryList
-                                          .map((item) => item.name.toString())
-                                          .toList(),
-                                      dropdownItems: controller.countryList
-                                          .map((item) => item.name.toString())
-                                          .toList(),
-                                      selectedItem:
-                                          controller.countryController.text,
-                                      textController:
-                                          controller.countryController,
-                                      currentlySelectedValue:
-                                          controller.countryController.text,
-                                      bottomSheetHeight: 500,
+                                          if (index != -1) {
+                                            final selectedCountry =
+                                                controller.countryList[index];
+                                            controller.countryController.text =
+                                                selectedCountry.name ?? "";
+                                            controller.countryCode.value =
+                                                selectedCountry.code ?? "";
+                                            controller.countryDialCode.value =
+                                                selectedCountry.dialCode ?? "";
+                                            controller.updateCitiesForCountry(
+                                              selectedCountry.code ?? "",
+                                              name: selectedCountry.name,
+                                              resetCity: true,
+                                            );
+                                          }
+                                        },
+                                        selectedValue: controller.countryList
+                                            .map((item) => item.name.toString())
+                                            .toList(),
+                                        dropdownItems: controller.countryList
+                                            .map((item) => item.name.toString())
+                                            .toList(),
+                                        selectedItem:
+                                            controller.countryController.text,
+                                        textController:
+                                            controller.countryController,
+                                        currentlySelectedValue:
+                                            controller.countryController.text,
+                                        bottomSheetHeight: 500,
+                                      ),
                                     ),
+                                    backgroundColor: AppColors.transparent,
+                                    isScrollControlled: true,
                                   );
                                 },
                                 hintText:
                                     localization.profileSettingsSelectCountry,
                                 controller: controller.countryController,
+                                suffixIcon: Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: tertiaryTextColor,
+                                  size: 22,
+                                ),
                                 suffixIconColor: tertiaryTextColor,
                                 readOnly: true,
                               ),
@@ -511,6 +611,35 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                 isFocused: controller.isCityFocused.value,
                                 backgroundColor: AppColors.transparent,
                                 readOnly: true,
+                                suffixIcon: isCityLoading
+                                    ? SizedBox(
+                                        width: 18,
+                                        height: 18,
+                                        child: Center(
+                                          child: SizedBox(
+                                            width: 16,
+                                            height: 16,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                isDark
+                                                    ? AppColors.mainSoftBlue
+                                                    : AppColors.lightPrimary,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: hasCountry
+                                            ? tertiaryTextColor
+                                            : tertiaryTextColor.withValues(
+                                                alpha: 0.3,
+                                              ),
+                                        size: 22,
+                                      ),
                                 onTap: () {
                                   if (!hasCountry) {
                                     ToastHelper().showErrorToast(
@@ -539,28 +668,33 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   }
 
                                   Get.bottomSheet(
-                                    CommonDropdownBottomSheet(
-                                      title: localization.profileSettingsCity,
-                                      isShowTitle: true,
-                                      showSearch: true,
-                                      notFoundText: localization
-                                          .profileSettingsCountryNotFound,
-                                      onValueSelected: (value) {
-                                        controller.city.value = value;
-                                        controller.cityController.text = value;
-                                      },
-                                      selectedValue:
-                                          controller.cityList.toList(),
-                                      dropdownItems:
-                                          controller.cityList.toList(),
-                                      selectedItem:
-                                          controller.cityController.text,
-                                      textController:
-                                          controller.cityController,
-                                      currentlySelectedValue:
-                                          controller.cityController.text,
-                                      bottomSheetHeight: 500,
+                                    Theme(
+                                      data: ThemeData.light(),
+                                      child: CommonDropdownBottomSheet(
+                                        title: localization.profileSettingsCity,
+                                        isShowTitle: true,
+                                        showSearch: true,
+                                        notFoundText: localization
+                                            .profileSettingsCountryNotFound,
+                                        onValueSelected: (value) {
+                                          controller.city.value = value;
+                                          controller.cityController.text = value;
+                                        },
+                                        selectedValue:
+                                            controller.cityList.toList(),
+                                        dropdownItems:
+                                            controller.cityList.toList(),
+                                        selectedItem:
+                                            controller.cityController.text,
+                                        textController:
+                                            controller.cityController,
+                                        currentlySelectedValue:
+                                            controller.cityController.text,
+                                        bottomSheetHeight: 500,
+                                      ),
                                     ),
+                                    backgroundColor: AppColors.transparent,
+                                    isScrollControlled: true,
                                   );
                                 },
                                 hintText: hasCountry
@@ -677,7 +811,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8FAFC),
+          color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
           border: Border.all(
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,

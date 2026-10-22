@@ -73,7 +73,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
   Color _statusColor(String status) {
     switch (status) {
       case 'RELEASED': return AppColors.success;
-      case 'ISSUED': return const Color(0xFF0D9488);
+      case 'ISSUED': return AppColors.brandViolet;
       case 'CLAIMED': return AppColors.error;
       case 'REJECTED': case 'CANCELLED': return AppColors.grey;
       case 'MARGIN_PENDING': case 'IN_ISSUANCE': return AppColors.warning;
@@ -91,35 +91,45 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
       title: Text(title, style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800)),
       content: Text(message, style: AppTextStyles.bodyMedium),
       actions: [
-        TextButton(
-          onPressed: () {
-            HapticFeedback.lightImpact();
-            Get.back();
-          },
-          child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف')),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.lightPrimary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Cancel', fa: 'انصراف'),
+          child: TextButton(
+            style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Get.back();
+            },
+            child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف')),
           ),
-          onPressed: () async {
-            HapticFeedback.lightImpact();
-            Get.back();
-            final ok = await action();
-            if (!mounted) return;
-            if (!ok) {
-              Get.snackbar(
-                errTitle,
-                errBody,
-                backgroundColor: AppColors.error,
-                colorText: AppColors.white,
-              );
-            }
-          },
-          child: Text(
-            l10nPick(context, en: 'Confirm', fa: 'تأیید'),
-            style: const TextStyle(color: AppColors.white),
+        ),
+        Semantics(
+          button: true,
+          label: l10nPick(context, en: 'Confirm', fa: 'تأیید'),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.brandViolet,
+              minimumSize: const Size(64, 44),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+            ),
+            onPressed: () async {
+              HapticFeedback.lightImpact();
+              Get.back();
+              final ok = await action();
+              if (!mounted) return;
+              if (!ok) {
+                Get.snackbar(
+                  errTitle,
+                  errBody,
+                  backgroundColor: AppColors.error,
+                  colorText: AppColors.white,
+                );
+              }
+            },
+            child: Text(
+              l10nPick(context, en: 'Confirm', fa: 'تأیید'),
+              style: const TextStyle(color: AppColors.white),
+            ),
           ),
         ),
       ],
@@ -166,33 +176,43 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Get.back();
-            },
-            child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.lightPrimary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+          Semantics(
+            button: true,
+            label: l10nPick(ctx, en: 'Cancel', fa: 'انصراف'),
+            child: TextButton(
+              style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Get.back();
+              },
+              child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
             ),
-            onPressed: () async {
-              HapticFeedback.lightImpact();
-              Get.back();
-              final ok = await controller.uploadDoc(c.id, docType, fileRefCtrl.text.trim());
-              if (!mounted) return;
-              if (ok) {
-                Get.snackbar(
-                  successTitle,
-                  successBody,
-                  backgroundColor: AppColors.success,
-                  colorText: AppColors.white,
-                );
-              }
-            },
-            child: Text(l10nPick(ctx, en: 'Upload', fa: 'بارگذاری'), style: const TextStyle(color: AppColors.white)),
+          ),
+          Semantics(
+            button: true,
+            label: l10nPick(ctx, en: 'Upload', fa: 'بارگذاری'),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.brandViolet,
+                minimumSize: const Size(64, 44),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+              ),
+              onPressed: () async {
+                HapticFeedback.lightImpact();
+                Get.back();
+                final ok = await controller.uploadDoc(c.id, docType, fileRefCtrl.text.trim());
+                if (!mounted) return;
+                if (ok) {
+                  Get.snackbar(
+                    successTitle,
+                    successBody,
+                    backgroundColor: AppColors.success,
+                    colorText: AppColors.white,
+                  );
+                }
+              },
+              child: Text(l10nPick(ctx, en: 'Upload', fa: 'بارگذاری'), style: const TextStyle(color: AppColors.white)),
+            ),
           ),
         ],
       ),
@@ -257,7 +277,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                   RadioListTile<String>(
                     dense: true,
                     value: 'WALLET_FIAT',
-                    activeColor: AppColors.lightPrimary,
+                    activeColor: AppColors.brandViolet,
                     title: Text(
                       l10nPick(ctx, en: 'Internal Fiat Wallet', fa: 'کیف پول فیات داخلی'),
                       style: AppTextStyles.bodySmall,
@@ -266,7 +286,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                   RadioListTile<String>(
                     dense: true,
                     value: 'WALLET_CRYPTO',
-                    activeColor: AppColors.lightPrimary,
+                    activeColor: AppColors.brandViolet,
                     title: Text(
                       l10nPick(ctx, en: 'Crypto Wallet (Instant FX snapshot)', fa: 'کیف پول رمزارز (تبدیل لحظه‌ای)'),
                       style: AppTextStyles.bodySmall,
@@ -278,35 +298,45 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Get.back();
-            },
-            child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.lightPrimary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+          Semantics(
+            button: true,
+            label: l10nPick(ctx, en: 'Cancel', fa: 'انصراف'),
+            child: TextButton(
+              style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
+              onPressed: () {
+                HapticFeedback.lightImpact();
+                Get.back();
+              },
+              child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
             ),
-            onPressed: () async {
-              HapticFeedback.lightImpact();
-              Get.back();
-              final ok = await controller.depositMargin(c.id, source);
-              if (!mounted) return;
-              if (ok) {
-                Get.snackbar(
-                  depositSuccessTitle,
-                  depositSuccessBody,
-                  backgroundColor: AppColors.success,
-                  colorText: AppColors.white,
-                );
-              }
-            },
-            child: Text(
-              l10nPick(ctx, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
-              style: const TextStyle(color: AppColors.white),
+          ),
+          Semantics(
+            button: true,
+            label: l10nPick(ctx, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.brandViolet,
+                minimumSize: const Size(64, 44),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+              ),
+              onPressed: () async {
+                HapticFeedback.lightImpact();
+                Get.back();
+                final ok = await controller.depositMargin(c.id, source);
+                if (!mounted) return;
+                if (ok) {
+                  Get.snackbar(
+                    depositSuccessTitle,
+                    depositSuccessBody,
+                    backgroundColor: AppColors.success,
+                    colorText: AppColors.white,
+                  );
+                }
+              },
+              child: Text(
+                l10nPick(ctx, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
+                style: const TextStyle(color: AppColors.white),
+              ),
             ),
           ),
         ],
@@ -430,10 +460,10 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF132838) : const Color(0xFFE0F2FE),
+                    color: isDark ? AppColors.info.withValues(alpha: 0.15) : AppColors.infoContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: isDark ? const Color(0xFF38BDF8).withValues(alpha: 0.25) : const Color(0xFFBAE6FD),
+                      color: AppColors.info.withValues(alpha: isDark ? 0.35 : 0.25),
                     ),
                   ),
                   child: Column(
@@ -443,7 +473,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                         l10nPick(context, en: 'Required Case Documents', fa: 'مدارک الزامی پرونده'),
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isDark ? const Color(0xFF38BDF8) : const Color(0xFF0369A1),
+                          color: isDark ? AppColors.info : AppColors.deepBlack,
                         ),
                       ),
                       SizedBox(height: AppSpacing.xs.h),
@@ -454,7 +484,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           fa: 'قرارداد پایه یا آگهی مناقصه، مدارک ثبتی شرکت و صورت‌های مالی را بارگذاری کنید.',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? const Color(0xFFBAE6FD) : const Color(0xFF075985),
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.sm.h),
@@ -462,12 +492,14 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                             padding: EdgeInsetsDirectional.symmetric(vertical: 2.h),
                             child: Row(
                               children: [
-                                const Icon(Icons.description, size: 14, color: Colors.blueGrey),
+                                Icon(Icons.description, size: 14, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                                 SizedBox(width: AppSpacing.xs.w),
                                 Expanded(
                                   child: Text(
                                     '${doc.docType}: ${doc.fileRef} (${doc.status})',
-                                    style: AppTextStyles.labelSmall,
+                                    style: AppTextStyles.labelSmall.copyWith(
+                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -477,31 +509,47 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: OutlinedButton.icon(
-                              icon: const Icon(Icons.upload_file, size: 16),
-                              label: Text(
-                                l10nPick(context, en: 'Upload Doc', fa: 'بارگذاری مدرک'),
-                                style: AppTextStyles.labelSmall,
+                            child: Semantics(
+                              button: true,
+                              label: l10nPick(context, en: 'Upload Document', fa: 'بارگذاری مدرک'),
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  minimumSize: Size(double.infinity, 44.h),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                                ),
+                                icon: const Icon(Icons.upload_file, size: 16),
+                                label: Text(
+                                  l10nPick(context, en: 'Upload Doc', fa: 'بارگذاری مدرک'),
+                                  style: AppTextStyles.labelSmall,
+                                ),
+                                onPressed: () {
+                                  HapticFeedback.lightImpact();
+                                  _showUploadDocDialog(c);
+                                },
                               ),
-                              onPressed: () {
-                                HapticFeedback.lightImpact();
-                                _showUploadDocDialog(c);
-                              },
                             ),
                           ),
                           SizedBox(width: AppSpacing.sm.w),
                           Expanded(
-                            child: ElevatedButton.icon(
-                              style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary),
-                              icon: const Icon(Icons.send, color: AppColors.white, size: 16),
-                              label: Text(
-                                l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
-                                style: const TextStyle(color: AppColors.white),
-                              ),
-                              onPressed: () => _confirm(
-                                l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
-                                l10nPick(context, en: 'Submit case for analyst and bank review?', fa: 'پرونده جهت بررسی کارشناس و استعلام بانک ارسال شود؟'),
-                                () => controller.submitCase(c.id),
+                            child: Semantics(
+                              button: true,
+                              label: l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: isDark ? AppColors.brandViolet : AppColors.brandVioletDeep,
+                                  minimumSize: Size(double.infinity, 44.h),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                                ),
+                                icon: const Icon(Icons.send, color: AppColors.white, size: 16),
+                                label: Text(
+                                  l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
+                                  style: const TextStyle(color: AppColors.white),
+                                ),
+                                onPressed: () => _confirm(
+                                  l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
+                                  l10nPick(context, en: 'Submit case for analyst and bank review?', fa: 'پرونده جهت بررسی کارشناس و استعلام بانک ارسال شود؟'),
+                                  () => controller.submitCase(c.id),
+                                ),
                               ),
                             ),
                           ),
@@ -518,15 +566,15 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF132838) : const Color(0xFFE0F2FE),
+                    color: isDark ? AppColors.info.withValues(alpha: 0.15) : AppColors.infoContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: isDark ? const Color(0xFF38BDF8).withValues(alpha: 0.25) : const Color(0xFFBAE6FD),
+                      color: AppColors.info.withValues(alpha: isDark ? 0.35 : 0.25),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.sync, color: Color(0xFF0284C7)),
+                      const Icon(Icons.sync, color: AppColors.info),
                       SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Text(
@@ -536,7 +584,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                             fa: 'پرونده در دست بررسی کارشناس اعتباری و استعلام بانک صادرکننده است (سقف ۵ روز کاری).',
                           ),
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: isDark ? const Color(0xFFBAE6FD) : const Color(0xFF0369A1),
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                       ),
@@ -551,10 +599,10 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF2E2211) : const Color(0xFFFEF3C7),
+                    color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: isDark ? const Color(0xFFFBBF24).withValues(alpha: 0.3) : const Color(0xFFFDE68A),
+                      color: AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.25),
                     ),
                   ),
                   child: Column(
@@ -564,7 +612,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                         l10nPick(context, en: 'Bank Approved — Margin Required', fa: 'موافقت مشروط بانک — تودیع وجه التزام'),
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isDark ? const Color(0xFFFBBF24) : const Color(0xFFB45309),
+                          color: AppColors.warning,
                         ),
                       ),
                       SizedBox(height: AppSpacing.xs.h),
@@ -575,27 +623,31 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           fa: 'مهلت تودیع ۴۸ ساعت است. وجه التزام نزد پلتفرم حبس می‌شود (نه نزد بانک).',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.md.h),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48.h,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.lightPrimary,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
+                      Semantics(
+                        button: true,
+                        label: l10nPick(context, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 48.h,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: isDark ? AppColors.brandViolet : AppColors.brandVioletDeep,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
+                            ),
+                            icon: const Icon(Icons.account_balance_wallet, color: AppColors.white),
+                            label: Text(
+                              l10nPick(context, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
+                              style: const TextStyle(color: AppColors.white),
+                            ),
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              _showDepositDialog(c);
+                            },
                           ),
-                          icon: const Icon(Icons.account_balance_wallet, color: AppColors.white),
-                          label: Text(
-                            l10nPick(context, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
-                            style: const TextStyle(color: AppColors.white),
-                          ),
-                          onPressed: () {
-                            HapticFeedback.lightImpact();
-                            _showDepositDialog(c);
-                          },
                         ),
                       ),
                     ],
@@ -609,15 +661,15 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF2E2211) : const Color(0xFFFEF3C7),
+                    color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: isDark ? const Color(0xFFFBBF24).withValues(alpha: 0.3) : const Color(0xFFFDE68A),
+                      color: AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.25),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.hourglass_bottom, color: Color(0xFFD97706)),
+                      const Icon(Icons.hourglass_bottom, color: AppColors.warning),
                       SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Text(
@@ -627,7 +679,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                             fa: 'بانک صادرکننده در حال صدور و مهر سند رسمی است (حداکثر ۳ روز کاری).',
                           ),
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                       ),
@@ -656,7 +708,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                   child: Theme(
                     data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
                     child: ExpansionTile(
-                      leading: const Icon(Icons.verified_outlined, color: Color(0xFF0D9488)),
+                      leading: Icon(Icons.verified_outlined, color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet),
                       title: Text(
                         l10nPick(
                           context,
@@ -687,10 +739,10 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF36181B) : const Color(0xFFFEE2E2),
+                    color: isDark ? AppColors.error.withValues(alpha: 0.15) : AppColors.errorContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: isDark ? const Color(0xFFF87171).withValues(alpha: 0.3) : const Color(0xFFFECACA),
+                      color: AppColors.error.withValues(alpha: isDark ? 0.35 : 0.25),
                     ),
                   ),
                   child: Column(
@@ -698,7 +750,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.warning, color: AppColors.error),
+                          const Icon(Icons.warning, color: AppColors.error),
                           SizedBox(width: AppSpacing.sm.w),
                           Text(
                             l10nPick(context, en: 'Beneficiary Claim Received', fa: 'مطالبه ذینفع از بانک دریافت شد'),
@@ -717,7 +769,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           fa: 'وجه التزام کاملاً فریز شده و طبق رویه بانکی تایمر انقضا متوقف است.',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? const Color(0xFFFCA5A5) : const Color(0xFFB91C1C),
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
@@ -763,19 +815,29 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
               // Cancel Case
               if (['DRAFT', 'UNDER_REVIEW', 'COMPLEMENT_REQUIRED', 'MARGIN_PENDING', 'IN_ISSUANCE'].contains(c.status)) ...[
                 SizedBox(height: AppSpacing.md.h),
-                TextButton(
-                  onPressed: () => _confirm(
-                    l10nPick(context, en: 'Cancel Case', fa: 'لغو پرونده'),
-                    l10nPick(
-                      context,
-                      en: 'Cancel this case? If deposited, margin and fees will be fully refunded.',
-                      fa: 'آیا از لغو پرونده اطمینان دارید؟ در صورت تودیع، وجه التزام کامل عودت می‌گردد.',
+                Semantics(
+                  button: true,
+                  label: l10nPick(context, en: 'Cancel Case', fa: 'لغو پرونده'),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: 44.h),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: Size(double.infinity, 44.h),
+                      ),
+                      onPressed: () => _confirm(
+                        l10nPick(context, en: 'Cancel Case', fa: 'لغو پرونده'),
+                        l10nPick(
+                          context,
+                          en: 'Cancel this case? If deposited, margin and fees will be fully refunded.',
+                          fa: 'آیا از لغو پرونده اطمینان دارید؟ در صورت تودیع، وجه التزام کامل عودت می‌گردد.',
+                        ),
+                        () => controller.cancelCase(c.id),
+                      ),
+                      child: Text(
+                        l10nPick(context, en: 'Cancel Case', fa: 'لغو پرونده'),
+                        style: const TextStyle(color: AppColors.error),
+                      ),
                     ),
-                    () => controller.cancelCase(c.id),
-                  ),
-                  child: Text(
-                    l10nPick(context, en: 'Cancel Case', fa: 'لغو پرونده'),
-                    style: const TextStyle(color: AppColors.error),
                   ),
                 ),
               ],
@@ -795,7 +857,7 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.circle, size: 8, color: Color(0xFF0D9488)),
+                        Icon(Icons.circle, size: 8, color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet),
                         SizedBox(width: AppSpacing.sm.w),
                         Expanded(
                           child: Text(

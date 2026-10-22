@@ -1,0 +1,14 @@
+# ADR — Dependency/Architecture Choice
+- Decision ID / Date / Owner:
+- Problem/gap demonstrated by baseline:
+- Candidates compared:
+- Current built-in solution / current stack:
+- Pub.dev constraints and latest stable checked at:
+- License and transitive dependencies:
+- Maintenance/security/issue review:
+- Android/iOS/web support:
+- A11y/i18n/reduced motion:
+- Bundle size + perf benchmark:
+- PoC and tests:
+- Decision: adopt / reject / defer:
+- Rollback plan:

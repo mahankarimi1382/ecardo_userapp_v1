@@ -128,14 +128,15 @@ class GuaranteeCertificateWidget extends StatelessWidget {
   /// Real-time Validity Badge Configuration
   ({String labelFa, String labelEn, Color bgColor, Color textColor, Color borderColor, IconData icon})
       _getValidityBadge(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final st = status.toUpperCase();
     if (st == 'ISSUED' || st == 'ACTIVE' || st == 'IN_FORCE') {
       return (
         labelFa: 'معتبر و نافذ (ACTIVE)',
         labelEn: 'VALID & ACTIVE',
-        bgColor: const Color(0xFFE8F8F0),
-        textColor: const Color(0xFF14AE6F),
-        borderColor: const Color(0xFF86EFAC),
+        bgColor: isDark ? AppColors.success.withValues(alpha: 0.18) : AppColors.successContainer,
+        textColor: AppColors.success,
+        borderColor: AppColors.success.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.verified_rounded,
       );
     }
@@ -143,9 +144,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       return (
         labelFa: 'ابطال و تسویه‌شده (DISCHARGED)',
         labelEn: 'DISCHARGED & CLOSED',
-        bgColor: const Color(0xFFEFF6FF),
-        textColor: const Color(0xFF2563EB),
-        borderColor: const Color(0xFFBFDBFE),
+        bgColor: isDark ? AppColors.info.withValues(alpha: 0.18) : AppColors.infoContainer,
+        textColor: AppColors.info,
+        borderColor: AppColors.info.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.task_alt_rounded,
       );
     }
@@ -153,9 +154,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       return (
         labelFa: 'مطالبه‌شده (فریز/CLAIMED)',
         labelEn: 'CLAIMED & FROZEN',
-        bgColor: const Color(0xFFFEF2F2),
-        textColor: const Color(0xFFDC2626),
-        borderColor: const Color(0xFFFECACA),
+        bgColor: isDark ? AppColors.error.withValues(alpha: 0.18) : AppColors.errorContainer,
+        textColor: AppColors.error,
+        borderColor: AppColors.error.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.warning_rounded,
       );
     }
@@ -163,9 +164,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       return (
         labelFa: 'منقضی‌شده (مهلت ۳۰ روزه)',
         labelEn: 'EXPIRED (WAITING PERIOD)',
-        bgColor: const Color(0xFFFFFBEB),
-        textColor: const Color(0xFFD97706),
-        borderColor: const Color(0xFFFDE68A),
+        bgColor: isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer,
+        textColor: AppColors.warning,
+        borderColor: AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.timer_outlined,
       );
     }
@@ -173,9 +174,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     return (
       labelFa: 'پیش‌نویس سند (DRAFT)',
       labelEn: 'PRE-ISSUANCE DRAFT',
-      bgColor: const Color(0xFFF1F5F9),
-      textColor: const Color(0xFF475569),
-      borderColor: const Color(0xFFCBD5E1),
+      bgColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+      textColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+      borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
       icon: Icons.article_outlined,
     );
   }
@@ -504,18 +505,30 @@ class GuaranteeCertificateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final badge = _getValidityBadge(context);
     final qrSvg = _generateVectorQrSvg(_effectiveVerificationUrl);
+
+    final primaryAccent = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+    final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final containerBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+    final cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textTertiary = isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFFCFDFD),
+        color: cardBg,
         borderRadius: BorderRadius.circular(22.r),
-        border: Border.all(color: const Color(0xFF0F766E), width: 2.2),
+        border: Border.all(
+          color: isDark ? AppColors.brandViolet.withValues(alpha: 0.5) : AppColors.brandViolet,
+          width: 2.0,
+        ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0F766E).withValues(alpha: 0.10),
+            color: (isDark ? AppColors.brandViolet : AppColors.brandVioletDeep).withValues(alpha: isDark ? 0.20 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -530,19 +543,22 @@ class GuaranteeCertificateWidget extends StatelessWidget {
               right: -30.r,
               top: 50.h,
               child: Opacity(
-                opacity: 0.04,
+                opacity: isDark ? 0.06 : 0.035,
                 child: Container(
                   width: 220.r,
                   height: 220.r,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.black, width: 8.r),
+                    border: Border.all(
+                      color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                      width: 8.r,
+                    ),
                   ),
                   child: Center(
                     child: Icon(
                       Icons.verified_outlined,
                       size: 150.sp,
-                      color: Colors.black,
+                      color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
                     ),
                   ),
                 ),
@@ -556,7 +572,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: const Color(0xFF0D9488).withValues(alpha: 0.35),
+                  color: isDark
+                      ? AppColors.brandViolet.withValues(alpha: 0.35)
+                      : AppColors.brandViolet.withValues(alpha: 0.25),
                   width: 1.0,
                 ),
               ),
@@ -570,12 +588,14 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(8.r),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0D9488).withValues(alpha: 0.12),
+                          color: isDark
+                              ? AppColors.brandViolet.withValues(alpha: 0.20)
+                              : AppColors.brandVioletContainer,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.account_balance_rounded,
-                          color: const Color(0xFF0D9488),
+                          color: primaryAccent,
                           size: 24.sp,
                         ),
                       ),
@@ -589,7 +609,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w900,
-                                color: const Color(0xFF0F766E),
+                                color: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
                                 letterSpacing: 0.2,
                               ),
                             ),
@@ -604,7 +624,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               ),
                               style: TextStyle(
                                 fontSize: 9.5.sp,
-                                color: AppColors.lightTextSecondary,
+                                color: textSecondary,
                               ),
                             ),
                           ],
@@ -653,11 +673,11 @@ class GuaranteeCertificateWidget extends StatelessWidget {
 
                   // Reference Number Box
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8FAFC),
+                      color: containerBg,
                       borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      border: Border.all(color: cardBorder),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -672,7 +692,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                           ),
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: AppColors.lightTextSecondary,
+                            color: textSecondary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -684,34 +704,50 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 fontSize: 12.5.sp,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'monospace',
-                                color: const Color(0xFF0F766E),
+                                color: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
                                 letterSpacing: 0.5,
                               ),
                             ),
-                            SizedBox(width: 6.w),
-                            InkWell(
-                              onTap: () async {
-                                await Clipboard.setData(ClipboardData(text: referenceNumber));
-                                HapticFeedback.selectionClick();
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        l10nPick(
-                                          context,
-                                          fa: 'شناسه ضمانت‌نامه در حافظه کپی شد',
-                                          en: 'Guarantee reference copied to clipboard',
+                            SizedBox(width: 4.w),
+                            Semantics(
+                              button: true,
+                              label: l10nPick(
+                                context,
+                                fa: 'کپی شناسه مرجع ضمانت‌نامه',
+                                en: 'Copy guarantee reference',
+                                ar: 'نسخ الرقم المرجعي للضمان',
+                                zh: '复制保函登记编号',
+                              ),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  onTap: () async {
+                                    await Clipboard.setData(ClipboardData(text: referenceNumber));
+                                    HapticFeedback.selectionClick();
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            l10nPick(
+                                              context,
+                                              fa: 'شناسه ضمانت‌نامه در حافظه کپی شد',
+                                              en: 'Guarantee reference copied to clipboard',
+                                            ),
+                                          ),
+                                          duration: const Duration(seconds: 2),
                                         ),
-                                      ),
-                                      duration: const Duration(seconds: 2),
+                                      );
+                                    }
+                                  },
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.copy_rounded,
+                                      size: 18.sp,
+                                      color: primaryAccent,
                                     ),
-                                  );
-                                }
-                              },
-                              child: Icon(
-                                Icons.copy_rounded,
-                                size: 16.sp,
-                                color: const Color(0xFF0D9488),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -726,9 +762,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF9FAFB),
+                      color: containerBg,
                       borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: const Color(0xFFF3F4F6)),
+                      border: Border.all(color: cardBorder),
                     ),
                     child: Column(
                       children: [
@@ -742,6 +778,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                             zh: '受益人：',
                           ),
                           value: beneficiaryName,
+                          iconColor: primaryAccent,
+                          labelColor: textSecondary,
+                          valueColor: textPrimary,
                         ),
                         SizedBox(height: 8.h),
                         _buildInfoRow(
@@ -754,6 +793,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                             zh: '被担保人（申请人）：',
                           ),
                           value: applicantName,
+                          iconColor: primaryAccent,
+                          labelColor: textSecondary,
+                          valueColor: textPrimary,
                         ),
                         SizedBox(height: 8.h),
                         _buildInfoRow(
@@ -766,6 +808,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                             zh: '担保业务目的：',
                           ),
                           value: purpose,
+                          iconColor: primaryAccent,
+                          labelColor: textSecondary,
+                          valueColor: textPrimary,
                         ),
                         SizedBox(height: 8.h),
                         Row(
@@ -780,6 +825,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                   zh: '开立日期',
                                 ),
                                 date: _formatDate(issueDate),
+                                isDark: isDark,
                               ),
                             ),
                             SizedBox(width: 8.w),
@@ -794,6 +840,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 ),
                                 date: _formatDate(maturityDate),
                                 highlight: true,
+                                isDark: isDark,
                               ),
                             ),
                           ],
@@ -808,15 +855,17 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 14.w),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF0F766E), Color(0xFF115E59)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      gradient: isDark
+                          ? const LinearGradient(
+                              colors: [AppColors.brandVioletDeep, AppColors.deepBlack],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : AppColors.brandGradient,
                       borderRadius: BorderRadius.circular(14.r),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF0F766E).withValues(alpha: 0.25),
+                          color: AppColors.brandViolet.withValues(alpha: isDark ? 0.35 : 0.25),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -836,7 +885,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w700,
-                            color: const Color(0xFFCCFBF1),
+                            color: AppColors.warmWhite.withValues(alpha: 0.9),
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -851,7 +900,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 22.sp,
                                 fontWeight: FontWeight.w900,
-                                color: Colors.white,
+                                color: AppColors.white,
                                 fontFamily: 'monospace',
                                 letterSpacing: 0.5,
                               ),
@@ -862,7 +911,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w800,
-                                color: const Color(0xFF99F6E4),
+                                color: isDark ? AppColors.mainSoftBlue : AppColors.warmWhite,
                               ),
                             ),
                           ],
@@ -879,7 +928,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 9.sp,
-                            color: const Color(0xFFE6FFFA),
+                            color: AppColors.warmWhite.withValues(alpha: 0.85),
                           ),
                         ),
                       ],
@@ -892,9 +941,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: containerBg,
                       borderRadius: BorderRadius.circular(14.r),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      border: Border.all(color: cardBorder),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -905,9 +954,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                           height: 100.r,
                           padding: EdgeInsets.all(6.r),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: AppColors.white,
                             borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(color: const Color(0xFFCBD5E1)),
+                            border: Border.all(color: cardBorder),
                           ),
                           child: SvgPicture.string(
                             qrSvg,
@@ -933,7 +982,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11.5.sp,
                                   fontWeight: FontWeight.w800,
-                                  color: AppColors.lightTextPrimary,
+                                  color: textPrimary,
                                 ),
                               ),
                               SizedBox(height: 3.h),
@@ -948,7 +997,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 ),
                                 style: TextStyle(
                                   fontSize: 9.5.sp,
-                                  color: AppColors.lightTextSecondary,
+                                  color: textSecondary,
                                   height: 1.3,
                                 ),
                               ),
@@ -958,7 +1007,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 8.5.sp,
                                   fontFamily: 'monospace',
-                                  color: Colors.grey.shade600,
+                                  color: textTertiary,
                                 ),
                               ),
                             ],
@@ -971,31 +1020,42 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                   SizedBox(height: 14.h),
 
                   // Print / Download PDF Action Button
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF0D9488),
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      elevation: 0,
+                  Semantics(
+                    button: true,
+                    label: l10nPick(
+                      context,
+                      fa: 'چاپ و دانلود نسخه رسمی سند ضمانت‌نامه بانکی (PDF)',
+                      en: 'Print / Download Official Bank Guarantee Certificate (PDF)',
+                      ar: 'طباعة وتحميل النسخة الرسمية للضمان (PDF)',
+                      zh: '打印/导出正式保函电子凭单 (PDF)',
                     ),
-                    icon: const Icon(Icons.picture_as_pdf_rounded, size: 20),
-                    label: Text(
-                      l10nPick(
-                        context,
-                        fa: 'چاپ و دانلود نسخه رسمی سند (PDF)',
-                        en: 'Print / Download Official Certificate (PDF)',
-                        ar: 'طباعة وتحميل النسخة الرسمية (PDF)',
-                        zh: '打印/导出正式保函电子凭单 (PDF)',
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark ? AppColors.brandViolet : AppColors.brandVioletDeep,
+                        foregroundColor: AppColors.white,
+                        minimumSize: Size(double.infinity, 48.h),
+                        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        elevation: 0,
                       ),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w800,
+                      icon: const Icon(Icons.picture_as_pdf_rounded, size: 20),
+                      label: Text(
+                        l10nPick(
+                          context,
+                          fa: 'چاپ و دانلود نسخه رسمی سند (PDF)',
+                          en: 'Print / Download Official Certificate (PDF)',
+                          ar: 'طباعة وتحميل النسخة الرسمية (PDF)',
+                          zh: '打印/导出正式保函电子凭单 (PDF)',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
+                      onPressed: () => _handlePrintAndDownloadPdf(context),
                     ),
-                    onPressed: () => _handlePrintAndDownloadPdf(context),
                   ),
                 ],
               ),
@@ -1010,17 +1070,20 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     required IconData icon,
     required String label,
     required String value,
+    required Color iconColor,
+    required Color labelColor,
+    required Color valueColor,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16.sp, color: const Color(0xFF0D9488)),
+        Icon(icon, size: 16.sp, color: iconColor),
         SizedBox(width: 8.w),
         Text(
           label,
           style: TextStyle(
             fontSize: 11.sp,
-            color: AppColors.lightTextSecondary,
+            color: labelColor,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -1031,7 +1094,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
             textAlign: TextAlign.end,
             style: TextStyle(
               fontSize: 11.sp,
-              color: AppColors.lightTextPrimary,
+              color: valueColor,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -1044,15 +1107,27 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     required String label,
     required String date,
     bool highlight = false,
+    required bool isDark,
   }) {
+    final bgColor = highlight
+        ? (isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer)
+        : (isDark ? AppColors.darkCard : AppColors.lightCard);
+    final borderColor = highlight
+        ? AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.35)
+        : (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+    final labelColor = highlight
+        ? AppColors.warning
+        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary);
+    final dateColor = highlight
+        ? AppColors.warning
+        : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: highlight ? const Color(0xFFFEF3C7) : Colors.white,
+        color: bgColor,
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(
-          color: highlight ? const Color(0xFFFDE68A) : const Color(0xFFE5E7EB),
-        ),
+        border: Border.all(color: borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1061,7 +1136,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 9.sp,
-              color: highlight ? const Color(0xFF92400E) : AppColors.lightTextSecondary,
+              color: labelColor,
             ),
           ),
           SizedBox(height: 2.h),
@@ -1071,7 +1146,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
               fontSize: 10.5.sp,
               fontWeight: FontWeight.w800,
               fontFamily: 'monospace',
-              color: highlight ? const Color(0xFF92400E) : AppColors.lightTextPrimary,
+              color: dateColor,
             ),
           ),
         ],

@@ -338,7 +338,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                   filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color(0x381E2E42),
+                      color: AppColors.darkSurface.withValues(alpha: 0.22),
                       border: Border.all(
                         color: AppColors.mainSoftBlue.withValues(alpha: 0.8),
                         width: 1.8,
@@ -600,9 +600,9 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFF0F0F12),
-                Color(0xFF26262B),
-                Color(0xFF141416),
+                AppColors.deepBlack,
+                AppColors.darkSurface,
+                AppColors.deepBlack,
               ],
             ),
             boxShadow: [
@@ -632,7 +632,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                   height: 38.h,
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF3F2EE),
+                    color: AppColors.lightBackground,
                     borderRadius: BorderRadius.circular(4.r),
                     boxShadow: [
                       BoxShadow(
@@ -654,7 +654,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                             fontSize: 7.sp,
                             fontWeight: FontWeight.w700,
                             letterSpacing: 0.5,
-                            color: const Color(0xFF7A7875),
+                            color: AppColors.softGray,
                           ),
                         ),
                       ),
@@ -666,7 +666,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                           fontStyle: FontStyle.italic,
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF2C3E50),
+                          color: AppColors.brandVioletDeep,
                         ),
                       ),
                     ],
@@ -687,7 +687,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(4.r),
                       border: Border.all(
-                        color: const Color(0xFFDCD6D0),
+                        color: AppColors.lightBorder,
                         width: 1,
                       ),
                     ),
@@ -700,7 +700,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                             fontSize: 8.sp,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 0.5,
-                            color: const Color(0xFF6A6864),
+                            color: AppColors.softGray,
                           ),
                         ),
                         Text(
@@ -711,7 +711,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                             fontSize: 12.5.sp,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1.5,
-                            color: const Color(0xFF161614),
+                            color: AppColors.deepBlack,
                           ),
                         ),
                         _isCvvCopiedRecently
@@ -739,7 +739,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                                       ? Icons.visibility_off_rounded
                                       : Icons.visibility_rounded,
                                   size: 14.sp,
-                                  color: const Color(0xFF4A4A48),
+                                  color: AppColors.softGray,
                                 ),
                               ),
                       ],
@@ -904,7 +904,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
         child: Icon(
           Icons.shield_rounded,
           size: 13.sp,
-          color: const Color(0xCC1E293B),
+          color: AppColors.darkSurface,
         ),
       ),
     );
@@ -939,9 +939,9 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            primary ?? AppColors.deepBlack,
-            secondary ?? const Color(0xFF1E2738),
-            AppColors.darkGray,
+            primary ?? AppColors.brandViolet,
+            secondary ?? AppColors.darkSurface,
+            AppColors.deepBlack,
           ],
           stops: const [0.0, 0.55, 1.0],
         ),
@@ -1020,7 +1020,7 @@ class _EmvMicrochipTracePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final stroke = Paint()
-      ..color = const Color(0x4D000000)
+      ..color = AppColors.deepBlack.withValues(alpha: 0.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.8;
 
@@ -1136,12 +1136,12 @@ class _StatusBadge extends StatelessWidget {
       icon = Icons.ac_unit_rounded;
     } else if (active) {
       bg = AppColors.success.withValues(alpha: 0.25);
-      fg = const Color(0xFF69F0AE);
+      fg = AppColors.success;
       displayStatus = 'Active';
       icon = Icons.check_circle_rounded;
     } else {
       bg = AppColors.error.withValues(alpha: 0.25);
-      fg = const Color(0xFFFF8A80);
+      fg = AppColors.error;
       displayStatus = _humanize(status);
       icon = Icons.lock_outline_rounded;
     }

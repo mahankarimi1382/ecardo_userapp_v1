@@ -65,6 +65,11 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
   late AnimationController _animController;
   late Animation<double> _glowAnimation;
 
+  bool _shouldReduceMotion(BuildContext context) {
+    return (MediaQuery.maybeDisableAnimationsOf(context) ?? false) ||
+        (WidgetsBinding.instance is! WidgetsFlutterBinding);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -74,19 +79,27 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
         : (effectiveCurrent <= 0 ? 1 : effectiveCurrent + 1);
     _selectedTier = widget.initialSelectedTier ?? defaultTarget;
 
-    final isTest =
-        WidgetsBinding.instance.runtimeType.toString().contains('Test');
     _animController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2200),
     );
-    if (!isTest) {
-      _animController.repeat(reverse: true);
-    }
 
     _glowAnimation = Tween<double>(begin: 0.65, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeInOut),
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_shouldReduceMotion(context)) {
+      if (_animController.isAnimating) {
+        _animController.stop();
+      }
+      _animController.value = 1.0;
+    } else if (!_animController.isAnimating) {
+      _animController.repeat(reverse: true);
+    }
   }
 
   @override
@@ -333,7 +346,7 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
             ),
             child: Icon(
               currentTierDef.icon,
-              color: Colors.white,
+              color: AppColors.white,
               size: 24.sp,
             ),
           ),
@@ -677,12 +690,14 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
     final isNext = tierLevel == currentTier + 1;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         setState(() => _selectedTier = tierLevel);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
+        constraints: const BoxConstraints(minHeight: 44.0),
         padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 6.w),
         decoration: BoxDecoration(
           color: isSelected
@@ -1215,7 +1230,7 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.arrow_upward_rounded, size: 18.sp, color: Colors.white),
+            Icon(Icons.arrow_upward_rounded, size: 18.sp, color: AppColors.white),
             SizedBox(width: 8.w),
             Flexible(
               child: Text(
@@ -1223,14 +1238,14 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: AppColors.white,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             SizedBox(width: 6.w),
-            Icon(Icons.arrow_forward_rounded, size: 16.sp, color: Colors.white),
+            Icon(Icons.arrow_forward_rounded, size: 16.sp, color: AppColors.white),
           ],
         ),
       ),

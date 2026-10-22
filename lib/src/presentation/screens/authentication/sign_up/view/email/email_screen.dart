@@ -46,15 +46,15 @@ class _EmailScreenState extends State<EmailScreen> {
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
 
     final cardBg = isDark
-        ? const Color(0xFF131A2B).withValues(alpha: 0.94)
+        ? AppColors.darkSurface.withValues(alpha: 0.94)
         : AppColors.white.withValues(alpha: 0.96);
     final cardBorder = isDark
-        ? Colors.white.withValues(alpha: 0.12)
+        ? AppColors.white.withValues(alpha: 0.12)
         : AppColors.lightBorder.withValues(alpha: 0.7);
 
     return Scaffold(
       backgroundColor:
-          isDark ? const Color(0xFF090D1A) : AppColors.lightBackground,
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: AmbientAuthBackground(
         child: Stack(
@@ -73,12 +73,17 @@ class _EmailScreenState extends State<EmailScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconButton(
-                            onPressed: () => Get.back(),
-                            icon: Icon(
-                              Icons.arrow_back_ios_new_rounded,
-                              size: 20.sp,
-                              color: primaryTextColor,
+                          Semantics(
+                            button: true,
+                            label: 'Back',
+                            child: IconButton(
+                              tooltip: 'Back',
+                              onPressed: () => Get.back(),
+                              icon: Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                size: 20.sp,
+                                color: primaryTextColor,
+                              ),
                             ),
                           ),
                           Container(
@@ -91,8 +96,8 @@ class _EmailScreenState extends State<EmailScreen> {
                               boxShadow: [
                                 BoxShadow(
                                   color: (isDark
-                                          ? const Color(0xFF38BDF8)
-                                          : AppColors.mainSoftBlue)
+                                          ? AppColors.darkAccent
+                                          : AppColors.brandViolet)
                                       .withValues(alpha: isDark ? 0.16 : 0.25),
                                   blurRadius: 18,
                                 ),
@@ -159,7 +164,7 @@ class _EmailScreenState extends State<EmailScreen> {
                           border: Border.all(color: cardBorder, width: 1.2),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(
+                              color: AppColors.black.withValues(
                                 alpha: isDark ? 0.35 : 0.08,
                               ),
                               blurRadius: 32,
@@ -171,31 +176,35 @@ class _EmailScreenState extends State<EmailScreen> {
                           children: [
                             // Clean Floating Label Email Input
                             Obx(
-                              () => CreativeFloatingTextField(
+                              () => Semantics(
                                 label: localizations.emailScreenEmail,
-                                isRequired: true,
-                                controller: controller.emailController,
-                                focusNode: controller.emailFocusNode,
-                                isFocused: controller.isEmailFocused.value,
-                                keyboardType: TextInputType.emailAddress,
-                                textInputAction: TextInputAction.done,
-                                onFieldSubmitted: (_) {
-                                  if (controller.emailController.text.isNotEmpty &&
-                                      !controller.isLoading.value) {
-                                    controller.sendVerifyEmail();
-                                  }
-                                },
-                                autofillHints: const [AutofillHints.email],
-                                prefixIcon: Icon(
-                                  Icons.mail_outline_rounded,
-                                  size: 20.sp,
-                                  color: controller.isEmailFocused.value
-                                      ? (isDark
-                                          ? const Color(0xFF38BDF8)
-                                          : AppColors.deepBlack)
-                                      : (isDark
-                                          ? AppColors.darkTextSecondary
-                                          : AppColors.lightTextTertiary),
+                                textField: true,
+                                child: CreativeFloatingTextField(
+                                  label: localizations.emailScreenEmail,
+                                  isRequired: true,
+                                  controller: controller.emailController,
+                                  focusNode: controller.emailFocusNode,
+                                  isFocused: controller.isEmailFocused.value,
+                                  keyboardType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.done,
+                                  onFieldSubmitted: (_) {
+                                    if (controller.emailController.text.isNotEmpty &&
+                                        !controller.isLoading.value) {
+                                      controller.sendVerifyEmail();
+                                    }
+                                  },
+                                  autofillHints: const [AutofillHints.email],
+                                  prefixIcon: Icon(
+                                    Icons.mail_outline_rounded,
+                                    size: 20.sp,
+                                    color: controller.isEmailFocused.value
+                                        ? (isDark
+                                            ? AppColors.darkAccent
+                                            : AppColors.brandViolet)
+                                        : (isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextTertiary),
+                                  ),
                                 ),
                               ),
                             ),
@@ -239,14 +248,25 @@ class _EmailScreenState extends State<EmailScreen> {
                                   onTap: () {
                                     Get.toNamed(BaseRoute.signIn);
                                   },
-                                  child: Text(
-                                    localizations.emailScreenSignIn,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 14.sp,
-                                      color: isDark
-                                          ? const Color(0xFF38BDF8)
-                                          : AppColors.lightPrimary,
+                                  child: Semantics(
+                                    button: true,
+                                    label: localizations.emailScreenSignIn,
+                                    child: Container(
+                                      constraints: BoxConstraints(
+                                        minHeight: 44.h,
+                                        minWidth: 44.w,
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        localizations.emailScreenSignIn,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 14.sp,
+                                          color: isDark
+                                              ? AppColors.darkAccent
+                                              : AppColors.brandViolet,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),

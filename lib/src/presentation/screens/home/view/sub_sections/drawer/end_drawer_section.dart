@@ -263,7 +263,9 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                             isSwitch: true,
                             title: localization.endDrawerBiometric,
                             icon: SvgAssets.commonBiometricIcon,
-                            onPressed: () {},
+                            onPressed: () async {
+                              await homeController.toggleBiometric();
+                            },
                             rightSideWidget: Transform.scale(
                               scale: 0.7,
                               child: Switch(

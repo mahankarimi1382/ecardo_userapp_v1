@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -197,7 +198,15 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '24h Trend',
+                                l10nPick(
+                                  context,
+                                  en: '24h Trend',
+                                  fa: 'روند ۲۴ ساعته',
+                                  ar: 'اتجاه 24 ساعة',
+                                  tr: '24s Trendi',
+                                  ru: 'Тренд 24ч',
+                                  zh: '24小时走势',
+                                ),
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
@@ -342,8 +351,24 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                 () => EcardoSwipeButton(
                   key: _swipeKey,
                   text: loc.exchangeReviewConfirm,
-                  loadingText: 'Processing...',
-                  successText: 'Confirmed',
+                  loadingText: l10nPick(
+                    context,
+                    en: 'Processing...',
+                    fa: 'در حال پردازش...',
+                    ar: 'جارٍ المعالجة...',
+                    tr: 'İşleniyor...',
+                    ru: 'Обработка...',
+                    zh: '处理中...',
+                  ),
+                  successText: l10nPick(
+                    context,
+                    en: 'Confirmed',
+                    fa: 'تایید شد',
+                    ar: 'تم التأكيد',
+                    tr: 'Onaylandı',
+                    ru: 'Подтверждено',
+                    zh: '已确认',
+                  ),
                   isLoading: controller.isExchangeWalletLoading.value,
                   enabled: !isStale,
                   onSwipeComplete: () async {

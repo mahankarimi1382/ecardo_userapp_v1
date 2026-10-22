@@ -63,8 +63,8 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
         appBar: AppBar(
           backgroundColor: AppColors.lightBackground,
           elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.lightTextPrimary),
+          leading: BackButton(
+            color: AppColors.lightTextPrimary,
             onPressed: _skip,
           ),
           actions: [

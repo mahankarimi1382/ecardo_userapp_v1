@@ -43,7 +43,7 @@ class TravelHomeScreen extends StatelessWidget {
         ),
       ),
       child: RefreshIndicator(
-        color: TravelTheme.blue,
+        color: AppColors.brandViolet,
         onRefresh: controller.loadDashboard,
         child: ListView(
           padding: EdgeInsetsDirectional.fromSTEB(20.w, 12.h, 20.w, 36.h),
@@ -112,7 +112,7 @@ class TravelHomeScreen extends StatelessWidget {
                 return TravelCard(
                   color: isDark
                       ? AppColors.darkSurfaceVariant
-                      : const Color(0xFFEAF3FF),
+                      : AppColors.infoContainer,
                   onTap: () => Get.toNamed(
                     BaseRoute.addMoney,
                     arguments: {'returnRoute': BaseRoute.travel},
@@ -194,12 +194,16 @@ class _Hero extends StatelessWidget {
         ? const LinearGradient(
             begin: AlignmentDirectional.topStart,
             end: AlignmentDirectional.bottomEnd,
-            colors: [Color(0xFF0A1E36), Color(0xFF1E3A5F), Color(0xFF2E4E74)],
+            colors: AppColors.heroNightGradient,
           )
         : const LinearGradient(
             begin: AlignmentDirectional.topStart,
             end: AlignmentDirectional.bottomEnd,
-            colors: [Color(0xFF0D47A1), TravelTheme.blue, TravelTheme.purple],
+            colors: [
+              AppColors.brandVioletDeep,
+              AppColors.brandViolet,
+              AppColors.mainSoftBlue,
+            ],
           );
 
     return Container(
@@ -323,7 +327,7 @@ class _Services extends StatelessWidget {
             ],
             Expanded(
               child: _ServiceTile(
-                color: const Color(0xFF9B51E0),
+                color: AppColors.brandViolet,
                 icon: Icons.tour_rounded,
                 label: l10nPick(
                   context,
@@ -339,7 +343,7 @@ class _Services extends StatelessWidget {
             SizedBox(width: 8.w),
             Expanded(
               child: _ServiceTile(
-                color: const Color(0xFF6C5CE7),
+                color: AppColors.brandVioletDeep,
                 icon: Icons.card_membership_rounded,
                 label: l10nPick(
                   context,
@@ -362,7 +366,7 @@ class _Services extends StatelessWidget {
           children: [
             Expanded(
               child: _ServiceTile(
-                color: TravelTheme.green,
+                color: AppColors.success,
                 icon: Icons.train_rounded,
                 label: l10nPick(
                   context,
@@ -378,7 +382,7 @@ class _Services extends StatelessWidget {
             SizedBox(width: 8.w),
             Expanded(
               child: _ServiceTile(
-                color: const Color(0xFF456A8C),
+                color: AppColors.warmBrown,
                 icon: Icons.directions_car_rounded,
                 label: l10nPick(
                   context,
@@ -394,7 +398,7 @@ class _Services extends StatelessWidget {
             SizedBox(width: 8.w),
             Expanded(
               child: _ServiceTile(
-                color: const Color(0xFF0D9488),
+                color: AppColors.mutedBlue,
                 icon: Icons.local_taxi_rounded,
                 label: l10nPick(
                   context,
@@ -410,13 +414,13 @@ class _Services extends StatelessWidget {
             SizedBox(width: 8.w),
             Expanded(
               child: _ServiceTile(
-                color: const Color(0xFF2563EB),
+                color: AppColors.info,
                 icon: Icons.health_and_safety_rounded,
                 label: l10nPick(
                   context,
                   en: 'Insurance',
                   fa: 'بیمه سفر',
-                  ar: 'تأمين السفر',
+                  ar: 'تأمین السفر',
                   zh: '旅游保险',
                 ),
                 foreground: Colors.white,
@@ -426,7 +430,7 @@ class _Services extends StatelessWidget {
             SizedBox(width: 8.w),
             Expanded(
               child: _ServiceTile(
-                color: const Color(0xFFE60000),
+                color: AppColors.error,
                 icon: Icons.phone_android_rounded,
                 label: l10nPick(
                   context,
@@ -443,75 +447,88 @@ class _Services extends StatelessWidget {
         ),
         SizedBox(height: 12.h),
         // VIP CIP & Airport Lounge Banner
-        InkWell(
-          borderRadius: BorderRadius.circular(14.r),
-          onTap: () => Get.to(() => const CipLoungeReservationScreen()),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF1E293B), Color(0xFF0F172A)],
+        Semantics(
+          button: true,
+          label: l10nPick(
+            context,
+            en: 'Airport CIP & VIP Lounge',
+            fa: 'تشریفات فرودگاهی و لانژ CIP',
+            ar: 'خدمات كبار الشخصيات بالمطار (CIP)',
+            zh: '机场贵宾室 (CIP)',
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14.r),
+            onTap: () => Get.to(() => const CipLoungeReservationScreen()),
+            child: Container(
+              constraints: BoxConstraints(minHeight: 48.h),
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: TravelTheme.isDark(context)
+                      ? const [AppColors.darkSurfaceVariant, AppColors.deepBlack]
+                      : const [AppColors.darkGray, AppColors.deepBlack],
+                ),
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(
+                  color: AppColors.warning.withValues(alpha: 0.4),
+                ),
               ),
-              borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(
-                color: const Color(0xFFD4AF37).withValues(alpha: 0.4),
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.warning.withValues(alpha: 0.18),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.airline_seat_recline_extra_rounded,
+                      color: AppColors.warning,
+                      size: 20,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Airport CIP & VIP Lounge',
+                            fa: 'تشریفات فرودگاهی و لانژ CIP',
+                            ar: 'خدمات كبار الشخصيات بالمطار (CIP)',
+                            zh: '机场贵宾室 (CIP)',
+                          ),
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Fast-track passport, private transfer & dining buffet',
+                            fa: 'گیت اختصاصی، ترانسفر پای پرواز و بوفه پذیرایی',
+                            ar: 'مسار سريع، نقل خاص وبوفيه مفتوح',
+                            zh: '专属安检通道、摆渡专车与自助餐饮',
+                          ),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: AppColors.warning,
+                    size: 14.sp,
+                  ),
+                ],
               ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD4AF37).withValues(alpha: 0.18),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.airline_seat_recline_extra_rounded,
-                    color: Color(0xFFD4AF37),
-                    size: 20,
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'Airport CIP & VIP Lounge',
-                          fa: 'تشریفات فرودگاهی و لانژ CIP',
-                          ar: 'خدمات كبار الشخصيات بالمطار (CIP)',
-                          zh: '机场贵宾室 (CIP)',
-                        ),
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'Fast-track passport, private transfer & dining buffet',
-                          fa: 'گیت اختصاصی، ترانسفر پای پرواز و بوفه پذیرایی',
-                          ar: 'مسار سريع، نقل خاص وبوفيه مفتوح',
-                          zh: '专属安检通道、摆渡专车与自助餐饮',
-                        ),
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: const Color(0xFFD4AF37),
-                  size: 14.sp,
-                ),
-              ],
             ),
           ),
         ),
@@ -552,49 +569,66 @@ class _ServiceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = TravelTheme.isDark(context);
+    final cardColor = isDark ? AppColors.darkSurfaceVariant : color;
     final iconBg = isDark
-        ? AppColors.darkSurface
+        ? color.withValues(alpha: 0.18)
         : Colors.white.withValues(alpha: 0.94);
+    final iconColor = isDark
+        ? (color == TravelTheme.ink ? AppColors.warmWhite : color)
+        : color;
+    final labelColor = isDark ? AppColors.darkTextPrimary : foreground;
 
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Material(
-        color: color,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-        child: InkWell(
-          onTap: () {
-            AppHaptics.light();
-            onTap();
-          },
-          borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 6.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 50.r,
-                  height: 50.r,
-                  decoration: BoxDecoration(
-                    color: iconBg,
-                    shape: BoxShape.circle,
+    return Semantics(
+      button: true,
+      label: label,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 44.w,
+          minHeight: 44.h,
+        ),
+        child: Material(
+          color: cardColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+            side: isDark
+                ? BorderSide(color: AppColors.darkBorder, width: 1.w)
+                : BorderSide.none,
+          ),
+          child: InkWell(
+            onTap: () {
+              AppHaptics.light();
+              onTap();
+            },
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 44.r,
+                    height: 44.r,
+                    decoration: BoxDecoration(
+                      color: iconBg,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(icon, color: iconColor, size: 22.r),
                   ),
-                  child: Icon(icon, color: color),
-                ),
-                SizedBox(height: AppSpacing.md.h),
-                Text(
-                  label,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: foreground,
-                    fontSize: 11.sp,
-                    height: 1.25,
-                    fontWeight: FontWeight.w800,
+                  SizedBox(height: AppSpacing.sm.h),
+                  Text(
+                    label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: labelColor,
+                      fontSize: 11.sp,
+                      height: 1.25,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

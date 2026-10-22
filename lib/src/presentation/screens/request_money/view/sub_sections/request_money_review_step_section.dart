@@ -40,6 +40,7 @@ class _RequestMoneyReviewStepSectionState
       ar: 'التحقق لتأكيد طلب المال',
       tr: 'Para talebini onaylamak için doğrulama yapın',
       ru: 'Подтвердите личность для запроса средств',
+      zh: '请进行身份验证以确认收款请求',
     );
 
     // Step-up Security: Try biometric first if available
@@ -181,6 +182,7 @@ class _RequestMoneyReviewStepSectionState
                   ar: 'اسحب لتأكيد الطلب',
                   tr: 'Talebi onaylamak için kaydırın',
                   ru: 'Проведите для подтверждения запроса',
+                  zh: '滑动以确认请求',
                 ),
                 isLoading: controller.isRequestMoneyLoading.value,
                 onSwipeComplete: () => _handleConfirmRequest(context),

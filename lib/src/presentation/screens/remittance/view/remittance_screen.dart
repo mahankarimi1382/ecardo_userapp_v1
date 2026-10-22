@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/view/sub_sections/remittance_method_section.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/view/sub_sections/remittance_sender_section.dart';
@@ -33,8 +34,8 @@ class RemittanceScreen extends StatelessWidget {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+        leading: BackButton(
+          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           onPressed: () {
             if (controller.currentStep.value > 0) {
               controller.previousStep();
@@ -47,7 +48,15 @@ class RemittanceScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.track_changes, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-            tooltip: 'رهگیری حواله',
+            tooltip: l10nPick(
+              context,
+              en: 'Track remittance',
+              fa: 'رهگیری حواله',
+              ar: 'تتبع الحوالة',
+              tr: 'Havale takibi',
+              ru: 'Отслеживание перевода',
+              zh: '汇款追踪',
+            ),
             onPressed: () => Get.toNamed(BaseRoute.remittanceTrack),
           ),
           IconButton(

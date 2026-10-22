@@ -83,10 +83,12 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
             Container(
               padding: EdgeInsetsDirectional.all(AppSpacing.xxl.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2E2211) : const Color(0xFFFEF3C7),
+                color: isDark
+                    ? AppColors.warning.withValues(alpha: 0.16)
+                    : AppColors.warningContainer,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                 border: Border.all(
-                  color: isDark ? const Color(0xFFFBBF24).withValues(alpha: 0.3) : const Color(0xFFFDE68A),
+                  color: AppColors.warning.withValues(alpha: isDark ? 0.3 : 0.35),
                 ),
               ),
               child: Column(
@@ -95,33 +97,74 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                     '${deal.totalEscrowAmount.toStringAsFixed(0)} ${deal.currency}',
                     style: AppTextStyles.headlineMedium.copyWith(
                       fontWeight: FontWeight.w900,
-                      color: isDark ? const Color(0xFFFBBF24) : const Color(0xFFB45309),
+                      color: isDark ? AppColors.warning : AppColors.warmBrown,
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs.h),
                   Text(
-                    l10nPick(context, fa: 'مبلغ قابل پرداخت جهت قفل در حساب امانی', en: 'Total Amount to Deposit in Escrow'),
+                    l10nPick(
+                      context,
+                      fa: 'مبلغ قابل پرداخت جهت قفل در حساب امانی',
+                      en: 'Total Amount to Deposit in Escrow',
+                    ),
                     style: AppTextStyles.labelSmall.copyWith(
-                      color: isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
+                      color: isDark
+                          ? AppColors.warning.withValues(alpha: 0.85)
+                          : AppColors.warmBrown.withValues(alpha: 0.85),
                     ),
                   ),
                   Divider(
                     height: 28,
-                    color: isDark ? const Color(0xFF78350F) : const Color(0xFFFCD34D),
+                    color: (isDark ? AppColors.warning : AppColors.warmBrown)
+                        .withValues(alpha: 0.25),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '${l10nPick(context, fa: 'مبلغ کالا: ', en: 'Item: ')}${deal.amount.toStringAsFixed(0)} ${deal.currency}',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: l10nPick(context, fa: 'مبلغ کالا: ', en: 'Item: '),
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '${deal.amount.toStringAsFixed(0)} ${deal.currency}',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Text(
-                        '${l10nPick(context, fa: 'کارمزد امانی: ', en: 'Fee: ')}${deal.feeAmount.toStringAsFixed(0)} ${deal.currency}',
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: l10nPick(context, fa: 'کارمزد امانی: ', en: 'Fee: '),
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '${deal.feeAmount.toStringAsFixed(0)} ${deal.currency}',
+                              style: AppTextStyles.bodySmall.copyWith(
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -157,32 +200,105 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                 },
                 child: Column(
                   children: [
-                    RadioListTile<String>(
-                      value: 'wallet',
-                      activeColor: primaryAccent,
-                      title: Text(
-                        l10nPick(context, fa: 'کیف پول eCardo (کسر مستقیم)', en: 'eCardo Wallet (Instant)'),
-                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
+                    Semantics(
+                      button: true,
+                      selected: _selectedMethod == 'wallet',
+                      inMutuallyExclusiveGroup: true,
+                      label:
+                          '${l10nPick(context, fa: 'کیف پول eCardo (کسر مستقیم)', en: 'eCardo Wallet (Instant)')}, ${l10nPick(context, fa: 'پرداخت امن و بدون کارمزد بانکی', en: 'No gateway fees')}',
+                      hint: l10nPick(
+                        context,
+                        fa: 'برای انتخاب کیف پول دو بار ضربه بزنید',
+                        en: 'Double tap to select wallet',
                       ),
-                      subtitle: Text(
-                        l10nPick(context, fa: 'پرداخت امن و بدون کارمزد بانکی', en: 'No gateway fees'),
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 48.h,
+                          minWidth: 48.w,
+                        ),
+                        child: RadioListTile<String>(
+                          value: 'wallet',
+                          activeColor: primaryAccent,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.padded,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md.w,
+                            vertical: AppSpacing.xs.h,
+                          ),
+                          title: Text(
+                            l10nPick(
+                              context,
+                              fa: 'کیف پول eCardo (کسر مستقیم)',
+                              en: 'eCardo Wallet (Instant)',
+                            ),
+                            style: AppTextStyles.bodyMedium
+                                .copyWith(fontWeight: FontWeight.w700),
+                          ),
+                          subtitle: Text(
+                            l10nPick(
+                              context,
+                              fa: 'پرداخت امن و بدون کارمزد بانکی',
+                              en: 'No gateway fees',
+                            ),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextSecondary,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                    Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
-                    RadioListTile<String>(
-                      value: 'gateway',
-                      activeColor: primaryAccent,
-                      title: Text(
-                        l10nPick(context, fa: 'درگاه پرداخت اینترنتی بانکی', en: 'Online Bank Gateway'),
-                        style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
+                    Divider(
+                      height: 1,
+                      color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    ),
+                    Semantics(
+                      button: true,
+                      selected: _selectedMethod == 'gateway',
+                      inMutuallyExclusiveGroup: true,
+                      label:
+                          '${l10nPick(context, fa: 'درگاه پرداخت اینترنتی بانکی', en: 'Online Bank Gateway')}, ${l10nPick(context, fa: 'پرداخت با کلیه کارت‌های عضو شتاب', en: 'All debit/credit cards')}',
+                      hint: l10nPick(
+                        context,
+                        fa: 'برای انتخاب درگاه اینترنتی دو بار ضربه بزنید',
+                        en: 'Double tap to select online gateway',
                       ),
-                      subtitle: Text(
-                        l10nPick(context, fa: 'پرداخت با کلیه کارت‌های عضو شتاب', en: 'All debit/credit cards'),
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 48.h,
+                          minWidth: 48.w,
+                        ),
+                        child: RadioListTile<String>(
+                          value: 'gateway',
+                          activeColor: primaryAccent,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.padded,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md.w,
+                            vertical: AppSpacing.xs.h,
+                          ),
+                          title: Text(
+                            l10nPick(
+                              context,
+                              fa: 'درگاه پرداخت اینترنتی بانکی',
+                              en: 'Online Bank Gateway',
+                            ),
+                            style: AppTextStyles.bodyMedium
+                                .copyWith(fontWeight: FontWeight.w700),
+                          ),
+                          subtitle: Text(
+                            l10nPick(
+                              context,
+                              fa: 'پرداخت با کلیه کارت‌های عضو شتاب',
+                              en: 'All debit/credit cards',
+                            ),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextSecondary,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -197,17 +313,19 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
             Container(
               padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF132838) : const Color(0xFFE0F2FE),
+                color: isDark
+                    ? AppColors.info.withValues(alpha: 0.15)
+                    : AppColors.infoContainer,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
                 border: Border.all(
-                  color: isDark ? const Color(0xFF38BDF8).withValues(alpha: 0.25) : const Color(0xFFBAE6FD),
+                  color: AppColors.info.withValues(alpha: isDark ? 0.25 : 0.35),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.shield_outlined,
-                    color: isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7),
+                    color: AppColors.info,
                     size: AppSpacing.iconMd.sp,
                   ),
                   SizedBox(width: AppSpacing.sm.w),
@@ -215,11 +333,15 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                     child: Text(
                       l10nPick(
                         context,
-                        fa: 'تضمین صد درصدی پلتفرم: وجه واریزی تا زمان تایید رضایت شما از کالا، هرگز به فروشنده تحویل داده نخواهد شد.',
-                        en: '100% Platform Guarantee: Funds will never be released until your full satisfaction.',
+                        fa:
+                            'تضمین صد درصدی پلتفرم: وجه واریزی تا زمان تایید رضایت شما از کالا، هرگز به فروشنده تحویل داده نخواهد شد.',
+                        en:
+                            '100% Platform Guarantee: Funds will never be released until your full satisfaction.',
                       ),
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: isDark ? const Color(0xFFBAE6FD) : const Color(0xFF0369A1),
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.deepBlack,
                         height: 1.4,
                       ),
                     ),

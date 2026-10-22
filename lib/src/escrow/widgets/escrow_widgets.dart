@@ -27,72 +27,69 @@ class EscrowStatusBadge extends StatelessWidget {
 
     switch (status) {
       case 'DRAFT':
-        bg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9);
-        text = isDark ? AppColors.darkTextSecondary : const Color(0xFF64748B);
+        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+        text = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
         icon = Icons.edit_note_rounded;
         display = l10nPick(context, fa: 'پیش‌نویس', en: 'Draft');
         break;
       case 'AWAITING_AGREEMENT':
-        bg = isDark ? const Color(0xFF2E2211) : const Color(0xFFFEF3C7);
-        text = isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706);
-        icon = Icons.handshake_outlined;
-        display = l10nPick(context, fa: 'در انتظار تأیید', en: 'Awaiting Agreement');
-        break;
       case 'AWAITING_PAYMENT':
-        bg = isDark ? const Color(0xFF332014) : const Color(0xFFFFEDD5);
-        text = isDark ? const Color(0xFFFB923C) : const Color(0xFFEA580C);
-        icon = Icons.payment_rounded;
-        display = l10nPick(context, fa: 'در انتظار پرداخت', en: 'Awaiting Payment');
+        bg = isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer;
+        text = isDark ? AppColors.warning : AppColors.warning;
+        icon = status == 'AWAITING_AGREEMENT' ? Icons.handshake_outlined : Icons.payment_rounded;
+        display = status == 'AWAITING_AGREEMENT'
+            ? l10nPick(context, fa: 'در انتظار تأیید', en: 'Awaiting Agreement')
+            : l10nPick(context, fa: 'در انتظار پرداخت', en: 'Awaiting Payment');
         break;
       case 'FUNDS_HELD':
-        bg = isDark ? const Color(0xFF132838) : const Color(0xFFE0F2FE);
-        text = isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7);
+        bg = isDark ? AppColors.info.withValues(alpha: 0.18) : AppColors.infoContainer;
+        text = isDark ? AppColors.info : AppColors.info;
         icon = Icons.lock_clock_rounded;
         display = l10nPick(context, fa: 'امان نزد پلتفرم', en: 'Funds in Escrow');
         break;
       case 'IN_DELIVERY':
-        bg = isDark ? const Color(0xFF261D36) : const Color(0xFFF3E8FF);
-        text = isDark ? const Color(0xFFC084FC) : const Color(0xFF9333EA);
+        bg = isDark ? AppColors.brandViolet.withValues(alpha: 0.18) : AppColors.brandVioletContainer;
+        text = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
         icon = Icons.local_shipping_outlined;
         display = l10nPick(context, fa: 'در حال ارسال', en: 'In Delivery');
         break;
       case 'DELIVERED':
-        bg = isDark ? const Color(0xFF122C2A) : const Color(0xFFCCFBF1);
-        text = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488);
+        bg = isDark ? AppColors.mutedBlue.withValues(alpha: 0.18) : AppColors.lightSecondaryContainer;
+        text = isDark ? AppColors.mutedBlue : AppColors.mutedBlue;
         icon = Icons.inventory_2_outlined;
         display = l10nPick(context, fa: 'دوره بازرسی', en: 'Inspection Period');
         break;
       case 'RELEASED':
       case 'COMPLETED':
-        bg = isDark ? const Color(0xFF132B1F) : const Color(0xFFDCFCE7);
-        text = isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+        bg = isDark ? AppColors.success.withValues(alpha: 0.18) : AppColors.successContainer;
+        text = isDark ? AppColors.success : AppColors.success;
         icon = Icons.check_circle_rounded;
         display = l10nPick(context, fa: 'تکمیل و تسویه', en: 'Completed');
         break;
       case 'DISPUTED':
-        bg = isDark ? const Color(0xFF36181B) : const Color(0xFFFEE2E2);
-        text = isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626);
+        bg = isDark ? AppColors.error.withValues(alpha: 0.18) : AppColors.errorContainer;
+        text = isDark ? AppColors.error : AppColors.error;
         icon = Icons.gavel_rounded;
         display = l10nPick(context, fa: 'پرونده اختلاف', en: 'Disputed');
         break;
       case 'REFUNDED':
-        bg = isDark ? const Color(0xFF36182C) : const Color(0xFFFCE7F3);
-        text = isDark ? const Color(0xFFF472B6) : const Color(0xFFDB2777);
+        bg = isDark ? AppColors.error.withValues(alpha: 0.18) : AppColors.errorContainer;
+        text = isDark ? AppColors.error : AppColors.error;
         icon = Icons.replay_rounded;
         display = l10nPick(context, fa: 'عودت وجه', en: 'Refunded');
         break;
       case 'CANCELLED':
       case 'EXPIRED':
-        bg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9);
-        text = isDark ? AppColors.darkTextTertiary : const Color(0xFF94A3B8);
+        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+        text = isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary;
         icon = Icons.cancel_outlined;
         display = status == 'EXPIRED'
             ? l10nPick(context, fa: 'منقضی شده', en: 'Expired')
             : l10nPick(context, fa: 'لغو شده', en: 'Cancelled');
         break;
       default:
-        bg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF1F5F9);
-        text = isDark ? AppColors.darkTextSecondary : const Color(0xFF475569);
+        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+        text = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
         icon = Icons.info_outline_rounded;
     }
 

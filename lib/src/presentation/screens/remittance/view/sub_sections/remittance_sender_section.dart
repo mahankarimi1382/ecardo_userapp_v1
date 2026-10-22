@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
@@ -83,25 +84,44 @@ class _Field extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark ? AppColors.brandViolet : AppColors.brandViolet;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      style: TextStyle(
-        fontSize: 14.sp,
-        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-      ),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
-        hintText: hint,
-        hintStyle: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint),
-        contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: borderColor)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: borderColor)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide(color: primaryColor, width: 1.5)),
+    return Semantics(
+      textField: true,
+      label: hint,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: 48.h),
+        child: TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+            hintText: hint,
+            hintStyle: TextStyle(
+              fontSize: 14.sp,
+              color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: borderColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: borderColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: primaryColor, width: 1.5),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -124,29 +144,48 @@ class _CountryDropdown extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
-        border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: countries.any((c) => c.$1 == value) && value.isNotEmpty
-              ? value
-              : null,
-          dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
-          hint: Text(hint, style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint)),
-          isExpanded: true,
-          items: countries
-              .map((c) => DropdownMenuItem(
-                    value: c.$1,
-                    child: Text('${c.$1} — ${c.$2}',
-                        style: TextStyle(fontSize: 14.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-                  ))
-              .toList(),
-          onChanged: onChanged,
+    return Semantics(
+      button: true,
+      label: hint,
+      child: Container(
+        constraints: BoxConstraints(minHeight: 48.h),
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            value: countries.any((c) => c.$1 == value) && value.isNotEmpty
+                ? value
+                : null,
+            dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
+            hint: Text(
+              hint,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+              ),
+            ),
+            isExpanded: true,
+            items: countries
+                .map((c) => DropdownMenuItem(
+                      value: c.$1,
+                      child: Text(
+                        '${c.$1} — ${c.$2}',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                    ))
+                .toList(),
+            onChanged: (val) {
+              HapticFeedback.lightImpact();
+              onChanged(val);
+            },
+          ),
         ),
       ),
     );
@@ -162,30 +201,40 @@ class _TypeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sel = value == groupValue;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark ? AppColors.brandViolet : AppColors.brandViolet;
 
-    return GestureDetector(
-      onTap: () => onSelected(value),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.h),
-        decoration: BoxDecoration(
-          color: sel
-              ? (isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer)
-              : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: sel ? primaryColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+    return Semantics(
+      button: true,
+      selected: sel,
+      label: label,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          HapticFeedback.lightImpact();
+          onSelected(value);
+        },
+        child: Container(
+          constraints: BoxConstraints(minHeight: 44.h),
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
+          decoration: BoxDecoration(
+            color: sel
+                ? (isDark ? AppColors.darkPrimaryContainer : AppColors.brandVioletContainer)
+                : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: sel ? primaryColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            ),
           ),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w600,
-              color: sel
-                  ? primaryColor
-                  : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w600,
+                color: sel
+                    ? primaryColor
+                    : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+              ),
             ),
           ),
         ),

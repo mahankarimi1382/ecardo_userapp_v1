@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/remittance/controller/remittance_controller.dart';
 
 /// Step 4: Review all details before submitting.
@@ -32,41 +31,52 @@ class RemittanceReviewSection extends StatelessWidget {
           SizedBox(height: 16.h),
 
           // Rate hold countdown banner (matches review_transfer.html)
-          Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: ECardoTokens.brand100(context),
-              borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.3)),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.timer_outlined, color: ECardoTokens.brand700(context), size: 20.sp),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Rate held for $mins:$remSecs',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w800,
-                          color: ECardoTokens.brand900(context),
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        'After that you need a new quote.',
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          color: ECardoTokens.inkMuted(context),
-                        ),
-                      ),
-                    ],
-                  ),
+          Semantics(
+            label: 'Rate held for $mins minutes and $remSecs seconds. After that you need a new quote.',
+            child: Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.brandViolet.withValues(alpha: 0.15)
+                    : AppColors.brandVioletContainer,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.brandViolet.withValues(alpha: isDark ? 0.40 : 0.25),
                 ),
-              ],
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.timer_outlined,
+                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    size: 20.sp,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Rate held for $mins:$remSecs',
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.brandVioletDeep,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          'After that you need a new quote.',
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           SizedBox(height: 16.h),
@@ -115,18 +125,21 @@ class RemittanceReviewSection extends StatelessWidget {
             ],
           ]),
           SizedBox(height: 20.h),
-          Container(
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.3)),
+          Semantics(
+            label: l.remittanceTermsNotice,
+            child: Container(
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.3)),
+              ),
+              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Icon(Icons.info_outline, color: AppColors.warning, size: 18.sp),
+                SizedBox(width: 8.w),
+                Expanded(child: Text(l.remittanceTermsNotice, style: TextStyle(fontSize: 11.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary))),
+              ]),
             ),
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Icon(Icons.info_outline, color: AppColors.warning, size: 18.sp),
-              SizedBox(width: 8.w),
-              Expanded(child: Text(l.remittanceTermsNotice, style: TextStyle(fontSize: 11.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary))),
-            ]),
           ),
         ],
       );
@@ -142,18 +155,22 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+    return Semantics(
+      container: true,
+      label: title,
+      child: Container(
+        padding: EdgeInsets.all(14.w),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+          SizedBox(height: 12.h),
+          ...children,
+        ]),
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-        SizedBox(height: 12.h),
-        ...children,
-      ]),
     );
   }
 }
@@ -166,13 +183,16 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: EdgeInsets.only(bottom: 6.h),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
-        SizedBox(width: 12.w),
-        Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
-      ]),
+    return Semantics(
+      label: '$label: $value',
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 6.h),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(label, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+          SizedBox(width: 12.w),
+          Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
+        ]),
+      ),
     );
   }
 }

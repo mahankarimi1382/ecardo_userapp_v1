@@ -9,14 +9,14 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 /// Curated gradient palettes for fintech monogram avatars.
 class MonogramGradients {
   static const List<List<Color>> palettes = [
-    [Color(0xFF2E5CFF), Color(0xFF00C6FF)], // Sapphire
-    [Color(0xFF0575E6), Color(0xFF00F260)], // Emerald
-    [Color(0xFF8E2DE2), Color(0xFF4A00E0)], // Violet
-    [Color(0xFFFF8008), Color(0xFFFFC837)], // Amber
-    [Color(0xFFFF416C), Color(0xFFFF4B2B)], // Rose
-    [Color(0xFF11998E), Color(0xFF38EF7D)], // Mint Teal
-    [Color(0xFF654EA3), Color(0xFFEAAFC8)], // Orchid
-    [Color(0xFF4776E6), Color(0xFF8E54E9)], // Royal Indigo
+    [AppColors.brandViolet, AppColors.brandVioletDeep], // Brand Violet
+    [AppColors.info, AppColors.mutedBlue], // Sapphire / Cyan
+    [AppColors.mutedBlue, AppColors.success], // Mint Teal
+    [AppColors.warning, AppColors.warmBrown], // Amber Bronze
+    [AppColors.error, AppColors.warning], // Coral Flame
+    [AppColors.mainSoftBlue, AppColors.brandViolet], // Lavender Violet
+    [AppColors.brandVioletDeep, AppColors.darkSurface], // Deep Midnight
+    [AppColors.info, AppColors.brandViolet], // Royal Blue
   ];
 
   static List<Color> forString(String key) {
@@ -65,6 +65,7 @@ class RecipientMonogramAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final keyString = (name != null && name!.isNotEmpty) ? name! : (identifier ?? '');
     final gradientColors = MonogramGradients.forString(keyString);
     final initials = _getInitials();
@@ -117,7 +118,7 @@ class RecipientMonogramAvatar extends StatelessWidget {
                   color: AppColors.success,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: theme.colorScheme.surface,
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                     width: 2,
                   ),
                   boxShadow: [
@@ -130,7 +131,7 @@ class RecipientMonogramAvatar extends StatelessWidget {
                 child: Center(
                   child: Icon(
                     Icons.check_rounded,
-                    color: Colors.white,
+                    color: AppColors.white,
                     size: badgeSize * 0.65,
                   ),
                 ),
@@ -147,7 +148,7 @@ class RecipientMonogramAvatar extends StatelessWidget {
         initials,
         style: TextStyle(
           fontFamily: 'Plus Jakarta Sans',
-          color: Colors.white,
+          color: AppColors.white,
           fontSize: size * 0.38,
           fontWeight: FontWeight.w800,
           letterSpacing: 0.5,
@@ -176,6 +177,7 @@ class TransferRecipientCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final colorScheme = theme.colorScheme;
 
     final displayName = beneficiary?.nickname ?? beneficiary?.receiver?.name ?? 'Recipient';
@@ -224,8 +226,16 @@ class TransferRecipientCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.successContainer,
+                          color: isDark
+                              ? AppColors.darkSurface
+                              : AppColors.successContainer,
                           borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
+                          border: Border.all(
+                            color: isDark
+                                ? AppColors.success.withValues(alpha: 0.40)
+                                : AppColors.success.withValues(alpha: 0.25),
+                            width: 1,
+                          ),
                         ),
                         child: const Row(
                           mainAxisSize: MainAxisSize.min,
@@ -399,7 +409,7 @@ class BeneficiariesQuickPickRow extends StatelessWidget {
                     border: Border.all(
                       color: isSelected
                           ? colorScheme.primary
-                          : Colors.transparent,
+                          : AppColors.transparent,
                       width: 2,
                     ),
                   ),

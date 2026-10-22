@@ -22,7 +22,7 @@ import 'package:ecardo_user/src/presentation/screens/settings/model/notification
 import 'package:ecardo_user/src/presentation/screens/settings/view/settings_screen.dart';
 import 'package:ecardo_user/src/presentation/widgets/notification_dynamic_icon.dart';
 
-enum _NotifFilter { all, unread, financial, system }
+enum _NotifFilter { all, security, financial, promo, unread }
 
 enum _DateGroup { today, yesterday, thisWeek, older }
 
@@ -283,8 +283,8 @@ class _NotificationsState extends State<Notifications>
                       isDark,
                     ),
                     _chip(
-                      l10nPick(context, en: 'Unread', fa: 'خوانده‌نشده', ar: 'غير مقروءة', tr: 'Okunmamış', ru: 'Непрочитанные', zh: '未读'),
-                      _NotifFilter.unread,
+                      l10nPick(context, en: 'Security', fa: 'امنیتی', ar: 'الأمان', tr: 'Güvenlik', ru: 'Безопасность', zh: '安全'),
+                      _NotifFilter.security,
                       isDark,
                     ),
                     _chip(
@@ -293,8 +293,13 @@ class _NotificationsState extends State<Notifications>
                       isDark,
                     ),
                     _chip(
-                      l10nPick(context, en: 'System', fa: 'سیستمی', ar: 'النظام', tr: 'Sistem', ru: 'Системные', zh: '系统'),
-                      _NotifFilter.system,
+                      l10nPick(context, en: 'Promo', fa: 'پیشنهادات', ar: 'عروض', tr: 'Promosyon', ru: 'Акции', zh: '优惠'),
+                      _NotifFilter.promo,
+                      isDark,
+                    ),
+                    _chip(
+                      l10nPick(context, en: 'Unread', fa: 'خوانده‌نشده', ar: 'غير مقروءة', tr: 'Okunmamış', ru: 'Непрочитанные', zh: '未读'),
+                      _NotifFilter.unread,
                       isDark,
                     ),
                   ],
@@ -318,56 +323,96 @@ class _NotificationsState extends State<Notifications>
                     }
 
                     final filteredLocal = localItems.where((e) {
+                      final t = e.type.toLowerCase();
                       switch (_filter) {
                         case _NotifFilter.unread:
                           return !e.read;
+                        case _NotifFilter.security:
+                          return t == 'security' ||
+                              t == 'system' ||
+                              t == 'update' ||
+                              t == 'kyc' ||
+                              t == 'ticket' ||
+                              t.contains('auth');
                         case _NotifFilter.financial:
-                          return e.type == 'financial';
-                        case _NotifFilter.system:
-                          return e.type == 'system' || e.type == 'update';
+                          return t == 'financial' ||
+                              t == 'deposit' ||
+                              t == 'transfer' ||
+                              t == 'payment' ||
+                              t == 'withdraw' ||
+                              t == 'wallet' ||
+                              t == 'card';
+                        case _NotifFilter.promo:
+                          return t == 'promo' ||
+                              t == 'promotion' ||
+                              t == 'offer' ||
+                              t == 'bonus' ||
+                              t.contains('discount');
                         case _NotifFilter.all:
                           return true;
                       }
                     }).toList();
 
                     final filteredServer = server.where((n) {
-                      if (_filter == _NotifFilter.unread) {
-                        return n.isRead == false;
+                      final tp = (n.type ?? '').toLowerCase();
+                      final title = (n.title ?? '').toLowerCase();
+                      final msg = (n.message ?? '').toLowerCase();
+                      switch (_filter) {
+                        case _NotifFilter.unread:
+                          return n.isRead == false;
+                        case _NotifFilter.security:
+                          return tp.contains('security') ||
+                              tp.contains('system') ||
+                              tp.contains('update') ||
+                              tp.contains('kyc') ||
+                              tp.contains('ticket') ||
+                              tp.contains('auth') ||
+                              title.contains('امنیت') ||
+                              title.contains('ورود');
+                        case _NotifFilter.financial:
+                          return tp.contains('financial') ||
+                              tp.contains('deposit') ||
+                              tp.contains('transfer') ||
+                              tp.contains('payment') ||
+                              tp.contains('withdraw') ||
+                              tp.contains('card') ||
+                              tp.contains('wallet') ||
+                              tp.contains('remittance') ||
+                              title.contains('تراکنش') ||
+                              title.contains('واریز') ||
+                              title.contains('برداشت');
+                        case _NotifFilter.promo:
+                          return tp.contains('promo') ||
+                              tp.contains('bonus') ||
+                              tp.contains('offer') ||
+                              tp.contains('reward') ||
+                              tp.contains('discount') ||
+                              title.contains('جایزه') ||
+                              title.contains('تخفیف') ||
+                              msg.contains('جایزه') ||
+                              msg.contains('تخفیف');
+                        case _NotifFilter.all:
+                          return true;
                       }
-                      return true;
                     }).toList();
 
-                    final showServer = _filter == _NotifFilter.all ||
-                        _filter == _NotifFilter.unread;
+                    final showServer = true;
 
-                    if (filteredLocal.isEmpty &&
-                        (!showServer || filteredServer.isEmpty)) {
+                    if (filteredLocal.isEmpty && filteredServer.isEmpty) {
                       return ListView(
                         physics: const AlwaysScrollableScrollPhysics(),
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 40),
                             child: EcardoEmptyState(
-                              animateGlow: false,
-                              iconData: Icons.notifications_none_rounded,
-                              title: l10nPick(
-                                context,
-                                en: 'No notifications yet',
-                                fa: 'هنوز اعلانی نداری',
-                                ar: 'لا توجد إشعارات بعد',
-                                tr: 'Henüz bildirim yok',
-                                ru: 'Пока нет уведомлений',
-                                zh: '暂无通知',
-                              ),
-                              description: l10nPick(
-                                context,
-                                en: 'Important financial updates and system notices will appear here.',
-                                fa: 'اعلان‌های مهم مالی و پیام‌های سیستم اینجا نمایش داده می‌شوند.',
-                                ar: 'ستظهر الإشعارات المهمة هنا.',
-                                tr: 'Önemli bildirimler burada görünecektir.',
-                                ru: 'Важные уведомления появятся здесь.',
-                                zh: '重要通知将在此显示。',
-                              ),
+                              animateGlow: true,
+                              iconData: _emptyIconForFilter(_filter),
+                              iconColor: _categoryColor(_filter, isDark),
+                              glowColor: _categoryColor(_filter, isDark)
+                                  .withValues(alpha: 0.35),
+                              title: _emptyTitleForFilter(context, _filter),
+                              description:
+                                  _emptyDescriptionForFilter(context, _filter),
                               primaryActionLabel: l10nPick(
                                 context,
                                 en: 'Refresh',
@@ -378,6 +423,21 @@ class _NotificationsState extends State<Notifications>
                                 zh: '刷新',
                               ),
                               onPrimaryAction: refreshData,
+                              secondaryActionLabel: _filter != _NotifFilter.all
+                                  ? l10nPick(
+                                      context,
+                                      en: 'View All Notifications',
+                                      fa: 'مشاهده همه اعلان‌ها',
+                                      ar: 'عرض جميع الإشعارات',
+                                      tr: 'Tüm Bildirimleri Gör',
+                                      ru: 'Показать все',
+                                      zh: '查看全部通知',
+                                    )
+                                  : null,
+                              onSecondaryAction: _filter != _NotifFilter.all
+                                  ? () => setState(
+                                      () => _filter = _NotifFilter.all)
+                                  : null,
                             ),
                           ),
                         ],
@@ -553,28 +613,222 @@ class _NotificationsState extends State<Notifications>
     );
   }
 
+  Color _categoryColor(_NotifFilter f, bool isDark) {
+    switch (f) {
+      case _NotifFilter.financial:
+        return AppColors.success;
+      case _NotifFilter.security:
+        return AppColors.info;
+      case _NotifFilter.promo:
+        return isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+      case _NotifFilter.unread:
+        return AppColors.warning;
+      case _NotifFilter.all:
+        return isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    }
+  }
+
+  IconData _categoryIcon(_NotifFilter f) {
+    switch (f) {
+      case _NotifFilter.all:
+        return Icons.all_inbox_rounded;
+      case _NotifFilter.security:
+        return Icons.shield_outlined;
+      case _NotifFilter.financial:
+        return Icons.account_balance_wallet_outlined;
+      case _NotifFilter.promo:
+        return Icons.local_offer_outlined;
+      case _NotifFilter.unread:
+        return Icons.mark_email_unread_outlined;
+    }
+  }
+
+  Color _typeColor(String type, bool isDark) {
+    final t = type.toLowerCase();
+    if (t.contains('promo') ||
+        t.contains('bonus') ||
+        t.contains('offer') ||
+        t.contains('reward') ||
+        t.contains('discount')) {
+      return isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+    }
+    if (t.contains('financial') ||
+        t.contains('deposit') ||
+        t.contains('payment') ||
+        t.contains('transfer') ||
+        t.contains('withdraw') ||
+        t.contains('card') ||
+        t.contains('wallet')) {
+      return AppColors.success;
+    }
+    if (t.contains('security') ||
+        t.contains('kyc') ||
+        t.contains('verification') ||
+        t.contains('ticket') ||
+        t.contains('support') ||
+        t.contains('system') ||
+        t.contains('update') ||
+        t.contains('auth')) {
+      return AppColors.info;
+    }
+    return isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+  }
+
+  IconData _emptyIconForFilter(_NotifFilter f) {
+    switch (f) {
+      case _NotifFilter.financial:
+        return Icons.account_balance_wallet_outlined;
+      case _NotifFilter.security:
+        return Icons.verified_user_outlined;
+      case _NotifFilter.promo:
+        return Icons.local_offer_outlined;
+      case _NotifFilter.unread:
+        return Icons.mark_email_read_outlined;
+      case _NotifFilter.all:
+        return Icons.notifications_none_rounded;
+    }
+  }
+
+  String _emptyTitleForFilter(BuildContext context, _NotifFilter f) {
+    switch (f) {
+      case _NotifFilter.financial:
+        return l10nPick(
+          context,
+          en: 'No financial notices',
+          fa: 'اعلانی در بخش مالی ندارید',
+          ar: 'لا توجد إشعارات مالية',
+          tr: 'Finansal bildirim yok',
+          ru: 'Нет финансовых уведомлений',
+          zh: '暂无财务通知',
+        );
+      case _NotifFilter.security:
+        return l10nPick(
+          context,
+          en: 'No security alerts',
+          fa: 'هشدار امنیتی وجود ندارد',
+          ar: 'لا توجد تنبيهات أمنية',
+          tr: 'Güvenlik uyarısı yok',
+          ru: 'Нет уведомлений безопасности',
+          zh: '暂无安全提醒',
+        );
+      case _NotifFilter.promo:
+        return l10nPick(
+          context,
+          en: 'No promotional offers',
+          fa: 'پیشنهاد یا تخفیفی موجود نیست',
+          ar: 'لا توجد عروض ترويجية',
+          tr: 'Promosyon yok',
+          ru: 'Нет промо-акций',
+          zh: '暂无优惠活动',
+        );
+      case _NotifFilter.unread:
+        return l10nPick(
+          context,
+          en: 'All caught up!',
+          fa: 'همه اعلان‌ها خوانده شده‌اند',
+          ar: 'قرأت جميع الإشعارات!',
+          tr: 'Tüm bildirimler okundu!',
+          ru: 'Все уведомления прочитаны!',
+          zh: '全部已读！',
+        );
+      case _NotifFilter.all:
+        return l10nPick(
+          context,
+          en: 'No notifications yet',
+          fa: 'هنوز اعلانی نداری',
+          ar: 'لا توجد إشعارات بعد',
+          tr: 'Henüz bildirim yok',
+          ru: 'Пока нет уведомлений',
+          zh: '暂无通知',
+        );
+    }
+  }
+
+  String _emptyDescriptionForFilter(BuildContext context, _NotifFilter f) {
+    switch (f) {
+      case _NotifFilter.financial:
+        return l10nPick(
+          context,
+          en: 'Updates regarding your transfers, cards and deposits will show up here.',
+          fa: 'گزارش واریزها، برداشت‌ها و انتقال‌های مالی شما در این بخش نمایش داده می‌شوند.',
+          ar: 'ستظهر هنا تحديثات التحويلات والإيداعات وبطاقاتك.',
+          tr: 'Transferleriniz ve ödemelerinizle ilgili bildirimler burada görünecektir.',
+          ru: 'Уведомления о переводах, картах и платежах появятся здесь.',
+          zh: '您的转账、卡片和充值通知将显示在此处。',
+        );
+      case _NotifFilter.security:
+        return l10nPick(
+          context,
+          en: 'System notices, login alerts and account security events will appear here.',
+          fa: 'پیام‌های سیستمی، ورودهای جدید و رویدادهای امنیتی حساب در این بخش ثبت می‌شوند.',
+          ar: 'ستظهر هنا تنبيهات تسجيل الدخول وأمان الحساب.',
+          tr: 'Giriş uyarıları ve hesap güvenliği bildirimleri burada görünecektir.',
+          ru: 'Оповещения о входе и безопасности аккаунта появятся здесь.',
+          zh: '系统通知、登录提醒和账户安全事件将显示在此处。',
+        );
+      case _NotifFilter.promo:
+        return l10nPick(
+          context,
+          en: 'Stay tuned for exclusive rewards, vouchers and platform promotions.',
+          fa: 'تخفیف‌ها، جوایز و جشنواره‌های پلتفرم در این قسمت اعلام خواهند شد.',
+          ar: 'ترقب العروض والمكافآت الحصرية.',
+          tr: 'Özel ödüller ve promosyonlar için takipte kalın.',
+          ru: 'Следите за специальными предложениями и бонусами.',
+          zh: '敬请期待专属奖励和平台优惠。',
+        );
+      case _NotifFilter.unread:
+        return l10nPick(
+          context,
+          en: 'You have read all your notifications. New notices will arrive here.',
+          fa: 'پیام ناخوانده‌ای ندارید. به محض دریافت پیام جدید، اینجا نمایش داده می‌شود.',
+          ar: 'لا توجد إشعارات غير مقروءة حالياً.',
+          tr: 'Okunmamış bildiriminiz bulunmuyor.',
+          ru: 'У вас нет непрочитанных уведомлений.',
+          zh: '您已查看所有通知。',
+        );
+      case _NotifFilter.all:
+        return l10nPick(
+          context,
+          en: 'Important financial updates and system notices will appear here.',
+          fa: 'اعلان‌های مهم مالی و پیام‌های سیستم اینجا نمایش داده می‌شوند.',
+          ar: 'ستظهر الإشعارات المهمة هنا.',
+          tr: 'Önemli bildirimler burada görünecektir.',
+          ru: 'Важные уведомления появятся здесь.',
+          zh: '重要通知将在此显示。',
+        );
+    }
+  }
+
   Widget _chip(String label, _NotifFilter f, bool isDark) {
     final selected = _filter == f;
+    final tokenColor = _categoryColor(f, isDark);
+    final iconData = _categoryIcon(f);
+
     return Padding(
       padding: const EdgeInsetsDirectional.only(end: 8),
       child: ChoiceChip(
+        avatar: Icon(
+          iconData,
+          size: 15,
+          color: selected
+              ? tokenColor
+              : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+        ),
         label: Text(label),
         selected: selected,
         onSelected: (_) => setState(() => _filter = f),
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
-        selectedColor: isDark
-            ? AppColors.mainSoftBlue.withValues(alpha: 0.25)
-            : AppColors.lightPrimary.withValues(alpha: 0.14),
+        selectedColor: tokenColor.withValues(alpha: isDark ? 0.22 : 0.12),
         side: BorderSide(
           color: selected
-              ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+              ? tokenColor.withValues(alpha: isDark ? 0.70 : 0.55)
               : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
           width: selected ? 1.2 : 0.8,
         ),
         labelStyle: AppTextStyles.labelSmall.copyWith(
           fontWeight: FontWeight.w700,
           color: selected
-              ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+              ? tokenColor
               : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
         ),
       ),
@@ -642,7 +896,7 @@ class _NotificationsState extends State<Notifications>
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                    color: _typeColor(n.type ?? '', isDark)
                         .withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
@@ -652,7 +906,7 @@ class _NotificationsState extends State<Notifications>
                       NotificationDynamicIcon.getNotificationIcon(n.type),
                       errorBuilder: (_, _, _) => Icon(
                         Icons.notifications_none,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        color: _typeColor(n.type ?? '', isDark),
                       ),
                     ),
                   ),
@@ -764,13 +1018,13 @@ class _NotificationsState extends State<Notifications>
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                    color: _typeColor(item.type, isDark)
                         .withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
                   child: Icon(
                     _typeIcon(item.type),
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    color: _typeColor(item.type, isDark),
                     size: 22,
                   ),
                 ),

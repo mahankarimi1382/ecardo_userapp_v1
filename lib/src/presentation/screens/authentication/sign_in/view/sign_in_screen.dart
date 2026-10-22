@@ -109,7 +109,7 @@ class _SignInScreenState extends State<SignInScreen>
       },
       child: Scaffold(
         backgroundColor:
-            isDark ? const Color(0xFF090D1A) : AppColors.lightBackground,
+            isDark ? AppColors.darkBackground : AppColors.lightBackground,
         appBar: const CommonDefaultAppBar(),
         body: AmbientAuthBackground(
           child: Stack(
@@ -180,8 +180,8 @@ class _SignInScreenState extends State<SignInScreen>
                   boxShadow: [
                     BoxShadow(
                       color: (isDark
-                              ? const Color(0xFF38BDF8)
-                              : AppColors.mainSoftBlue)
+                              ? AppColors.mainSoftBlue
+                              : AppColors.brandViolet)
                           .withValues(alpha: isDark ? 0.18 : 0.28),
                       blurRadius: 20,
                       spreadRadius: 2,
@@ -334,10 +334,10 @@ class _SignInScreenState extends State<SignInScreen>
   Widget _buildLoginModeToggle(BuildContext context, {required bool isDark}) {
     final trackBg = isDark
         ? Colors.white.withValues(alpha: 0.06)
-        : const Color(0xFFF1F5F9);
-    final activeBg = isDark ? const Color(0xFF1E293B) : AppColors.white;
+        : AppColors.lightSurfaceVariant;
+    final activeBg = isDark ? AppColors.darkSurface : AppColors.white;
     final activeText =
-        isDark ? const Color(0xFF38BDF8) : AppColors.lightTextPrimary;
+        isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
     final inactiveText =
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
 
@@ -356,131 +356,157 @@ class _SignInScreenState extends State<SignInScreen>
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
-              onTap: () {
-                if (_selectedTab != 0) {
-                  setState(() => _selectedTab = 0);
-                }
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOut,
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                decoration: BoxDecoration(
-                  color: _selectedTab == 0 ? activeBg : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12.r),
-                  boxShadow: _selectedTab == 0
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withValues(
-                              alpha: isDark ? 0.25 : 0.06,
+            child: Semantics(
+              label: l10nPick(
+                context,
+                en: 'Password login tab',
+                fa: 'برگه ورود با رمز عبور',
+                ar: 'تبويب تسجيل الدخول بكلمة المرور',
+                zh: '密码登录标签',
+                tr: 'Şifre ile giriş sekmesi',
+                ru: 'Вкладка входа по паролю',
+              ),
+              selected: _selectedTab == 0,
+              button: true,
+              child: GestureDetector(
+                onTap: () {
+                  if (_selectedTab != 0) {
+                    setState(() => _selectedTab = 0);
+                  }
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOut,
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  decoration: BoxDecoration(
+                    color: _selectedTab == 0 ? activeBg : Colors.transparent,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: _selectedTab == 0
+                        ? [
+                            BoxShadow(
+                              color: Colors.black.withValues(
+                                alpha: isDark ? 0.25 : 0.06,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
                             ),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.lock_outline_rounded,
-                      size: 16.sp,
-                      color: _selectedTab == 0 ? activeText : inactiveText,
-                    ),
-                    SizedBox(width: 5.w),
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          l10nPick(
-                            context,
-                            en: 'Password',
-                            fa: 'رمز عبور',
-                            ar: 'كلمة المرور',
-                            zh: '密码登录',
-                            tr: 'Şifre',
-                            ru: 'Пароль',
-                          ),
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            fontWeight: _selectedTab == 0
-                                ? FontWeight.w900
-                                : FontWeight.w600,
-                            color: _selectedTab == 0 ? activeText : inactiveText,
+                          ]
+                        : null,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.lock_outline_rounded,
+                        size: 16.sp,
+                        color: _selectedTab == 0 ? activeText : inactiveText,
+                      ),
+                      SizedBox(width: 5.w),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            l10nPick(
+                              context,
+                              en: 'Password',
+                              fa: 'رمز عبور',
+                              ar: 'كلمة المرور',
+                              zh: '密码登录',
+                              tr: 'Şifre',
+                              ru: 'Пароль',
+                            ),
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 12.5.sp,
+                              fontWeight: _selectedTab == 0
+                                  ? FontWeight.w900
+                                  : FontWeight.w600,
+                              color: _selectedTab == 0 ? activeText : inactiveText,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
           Expanded(
-            child: GestureDetector(
-              onTap: () {
-                if (_selectedTab != 1) {
-                  setState(() => _selectedTab = 1);
-                }
-              },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOut,
-                padding: EdgeInsets.symmetric(vertical: 10.h),
-                decoration: BoxDecoration(
-                  color: _selectedTab == 1 ? activeBg : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12.r),
-                  boxShadow: _selectedTab == 1
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withValues(
-                              alpha: isDark ? 0.25 : 0.06,
+            child: Semantics(
+              label: l10nPick(
+                context,
+                en: 'Email OTP login tab',
+                fa: 'برگه ورود با کد یک‌بارمصرف',
+                ar: 'تبويب تسجيل الدخول بالرمز لمرة واحدة',
+                zh: '验证码登录标签',
+                tr: 'Tek Seferlik Kod ile Giriş Sekmesi',
+                ru: 'Вкладка входа по коду из почты',
+              ),
+              selected: _selectedTab == 1,
+              button: true,
+              child: GestureDetector(
+                onTap: () {
+                  if (_selectedTab != 1) {
+                    setState(() => _selectedTab = 1);
+                  }
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOut,
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  decoration: BoxDecoration(
+                    color: _selectedTab == 1 ? activeBg : Colors.transparent,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: _selectedTab == 1
+                        ? [
+                            BoxShadow(
+                              color: Colors.black.withValues(
+                                alpha: isDark ? 0.25 : 0.06,
+                              ),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
                             ),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.mark_email_read_outlined,
-                      size: 16.sp,
-                      color: _selectedTab == 1 ? activeText : inactiveText,
-                    ),
-                    SizedBox(width: 5.w),
-                    Flexible(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          l10nPick(
-                            context,
-                            en: 'Email OTP',
-                            fa: 'کد یک‌بارمصرف',
-                            ar: 'رمز الدخول (OTP)',
-                            zh: '验证码登录',
-                            tr: 'Tek Seferlik Kod',
-                            ru: 'Код из почты',
-                          ),
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 12.5.sp,
-                            fontWeight: _selectedTab == 1
-                                ? FontWeight.w900
-                                : FontWeight.w600,
-                            color: _selectedTab == 1 ? activeText : inactiveText,
+                          ]
+                        : null,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.mark_email_read_outlined,
+                        size: 16.sp,
+                        color: _selectedTab == 1 ? activeText : inactiveText,
+                      ),
+                      SizedBox(width: 5.w),
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            l10nPick(
+                              context,
+                              en: 'Email OTP',
+                              fa: 'کد یک‌بارمصرف',
+                              ar: 'رمز الدخول (OTP)',
+                              zh: '验证码登录',
+                              tr: 'Tek Seferlik Kod',
+                              ru: 'Код из почты',
+                            ),
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 12.5.sp,
+                              fontWeight: _selectedTab == 1
+                                  ? FontWeight.w900
+                                  : FontWeight.w600,
+                              color: _selectedTab == 1 ? activeText : inactiveText,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -518,7 +544,7 @@ class _SignInScreenState extends State<SignInScreen>
                 Icons.mail_outline_rounded,
                 size: 20.sp,
                 color: controller.isEmailFocused.value
-                    ? (isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack)
+                    ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                     : (isDark
                         ? AppColors.darkTextSecondary
                         : AppColors.lightTextTertiary),
@@ -553,21 +579,62 @@ class _SignInScreenState extends State<SignInScreen>
                 Icons.lock_outline_rounded,
                 size: 20.sp,
                 color: controller.isPasswordFocused.value
-                    ? (isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack)
+                    ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                     : (isDark
                         ? AppColors.darkTextSecondary
                         : AppColors.lightTextTertiary),
               ),
-              suffixIcon: IconButton(
-                onPressed: () => controller.isPasswordVisible.toggle(),
-                icon: Icon(
-                  controller.isPasswordVisible.value
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  size: 20.sp,
-                  color: isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextTertiary,
+              suffixIcon: Semantics(
+                label: controller.isPasswordVisible.value
+                    ? l10nPick(
+                        context,
+                        en: 'Hide password',
+                        fa: 'مخفی کردن رمز عبور',
+                        ar: 'إخفاء كلمة المرور',
+                        zh: '隐藏密码',
+                        tr: 'Şifreyi gizle',
+                        ru: 'Скрыть пароль',
+                      )
+                    : l10nPick(
+                        context,
+                        en: 'Show password',
+                        fa: 'نمایش رمز عبور',
+                        ar: 'إظهار كلمة المرور',
+                        zh: '显示密码',
+                        tr: 'Şifreyi göster',
+                        ru: 'Показать пароль',
+                      ),
+                button: true,
+                child: IconButton(
+                  tooltip: controller.isPasswordVisible.value
+                      ? l10nPick(
+                          context,
+                          en: 'Hide password',
+                          fa: 'مخفی کردن رمز عبور',
+                          ar: 'إخفاء كلمة المرور',
+                          zh: '隐藏密码',
+                          tr: 'Şifreyi gizle',
+                          ru: 'Скрыть пароль',
+                        )
+                      : l10nPick(
+                          context,
+                          en: 'Show password',
+                          fa: 'نمایش رمز عبور',
+                          ar: 'إظهار كلمة المرور',
+                          zh: '显示密码',
+                          tr: 'Şifreyi göster',
+                          ru: 'Показать пароль',
+                        ),
+                  onPressed: () => controller.isPasswordVisible.toggle(),
+                  icon: Icon(
+                    controller.isPasswordVisible.value
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    size: 20.sp,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextTertiary,
+                  ),
                 ),
               ),
             ),
@@ -588,8 +655,8 @@ class _SignInScreenState extends State<SignInScreen>
                     fontWeight: FontWeight.w700,
                     fontSize: 13.5.sp,
                     color: isDark
-                        ? const Color(0xFF38BDF8)
-                        : AppColors.lightPrimary,
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                 ),
               ),
@@ -757,8 +824,8 @@ class _SignInScreenState extends State<SignInScreen>
                           fontSize: 12.5.sp,
                           fontWeight: FontWeight.w700,
                           color: isDark
-                              ? const Color(0xFF38BDF8)
-                              : AppColors.lightPrimary,
+                              ? AppColors.mainSoftBlue
+                              : AppColors.brandViolet,
                         ),
                       ),
                     ),
@@ -778,8 +845,8 @@ class _SignInScreenState extends State<SignInScreen>
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w600,
                     color: isDark
-                        ? const Color(0xFF38BDF8)
-                        : AppColors.lightPrimary,
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -795,8 +862,8 @@ class _SignInScreenState extends State<SignInScreen>
                       FilteringTextInputFormatter.digitsOnly,
                     ],
                     cursorColor: isDark
-                        ? const Color(0xFF38BDF8)
-                        : AppColors.lightPrimary,
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                     textStyle: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
@@ -810,21 +877,21 @@ class _SignInScreenState extends State<SignInScreen>
                       fieldHeight: 48.h,
                       fieldWidth: 42.w,
                       activeColor: isDark
-                          ? const Color(0xFF38BDF8)
-                          : AppColors.lightPrimary,
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                       inactiveColor: isDark
                           ? Colors.white.withValues(alpha: 0.15)
                           : AppColors.lightBorder,
                       selectedColor: isDark
-                          ? const Color(0xFF38BDF8)
-                          : AppColors.lightPrimary,
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                       activeFillColor: isDark
                           ? Colors.white.withValues(alpha: 0.05)
-                          : const Color(0xFFF8FAFC),
+                          : AppColors.lightSurfaceVariant,
                       inactiveFillColor: Colors.transparent,
                       selectedFillColor: isDark
-                          ? const Color(0xFF38BDF8).withValues(alpha: 0.1)
-                          : AppColors.lightSecondaryContainer,
+                          ? AppColors.mainSoftBlue.withValues(alpha: 0.1)
+                          : AppColors.brandVioletContainer,
                     ),
                     enableActiveFill: true,
                     onCompleted: (_) {
@@ -873,8 +940,8 @@ class _SignInScreenState extends State<SignInScreen>
                             fontSize: 12.5.sp,
                             fontWeight: FontWeight.w800,
                             color: isDark
-                                ? const Color(0xFF38BDF8)
-                                : AppColors.lightPrimary,
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet,
                           ),
                         ),
                       ),
@@ -913,11 +980,11 @@ class _SignInScreenState extends State<SignInScreen>
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF1E293B).withValues(alpha: 0.6)
-            : const Color(0xFFF1F5F9),
+            ? AppColors.darkSurface.withValues(alpha: 0.6)
+            : AppColors.lightSurfaceVariant,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: (isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack)
+          color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
               .withValues(alpha: 0.20),
           width: 1.2,
         ),
@@ -937,14 +1004,14 @@ class _SignInScreenState extends State<SignInScreen>
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: isDark
-                          ? const [Color(0xFF38BDF8), Color(0xFF6366F1)]
-                          : const [AppColors.deepBlack, Color(0xFF3F3F46)],
+                          ? const [AppColors.mainSoftBlue, AppColors.brandViolet]
+                          : const [AppColors.brandViolet, AppColors.brandVioletDeep],
                     ),
                     boxShadow: [
                       BoxShadow(
                         color: (isDark
-                                ? const Color(0xFF38BDF8)
-                                : AppColors.deepBlack)
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet)
                             .withValues(alpha: _bioGlowOpacity.value),
                         blurRadius: 14,
                         spreadRadius: 2,
@@ -1068,7 +1135,7 @@ class _SignInScreenState extends State<SignInScreen>
             style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 14.sp,
-              color: isDark ? const Color(0xFF38BDF8) : AppColors.lightPrimary,
+              color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
             ),
           ),
         ),
@@ -1116,7 +1183,7 @@ class _TelegramSignInButton extends StatelessWidget {
       icon: Icon(
         Icons.send_rounded,
         size: 19.sp,
-        color: const Color(0xFF2AABEE), // Telegram brand blue
+        color: AppColors.info, // Telegram brand blue mapped to info token
       ),
       label: Text(
         localizations.signInWithTelegram,
@@ -1152,13 +1219,13 @@ class _DemoAccountSignInButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF6366F1).withValues(alpha: isDark ? 0.20 : 0.12),
-            const Color(0xFF8B5CF6).withValues(alpha: isDark ? 0.16 : 0.08),
+            AppColors.brandViolet.withValues(alpha: isDark ? 0.20 : 0.12),
+            AppColors.mainSoftBlue.withValues(alpha: isDark ? 0.16 : 0.08),
           ],
         ),
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: const Color(0xFF6366F1).withValues(alpha: 0.35),
+          color: AppColors.brandViolet.withValues(alpha: 0.35),
           width: 1.2,
         ),
       ),
@@ -1181,12 +1248,12 @@ class _DemoAccountSignInButton extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(6.w),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF6366F1).withValues(alpha: 0.25),
+                    color: AppColors.brandViolet.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
                     Icons.bolt_rounded,
-                    color: const Color(0xFF818CF8),
+                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                     size: 20.sp,
                   ),
                 ),
@@ -1238,7 +1305,7 @@ class _DemoAccountSignInButton extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 14.sp,
-                  color: const Color(0xFF818CF8),
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                 ),
               ],
             ),

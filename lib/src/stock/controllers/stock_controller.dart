@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../models/stock_models.dart';
 import '../services/stock_service.dart';
@@ -662,28 +663,38 @@ class StockController extends GetxController {
         if (pData != null) portfolioData.value = pData;
         return true;
       } else {
-        // Create local validated pending order
-        final pendingOrder = StockOrderModel(
-          orderNo: 'ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
-          ticker: selectedSymbol.value!.ticker,
-          nameFa: selectedSymbol.value!.nameFa,
-          side: orderSide.value,
-          type: orderType.value,
-          qty: quantity.value,
-          limitPrice: limitPrice ?? selectedSymbol.value!.lastPrice,
-          stopPrice: double.tryParse(stopPriceInput.value) ?? 0.0,
-          marketCurrency: selectedMarket.value?.baseCurrency ?? 'USD',
-          payCurrency: payCurrency.value,
-          payAmount: calculatedPayAmount.value,
-          executedFxRate: calculatedFxRate.value,
-          avgExecPrice: selectedSymbol.value!.lastPrice,
-          commissionAmount: calculatedCommission.value,
-          status: 'PENDING_BROKER',
-          settlementDays: selectedMarket.value?.settlementDays ?? 2,
-          createdAt: DateTime.now(),
-        );
-        orders.insert(0, pendingOrder);
-        return true;
+        if (DemoAccountService.isDemoInterceptionAllowedNow) {
+          // Create local validated pending order in demo mode
+          final pendingOrder = StockOrderModel(
+            orderNo: 'ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
+            ticker: selectedSymbol.value!.ticker,
+            nameFa: selectedSymbol.value!.nameFa,
+            side: orderSide.value,
+            type: orderType.value,
+            qty: quantity.value,
+            limitPrice: limitPrice ?? selectedSymbol.value!.lastPrice,
+            stopPrice: double.tryParse(stopPriceInput.value) ?? 0.0,
+            marketCurrency: selectedMarket.value?.baseCurrency ?? 'USD',
+            payCurrency: payCurrency.value,
+            payAmount: calculatedPayAmount.value,
+            executedFxRate: calculatedFxRate.value,
+            avgExecPrice: selectedSymbol.value!.lastPrice,
+            commissionAmount: calculatedCommission.value,
+            status: 'PENDING_BROKER',
+            settlementDays: selectedMarket.value?.settlementDays ?? 2,
+            createdAt: DateTime.now(),
+          );
+          orders.insert(0, pendingOrder);
+          return true;
+        } else {
+          errorMessage.value = l10nPickAuto(
+            en: 'Order placement failed at broker gateway. Please try again.',
+            fa: 'خطا در ثبت سفارش نزد کارگزار. لطفاً مجدداً تلاش نمایید.',
+            ar: 'فشل تقديم الطلب لدى الوسيط. يرجى المحاولة مرة أخرى.',
+            zh: '经纪商网关下单失败，请重试。',
+          );
+          return false;
+        }
       }
     } catch (e) {
       errorMessage.value = e.toString();

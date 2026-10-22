@@ -83,8 +83,8 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           backgroundColor: bgColor,
           elevation: 0,
           centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: primaryTextColor),
+          leading: BackButton(
+            color: primaryTextColor,
             onPressed: _handleBack,
           ),
           title: Text(
@@ -100,7 +100,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           if (controller.isLoading.value && controller.levels.isEmpty) {
             return Center(
               child: CircularProgressIndicator(
-                color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
               ),
             );
           }
@@ -131,7 +131,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                   padding: EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? const Color(0xFF450A0A).withValues(alpha: 0.35)
+                        ? AppColors.error.withValues(alpha: 0.15)
                         : AppColors.errorContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
@@ -181,7 +181,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                             height: 2,
                             margin: const EdgeInsets.symmetric(horizontal: 4),
                             color: _currentStep > index ~/ 2
-                                ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                                ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                                 : (isDark ? AppColors.darkDivider : AppColors.lightBorder),
                           ),
                         );
@@ -280,7 +280,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                  color: AppColors.success.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 ),
                 child: Row(
@@ -289,7 +289,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                     const Icon(
                       Icons.check_circle_rounded,
                       size: 13,
-                      color: Color(0xFF10B981),
+                      color: AppColors.success,
                     ),
                     SizedBox(width: 4.w),
                     Text(
@@ -297,7 +297,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                       style: AppTextStyles.labelSmall.copyWith(
                         fontSize: 9.5.sp,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF10B981),
+                        color: AppColors.success,
                       ),
                     ),
                   ],
@@ -313,139 +313,195 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
 
         // Upload Area / Thumbnail Preview
         if (!isUploaded)
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              _pickDocument(docKey, isDark, primaryTextColor);
-            },
-            child: Container(
-              width: double.infinity,
-              height: 200.h,
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurface : AppColors.white,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  width: 1.5,
+          Semantics(
+            button: true,
+            label: localization?.kycSubmitWizardTapToUpload ??
+                l10nPick(
+                  context,
+                  en: 'Tap to capture or upload $docLabel',
+                  fa: 'برای تصویربرداری یا بارگذاری $docLabel لمس کنید',
                 ),
-                boxShadow: !isDark
-                    ? [
-                        BoxShadow(
-                          color: AppColors.black.withValues(alpha: 0.03),
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ]
-                    : null,
-              ),
-              child: Stack(
-                children: [
-                  // Corner alignment guides
-                  Positioned(
-                    top: 12,
-                    left: 12,
-                    child: Container(
-                      width: 18,
-                      height: 18,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: Color(0xFF10B981), width: 3),
-                          left: BorderSide(color: Color(0xFF10B981), width: 3),
-                        ),
-                      ),
+            hint: localization?.kycSubmitWizardFileFormat ??
+                'JPG, PNG, PDF — Max 20MB',
+            child: Material(
+              color: AppColors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  _pickDocument(docKey, isDark, primaryTextColor);
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 200.h,
+                  constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                    border: Border.all(
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      width: 1.5,
                     ),
+                    boxShadow: !isDark
+                        ? [
+                            BoxShadow(
+                              color: AppColors.black.withValues(alpha: 0.03),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
+                            ),
+                          ]
+                        : null,
                   ),
-                  Positioned(
-                    top: 12,
-                    right: 12,
-                    child: Container(
-                      width: 18,
-                      height: 18,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          top: BorderSide(color: Color(0xFF10B981), width: 3),
-                          right: BorderSide(color: Color(0xFF10B981), width: 3),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 12,
-                    left: 12,
-                    child: Container(
-                      width: 18,
-                      height: 18,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: Color(0xFF10B981), width: 3),
-                          left: BorderSide(color: Color(0xFF10B981), width: 3),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 12,
-                    right: 12,
-                    child: Container(
-                      width: 18,
-                      height: 18,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: Color(0xFF10B981), width: 3),
-                          right: BorderSide(color: Color(0xFF10B981), width: 3),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 56.w,
-                          height: 56.w,
+                  child: Stack(
+                    children: [
+                      // Corner alignment guides
+                      Positioned(
+                        top: 12,
+                        left: 12,
+                        child: Container(
+                          width: 18,
+                          height: 18,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: (isDark
+                            border: Border(
+                              top: BorderSide(
+                                color: isDark
                                     ? AppColors.mainSoftBlue
-                                    : AppColors.lightPrimary)
-                                .withValues(alpha: 0.12),
-                          ),
-                          child: Icon(
-                            Icons.cloud_upload_outlined,
-                            size: 28.sp,
-                            color: isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.lightPrimary,
-                          ),
-                        ),
-                        SizedBox(height: AppSpacing.sm),
-                        Text(
-                          localization?.kycSubmitWizardTapToUpload ??
-                              l10nPick(
-                                context,
-                                en: 'Tap to capture or upload',
-                                fa: 'برای تصویربرداری یا بارگذاری لمس کنید',
+                                    : AppColors.brandViolet,
+                                width: 3,
                               ),
-                          style: AppTextStyles.titleSmall.copyWith(
-                            color: primaryTextColor,
-                            fontWeight: FontWeight.w700,
+                              left: BorderSide(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                                width: 3,
+                              ),
+                            ),
                           ),
                         ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          localization?.kycSubmitWizardFileFormat ??
-                              'JPG, PNG, PDF — Max 20MB',
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: isDark
-                                ? AppColors.softGray
-                                : AppColors.lightTextHint,
+                      ),
+                      Positioned(
+                        top: 12,
+                        right: 12,
+                        child: Container(
+                          width: 18,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                                width: 3,
+                              ),
+                              right: BorderSide(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                                width: 3,
+                              ),
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        bottom: 12,
+                        left: 12,
+                        child: Container(
+                          width: 18,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                                width: 3,
+                              ),
+                              left: BorderSide(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                                width: 3,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 12,
+                        right: 12,
+                        child: Container(
+                          width: 18,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                                width: 3,
+                              ),
+                              right: BorderSide(
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                                width: 3,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 56.w,
+                              height: 56.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: (isDark
+                                        ? AppColors.mainSoftBlue
+                                        : AppColors.brandViolet)
+                                    .withValues(alpha: 0.12),
+                              ),
+                              child: Icon(
+                                Icons.cloud_upload_outlined,
+                                size: 28.sp,
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
+                              ),
+                            ),
+                            SizedBox(height: AppSpacing.sm),
+                            Text(
+                              localization?.kycSubmitWizardTapToUpload ??
+                                  l10nPick(
+                                    context,
+                                    en: 'Tap to capture or upload',
+                                    fa: 'برای تصویربرداری یا بارگذاری لمس کنید',
+                                  ),
+                              style: AppTextStyles.titleSmall.copyWith(
+                                color: primaryTextColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              localization?.kycSubmitWizardFileFormat ??
+                                  'JPG, PNG, PDF — Max 20MB',
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: isDark
+                                    ? AppColors.softGray
+                                    : AppColors.lightTextHint,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           )
@@ -454,10 +510,10 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurface : AppColors.white,
+              color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
               borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
               border: Border.all(
-                color: const Color(0xFF10B981).withValues(alpha: 0.5),
+                color: AppColors.success.withValues(alpha: 0.5),
                 width: 1.5,
               ),
             ),
@@ -487,7 +543,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                                     vertical: 4.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.7),
+                                    color: AppColors.black.withValues(alpha: 0.7),
                                     borderRadius: BorderRadius.circular(
                                       AppSpacing.radiusSm,
                                     ),
@@ -498,13 +554,13 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                                       const Icon(
                                         Icons.check_circle_rounded,
                                         size: 12,
-                                        color: Color(0xFF10B981),
+                                        color: AppColors.success,
                                       ),
                                       SizedBox(width: 4.w),
                                       Text(
                                         '$fileSizeMB MB',
                                         style: const TextStyle(
-                                          color: Colors.white,
+                                          color: AppColors.white,
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -519,8 +575,8 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                       : Container(
                           height: 120.h,
                           color: isDark
-                              ? AppColors.darkBackground
-                              : const Color(0xFFF1F5F9),
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.lightSurfaceVariant,
                           alignment: Alignment.center,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -528,7 +584,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                               Icon(
                                 Icons.description_rounded,
                                 size: 36.sp,
-                                color: const Color(0xFF10B981),
+                                color: AppColors.success,
                               ),
                               SizedBox(width: 10.w),
                               Column(
@@ -561,51 +617,77 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            HapticFeedback.lightImpact();
-                            _pickDocument(docKey, isDark, primaryTextColor);
-                          },
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: isDark
-                                  ? AppColors.darkBorder
-                                  : AppColors.lightBorder,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(AppSpacing.radiusMd),
-                            ),
+                        child: Semantics(
+                          button: true,
+                          label: l10nPick(
+                            context,
+                            en: 'Retake or replace $docLabel',
+                            fa: 'تغییر یا عکس مجدد مدرک $docLabel',
+                            ar: 'إعادة التقاط أو استبدال $docLabel',
+                            zh: '重新拍摄或更换 $docLabel',
                           ),
-                          icon: const Icon(Icons.refresh_rounded, size: 16),
-                          label: Text(
-                            l10nPick(
-                              context,
-                              en: 'Retake / Replace',
-                              fa: 'تغییر یا عکس مجدد',
-                              ar: 'إعادة الالتقاط / استبدال',
-                              zh: '重新拍摄/更换',
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              HapticFeedback.lightImpact();
+                              _pickDocument(docKey, isDark, primaryTextColor);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: Size(double.infinity, 44.h),
+                              side: BorderSide(
+                                color: isDark
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorder,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(AppSpacing.radiusMd),
+                              ),
                             ),
-                            style: AppTextStyles.labelSmall.copyWith(
-                              fontWeight: FontWeight.w700,
+                            icon: const Icon(Icons.refresh_rounded, size: 16),
+                            label: Text(
+                              l10nPick(
+                                context,
+                                en: 'Retake / Replace',
+                                fa: 'تغییر یا عکس مجدد',
+                                ar: 'إعادة الالتقاط / استبدال',
+                                zh: '重新拍摄/更换',
+                              ),
+                              style: AppTextStyles.labelSmall.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: primaryTextColor,
+                              ),
                             ),
                           ),
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      IconButton(
-                        tooltip: l10nPick(context, en: 'Remove', fa: 'حذف'),
-                        icon: const Icon(
-                          Icons.delete_outline_rounded,
-                          color: AppColors.error,
-                          size: 20,
+                      Semantics(
+                        button: true,
+                        label: l10nPick(
+                          context,
+                          en: 'Remove $docLabel',
+                          fa: 'حذف مدرک $docLabel',
+                          ar: 'حذف $docLabel',
+                          zh: '删除 $docLabel',
                         ),
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          setState(() {
-                            _documents.remove(docKey);
-                          });
-                        },
+                        child: IconButton(
+                          constraints: BoxConstraints(
+                            minWidth: 44.w,
+                            minHeight: 44.h,
+                          ),
+                          tooltip: l10nPick(context, en: 'Remove', fa: 'حذف'),
+                          icon: const Icon(
+                            Icons.delete_outline_rounded,
+                            color: AppColors.error,
+                            size: 20,
+                          ),
+                          onPressed: () {
+                            HapticFeedback.lightImpact();
+                            setState(() {
+                              _documents.remove(docKey);
+                            });
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -652,11 +734,11 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF1E293B)
-            : const Color(0xFFF8FAFC),
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         border: Border.all(
-          color: isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
         ),
       ),
       child: Column(
@@ -667,7 +749,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
               const Icon(
                 Icons.lightbulb_outline_rounded,
                 size: 16,
-                color: Color(0xFFF59E0B),
+                color: AppColors.warning,
               ),
               SizedBox(width: 6.w),
               Text(
@@ -732,7 +814,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
         Icon(
           icon,
           size: 13.sp,
-          color: const Color(0xFF10B981),
+          color: AppColors.success,
         ),
         SizedBox(width: 6.w),
         Expanded(
@@ -782,7 +864,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           padding: EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
             color: isDark
-                ? const Color(0xFF78350F).withValues(alpha: 0.25)
+                ? AppColors.warning.withValues(alpha: 0.15)
                 : AppColors.warningContainer,
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             border: Border.all(
@@ -821,7 +903,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         border: Border(
           top: BorderSide(
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -833,58 +915,64 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
         child: SizedBox(
           width: double.infinity,
           height: 48.h,
-          child: ElevatedButton(
-            onPressed: canProceed
-                ? (isLastStep
-                    ? _submit
-                    : () {
-                        HapticFeedback.lightImpact();
-                        setState(() => _currentStep++);
-                      })
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
-              foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          child: Semantics(
+            button: true,
+            label: isLastStep
+                ? (localization?.kycSubmitWizardSubmit ?? 'Submit documents')
+                : (localization?.kycSubmitWizardContinue ?? 'Continue'),
+            child: ElevatedButton(
+              onPressed: canProceed
+                  ? (isLastStep
+                      ? _submit
+                      : () {
+                          HapticFeedback.lightImpact();
+                          setState(() => _currentStep++);
+                        })
+                  : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                ),
+                elevation: 0,
               ),
-              elevation: 0,
-            ),
-            child: Obx(
-              () => controller.isSubmitting.value
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            color: isDark ? AppColors.deepBlack : AppColors.white,
-                            strokeWidth: 2,
-                          ),
-                        ),
-                        if (controller.uploadProgress.value > 0) ...[
-                          const SizedBox(width: 8),
-                          Text(
-                            '${(controller.uploadProgress.value * 100).toInt()}%',
-                            style: AppTextStyles.labelMedium.copyWith(
-                              fontWeight: FontWeight.w700,
+              child: Obx(
+                () => controller.isSubmitting.value
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
                               color: isDark ? AppColors.deepBlack : AppColors.white,
+                              strokeWidth: 2,
                             ),
                           ),
+                          if (controller.uploadProgress.value > 0) ...[
+                            const SizedBox(width: 8),
+                            Text(
+                              '${(controller.uploadProgress.value * 100).toInt()}%',
+                              style: AppTextStyles.labelMedium.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.deepBlack : AppColors.white,
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
-                    )
-                  : Text(
-                      isLastStep
-                          ? (localization?.kycSubmitWizardSubmit ?? 'Submit documents')
-                          : (localization?.kycSubmitWizardContinue ?? 'Continue'),
-                      style: AppTextStyles.labelMedium.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.deepBlack : AppColors.white,
+                      )
+                    : Text(
+                        isLastStep
+                            ? (localization?.kycSubmitWizardSubmit ?? 'Submit documents')
+                            : (localization?.kycSubmitWizardContinue ?? 'Continue'),
+                        style: AppTextStyles.labelMedium.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.deepBlack : AppColors.white,
+                        ),
                       ),
-                    ),
+              ),
             ),
           ),
         ),
@@ -926,38 +1014,133 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                 ),
               ),
               SizedBox(height: AppSpacing.md),
-              ListTile(
-                leading: Icon(
-                  Icons.camera_alt_outlined,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              Semantics(
+                button: true,
+                label: l10nPickAuto(
+                  en: 'Take a Photo with Camera',
+                  fa: 'عکس‌برداری با دوربین',
                 ),
-                title: Text(
-                  l10nPickAuto(en: 'Take a Photo (Camera)', fa: 'عکس‌برداری با دوربین'),
-                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: 48.h),
+                  child: ListTile(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    leading: Container(
+                      width: 44.w,
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: (isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet)
+                            .withValues(alpha: 0.12),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusMd),
+                      ),
+                      child: Icon(
+                        Icons.camera_alt_outlined,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                        size: 22.sp,
+                      ),
+                    ),
+                    title: Text(
+                      l10nPickAuto(
+                          en: 'Take a Photo (Camera)', fa: 'عکس‌برداری با دوربین'),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primaryTextColor,
+                      ),
+                    ),
+                    onTap: () => Navigator.pop(ctx, 'camera'),
+                  ),
                 ),
-                onTap: () => Navigator.pop(ctx, 'camera'),
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.photo_library_outlined,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              SizedBox(height: 4.h),
+              Semantics(
+                button: true,
+                label: l10nPickAuto(
+                  en: 'Choose from Gallery',
+                  fa: 'انتخاب تصویر از گالری',
                 ),
-                title: Text(
-                  l10nPickAuto(en: 'Choose from Gallery', fa: 'انتخاب تصویر از گالری'),
-                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: 48.h),
+                  child: ListTile(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    leading: Container(
+                      width: 44.w,
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: (isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet)
+                            .withValues(alpha: 0.12),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusMd),
+                      ),
+                      child: Icon(
+                        Icons.photo_library_outlined,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                        size: 22.sp,
+                      ),
+                    ),
+                    title: Text(
+                      l10nPickAuto(
+                          en: 'Choose from Gallery', fa: 'انتخاب تصویر از گالری'),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primaryTextColor,
+                      ),
+                    ),
+                    onTap: () => Navigator.pop(ctx, 'gallery'),
+                  ),
                 ),
-                onTap: () => Navigator.pop(ctx, 'gallery'),
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.picture_as_pdf_outlined,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              SizedBox(height: 4.h),
+              Semantics(
+                button: true,
+                label: l10nPickAuto(
+                  en: 'Choose PDF Document',
+                  fa: 'انتخاب سند با فرمت PDF',
                 ),
-                title: Text(
-                  l10nPickAuto(en: 'Choose PDF Document', fa: 'انتخاب سند با فرمت PDF'),
-                  style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: 48.h),
+                  child: ListTile(
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    leading: Container(
+                      width: 44.w,
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: (isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet)
+                            .withValues(alpha: 0.12),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusMd),
+                      ),
+                      child: Icon(
+                        Icons.picture_as_pdf_outlined,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                        size: 22.sp,
+                      ),
+                    ),
+                    title: Text(
+                      l10nPickAuto(
+                          en: 'Choose PDF Document', fa: 'انتخاب سند با فرمت PDF'),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primaryTextColor,
+                      ),
+                    ),
+                    onTap: () => Navigator.pop(ctx, 'pdf'),
+                  ),
                 ),
-                onTap: () => Navigator.pop(ctx, 'pdf'),
               ),
             ],
           ),
@@ -1049,26 +1232,30 @@ class _StepCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final activeColor = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
     final inactiveColor = isDark ? AppColors.darkCard : AppColors.lightBorder;
 
-    return Container(
-      width: 32.w,
-      height: 32.w,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: isActive ? activeColor : inactiveColor,
-        border: isCurrent && !isActive
-            ? Border.all(color: activeColor, width: 2)
-            : null,
-      ),
-      child: Center(
-        child: Icon(
-          isActive ? Icons.check : Icons.circle,
-          color: isActive
-              ? (isDark ? AppColors.deepBlack : AppColors.white)
-              : (isDark ? AppColors.softGray : AppColors.lightTextHint),
-          size: 15.sp,
+    return Semantics(
+      label:
+          'Step $step: ${isActive ? "completed" : (isCurrent ? "current" : "pending")}',
+      child: Container(
+        width: 32.w,
+        height: 32.w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isActive ? activeColor : inactiveColor,
+          border: isCurrent && !isActive
+              ? Border.all(color: activeColor, width: 2)
+              : null,
+        ),
+        child: Center(
+          child: Icon(
+            isActive ? Icons.check : Icons.circle,
+            color: isActive
+                ? (isDark ? AppColors.deepBlack : AppColors.white)
+                : (isDark ? AppColors.softGray : AppColors.lightTextHint),
+            size: 15.sp,
+          ),
         ),
       ),
     );
@@ -1099,44 +1286,47 @@ class _ReviewItem extends StatelessWidget {
         ? Icons.error_outline_rounded
         : (isPdf ? Icons.picture_as_pdf_rounded : Icons.check_circle_rounded);
     final iconColor = isUploaded
-        ? (isPdf ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary) : AppColors.success)
+        ? (isPdf ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet) : AppColors.success)
         : AppColors.error;
 
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSpacing.sm),
-      padding: EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(
-          color: isUploaded ? AppColors.success.withValues(alpha: 0.4) : AppColors.error,
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: iconColor, size: 20.sp),
-          SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: AppTextStyles.labelMedium.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: primaryTextColor,
-                  ),
-                ),
-                Text(
-                  fileName,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: secondaryTextColor,
-                  ),
-                ),
-              ],
-            ),
+    return Semantics(
+      label: '$label: ${isUploaded ? fileName : "Not uploaded"}',
+      child: Container(
+        margin: EdgeInsets.only(bottom: AppSpacing.sm),
+        padding: EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          border: Border.all(
+            color: isUploaded ? AppColors.success.withValues(alpha: 0.4) : AppColors.error,
           ),
-        ],
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: iconColor, size: 20.sp),
+            SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: AppTextStyles.labelMedium.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  Text(
+                    fileName,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: secondaryTextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

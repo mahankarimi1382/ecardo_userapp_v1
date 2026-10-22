@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/common/services/demo_account_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import '../models/commercial_models.dart';
@@ -193,6 +194,17 @@ class CommercialController extends GetxController {
     required double amount,
     required String currency,
   }) async {
+    if (!DemoAccountService.isDemoInterceptionAllowedNow) {
+      ToastHelper().showErrorToast(
+        l10nPickAuto(
+          en: 'Commercial crowdfunding platform is currently under maintenance.',
+          fa: 'سامانه تامین مالی جمعی در حال حاضر در دست به‌روزرسانی است.',
+          ar: 'منصة التمويل الجماعي تخضع للتحديث حالياً.',
+          zh: '众筹投资平台正在维护中。',
+        ),
+      );
+      return false;
+    }
     isSubmittingInvestment.value = true;
     try {
       // Simulate network / blockchain escrow settlement

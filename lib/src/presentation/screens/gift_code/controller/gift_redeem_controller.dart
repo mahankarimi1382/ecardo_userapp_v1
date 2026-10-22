@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -35,10 +36,13 @@ class GiftRedeemController extends GetxController {
 
   // Gift Code Redeem
   Future<void> giftCodeRedeem() async {
+    if (isGiftRedeemLoading.isTrue) return;
+    final code = giftCodeController.text.trim();
+    if (code.isEmpty) return;
     isGiftRedeemLoading.value = true;
     try {
       final Map<String, dynamic> requestBody = {
-        "code": giftCodeController.text,
+        "code": code,
       };
 
       final response = await Get.find<NetworkService>().post(
@@ -49,6 +53,7 @@ class GiftRedeemController extends GetxController {
       if (response.status == Status.completed) {
         giftCodeController.clear();
         ToastHelper().showSuccessToast(response.data!["message"]);
+        AppEventBus.emit(BalanceChangedEvent(sourceModule: 'gift_redeem'));
       }
     } catch (e, stackTrace) {
       debugPrint('❌ giftCodeRedeem() error: $e');

@@ -15,11 +15,14 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/multiple_image_picker_dropdown_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/controller/reply_ticket_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/settings/model/ticket_message_model.dart';
-import 'package:ecardo_user/src/presentation/screens/settings/view/support_tickets/ticket_status_helper.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/support_tickets/sub_sections/ticket_status_badge.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/support_tickets/ticket_status_helper.dart'
+    hide TicketStatusBadge;
 
 class ReplayTicket extends StatefulWidget {
   final String ticketUid;
@@ -167,13 +170,29 @@ class _ReplayTicketState extends State<ReplayTicket> {
                 CommonAppBar(
                   title: "#${ticket?.uuid ?? widget.ticketUid}",
                   rightSideWidget: (!isClosed)
-                      ? Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 18),
-                          child: _buildCloseTicketButton(
-                            context,
-                            isDark,
-                            localization,
-                          ),
+                      ? Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (ticket?.status != null)
+                              Padding(
+                                padding:
+                                    const EdgeInsetsDirectional.only(end: 8),
+                                child: TicketStatusBadge(
+                                  status: ticket!.status,
+                                  isDark: isDark,
+                                  localization: localization,
+                                ),
+                              ),
+                            Padding(
+                              padding:
+                                  const EdgeInsetsDirectional.only(end: 18),
+                              child: _buildCloseTicketButton(
+                                context,
+                                isDark,
+                                localization,
+                              ),
+                            ),
+                          ],
                         )
                       : (ticket?.status != null)
                           ? Padding(
@@ -260,6 +279,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                   personAvatar: t.user?.avatar ?? "",
                                   attachments: t.attachments ?? [],
                                   firstMessageDate: t.createdAt ?? "",
+                                  rawDate: t.createdAt,
                                   isDark: isDark,
                                 ),
                               // Conversation messages
@@ -273,6 +293,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                   personAvatar: item.user?.avatar ?? "",
                                   attachments: item.attachments ?? [],
                                   messageDate: item.createdAtFormatted ?? "",
+                                  rawDate: item.createdAt,
                                   isDark: isDark,
                                 );
                               }),
@@ -475,10 +496,10 @@ class _ReplayTicketState extends State<ReplayTicket> {
       pColor = AppColors.error;
       label = localization.supportTicketsPriorityHigh;
     } else if (p == 'medium') {
-      pColor = const Color(0xFFE6A700);
+      pColor = AppColors.warning;
       label = localization.supportTicketsPriorityMedium;
     } else {
-      pColor = const Color(0xFF0D9488);
+      pColor = AppColors.mutedBlue;
       label = localization.supportTicketsPriorityLow;
     }
 
@@ -528,6 +549,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
     required List<Attachments> attachments,
     String? firstMessageDate,
     String? messageDate,
+    String? rawDate,
     required bool isDark,
   }) {
     // Bubble shape with directional message tail
@@ -561,25 +583,22 @@ class _ReplayTicketState extends State<ReplayTicket> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 decoration: BoxDecoration(
-                  gradient: isDark
-                      ? const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFF7445FF), Color(0xFF5228D1)],
-                        )
-                      : const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFF7445FF), Color(0xFF5A35CC)],
-                        ),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.brandViolet,
+                      AppColors.brandVioletDeep,
+                    ],
+                  ),
                   borderRadius: bubbleBorderRadius,
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.12),
+                    color: AppColors.white.withValues(alpha: 0.12),
                     width: 0.8,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF7445FF).withValues(alpha: 0.22),
+                      color: AppColors.brandViolet.withValues(alpha: 0.22),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -592,8 +611,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                   isMe: isMe,
                   messageDate: messageDate,
                   firstMessageDate: firstMessageDate,
+                  rawDate: rawDate,
                   textColor: AppColors.white,
-                  secondaryTextColor: AppColors.white.withValues(alpha: 0.78),
+                  secondaryTextColor: AppColors.white.withValues(alpha: 0.82),
                   isDark: isDark,
                 ),
               ),
@@ -617,7 +637,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                   boxShadow: [
                     BoxShadow(
                       color:
-                          Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                          AppColors.black.withValues(alpha: isDark ? 0.25 : 0.04),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -733,6 +753,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                       isMe: isMe,
                       messageDate: messageDate,
                       firstMessageDate: firstMessageDate,
+                      rawDate: rawDate,
                       textColor: isDark
                           ? AppColors.warmWhite
                           : AppColors.lightTextPrimary.withValues(alpha: 0.80),
@@ -760,21 +781,40 @@ class _ReplayTicketState extends State<ReplayTicket> {
     required bool isMe,
     String? messageDate,
     String? firstMessageDate,
+    String? rawDate,
     required Color textColor,
     required Color secondaryTextColor,
     required bool isDark,
   }) {
     final localization = AppLocalizations.of(context)!;
-    String? formattedDate = messageDate;
-    if ((formattedDate == null || formattedDate.isEmpty) &&
-        firstMessageDate != null &&
-        firstMessageDate.isNotEmpty) {
-      try {
-        formattedDate = intl.DateFormat(
-          "dd MMM, yyyy hh:mm a",
-        ).format(DateTime.parse(firstMessageDate));
-      } catch (e) {
-        formattedDate = firstMessageDate;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final isFa = Localizations.localeOf(context).languageCode == 'fa';
+
+    String? formattedDate;
+    if (rawDate != null && rawDate.isNotEmpty) {
+      if (isFa) {
+        formattedDate = JalaliDateHelper.format(rawDate);
+      } else {
+        try {
+          final dt = DateTime.parse(rawDate);
+          formattedDate = intl.DateFormat("dd MMM, yyyy hh:mm a").format(dt);
+        } catch (_) {
+          formattedDate = messageDate ?? rawDate;
+        }
+      }
+    } else if (messageDate != null && messageDate.isNotEmpty) {
+      formattedDate = messageDate;
+    } else if (firstMessageDate != null && firstMessageDate.isNotEmpty) {
+      if (isFa) {
+        formattedDate = JalaliDateHelper.format(firstMessageDate);
+      } else {
+        try {
+          formattedDate = intl.DateFormat(
+            "dd MMM, yyyy hh:mm a",
+          ).format(DateTime.parse(firstMessageDate));
+        } catch (_) {
+          formattedDate = firstMessageDate;
+        }
       }
     }
 
@@ -831,7 +871,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
           ),
         ],
 
-        // Clean timestamp chip
+        // Clean timestamp chip with RTL support
         if (formattedDate != null && formattedDate.isNotEmpty) ...[
           const SizedBox(height: 6),
           Align(
@@ -840,6 +880,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                 : AlignmentDirectional.centerStart,
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              textDirection: isRtl ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 if (!isMe) ...[
                   Icon(
@@ -851,6 +892,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                 ],
                 Text(
                   formattedDate,
+                  textDirection: isFa
+                      ? TextDirection.rtl
+                      : (isRtl ? TextDirection.ltr : null),
                   style: AppTextStyles.labelSmall.copyWith(
                     fontSize: 10,
                     color: secondaryTextColor,
@@ -1082,7 +1126,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF232228) : AppColors.white,
+        color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
         borderRadius: BorderRadius.circular(26),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
@@ -1091,8 +1135,8 @@ class _ReplayTicketState extends State<ReplayTicket> {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withValues(alpha: 0.40)
-                : const Color(0xFF7445FF).withValues(alpha: 0.08),
+                ? AppColors.black.withValues(alpha: 0.40)
+                : AppColors.brandViolet.withValues(alpha: 0.08),
             blurRadius: 18,
             offset: const Offset(0, 4),
           ),
@@ -1193,8 +1237,8 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    Color(0xFF7445FF),
-                                    Color(0xFF5A35CC),
+                                    AppColors.brandViolet,
+                                    AppColors.brandVioletDeep,
                                   ],
                                 )
                               : LinearGradient(
@@ -1214,7 +1258,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           boxShadow: isActive
                               ? [
                                   BoxShadow(
-                                    color: const Color(0xFF7445FF)
+                                    color: AppColors.brandViolet
                                         .withValues(alpha: 0.35),
                                     blurRadius: 10,
                                     offset: const Offset(0, 3),

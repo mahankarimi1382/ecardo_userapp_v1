@@ -85,10 +85,6 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
       duration: const Duration(milliseconds: 1800),
     );
 
-    if (widget.animateShimmer) {
-      _shimmerController.repeat();
-    }
-
     _shimmerAnimation = Tween<double>(begin: -1.0, end: 2.0).animate(
       CurvedAnimation(parent: _shimmerController, curve: Curves.easeInOutSine),
     );
@@ -99,12 +95,19 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _syncShimmerAnimation();
+  }
+
+  @override
   void didUpdateWidget(EcardoSwipeButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Reset if loading or success finished or if explicitly enabled again
     if (oldWidget.isLoading && !widget.isLoading && !widget.isSuccess) {
       reset();
     }
+    _syncShimmerAnimation();
   }
 
   @override
@@ -123,6 +126,30 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
       _completed = false;
       _passedHalfwayHaptic = false;
     });
+    _syncShimmerAnimation();
+  }
+
+  void _syncShimmerAnimation() {
+    if (!mounted) return;
+    final disableAnimations =
+        MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+    final shouldAnimate = widget.animateShimmer &&
+        !disableAnimations &&
+        widget.enabled &&
+        !widget.isLoading &&
+        !widget.isSuccess &&
+        !_completed;
+
+    if (shouldAnimate) {
+      if (!_shimmerController.isAnimating) {
+        _shimmerController.repeat();
+      }
+    } else {
+      if (_shimmerController.isAnimating) {
+        _shimmerController.stop();
+        _shimmerController.reset();
+      }
+    }
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details, double maxDrag, {bool isRtl = false}) {
@@ -184,6 +211,9 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
 
   void _snapToComplete(double maxDrag) {
     _completed = true;
+    if (_shimmerController.isAnimating) {
+      _shimmerController.stop();
+    }
     _animateTo(maxDrag, Curves.easeOutCubic);
 
     _resetController.forward(from: 0.0).then((_) {
@@ -218,15 +248,32 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
           final totalWidth = constraints.maxWidth;
           final maxDrag = math.max(0.0, totalWidth - thumbSize - 8.0);
           final progress = maxDrag > 0 ? (_dragPosition / maxDrag).clamp(0.0, 1.0) : 0.0;
+          final isInteractive =
+              widget.enabled && !widget.isLoading && !widget.isSuccess && !_completed;
 
-          return _buildTrack(
-            context,
-            isDark,
-            isRtl,
-            totalWidth,
-            maxDrag,
-            progress,
-            thumbSize,
+          final label = widget.isLoading
+              ? (widget.loadingText ?? 'Processing...')
+              : widget.isSuccess
+                  ? (widget.successText ?? 'Confirmed')
+                  : widget.text;
+
+          return Semantics(
+            container: true,
+            button: true,
+            enabled: isInteractive,
+            label: label,
+            hint: isInteractive ? 'Double tap to confirm' : null,
+            onTap: isInteractive ? () => _snapToComplete(maxDrag) : null,
+            excludeSemantics: true,
+            child: _buildTrack(
+              context,
+              isDark,
+              isRtl,
+              totalWidth,
+              maxDrag,
+              progress,
+              thumbSize,
+            ),
           );
         },
       ),

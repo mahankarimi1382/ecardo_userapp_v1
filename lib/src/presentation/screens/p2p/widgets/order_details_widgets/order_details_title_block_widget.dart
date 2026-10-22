@@ -44,11 +44,11 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
 
   /// Escrow Security Shield Header ("Escrow Protected / تحت پوشش امانی")
   Widget _buildEscrowSecurityBanner(BuildContext context, bool isDark) {
-    final emeraldGreen = const Color(0xFF10B981);
-    final cardBg = isDark ? const Color(0xFF062A20) : const Color(0xFFECFDF5);
-    final borderColor = isDark ? const Color(0xFF0F5132) : const Color(0xFFA7F3D0);
-    final textHeading = isDark ? const Color(0xFF6EE7B7) : const Color(0xFF065F46);
-    final textSub = isDark ? const Color(0xFFA7F3D0).withValues(alpha: 0.85) : const Color(0xFF047857);
+    final emeraldGreen = AppColors.success;
+    final cardBg = isDark ? AppColors.darkSecondaryContainer : AppColors.successContainer;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final textHeading = isDark ? AppColors.white : AppColors.deepBlack;
+    final textSub = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
 
     return Container(
       width: double.infinity,
@@ -116,7 +116,7 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                           letterSpacing: 0.5,
                           fontSize: 9.sp,
                           fontWeight: FontWeight.w900,
-                          color: Colors.white,
+                          color: AppColors.white,
                         ),
                       ),
                     ),

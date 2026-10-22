@@ -3,9 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../bookings/travel_checkout_screen.dart';
 import '../core/controller/travel_controller.dart';
@@ -209,8 +212,8 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                   borderRadius: TravelTheme.radius,
                   gradient: LinearGradient(
                     colors: isDark
-                        ? const [Color(0xFF2C1045), Color(0xFF4A1A6D)]
-                        : const [Color(0xFF6A1B9A), TravelTheme.purple],
+                        ? const [AppColors.darkPrimaryContainer, AppColors.darkSurfaceVariant]
+                        : const [AppColors.brandVioletDeep, AppColors.brandViolet],
                   ),
                   boxShadow: TravelTheme.shadowFor(context),
                 ),
@@ -526,6 +529,13 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         ),
                       ),
                       IconButton(
+                        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                        tooltip: l10nPick(
+                          context,
+                          en: 'Decrease rooms',
+                          fa: 'کاهش تعداد اتاق',
+                          ar: 'تقليل عدد الغرف',
+                        ),
                         onPressed: selectedRooms.length > 1
                             ? () => setSheetState(selectedRooms.removeLast)
                             : null,
@@ -536,14 +546,27 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                               : TravelTheme.textSecondaryFor(context),
                         ),
                       ),
-                      Text(
-                        '${selectedRooms.length}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          color: TravelTheme.textPrimaryFor(context),
+                      SizedBox(
+                        width: 44.w,
+                        height: 44.h,
+                        child: Center(
+                          child: Text(
+                            '${selectedRooms.length}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              color: TravelTheme.textPrimaryFor(context),
+                            ),
+                          ),
                         ),
                       ),
                       IconButton(
+                        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                        tooltip: l10nPick(
+                          context,
+                          en: 'Increase rooms',
+                          fa: 'افزایش تعداد اتاق',
+                          ar: 'زيادة عدد الغرف',
+                        ),
                         onPressed: selectedRooms.length < 8
                             ? () => setSheetState(
                                 () => selectedRooms.add(
@@ -752,6 +775,13 @@ class _CountRow extends StatelessWidget {
             ),
           ),
           IconButton(
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+            tooltip: l10nPick(
+              context,
+              en: 'Decrease $label',
+              fa: 'کاهش $label',
+              ar: 'تقليل $label',
+            ),
             onPressed: value > minimum ? () => onChanged(value - 1) : null,
             icon: Icon(
               Icons.remove_circle_outline_rounded,
@@ -759,17 +789,27 @@ class _CountRow extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 34.w,
-            child: Text(
-              '$value',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                color: textPrimary,
+            width: 44.w,
+            height: 44.h,
+            child: Center(
+              child: Text(
+                '$value',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  color: textPrimary,
+                ),
               ),
             ),
           ),
           IconButton(
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+            tooltip: l10nPick(
+              context,
+              en: 'Increase $label',
+              fa: 'افزایش $label',
+              ar: 'زيادة $label',
+            ),
             onPressed: value < maximum ? () => onChanged(value + 1) : null,
             icon: Icon(
               Icons.add_circle_outline_rounded,
@@ -892,7 +932,7 @@ class _HotelResultsScreenState extends State<HotelResultsScreen> {
             ),
             for (final rating in [3.0, 4.0, 4.5])
               ListTile(
-                leading: const Icon(Icons.star_rounded, color: Colors.amber),
+                leading: const Icon(Icons.star_rounded, color: AppColors.warning),
                 title: Text('$rating+'),
                 onTap: () => Navigator.of(context).pop(rating),
               ),
@@ -1145,7 +1185,11 @@ class _HotelResultActions extends StatelessWidget {
               ),
               if (onRating != null)
                 ActionChip(
-                  avatar: const Icon(Icons.star_outline_rounded, size: 18),
+                  avatar: const Icon(
+                    Icons.star_outline_rounded,
+                    size: 18,
+                    color: AppColors.warning,
+                  ),
                   label: Text(localization.travelRating),
                   onPressed: onRating,
                 ),
@@ -1180,16 +1224,18 @@ class _HotelFilteredEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    return Column(
-      children: [
-        TravelEmptyState(message: localization.travelNoHotelResults),
-        SizedBox(height: 12.h),
-        TextButton.icon(
-          onPressed: onReset,
-          icon: const Icon(Icons.restart_alt_rounded),
-          label: Text(localization.reset),
-        ),
-      ],
+    return EcardoEmptyState(
+      title: localization.travelNoHotelResults,
+      description: l10nPick(
+        context,
+        en: 'No hotels match your active filters or sorting criteria. Reset filters to see all available hotels.',
+        fa: 'هیچ هتلی با فیلترها یا معیارهای انتخابی شما مطابقت ندارد. فیلترها را برای مشاهده تمام هتل‌ها بازنشانی کنید.',
+        ar: 'لا توجد فنادق تطابق الفلاتر المحددة. قم بإعادة ضبط الفلاتر لعرض جميع الفنادق المتاحة.',
+      ),
+      iconData: Icons.search_off_rounded,
+      glowColor: AppColors.brandViolet,
+      primaryActionLabel: localization.reset,
+      onPrimaryAction: onReset,
     );
   }
 }
@@ -1266,9 +1312,12 @@ class _HotelOfferCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            child: SizedBox(
+            child: Container(
               height: 145.h,
               width: double.infinity,
+              color: TravelTheme.isDark(context)
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightSurfaceVariant,
               child: offer.imageUrl.isNotEmpty
                   ? _HotelNetworkImage(url: offer.imageUrl)
                   : const _HotelImageFallback(),
@@ -1299,8 +1348,16 @@ class _HotelOfferCard extends StatelessWidget {
                             vertical: 3.h,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFFEF3C7),
+                            color: TravelTheme.isDark(context)
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.warningContainer,
                             borderRadius: BorderRadius.circular(6.r),
+                            border: Border.all(
+                              color: AppColors.warning.withValues(
+                                alpha: TravelTheme.isDark(context) ? 0.35 : 0.2,
+                              ),
+                              width: 0.8,
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -1308,7 +1365,7 @@ class _HotelOfferCard extends StatelessWidget {
                               const Icon(
                                 Icons.star_rounded,
                                 size: 14,
-                                color: Color(0xFFD97706),
+                                color: AppColors.warning,
                               ),
                               SizedBox(width: 2.w),
                               Text(
@@ -1316,7 +1373,9 @@ class _HotelOfferCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF92400E),
+                                  color: TravelTheme.isDark(context)
+                                      ? AppColors.warning
+                                      : AppColors.deepBlack,
                                 ),
                               ),
                             ],
@@ -1380,8 +1439,16 @@ class _HotelOfferCard extends StatelessWidget {
                                 vertical: 2.h,
                               ),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFFEF3C7),
+                                color: TravelTheme.isDark(context)
+                                    ? AppColors.darkSurfaceVariant
+                                    : AppColors.warningContainer,
                                 borderRadius: BorderRadius.circular(4.r),
+                                border: Border.all(
+                                  color: AppColors.warning.withValues(
+                                    alpha: TravelTheme.isDark(context) ? 0.35 : 0.2,
+                                  ),
+                                  width: 0.8,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -1390,7 +1457,7 @@ class _HotelOfferCard extends StatelessWidget {
                                     Icon(
                                       Icons.star_rounded,
                                       size: 11.r,
-                                      color: const Color(0xFFD97706),
+                                      color: AppColors.warning,
                                     ),
                                 ],
                               ),
@@ -1437,13 +1504,31 @@ class _HotelOfferCard extends StatelessWidget {
                 SizedBox(height: 12.h),
                 Wrap(
                   spacing: 8.w,
-                  runSpacing: 7.h,
+                  runSpacing: 8.h,
                   children: offer.featureKeys
                       .map(
-                        (feature) => Chip(
-                          visualDensity: VisualDensity.compact,
-                          label: Text(
-                            travelLocalizedKey(localization, feature),
+                        (feature) => ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 44),
+                          child: Chip(
+                            materialTapTargetSize: MaterialTapTargetSize.padded,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 8.h,
+                            ),
+                            backgroundColor: TravelTheme.isDark(context)
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.lightSurfaceVariant,
+                            side: BorderSide(
+                              color: TravelTheme.borderFor(context),
+                              width: 0.8,
+                            ),
+                            label: Text(
+                              travelLocalizedKey(localization, feature),
+                              style: TextStyle(
+                                fontSize: 11.sp,
+                                color: TravelTheme.textPrimaryFor(context),
+                              ),
+                            ),
                           ),
                         ),
                       )
@@ -1533,9 +1618,12 @@ class _HotelRailCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            child: SizedBox(
+            child: Container(
               height: 105.h,
               width: double.infinity,
+              color: TravelTheme.isDark(context)
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightSurfaceVariant,
               child: offer.imageUrl.isEmpty
                   ? const _HotelImageFallback()
                   : _HotelNetworkImage(url: offer.imageUrl),
@@ -1755,31 +1843,22 @@ class _HotelResultsEmptyState extends StatelessWidget {
         onRetry: onRetry,
       );
     }
-    return Column(
-      children: [
-        TravelEmptyState(
-          icon: Icons.hotel_rounded,
-          title: localization.travelNoHotelResults,
-          message: localization.travelOfferUnavailable,
-          actionText: localization.travelSearchHotels,
-          onAction: onEdit,
-        ),
-        if (onNotify != null) ...[
-          SizedBox(height: AppSpacing.sm.h),
-          FilledButton.icon(
-            onPressed: onNotify,
-            icon: const Icon(Icons.notifications_active_outlined),
-            label: Text(
-              () {
-                final code = Localizations.localeOf(context).languageCode;
-                if (code == 'fa') return 'موجود شد خبرم کن';
-                if (code == 'ar') return 'أعلمني عند التوفر';
-                return 'Notify me when available';
-              }(),
-            ),
-          ),
-        ],
-      ],
+    return EcardoEmptyState(
+      title: localization.travelNoHotelResults,
+      description: localization.travelOfferUnavailable,
+      iconData: Icons.travel_explore_rounded,
+      glowColor: AppColors.brandViolet,
+      primaryActionLabel: localization.travelSearchHotels,
+      onPrimaryAction: onEdit,
+      secondaryActionLabel: onNotify != null
+          ? () {
+              final code = Localizations.localeOf(context).languageCode;
+              if (code == 'fa') return 'موجود شد خبرم کن';
+              if (code == 'ar') return 'أعلمني عند التوفر';
+              return 'Notify me when available';
+            }()
+          : null,
+      onSecondaryAction: onNotify,
     );
   }
 }
@@ -1791,17 +1870,23 @@ class _HotelImageFallback extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = TravelTheme.isDark(context);
     final colors = isDark
-        ? const [Color(0xFF2C1045), Color(0xFF4A1A6D)]
-        : const [Color(0xFF4A148C), TravelTheme.purple];
+        ? const [AppColors.darkPrimaryContainer, AppColors.darkSurfaceVariant]
+        : const [AppColors.brandVioletDeep, AppColors.brandViolet];
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: colors),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: colors,
+        ),
       ),
       child: Center(
         child: Icon(
           Icons.hotel_rounded,
           size: 72.r,
-          color: Colors.white.withValues(alpha: 0.88),
+          color: isDark
+              ? AppColors.warmWhite.withValues(alpha: 0.88)
+              : AppColors.white.withValues(alpha: 0.88),
         ),
       ),
     );
@@ -1815,11 +1900,28 @@ class _HotelNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      url,
-      fit: BoxFit.cover,
-      webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
-      errorBuilder: (_, _, _) => const _HotelImageFallback(),
+    final isDark = TravelTheme.isDark(context);
+    return Container(
+      color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+        webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2,
+              color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+            ),
+          );
+        },
+        errorBuilder: (_, _, _) => const _HotelImageFallback(),
+      ),
     );
   }
 }
@@ -2062,7 +2164,7 @@ class _HotelDetailsScreenState extends State<HotelDetailsScreen> {
               if (_showSectionNavigation) ...[
                 SizedBox(height: 12.h),
                 SizedBox(
-                  height: 42.h,
+                  height: 48.h,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
@@ -2361,7 +2463,14 @@ class _SectionChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsetsDirectional.only(end: 8.w),
-      child: ActionChip(label: Text(label), onPressed: onTap),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 44),
+        child: ActionChip(
+          materialTapTargetSize: MaterialTapTargetSize.padded,
+          label: Text(label),
+          onPressed: onTap,
+        ),
+      ),
     );
   }
 }
@@ -2388,7 +2497,13 @@ class _HotelGalleryState extends State<_HotelGallery> {
     if (gallery.isEmpty) {
       return ClipRRect(
         borderRadius: TravelTheme.radius,
-        child: SizedBox(height: 230.h, child: const _HotelImageFallback()),
+        child: Container(
+          height: 230.h,
+          color: TravelTheme.isDark(context)
+              ? AppColors.darkSurfaceVariant
+              : AppColors.lightSurfaceVariant,
+          child: const _HotelImageFallback(),
+        ),
       );
     }
     return SizedBox(
@@ -2404,7 +2519,12 @@ class _HotelGalleryState extends State<_HotelGallery> {
               ),
               child: ClipRRect(
                 borderRadius: TravelTheme.radius,
-                child: _HotelNetworkImage(url: gallery[index]),
+                child: Container(
+                  color: TravelTheme.isDark(context)
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightSurfaceVariant,
+                  child: _HotelNetworkImage(url: gallery[index]),
+                ),
               ),
             ),
           ),

@@ -28,9 +28,15 @@ class TransactionSummaryCard extends StatelessWidget {
     double totalInflow = 0.0;
     double totalOutflow = 0.0;
 
+    final currencyCodes = transactions
+        .map((t) => t.trxCurrencyCode?.toUpperCase().trim())
+        .where((c) => c != null && c.isNotEmpty)
+        .toSet();
+    final isMultiCurrency = currencyCodes.length > 1;
+
     String currencySymbol = '';
     for (final tx in transactions) {
-      if (currencySymbol.isEmpty && tx.trxCurrencySymbol != null) {
+      if (currencySymbol.isEmpty && tx.trxCurrencySymbol != null && tx.trxCurrencySymbol!.isNotEmpty) {
         currencySymbol = tx.trxCurrencySymbol!;
       }
       final amount = tx.numericAmount;
@@ -42,7 +48,17 @@ class TransactionSummaryCard extends StatelessWidget {
         totalOutflow += amount;
       }
     }
-    if (currencySymbol.isEmpty) currencySymbol = '\$';
+    if (!isMultiCurrency && currencySymbol.isEmpty) {
+      currencySymbol = currencyCodes.isNotEmpty ? '${currencyCodes.first} ' : '\$';
+    }
+
+    final String inflowDisplay = isMultiCurrency
+        ? '+${_formatCompact(totalInflow)} (${l10nPick(context, en: "Multi", fa: "چندارزی", ar: "متعدد")})'
+        : '+$currencySymbol${_formatCompact(totalInflow)}';
+
+    final String outflowDisplay = isMultiCurrency
+        ? '-${_formatCompact(totalOutflow)} (${l10nPick(context, en: "Multi", fa: "چندارزی", ar: "متعدد")})'
+        : '-$currencySymbol${_formatCompact(totalOutflow)}';
 
     return Padding(
       padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.lg),
@@ -137,7 +153,7 @@ class TransactionSummaryCard extends StatelessWidget {
                       fa: 'مجموع دریافتی',
                       ar: 'إجمالي الوارد',
                     ),
-                    amount: '+$currencySymbol${_formatCompact(totalInflow)}',
+                    amount: inflowDisplay,
                     countLabel: '$inflowCount ${l10nPick(context, en: 'in', fa: 'ورودی', ar: 'وارد')}',
                     color: AppColors.success,
                     icon: Icons.arrow_downward_rounded,
@@ -163,7 +179,7 @@ class TransactionSummaryCard extends StatelessWidget {
                       fa: 'مجموع پرداختی',
                       ar: 'إجمالي الصادر',
                     ),
-                    amount: '-$currencySymbol${_formatCompact(totalOutflow)}',
+                    amount: outflowDisplay,
                     countLabel: '$outflowCount ${l10nPick(context, en: 'out', fa: 'خروجی', ar: 'صادر')}',
                     color: AppColors.error,
                     icon: Icons.arrow_upward_rounded,

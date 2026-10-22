@@ -18,7 +18,7 @@ enum GuaranteeCollateralType {
     descEn: 'Cash deposit locked in platform escrow wallet',
     ltvPct: 100,
     icon: Icons.account_balance_wallet_rounded,
-    themeColor: Color(0xFF0D9488),
+    themeColor: AppColors.mutedBlue,
   ),
 
   /// Crypto / USDT Collateral at 120% LTV (وثیقه تتر با نسبت LTV 120%)
@@ -30,7 +30,7 @@ enum GuaranteeCollateralType {
     descEn: 'USDT collateral locked in escrow smart contract at 120% LTV',
     ltvPct: 120,
     icon: Icons.currency_bitcoin_rounded,
-    themeColor: Color(0xFF2563EB),
+    themeColor: AppColors.info,
   ),
 
   /// Digital Promissory Note / Sayad Check (سفته الکترونیک / چک صیادی)
@@ -42,7 +42,7 @@ enum GuaranteeCollateralType {
     descEn: 'Digital promissory note or verified Sayad check',
     ltvPct: 110,
     icon: Icons.receipt_long_rounded,
-    themeColor: Color(0xFF7C3AED),
+    themeColor: AppColors.brandViolet,
   ),
 
   /// Real Estate / Bank Deposit Certificate (گواهی سپرده بانکی / سند ملکی)
@@ -54,7 +54,7 @@ enum GuaranteeCollateralType {
     descEn: 'Bank deposit certificate or registered property deed mortgage',
     ltvPct: 130,
     icon: Icons.apartment_rounded,
-    themeColor: Color(0xFFD97706),
+    themeColor: AppColors.warning,
   );
 
   final String id;
@@ -210,6 +210,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final liveWallet = _detectLiveWalletBalance();
     final isCryptoType = _selectedType == GuaranteeCollateralType.cryptoUsdt;
     final targetNeeded = isCryptoType ? _requiredUsdtAmount : _requiredCoverageAmount;
@@ -218,12 +219,15 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.lightBorder, width: 1.2),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: isDark ? 0.20 : 0.04),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -239,12 +243,14 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
               Container(
                 padding: EdgeInsets.all(8.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0D9488).withValues(alpha: 0.12),
+                  color: isDark
+                      ? AppColors.brandViolet.withValues(alpha: 0.18)
+                      : AppColors.brandVioletContainer,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Icon(
                   Icons.lock_clock_rounded,
-                  color: const Color(0xFF0D9488),
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
                   size: 22.sp,
                 ),
               ),
@@ -264,7 +270,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.lightTextPrimary,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -278,7 +284,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                       ),
                       style: TextStyle(
                         fontSize: 10.5.sp,
-                        color: AppColors.lightTextSecondary,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -295,129 +301,141 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
               final isSelected = _selectedType == type;
               return Padding(
                 padding: EdgeInsets.only(bottom: 8.h),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(14.r),
-                    onTap: () => _selectType(type),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? type.themeColor.withValues(alpha: 0.07)
-                            : const Color(0xFFFAFAFC),
+                child: Semantics(
+                  button: true,
+                  selected: isSelected,
+                  label: '${l10nPick(context, fa: type.titleFa, en: type.titleEn)}, LTV ${type.ltvPct}%',
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 48),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
                         borderRadius: BorderRadius.circular(14.r),
-                        border: Border.all(
-                          color: isSelected ? type.themeColor : AppColors.lightBorder,
-                          width: isSelected ? 1.8 : 1.0,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          // Leading icon
-                          Container(
-                            width: 38.r,
-                            height: 38.r,
-                            decoration: BoxDecoration(
+                        onTap: () => _selectType(type),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? type.themeColor.withValues(alpha: isDark ? 0.15 : 0.08)
+                                : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant),
+                            borderRadius: BorderRadius.circular(14.r),
+                            border: Border.all(
                               color: isSelected
                                   ? type.themeColor
-                                  : type.themeColor.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            child: Icon(
-                              type.icon,
-                              color: isSelected ? Colors.white : type.themeColor,
-                              size: 20.sp,
+                                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                              width: isSelected ? 1.8 : 1.0,
                             ),
                           ),
-                          SizedBox(width: 12.w),
+                          child: Row(
+                            children: [
+                              // Leading icon
+                              Container(
+                                width: 38.r,
+                                height: 38.r,
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? type.themeColor
+                                      : type.themeColor.withValues(alpha: isDark ? 0.20 : 0.12),
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Icon(
+                                  type.icon,
+                                  color: isSelected ? Colors.white : type.themeColor,
+                                  size: 20.sp,
+                                ),
+                              ),
+                              SizedBox(width: 12.w),
 
-                          // Title and description
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                              // Title and description
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: Text(
-                                        l10nPick(
-                                          context,
-                                          fa: type.titleFa,
-                                          en: type.titleEn,
-                                          ar: type.titleFa,
-                                          zh: type.titleEn,
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            l10nPick(
+                                              context,
+                                              fa: type.titleFa,
+                                              en: type.titleEn,
+                                              ar: type.titleFa,
+                                              zh: type.titleEn,
+                                            ),
+                                            style: TextStyle(
+                                              fontSize: 12.5.sp,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.w800
+                                                  : FontWeight.w600,
+                                              color: isSelected
+                                                  ? type.themeColor
+                                                  : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                                            ),
+                                          ),
                                         ),
-                                        style: TextStyle(
-                                          fontSize: 12.5.sp,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w800
-                                              : FontWeight.w600,
-                                          color: isSelected
-                                              ? type.themeColor
-                                              : AppColors.lightTextPrimary,
+                                        SizedBox(width: 6.w),
+                                        // LTV ratio pill
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 3.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: isSelected
+                                                ? type.themeColor
+                                                : (isDark ? AppColors.darkCard : AppColors.lightWarmGray.withValues(alpha: 0.3)),
+                                            borderRadius: BorderRadius.circular(20.r),
+                                          ),
+                                          child: Text(
+                                            'LTV ${type.ltvPct}%',
+                                            style: TextStyle(
+                                              fontSize: 9.5.sp,
+                                              fontWeight: FontWeight.w800,
+                                              color: isSelected
+                                                  ? Colors.white
+                                                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    SizedBox(width: 6.w),
-                                    // LTV ratio pill
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.w,
-                                        vertical: 3.h,
+                                    SizedBox(height: 3.h),
+                                    Text(
+                                      l10nPick(
+                                        context,
+                                        fa: type.descFa,
+                                        en: type.descEn,
+                                        ar: type.descFa,
+                                        zh: type.descEn,
                                       ),
-                                      decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? type.themeColor
-                                            : Colors.grey.shade200,
-                                        borderRadius: BorderRadius.circular(20.r),
-                                      ),
-                                      child: Text(
-                                        'LTV ${type.ltvPct}%',
-                                        style: TextStyle(
-                                          fontSize: 9.5.sp,
-                                          fontWeight: FontWeight.w800,
-                                          color: isSelected
-                                              ? Colors.white
-                                              : Colors.grey.shade700,
-                                        ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                        height: 1.3,
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 3.h),
-                                Text(
-                                  l10nPick(
-                                    context,
-                                    fa: type.descFa,
-                                    en: type.descEn,
-                                    ar: type.descFa,
-                                    zh: type.descEn,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 10.sp,
-                                    color: Colors.grey.shade600,
-                                    height: 1.3,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                              ),
 
-                          SizedBox(width: 8.w),
+                              SizedBox(width: 8.w),
 
-                          // Selection radio indicator
-                          Icon(
-                            isSelected
-                                ? Icons.radio_button_checked_rounded
-                                : Icons.radio_button_unchecked_rounded,
-                            color: isSelected ? type.themeColor : Colors.grey.shade400,
-                            size: 20.sp,
+                              // Selection radio indicator
+                              Icon(
+                                isSelected
+                                    ? Icons.radio_button_checked_rounded
+                                    : Icons.radio_button_unchecked_rounded,
+                                color: isSelected
+                                    ? type.themeColor
+                                    : (isDark ? AppColors.darkTextTertiary : AppColors.softGray),
+                                size: 20.sp,
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
@@ -432,9 +450,9 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
           Container(
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: const Color(0xFFF8FAFC),
+              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
               borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
             ),
             child: Column(
               children: [
@@ -448,6 +466,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                   ),
                   value: '${_formatAmount(widget.guaranteeAmount)} ${widget.currency}',
                   isBold: false,
+                  isDark: isDark,
                 ),
                 SizedBox(height: 6.h),
                 _buildBreakdownRow(
@@ -460,9 +479,10 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                   ),
                   value: '${_formatAmount(_baseMarginAmount)} ${widget.currency}',
                   isBold: false,
+                  isDark: isDark,
                 ),
                 SizedBox(height: 6.h),
-                const Divider(height: 12, thickness: 0.8),
+                Divider(height: 12, thickness: 0.8, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
                 SizedBox(height: 4.h),
                 _buildBreakdownRow(
                   label: l10nPick(
@@ -477,6 +497,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                       : '${_formatAmount(_requiredCoverageAmount)} ${widget.currency}',
                   isBold: true,
                   valueColor: _selectedType.themeColor,
+                  isDark: isDark,
                 ),
               ],
             ),
@@ -492,6 +513,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
             targetNeeded: targetNeeded,
             isSufficient: isSufficient,
             deficit: deficit,
+            isDark: isDark,
           ),
 
           SizedBox(height: 14.h),
@@ -500,16 +522,16 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
           Container(
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F5F9),
+              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
               borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: const Color(0xFFCBD5E1)),
+              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
                   Icons.shield_outlined,
-                  color: const Color(0xFF475569),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   size: 20.sp,
                 ),
                 SizedBox(width: 10.w),
@@ -528,7 +550,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                         style: TextStyle(
                           fontSize: 11.5.sp,
                           fontWeight: FontWeight.w800,
-                          color: const Color(0xFF1E293B),
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -542,7 +564,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                         ),
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: const Color(0xFF475569),
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           height: 1.5,
                         ),
                       ),
@@ -562,7 +584,11 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
     required String value,
     required bool isBold,
     Color? valueColor,
+    required bool isDark,
   }) {
+    final defaultPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final defaultSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -572,7 +598,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
-              color: isBold ? AppColors.lightTextPrimary : AppColors.lightTextSecondary,
+              color: isBold ? defaultPrimary : defaultSecondary,
             ),
           ),
         ),
@@ -582,7 +608,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
           style: TextStyle(
             fontSize: isBold ? 12.sp : 11.sp,
             fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
-            color: valueColor ?? AppColors.lightTextPrimary,
+            color: valueColor ?? defaultPrimary,
           ),
         ),
       ],
@@ -596,21 +622,22 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
     required double targetNeeded,
     required bool isSufficient,
     required double deficit,
+    required bool isDark,
   }) {
     // If Promissory Note or Real Estate: show registry/signature verification status
     if (_selectedType == GuaranteeCollateralType.promissoryNote) {
       return Container(
         padding: EdgeInsets.all(12.r),
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F3FF),
+          color: isDark ? AppColors.brandViolet.withValues(alpha: 0.15) : AppColors.brandVioletContainer,
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: const Color(0xFFDDD6FE)),
+          border: Border.all(color: AppColors.brandViolet.withValues(alpha: isDark ? 0.35 : 0.25)),
         ),
         child: Row(
           children: [
             Icon(
               Icons.verified_user_rounded,
-              color: const Color(0xFF7C3AED),
+              color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
               size: 20.sp,
             ),
             SizedBox(width: 10.w),
@@ -629,7 +656,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                     style: TextStyle(
                       fontSize: 11.5.sp,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF5B21B6),
+                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -641,7 +668,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                     ),
                     style: TextStyle(
                       fontSize: 10.sp,
-                      color: const Color(0xFF6D28D9),
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -656,15 +683,15 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
       return Container(
         padding: EdgeInsets.all(12.r),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFBEB),
+          color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: const Color(0xFFFDE68A)),
+          border: Border.all(color: AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.25)),
         ),
         child: Row(
           children: [
             Icon(
               Icons.home_work_rounded,
-              color: const Color(0xFFD97706),
+              color: AppColors.warning,
               size: 20.sp,
             ),
             SizedBox(width: 10.w),
@@ -683,7 +710,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                     style: TextStyle(
                       fontSize: 11.5.sp,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFFB45309),
+                      color: AppColors.warning,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -695,7 +722,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                     ),
                     style: TextStyle(
                       fontSize: 10.sp,
-                      color: const Color(0xFF92400E),
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -711,9 +738,9 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
       return Container(
         padding: EdgeInsets.all(12.r),
         decoration: BoxDecoration(
-          color: AppColors.successContainer,
+          color: isDark ? AppColors.success.withValues(alpha: 0.15) : AppColors.successContainer,
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
+          border: Border.all(color: AppColors.success.withValues(alpha: isDark ? 0.40 : 0.35)),
         ),
         child: Row(
           children: [
@@ -746,7 +773,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                           style: TextStyle(
                             fontSize: 9.5.sp,
                             fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                       ),
@@ -770,7 +797,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                     '${l10nPick(context, fa: 'موجودی فعلی:', en: 'Available Balance:')} ${_formatAmount(liveWallet.balance)} ${liveWallet.code} · ${l10nPick(context, fa: 'پوشش مورد نیاز:', en: 'Required:')} ${_formatAmount(targetNeeded)} ${liveWallet.code}',
                     style: TextStyle(
                       fontSize: 10.sp,
-                      color: Colors.green.shade900,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -785,9 +812,9 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
     return Container(
       padding: EdgeInsets.all(12.r),
       decoration: BoxDecoration(
-        color: AppColors.warningContainer,
+        color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.warning.withValues(alpha: 0.5)),
+        border: Border.all(color: AppColors.warning.withValues(alpha: isDark ? 0.40 : 0.35)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -820,43 +847,55 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
                     style: TextStyle(
                       fontSize: 9.5.sp,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                   ),
                 ),
               ),
               SizedBox(width: 8.w),
               if (widget.onTopUpPressed != null || Get.isRegistered<HomeController>())
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.warning,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    elevation: 0,
+                Semantics(
+                  button: true,
+                  label: l10nPick(
+                    context,
+                    fa: 'شارژ کیف‌پول',
+                    en: 'Top-Up Wallet',
+                    ar: 'شحن المحفظة',
+                    zh: '充值钱包',
                   ),
-                  onPressed: () {
-                    if (widget.onTopUpPressed != null) {
-                      widget.onTopUpPressed!();
-                    } else {
-                      try {
-                        Get.toNamed(BaseRoute.addMoney);
-                      } catch (_) {}
-                    }
-                  },
-                  child: Text(
-                    l10nPick(
-                      context,
-                      fa: 'شارژ کیف‌پول',
-                      en: 'Top-Up',
-                      ar: 'شحن',
-                      zh: '充值',
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.warning,
+                        foregroundColor: AppColors.white,
+                        minimumSize: Size(44.w, 44.h),
+                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: () {
+                        if (widget.onTopUpPressed != null) {
+                          widget.onTopUpPressed!();
+                        } else {
+                          try {
+                            Get.toNamed(BaseRoute.addMoney);
+                          } catch (_) {}
+                        }
+                      },
+                      child: Text(
+                        l10nPick(
+                          context,
+                          fa: 'شارژ کیف‌پول',
+                          en: 'Top-Up',
+                          ar: 'شحن',
+                          zh: '充值',
+                        ),
+                        style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w800),
+                      ),
                     ),
-                    style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800),
                   ),
                 ),
             ],
@@ -867,7 +906,7 @@ class _GuaranteeCollateralCardState extends State<GuaranteeCollateralCard> {
             style: TextStyle(
               fontSize: 10.5.sp,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF92400E),
+              color: AppColors.warning,
             ),
           ),
         ],

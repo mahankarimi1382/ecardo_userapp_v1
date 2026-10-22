@@ -5,10 +5,12 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../app/constants/app_colors.dart';
 import '../../app/constants/app_spacing.dart';
+import '../../common/widgets/design_system/ecardo_empty_state.dart';
 import '../../helper/l10n_pick.dart';
 import '../controllers/visa_controller.dart';
 import '../models/visa_models.dart';
-import '../widgets/visa_widgets.dart';
+import '../widgets/visa_status_badge.dart';
+import '../widgets/visa_widgets.dart' hide VisaStatusBadge;
 import 'visa_detail_screen.dart';
 
 class VisaListScreen extends StatefulWidget {
@@ -54,6 +56,8 @@ class _VisaListScreenState extends State<VisaListScreen> {
             color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
+          tooltip: l10nPick(context, en: 'Back', fa: 'بازگشت'),
+          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
           onPressed: () => Get.back(),
         ),
       ),
@@ -80,7 +84,7 @@ class _VisaListScreenState extends State<VisaListScreen> {
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(
                     horizontal: AppSpacing.lg.w,
-                    vertical: AppSpacing.sm.h,
+                    vertical: AppSpacing.xs.h,
                   ),
                   itemCount: filters.length,
                   separatorBuilder: (_, _) => SizedBox(width: AppSpacing.sm.w),
@@ -88,24 +92,29 @@ class _VisaListScreenState extends State<VisaListScreen> {
                     final f = filters[index];
                     final isSelected = current == f['id'];
 
-                    return InkWell(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        _controller.selectedFilterStatus.value = f['id'] as String;
-                      },
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md.w,
-                          vertical: AppSpacing.xs.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? (isDark ? AppColors.darkPrimary : AppColors.lightSecondary)
-                              : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                        ),
-                        child: Center(
+                    return Semantics(
+                      button: true,
+                      selected: isSelected,
+                      label: f['label'] as String,
+                      child: InkWell(
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          _controller.selectedFilterStatus.value = f['id'] as String;
+                        },
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+                        child: Container(
+                          constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md.w,
+                            vertical: AppSpacing.xs.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? (isDark ? AppColors.darkPrimary : AppColors.lightSecondary)
+                                : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
+                            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+                          ),
                           child: Text(
                             f['label'] as String,
                             style: TextStyle(
@@ -143,65 +152,20 @@ class _VisaListScreenState extends State<VisaListScreen> {
                   return Center(
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.all(AppSpacing.xxxl.r),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(AppSpacing.xl.r),
-                            decoration: BoxDecoration(
-                              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.assignment_outlined,
-                              size: 48.r,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
-                            ),
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                          Text(
-                            l10nPick(context, en: 'No visa applications found', fa: 'هیچ پرونده ویزایی یافت نشد'),
-                            style: TextStyle(
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          SizedBox(height: AppSpacing.xs.h),
-                          Text(
-                            l10nPick(
-                              context,
-                              en: 'Apply for your destination visa and track the status in real time.',
-                              fa: 'کشور مقصد خود را انتخاب کرده و درخواست ویزا را به صورت آنلاین ثبت نمایید.',
-                            ),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                              height: 1.4,
-                            ),
-                          ),
-                          SizedBox(height: AppSpacing.xl.h),
-                          ElevatedButton.icon(
-                            onPressed: () {
-                              HapticFeedback.lightImpact();
-                              Get.back();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-                              foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-                              padding: EdgeInsets.symmetric(horizontal: AppSpacing.xl.w, vertical: AppSpacing.md.h),
-                              elevation: 0,
-                            ),
-                            icon: const Icon(Icons.add, size: 18),
-                            label: Text(
-                              l10nPick(context, en: 'New Application', fa: 'ثبت درخواست جدید'),
-                              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
-                            ),
-                          ),
-                        ],
+                      child: EcardoEmptyState(
+                        title: l10nPick(context, en: 'No visa applications found', fa: 'هیچ پرونده ویزایی یافت نشد'),
+                        description: l10nPick(
+                          context,
+                          en: 'Apply for your destination visa and track the status in real time.',
+                          fa: 'کشور مقصد خود را انتخاب کرده و درخواست ویزا را به صورت آنلاین ثبت نمایید.',
+                        ),
+                        iconData: Icons.assignment_outlined,
+                        glowColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        primaryActionLabel: l10nPick(context, en: 'New Application', fa: 'ثبت درخواست جدید'),
+                        onPrimaryAction: () {
+                          HapticFeedback.lightImpact();
+                          Get.back();
+                        },
                       ),
                     ),
                   );
@@ -236,8 +200,8 @@ class _VisaListScreenState extends State<VisaListScreen> {
   }
 
   Widget _buildLoadingSkeleton(bool isDark) {
-    final baseColor = isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300;
-    final highlightColor = isDark ? AppColors.darkSurface : Colors.grey.shade100;
+    final baseColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+    final highlightColor = isDark ? AppColors.darkSurface : AppColors.lightOutlineVariant;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -271,8 +235,11 @@ class _VisaRequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VisaCard(
-      onTap: onTap,
+    return Semantics(
+      button: true,
+      label: '${request.countryName}, ${request.visaTitle}, ${request.applicantName}',
+      child: VisaCard(
+        onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -374,6 +341,6 @@ class _VisaRequestCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ),);
   }
 }

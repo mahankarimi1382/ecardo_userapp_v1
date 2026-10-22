@@ -26,15 +26,14 @@ class AmbientAuthBackground extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: isDark
-                    ? const [
-                        Color(0xFF090D1A), // Deep navy
-                        Color(0xFF0E1629), // Rich midnight
-                        Color(0xFF0A0E1C), // Obsidian blue
+                    ? [
+                        AppColors.darkBackground,
+                        ...AppColors.heroNightGradient,
                       ]
                     : const [
-                        Color(0xFFF8FAFC), // Alabaster
-                        Color(0xFFF1F5F9), // Pearl white
-                        Color(0xFFFFFFFF), // Pure white
+                        AppColors.lightBackground,
+                        AppColors.lightSurfaceVariant,
+                        AppColors.lightSurface,
                       ],
               ),
             ),
@@ -54,14 +53,14 @@ class AmbientAuthBackground extends StatelessWidget {
                 gradient: RadialGradient(
                   colors: isDark
                       ? [
-                          const Color(0xFF38BDF8).withValues(alpha: 0.16), // Cyan glow
-                          const Color(0xFF6366F1).withValues(alpha: 0.08), // Indigo
-                          Colors.transparent,
+                          AppColors.mainSoftBlue.withValues(alpha: 0.16),
+                          AppColors.brandViolet.withValues(alpha: 0.08),
+                          AppColors.transparent,
                         ]
                       : [
-                          const Color(0xFFABC3EA).withValues(alpha: 0.35),
-                          const Color(0xFF849ACD).withValues(alpha: 0.12),
-                          Colors.transparent,
+                          AppColors.mainSoftBlue.withValues(alpha: 0.25),
+                          AppColors.brandVioletContainer.withValues(alpha: 0.12),
+                          AppColors.transparent,
                         ],
                   stops: const [0.0, 0.45, 1.0],
                 ),
@@ -83,14 +82,14 @@ class AmbientAuthBackground extends StatelessWidget {
                 gradient: RadialGradient(
                   colors: isDark
                       ? [
-                          const Color(0xFF818CF8).withValues(alpha: 0.14), // Violet glow
-                          const Color(0xFF4F46E5).withValues(alpha: 0.06),
-                          Colors.transparent,
+                          AppColors.brandViolet.withValues(alpha: 0.14),
+                          AppColors.brandVioletDeep.withValues(alpha: 0.06),
+                          AppColors.transparent,
                         ]
                       : [
-                          const Color(0xFFD5CBC8).withValues(alpha: 0.30),
-                          const Color(0xFFABC3EA).withValues(alpha: 0.10),
-                          Colors.transparent,
+                          AppColors.lightOutlineVariant.withValues(alpha: 0.40),
+                          AppColors.brandVioletContainer.withValues(alpha: 0.15),
+                          AppColors.transparent,
                         ],
                   stops: const [0.0, 0.50, 1.0],
                 ),
@@ -124,7 +123,7 @@ class _SubtleGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = (isDark ? Colors.white : AppColors.deepBlack)
+      ..color = (isDark ? AppColors.white : AppColors.deepBlack)
           .withValues(alpha: isDark ? 0.022 : 0.015)
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;

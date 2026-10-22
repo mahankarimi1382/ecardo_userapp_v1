@@ -39,14 +39,12 @@ class ServicesEntrySection extends StatelessWidget {
                       width: 28.r,
                       height: 28.r,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF7C3AED), Color(0xFF6366F1)],
-                        ),
+                        gradient: AppColors.brandGradient,
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Icon(
                         Icons.widgets_rounded,
-                        color: Colors.white,
+                        color: AppColors.white,
                         size: 16.r,
                       ),
                     ),
@@ -74,39 +72,55 @@ class ServicesEntrySection extends StatelessWidget {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  Get.toNamed(BaseRoute.services);
-                },
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
-                  child: Row(
-                    children: [
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'All Services',
-                          fa: 'مشاهده همه',
-                          ar: 'جميع الخدمات',
-                          tr: 'Tümü',
-                          ru: 'Все',
-                          zh: '全部',
-                        ),
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                        ),
+              Semantics(
+                button: true,
+                label: l10nPick(
+                  context,
+                  en: 'All Services',
+                  fa: 'مشاهده همه',
+                  ar: 'جميع الخدمات',
+                  tr: 'Tümü',
+                  ru: 'Все',
+                  zh: '全部',
+                ),
+                child: InkWell(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    Get.toNamed(BaseRoute.services);
+                  },
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(minWidth: 44.0, minHeight: 44.0),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'All Services',
+                              fa: 'مشاهده همه',
+                              ar: 'جميع الخدمات',
+                              tr: 'Tümü',
+                              ru: 'Все',
+                              zh: '全部',
+                            ),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                            ),
+                          ),
+                          SizedBox(width: 2.w),
+                          Icon(
+                            isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+                            size: 18.r,
+                            color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 2.w),
-                      Icon(
-                        isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
-                        size: 18.r,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -129,7 +143,7 @@ class ServicesEntrySection extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: isDark
-                      ? Colors.black.withValues(alpha: 0.25)
+                      ? AppColors.black.withValues(alpha: 0.25)
                       : AppColors.brandViolet.withValues(alpha: 0.05),
                   blurRadius: 14,
                   offset: const Offset(0, 4),
@@ -152,7 +166,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Lisanslar',
                         ru: 'Лицензии',
                       ),
-                      gradient: const [Color(0xFF7C3AED), Color(0xFF6366F1)],
+                      gradient: const [AppColors.brandViolet, AppColors.brandVioletDeep],
                       isDark: isDark,
                       badge: l10nPick(context, en: 'VIP', fa: 'ویژه', ar: 'مميز'),
                       onTap: () {
@@ -170,7 +184,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Faturalar',
                         ru: 'Счета',
                       ),
-                      gradient: const [Color(0xFFD97706), Color(0xFFF59E0B)],
+                      gradient: const [AppColors.warning, AppColors.warmBrown],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -187,7 +201,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Hediye Kartı',
                         ru: 'Подарки',
                       ),
-                      gradient: const [Color(0xFFE11D48), Color(0xFFFB7185)],
+                      gradient: const [AppColors.error, AppColors.brandVioletDeep],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -204,7 +218,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Seyahat',
                         ru: 'Путешествия',
                       ),
-                      gradient: const [Color(0xFF0284C7), Color(0xFF38BDF8)],
+                      gradient: const [AppColors.info, AppColors.mutedBlue],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -229,7 +243,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Transfer',
                         ru: 'Перевод',
                       ),
-                      gradient: const [Color(0xFF059669), Color(0xFF10B981)],
+                      gradient: const [AppColors.success, AppColors.mutedBlue],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -246,7 +260,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Döviz',
                         ru: 'Обмен',
                       ),
-                      gradient: const [Color(0xFF2563EB), Color(0xFF60A5FA)],
+                      gradient: const [AppColors.info, AppColors.brandViolet],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -263,7 +277,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Kartlar',
                         ru: 'Карты',
                       ),
-                      gradient: const [Color(0xFF8B5CF6), Color(0xFFA78BFA)],
+                      gradient: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -280,7 +294,7 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Daha Fazla',
                         ru: 'Еще',
                       ),
-                      gradient: const [Color(0xFF475569), Color(0xFF64748B)],
+                      gradient: const [AppColors.darkGray, AppColors.softGray],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -317,81 +331,91 @@ class _ServiceTileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 72.w,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
+    final semanticLabel = badge != null ? '$label, $badge' : label;
+
+    return Semantics(
+      button: true,
+      enabled: true,
+      label: semanticLabel,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 44.0, minHeight: 44.0),
+          child: SizedBox(
+            width: 72.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 50.r,
-                  height: 50.r,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: gradient,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: gradient.first.withValues(alpha: isDark ? 0.35 : 0.25),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+                Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 50.r,
+                      height: 50.r,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: gradient,
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(16.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: gradient.first.withValues(alpha: isDark ? 0.35 : 0.25),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Icon(
-                    icon,
-                    color: Colors.white,
-                    size: 24.r,
+                      child: Icon(
+                        icon,
+                        color: AppColors.white,
+                        size: 24.r,
+                      ),
+                    ),
+                    if (badge != null)
+                      Positioned(
+                        top: -4.h,
+                        right: -4.w,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.error,
+                            borderRadius: BorderRadius.circular(6.r),
+                            border: Border.all(
+                              color: isDark ? AppColors.darkCard : AppColors.white,
+                              width: 1.2,
+                            ),
+                          ),
+                          child: Text(
+                            badge!,
+                            style: TextStyle(
+                              fontSize: 8.5.sp,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 7.h),
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
-                if (badge != null)
-                  Positioned(
-                    top: -4.h,
-                    right: -4.w,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEF4444),
-                        borderRadius: BorderRadius.circular(6.r),
-                        border: Border.all(
-                          color: isDark ? AppColors.darkCard : Colors.white,
-                          width: 1.2,
-                        ),
-                      ),
-                      child: Text(
-                        badge!,
-                        style: TextStyle(
-                          fontSize: 8.5.sp,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
               ],
             ),
-            SizedBox(height: 7.h),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

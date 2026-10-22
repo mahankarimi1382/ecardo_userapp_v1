@@ -196,9 +196,8 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
             // مسدودی سراسری: بازگشت، کاربر را به صفحه‌ای می‌برد که دوباره
             // ۴۰۳ می‌دهد. به‌جای دکمهٔ بی‌اثر، هیچ ناوبری پیشنهاد نمی‌شود.
             ? null
-            : IconButton(
-                icon: Icon(Icons.arrow_back,
-                    color: primaryTextColor),
+            : BackButton(
+                color: primaryTextColor,
                 onPressed: () {
                   if (Get.key.currentState?.canPop() ?? false) {
                     Get.back();
