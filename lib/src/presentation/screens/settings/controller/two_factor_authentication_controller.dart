@@ -158,12 +158,14 @@ class TwoFactorAuthenticationController extends GetxController {
       if (response.status == Status.completed) {
         await fetchUser();
         enable2FaController.clear();
-        final msg = response.data?["message"]?.toString() ??
+        final msg =
+            response.data?["message"]?.toString() ??
             loc?.enable2FaSectionTitle ??
             '2FA enabled successfully';
         ToastHelper().showSuccessToast(msg);
       } else if (response.status == Status.error) {
-        final msg = response.message ??
+        final msg =
+            response.message ??
             loc?.allControllerLoadError ??
             'Failed to enable 2FA';
         ToastHelper().showErrorToast(msg);
@@ -191,12 +193,14 @@ class TwoFactorAuthenticationController extends GetxController {
       if (response.status == Status.completed) {
         await fetchUser();
         disable2FaController.clear();
-        final msg = response.data?["message"]?.toString() ??
+        final msg =
+            response.data?["message"]?.toString() ??
             loc?.disable2FaSectionTitle ??
             '2FA disabled successfully';
         ToastHelper().showSuccessToast(msg);
       } else if (response.status == Status.error) {
-        final msg = response.message ??
+        final msg =
+            response.message ??
             loc?.allControllerLoadError ??
             'Failed to disable 2FA';
         ToastHelper().showErrorToast(msg);
@@ -328,9 +332,7 @@ class TwoFactorAuthenticationController extends GetxController {
     }
     if (passcodeController.text.trim() !=
         confirmPasscodeController.text.trim()) {
-      ToastHelper().showErrorToast(
-        loc.twoFactorValidationPasscodesDoNotMatch,
-      );
+      ToastHelper().showErrorToast(loc.twoFactorValidationPasscodesDoNotMatch);
       return false;
     }
     return true;

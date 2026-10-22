@@ -17,7 +17,9 @@ class TicketDetails extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextTertiary;
 
     return Container(
       width: double.infinity,
@@ -55,7 +57,9 @@ class TicketDetails extends StatelessWidget {
                       _buildDetailRow(
                         label: localization.ticketDetailsTicketId,
                         value: "#${ticket.uuid ?? ''}",
-                        valueColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        valueColor: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.lightPrimary,
                         isMono: true,
                         secondaryTextColor: secondaryTextColor,
                       ),
@@ -76,17 +80,22 @@ class TicketDetails extends StatelessWidget {
                             ? AppColors.error
                             : ticket.priority == "medium"
                             ? AppColors.warning
-                            : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+                            : (isDark
+                                  ? AppColors.softGray
+                                  : AppColors.lightTextSecondary),
                         secondaryTextColor: secondaryTextColor,
                       ),
                       _buildStatusRow(
-                        label: localization.supportTicketsStatus.replaceAll(':', '').trim(),
+                        label: localization.supportTicketsStatus
+                            .replaceAll(':', '')
+                            .trim(),
                         status: ticket.status,
                         localization: localization,
                         isDark: isDark,
                         secondaryTextColor: secondaryTextColor,
                       ),
-                      if (ticket.createdAt != null && ticket.createdAt!.isNotEmpty)
+                      if (ticket.createdAt != null &&
+                          ticket.createdAt!.isNotEmpty)
                         _buildDetailRow(
                           label: localization.ticketDetailsCreatedOn,
                           // TICKET-FIX: DateTime.parse throws on formatted
@@ -96,7 +105,8 @@ class TicketDetails extends StatelessWidget {
                           valueColor: primaryTextColor,
                           secondaryTextColor: secondaryTextColor,
                         ),
-                      if (ticket.updatedAt != null && ticket.updatedAt!.isNotEmpty)
+                      if (ticket.updatedAt != null &&
+                          ticket.updatedAt!.isNotEmpty)
                         _buildDetailRow(
                           label: localization.ticketDetailsLastUpdated,
                           value: _formatTicketDate(ticket.updatedAt!),
@@ -151,11 +161,16 @@ class TicketDetails extends StatelessWidget {
             child: Align(
               alignment: AlignmentDirectional.centerEnd,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: statusBg,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                  border: Border.all(color: statusColor.withValues(alpha: 0.35)),
+                  border: Border.all(
+                    color: statusColor.withValues(alpha: 0.35),
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -245,7 +260,10 @@ class TicketDetails extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
-        Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+        Divider(
+          height: 1,
+          color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+        ),
         const SizedBox(height: 16),
       ],
     );

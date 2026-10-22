@@ -6,7 +6,8 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/visa/widgets/visa_widgets.dart';
 import 'package:ecardo_user/src/tour/models/tour_model.dart';
-import 'package:ecardo_user/src/presentation/screens/p2p/model/p2p_marketplace_response_model.dart' as p2p_m;
+import 'package:ecardo_user/src/presentation/screens/p2p/model/p2p_marketplace_response_model.dart'
+    as p2p_m;
 import 'package:ecardo_user/src/presentation/screens/p2p/widgets/p2p_ad_card.dart';
 
 void main() {
@@ -24,7 +25,9 @@ void main() {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (context, _) => GetMaterialApp(
-        theme: ThemeData(brightness: isDark ? Brightness.dark : Brightness.light),
+        theme: ThemeData(
+          brightness: isDark ? Brightness.dark : Brightness.light,
+        ),
         locale: const Locale('en'),
         supportedLocales: AppLocalizations.supportedLocales,
         localizationsDelegates: const [
@@ -39,17 +42,21 @@ void main() {
   }
 
   group('Visa Module Widgets & Tokens', () {
-    testWidgets('VisaStatusBadge renders correct label and container colors', (tester) async {
-      await tester.pumpWidget(buildTestableWidget(
-        const Column(
-          children: [
-            VisaStatusBadge(status: 'APPROVED'),
-            VisaStatusBadge(status: 'UNDER_REVIEW'),
-            VisaStatusBadge(status: 'REJECTED'),
-            VisaStatusBadge(status: 'AWAITING_PAYMENT'),
-          ],
+    testWidgets('VisaStatusBadge renders correct label and container colors', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          const Column(
+            children: [
+              VisaStatusBadge(status: 'APPROVED'),
+              VisaStatusBadge(status: 'UNDER_REVIEW'),
+              VisaStatusBadge(status: 'REJECTED'),
+              VisaStatusBadge(status: 'AWAITING_PAYMENT'),
+            ],
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Approved'), findsOneWidget);
@@ -58,10 +65,14 @@ void main() {
       expect(find.text('Awaiting Payment'), findsOneWidget);
     });
 
-    testWidgets('VisaTimelineWidget renders 5-step status tracker', (tester) async {
-      await tester.pumpWidget(buildTestableWidget(
-        const VisaTimelineWidget(currentStatus: 'UNDER_REVIEW'),
-      ));
+    testWidgets('VisaTimelineWidget renders 5-step status tracker', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestableWidget(
+          const VisaTimelineWidget(currentStatus: 'UNDER_REVIEW'),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Application'), findsOneWidget);
@@ -71,18 +82,22 @@ void main() {
       expect(find.text('Issued'), findsOneWidget);
     });
 
-    testWidgets('VisaDocUploadCard renders requirement and action button', (tester) async {
+    testWidgets('VisaDocUploadCard renders requirement and action button', (
+      tester,
+    ) async {
       bool picked = false;
-      await tester.pumpWidget(buildTestableWidget(
-        VisaDocUploadCard(
-          title: 'Passport Scan',
-          instructions: 'Clear color photo or scan',
-          isRequired: true,
-          onPickFile: () {
-            picked = true;
-          },
+      await tester.pumpWidget(
+        buildTestableWidget(
+          VisaDocUploadCard(
+            title: 'Passport Scan',
+            instructions: 'Clear color photo or scan',
+            isRequired: true,
+            onPickFile: () {
+              picked = true;
+            },
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Passport Scan'), findsOneWidget);
@@ -137,7 +152,9 @@ void main() {
   });
 
   group('P2P Module Reputation Badges & Cards', () {
-    testWidgets('P2pAdCard renders trader reputation badge and price info', (tester) async {
+    testWidgets('P2pAdCard renders trader reputation badge and price info', (
+      tester,
+    ) async {
       final ad = p2p_m.Ad(
         id: 55,
         adType: 'sell',
@@ -158,14 +175,15 @@ void main() {
         paymentMethods: [
           p2p_m.PaymentMethodElement(
             id: 1,
-            paymentMethod: p2p_m.PaymentMethodPaymentMethod(id: 1, name: 'Bank Transfer'),
+            paymentMethod: p2p_m.PaymentMethodPaymentMethod(
+              id: 1,
+              name: 'Bank Transfer',
+            ),
           ),
         ],
       );
 
-      await tester.pumpWidget(buildTestableWidget(
-        P2pAdCard(item: ad),
-      ));
+      await tester.pumpWidget(buildTestableWidget(P2pAdCard(item: ad)));
       await tester.pumpAndSettle();
 
       expect(find.text('CryptoMaster'), findsOneWidget);

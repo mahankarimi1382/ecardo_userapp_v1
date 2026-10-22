@@ -148,10 +148,10 @@ class DrawerSection extends StatelessWidget {
           final addonEnabled = addonKey == "virtualCards"
               ? hasVirtualCard
               : addonKey == "giftCards"
-                  ? hasGiftCard
-                  : addonKey == "p2pTrading"
-                      ? hasP2p
-                      : true;
+              ? hasGiftCard
+              : addonKey == "p2pTrading"
+              ? hasP2p
+              : true;
           isEnabled = isEnabled && addonEnabled;
         }
 
@@ -168,8 +168,9 @@ class DrawerSection extends StatelessWidget {
     // colors and dark status-bar icons — unreadable in dark mode.
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final drawerTextPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final drawerTextPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     return SafeArea(
       bottom: false,
@@ -178,16 +179,16 @@ class DrawerSection extends StatelessWidget {
         children: [
           AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle(
-              statusBarIconBrightness:
-                  isDark ? Brightness.light : Brightness.dark,
+              statusBarIconBrightness: isDark
+                  ? Brightness.light
+                  : Brightness.dark,
             ),
             child: Drawer(
               width: 310,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
               ),
-              backgroundColor:
-                  isDark ? AppColors.darkSurface : AppColors.white,
+              backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -226,93 +227,103 @@ class DrawerSection extends StatelessWidget {
                   // Demo & Tester Control Panel Tile — debug builds only
                   if (DemoAccountService.isDemoAvailableInThisBuild &&
                       Get.isRegistered<DemoAccountService>())
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF0F172A),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF0F172A),
                         borderRadius: BorderRadius.circular(16),
-                        onTap: () {
-                          Get.back(); // close drawer
-                          if (DemoAccountService.isDemoAvailableInThisBuild &&
-                              Get.isRegistered<DemoAccountService>()) {
-                            DemoAccountService.to.showTesterControlBottomSheet(context);
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF38BDF8).withValues(alpha: 0.2),
-                                  shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          onTap: () {
+                            Get.back(); // close drawer
+                            if (DemoAccountService.isDemoAvailableInThisBuild &&
+                                Get.isRegistered<DemoAccountService>()) {
+                              DemoAccountService.to
+                                  .showTesterControlBottomSheet(context);
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 12,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: const Color(
+                                      0xFF38BDF8,
+                                    ).withValues(alpha: 0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.biotech_rounded,
+                                    color: Color(0xFF38BDF8),
+                                    size: 20,
+                                  ),
                                 ),
-                                child: const Icon(
-                                  Icons.biotech_rounded,
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        l10nPick(
+                                          context,
+                                          en: 'Tester Control Panel',
+                                          fa: 'تنظیمات اکانت تست (دمو)',
+                                          ar: 'لوحة تحكم الحساب التجريبي',
+                                          zh: '测试与演示控制台',
+                                        ),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        l10nPick(
+                                          context,
+                                          en: 'Switch KYC & Recharge Wallets',
+                                          fa: 'سوییچ KYC و شارژ کیف‌پول‌ها',
+                                          ar: 'تعديل KYC وشحن الأرصدة',
+                                          zh: '一键KYC与充值测试',
+                                        ),
+                                        style: const TextStyle(
+                                          color: Color(0xFF94A3B8),
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.chevron_right_rounded,
                                   color: Color(0xFF38BDF8),
-                                  size: 20,
+                                  size: 18,
                                 ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      l10nPick(
-                                        context,
-                                        en: 'Tester Control Panel',
-                                        fa: 'تنظیمات اکانت تست (دمو)',
-                                        ar: 'لوحة تحكم الحساب التجريبي',
-                                        zh: '测试与演示控制台',
-                                      ),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      l10nPick(
-                                        context,
-                                        en: 'Switch KYC & Recharge Wallets',
-                                        fa: 'سوییچ KYC و شارژ کیف‌پول‌ها',
-                                        ar: 'تعديل KYC وشحن الأرصدة',
-                                        zh: '一键KYC与充值测试',
-                                      ),
-                                      style: const TextStyle(
-                                        color: Color(0xFF94A3B8),
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Icon(
-                                Icons.chevron_right_rounded,
-                                color: Color(0xFF38BDF8),
-                                size: 18,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -338,7 +349,9 @@ class DrawerSection extends StatelessWidget {
                         offset: Offset(-1, 1),
                       ),
                     ],
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.white,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Image.asset(
@@ -376,12 +389,15 @@ class _DrawerItem extends StatelessWidget {
 
     // DARK-FIX: item colors follow the ambient theme.
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final drawerTextPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final drawerTextMuted =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
-    final drawerTextHint =
-        isDark ? AppColors.darkTextHint : AppColors.lightTextHint;
+    final drawerTextPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final drawerTextMuted = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
+    final drawerTextHint = isDark
+        ? AppColors.darkTextHint
+        : AppColors.lightTextHint;
 
     return Column(
       children: [
@@ -397,25 +413,47 @@ class _DrawerItem extends StatelessWidget {
               Get.back();
               Get.dialog(
                 AlertDialog(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  title: Row(children: [
-                    Icon(Icons.lock_outline, color: AppColors.warning, size: 24),
-                    SizedBox(width: 8),
-                    Text(
-                      localization.licenseRequiredTitle,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
-                  ]),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  title: Row(
+                    children: [
+                      Icon(
+                        Icons.lock_outline,
+                        color: AppColors.warning,
+                        size: 24,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        localization.licenseRequiredTitle,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
                   content: Text(
                     'The "$nav" feature is not available on your current plan.\n\nPlease contact support to activate this module.',
                     style: TextStyle(fontSize: 14, color: drawerTextPrimary),
                   ),
                   actions: [
-                    TextButton(onPressed: () => Get.back(), child: Text(localization.commonClose)),
+                    TextButton(
+                      onPressed: () => Get.back(),
+                      child: Text(localization.commonClose),
+                    ),
                     ElevatedButton(
-                      onPressed: () { Get.back(); Get.toNamed(BaseRoute.supportTickets); },
-                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary),
-                      child: Text(localization.contactSupport, style: TextStyle(color: AppColors.white)),
+                      onPressed: () {
+                        Get.back();
+                        Get.toNamed(BaseRoute.supportTickets);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.lightPrimary,
+                      ),
+                      child: Text(
+                        localization.contactSupport,
+                        style: TextStyle(color: AppColors.white),
+                      ),
                     ),
                   ],
                 ),
@@ -434,8 +472,11 @@ class _DrawerItem extends StatelessWidget {
             final userKyc = homeController.userModel.value.data?.kyc ?? 0;
 
             if (nav == localization.drawerTransfer) {
-              if (settingsService.getSetting("kyc_fund_transfer") == "0" && userKyc == 0) {
-                ToastHelper().showErrorToast(localization.drawerKycVerification);
+              if (settingsService.getSetting("kyc_fund_transfer") == "0" &&
+                  userKyc == 0) {
+                ToastHelper().showErrorToast(
+                  localization.drawerKycVerification,
+                );
               } else {
                 navigateTo();
               }
@@ -445,11 +486,13 @@ class _DrawerItem extends StatelessWidget {
                 final kycController = Get.find<KycLevelController>();
                 if (!kycController.hasFeature('remittance')) {
                   Get.back();
-                  Get.dialog(_KycLevelRequiredDialog(
-                    requiredLevel: 3,
-                    currentLevel: kycController.currentLevel,
-                    featureName: nav,
-                  ));
+                  Get.dialog(
+                    _KycLevelRequiredDialog(
+                      requiredLevel: 3,
+                      currentLevel: kycController.currentLevel,
+                      featureName: nav,
+                    ),
+                  );
                   return;
                 }
               } catch (_) {
@@ -458,49 +501,69 @@ class _DrawerItem extends StatelessWidget {
                 // registered — a gate that silently opens. Now the item is
                 // blocked with the KYC dialog until the controller exists.
                 Get.back();
-                Get.dialog(_KycLevelRequiredDialog(
-                  requiredLevel: 3,
-                  currentLevel: 0,
-                  featureName: nav,
-                ));
+                Get.dialog(
+                  _KycLevelRequiredDialog(
+                    requiredLevel: 3,
+                    currentLevel: 0,
+                    featureName: nav,
+                  ),
+                );
                 return;
               }
               navigateTo();
             } else if (nav == localization.drawerDashboard) {
               Get.back();
             } else if (nav == localization.drawerMyWallets) {
-              if (settingsService.getSetting("kyc_wallet") == "0" && userKyc == 0) {
-                ToastHelper().showErrorToast(localization.drawerKycVerification);
+              if (settingsService.getSetting("kyc_wallet") == "0" &&
+                  userKyc == 0) {
+                ToastHelper().showErrorToast(
+                  localization.drawerKycVerification,
+                );
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerAddMoney) {
-              if (settingsService.getSetting("kyc_deposit") == "0" && userKyc == 0) {
-                ToastHelper().showErrorToast(localization.drawerKycVerification);
+              if (settingsService.getSetting("kyc_deposit") == "0" &&
+                  userKyc == 0) {
+                ToastHelper().showErrorToast(
+                  localization.drawerKycVerification,
+                );
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerCashOut) {
-              if (settingsService.getSetting("kyc_cashout") == "0" && userKyc == 0) {
-                ToastHelper().showErrorToast(localization.drawerKycVerification);
+              if (settingsService.getSetting("kyc_cashout") == "0" &&
+                  userKyc == 0) {
+                ToastHelper().showErrorToast(
+                  localization.drawerKycVerification,
+                );
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerMakePayment) {
-              if (settingsService.getSetting("kyc_payment") == "0" && userKyc == 0) {
-                ToastHelper().showErrorToast(localization.drawerKycVerification);
+              if (settingsService.getSetting("kyc_payment") == "0" &&
+                  userKyc == 0) {
+                ToastHelper().showErrorToast(
+                  localization.drawerKycVerification,
+                );
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerExchange) {
-              if (settingsService.getSetting("kyc_exchange") == "0" && userKyc == 0) {
-                ToastHelper().showErrorToast(localization.drawerKycVerification);
+              if (settingsService.getSetting("kyc_exchange") == "0" &&
+                  userKyc == 0) {
+                ToastHelper().showErrorToast(
+                  localization.drawerKycVerification,
+                );
               } else {
                 navigateTo();
               }
             } else if (nav == localization.drawerWithdraw) {
-              if (settingsService.getSetting("kyc_withdraw") == "0" && userKyc == 0) {
-                ToastHelper().showErrorToast(localization.drawerKycVerification);
+              if (settingsService.getSetting("kyc_withdraw") == "0" &&
+                  userKyc == 0) {
+                ToastHelper().showErrorToast(
+                  localization.drawerKycVerification,
+                );
               } else {
                 navigateTo();
               }
@@ -510,37 +573,36 @@ class _DrawerItem extends StatelessWidget {
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 28, vertical: 10),
-                child: Row(
-                  children: [
-                    SvgPicture.asset(
-                      item["icon"],
-                      colorFilter: ColorFilter.mode(
-                        (item["isEnabled"] as bool? ?? true)
-                            ? drawerTextPrimary.withValues(alpha: 0.44)
-                            : drawerTextHint.withValues(alpha: 0.3),
-                        BlendMode.srcIn,
-                      ),
-                      width: 20,
-                    ),
-                    SizedBox(width: 14),
-                    Expanded(
-                      child: Text(
-                        item["navigation"],
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                          color: (item["isEnabled"] as bool? ?? true)
-                              ? drawerTextMuted
-                              : drawerTextHint,
-                        ),
-                      ),
-                    ),
-                    // Show lock icon for disabled modules
-                    if (!(item["isEnabled"] as bool? ?? true))
-                      Icon(Icons.lock_outline,
-                          size: 14, color: drawerTextHint),
-                  ],
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  item["icon"],
+                  colorFilter: ColorFilter.mode(
+                    (item["isEnabled"] as bool? ?? true)
+                        ? drawerTextPrimary.withValues(alpha: 0.44)
+                        : drawerTextHint.withValues(alpha: 0.3),
+                    BlendMode.srcIn,
+                  ),
+                  width: 20,
                 ),
+                SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    item["navigation"],
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: (item["isEnabled"] as bool? ?? true)
+                          ? drawerTextMuted
+                          : drawerTextHint,
+                    ),
+                  ),
+                ),
+                // Show lock icon for disabled modules
+                if (!(item["isEnabled"] as bool? ?? true))
+                  Icon(Icons.lock_outline, size: 14, color: drawerTextHint),
+              ],
+            ),
           ),
         ),
         if (isLastItem) SizedBox(height: 20),
@@ -567,49 +629,99 @@ class _KycLevelRequiredDialog extends StatelessWidget {
     if (loc == null) return const SizedBox.shrink();
     // DARK-FIX: dialog surfaces adapt to the ambient theme.
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final dialogTextPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final dialogTextSecondary =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final dialogTextPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final dialogTextSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         children: [
           Icon(Icons.shield_outlined, color: AppColors.warning, size: 28),
           SizedBox(width: 8),
-          Expanded(child: Text(loc.kycUpgradeDialogTitle, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))),
+          Expanded(
+            child: Text(
+              loc.kycUpgradeDialogTitle,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
+          ),
         ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(loc.kycUpgradeDialogBody(featureName, '$requiredLevel'), style: TextStyle(fontSize: 14, color: dialogTextPrimary)),
+          Text(
+            loc.kycUpgradeDialogBody(featureName, '$requiredLevel'),
+            style: TextStyle(fontSize: 14, color: dialogTextPrimary),
+          ),
           SizedBox(height: 8),
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground, borderRadius: BorderRadius.circular(8)),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(loc.kycUpgradeCurrentLevel, style: TextStyle(fontSize: 12, color: dialogTextSecondary)),
-              Text(loc.kycUpgradeLevelValue('$currentLevel'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.warning)),
-            ]),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightBackground,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  loc.kycUpgradeCurrentLevel,
+                  style: TextStyle(fontSize: 12, color: dialogTextSecondary),
+                ),
+                Text(
+                  loc.kycUpgradeLevelValue('$currentLevel'),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.warning,
+                  ),
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 4),
           Container(
             padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(color: AppColors.lightPrimaryContainer, borderRadius: BorderRadius.circular(8)),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(loc.kycUpgradeRequiredLevel, style: TextStyle(fontSize: 12, color: dialogTextSecondary)),
-              Text(loc.kycUpgradeLevelValue('$requiredLevel'), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.lightPrimary)),
-            ]),
+            decoration: BoxDecoration(
+              color: AppColors.lightPrimaryContainer,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  loc.kycUpgradeRequiredLevel,
+                  style: TextStyle(fontSize: 12, color: dialogTextSecondary),
+                ),
+                Text(
+                  loc.kycUpgradeLevelValue('$requiredLevel'),
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.lightPrimary,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
       actions: [
         TextButton(onPressed: () => Get.back(), child: Text(loc.commonClose)),
         ElevatedButton(
-          onPressed: () { Get.back(); Get.toNamed(BaseRoute.idVerification); },
-          style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightPrimary, foregroundColor: AppColors.white),
+          onPressed: () {
+            Get.back();
+            Get.toNamed(BaseRoute.idVerification);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.lightPrimary,
+            foregroundColor: AppColors.white,
+          ),
           child: Text(loc.kycUpgradeStartAction),
         ),
       ],

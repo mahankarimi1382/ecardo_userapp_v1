@@ -101,17 +101,21 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
           (m) => '${m[1]},',
         );
       } else {
-        clean = parsed.toStringAsFixed(decimals).replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
+        clean = parsed
+            .toStringAsFixed(decimals)
+            .replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+              (m) => '${m[1]},',
+            );
       }
     }
     if (isCrypto == true) {
       return "$clean $currencyCode";
     }
     final sym = currencySymbol ?? '';
-    return sym.isNotEmpty ? "$sym$clean" : "$clean ${currencyCode ?? ''}".trim();
+    return sym.isNotEmpty
+        ? "$sym$clean"
+        : "$clean ${currencyCode ?? ''}".trim();
   }
 
   void _onRepeat() {
@@ -128,11 +132,14 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     } else if (type.contains('payment') || type.contains('card')) {
       targetRoute = BaseRoute.makePayment;
     }
-    Get.toNamed(targetRoute, arguments: {
-      'amount': widget.transaction.amount,
-      'currency': widget.transaction.trxCurrencyCode,
-      'method': widget.transaction.method,
-    });
+    Get.toNamed(
+      targetRoute,
+      arguments: {
+        'amount': widget.transaction.amount,
+        'currency': widget.transaction.trxCurrencyCode,
+        'method': widget.transaction.method,
+      },
+    );
   }
 
   void _onSupportInquiry() {
@@ -262,7 +269,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                         _buildExchangeRateRow(context, isDark),
                         _buildAmountRow(
                           localization.transactionDetailsTotalAmount,
-                          transaction.finalAmount ?? transaction.amount ?? "0.00",
+                          transaction.finalAmount ??
+                              transaction.amount ??
+                              "0.00",
                           transaction.finalAmount,
                           transaction.isPlus,
                           transaction.isCrypto,
@@ -297,7 +306,8 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     String? currencySymbol, {
     required bool isDark,
   }) {
-    final isCharge = label.toLowerCase().contains("charge") ||
+    final isCharge =
+        label.toLowerCase().contains("charge") ||
         label.contains("کارمزد") ||
         label.contains("رسوم");
     final color = isCharge ? AppColors.error : _getAmountColor(isPlus);
@@ -317,9 +327,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
             letterSpacing: 0,
             fontWeight: FontWeight.w900,
             fontSize: 15.5,
-            fontFeatures: const [
-              FontFeature.tabularFigures(),
-            ],
+            fontFeatures: const [FontFeature.tabularFigures()],
             color: color,
           ),
         ),
@@ -330,7 +338,8 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
   Widget _buildExchangeRateRow(BuildContext context, bool isDark) {
     final tx = widget.transaction;
     final isExchange = tx.type?.toLowerCase() == 'exchange';
-    final hasPay = tx.payAmount != null &&
+    final hasPay =
+        tx.payAmount != null &&
         tx.payAmount!.trim().isNotEmpty &&
         tx.payCurrency != null &&
         tx.payCurrency!.trim().isNotEmpty;
@@ -357,7 +366,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
         style: TextStyle(
           letterSpacing: 0,
           fontSize: 15,
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: isDark
+              ? AppColors.darkTextPrimary
+              : AppColors.lightTextPrimary,
           fontWeight: FontWeight.w800,
         ),
       ),
@@ -375,12 +386,13 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
     final parsed = JalaliDateHelper.tryParse(rawCreatedAt);
     final jalaliText = JalaliDateHelper.format(rawCreatedAt);
     final gregorianText = parsed != null
-        ? DateFormat('d MMM yyyy, HH:mm').format(
-            parsed.isUtc ? parsed.toLocal() : parsed,
-          )
+        ? DateFormat(
+            'd MMM yyyy, HH:mm',
+          ).format(parsed.isUtc ? parsed.toLocal() : parsed)
         : '';
 
-    final isFa = Localizations.localeOf(context).languageCode == 'fa' ||
+    final isFa =
+        Localizations.localeOf(context).languageCode == 'fa' ||
         Localizations.localeOf(context).languageCode == 'ar';
 
     return _buildDetailRow(
@@ -546,17 +558,19 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                       color: _copiedTnx
                           ? AppColors.success.withValues(alpha: 0.14)
                           : (isDark
-                              ? AppColors.darkSurfaceVariant
-                              : AppColors.lightTextPrimary
-                                  .withValues(alpha: 0.07)),
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.lightTextPrimary.withValues(
+                                    alpha: 0.07,
+                                  )),
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
                         color: _copiedTnx
                             ? AppColors.success.withValues(alpha: 0.35)
                             : (isDark
-                                ? AppColors.darkBorder
-                                : AppColors.lightTextPrimary
-                                    .withValues(alpha: 0.12)),
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightTextPrimary.withValues(
+                                      alpha: 0.12,
+                                    )),
                         width: 0.6,
                       ),
                     ),
@@ -566,8 +580,8 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
                       color: _copiedTnx
                           ? AppColors.success
                           : (isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary),
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
                     ),
                   ),
                 ),
@@ -582,8 +596,10 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
   Widget _buildStatusChip(String? status, bool isDark) {
     final statusColor = _getStatusColor(status);
     final localization = AppLocalizations.of(context)!;
-    final localizedLabel =
-        StatusLabelHelper.localize(localization, status ?? "");
+    final localizedLabel = StatusLabelHelper.localize(
+      localization,
+      status ?? "",
+    );
 
     IconData statusIcon;
     switch ((status ?? '').trim().toLowerCase()) {
@@ -688,10 +704,7 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         gradient: const LinearGradient(
-          colors: [
-            AppColors.brandViolet,
-            AppColors.brandVioletDeep,
-          ],
+          colors: [AppColors.brandViolet, AppColors.brandVioletDeep],
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
         ),
@@ -738,7 +751,9 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
       if (boundary is RenderRepaintBoundary) {
         try {
           final image = await boundary.toImage(pixelRatio: 3);
-          final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+          final byteData = await image.toByteData(
+            format: ui.ImageByteFormat.png,
+          );
           image.dispose();
           if (byteData != null) {
             final dir = await getTemporaryDirectory();
@@ -750,7 +765,8 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
             await SharePlus.instance.share(
               ShareParams(
                 files: [XFile(file.path)],
-                text: localization?.shareReceiptBody ??
+                text:
+                    localization?.shareReceiptBody ??
                     'My eCardo transaction receipt',
                 subject: 'eCardo Receipt',
               ),
@@ -758,13 +774,16 @@ class _RecentTransactionDetailsState extends State<RecentTransactionDetails> {
             return;
           }
         } catch (imgError) {
-          debugPrint('Image rasterization failed, falling back to text ticket: $imgError');
+          debugPrint(
+            'Image rasterization failed, falling back to text ticket: $imgError',
+          );
         }
       }
 
       // Text ticket fallback
       final tx = widget.transaction;
-      final textSummary = '''
+      final textSummary =
+          '''
 eCardo Digital Receipt
 ------------------------------
 Reference: ${tx.tnx ?? '—'}
@@ -930,9 +949,7 @@ Verified by eCardo · ecardo.ir
                     letterSpacing: 0,
                     fontWeight: FontWeight.w900,
                     fontSize: 30,
-                    fontFeatures: const [
-                      FontFeature.tabularFigures(),
-                    ],
+                    fontFeatures: const [FontFeature.tabularFigures()],
                     color: _getAmountColor(transaction.isPlus),
                   ),
                 ),
@@ -1068,9 +1085,14 @@ Verified by eCardo · ecardo.ir
               flex: 3,
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 11,
+                    horizontal: 4,
+                  ),
                   side: BorderSide(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                     width: 1.0,
                   ),
                   shape: RoundedRectangleBorder(
@@ -1119,7 +1141,10 @@ Verified by eCardo · ecardo.ir
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.brandViolet,
                   foregroundColor: AppColors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 11,
+                    horizontal: 4,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -1173,9 +1198,14 @@ Verified by eCardo · ecardo.ir
               flex: 3,
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 4),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 11,
+                    horizontal: 4,
+                  ),
                   side: BorderSide(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                     width: 1.0,
                   ),
                   shape: RoundedRectangleBorder(

@@ -29,7 +29,9 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -61,14 +63,24 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
               ),
               child: Column(
                 children: [
-                  Icon(Icons.check_circle_rounded, color: AppColors.success, size: 48.sp),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.success,
+                    size: 48.sp,
+                  ),
                   SizedBox(height: AppSpacing.sm.h),
                   Text(
-                    l10nPick(context, en: 'Payment Confirmed & Key Issued!', fa: 'پرداخت تأیید شد و کلید صادر گردید!'),
+                    l10nPick(
+                      context,
+                      en: 'Payment Confirmed & Key Issued!',
+                      fa: 'پرداخت تأیید شد و کلید صادر گردید!',
+                    ),
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   SizedBox(height: 4.h),
@@ -96,7 +108,9 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -109,25 +123,42 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Your Digital License Key:', fa: 'کلید دیجیتال لایسنس شما:'),
+                        l10nPick(
+                          context,
+                          en: 'Your Digital License Key:',
+                          fa: 'کلید دیجیتال لایسنس شما:',
+                        ),
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                          color:
+                              (isDark
+                                      ? AppColors.darkPrimary
+                                      : AppColors.lightPrimary)
+                                  .withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
                         ),
                         child: Text(
                           widget.order.edition,
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary,
                           ),
                         ),
                       ),
@@ -138,22 +169,35 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                   // Key box
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.md.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md.w,
+                      vertical: AppSpacing.md.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF3F4F6),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      color: isDark
+                          ? AppColors.darkSurfaceVariant
+                          : const Color(0xFFF3F4F6),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                       border: Border.all(
-                        color: isDark ? AppColors.darkOutline : AppColors.lightOutline,
+                        color: isDark
+                            ? AppColors.darkOutline
+                            : AppColors.lightOutline,
                       ),
                     ),
                     child: Text(
-                      widget.order.licenseKey ?? widget.order.keyMasked ?? 'XXXX-XXXX-XXXX-XXXX',
+                      widget.order.licenseKey ??
+                          widget.order.keyMasked ??
+                          'XXXX-XXXX-XXXX-XXXX',
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
                         fontFamily: 'monospace',
                         letterSpacing: 1.2,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -164,7 +208,9 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                   CommonButton(
                     width: double.infinity,
                     height: 44,
-                    backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    backgroundColor: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                     textColor: isDark ? AppColors.deepBlack : AppColors.white,
                     text: l10nPick(
                       context,
@@ -175,13 +221,18 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                     ),
                     onPressed: () {
                       HapticFeedback.lightImpact();
-                      final textToCopy = widget.order.licenseKey ?? widget.order.keyMasked ?? '';
+                      final textToCopy =
+                          widget.order.licenseKey ??
+                          widget.order.keyMasked ??
+                          '';
                       Clipboard.setData(ClipboardData(text: textToCopy));
-                      ToastHelper().showSuccessToast(l10nPick(
-                        context,
-                        en: 'License key copied to clipboard!',
-                        fa: 'کلید لایسنس در حافظه کپی شد!',
-                      ));
+                      ToastHelper().showSuccessToast(
+                        l10nPick(
+                          context,
+                          en: 'License key copied to clipboard!',
+                          fa: 'کلید لایسنس در حافظه کپی شد!',
+                        ),
+                      );
                     },
                   ),
                 ],
@@ -207,15 +258,23 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                       Icon(
                         Icons.info_outline,
                         size: AppSpacing.iconSm.sp,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                       SizedBox(width: AppSpacing.sm.w),
                       Text(
-                        l10nPick(context, en: 'How to Activate', fa: 'راهنمای فعال‌سازی'),
+                        l10nPick(
+                          context,
+                          en: 'How to Activate',
+                          fa: 'راهنمای فعال‌سازی',
+                        ),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -229,7 +288,9 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                     ),
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                       height: 1.5,
                     ),
                   ),
@@ -241,7 +302,9 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
             // Confirm Activation Button (BTN_CONFIRM_ACTIVATION)
             CommonButton(
               width: double.infinity,
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              backgroundColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightPrimary,
               textColor: isDark ? AppColors.deepBlack : AppColors.white,
               text: l10nPick(
                 context,
@@ -262,7 +325,11 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
 
             // Report Issue / Dispute Button (BTN_REPORT_ISSUE)
             TextButton.icon(
-              icon: Icon(Icons.report_problem_outlined, size: 18.sp, color: AppColors.warning),
+              icon: Icon(
+                Icons.report_problem_outlined,
+                size: 18.sp,
+                color: AppColors.warning,
+              ),
               label: Text(
                 l10nPick(
                   context,
@@ -271,7 +338,11 @@ class _LicenseDeliveryScreenState extends State<LicenseDeliveryScreen> {
                   ar: 'الإبلاغ عن مشكلة',
                   zh: '报告问题',
                 ),
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700, color: AppColors.warning),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.warning,
+                ),
               ),
               onPressed: () {
                 HapticFeedback.selectionClick();

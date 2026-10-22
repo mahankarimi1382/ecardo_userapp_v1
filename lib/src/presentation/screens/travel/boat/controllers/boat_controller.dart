@@ -8,7 +8,8 @@ import '../models/boat_models.dart';
 
 class BoatController extends GetxController {
   // UI State Machine (Mandatory 12 states)
-  final Rx<ExperienceServiceState> uiState = ExperienceServiceState.defaultState.obs;
+  final Rx<ExperienceServiceState> uiState =
+      ExperienceServiceState.defaultState.obs;
   final RxString errorMessage = ''.obs;
   final RxString validationError = ''.obs;
   final RxBool isOffline = false.obs;
@@ -31,7 +32,9 @@ class BoatController extends GetxController {
   final RxInt passengerCount = 2.obs;
   final RxInt childrenCount = 0.obs;
   final RxList<String> selectedAddons = <String>[].obs;
-  final Rx<DateTime> selectedDate = DateTime.now().add(const Duration(days: 2)).obs;
+  final Rx<DateTime> selectedDate = DateTime.now()
+      .add(const Duration(days: 2))
+      .obs;
   final RxString customerNote = ''.obs;
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
@@ -53,15 +56,20 @@ class BoatController extends GetxController {
 
   void _initConnectivity() {
     // DATA: REAL connectivity check with fallback
-    Connectivity().checkConnectivity().then((result) {
-      final offline = result.contains(ConnectivityResult.none);
-      isOffline.value = offline;
-      if (offline && uiState.value == ExperienceServiceState.defaultState) {
-        uiState.value = ExperienceServiceState.offline;
-      }
-    }).catchError((_) {});
+    Connectivity()
+        .checkConnectivity()
+        .then((result) {
+          final offline = result.contains(ConnectivityResult.none);
+          isOffline.value = offline;
+          if (offline && uiState.value == ExperienceServiceState.defaultState) {
+            uiState.value = ExperienceServiceState.offline;
+          }
+        })
+        .catchError((_) {});
 
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) {
       final offline = results.contains(ConnectivityResult.none);
       isOffline.value = offline;
       if (offline) {
@@ -86,7 +94,8 @@ class BoatController extends GetxController {
         const BoatExperienceModel(
           schemaVersion: '1.0',
           id: 'boat-01',
-          title: 'کشتی تفریحی و یات لوکس سان‌سیکر ۵۵ (Sunseeker 55ft Luxury Yacht)',
+          title:
+              'کشتی تفریحی و یات لوکس سان‌سیکر ۵۵ (Sunseeker 55ft Luxury Yacht)',
           marinaName: 'اسکله تفریحی میرمهنا، کیش',
           city: 'کیش (Kish Island)',
           category: BoatCategory.yacht,
@@ -144,7 +153,8 @@ class BoatController extends GetxController {
           cancellationPolicy: ExperienceCancellationPolicy(
             freeCancellationHours: 24,
             lateCancelPenaltyPercent: 30.0,
-            policyNotes: 'لغو رایگان تا ۲۴ ساعت قبل از حرکت با استرداد ۱۰۰٪ به کیف پول دلاری.',
+            policyNotes:
+                'لغو رایگان تا ۲۴ ساعت قبل از حرکت با استرداد ۱۰۰٪ به کیف پول دلاری.',
           ),
           pierDockNumber: 'Dock B - Pier #8',
           seaConditionsAdvisory: 'آب‌های آرام خلیج فارس، بدون ریسک دریازدگی',
@@ -153,7 +163,8 @@ class BoatController extends GetxController {
         const BoatExperienceModel(
           schemaVersion: '1.0',
           id: 'boat-02',
-          title: 'قایق تندرو اسپرت اوشن مستر ۳۱ (Ocean Master Offshore Speedboat)',
+          title:
+              'قایق تندرو اسپرت اوشن مستر ۳۱ (Ocean Master Offshore Speedboat)',
           marinaName: 'دبی مارینا (Dubai Marina Pier 7)',
           city: 'دبی (Dubai)',
           category: BoatCategory.speedboat,
@@ -198,12 +209,14 @@ class BoatController extends GetxController {
             lateCancelPenaltyPercent: 25.0,
           ),
           pierDockNumber: 'Marina Gate 3 - Slip 12',
-          seaConditionsAdvisory: 'آب‌های آرام ساحلی دبی، مناسب کودکان و خانواده‌ها',
+          seaConditionsAdvisory:
+              'آب‌های آرام ساحلی دبی، مناسب کودکان و خانواده‌ها',
         ),
         const BoatExperienceModel(
           schemaVersion: '1.0',
           id: 'boat-03',
-          title: 'کاتاماران دوطبقه بادبانی بوسفوروس (Bosphorus Sailing Catamaran)',
+          title:
+              'کاتاماران دوطبقه بادبانی بوسفوروس (Bosphorus Sailing Catamaran)',
           marinaName: 'مارینای ببک، استانبول',
           city: 'استانبول (Istanbul)',
           category: BoatCategory.catamaran,
@@ -316,10 +329,12 @@ class BoatController extends GetxController {
     final query = searchQuery.value.trim().toLowerCase();
     final results = allBoats.where((boat) {
       final matchesCategory =
-          selectedCategory.value == null || boat.category == selectedCategory.value;
+          selectedCategory.value == null ||
+          boat.category == selectedCategory.value;
       final matchesCity =
           selectedCity.value == 'ALL' || boat.city.contains(selectedCity.value);
-      final matchesQuery = query.isEmpty ||
+      final matchesQuery =
+          query.isEmpty ||
           boat.title.toLowerCase().contains(query) ||
           boat.marinaName.toLowerCase().contains(query) ||
           boat.captainName.toLowerCase().contains(query);
@@ -402,7 +417,8 @@ class BoatController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 1200));
 
       final total = calculateTotalPrice(boat);
-      final bookingId = 'SEA-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+      final bookingId =
+          'SEA-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
       final booking = BoatBookingModel(
         schemaVersion: '1.0',
         bookingId: bookingId,
@@ -412,7 +428,9 @@ class BoatController extends GetxController {
         date: selectedDate.value,
         timeSlot: selectedTimeSlot.value.isNotEmpty
             ? selectedTimeSlot.value
-            : (boat.availableSlots.isNotEmpty ? boat.availableSlots.first : '10:00 - 12:00'),
+            : (boat.availableSlots.isNotEmpty
+                  ? boat.availableSlots.first
+                  : '10:00 - 12:00'),
         durationHours: selectedDurationHours.value,
         passengersCount: passengerCount.value,
         childrenCount: childrenCount.value,
@@ -429,7 +447,9 @@ class BoatController extends GetxController {
 
       myBookings.insert(0, booking);
       uiState.value = ExperienceServiceState.completed;
-      ToastHelper().showSuccessToast('رزرو گشت دریایی با موفقیت تأیید و بلیت صادر شد');
+      ToastHelper().showSuccessToast(
+        'رزرو گشت دریایی با موفقیت تأیید و بلیت صادر شد',
+      );
       return booking;
     } catch (e) {
       errorMessage.value = 'خطا در ثبت رزرو: $e';

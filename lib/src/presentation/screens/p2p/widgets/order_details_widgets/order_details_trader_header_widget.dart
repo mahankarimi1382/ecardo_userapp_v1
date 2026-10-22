@@ -23,8 +23,12 @@ class OrderDetailsTraderHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final emeraldGreen = const Color(0xFF10B981);
 
@@ -114,7 +118,10 @@ class OrderDetailsTraderHeaderWidget extends StatelessWidget {
                     if (isVerified) ...[
                       SizedBox(width: 6.w),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 5.w,
+                          vertical: 1.5.h,
+                        ),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [Color(0xFFFFB800), Color(0xFFF59E0B)],
@@ -124,7 +131,11 @@ class OrderDetailsTraderHeaderWidget extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.verified_rounded, size: 10.5.r, color: Colors.black87),
+                            Icon(
+                              Icons.verified_rounded,
+                              size: 10.5.r,
+                              color: Colors.black87,
+                            ),
                             SizedBox(width: 2.w),
                             Text(
                               'PRO',
@@ -142,7 +153,11 @@ class OrderDetailsTraderHeaderWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 2.h),
                 Text(
-                  l10nPick(context, en: 'Counterparty Trader', fa: 'طرف معامله'),
+                  l10nPick(
+                    context,
+                    en: 'Counterparty Trader',
+                    fa: 'طرف معامله',
+                  ),
                   style: TextStyle(
                     letterSpacing: 0,
                     fontSize: 11.sp,
@@ -165,7 +180,9 @@ class OrderDetailsTraderHeaderWidget extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                color: isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightBackground,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                 border: Border.all(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -177,7 +194,9 @@ class OrderDetailsTraderHeaderWidget extends StatelessWidget {
                   Icon(
                     Icons.chat_bubble_outline_rounded,
                     size: 16.r,
-                    color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.brandViolet,
                   ),
                   SizedBox(width: 5.w),
                   Text(
@@ -186,7 +205,9 @@ class OrderDetailsTraderHeaderWidget extends StatelessWidget {
                       letterSpacing: 0,
                       fontWeight: FontWeight.w700,
                       fontSize: 12.sp,
-                      color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.brandViolet,
                     ),
                   ),
                 ],

@@ -62,9 +62,11 @@ class Ad {
   String? averageReleaseTime;
   String? lastUpdated;
   String? createdAt;
+
   /// نوع بازار: iran (بازار ایران - ریال/دلار نقد) یا china (بازار چین)
   /// از بکند P2P Phase 1 اضافه شده
   String? marketType;
+
   /// آیا آگهی مربوط به دلار نقد (پول نقد حضوری) است
   /// در بازار ایران: اگر true باشد، مبادله حضوری و نقدی است
   /// کسر از حساب فروشنده به عنوان تضمین قرارداد عمل می‌کند

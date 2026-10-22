@@ -122,10 +122,20 @@ class CommerceCatalog {
         'fee_payer': 'split', // 50/50
         'inspection_hours': 72,
         'status': 'funded', // funded, inspecting, completed, disputed
-        'inspection_ends_at': DateTime.now().add(const Duration(hours: 48)).toIso8601String(),
+        'inspection_ends_at': DateTime.now()
+            .add(const Duration(hours: 48))
+            .toIso8601String(),
         'milestones': [
-          {'title': 'تحویل در گمرک و بررسی اصالت سریال‌ها', 'percentage': 40, 'released': true},
-          {'title': 'تست گرم و راه‌اندازی در دیتاسنتر', 'percentage': 60, 'released': false},
+          {
+            'title': 'تحویل در گمرک و بررسی اصالت سریال‌ها',
+            'percentage': 40,
+            'released': true,
+          },
+          {
+            'title': 'تست گرم و راه‌اندازی در دیتاسنتر',
+            'percentage': 60,
+            'released': false,
+          },
         ],
         'created_at': '2026-10-02 11:30:00',
       },
@@ -161,7 +171,10 @@ class CommerceCatalog {
         'tenure_months': [6, 12, 24, 36],
         'grace_period_months': 1,
         'collateral_ratio_pct': 30.0,
-        'features': ['محاسبه اقساط متساوی استاندارد فرانسه', 'واریز آنی به کیف پول دلاری پس از تایید ضمانت'],
+        'features': [
+          'محاسبه اقساط متساوی استاندارد فرانسه',
+          'واریز آنی به کیف پول دلاری پس از تایید ضمانت',
+        ],
       },
       {
         'id': 2,

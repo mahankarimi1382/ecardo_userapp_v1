@@ -135,7 +135,9 @@ void main() {
         'duration_minutes': 42,
         'is_fixed_price': true,
         'currency': 'IRR',
-        'expires_at': DateTime.now().add(const Duration(minutes: 15)).toIso8601String(),
+        'expires_at': DateTime.now()
+            .add(const Duration(minutes: 15))
+            .toIso8601String(),
         'quotes': [
           {
             'vehicle_id': 'economy',
@@ -146,7 +148,7 @@ void main() {
             'currency': 'IRR',
             'eta_minutes': 12,
             'fixed_rate': true,
-          }
+          },
         ],
       };
 
@@ -248,62 +250,69 @@ void main() {
   // GROUP 2: Business Logic & Rules
   // =========================================================================
   group('Taxi Business Logic & Policies', () {
-    test('calculateTotalFare applies base, meet & greet, child seats, and intercity multipliers', () {
-      final controller = TaxiController();
-      final vehicle = controller.availableVehicles.first; // basePrice = 650000
+    test(
+      'calculateTotalFare applies base, meet & greet, child seats, and intercity multipliers',
+      () {
+        final controller = TaxiController();
+        final vehicle =
+            controller.availableVehicles.first; // basePrice = 650000
 
-      // Case 1: Airport transfer with meet and greet (base 650,000 + 150,000 = 800,000)
-      controller.selectedRideType.value = TaxiRideType.airportTransfer;
-      controller.meetAndGreet.value = true;
-      controller.childSeatCount.value = 0;
-      expect(controller.calculateTotalFare(vehicle), 800000);
+        // Case 1: Airport transfer with meet and greet (base 650,000 + 150,000 = 800,000)
+        controller.selectedRideType.value = TaxiRideType.airportTransfer;
+        controller.meetAndGreet.value = true;
+        controller.childSeatCount.value = 0;
+        expect(controller.calculateTotalFare(vehicle), 800000);
 
-      // Case 2: Airport transfer without meet and greet (base 650,000)
-      controller.meetAndGreet.value = false;
-      expect(controller.calculateTotalFare(vehicle), 650000);
+        // Case 2: Airport transfer without meet and greet (base 650,000)
+        controller.meetAndGreet.value = false;
+        expect(controller.calculateTotalFare(vehicle), 650000);
 
-      // Case 3: With 2 child seats (+150,000)
-      controller.childSeatCount.value = 2;
-      expect(controller.calculateTotalFare(vehicle), 650000 + 150000);
+        // Case 3: With 2 child seats (+150,000)
+        controller.childSeatCount.value = 2;
+        expect(controller.calculateTotalFare(vehicle), 650000 + 150000);
 
-      // Case 4: Intercity ride (650,000 * 1.6 = 1,040,000 + 150,000 child seats = 1,190,000)
-      controller.selectedRideType.value = TaxiRideType.intercity;
-      expect(controller.calculateTotalFare(vehicle), 1040000 + 150000);
-    });
+        // Case 4: Intercity ride (650,000 * 1.6 = 1,040,000 + 150,000 child seats = 1,190,000)
+        controller.selectedRideType.value = TaxiRideType.intercity;
+        expect(controller.calculateTotalFare(vehicle), 1040000 + 150000);
+      },
+    );
 
-    test('Cancellation policy calculates correct fee and wallet refund tiers', () {
-      final now = DateTime.now();
+    test(
+      'Cancellation policy calculates correct fee and wallet refund tiers',
+      () {
+        final now = DateTime.now();
 
-      // Tier 1: > 24 hours in future -> 0% penalty, 100% refund
-      final farFuturePickup = now.add(const Duration(hours: 48));
-      final policyTier1 = RideCancellationPolicy.standard(
-        pickupTime: farFuturePickup,
-        totalFare: 1000000,
-        currency: 'IRR',
-      );
-      expect(policyTier1.penaltyPercent, 0.0);
-      expect(policyTier1.refundableAmount, 1000000);
+        // Tier 1: > 24 hours in future -> 0% penalty, 100% refund
+        final farFuturePickup = now.add(const Duration(hours: 48));
+        final policyTier1 = RideCancellationPolicy.standard(
+          pickupTime: farFuturePickup,
+          totalFare: 1000000,
+          currency: 'IRR',
+        );
+        expect(policyTier1.penaltyPercent, 0.0);
+        expect(policyTier1.refundableAmount, 1000000);
 
-      // Tier 2: between 4 and 24 hours -> 50% penalty, 50% refund
-      final midPickup = now.add(const Duration(hours: 12));
-      final policyTier2 = RideCancellationPolicy.standard(
-        pickupTime: midPickup,
-        totalFare: 1000000,
-        currency: 'IRR',
-      );
-      expect(policyTier2.penaltyPercent, 50.0);
-      expect(policyTier2.refundableAmount, 500000);
+        // Tier 2: between 4 and 24 hours -> 50% penalty, 50% refund
+        final midPickup = now.add(const Duration(hours: 12));
+        final policyTier2 = RideCancellationPolicy.standard(
+          pickupTime: midPickup,
+          totalFare: 1000000,
+          currency: 'IRR',
+        );
+        expect(policyTier2.penaltyPercent, 50.0);
+        expect(policyTier2.refundableAmount, 500000);
 
-      // Tier 3: < 4 hours before pickup -> 100% penalty, 0% refund
-      final soonPickup = now.add(const Duration(hours: 2));
-      final policyTier3 = RideCancellationPolicy.standard(
-        pickupTime: soonPickup,
-        totalFare: 1000000,
-        currency: 'IRR',
-      );
-      expect(policyTier3.penaltyPercent, 100.0);
-      expect(policyTier3.refundableAmount, 0);
-    });
+        // Tier 3: < 4 hours before pickup -> 100% penalty, 0% refund
+        final soonPickup = now.add(const Duration(hours: 2));
+        final policyTier3 = RideCancellationPolicy.standard(
+          pickupTime: soonPickup,
+          totalFare: 1000000,
+          currency: 'IRR',
+        );
+        expect(policyTier3.penaltyPercent, 100.0);
+        expect(policyTier3.refundableAmount, 0);
+      },
+    );
 
     test('Iranian mobile number validation handles formats', () {
       expect(TaxiApiService.isValidIranianMobile('09123456789'), true);
@@ -319,173 +328,190 @@ void main() {
   // GROUP 3: Widget Rendering & RTL / Dark Mode Tests (375x812 designSize)
   // =========================================================================
   group('Taxi Widgets - Theme & Responsive Rendering', () {
-    testWidgets('TaxiCounterControl renders, increments, decrements, and respects limits', (tester) async {
-      phoneSurface(tester);
-      final value = 2.obs;
+    testWidgets(
+      'TaxiCounterControl renders, increments, decrements, and respects limits',
+      (tester) async {
+        phoneSurface(tester);
+        final value = 2.obs;
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          Center(
-            child: SizedBox(
-              width: 160,
-              child: TaxiCounterControl(
-                icon: Icons.person_rounded,
-                label: 'Passengers',
-                value: value,
-                min: 1,
-                max: 5,
+        await tester.pumpWidget(
+          wrapWithTheme(
+            Center(
+              child: SizedBox(
+                width: 160,
+                child: TaxiCounterControl(
+                  icon: Icons.person_rounded,
+                  label: 'Passengers',
+                  value: value,
+                  min: 1,
+                  max: 5,
+                ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Passengers'), findsOneWidget);
-      expect(find.text('2'), findsOneWidget);
+        expect(find.text('Passengers'), findsOneWidget);
+        expect(find.text('2'), findsOneWidget);
 
-      // Tap increment
-      final addIcon = find.byIcon(Icons.add_rounded);
-      await tester.tap(addIcon);
-      await tester.pump();
-      expect(value.value, 3);
-      expect(find.text('3'), findsOneWidget);
+        // Tap increment
+        final addIcon = find.byIcon(Icons.add_rounded);
+        await tester.tap(addIcon);
+        await tester.pump();
+        expect(value.value, 3);
+        expect(find.text('3'), findsOneWidget);
 
-      // Tap decrement
-      final removeIcon = find.byIcon(Icons.remove_rounded);
-      await tester.tap(removeIcon);
-      await tester.pump();
-      expect(value.value, 2);
-    });
+        // Tap decrement
+        final removeIcon = find.byIcon(Icons.remove_rounded);
+        await tester.tap(removeIcon);
+        await tester.pump();
+        expect(value.value, 2);
+      },
+    );
 
-    testWidgets('TaxiSearchScreen renders in LTR English Light without overflow', (tester) async {
-      phoneSurface(tester);
+    testWidgets(
+      'TaxiSearchScreen renders in LTR English Light without overflow',
+      (tester) async {
+        phoneSurface(tester);
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const TaxiSearchScreen(),
-          isDark: false,
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const TaxiSearchScreen(),
+            isDark: false,
+            locale: const Locale('en'),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Airport Transfer & Taxi'), findsOneWidget);
-      expect(find.text('Pickup Location'), findsOneWidget);
-      expect(find.text('Destination / Drop-off'), findsOneWidget);
+        expect(find.text('Airport Transfer & Taxi'), findsOneWidget);
+        expect(find.text('Pickup Location'), findsOneWidget);
+        expect(find.text('Destination / Drop-off'), findsOneWidget);
 
-      await tester.drag(find.byType(ListView), const Offset(0, -600));
-      await tester.pumpAndSettle();
+        await tester.drag(find.byType(ListView), const Offset(0, -600));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Passengers'), findsOneWidget);
-      expect(find.text('Luggage / Bags'), findsOneWidget);
-      expect(find.byType(ListView), findsOneWidget);
-    });
+        expect(find.text('Passengers'), findsOneWidget);
+        expect(find.text('Luggage / Bags'), findsOneWidget);
+        expect(find.byType(ListView), findsOneWidget);
+      },
+    );
 
     // Skipped: Counter labels not found in RTL due to ListView layout
     // The RTL overlay warning is cosmetic and fixed; actual screen renders fine
 
-    testWidgets('TaxiVehiclesScreen renders vehicle catalog in RTL Persian Dark mode', (tester) async {
-      phoneSurface(tester);
-      final controller = Get.put(TaxiController());
-      controller.availableVehicles.assignAll(TaxiApiService.fallbackVehicles);
-      controller.selectedVehicle.value = TaxiApiService.fallbackVehicles.first;
+    testWidgets(
+      'TaxiVehiclesScreen renders vehicle catalog in RTL Persian Dark mode',
+      (tester) async {
+        phoneSurface(tester);
+        final controller = Get.put(TaxiController());
+        controller.availableVehicles.assignAll(TaxiApiService.fallbackVehicles);
+        controller.selectedVehicle.value =
+            TaxiApiService.fallbackVehicles.first;
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const TaxiVehiclesScreen(),
-          isDark: true,
-          locale: const Locale('fa'),
-        ),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const TaxiVehiclesScreen(),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('انتخاب کلاس خودرو'), findsOneWidget);
-      expect(find.text('خلاصه مسیر ترانسفر'), findsOneWidget);
-      expect(find.text('ناوگان در دسترس'), findsOneWidget);
-      expect(find.text('تأیید خودرو و ادامه'), findsOneWidget);
+        expect(find.text('انتخاب کلاس خودرو'), findsOneWidget);
+        expect(find.text('خلاصه مسیر ترانسفر'), findsOneWidget);
+        expect(find.text('ناوگان در دسترس'), findsOneWidget);
+        expect(find.text('تأیید خودرو و ادامه'), findsOneWidget);
 
-      controller.onClose();
-    });
+        controller.onClose();
+      },
+    );
 
-    testWidgets('TaxiDetailScreen renders passenger form and fare summary without overflow', (tester) async {
-      phoneSurface(tester);
-      final controller = Get.put(TaxiController());
-      controller.availableVehicles.assignAll(TaxiApiService.fallbackVehicles);
-      controller.selectedVehicle.value = TaxiApiService.fallbackVehicles[1]; // Comfort
+    testWidgets(
+      'TaxiDetailScreen renders passenger form and fare summary without overflow',
+      (tester) async {
+        phoneSurface(tester);
+        final controller = Get.put(TaxiController());
+        controller.availableVehicles.assignAll(TaxiApiService.fallbackVehicles);
+        controller.selectedVehicle.value =
+            TaxiApiService.fallbackVehicles[1]; // Comfort
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const TaxiDetailScreen(),
-          isDark: false,
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const TaxiDetailScreen(),
+            isDark: false,
+            locale: const Locale('en'),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Passenger & Confirmation'), findsOneWidget);
-      expect(find.text('Passenger Information'), findsOneWidget);
-      expect(find.text('Full Name'), findsOneWidget);
-      expect(find.text('Fare Breakdown'), findsOneWidget);
-      expect(find.text('Base Vehicle Fare'), findsOneWidget);
-    });
+        expect(find.text('Passenger & Confirmation'), findsOneWidget);
+        expect(find.text('Passenger Information'), findsOneWidget);
+        expect(find.text('Full Name'), findsOneWidget);
+        expect(find.text('Fare Breakdown'), findsOneWidget);
+        expect(find.text('Base Vehicle Fare'), findsOneWidget);
+      },
+    );
 
-    testWidgets('TaxiVoucherScreen renders digital pass, QR code, and driver details', (tester) async {
-      phoneSurface(tester);
-      final vehicle = TaxiApiService.fallbackVehicles[1];
-      final testBooking = TaxiBookingInfo(
-        id: 'taxi-test-voucher-1',
-        reference: 'TSR-IKA-VOUCHER',
-        rideType: TaxiRideType.airportTransfer,
-        transferDirection: AirportTransferDirection.fromAirport,
-        origin: 'فرودگاه امام خمینی',
-        destination: 'تهران، میدان ونک',
-        pickupDate: DateTime(2026, 10, 20),
-        pickupTime: '10:00',
-        flightNumber: 'W5-115',
-        passengerName: 'سارا رضایی',
-        passengerPhone: '+98-912-345-6789',
-        passengerCount: 2,
-        luggageCount: 2,
-        vehicle: vehicle,
-        totalFare: 1250000,
-        currency: 'IRR',
-        meetAndGreet: true,
-        notes: '',
-        createdAt: DateTime.now(),
-        status: 'CONFIRMED',
-        operationalStatus: RideBookingStatus.driverAssigned,
-        driver: const RideDriverInfo(
-          id: 'drv-77',
-          name: 'علی احمدی',
-          phone: '+98-912-345-6789',
-          rating: 4.96,
-          totalTrips: 1100,
-          vehicleModel: 'تویوتا کمری',
-          licensePlate: '۶۸ ج ۹۱۴ - ایران ۲۲',
-        ),
-      );
+    testWidgets(
+      'TaxiVoucherScreen renders digital pass, QR code, and driver details',
+      (tester) async {
+        phoneSurface(tester);
+        final vehicle = TaxiApiService.fallbackVehicles[1];
+        final testBooking = TaxiBookingInfo(
+          id: 'taxi-test-voucher-1',
+          reference: 'TSR-IKA-VOUCHER',
+          rideType: TaxiRideType.airportTransfer,
+          transferDirection: AirportTransferDirection.fromAirport,
+          origin: 'فرودگاه امام خمینی',
+          destination: 'تهران، میدان ونک',
+          pickupDate: DateTime(2026, 10, 20),
+          pickupTime: '10:00',
+          flightNumber: 'W5-115',
+          passengerName: 'سارا رضایی',
+          passengerPhone: '+98-912-345-6789',
+          passengerCount: 2,
+          luggageCount: 2,
+          vehicle: vehicle,
+          totalFare: 1250000,
+          currency: 'IRR',
+          meetAndGreet: true,
+          notes: '',
+          createdAt: DateTime.now(),
+          status: 'CONFIRMED',
+          operationalStatus: RideBookingStatus.driverAssigned,
+          driver: const RideDriverInfo(
+            id: 'drv-77',
+            name: 'علی احمدی',
+            phone: '+98-912-345-6789',
+            rating: 4.96,
+            totalTrips: 1100,
+            vehicleModel: 'تویوتا کمری',
+            licensePlate: '۶۸ ج ۹۱۴ - ایران ۲۲',
+          ),
+        );
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          TaxiVoucherScreen(booking: testBooking),
-          isDark: false,
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          wrapWithTheme(
+            TaxiVoucherScreen(booking: testBooking),
+            isDark: false,
+            locale: const Locale('en'),
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Transfer Voucher & Pass'), findsOneWidget);
-      expect(find.text('TSR-IKA-VOUCHER'), findsWidgets);
-      expect(find.text('علی احمدی'), findsOneWidget);
-      expect(find.text('۶۸ ج ۹۱۴ - ایران ۲۲'), findsOneWidget);
-      expect(find.text('Call Chauffeur'), findsOneWidget);
+        expect(find.text('Transfer Voucher & Pass'), findsOneWidget);
+        expect(find.text('TSR-IKA-VOUCHER'), findsWidgets);
+        expect(find.text('علی احمدی'), findsOneWidget);
+        expect(find.text('۶۸ ج ۹۱۴ - ایران ۲۲'), findsOneWidget);
+        expect(find.text('Call Chauffeur'), findsOneWidget);
 
-      await tester.drag(find.byType(ListView), const Offset(0, -600));
-      await tester.pumpAndSettle();
+        await tester.drag(find.byType(ListView), const Offset(0, -600));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Cancel Ride'), findsOneWidget);
-      expect(find.text('Rate Chauffeur'), findsOneWidget);
-    });
+        expect(find.text('Cancel Ride'), findsOneWidget);
+        expect(find.text('Rate Chauffeur'), findsOneWidget);
+      },
+    );
   });
 }

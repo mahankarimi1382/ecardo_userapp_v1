@@ -10,7 +10,8 @@ class CommercialController extends GetxController {
   final RxList<EquityProjectItem> filteredProjects = <EquityProjectItem>[].obs;
   final RxList<UserInvestmentModel> myInvestments = <UserInvestmentModel>[].obs;
 
-  final Rx<EquityProjectDetailModel?> selectedDetail = Rx<EquityProjectDetailModel?>(null);
+  final Rx<EquityProjectDetailModel?> selectedDetail =
+      Rx<EquityProjectDetailModel?>(null);
 
   final RxString selectedSector = 'ALL'.obs;
   final RxBool isLoadingProjects = false.obs;
@@ -83,7 +84,9 @@ class CommercialController extends GetxController {
       filteredProjects.assignAll(allProjects);
     } else {
       filteredProjects.assignAll(
-        allProjects.where((p) => p.sector.toLowerCase().contains(sector.toLowerCase())),
+        allProjects.where(
+          (p) => p.sector.toLowerCase().contains(sector.toLowerCase()),
+        ),
       );
     }
   }
@@ -110,25 +113,29 @@ class CommercialController extends GetxController {
         milestones: const [
           ProjectMilestone(
             title: 'Regulatory & Central Bank SandBox Approval',
-            description: 'Approved compliance framework and capital custody license.',
+            description:
+                'Approved compliance framework and capital custody license.',
             targetDate: 'Q1 2026',
             isCompleted: true,
           ),
           ProjectMilestone(
             title: 'Hardware POS Rollout (Phase 1)',
-            description: 'Deploy 500 smart terminal nodes in tier-1 logistics hubs.',
+            description:
+                'Deploy 500 smart terminal nodes in tier-1 logistics hubs.',
             targetDate: 'Q2 2026',
             isCompleted: true,
           ),
           ProjectMilestone(
             title: 'Cross-Border Instant Settlement Rail',
-            description: 'Integration with GCC & Eurasian banking payment switches.',
+            description:
+                'Integration with GCC & Eurasian banking payment switches.',
             targetDate: 'Q3 2026',
             isCompleted: false,
           ),
           ProjectMilestone(
             title: 'Series A Secondary Liquidity Window',
-            description: 'Option for early equity participants to exit with premium.',
+            description:
+                'Option for early equity participants to exit with premium.',
             targetDate: 'Q4 2026',
             isCompleted: false,
           ),
@@ -216,7 +223,8 @@ class CommercialController extends GetxController {
       final yieldPct = project?.annualYieldPercent ?? 20.0;
 
       final newInvestment = UserInvestmentModel(
-        investmentId: 'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(6)}',
+        investmentId:
+            'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(6)}',
         projectId: projectId,
         projectTitle: title,
         sector: sector,
@@ -282,11 +290,15 @@ class CommercialController extends GetxController {
   double get totalInvestedUSD {
     return myInvestments.fold(0.0, (acc, item) {
       if (item.currency == 'USD') return acc + item.amountInvested;
-      return acc + (item.amountInvested / 650000.0); // Approx conversion for IRR
+      return acc +
+          (item.amountInvested / 650000.0); // Approx conversion for IRR
     });
   }
 
   double get totalDividendsUSD {
-    return myInvestments.fold(0.0, (acc, item) => acc + item.accumulatedDividends);
+    return myInvestments.fold(
+      0.0,
+      (acc, item) => acc + item.accumulatedDividends,
+    );
   }
 }

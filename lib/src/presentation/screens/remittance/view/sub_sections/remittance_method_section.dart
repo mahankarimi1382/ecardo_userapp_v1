@@ -70,17 +70,29 @@ class RemittanceMethodSection extends StatelessWidget {
                 : '∞';
             return Padding(
               padding: EdgeInsets.only(top: 8.h),
-              child: Row(children: [
-                Icon(Icons.rule, size: 14.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
-                SizedBox(width: 6.w),
-                Expanded(
-                  child: Text(
-                    l.remittanceAmountLimitHint(minText, maxText),
-                    style: TextStyle(
-                        fontSize: 11.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.rule,
+                    size: 14.sp,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
-                ),
-              ]),
+                  SizedBox(width: 6.w),
+                  Expanded(
+                    child: Text(
+                      l.remittanceAmountLimitHint(minText, maxText),
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             );
           }),
 
@@ -92,7 +104,9 @@ class RemittanceMethodSection extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 4.h),
@@ -100,16 +114,20 @@ class RemittanceMethodSection extends StatelessWidget {
             l.remittanceSelectPayoutMethod,
             style: TextStyle(
               fontSize: 11.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           SizedBox(height: 12.h),
-          ...controller.methods.map((m) => _MethodCard(
-                method: m,
-                isSelected: controller.selectedMethod.value?.id == m.id,
-                onTap: () => controller.selectMethod(m),
-                unknownLabel: l.remittanceUnknownMethod,
-              )),
+          ...controller.methods.map(
+            (m) => _MethodCard(
+              method: m,
+              isSelected: controller.selectedMethod.value?.id == m.id,
+              onTap: () => controller.selectMethod(m),
+              unknownLabel: l.remittanceUnknownMethod,
+            ),
+          ),
 
           SizedBox(height: 16.h),
 
@@ -135,14 +153,20 @@ class _YouSendCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer,
+        color: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.lightPrimaryContainer,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.25)),
+        border: Border.all(
+          color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.25),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,12 +191,16 @@ class _YouSendCard extends StatelessWidget {
                   controller: controller.amountController,
                   focusNode: controller.amountFocusNode,
                   hintText: l.remittanceEnterAmount,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                   ],
                   isBorderShow: false,
-                  backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+                  backgroundColor: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.white,
                 ),
               ),
               SizedBox(width: 10.w),
@@ -226,7 +254,9 @@ class _NoMethodsState extends StatelessWidget {
               message,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
                 fontSize: 14.sp,
               ),
             ),
@@ -248,7 +278,12 @@ class _MethodCard extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final String unknownLabel;
-  const _MethodCard({required this.method, required this.isSelected, required this.onTap, required this.unknownLabel});
+  const _MethodCard({
+    required this.method,
+    required this.isSelected,
+    required this.onTap,
+    required this.unknownLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +291,9 @@ class _MethodCard extends StatelessWidget {
     final rcCode = (method.receiveCurrencyCode ?? '').toUpperCase();
     final isActive = method.isActive;
     final subtitle = method.description ?? method.countryCode?.toUpperCase();
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
     return GestureDetector(
       onTap: isActive
@@ -280,10 +317,14 @@ class _MethodCard extends StatelessWidget {
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
           color: isSelected
-              ? (isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer)
+              ? (isDark
+                    ? AppColors.darkPrimaryContainer
+                    : AppColors.lightPrimaryContainer)
               : (isActive
-                  ? (isDark ? AppColors.darkSurface : AppColors.lightSurface)
-                  : (isDark ? AppColors.darkBackground.withValues(alpha: 0.6) : AppColors.lightBackground.withValues(alpha: 0.6))),
+                    ? (isDark ? AppColors.darkSurface : AppColors.lightSurface)
+                    : (isDark
+                          ? AppColors.darkBackground.withValues(alpha: 0.6)
+                          : AppColors.lightBackground.withValues(alpha: 0.6))),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
@@ -299,8 +340,12 @@ class _MethodCard extends StatelessWidget {
               height: 40.w,
               decoration: BoxDecoration(
                 color: isActive
-                    ? (isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer)
-                    : (isDark ? AppColors.darkBorder.withValues(alpha: 0.5) : AppColors.lightBorder.withValues(alpha: 0.5)),
+                    ? (isDark
+                          ? AppColors.darkPrimaryContainer
+                          : AppColors.lightPrimaryContainer)
+                    : (isDark
+                          ? AppColors.darkBorder.withValues(alpha: 0.5)
+                          : AppColors.lightBorder.withValues(alpha: 0.5)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -320,7 +365,9 @@ class _MethodCard extends StatelessWidget {
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: isActive
-                          ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                          ? (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary)
                           : AppColors.softGray,
                     ),
                   ),
@@ -330,7 +377,9 @@ class _MethodCard extends StatelessWidget {
                       subtitle,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -357,7 +406,9 @@ class _MethodCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                  color: isDark
+                      ? AppColors.darkBackground
+                      : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -365,7 +416,9 @@ class _MethodCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
@@ -403,26 +456,40 @@ class _SendCurrencyPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final hintColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final hintColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     if (loading) {
       return _pickerContainer(
         context: context,
-        child: Row(children: [
-          SizedBox(width: 14.w, height: 14.w, child: const CircularProgressIndicator(strokeWidth: 2)),
-          SizedBox(width: 8.w),
-          Flexible(
-            child: Text(loadingLabel, style: TextStyle(fontSize: 12.sp, color: hintColor),
-                overflow: TextOverflow.ellipsis),
-          ),
-        ]),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 14.w,
+              height: 14.w,
+              child: const CircularProgressIndicator(strokeWidth: 2),
+            ),
+            SizedBox(width: 8.w),
+            Flexible(
+              child: Text(
+                loadingLabel,
+                style: TextStyle(fontSize: 12.sp, color: hintColor),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       );
     }
 
     if (currencies.isEmpty) {
       return _pickerContainer(
         context: context,
-        child: Text(emptyLabel, style: TextStyle(fontSize: 12.sp, color: hintColor)),
+        child: Text(
+          emptyLabel,
+          style: TextStyle(fontSize: 12.sp, color: hintColor),
+        ),
       );
     }
 
@@ -443,19 +510,26 @@ class _SendCurrencyPicker extends StatelessWidget {
           value: selected,
           isExpanded: true,
           dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
-          hint: Text(label, style: TextStyle(fontSize: 12.sp, color: hintColor)),
+          hint: Text(
+            label,
+            style: TextStyle(fontSize: 12.sp, color: hintColor),
+          ),
           items: currencies.map((c) {
             final code = (c.code ?? '').toUpperCase();
             final name = c.name ?? '';
             final display = name.isEmpty ? code : '$code — $name';
             return DropdownMenuItem<CurrenciesData>(
               value: c,
-              child: Text(display,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                  ),
-                  overflow: TextOverflow.ellipsis),
+              child: Text(
+                display,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             );
           }).toList(),
           onChanged: (value) {
@@ -466,14 +540,20 @@ class _SendCurrencyPicker extends StatelessWidget {
     );
   }
 
-  Widget _pickerContainer({required BuildContext context, required Widget child}) {
+  Widget _pickerContainer({
+    required BuildContext context,
+    required Widget child,
+  }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder, width: 1),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1,
+        ),
       ),
       child: child,
     );
@@ -484,57 +564,111 @@ class _QuotePreview extends StatelessWidget {
   final RemittanceQuote quote;
   final RemittanceController controller;
   final AppLocalizations l;
-  const _QuotePreview({required this.quote, required this.controller, required this.l});
+  const _QuotePreview({
+    required this.quote,
+    required this.controller,
+    required this.l,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
     final source = quote.rateSource;
     final sourceLabel = source == 'admin'
         ? l.remittanceRateSourceAdmin
         : source == 'auto'
-            ? l.remittanceRateSourceAuto
-            : null;
+        ? l.remittanceRateSourceAuto
+        : null;
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer,
+        color: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.lightPrimaryContainer,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.2)),
+        border: Border.all(
+          color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.2),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [
-            Icon(Icons.lock_clock, color: primaryColor, size: 16.sp),
-            SizedBox(width: 6.w),
-            Obx(() => Text(l.remittanceRateLocked(controller.rateExpiresInSeconds.value),
-                style: TextStyle(fontSize: 12.sp, color: primaryColor, fontWeight: FontWeight.w600))),
-            const Spacer(),
-            if (sourceLabel != null)
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurface : AppColors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: primaryColor.withValues(alpha: isDark ? 0.4 : 0.3)),
+          Row(
+            children: [
+              Icon(Icons.lock_clock, color: primaryColor, size: 16.sp),
+              SizedBox(width: 6.w),
+              Obx(
+                () => Text(
+                  l.remittanceRateLocked(controller.rateExpiresInSeconds.value),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: primaryColor,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                child: Text(sourceLabel,
-                    style: TextStyle(fontSize: 10.sp, color: primaryColor, fontWeight: FontWeight.w600)),
               ),
-          ]),
+              const Spacer(),
+              if (sourceLabel != null)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurface : AppColors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: primaryColor.withValues(alpha: isDark ? 0.4 : 0.3),
+                    ),
+                  ),
+                  child: Text(
+                    sourceLabel,
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      color: primaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           SizedBox(height: 12.h),
-          _Row(l.remittanceReceiverGets, controller.formatReceiveAmount(quote.receiveAmount, quote.receiveCurrencyId), bold: true),
+          _Row(
+            l.remittanceReceiverGets,
+            controller.formatReceiveAmount(
+              quote.receiveAmount,
+              quote.receiveCurrencyId,
+            ),
+            bold: true,
+          ),
           SizedBox(height: 6.h),
-          _Row(l.remittanceExchangeRate, '1 = ${controller.formatRate(quote.exchangeRate)}'),
+          _Row(
+            l.remittanceExchangeRate,
+            '1 = ${controller.formatRate(quote.exchangeRate)}',
+          ),
           SizedBox(height: 6.h),
-          _Row(l.remittanceSystemFee, controller.formatAmount(quote.systemFee, currencyId: quote.sendCurrencyId)),
+          _Row(
+            l.remittanceSystemFee,
+            controller.formatAmount(
+              quote.systemFee,
+              currencyId: quote.sendCurrencyId,
+            ),
+          ),
           SizedBox(height: 8.h),
-          Divider(color: isDark ? AppColors.darkDivider : AppColors.lightBorder, height: 1),
+          Divider(
+            color: isDark ? AppColors.darkDivider : AppColors.lightBorder,
+            height: 1,
+          ),
           SizedBox(height: 8.h),
-          _Row(l.remittanceTotalPayable, controller.formatAmount(quote.totalPayable, currencyId: quote.sendCurrencyId), bold: true),
+          _Row(
+            l.remittanceTotalPayable,
+            controller.formatAmount(
+              quote.totalPayable,
+              currencyId: quote.sendCurrencyId,
+            ),
+            bold: true,
+          ),
         ],
       ),
     );
@@ -553,8 +687,26 @@ class _Row extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary, fontWeight: bold ? FontWeight.w600 : FontWeight.w400)),
-        Text(value, style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+            fontWeight: bold ? FontWeight.w600 : FontWeight.w400,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
+            fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
       ],
     );
   }

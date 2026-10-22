@@ -22,8 +22,7 @@ class TransferSuccessCelebration extends StatefulWidget {
       _TransferSuccessCelebrationState();
 }
 
-class _TransferSuccessCelebrationState
-    extends State<TransferSuccessCelebration>
+class _TransferSuccessCelebrationState extends State<TransferSuccessCelebration>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
@@ -197,8 +196,12 @@ class _TransferSuccessCelebrationState
                   ),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
-                        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                        ? colorScheme.surfaceContainerHigh.withValues(
+                            alpha: 0.5,
+                          )
+                        : colorScheme.surfaceContainerHighest.withValues(
+                            alpha: 0.6,
+                          ),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                     border: Border.all(
                       color: colorScheme.outlineVariant.withValues(alpha: 0.4),

@@ -62,36 +62,40 @@ void main() {
 
   tearDown(Get.reset);
 
-  testWidgets('Services Hub settles in Light mode LTR with animations and hero banner', (tester) async {
+  testWidgets(
+    'Services Hub settles in Light mode LTR with animations and hero banner',
+    (tester) async {
+      tester.view.physicalSize = const Size(390 * 2, 844 * 2);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(_wrapWithServicesScreen());
+      await tester.pumpAndSettle();
+
+      // Verify Title and Subtitle
+      expect(find.text('Services Hub'), findsOneWidget);
+      expect(find.text('Fintech & Travel Suite'), findsOneWidget);
+
+      // Verify Quick Access Hero Banner
+      expect(find.text('Quick Access'), findsOneWidget);
+      expect(find.text('Top financial & travel actions'), findsOneWidget);
+
+      // Verify Category Filter Chips
+      expect(find.text('All'), findsOneWidget);
+      expect(find.text('Financial'), findsOneWidget);
+    },
+  );
+
+  testWidgets('Services Hub settles in Dark mode Persian RTL without errors', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(390 * 2, 844 * 2);
     tester.view.devicePixelRatio = 2;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(_wrapWithServicesScreen());
-    await tester.pumpAndSettle();
-
-    // Verify Title and Subtitle
-    expect(find.text('Services Hub'), findsOneWidget);
-    expect(find.text('Fintech & Travel Suite'), findsOneWidget);
-
-    // Verify Quick Access Hero Banner
-    expect(find.text('Quick Access'), findsOneWidget);
-    expect(find.text('Top financial & travel actions'), findsOneWidget);
-
-    // Verify Category Filter Chips
-    expect(find.text('All'), findsOneWidget);
-    expect(find.text('Financial'), findsOneWidget);
-  });
-
-  testWidgets('Services Hub settles in Dark mode Persian RTL without errors', (tester) async {
-    tester.view.physicalSize = const Size(390 * 2, 844 * 2);
-    tester.view.devicePixelRatio = 2;
-    addTearDown(tester.view.reset);
-
-    await tester.pumpWidget(_wrapWithServicesScreen(
-      locale: const Locale('fa'),
-      mode: ThemeMode.dark,
-    ));
+    await tester.pumpWidget(
+      _wrapWithServicesScreen(locale: const Locale('fa'), mode: ThemeMode.dark),
+    );
     await tester.pumpAndSettle();
 
     // Verify Persian Header
@@ -103,7 +107,9 @@ void main() {
     expect(find.text('عملیات برگزیده مالی و مسافرتی'), findsOneWidget);
   });
 
-  testWidgets('Services Hub category filtering transitions smoothly', (tester) async {
+  testWidgets('Services Hub category filtering transitions smoothly', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(390 * 2, 844 * 2);
     tester.view.devicePixelRatio = 2;
     addTearDown(tester.view.reset);
@@ -125,7 +131,9 @@ void main() {
     expect(find.text('Quick Access'), findsOneWidget);
   });
 
-  testWidgets('Services Hub search filtering responds to input and clear', (tester) async {
+  testWidgets('Services Hub search filtering responds to input and clear', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(390 * 2, 844 * 2);
     tester.view.devicePixelRatio = 2;
     addTearDown(tester.view.reset);

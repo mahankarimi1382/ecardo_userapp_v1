@@ -20,7 +20,8 @@ String hotelFlowText(BuildContext context, String fa, String en) {
 /// Calculate distance in kilometers between two geographic coordinates using Haversine formula
 double calculateDistanceKm(double lat1, double lon1, double lat2, double lon2) {
   const p = 0.017453292519943295; // math.pi / 180
-  final a = 0.5 -
+  final a =
+      0.5 -
       math.cos((lat2 - lat1) * p) / 2 +
       math.cos(lat1 * p) *
           math.cos(lat2 * p) *
@@ -223,8 +224,9 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                       vertical: 14.h,
                     ),
                     border: InputBorder.none,
-                    hintText: AppLocalizations.of(context)!
-                        .hotel_search_by_city_or_hotel_name,
+                    hintText: AppLocalizations.of(
+                      context,
+                    )!.hotel_search_by_city_or_hotel_name,
                     hintStyle: TextStyle(
                       color: ECardoTokens.inkMuted(context),
                       fontSize: 13.sp,
@@ -255,7 +257,9 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                 alignment: AlignmentDirectional.centerStart,
                 child: Text(
                   queryController.text.trim().isEmpty
-                      ? AppLocalizations.of(context)!.hotel_all_cities_with_hotels
+                      ? AppLocalizations.of(
+                          context,
+                        )!.hotel_all_cities_with_hotels
                       : AppLocalizations.of(context)!.hotel_search_results,
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
@@ -273,177 +277,174 @@ class _HotelDestinationScreenState extends State<HotelDestinationScreen> {
                       count: 6,
                     )
                   : visible.isEmpty
-                      ? TravelEmptyState(
-                          icon: Icons.location_city_rounded,
-                          title: AppLocalizations.of(context)!
-                              .hotel_no_matching_city_or_hotel_was_found,
-                          message: AppLocalizations.of(context)!
-                              .hotel_search_by_city_or_hotel_name,
-                        )
-                      : ListView.separated(
-                          controller: scrollController,
-                          padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 28.h),
-                          itemCount: visible.length +
-                              (visible.length < suggestions.length ? 1 : 0),
-                          separatorBuilder: (_, _) => Divider(
-                            height: 1,
-                            color: ECardoTokens.border(context),
-                          ),
-                          itemBuilder: (context, index) {
-                            if (index == visible.length) {
-                              return Padding(
-                                padding: EdgeInsets.all(20.r),
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: ECardoTokens.brand500(context),
-                                  ),
-                                ),
-                              );
-                            }
-                            final suggestion = visible[index];
-                            final hotelCount = int.tryParse(
-                              suggestion.metadata['property_count']
-                                      ?.toString() ??
-                                  '',
-                            );
-                            final distanceKm = _resolveDistance(suggestion);
+                  ? TravelEmptyState(
+                      icon: Icons.location_city_rounded,
+                      title: AppLocalizations.of(
+                        context,
+                      )!.hotel_no_matching_city_or_hotel_was_found,
+                      message: AppLocalizations.of(
+                        context,
+                      )!.hotel_search_by_city_or_hotel_name,
+                    )
+                  : ListView.separated(
+                      controller: scrollController,
+                      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 28.h),
+                      itemCount:
+                          visible.length +
+                          (visible.length < suggestions.length ? 1 : 0),
+                      separatorBuilder: (_, _) => Divider(
+                        height: 1,
+                        color: ECardoTokens.border(context),
+                      ),
+                      itemBuilder: (context, index) {
+                        if (index == visible.length) {
+                          return Padding(
+                            padding: EdgeInsets.all(20.r),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: ECardoTokens.brand500(context),
+                              ),
+                            ),
+                          );
+                        }
+                        final suggestion = visible[index];
+                        final hotelCount = int.tryParse(
+                          suggestion.metadata['property_count']?.toString() ??
+                              '',
+                        );
+                        final distanceKm = _resolveDistance(suggestion);
 
-                            return Material(
-                              color: Colors.transparent,
-                              child: ListTile(
-                                minVerticalPadding: 12.h,
-                                contentPadding:
-                                    EdgeInsets.symmetric(horizontal: 8.w),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    ECardoTokens.radiusMd,
-                                  ),
+                        return Material(
+                          color: Colors.transparent,
+                          child: ListTile(
+                            minVerticalPadding: 12.h,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusMd,
+                              ),
+                            ),
+                            leading: Container(
+                              width: 44.r,
+                              height: 44.r,
+                              decoration: BoxDecoration(
+                                color: ECardoTokens.brand100(context),
+                                borderRadius: BorderRadius.circular(
+                                  ECardoTokens.radiusMd,
                                 ),
-                                leading: Container(
-                                  width: 44.r,
-                                  height: 44.r,
-                                  decoration: BoxDecoration(
-                                    color: ECardoTokens.brand100(context),
-                                    borderRadius: BorderRadius.circular(
-                                      ECardoTokens.radiusMd,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  suggestion.kind == 'hotel'
+                                      ? Icons.hotel_rounded
+                                      : Icons.location_city_rounded,
+                                  color: ECardoTokens.brand500(context),
+                                  size: 22.sp,
+                                ),
+                              ),
+                            ),
+                            title: TravelBidiText(
+                              suggestion.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 14.sp,
+                                color: ECardoTokens.ink(context),
+                              ),
+                            ),
+                            subtitle: Padding(
+                              padding: EdgeInsets.only(top: 4.h),
+                              child: Row(
+                                children: [
+                                  if (hotelCount != null) ...[
+                                    Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.hotelHotelsCount(
+                                        hotelCount.toString(),
+                                      ),
+                                      style: TextStyle(
+                                        color: ECardoTokens.inkMuted(context),
+                                        fontSize: 11.sp,
+                                      ),
                                     ),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      suggestion.kind == 'hotel'
-                                          ? Icons.hotel_rounded
-                                          : Icons.location_city_rounded,
-                                      color: ECardoTokens.brand500(context),
-                                      size: 22.sp,
-                                    ),
-                                  ),
-                                ),
-                                title: TravelBidiText(
-                                  suggestion.title,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 14.sp,
-                                    color: ECardoTokens.ink(context),
-                                  ),
-                                ),
-                                subtitle: Padding(
-                                  padding: EdgeInsets.only(top: 4.h),
-                                  child: Row(
-                                    children: [
-                                      if (hotelCount != null) ...[
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .hotelHotelsCount(
-                                            hotelCount.toString(),
-                                          ),
-                                          style: TextStyle(
-                                            color: ECardoTokens.inkMuted(context),
-                                            fontSize: 11.sp,
-                                          ),
+                                    if (distanceKm != null)
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 6.w,
                                         ),
-                                        if (distanceKm != null)
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 6.w,
-                                            ),
-                                            child: Text(
-                                              '•',
-                                              style: TextStyle(
-                                                color: ECardoTokens.inkMuted(
-                                                  context,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                      if (distanceKm != null)
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 6.w,
-                                            vertical: 2.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: ECardoTokens.surfaceSunken(
+                                        child: Text(
+                                          '•',
+                                          style: TextStyle(
+                                            color: ECardoTokens.inkMuted(
                                               context,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(4.r),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                Icons.near_me_rounded,
-                                                size: 11.sp,
-                                                color: ECardoTokens.brand500(
-                                                  context,
-                                                ),
-                                              ),
-                                              SizedBox(width: 3.w),
-                                              Text(
-                                                formatDistance(
-                                                  distanceKm,
-                                                  context,
-                                                ),
-                                                style: TextStyle(
-                                                  color: ECardoTokens.ink(
-                                                    context,
-                                                  ),
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      else if (suggestion.subtitle.isNotEmpty)
-                                        Expanded(
-                                          child: TravelBidiText(
-                                            suggestion.subtitle,
-                                            style: TextStyle(
-                                              color: ECardoTokens.inkMuted(
-                                                context,
-                                              ),
-                                              fontSize: 11.sp,
-                                            ),
                                           ),
                                         ),
-                                    ],
-                                  ),
-                                ),
-                                trailing: Icon(
-                                  isRtl
-                                      ? Icons.chevron_left_rounded
-                                      : Icons.chevron_right_rounded,
-                                  color: ECardoTokens.inkMuted(context),
-                                  size: 20.sp,
-                                ),
-                                onTap: () =>
-                                    Navigator.of(context).pop(suggestion),
+                                      ),
+                                  ],
+                                  if (distanceKm != null)
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 6.w,
+                                        vertical: 2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: ECardoTokens.surfaceSunken(
+                                          context,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          4.r,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.near_me_rounded,
+                                            size: 11.sp,
+                                            color: ECardoTokens.brand500(
+                                              context,
+                                            ),
+                                          ),
+                                          SizedBox(width: 3.w),
+                                          Text(
+                                            formatDistance(distanceKm, context),
+                                            style: TextStyle(
+                                              color: ECardoTokens.ink(context),
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  else if (suggestion.subtitle.isNotEmpty)
+                                    Expanded(
+                                      child: TravelBidiText(
+                                        suggestion.subtitle,
+                                        style: TextStyle(
+                                          color: ECardoTokens.inkMuted(context),
+                                          fontSize: 11.sp,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                            trailing: Icon(
+                              isRtl
+                                  ? Icons.chevron_left_rounded
+                                  : Icons.chevron_right_rounded,
+                              color: ECardoTokens.inkMuted(context),
+                              size: 20.sp,
+                            ),
+                            onTap: () => Navigator.of(context).pop(suggestion),
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
@@ -502,7 +503,9 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
   }
 
   void _setNights(int nights) {
-    final start = values.whereType<DateTime>().firstOrNull ?? DateTime.now().add(const Duration(days: 1));
+    final start =
+        values.whereType<DateTime>().firstOrNull ??
+        DateTime.now().add(const Duration(days: 1));
     setState(() {
       values = [start, start.add(Duration(days: nights))];
     });
@@ -524,7 +527,9 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
           padding: EdgeInsets.all(AppSpacing.lg.r),
           decoration: BoxDecoration(
             color: ECardoTokens.surfaceCard(context),
-            border: Border(top: BorderSide(color: ECardoTokens.border(context))),
+            border: Border(
+              top: BorderSide(color: ECardoTokens.border(context)),
+            ),
             boxShadow: ECardoTokens.shadowSheet(context),
           ),
           child: SizedBox(
@@ -532,9 +537,9 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: canConfirm
-                  ? () => Navigator.of(context).pop(
-                        DateTimeRange(start: start, end: end),
-                      )
+                  ? () => Navigator.of(
+                      context,
+                    ).pop(DateTimeRange(start: start, end: end))
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: canConfirm
@@ -550,10 +555,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
               ),
               child: Text(
                 AppLocalizations.of(context)!.hotel_confirm_dates,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
               ),
             ),
           ),
@@ -578,15 +580,17 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                     Container(
                       decoration: BoxDecoration(
                         color: ECardoTokens.surfaceSunken(context),
-                        borderRadius:
-                            BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                       ),
                       padding: EdgeInsets.all(4.r),
                       child: Row(
                         children: [
                           Expanded(
                             child: GestureDetector(
-                              onTap: () => setState(() => persianCalendar = true),
+                              onTap: () =>
+                                  setState(() => persianCalendar = true),
                               child: Container(
                                 padding: EdgeInsets.symmetric(vertical: 8.h),
                                 decoration: BoxDecoration(
@@ -657,8 +661,7 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                       children: [
                         Expanded(
                           child: _SelectedDateSummary(
-                            label:
-                                AppLocalizations.of(context)!.hotel_check_in,
+                            label: AppLocalizations.of(context)!.hotel_check_in,
                             value: start == null ? '—' : _dateLabel(start),
                           ),
                         ),
@@ -676,8 +679,9 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                         ),
                         Expanded(
                           child: _SelectedDateSummary(
-                            label:
-                                AppLocalizations.of(context)!.hotel_check_out,
+                            label: AppLocalizations.of(
+                              context,
+                            )!.hotel_check_out,
                             value: end == null ? '—' : _dateLabel(end),
                           ),
                         ),
@@ -697,9 +701,9 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                           ),
                         ),
                         child: Text(
-                          AppLocalizations.of(context)!.hotelNightsCount(
-                            end.difference(start).inDays,
-                          ),
+                          AppLocalizations.of(
+                            context,
+                          )!.hotelNightsCount(end.difference(start).inDays),
                           style: TextStyle(
                             color: ECardoTokens.brand700(context),
                             fontWeight: FontWeight.w900,
@@ -718,17 +722,33 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [1, 2, 3, 5, 7].map((n) {
-                    final isCurrent = start != null && end != null && end.difference(start).inDays == n;
+                    final isCurrent =
+                        start != null &&
+                        end != null &&
+                        end.difference(start).inDays == n;
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 3.w),
                       child: ActionChip(
-                        label: Text(l10nPick(context, en: '$n Night${n > 1 ? 's' : ''}', fa: '$n شب', ar: '$n ليالٍ', tr: '$n Gece', ru: '$n ноч.')),
+                        label: Text(
+                          l10nPick(
+                            context,
+                            en: '$n Night${n > 1 ? 's' : ''}',
+                            fa: '$n شب',
+                            ar: '$n ليالٍ',
+                            tr: '$n Gece',
+                            ru: '$n ноч.',
+                          ),
+                        ),
                         labelStyle: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w700,
-                          color: isCurrent ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                          color: isCurrent
+                              ? ECardoTokens.inkOnBrand
+                              : ECardoTokens.ink(context),
                         ),
-                        backgroundColor: isCurrent ? ECardoTokens.brand700(context) : ECardoTokens.surfaceSunken(context),
+                        backgroundColor: isCurrent
+                            ? ECardoTokens.brand700(context)
+                            : ECardoTokens.surfaceSunken(context),
                         onPressed: () => _setNights(n),
                       ),
                     );
@@ -740,19 +760,17 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
               child: Theme(
                 data: Theme.of(context).copyWith(
                   colorScheme: Theme.of(context).colorScheme.copyWith(
-                        primary: ECardoTokens.brand700(context),
-                        surface: ECardoTokens.surfaceCard(context),
-                      ),
+                    primary: ECardoTokens.brand700(context),
+                    surface: ECardoTokens.surfaceCard(context),
+                  ),
                 ),
                 child: CalendarDatePicker2(
                   config: CalendarDatePicker2Config(
                     calendarType: CalendarDatePicker2Type.range,
                     firstDate: DateUtils.dateOnly(DateTime.now()),
                     lastDate: DateTime.now().add(const Duration(days: 730)),
-                    selectedDayHighlightColor:
-                        ECardoTokens.brand700(context),
-                    selectedRangeHighlightColor:
-                        ECardoTokens.brand100(context),
+                    selectedDayHighlightColor: ECardoTokens.brand700(context),
+                    selectedRangeHighlightColor: ECardoTokens.brand100(context),
                     rangeBidirectional: true,
                     centerAlignModePicker: true,
                     controlsTextStyle: TextStyle(
@@ -769,7 +787,10 @@ class _HotelDateRangeScreenState extends State<HotelDateRangeScreen> {
                     setState(() {
                       final nonNulls = next.whereType<DateTime>().toList();
                       if (nonNulls.length == 1) {
-                        values = [nonNulls.first, nonNulls.first.add(const Duration(days: 1))];
+                        values = [
+                          nonNulls.first,
+                          nonNulls.first.add(const Duration(days: 1)),
+                        ];
                       } else {
                         values = next;
                       }

@@ -83,7 +83,8 @@ class BaseRoute {
   static const String profileSettings = "/profile_settings_route";
   static const String permissionsSettings = "/permissions_settings_route";
   static const String privacyPolicy = "/privacy_policy_route";
-  static const String deviceSessionsSecurity = "/device_sessions_security_route";
+  static const String deviceSessionsSecurity =
+      "/device_sessions_security_route";
 
   static const String changePassword = "/change_password_route";
 
@@ -229,9 +230,12 @@ class BaseRoute {
   static const String visaIntro = "/visa_intro_route";
   static const String licenseIntro = "/license_intro_route";
   static const String commercialProjects = "/commercial_projects_route";
-  static const String commercialProjectDetail = "/commercial_project_detail_route";
-  static const String commercialInvestCheckout = "/commercial_invest_checkout_route";
-  static const String commercialMyInvestments = "/commercial_my_investments_route";
+  static const String commercialProjectDetail =
+      "/commercial_project_detail_route";
+  static const String commercialInvestCheckout =
+      "/commercial_invest_checkout_route";
+  static const String commercialMyInvestments =
+      "/commercial_my_investments_route";
 
   // Marine & Boat Experience Routes
   static const String boatCatalog = "/boat_catalog_route";

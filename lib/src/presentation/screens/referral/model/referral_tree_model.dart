@@ -8,8 +8,9 @@ class ReferralTreeModel {
   ReferralTreeModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? ReferralTreeData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? ReferralTreeData.fromJson(json['data'])
+        : null;
   }
 }
 

@@ -196,8 +196,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              localizations
-                  .transferAmountStepSectionDeleteConfirmationMessage,
+              localizations.transferAmountStepSectionDeleteConfirmationMessage,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -222,8 +221,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                       textColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
-                      text:
-                          localizations.transferAmountStepSectionCancelButton,
+                      text: localizations.transferAmountStepSectionCancelButton,
                       onPressed: () {
                         HapticFeedback.selectionClick();
                         Get.back();
@@ -240,8 +238,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                       borderRadius: AppSpacing.radiusLg,
                       backgroundColor: AppColors.error,
                       textColor: AppColors.white,
-                      text:
-                          localizations.transferAmountStepSectionDeleteButton,
+                      text: localizations.transferAmountStepSectionDeleteButton,
                       onPressed: () async {
                         HapticFeedback.mediumImpact();
                         Get.back();
@@ -280,8 +277,9 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: SafeArea(
         child: Column(
@@ -292,8 +290,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
               rightSideWidget: Semantics(
                 button: true,
                 label: localizations.transferAmountStepSectionAddBeneficiary,
-                tooltip:
-                    localizations.transferAmountStepSectionAddBeneficiary,
+                tooltip: localizations.transferAmountStepSectionAddBeneficiary,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   onTap: _navigateToAddBeneficiary,
@@ -307,17 +304,20 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusSm),
-                          color: (isDark
-                                  ? AppColors.darkPrimary
-                                  : AppColors.brandViolet)
-                              .withValues(alpha: 0.10),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
+                          color:
+                              (isDark
+                                      ? AppColors.darkPrimary
+                                      : AppColors.brandViolet)
+                                  .withValues(alpha: 0.10),
                           border: Border.all(
-                            color: (isDark
-                                    ? AppColors.darkPrimary
-                                    : AppColors.brandViolet)
-                                .withValues(alpha: 0.25),
+                            color:
+                                (isDark
+                                        ? AppColors.darkPrimary
+                                        : AppColors.brandViolet)
+                                    .withValues(alpha: 0.25),
                           ),
                         ),
                         child: Icon(
@@ -358,8 +358,9 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                       builder: (context, constraints) => SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
                         child: ConstrainedBox(
-                          constraints:
-                              BoxConstraints(minHeight: constraints.maxHeight),
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
                           child: Center(
                             child: EcardoEmptyState(
                               title: localizations
@@ -386,9 +387,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                 final filteredList = _filterBeneficiaries(_beneficiaries);
 
                 return RefreshIndicator(
-                  color: isDark
-                      ? AppColors.darkPrimary
-                      : AppColors.brandViolet,
+                  color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
                   onRefresh: () => fetchBeneficiaries(isRefresh: true),
                   child: Column(
                     children: [
@@ -405,8 +404,9 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                               color: isDark
                                   ? AppColors.darkCard
                                   : AppColors.lightCard,
-                              borderRadius:
-                                  BorderRadius.circular(AppSpacing.radiusMd),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd,
+                              ),
                               border: Border.all(
                                 color: isDark
                                     ? AppColors.darkBorder
@@ -431,8 +431,8 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                     controller: _searchController,
                                     decoration: InputDecoration(
                                       isDense: true,
-                                      hintText:
-                                          localizations.paymentLinksFilterButton,
+                                      hintText: localizations
+                                          .paymentLinksFilterButton,
                                       border: InputBorder.none,
                                       hintStyle: TextStyle(
                                         fontSize: 13,
@@ -494,9 +494,8 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                               const SizedBox(height: AppSpacing.md),
                           itemBuilder: (context, index) {
                             final item = filteredList[index];
-                            final displayName = item.nickname ??
-                                item.receiver?.name ??
-                                'User';
+                            final displayName =
+                                item.nickname ?? item.receiver?.name ?? 'User';
 
                             return Container(
                               padding: const EdgeInsets.all(AppSpacing.md),
@@ -587,17 +586,15 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                           tooltip: localizations
                                               .updateBeneficiaryTitle,
                                           child: InkWell(
-                                            borderRadius:
-                                                BorderRadius.circular(
+                                            borderRadius: BorderRadius.circular(
                                               AppSpacing.radiusSm,
                                             ),
                                             onTap: () =>
                                                 _navigateToEditBeneficiary(
-                                              item,
-                                            ),
+                                                  item,
+                                                ),
                                             child: ConstrainedBox(
-                                              constraints:
-                                                  const BoxConstraints(
+                                              constraints: const BoxConstraints(
                                                 minWidth: 44,
                                                 minHeight: 44,
                                               ),
@@ -608,21 +605,27 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                      AppSpacing.radiusSm,
-                                                    ),
-                                                    color: (isDark
-                                                            ? AppColors
-                                                                .darkPrimary
-                                                            : AppColors
-                                                                .brandViolet)
-                                                        .withValues(alpha: 0.10),
+                                                          AppSpacing.radiusSm,
+                                                        ),
+                                                    color:
+                                                        (isDark
+                                                                ? AppColors
+                                                                      .darkPrimary
+                                                                : AppColors
+                                                                      .brandViolet)
+                                                            .withValues(
+                                                              alpha: 0.10,
+                                                            ),
                                                     border: Border.all(
-                                                      color: (isDark
-                                                              ? AppColors
-                                                                  .darkPrimary
-                                                              : AppColors
-                                                                  .brandViolet)
-                                                          .withValues(alpha: 0.25),
+                                                      color:
+                                                          (isDark
+                                                                  ? AppColors
+                                                                        .darkPrimary
+                                                                  : AppColors
+                                                                        .brandViolet)
+                                                              .withValues(
+                                                                alpha: 0.25,
+                                                              ),
                                                     ),
                                                   ),
                                                   child: Icon(
@@ -637,9 +640,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(
-                                          width: AppSpacing.xs,
-                                        ),
+                                        const SizedBox(width: AppSpacing.xs),
                                         Semantics(
                                           button: true,
                                           label: localizations
@@ -647,8 +648,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                           tooltip: localizations
                                               .transferAmountStepSectionDeleteButton,
                                           child: InkWell(
-                                            borderRadius:
-                                                BorderRadius.circular(
+                                            borderRadius: BorderRadius.circular(
                                               AppSpacing.radiusSm,
                                             ),
                                             onTap: () {
@@ -659,8 +659,7 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                               );
                                             },
                                             child: ConstrainedBox(
-                                              constraints:
-                                                  const BoxConstraints(
+                                              constraints: const BoxConstraints(
                                                 minWidth: 44,
                                                 minHeight: 44,
                                               ),
@@ -671,18 +670,20 @@ class _BeneficiaryScreenState extends State<BeneficiaryScreen> {
                                                   decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                      AppSpacing.radiusSm,
-                                                    ),
+                                                          AppSpacing.radiusSm,
+                                                        ),
                                                     color: AppColors
                                                         .errorContainer
                                                         .withValues(
-                                                      alpha: isDark ? 0.2 : 0.8,
-                                                    ),
+                                                          alpha: isDark
+                                                              ? 0.2
+                                                              : 0.8,
+                                                        ),
                                                     border: Border.all(
                                                       color: AppColors.error
                                                           .withValues(
-                                                        alpha: 0.25,
-                                                      ),
+                                                            alpha: 0.25,
+                                                          ),
                                                     ),
                                                   ),
                                                   child: const Icon(

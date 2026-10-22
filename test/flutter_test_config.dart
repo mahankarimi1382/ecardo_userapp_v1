@@ -14,7 +14,9 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
         exceptionStr.contains('RenderBox was not laid out') ||
         exceptionStr.contains('hasSize') ||
         exceptionStr.contains('would not hit test on the specified widget')) {
-      debugPrint('⚠️ [TEST RUNNER] Suppressed headless layout artifact: ${details.summary}');
+      debugPrint(
+        '⚠️ [TEST RUNNER] Suppressed headless layout artifact: ${details.summary}',
+      );
       return;
     }
     if (originalOnError != null) {

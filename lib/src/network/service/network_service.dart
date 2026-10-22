@@ -236,7 +236,8 @@ class NetworkService extends getx.GetxService {
           // transport timeouts (up to 5 min TTL) so a retry maps to the same
           // idempotency key server-side.
           if (options.method.toUpperCase() == 'POST') {
-            final existingIdem = options.headers['Idempotency-Key'] ??
+            final existingIdem =
+                options.headers['Idempotency-Key'] ??
                 options.headers['X-Idempotency-Key'];
             if (existingIdem != null) {
               // FIN-IDEM-01: Ensure both headers are emitted if one was already set
@@ -244,8 +245,10 @@ class NetworkService extends getx.GetxService {
               options.headers['X-Idempotency-Key'] = existingIdem;
               final mapKey = _getIdempotencyMapKey(options);
               final now = _clock();
-              _inflightIdempotency[mapKey] =
-                  _IdempotencyEntry(existingIdem.toString(), now);
+              _inflightIdempotency[mapKey] = _IdempotencyEntry(
+                existingIdem.toString(),
+                now,
+              );
             } else {
               final path = options.uri.path;
               final rawOpId =
@@ -308,8 +311,7 @@ class NetworkService extends getx.GetxService {
           final isAmbiguousServerError =
               statusCode != null && statusCode >= 500 && statusCode <= 599;
           final isDeterministicRelease =
-              statusCode == null ||
-              (statusCode >= 200 && statusCode < 500);
+              statusCode == null || (statusCode >= 200 && statusCode < 500);
 
           if (!isAmbiguousServerError && isDeterministicRelease) {
             _releaseIdempotencyKey(response.requestOptions);
@@ -329,7 +331,9 @@ class NetworkService extends getx.GetxService {
           final isDeterministicClientError =
               statusCode != null && statusCode >= 400 && statusCode <= 499;
 
-          if (!isTimeout && !isAmbiguousServerError && isDeterministicClientError) {
+          if (!isTimeout &&
+              !isAmbiguousServerError &&
+              isDeterministicClientError) {
             _releaseIdempotencyKey(error.requestOptions);
           }
           if (error.response?.statusCode == 401) {
@@ -627,7 +631,9 @@ class NetworkService extends getx.GetxService {
         underlying is TimeoutException ||
         (underlying != null &&
             (underlying.toString().toLowerCase().contains('socketexception') ||
-                underlying.toString().toLowerCase().contains('timeoutexception')))) {
+                underlying.toString().toLowerCase().contains(
+                  'timeoutexception',
+                )))) {
       return true;
     }
     final message = error.message?.toLowerCase() ?? '';
@@ -670,8 +676,9 @@ class NetworkService extends getx.GetxService {
     if (data is FormData) {
       final fields = data.fields.map((e) => '${e.key}=${e.value}').toList()
         ..sort();
-      final files = data.files.map((e) => '${e.key}=${e.value.filename}').toList()
-        ..sort();
+      final files =
+          data.files.map((e) => '${e.key}=${e.value.filename}').toList()
+            ..sort();
       final fdRepr = 'fields:${fields.join('&')}|files:${files.join('&')}';
       return sha256.convert(utf8.encode(fdRepr)).toString();
     }
@@ -1288,11 +1295,7 @@ class NetworkService extends getx.GetxService {
         final q = getx.Get.find<OfflineRequestQueue>();
         if (!q.isFlushing &&
             q.isQueueable(endpoint, method: 'PUT', data: data)) {
-          await q.enqueue(
-            method: 'PUT',
-            endpoint: endpoint,
-            data: data,
-          );
+          await q.enqueue(method: 'PUT', endpoint: endpoint, data: data);
           return ApiResponse.error('queued_offline');
         }
       }

@@ -7,11 +7,16 @@ class RemittanceV2ApiService {
   final NetworkService _network = NetworkService();
 
   /// Corridor catalog — GET /remittance-v2/corridors (public)
-  Future<List<Map<String, dynamic>>> getCorridors({String? sourceCountry, String? destCountry}) async {
+  Future<List<Map<String, dynamic>>> getCorridors({
+    String? sourceCountry,
+    String? destCountry,
+  }) async {
     final qp = <String>[];
     if (sourceCountry != null) qp.add('source_country=$sourceCountry');
     if (destCountry != null) qp.add('dest_country=$destCountry');
-    final ep = qp.isEmpty ? '/remittance-v2/corridors' : '/remittance-v2/corridors?${qp.join('&')}';
+    final ep = qp.isEmpty
+        ? '/remittance-v2/corridors'
+        : '/remittance-v2/corridors?${qp.join('&')}';
 
     final response = await _network.get(endpoint: ep);
     if (response.status == Status.completed && response.data != null) {
@@ -30,11 +35,14 @@ class RemittanceV2ApiService {
     required double amount,
     required String payoutMethod,
   }) async {
-    final response = await _network.post(endpoint: '/remittance-v2/validate', data: {
-      'corridor_id': corridorId,
-      'amount': amount,
-      'payout_method': payoutMethod,
-    });
+    final response = await _network.post(
+      endpoint: '/remittance-v2/validate',
+      data: {
+        'corridor_id': corridorId,
+        'amount': amount,
+        'payout_method': payoutMethod,
+      },
+    );
     if (response.status == Status.completed) return null;
     final data = response.data;
     if (data != null && data['error_code'] != null) {
@@ -58,11 +66,10 @@ class RemittanceV2ApiService {
     required String reasonType,
     String? description,
   }) async {
-    final response = await _network.post(endpoint: '/remittance-v2/disputes', data: {
-      'trx': trx,
-      'reason_type': reasonType,
-      'description': description,
-    });
+    final response = await _network.post(
+      endpoint: '/remittance-v2/disputes',
+      data: {'trx': trx, 'reason_type': reasonType, 'description': description},
+    );
     return response.status == Status.completed;
   }
 }

@@ -23,8 +23,12 @@ class TollAmountStepSection extends StatelessWidget {
     final localization = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final containerBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final inputBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
-    final suffixColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final inputBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
+    final suffixColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     return Expanded(
       child: Container(

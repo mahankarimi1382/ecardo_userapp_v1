@@ -70,13 +70,15 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
 
     // Step-up Security: Verify Transaction Passcode
     final bool isPasscodeEnabled =
-        Get.find<SettingsService>().getSetting("withdraw_passcode_status") == "1";
+        Get.find<SettingsService>().getSetting("withdraw_passcode_status") ==
+        "1";
 
     if (isPasscodeEnabled) {
       final dynamic verified = await Get.bottomSheet<dynamic>(
         const VerifyPasscodeBottomSheet(),
       );
-      final isVerified = verified != null &&
+      final isVerified =
+          verified != null &&
           verified != false &&
           (verified is! String || verified.isNotEmpty);
       if (!isVerified) {
@@ -278,8 +280,9 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
                   decoration: BoxDecoration(
                     color: isDark
                         ? AppColors.darkSurfaceVariant.withValues(alpha: 0.4)
-                        : AppColors.lightSecondaryContainer
-                            .withValues(alpha: 0.45),
+                        : AppColors.lightSecondaryContainer.withValues(
+                            alpha: 0.45,
+                          ),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                     border: Border.all(
                       color: accentColor.withValues(alpha: 0.35),
@@ -289,11 +292,7 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.shield_outlined,
-                        size: 14,
-                        color: accentColor,
-                      ),
+                      Icon(Icons.shield_outlined, size: 14, color: accentColor),
                       const SizedBox(width: AppSpacing.xs),
                       Text(
                         l10nPick(
@@ -321,43 +320,46 @@ class _WithdrawReviewStepSectionState extends State<WithdrawReviewStepSection> {
               const SizedBox(height: AppSpacing.xl),
 
               // 4. Swipe to Confirm Button (Design System)
-              Obx(() => EcardoSwipeButton(
-                    key: _swipeKey,
-                    text: l10nPick(
-                      context,
-                      en: 'Swipe to Confirm Payout',
-                      fa: 'بکشید برای تأیید و ثبت برداشت',
-                      ar: 'اسحب لتأكيد السحب',
-                      tr: 'Çekimi Onaylamak İçin Kaydırın',
-                      ru: 'Проведите для подтверждения',
-                      zh: '滑动以确认提现',
-                    ),
-                    loadingText: l10nPick(
-                      context,
-                      en: 'Processing Withdrawal...',
-                      fa: 'در حال پردازش برداشت وجه...',
-                      ar: 'جار معالجة السحب...',
-                      tr: 'Çekim İşleniyor...',
-                      ru: 'Обработка вывода...',
-                      zh: '正在处理提现...',
-                    ),
-                    successText: l10nPick(
-                      context,
-                      en: 'Payout Confirmed',
-                      fa: 'برداشت تأیید شد',
-                      ar: 'تم تأكيد السحب',
-                      tr: 'Çekim Onaylandı',
-                      ru: 'Вывод подтвержден',
-                      zh: '提现已确认',
-                    ),
-                    isLoading: controller.isWithdrawLoading.value,
-                    enabled: !controller.chargeLoadFailed.value &&
-                        !controller.isWithdrawLoading.value,
-                    onSwipeComplete: () async {
-                      await _handleConfirmWithdraw(context);
-                      _swipeKey.currentState?.reset();
-                    },
-                  )),
+              Obx(
+                () => EcardoSwipeButton(
+                  key: _swipeKey,
+                  text: l10nPick(
+                    context,
+                    en: 'Swipe to Confirm Payout',
+                    fa: 'بکشید برای تأیید و ثبت برداشت',
+                    ar: 'اسحب لتأكيد السحب',
+                    tr: 'Çekimi Onaylamak İçin Kaydırın',
+                    ru: 'Проведите для подтверждения',
+                    zh: '滑动以确认提现',
+                  ),
+                  loadingText: l10nPick(
+                    context,
+                    en: 'Processing Withdrawal...',
+                    fa: 'در حال پردازش برداشت وجه...',
+                    ar: 'جار معالجة السحب...',
+                    tr: 'Çekim İşleniyor...',
+                    ru: 'Обработка вывода...',
+                    zh: '正在处理提现...',
+                  ),
+                  successText: l10nPick(
+                    context,
+                    en: 'Payout Confirmed',
+                    fa: 'برداشت تأیید شد',
+                    ar: 'تم تأكيد السحب',
+                    tr: 'Çekim Onaylandı',
+                    ru: 'Вывод подтвержден',
+                    zh: '提现已确认',
+                  ),
+                  isLoading: controller.isWithdrawLoading.value,
+                  enabled:
+                      !controller.chargeLoadFailed.value &&
+                      !controller.isWithdrawLoading.value,
+                  onSwipeComplete: () async {
+                    await _handleConfirmWithdraw(context);
+                    _swipeKey.currentState?.reset();
+                  },
+                ),
+              ),
 
               const SizedBox(height: AppSpacing.md),
 

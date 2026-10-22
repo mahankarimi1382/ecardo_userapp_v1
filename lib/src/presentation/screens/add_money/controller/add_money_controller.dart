@@ -27,6 +27,7 @@ class AddMoneyController extends GetxController {
   final Rxn<Map<String, dynamic>> pendingPaymentData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
+
   /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
   /// froze the locale at controller creation (language switches left stale
   /// strings) and crashed when no localization context existed yet.
@@ -178,8 +179,11 @@ class AddMoneyController extends GetxController {
           final fallbackResponse = await Get.find<NetworkService>().get(
             endpoint: ApiPath.getGatewayMethodsEndpoint,
           );
-          if (fallbackResponse.status == Status.completed && fallbackResponse.data != null) {
-            final fallbackModel = GatewayMethodsModel.fromJson(fallbackResponse.data!);
+          if (fallbackResponse.status == Status.completed &&
+              fallbackResponse.data != null) {
+            final fallbackModel = GatewayMethodsModel.fromJson(
+              fallbackResponse.data!,
+            );
             gatewayMethodsList.assignAll(fallbackModel.data ?? []);
           }
         }
@@ -250,8 +254,9 @@ class AddMoneyController extends GetxController {
         // second shape AFTER the deposit row had already been created, so the
         // user saw a generic error for a real pending deposit.
         final raw = response.data?["data"];
-        final Map<String, dynamic>? payload =
-            raw is Map<String, dynamic> ? raw : null;
+        final Map<String, dynamic>? payload = raw is Map<String, dynamic>
+            ? raw
+            : null;
         final redirectUrl = payload?["redirect_url"]?.toString();
 
         if (redirectUrl == null || redirectUrl.isEmpty) {
@@ -373,7 +378,8 @@ class AddMoneyController extends GetxController {
           (double.tryParse((gatewayMethod.value?.charge ?? '0')) ?? 0.0) /
           100);
     } else if (gatewayMethod.value!.chargeType == 'fixed') {
-      calculatedCharge.value = (double.tryParse((gatewayMethod.value?.charge ?? '0')) ?? 0.0);
+      calculatedCharge.value =
+          (double.tryParse((gatewayMethod.value?.charge ?? '0')) ?? 0.0);
     } else {
       calculatedCharge.value = 0.0;
     }
@@ -418,7 +424,8 @@ class AddMoneyController extends GetxController {
     final isCrypto = wallet.value?.isCrypto ?? false;
     final int decimals = isCrypto ? 8 : 2;
 
-    final minDeposit = double.tryParse(gatewayMethod.value?.minimumDeposit ?? '0') ?? 0.0;
+    final minDeposit =
+        double.tryParse(gatewayMethod.value?.minimumDeposit ?? '0') ?? 0.0;
     if (minDeposit > 0 && amount < minDeposit) {
       ToastHelper().showErrorToast(
         localization!.addMoneyValidationAmountMinimum(
@@ -428,7 +435,8 @@ class AddMoneyController extends GetxController {
       return false;
     }
 
-    final maxDeposit = double.tryParse(gatewayMethod.value?.maximumDeposit ?? '0') ?? 0.0;
+    final maxDeposit =
+        double.tryParse(gatewayMethod.value?.maximumDeposit ?? '0') ?? 0.0;
     if (maxDeposit > 0 && amount > maxDeposit) {
       ToastHelper().showErrorToast(
         localization!.addMoneyValidationAmountMaximum(

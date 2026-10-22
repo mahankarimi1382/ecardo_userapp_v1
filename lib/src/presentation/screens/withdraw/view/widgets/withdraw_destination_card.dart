@@ -8,12 +8,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/widgets/monogram_avatar.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/model/withdraw_account_model.dart';
 
-enum WithdrawCardMode {
-  management,
-  selectable,
-  selectedBanner,
-  review,
-}
+enum WithdrawCardMode { management, selectable, selectedBanner, review }
 
 /// A luxury neo-fintech card for saved bank accounts, Sheba, IBAN, and payout destinations.
 class WithdrawDestinationCard extends StatelessWidget {
@@ -117,10 +112,12 @@ class WithdrawDestinationCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final accentColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
-    final methodName = account.methodName ?? account.method?.name ?? 'Bank Account';
+    final methodName =
+        account.methodName ?? account.method?.name ?? 'Bank Account';
     final currency = account.currency ?? 'USD';
     final maskedAccount = maskAccountNumber(account);
-    final settlementTime = account.method?.time ??
+    final settlementTime =
+        account.method?.time ??
         l10nPick(
           context,
           en: 'Instant',
@@ -136,12 +133,8 @@ class WithdrawDestinationCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
         color: isDark
-            ? (isHighlight
-                ? AppColors.darkSurfaceVariant
-                : AppColors.darkCard)
-            : (isHighlight
-                ? AppColors.white
-                : AppColors.lightCard),
+            ? (isHighlight ? AppColors.darkSurfaceVariant : AppColors.darkCard)
+            : (isHighlight ? AppColors.white : AppColors.lightCard),
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         border: Border.all(
           color: isHighlight
@@ -153,7 +146,9 @@ class WithdrawDestinationCard extends StatelessWidget {
           BoxShadow(
             color: isHighlight
                 ? accentColor.withValues(alpha: isDark ? 0.22 : 0.10)
-                : (isDark ? Colors.black.withValues(alpha: 0.20) : AppColors.lightShadow),
+                : (isDark
+                      ? Colors.black.withValues(alpha: 0.20)
+                      : AppColors.lightShadow),
             blurRadius: isHighlight ? 14 : 6,
             spreadRadius: isHighlight ? 0 : -2,
             offset: const Offset(0, 3),
@@ -217,8 +212,9 @@ class WithdrawDestinationCard extends StatelessWidget {
                               color: accentColor.withValues(
                                 alpha: isDark ? 0.20 : 0.10,
                               ),
-                              borderRadius:
-                                  BorderRadius.circular(AppSpacing.radiusXs),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusXs,
+                              ),
                             ),
                             child: Text(
                               currency,
@@ -297,7 +293,8 @@ class WithdrawDestinationCard extends StatelessWidget {
 
   Widget _buildLogoAvatar(bool isDark, String name) {
     final iconUrl = account.method?.icon;
-    final hasValidIcon = iconUrl != null &&
+    final hasValidIcon =
+        iconUrl != null &&
         iconUrl.isNotEmpty &&
         (iconUrl.startsWith('http') || iconUrl.startsWith('https'));
 
@@ -320,26 +317,16 @@ class WithdrawDestinationCard extends StatelessWidget {
           child: CachedNetworkImage(
             imageUrl: iconUrl,
             fit: BoxFit.contain,
-            placeholder: (context, _) => MonogramAvatar(
-              name: name,
-              size: 36,
-              isVerified: true,
-            ),
-            errorWidget: (context, _, error) => MonogramAvatar(
-              name: name,
-              size: 36,
-              isVerified: true,
-            ),
+            placeholder: (context, _) =>
+                MonogramAvatar(name: name, size: 36, isVerified: true),
+            errorWidget: (context, _, error) =>
+                MonogramAvatar(name: name, size: 36, isVerified: true),
           ),
         ),
       );
     }
 
-    return MonogramAvatar(
-      name: name,
-      size: 46,
-      isVerified: true,
-    );
+    return MonogramAvatar(name: name, size: 46, isVerified: true);
   }
 
   Widget _buildTrailingSection(
@@ -443,9 +430,7 @@ class WithdrawDestinationCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: accentColor.withValues(alpha: isDark ? 0.20 : 0.10),
               borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-              border: Border.all(
-                color: accentColor.withValues(alpha: 0.35),
-              ),
+              border: Border.all(color: accentColor.withValues(alpha: 0.35)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -466,11 +451,7 @@ class WithdrawDestinationCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                Icon(
-                  Icons.swap_horiz_rounded,
-                  size: 15,
-                  color: accentColor,
-                ),
+                Icon(Icons.swap_horiz_rounded, size: 15, color: accentColor),
               ],
             ),
           ),

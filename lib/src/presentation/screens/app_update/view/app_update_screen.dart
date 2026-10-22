@@ -88,7 +88,9 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
   Widget build(BuildContext context) {
     final controller = Get.find<AppUpdateController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
 
     return PopScope(
       canPop: true,
@@ -152,7 +154,10 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
         );
 
       case AppUpdatePhase.installing:
-        return _InstallingView(key: const ValueKey('installing'), isDark: isDark);
+        return _InstallingView(
+          key: const ValueKey('installing'),
+          isDark: isDark,
+        );
 
       case AppUpdatePhase.error:
         return _ErrorView(
@@ -168,7 +173,9 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
     final result = await Get.dialog<bool>(
       AlertDialog(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        ),
         title: Text(
           localization?.updateCancelDownloadTitle ?? 'Cancel download?',
           style: AppTextStyles.titleMedium.copyWith(
@@ -203,9 +210,7 @@ class _AppUpdateScreenState extends State<AppUpdateScreen>
               ),
             ),
             onPressed: () => Get.back(result: true),
-            child: Text(
-              localization?.updateCancel ?? 'Cancel',
-            ),
+            child: Text(localization?.updateCancel ?? 'Cancel'),
           ),
         ],
       ),
@@ -227,7 +232,9 @@ class _CheckingView extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Center(
       child: Column(
@@ -242,7 +249,9 @@ class _CheckingView extends StatelessWidget {
               errorBuilder: (context, error, stackTrace) {
                 return Center(
                   child: CircularProgressIndicator(
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                 );
               },
@@ -260,9 +269,7 @@ class _CheckingView extends StatelessWidget {
           Text(
             localization?.updateCheckingBody ??
                 'Contacting eCardo server for the latest version.',
-            style: AppTextStyles.bodySmall.copyWith(
-              color: secondaryTextColor,
-            ),
+            style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
           ),
         ],
       ),
@@ -284,7 +291,9 @@ class _UpToDateView extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Center(
       child: Padding(
@@ -334,8 +343,11 @@ class _UpToDateView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   boxShadow: [
                     BoxShadow(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                          .withValues(alpha: 0.30),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: 0.30),
                       blurRadius: 14,
                       offset: const Offset(0, 4),
                     ),
@@ -344,7 +356,9 @@ class _UpToDateView extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.transparent,
-                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                    foregroundColor: isDark
+                        ? AppColors.deepBlack
+                        : AppColors.white,
                     shadowColor: AppColors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -376,12 +390,16 @@ class _UpToDateView extends StatelessWidget {
                 icon: Icon(
                   Icons.refresh_rounded,
                   size: 16,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 ),
                 label: Text(
                   localization?.updateCheckAgain ?? 'Check again',
                   style: AppTextStyles.labelMedium.copyWith(
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -408,12 +426,17 @@ class _UpdateAvailableView extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
 
     return Center(
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: AppSpacing.lg),
+        padding: EdgeInsets.symmetric(
+          horizontal: 24.w,
+          vertical: AppSpacing.lg,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -427,7 +450,9 @@ class _UpdateAvailableView extends StatelessWidget {
                   return Icon(
                     Icons.system_update_alt_rounded,
                     size: 90.w,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   );
                 },
               ),
@@ -444,17 +469,24 @@ class _UpdateAvailableView extends StatelessWidget {
 
             // Modern Version comparison card
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
               decoration: BoxDecoration(
                 color: cardBg,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                 border: Border.all(
-                  color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(alpha: 0.35),
+                  color:
+                      (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                          .withValues(alpha: 0.35),
                   width: 1.2,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -485,15 +517,20 @@ class _UpdateAvailableView extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(AppSpacing.xs),
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                          .withValues(alpha: 0.12),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Directionality.of(context) == TextDirection.rtl
                           ? Icons.arrow_back_rounded
                           : Icons.arrow_forward_rounded,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                       size: 20,
                     ),
                   ),
@@ -511,7 +548,9 @@ class _UpdateAvailableView extends StatelessWidget {
                         'v${controller.serverVersion.value}',
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                          color: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.brandViolet,
                         ),
                       ),
                     ],
@@ -521,25 +560,27 @@ class _UpdateAvailableView extends StatelessWidget {
             ),
 
             // Modern Changelog list card
-            Builder(builder: (context) {
-              final notes = controller.resolveNotes(
-                controller.serverVersion.value,
-              );
-              final version = controller.serverVersion.value;
-              return Column(
-                children: [
-                  const SizedBox(height: AppSpacing.md),
-                  _ChangelogCard(
-                    version: version,
-                    notes: notes,
-                    isDark: isDark,
-                    primaryTextColor: primaryTextColor,
-                    secondaryTextColor: secondaryTextColor,
-                    cardBg: cardBg,
-                  ),
-                ],
-              );
-            }),
+            Builder(
+              builder: (context) {
+                final notes = controller.resolveNotes(
+                  controller.serverVersion.value,
+                );
+                final version = controller.serverVersion.value;
+                return Column(
+                  children: [
+                    const SizedBox(height: AppSpacing.md),
+                    _ChangelogCard(
+                      version: version,
+                      notes: notes,
+                      isDark: isDark,
+                      primaryTextColor: primaryTextColor,
+                      secondaryTextColor: secondaryTextColor,
+                      cardBg: cardBg,
+                    ),
+                  ],
+                );
+              },
+            ),
 
             if (controller.forceUpdate.value) ...[
               const SizedBox(height: AppSpacing.md),
@@ -557,7 +598,11 @@ class _UpdateAvailableView extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 20),
+                    const Icon(
+                      Icons.warning_amber_rounded,
+                      color: AppColors.error,
+                      size: 20,
+                    ),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: Text(
@@ -587,8 +632,11 @@ class _UpdateAvailableView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   boxShadow: [
                     BoxShadow(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                          .withValues(alpha: 0.35),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: 0.35),
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -597,7 +645,9 @@ class _UpdateAvailableView extends StatelessWidget {
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.transparent,
-                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                    foregroundColor: isDark
+                        ? AppColors.deepBlack
+                        : AppColors.white,
                     shadowColor: AppColors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -711,7 +761,8 @@ class _ChangelogCard extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
-                  loc?.updateWhatsNewTitle(version) ?? "What's new in v$version",
+                  loc?.updateWhatsNewTitle(version) ??
+                      "What's new in v$version",
                   style: AppTextStyles.labelMedium.copyWith(
                     fontWeight: FontWeight.w800,
                     color: primaryTextColor,
@@ -810,7 +861,9 @@ class _DownloadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final accentColor = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
 
@@ -850,7 +903,9 @@ class _DownloadingView extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 14,
                     offset: const Offset(0, 4),
                   ),
@@ -871,10 +926,13 @@ class _DownloadingView extends StatelessWidget {
                           ),
                           const SizedBox(width: AppSpacing.xs),
                           Text(
-                            localization?.updateStartingDownload ?? 'Downloading...',
+                            localization?.updateStartingDownload ??
+                                'Downloading...',
                             style: AppTextStyles.labelMedium.copyWith(
                               fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                              color: isDark
+                                  ? AppColors.warmWhite
+                                  : AppColors.deepBlack,
                             ),
                           ),
                         ],
@@ -895,15 +953,20 @@ class _DownloadingView extends StatelessWidget {
 
                   // Modern Animated Gradient Progress Bar
                   Obx(() {
-                    final percent = (controller.progressPercent.value / 100.0).clamp(0.0, 1.0);
+                    final percent = (controller.progressPercent.value / 100.0)
+                        .clamp(0.0, 1.0);
                     return Container(
                       height: 12.h,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: isDark
                             ? AppColors.darkSurfaceVariant
-                            : AppColors.lightOutlineVariant.withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                            : AppColors.lightOutlineVariant.withValues(
+                                alpha: 0.6,
+                              ),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
                       ),
                       child: LayoutBuilder(
                         builder: (context, constraints) {
@@ -918,10 +981,15 @@ class _DownloadingView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 gradient: isDark
                                     ? const LinearGradient(
-                                        colors: [AppColors.mainSoftBlue, AppColors.brandViolet],
+                                        colors: [
+                                          AppColors.mainSoftBlue,
+                                          AppColors.brandViolet,
+                                        ],
                                       )
                                     : AppColors.brandGradient,
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusFull,
+                                ),
                                 boxShadow: [
                                   BoxShadow(
                                     color: accentColor.withValues(alpha: 0.35),
@@ -1021,7 +1089,9 @@ class _InstallingView extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Center(
       child: Padding(
@@ -1038,7 +1108,9 @@ class _InstallingView extends StatelessWidget {
                 errorBuilder: (context, error, stackTrace) {
                   return Center(
                     child: CircularProgressIndicator(
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                     ),
                   );
                 },
@@ -1073,8 +1145,11 @@ class _InstallingView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   boxShadow: [
                     BoxShadow(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                          .withValues(alpha: 0.30),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: 0.30),
                       blurRadius: 14,
                       offset: const Offset(0, 4),
                     ),
@@ -1083,7 +1158,9 @@ class _InstallingView extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.transparent,
-                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                    foregroundColor: isDark
+                        ? AppColors.deepBlack
+                        : AppColors.white,
                     shadowColor: AppColors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -1095,7 +1172,8 @@ class _InstallingView extends StatelessWidget {
                     Get.back();
                   },
                   child: Text(
-                    localization?.updateInstallFinished ?? "I've finished installing",
+                    localization?.updateInstallFinished ??
+                        "I've finished installing",
                     style: AppTextStyles.labelMedium.copyWith(
                       fontWeight: FontWeight.w700,
                       color: isDark ? AppColors.deepBlack : AppColors.white,
@@ -1115,17 +1193,15 @@ class _ErrorView extends StatelessWidget {
   final AppUpdateController controller;
   final bool isDark;
 
-  const _ErrorView({
-    super.key,
-    required this.controller,
-    required this.isDark,
-  });
+  const _ErrorView({super.key, required this.controller, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Center(
       child: Padding(
@@ -1170,7 +1246,7 @@ class _ErrorView extends StatelessWidget {
                 child: Text(
                   controller.errorMessage.value.isEmpty
                       ? (localization?.updateUnknownError ??
-                          'An unknown error occurred.')
+                            'An unknown error occurred.')
                       : controller.errorMessage.value,
                   textAlign: TextAlign.center,
                   style: AppTextStyles.bodySmall.copyWith(
@@ -1190,8 +1266,11 @@ class _ErrorView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   boxShadow: [
                     BoxShadow(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                          .withValues(alpha: 0.30),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: 0.30),
                       blurRadius: 14,
                       offset: const Offset(0, 4),
                     ),
@@ -1200,7 +1279,9 @@ class _ErrorView extends StatelessWidget {
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.transparent,
-                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                    foregroundColor: isDark
+                        ? AppColors.deepBlack
+                        : AppColors.white,
                     shadowColor: AppColors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -1229,9 +1310,13 @@ class _ErrorView extends StatelessWidget {
               height: 48.h,
               child: OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  foregroundColor: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                   side: BorderSide(
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                     width: 1.5,
                   ),
                   shape: RoundedRectangleBorder(

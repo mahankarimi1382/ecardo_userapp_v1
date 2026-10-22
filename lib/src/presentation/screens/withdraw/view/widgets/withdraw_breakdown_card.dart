@@ -34,22 +34,27 @@ class WithdrawBreakdownCard extends StatelessWidget {
     final accentColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
     final isFreeFee = feeAmount <= 0.0 && !hasFeeError;
-    final formattedRequested = "${requestedAmount.toStringAsFixed(decimals)} $currency";
+    final formattedRequested =
+        "${requestedAmount.toStringAsFixed(decimals)} $currency";
     final formattedFee = hasFeeError
         ? '—'
         : (isFreeFee
-            ? l10nPick(
-                context,
-                en: 'Free (0.00 $currency)',
-                fa: 'رایگان (۰.۰۰ $currency)',
-                ar: 'مجاني (0.00 $currency)',
-                tr: 'Ücretsiz (0.00 $currency)',
-                ru: 'Бесплатно (0.00 $currency)',
-              )
-            : "${feeAmount.toStringAsFixed(decimals)} $currency");
+              ? l10nPick(
+                  context,
+                  en: 'Free (0.00 $currency)',
+                  fa: 'رایگان (۰.۰۰ $currency)',
+                  ar: 'مجاني (0.00 $currency)',
+                  tr: 'Ücretsiz (0.00 $currency)',
+                  ru: 'Бесплатно (0.00 $currency)',
+                )
+              : "${feeAmount.toStringAsFixed(decimals)} $currency");
     final formattedNet = "${netPayout.toStringAsFixed(decimals)} $currency";
-    final isInternationalCurrency = currency.toUpperCase() == 'USD' || currency.toUpperCase() == 'EUR' || currency.toUpperCase() == 'USDT';
-    final resolvedSettlementTime = settlementTime ??
+    final isInternationalCurrency =
+        currency.toUpperCase() == 'USD' ||
+        currency.toUpperCase() == 'EUR' ||
+        currency.toUpperCase() == 'USDT';
+    final resolvedSettlementTime =
+        settlementTime ??
         (isInternationalCurrency
             ? l10nPick(
                 context,
@@ -223,7 +228,9 @@ class WithdrawBreakdownCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w900,
-                      color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.brandViolet,
                       letterSpacing: -0.3,
                     ),
                   ),

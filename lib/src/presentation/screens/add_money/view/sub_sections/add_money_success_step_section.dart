@@ -44,23 +44,31 @@ class _AddMoneySuccessStepSectionState
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final currentWallet = controller.wallet.value;
-    final payCurrency = (controller.successPaymentData.value?["pay_currency"] ?? currentWallet?.code ?? "USD").toString();
+    final payCurrency =
+        (controller.successPaymentData.value?["pay_currency"] ??
+                currentWallet?.code ??
+                "USD")
+            .toString();
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: currentWallet?.code ?? 'USD',
       siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      ) ?? '2',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
       isCrypto: currentWallet?.isCrypto ?? false,
     );
 
-    final rawAmount = controller.successPaymentData.value?["amount"] ?? controller.amountController.text;
+    final rawAmount =
+        controller.successPaymentData.value?["amount"] ??
+        controller.amountController.text;
     final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
     final rawCharge = controller.successPaymentData.value?["charge"];
     final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? 0.0;
-    final tnxId = _nonEmpty(controller.successPaymentData.value?["tnx"]?.toString());
-    final txType = controller.successPaymentData.value?["type"]?.toString() ?? 'Deposit';
+    final tnxId = _nonEmpty(
+      controller.successPaymentData.value?["tnx"]?.toString(),
+    );
+    final txType =
+        controller.successPaymentData.value?["type"]?.toString() ?? 'Deposit';
 
     return Obx(
       () => controller.isPaymentLoading.value
@@ -124,7 +132,9 @@ class _AddMoneySuccessStepSectionState
                             tr: 'Ödeme Yöntemi',
                             ru: 'Способ оплаты',
                           ),
-                          value: controller.gatewayMethod.value?.formattedName ?? payCurrency,
+                          value:
+                              controller.gatewayMethod.value?.formattedName ??
+                              payCurrency,
                         ),
                         EcardoReceiptItem(
                           label: localization.addMoneySuccessTransactionType,
@@ -142,7 +152,9 @@ class _AddMoneySuccessStepSectionState
                           currency: payCurrency,
                           decimals: calculateDecimals,
                           isHighlighted: true,
-                          valueColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                          valueColor: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.deepBlack,
                         ),
                       ],
                       note: l10nPick(

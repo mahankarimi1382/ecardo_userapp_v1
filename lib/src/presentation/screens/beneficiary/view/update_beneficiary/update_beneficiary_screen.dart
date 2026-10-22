@@ -94,7 +94,9 @@ class _UpdateBeneficiaryScreenState extends State<UpdateBeneficiaryScreen> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                        color: isDark
+                            ? AppColors.darkShadow
+                            : AppColors.lightShadow,
                         blurRadius: AppSpacing.lg,
                         offset: const Offset(0, -2),
                       ),

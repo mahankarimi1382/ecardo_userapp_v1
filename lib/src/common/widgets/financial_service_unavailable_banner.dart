@@ -93,7 +93,10 @@ class FinancialServiceUnavailableBanner extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFD97706),
                         borderRadius: BorderRadius.circular(10.r),
@@ -130,7 +133,10 @@ class FinancialServiceUnavailableBanner extends StatelessWidget {
                     onTap: onRetry,
                     borderRadius: BorderRadius.circular(8.r),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 4.h,
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

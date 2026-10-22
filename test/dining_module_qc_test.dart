@@ -11,9 +11,7 @@ import 'package:ecardo_user/src/presentation/screens/travel/dining/screens/dinin
 Widget _host(Widget child) {
   return ScreenUtilInit(
     designSize: const Size(375, 812),
-    builder: (context, _) => GetMaterialApp(
-      home: child,
-    ),
+    builder: (context, _) => GetMaterialApp(home: child),
   );
 }
 
@@ -23,9 +21,9 @@ void main() {
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('PonnamKarthik/fluttertoast'),
-      (MethodCall methodCall) async => true,
-    );
+          const MethodChannel('PonnamKarthik/fluttertoast'),
+          (MethodCall methodCall) async => true,
+        );
   });
 
   void phoneSurface(WidgetTester tester) {
@@ -39,56 +37,64 @@ void main() {
   });
 
   group('Dining Module Unit & Cart Tests', () {
-    test('DiningController cart operations, totals and order submission work', () async {
-      final controller = Get.put(DiningController());
+    test(
+      'DiningController cart operations, totals and order submission work',
+      () async {
+        final controller = Get.put(DiningController());
 
-      // Wait for catalog to load
-      await Future.delayed(const Duration(seconds: 2));
+        // Wait for catalog to load
+        await Future.delayed(const Duration(seconds: 2));
 
-      expect(controller.allRestaurants.isNotEmpty, isTrue);
-      final rest = controller.allRestaurants.first;
-      expect(rest.menu.isNotEmpty, isTrue);
-      final item1 = rest.menu[0];
-      final item2 = rest.menu.length > 1 ? rest.menu[1] : rest.menu[0];
+        expect(controller.allRestaurants.isNotEmpty, isTrue);
+        final rest = controller.allRestaurants.first;
+        expect(rest.menu.isNotEmpty, isTrue);
+        final item1 = rest.menu[0];
+        final item2 = rest.menu.length > 1 ? rest.menu[1] : rest.menu[0];
 
-      expect(controller.cartCount, equals(0));
+        expect(controller.cartCount, equals(0));
 
-      controller.addToCart(rest, item1);
-      expect(controller.cartCount, equals(1));
-      expect(controller.getItemQuantity(item1.id), equals(1));
+        controller.addToCart(rest, item1);
+        expect(controller.cartCount, equals(1));
+        expect(controller.getItemQuantity(item1.id), equals(1));
 
-      controller.addToCart(rest, item1);
-      expect(controller.cartCount, equals(2));
-      expect(controller.getItemQuantity(item1.id), equals(2));
+        controller.addToCart(rest, item1);
+        expect(controller.cartCount, equals(2));
+        expect(controller.getItemQuantity(item1.id), equals(2));
 
-      controller.addToCart(rest, item2);
-      expect(controller.cartCount, equals(3));
-      // item1: 18 * 2 = 36 + item2: 12 = 48
-      expect(controller.cartSubtotal, equals(48.0));
+        controller.addToCart(rest, item2);
+        expect(controller.cartCount, equals(3));
+        // item1: 18 * 2 = 36 + item2: 12 = 48
+        expect(controller.cartSubtotal, equals(48.0));
 
-      // Set required validation fields
-      controller.gateOrFlightNumber.value = 'Gate A1';
-      controller.targetPickupTime.value = '14:00';
+        // Set required validation fields
+        controller.gateOrFlightNumber.value = 'Gate A1';
+        controller.targetPickupTime.value = '14:00';
 
-      final order = await controller.submitOrder();
-      expect(order, isNotNull);
-      expect(order!.totalAmount, equals(48.0));
-      expect(controller.cartCount, equals(0));
-      expect(controller.myOrders.first.orderId, equals(order.orderId));
-    });
+        final order = await controller.submitOrder();
+        expect(order, isNotNull);
+        expect(order!.totalAmount, equals(48.0));
+        expect(controller.cartCount, equals(0));
+        expect(controller.myOrders.first.orderId, equals(order.orderId));
+      },
+    );
 
-    testWidgets('DiningCatalogScreen renders transit dining catalog with hubs', (tester) async {
-      phoneSurface(tester);
-      await tester.pumpWidget(_host(const DiningCatalogScreen()));
-      await tester.pumpAndSettle();
+    testWidgets(
+      'DiningCatalogScreen renders transit dining catalog with hubs',
+      (tester) async {
+        phoneSurface(tester);
+        await tester.pumpWidget(_host(const DiningCatalogScreen()));
+        await tester.pumpAndSettle();
 
-      expect(find.text('In-Transit Dining'), findsOneWidget);
-      expect(find.text('همه پایانه‌ها ✈️'), findsOneWidget);
-      expect(find.text('فرودگاه امام (IKA) 🇮🇷'), findsOneWidget);
-      expect(find.textContaining('پرشین لانژ'), findsOneWidget);
-    });
+        expect(find.text('In-Transit Dining'), findsOneWidget);
+        expect(find.text('همه پایانه‌ها ✈️'), findsOneWidget);
+        expect(find.text('فرودگاه امام (IKA) 🇮🇷'), findsOneWidget);
+        expect(find.textContaining('پرشین لانژ'), findsOneWidget);
+      },
+    );
 
-    testWidgets('DiningOrderPassScreen renders barcode and pickup details', (tester) async {
+    testWidgets('DiningOrderPassScreen renders barcode and pickup details', (
+      tester,
+    ) async {
       phoneSurface(tester);
       final sampleOrder = DiningOrderModel(
         orderId: 'MEAL-77123',

@@ -53,8 +53,12 @@ void main() {
     });
 
     test('identifies breakfast included status', () {
-      final testRoomWithBreakfast = <String, dynamic>{'breakfast_included': true};
-      final testRoomWithoutBreakfast = <String, dynamic>{'meal_plan': 'room only'};
+      final testRoomWithBreakfast = <String, dynamic>{
+        'breakfast_included': true,
+      };
+      final testRoomWithoutBreakfast = <String, dynamic>{
+        'meal_plan': 'room only',
+      };
 
       expect(testRoomWithBreakfast['breakfast_included'], isTrue);
       expect(testRoomWithoutBreakfast['breakfast_included'] == true, isFalse);
@@ -123,13 +127,18 @@ void main() {
       // Check for breakfast-related text - either English or Persian
       final breakfastFinder = find.textContaining('Breakfast');
       final persianBreakfastFinder = find.textContaining('بریکفست');
-      expect(breakfastFinder.evaluate().isNotEmpty || persianBreakfastFinder.evaluate().isNotEmpty, isTrue);
+      expect(
+        breakfastFinder.evaluate().isNotEmpty ||
+            persianBreakfastFinder.evaluate().isNotEmpty,
+        isTrue,
+      );
     });
 
     testWidgets('handles long room names without overflow', (tester) async {
       phoneSurface(tester);
       final testRoom = <String, dynamic>{
-        'room_name': 'Very Long Deluxe Executive Suite Name with Many Words that Should Overflow Normally',
+        'room_name':
+            'Very Long Deluxe Executive Suite Name with Many Words that Should Overflow Normally',
         'price': 200.0,
         'currency': 'USD',
       };
@@ -153,7 +162,12 @@ void main() {
       final priceFinder = find.textContaining('99');
       final euroSymbolFinder = find.textContaining('€');
       final euroWordFinder = find.textContaining('EUR');
-      expect(priceFinder.evaluate().isNotEmpty || euroSymbolFinder.evaluate().isNotEmpty || euroWordFinder.evaluate().isNotEmpty, isTrue);
+      expect(
+        priceFinder.evaluate().isNotEmpty ||
+            euroSymbolFinder.evaluate().isNotEmpty ||
+            euroWordFinder.evaluate().isNotEmpty,
+        isTrue,
+      );
     });
   });
 
@@ -172,7 +186,9 @@ void main() {
         'currency': 'USD',
       };
 
-      await tester.pumpWidget(_host(HotelRoomSelectionCard(room: testRoom), isDark: true));
+      await tester.pumpWidget(
+        _host(HotelRoomSelectionCard(room: testRoom), isDark: true),
+      );
 
       expect(find.byType(HotelRoomSelectionCard), findsOneWidget);
     });
@@ -185,7 +201,9 @@ void main() {
         'currency': 'USD',
       };
 
-      await tester.pumpWidget(_host(HotelRoomSelectionCard(room: testRoom), isDark: true));
+      await tester.pumpWidget(
+        _host(HotelRoomSelectionCard(room: testRoom), isDark: true),
+      );
 
       // Verify card exists and doesn't use pure white backgrounds
       final cardFinder = find.byType(Material);

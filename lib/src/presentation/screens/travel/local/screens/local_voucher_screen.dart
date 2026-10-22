@@ -13,10 +13,7 @@ import '../models/local_experience_models.dart';
 class LocalVoucherScreen extends StatelessWidget {
   final LocalBookingModel booking;
 
-  const LocalVoucherScreen({
-    super.key,
-    required this.booking,
-  });
+  const LocalVoucherScreen({super.key, required this.booking});
 
   String _generateQrSvg() {
     final barcode = Barcode.qrCode();
@@ -33,7 +30,9 @@ class LocalVoucherScreen extends StatelessWidget {
     const tealHeader = Color(0xFF0F766E);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : const Color(0xFFF0FDF4),
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : const Color(0xFFF0FDF4),
       appBar: AppBar(
         backgroundColor: tealHeader,
         elevation: 0,
@@ -91,7 +90,11 @@ class LocalVoucherScreen extends StatelessWidget {
                         Expanded(
                           child: Row(
                             children: [
-                              Icon(Icons.place_rounded, color: Colors.white, size: 22.sp),
+                              Icon(
+                                Icons.place_rounded,
+                                color: Colors.white,
+                                size: 22.sp,
+                              ),
                               SizedBox(width: 8.w),
                               Flexible(
                                 child: Text(
@@ -110,7 +113,10 @@ class LocalVoucherScreen extends StatelessWidget {
                         ),
                         SizedBox(width: 8.w),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.success.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12.r),
@@ -140,7 +146,11 @@ class LocalVoucherScreen extends StatelessWidget {
                     SizedBox(height: 6.h),
                     Row(
                       children: [
-                        Icon(Icons.person_pin_rounded, size: 14.sp, color: Colors.white70),
+                        Icon(
+                          Icons.person_pin_rounded,
+                          size: 14.sp,
+                          color: Colors.white70,
+                        ),
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
@@ -168,7 +178,9 @@ class LocalVoucherScreen extends StatelessWidget {
                     (i) => Expanded(
                       child: Container(
                         height: 2,
-                        color: i % 2 == 0 ? Colors.transparent : AppColors.white.withValues(alpha: 0.4),
+                        color: i % 2 == 0
+                            ? Colors.transparent
+                            : AppColors.white.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -185,7 +197,9 @@ class LocalVoucherScreen extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                      color: isDark
+                          ? AppColors.darkShadow
+                          : AppColors.lightShadow,
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -199,7 +213,9 @@ class LocalVoucherScreen extends StatelessWidget {
                         Expanded(
                           child: _buildDetailTile(
                             'تاریخ خدمت',
-                            DateFormat('yyyy/MM/dd').format(booking.serviceDate),
+                            DateFormat(
+                              'yyyy/MM/dd',
+                            ).format(booking.serviceDate),
                             Icons.calendar_today_rounded,
                             isDark,
                           ),
@@ -275,7 +291,9 @@ class LocalVoucherScreen extends StatelessWidget {
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 1.2,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -284,7 +302,9 @@ class LocalVoucherScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
 
@@ -300,7 +320,10 @@ class LocalVoucherScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                             ),
-                            icon: const Icon(Icons.phone_in_talk_rounded, size: 18),
+                            icon: const Icon(
+                              Icons.phone_in_talk_rounded,
+                              size: 18,
+                            ),
                             label: const Text('تماس با مجری'),
                             onPressed: () {
                               HapticFeedback.lightImpact();
@@ -322,8 +345,15 @@ class LocalVoucherScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                             ),
-                            icon: const Icon(Icons.directions_rounded, size: 18, color: Colors.white),
-                            label: const Text('مسیریابی نقطه قرار', style: TextStyle(color: Colors.white)),
+                            icon: const Icon(
+                              Icons.directions_rounded,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'مسیریابی نقطه قرار',
+                              style: TextStyle(color: Colors.white),
+                            ),
                             onPressed: () {
                               HapticFeedback.lightImpact();
                               Get.snackbar(
@@ -361,7 +391,9 @@ class LocalVoucherScreen extends StatelessWidget {
             Icon(
               icon,
               size: 14.sp,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+              color: isDark
+                  ? AppColors.darkTextTertiary
+                  : AppColors.lightTextTertiary,
             ),
             SizedBox(width: 4.w),
             Flexible(
@@ -369,7 +401,9 @@ class LocalVoucherScreen extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -383,8 +417,11 @@ class LocalVoucherScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w800,
-            color: valueColor ??
-                (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            color:
+                valueColor ??
+                (isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary),
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

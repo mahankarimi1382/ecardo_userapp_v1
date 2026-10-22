@@ -246,15 +246,7 @@ class CountryCityHelper {
     ],
 
     // Oman
-    'OM': [
-      'Muscat',
-      'Salalah',
-      'Sohar',
-      'Nizwa',
-      'Sur',
-      'Seeb',
-      'Barka',
-    ],
+    'OM': ['Muscat', 'Salalah', 'Sohar', 'Nizwa', 'Sur', 'Seeb', 'Barka'],
 
     // Kuwait
     'KW': [
@@ -267,14 +259,7 @@ class CountryCityHelper {
     ],
 
     // Bahrain
-    'BH': [
-      'Manama',
-      'Riffa',
-      'Muharraq',
-      'Hamad Town',
-      'A\'ali',
-      'Isa Town',
-    ],
+    'BH': ['Manama', 'Riffa', 'Muharraq', 'Hamad Town', 'A\'ali', 'Isa Town'],
 
     // Armenia
     'AM': [
@@ -384,40 +369,62 @@ class CountryCityHelper {
   static List<String> _getCitiesByName(String name) {
     final lower = name.toLowerCase();
     for (final entry in _countryCities.entries) {
-      if (entry.key == 'IR' && (lower.contains('iran') || lower.contains('ایران'))) {
+      if (entry.key == 'IR' &&
+          (lower.contains('iran') || lower.contains('ایران'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'TR' && (lower.contains('turkey') || lower.contains('türkiye') || lower.contains('ترکیه'))) {
+      if (entry.key == 'TR' &&
+          (lower.contains('turkey') ||
+              lower.contains('türkiye') ||
+              lower.contains('ترکیه'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'AE' && (lower.contains('emirates') || lower.contains('uae') || lower.contains('امارات'))) {
+      if (entry.key == 'AE' &&
+          (lower.contains('emirates') ||
+              lower.contains('uae') ||
+              lower.contains('امارات'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'GB' && (lower.contains('united kingdom') || lower.contains('britain') || lower.contains('انگلیس'))) {
+      if (entry.key == 'GB' &&
+          (lower.contains('united kingdom') ||
+              lower.contains('britain') ||
+              lower.contains('انگلیس'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'US' && (lower.contains('united states') || lower.contains('usa') || lower.contains('آمریکا'))) {
+      if (entry.key == 'US' &&
+          (lower.contains('united states') ||
+              lower.contains('usa') ||
+              lower.contains('آمریکا'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'DE' && (lower.contains('germany') || lower.contains('deutschland') || lower.contains('آلمان'))) {
+      if (entry.key == 'DE' &&
+          (lower.contains('germany') ||
+              lower.contains('deutschland') ||
+              lower.contains('آلمان'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'CA' && (lower.contains('canada') || lower.contains('کانادا'))) {
+      if (entry.key == 'CA' &&
+          (lower.contains('canada') || lower.contains('کانادا'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'FR' && (lower.contains('france') || lower.contains('فرانسه'))) {
+      if (entry.key == 'FR' &&
+          (lower.contains('france') || lower.contains('فرانسه'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'CN' && (lower.contains('china') || lower.contains('چین'))) {
+      if (entry.key == 'CN' &&
+          (lower.contains('china') || lower.contains('چین'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'RU' && (lower.contains('russia') || lower.contains('روسیه'))) {
+      if (entry.key == 'RU' &&
+          (lower.contains('russia') || lower.contains('روسیه'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'IQ' && (lower.contains('iraq') || lower.contains('عراق'))) {
+      if (entry.key == 'IQ' &&
+          (lower.contains('iraq') || lower.contains('عراق'))) {
         return List<String>.from(entry.value);
       }
-      if (entry.key == 'SA' && (lower.contains('saudi') || lower.contains('عربستان'))) {
+      if (entry.key == 'SA' &&
+          (lower.contains('saudi') || lower.contains('عربستان'))) {
         return List<String>.from(entry.value);
       }
     }

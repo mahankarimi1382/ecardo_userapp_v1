@@ -65,13 +65,13 @@ class BoatAddon {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'price': price,
-        'unit': unit,
-        'icon': icon,
-        'max_quantity': maxQuantity,
-      };
+    'id': id,
+    'title': title,
+    'price': price,
+    'unit': unit,
+    'icon': icon,
+    'max_quantity': maxQuantity,
+  };
 
   factory BoatAddon.fromJson(Map<String, dynamic> json) {
     return BoatAddon(
@@ -181,9 +181,9 @@ class BoatExperienceModel {
     double addonsTotal = 0.0;
     for (final addonId in selectedAddonIds) {
       final addon = addons.cast<BoatAddon?>().firstWhere(
-            (a) => a?.id == addonId,
-            orElse: () => null,
-          );
+        (a) => a?.id == addonId,
+        orElse: () => null,
+      );
       if (addon != null) {
         if (addon.unit.contains('نفر')) {
           addonsTotal += addon.price * (adults + children);
@@ -196,33 +196,33 @@ class BoatExperienceModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'id': id,
-        'title': title,
-        'marina_name': marinaName,
-        'city': city,
-        'category': category.wireName,
-        'hourly_rate': hourlyRate,
-        'child_rate': childRate,
-        'currency': currency,
-        'min_passengers': minPassengers,
-        'max_passengers': maxPassengers,
-        'length_meters': lengthMeters,
-        'rating': rating,
-        'reviews_count': reviewsCount,
-        'captain_name': captainName,
-        'images': images,
-        'features': features,
-        'available_slots': availableSlots,
-        'addons': addons.map((a) => a.toJson()).toList(),
-        'description': description,
-        'pricing_type': pricingType.wireName,
-        'cancellation_policy': cancellationPolicy.toJson(),
-        'pier_dock_number': pierDockNumber,
-        'sea_conditions_advisory': seaConditionsAdvisory,
-        'fuel_policy': fuelPolicy,
-        'instant_confirmation': instantConfirmation,
-      };
+    'schema_version': schemaVersion,
+    'id': id,
+    'title': title,
+    'marina_name': marinaName,
+    'city': city,
+    'category': category.wireName,
+    'hourly_rate': hourlyRate,
+    'child_rate': childRate,
+    'currency': currency,
+    'min_passengers': minPassengers,
+    'max_passengers': maxPassengers,
+    'length_meters': lengthMeters,
+    'rating': rating,
+    'reviews_count': reviewsCount,
+    'captain_name': captainName,
+    'images': images,
+    'features': features,
+    'available_slots': availableSlots,
+    'addons': addons.map((a) => a.toJson()).toList(),
+    'description': description,
+    'pricing_type': pricingType.wireName,
+    'cancellation_policy': cancellationPolicy.toJson(),
+    'pier_dock_number': pierDockNumber,
+    'sea_conditions_advisory': seaConditionsAdvisory,
+    'fuel_policy': fuelPolicy,
+    'instant_confirmation': instantConfirmation,
+  };
 
   factory BoatExperienceModel.fromJson(Map<String, dynamic> json) {
     return BoatExperienceModel(
@@ -241,19 +241,36 @@ class BoatExperienceModel {
       rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
       reviewsCount: json['reviews_count'] as int? ?? 0,
       captainName: json['captain_name'] as String? ?? '',
-      images: (json['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
-      features: (json['features'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      images:
+          (json['images'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
+      features:
+          (json['features'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
       availableSlots:
-          (json['available_slots'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
-      addons: (json['addons'] as List<dynamic>?)
-              ?.map((e) => BoatAddon.fromJson(Map<String, dynamic>.from(e as Map)))
+          (json['available_slots'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
+      addons:
+          (json['addons'] as List<dynamic>?)
+              ?.map(
+                (e) => BoatAddon.fromJson(Map<String, dynamic>.from(e as Map)),
+              )
               .toList() ??
           const [],
       description: json['description'] as String? ?? '',
-      pricingType: ExperiencePricingType.fromWireName(json['pricing_type'] as String?),
+      pricingType: ExperiencePricingType.fromWireName(
+        json['pricing_type'] as String?,
+      ),
       cancellationPolicy: json['cancellation_policy'] != null
           ? ExperienceCancellationPolicy.fromJson(
-              Map<String, dynamic>.from(json['cancellation_policy'] as Map))
+              Map<String, dynamic>.from(json['cancellation_policy'] as Map),
+            )
           : const ExperienceCancellationPolicy(),
       pierDockNumber: json['pier_dock_number'] as String? ?? '',
       seaConditionsAdvisory: json['sea_conditions_advisory'] as String? ?? '',
@@ -317,9 +334,10 @@ class BoatBookingModel {
     this.cancellationPolicy = const ExperienceCancellationPolicy(),
     String? voucherCode,
     String? qrPayload,
-  })  : refundDestinationWalletCurrency = refundDestinationWalletCurrency ?? currency,
-        voucherCode = voucherCode ?? bookingId,
-        qrPayload = qrPayload ?? 'ECARDO-MARINE-PASS-$bookingId-$boatId-$status';
+  }) : refundDestinationWalletCurrency =
+           refundDestinationWalletCurrency ?? currency,
+       voucherCode = voucherCode ?? bookingId,
+       qrPayload = qrPayload ?? 'ECARDO-MARINE-PASS-$bookingId-$boatId-$status';
 
   bool get isCancelled => status == 'cancelled' || status == 'refunded';
   bool get canCancel => !isCancelled && status != 'completed';
@@ -368,32 +386,32 @@ class BoatBookingModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'booking_id': bookingId,
-        'boat_id': boatId,
-        'boat_title': boatTitle,
-        'marina_name': marinaName,
-        'date': date.toIso8601String(),
-        'time_slot': timeSlot,
-        'duration_hours': durationHours,
-        'passengers_count': passengersCount,
-        'children_count': childrenCount,
-        'selected_addon_ids': selectedAddonIds,
-        'total_amount': totalAmount,
-        'penalty_amount': penaltyAmount,
-        'refunded_amount': refundedAmount,
-        'currency': currency,
-        'refund_destination_wallet_currency': refundDestinationWalletCurrency,
-        'captain_phone': captainPhone,
-        'pier_dock_number': pierDockNumber,
-        'status': status,
-        if (cancellationReason != null) 'cancellation_reason': cancellationReason,
-        'booked_at': bookedAt.toIso8601String(),
-        if (cancelledAt != null) 'cancelled_at': cancelledAt!.toIso8601String(),
-        'cancellation_policy': cancellationPolicy.toJson(),
-        'voucher_code': voucherCode,
-        'qr_payload': qrPayload,
-      };
+    'schema_version': schemaVersion,
+    'booking_id': bookingId,
+    'boat_id': boatId,
+    'boat_title': boatTitle,
+    'marina_name': marinaName,
+    'date': date.toIso8601String(),
+    'time_slot': timeSlot,
+    'duration_hours': durationHours,
+    'passengers_count': passengersCount,
+    'children_count': childrenCount,
+    'selected_addon_ids': selectedAddonIds,
+    'total_amount': totalAmount,
+    'penalty_amount': penaltyAmount,
+    'refunded_amount': refundedAmount,
+    'currency': currency,
+    'refund_destination_wallet_currency': refundDestinationWalletCurrency,
+    'captain_phone': captainPhone,
+    'pier_dock_number': pierDockNumber,
+    'status': status,
+    if (cancellationReason != null) 'cancellation_reason': cancellationReason,
+    'booked_at': bookedAt.toIso8601String(),
+    if (cancelledAt != null) 'cancelled_at': cancelledAt!.toIso8601String(),
+    'cancellation_policy': cancellationPolicy.toJson(),
+    'voucher_code': voucherCode,
+    'qr_payload': qrPayload,
+  };
 
   factory BoatBookingModel.fromJson(Map<String, dynamic> json) {
     return BoatBookingModel(
@@ -402,14 +420,18 @@ class BoatBookingModel {
       boatId: json['boat_id'] as String? ?? '',
       boatTitle: json['boat_title'] as String? ?? '',
       marinaName: json['marina_name'] as String? ?? '',
-      date: json['date'] != null ? DateTime.parse(json['date'] as String) : DateTime.now(),
+      date: json['date'] != null
+          ? DateTime.parse(json['date'] as String)
+          : DateTime.now(),
       timeSlot: json['time_slot'] as String? ?? '',
       durationHours: json['duration_hours'] as int? ?? 1,
       passengersCount: json['passengers_count'] as int? ?? 1,
       childrenCount: json['children_count'] as int? ?? 0,
       selectedAddonIds:
-          (json['selected_addon_ids'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
-              const [],
+          (json['selected_addon_ids'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
       totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0.0,
       penaltyAmount: (json['penalty_amount'] as num?)?.toDouble() ?? 0.0,
       refundedAmount: (json['refunded_amount'] as num?)?.toDouble() ?? 0.0,
@@ -428,7 +450,8 @@ class BoatBookingModel {
           : null,
       cancellationPolicy: json['cancellation_policy'] != null
           ? ExperienceCancellationPolicy.fromJson(
-              Map<String, dynamic>.from(json['cancellation_policy'] as Map))
+              Map<String, dynamic>.from(json['cancellation_policy'] as Map),
+            )
           : const ExperienceCancellationPolicy(),
       voucherCode: json['voucher_code'] as String?,
       qrPayload: json['qr_payload'] as String?,

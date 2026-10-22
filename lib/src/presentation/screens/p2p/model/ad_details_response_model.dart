@@ -41,8 +41,10 @@ class Data {
   String? averageReleaseTime;
   String? lastUpdated;
   String? createdAt;
+
   /// نوع بازار: iran یا china
   String? marketType;
+
   /// آیا آگهی/سفارش مربوط به دلار نقد (مبادله حضوری) است
   bool? isCashDollar;
 

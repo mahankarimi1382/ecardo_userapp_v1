@@ -17,7 +17,8 @@ class LocaleThemeService extends GetxService {
     if (savedNormalized != null && supported.contains(savedNormalized)) {
       locale.value = Locale(savedNormalized);
     } else {
-      final device = Get.deviceLocale?.languageCode ??
+      final device =
+          Get.deviceLocale?.languageCode ??
           WidgetsBinding.instance.platformDispatcher.locale.languageCode;
       final code = supported.contains(device) ? device : 'en';
       locale.value = Locale(code);
@@ -39,8 +40,8 @@ class LocaleThemeService extends GetxService {
   /// Resolves ThemeMode.system against the OS setting and pushes the
   /// matching status-bar / nav-bar icon brightness globally.
   void _syncSystemChrome() {
-    final platformDark = WidgetsBinding
-            .instance.platformDispatcher.platformBrightness ==
+    final platformDark =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness ==
         Brightness.dark;
     final effectiveDark = switch (themeMode.value) {
       ThemeMode.dark => true,
@@ -50,12 +51,13 @@ class LocaleThemeService extends GetxService {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness:
-            effectiveDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness:
-            effectiveDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarIconBrightness:
-            effectiveDark ? Brightness.light : Brightness.dark,
+        statusBarIconBrightness: effectiveDark
+            ? Brightness.light
+            : Brightness.dark,
+        statusBarBrightness: effectiveDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarIconBrightness: effectiveDark
+            ? Brightness.light
+            : Brightness.dark,
       ),
     );
   }
@@ -114,10 +116,12 @@ class LocaleThemeService extends GetxService {
 
     // Back to where the user was. Splash (`/`) is intentionally NOT part of
     // the path, so it never replays.
-    final rawTarget =
-        route == BaseRoute.localeTransition ? BaseRoute.root : route;
-    final target =
-        rawTarget.contains('?') ? rawTarget.split('?').first : rawTarget;
+    final rawTarget = route == BaseRoute.localeTransition
+        ? BaseRoute.root
+        : route;
+    final target = rawTarget.contains('?')
+        ? rawTarget.split('?').first
+        : rawTarget;
     if (target == BaseRoute.root) {
       Get.offAllNamed(BaseRoute.root);
     } else if (params.isNotEmpty) {
@@ -138,17 +142,17 @@ class LocaleThemeService extends GetxService {
   }
 
   ThemeMode _parseTheme(String mode) => switch (mode) {
-        'dark' => ThemeMode.dark,
-        'light' => ThemeMode.light,
-        _ => ThemeMode.system,
-      };
+    'dark' => ThemeMode.dark,
+    'light' => ThemeMode.light,
+    _ => ThemeMode.system,
+  };
 
   static String nativeName(String code) => switch (code) {
-        'fa' => 'فارسی',
-        'ar' => 'العربية',
-        'zh' => '中文',
-        'tr' => 'Türkçe',
-        'ru' => 'Русский',
-        _ => 'English',
-      };
+    'fa' => 'فارسی',
+    'ar' => 'العربية',
+    'zh' => '中文',
+    'tr' => 'Türkçe',
+    'ru' => 'Русский',
+    _ => 'English',
+  };
 }

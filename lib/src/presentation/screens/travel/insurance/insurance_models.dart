@@ -17,40 +17,43 @@ enum InsuranceDestinationZone {
 
 extension InsuranceDestinationZoneExtension on InsuranceDestinationZone {
   String get code => switch (this) {
-        InsuranceDestinationZone.schengen => 'SCHENGEN',
-        InsuranceDestinationZone.worldwide => 'WORLDWIDE',
-        InsuranceDestinationZone.worldwideExcludingUsa => 'WORLDWIDE_NO_USA',
-        InsuranceDestinationZone.middleEast => 'MIDDLE_EAST',
-        InsuranceDestinationZone.asia => 'ASIA',
-        InsuranceDestinationZone.domestic => 'DOMESTIC',
-      };
+    InsuranceDestinationZone.schengen => 'SCHENGEN',
+    InsuranceDestinationZone.worldwide => 'WORLDWIDE',
+    InsuranceDestinationZone.worldwideExcludingUsa => 'WORLDWIDE_NO_USA',
+    InsuranceDestinationZone.middleEast => 'MIDDLE_EAST',
+    InsuranceDestinationZone.asia => 'ASIA',
+    InsuranceDestinationZone.domestic => 'DOMESTIC',
+  };
 
   String get displayNameEn => switch (this) {
-        InsuranceDestinationZone.schengen => 'Schengen & Europe (EU/EEA)',
-        InsuranceDestinationZone.worldwide => 'Worldwide (All Countries)',
-        InsuranceDestinationZone.worldwideExcludingUsa => 'Worldwide (Excl. USA/Canada)',
-        InsuranceDestinationZone.middleEast => 'Turkey & Middle East',
-        InsuranceDestinationZone.asia => 'Asia & Pacific',
-        InsuranceDestinationZone.domestic => 'Domestic Travel',
-      };
+    InsuranceDestinationZone.schengen => 'Schengen & Europe (EU/EEA)',
+    InsuranceDestinationZone.worldwide => 'Worldwide (All Countries)',
+    InsuranceDestinationZone.worldwideExcludingUsa =>
+      'Worldwide (Excl. USA/Canada)',
+    InsuranceDestinationZone.middleEast => 'Turkey & Middle East',
+    InsuranceDestinationZone.asia => 'Asia & Pacific',
+    InsuranceDestinationZone.domestic => 'Domestic Travel',
+  };
 
   String get displayNameFa => switch (this) {
-        InsuranceDestinationZone.schengen => 'حوزه شنگن و اروپا (EU/EEA)',
-        InsuranceDestinationZone.worldwide => 'سراسر جهان (کلیه کشورها شامل آمریکا و کانادا)',
-        InsuranceDestinationZone.worldwideExcludingUsa => 'سراسر جهان (به‌جز آمریکا و کانادا)',
-        InsuranceDestinationZone.middleEast => 'ترکیه، امارات و خاورمیانه',
-        InsuranceDestinationZone.asia => 'آسیا و اقیانوسیه',
-        InsuranceDestinationZone.domestic => 'سفرهای داخلی',
-      };
+    InsuranceDestinationZone.schengen => 'حوزه شنگن و اروپا (EU/EEA)',
+    InsuranceDestinationZone.worldwide =>
+      'سراسر جهان (کلیه کشورها شامل آمریکا و کانادا)',
+    InsuranceDestinationZone.worldwideExcludingUsa =>
+      'سراسر جهان (به‌جز آمریکا و کانادا)',
+    InsuranceDestinationZone.middleEast => 'ترکیه، امارات و خاورمیانه',
+    InsuranceDestinationZone.asia => 'آسیا و اقیانوسیه',
+    InsuranceDestinationZone.domestic => 'سفرهای داخلی',
+  };
 
   double get riskMultiplier => switch (this) {
-        InsuranceDestinationZone.domestic => 0.50,
-        InsuranceDestinationZone.middleEast => 0.85,
-        InsuranceDestinationZone.asia => 0.90,
-        InsuranceDestinationZone.schengen => 1.15,
-        InsuranceDestinationZone.worldwideExcludingUsa => 1.30,
-        InsuranceDestinationZone.worldwide => 1.55,
-      };
+    InsuranceDestinationZone.domestic => 0.50,
+    InsuranceDestinationZone.middleEast => 0.85,
+    InsuranceDestinationZone.asia => 0.90,
+    InsuranceDestinationZone.schengen => 1.15,
+    InsuranceDestinationZone.worldwideExcludingUsa => 1.30,
+    InsuranceDestinationZone.worldwide => 1.55,
+  };
 }
 
 /// Traveler age risk bands.
@@ -62,22 +65,22 @@ enum TravelerAgeBand {
 
 extension TravelerAgeBandExtension on TravelerAgeBand {
   String get labelEn => switch (this) {
-        TravelerAgeBand.standard => 'Under 65 years',
-        TravelerAgeBand.senior => '65 to 75 years',
-        TravelerAgeBand.elderly => '75+ years',
-      };
+    TravelerAgeBand.standard => 'Under 65 years',
+    TravelerAgeBand.senior => '65 to 75 years',
+    TravelerAgeBand.elderly => '75+ years',
+  };
 
   String get labelFa => switch (this) {
-        TravelerAgeBand.standard => 'زیر ۶۵ سال',
-        TravelerAgeBand.senior => '۶۵ تا ۷۵ سال',
-        TravelerAgeBand.elderly => 'بالای ۷۵ سال',
-      };
+    TravelerAgeBand.standard => 'زیر ۶۵ سال',
+    TravelerAgeBand.senior => '۶۵ تا ۷۵ سال',
+    TravelerAgeBand.elderly => 'بالای ۷۵ سال',
+  };
 
   double get multiplier => switch (this) {
-        TravelerAgeBand.standard => 1.0,
-        TravelerAgeBand.senior => 1.8,
-        TravelerAgeBand.elderly => 2.8,
-      };
+    TravelerAgeBand.standard => 1.0,
+    TravelerAgeBand.senior => 1.8,
+    TravelerAgeBand.elderly => 2.8,
+  };
 }
 
 /// Medical coverage tiers with visa compliance attributes.
@@ -90,60 +93,58 @@ enum MedicalCoverageTier {
 
 extension MedicalCoverageTierExtension on MedicalCoverageTier {
   String get limitLabel => switch (this) {
-        MedicalCoverageTier.tier10k => '€10,000',
-        MedicalCoverageTier.schengen30k => '€30,000',
-        MedicalCoverageTier.tier50k => '€50,000',
-        MedicalCoverageTier.tier100k => '€100,000',
-      };
+    MedicalCoverageTier.tier10k => '€10,000',
+    MedicalCoverageTier.schengen30k => '€30,000',
+    MedicalCoverageTier.tier50k => '€50,000',
+    MedicalCoverageTier.tier100k => '€100,000',
+  };
 
   int get limitAmountEur => switch (this) {
-        MedicalCoverageTier.tier10k => 10000,
-        MedicalCoverageTier.schengen30k => 30000,
-        MedicalCoverageTier.tier50k => 50000,
-        MedicalCoverageTier.tier100k => 100000,
-      };
+    MedicalCoverageTier.tier10k => 10000,
+    MedicalCoverageTier.schengen30k => 30000,
+    MedicalCoverageTier.tier50k => 50000,
+    MedicalCoverageTier.tier100k => 100000,
+  };
 
   bool get isSchengenCompliant => limitAmountEur >= 30000;
 
   int get baseDailyRateRial => switch (this) {
-        MedicalCoverageTier.tier10k => 28000,
-        MedicalCoverageTier.schengen30k => 42000,
-        MedicalCoverageTier.tier50k => 65000,
-        MedicalCoverageTier.tier100k => 110000,
-      };
+    MedicalCoverageTier.tier10k => 28000,
+    MedicalCoverageTier.schengen30k => 42000,
+    MedicalCoverageTier.tier50k => 65000,
+    MedicalCoverageTier.tier100k => 110000,
+  };
 }
 
 /// Optional riders and addons.
-enum InsuranceAddon {
-  baggageProtection,
-  tripCancellation,
-  adventureSports,
-}
+enum InsuranceAddon { baggageProtection, tripCancellation, adventureSports }
 
 extension InsuranceAddonExtension on InsuranceAddon {
   String get titleEn => switch (this) {
-        InsuranceAddon.baggageProtection => 'Baggage Loss & Delay Rider',
-        InsuranceAddon.tripCancellation => 'Trip Cancellation & Curtailment',
-        InsuranceAddon.adventureSports => 'Adventure & Winter Sports Rider',
-      };
+    InsuranceAddon.baggageProtection => 'Baggage Loss & Delay Rider',
+    InsuranceAddon.tripCancellation => 'Trip Cancellation & Curtailment',
+    InsuranceAddon.adventureSports => 'Adventure & Winter Sports Rider',
+  };
 
   String get titleFa => switch (this) {
-        InsuranceAddon.baggageProtection => 'پوشش سرقت و تأخیر چمدان',
-        InsuranceAddon.tripCancellation => 'پوشش لغو و کنسلی سفر',
-        InsuranceAddon.adventureSports => 'پوشش ورزش‌های زمستانی و پرخطر',
-      };
+    InsuranceAddon.baggageProtection => 'پوشش سرقت و تأخیر چمدان',
+    InsuranceAddon.tripCancellation => 'پوشش لغو و کنسلی سفر',
+    InsuranceAddon.adventureSports => 'پوشش ورزش‌های زمستانی و پرخطر',
+  };
 
   String get coverageLimitEn => switch (this) {
-        InsuranceAddon.baggageProtection => 'Up to €1,000 (delay >6h: €200)',
-        InsuranceAddon.tripCancellation => 'Up to €2,500 non-refundable costs',
-        InsuranceAddon.adventureSports => 'Up to €30,000 medical for sports',
-      };
+    InsuranceAddon.baggageProtection => 'Up to €1,000 (delay >6h: €200)',
+    InsuranceAddon.tripCancellation => 'Up to €2,500 non-refundable costs',
+    InsuranceAddon.adventureSports => 'Up to €30,000 medical for sports',
+  };
 
   String get coverageLimitFa => switch (this) {
-        InsuranceAddon.baggageProtection => 'تا ۱,۰۰۰ یورو (تأخیر بیش از ۶ ساعت: ۲۰۰ یورو)',
-        InsuranceAddon.tripCancellation => 'تا ۲,۵۰۰ یورو جبران هزینه‌های غیرقابل استرداد',
-        InsuranceAddon.adventureSports => 'تا ۳۰,۰۰۰ یورو حوادث ورزشی و اسکی',
-      };
+    InsuranceAddon.baggageProtection =>
+      'تا ۱,۰۰۰ یورو (تأخیر بیش از ۶ ساعت: ۲۰۰ یورو)',
+    InsuranceAddon.tripCancellation =>
+      'تا ۲,۵۰۰ یورو جبران هزینه‌های غیرقابل استرداد',
+    InsuranceAddon.adventureSports => 'تا ۳۰,۰۰۰ یورو حوادث ورزشی و اسکی',
+  };
 
   int calculateCost(int durationDays) {
     return switch (this) {
@@ -413,7 +414,9 @@ class InsurancePolicy {
     final now = checkDate ?? DateTime.now();
     // Free look period: 14 calendar days from issuance OR before trip starts (whichever is earlier)
     final freeLookEndDate = issuedAt.add(const Duration(days: 14));
-    final effectiveEndDate = now.isBefore(startDate) ? startDate : freeLookEndDate;
+    final effectiveEndDate = now.isBefore(startDate)
+        ? startDate
+        : freeLookEndDate;
     return now.isBefore(effectiveEndDate) && status == 'active';
   }
 }
@@ -430,22 +433,23 @@ enum InsuranceClaimType {
 
 extension InsuranceClaimTypeExtension on InsuranceClaimType {
   String get labelEn => switch (this) {
-        InsuranceClaimType.medicalEmergency => 'Medical Emergency / Hospitalization',
-        InsuranceClaimType.baggageLossOrDelay => 'Baggage Loss or Delay',
-        InsuranceClaimType.tripCancellation => 'Trip Cancellation or Curtailment',
-        InsuranceClaimType.flightDelay => 'Flight Delay (> 6 Hours)',
-        InsuranceClaimType.dentalEmergency => 'Emergency Dental Care',
-        InsuranceClaimType.other => 'Other Incident / Assistance',
-      };
+    InsuranceClaimType.medicalEmergency =>
+      'Medical Emergency / Hospitalization',
+    InsuranceClaimType.baggageLossOrDelay => 'Baggage Loss or Delay',
+    InsuranceClaimType.tripCancellation => 'Trip Cancellation or Curtailment',
+    InsuranceClaimType.flightDelay => 'Flight Delay (> 6 Hours)',
+    InsuranceClaimType.dentalEmergency => 'Emergency Dental Care',
+    InsuranceClaimType.other => 'Other Incident / Assistance',
+  };
 
   String get labelFa => switch (this) {
-        InsuranceClaimType.medicalEmergency => 'فوریت‌های پزشکی و بستری بیمارستان',
-        InsuranceClaimType.baggageLossOrDelay => 'گم شدن یا تأخیر بار و چمدان',
-        InsuranceClaimType.tripCancellation => 'کنسلی یا قطع سفر اضطراری',
-        InsuranceClaimType.flightDelay => 'تأخیر پرواز بیش از ۶ ساعت',
-        InsuranceClaimType.dentalEmergency => 'فوریت‌های دندانپزشکی',
-        InsuranceClaimType.other => 'سایر خسارت‌ها و حوادث',
-      };
+    InsuranceClaimType.medicalEmergency => 'فوریت‌های پزشکی و بستری بیمارستان',
+    InsuranceClaimType.baggageLossOrDelay => 'گم شدن یا تأخیر بار و چمدان',
+    InsuranceClaimType.tripCancellation => 'کنسلی یا قطع سفر اضطراری',
+    InsuranceClaimType.flightDelay => 'تأخیر پرواز بیش از ۶ ساعت',
+    InsuranceClaimType.dentalEmergency => 'فوریت‌های دندانپزشکی',
+    InsuranceClaimType.other => 'سایر خسارت‌ها و حوادث',
+  };
 }
 
 /// Claim review status.
@@ -460,49 +464,49 @@ enum InsuranceClaimStatus {
 
 extension InsuranceClaimStatusExtension on InsuranceClaimStatus {
   String get labelEn => switch (this) {
-        InsuranceClaimStatus.submitted => 'Submitted',
-        InsuranceClaimStatus.underReview => 'Under Review',
-        InsuranceClaimStatus.documentsRequired => 'Documents Required',
-        InsuranceClaimStatus.approved => 'Approved',
-        InsuranceClaimStatus.rejected => 'Rejected',
-        InsuranceClaimStatus.paidOut => 'Settled & Paid',
-      };
+    InsuranceClaimStatus.submitted => 'Submitted',
+    InsuranceClaimStatus.underReview => 'Under Review',
+    InsuranceClaimStatus.documentsRequired => 'Documents Required',
+    InsuranceClaimStatus.approved => 'Approved',
+    InsuranceClaimStatus.rejected => 'Rejected',
+    InsuranceClaimStatus.paidOut => 'Settled & Paid',
+  };
 
   String get labelFa => switch (this) {
-        InsuranceClaimStatus.submitted => 'ثبت اولیه',
-        InsuranceClaimStatus.underReview => 'در حال بررسی کارشناس',
-        InsuranceClaimStatus.documentsRequired => 'نیازمند بارگذاری مدارک',
-        InsuranceClaimStatus.approved => 'تأیید خسارت',
-        InsuranceClaimStatus.rejected => 'عدم تأیید',
-        InsuranceClaimStatus.paidOut => 'تسویه و پرداخت شد',
-      };
+    InsuranceClaimStatus.submitted => 'ثبت اولیه',
+    InsuranceClaimStatus.underReview => 'در حال بررسی کارشناس',
+    InsuranceClaimStatus.documentsRequired => 'نیازمند بارگذاری مدارک',
+    InsuranceClaimStatus.approved => 'تأیید خسارت',
+    InsuranceClaimStatus.rejected => 'عدم تأیید',
+    InsuranceClaimStatus.paidOut => 'تسویه و پرداخت شد',
+  };
 
   Color themeColor(BuildContext context) => switch (this) {
-        InsuranceClaimStatus.submitted => ECardoTokens.brand500(context),
-        InsuranceClaimStatus.underReview => ECardoTokens.warning(context),
-        InsuranceClaimStatus.documentsRequired => ECardoTokens.warning(context),
-        InsuranceClaimStatus.approved => ECardoTokens.success(context),
-        InsuranceClaimStatus.rejected => ECardoTokens.danger(context),
-        InsuranceClaimStatus.paidOut => ECardoTokens.brand700(context),
-      };
+    InsuranceClaimStatus.submitted => ECardoTokens.brand500(context),
+    InsuranceClaimStatus.underReview => ECardoTokens.warning(context),
+    InsuranceClaimStatus.documentsRequired => ECardoTokens.warning(context),
+    InsuranceClaimStatus.approved => ECardoTokens.success(context),
+    InsuranceClaimStatus.rejected => ECardoTokens.danger(context),
+    InsuranceClaimStatus.paidOut => ECardoTokens.brand700(context),
+  };
 
   Color themeBgColor(BuildContext context) => switch (this) {
-        InsuranceClaimStatus.submitted => ECardoTokens.brand100(context),
-        InsuranceClaimStatus.underReview => ECardoTokens.warningBg(context),
-        InsuranceClaimStatus.documentsRequired => ECardoTokens.warningBg(context),
-        InsuranceClaimStatus.approved => ECardoTokens.successBg(context),
-        InsuranceClaimStatus.rejected => ECardoTokens.dangerBg(context),
-        InsuranceClaimStatus.paidOut => ECardoTokens.brand100(context),
-      };
+    InsuranceClaimStatus.submitted => ECardoTokens.brand100(context),
+    InsuranceClaimStatus.underReview => ECardoTokens.warningBg(context),
+    InsuranceClaimStatus.documentsRequired => ECardoTokens.warningBg(context),
+    InsuranceClaimStatus.approved => ECardoTokens.successBg(context),
+    InsuranceClaimStatus.rejected => ECardoTokens.dangerBg(context),
+    InsuranceClaimStatus.paidOut => ECardoTokens.brand100(context),
+  };
 
   Color get color => switch (this) {
-        InsuranceClaimStatus.submitted => const Color(0xFF7445FF),
-        InsuranceClaimStatus.underReview => const Color(0xFF8A5A00),
-        InsuranceClaimStatus.documentsRequired => const Color(0xFFC79A3C),
-        InsuranceClaimStatus.approved => const Color(0xFF15713F),
-        InsuranceClaimStatus.rejected => const Color(0xFFA3231C),
-        InsuranceClaimStatus.paidOut => const Color(0xFF35276B),
-      };
+    InsuranceClaimStatus.submitted => const Color(0xFF7445FF),
+    InsuranceClaimStatus.underReview => const Color(0xFF8A5A00),
+    InsuranceClaimStatus.documentsRequired => const Color(0xFFC79A3C),
+    InsuranceClaimStatus.approved => const Color(0xFF15713F),
+    InsuranceClaimStatus.rejected => const Color(0xFFA3231C),
+    InsuranceClaimStatus.paidOut => const Color(0xFF35276B),
+  };
 }
 
 /// Submitted claim report.
@@ -560,11 +564,14 @@ class InsurancePricingCalculator {
     required InsuranceDestinationZone zone,
     required MedicalCoverageTier tier,
   }) {
-    if (zone == InsuranceDestinationZone.schengen && !tier.isSchengenCompliant) {
+    if (zone == InsuranceDestinationZone.schengen &&
+        !tier.isSchengenCompliant) {
       return const SchengenValidationResult(
         isValid: false,
-        errorMessageEn: 'Schengen embassies require a minimum of €30,000 medical coverage.',
-        errorMessageFa: 'استاندارد سفارت‌های حوزه شنگن حداقل ۳۰,۰۰۰ یورو پوشش درمانی را الزامی می‌داند.',
+        errorMessageEn:
+            'Schengen embassies require a minimum of €30,000 medical coverage.',
+        errorMessageFa:
+            'استاندارد سفارت‌های حوزه شنگن حداقل ۳۰,۰۰۰ یورو پوشش درمانی را الزامی می‌داند.',
       );
     }
     return SchengenValidationResult.valid;
@@ -596,7 +603,8 @@ class InsurancePricingCalculator {
     final ageFactor = ageBand.multiplier;
 
     // Base medical cost before age surcharge
-    final baseMedical = (baseDaily * safeDays * durationFactor * zoneFactor).round();
+    final baseMedical = (baseDaily * safeDays * durationFactor * zoneFactor)
+        .round();
     // Age surcharge component
     final ageSurcharge = (baseMedical * (ageFactor - 1.0)).round();
 
@@ -609,7 +617,8 @@ class InsurancePricingCalculator {
       addonCosts[addon] = addon.calculateCost(safeDays);
     }
 
-    final int total = baseMedical +
+    final int total =
+        baseMedical +
         ageSurcharge +
         addonCosts.values.fold<int>(0, (sum, val) => sum + val);
 
@@ -641,8 +650,10 @@ class InsurancePricingCalculator {
         isEligible: false,
         refundAmount: 0,
         refundPercentage: 0.0,
-        reasonEn: 'Coverage period has already commenced; policies are non-refundable after departure.',
-        reasonFa: 'به دلیل فعال شدن دوره پوشش بیمه، امکان لغو و استرداد وجه وجود ندارد.',
+        reasonEn:
+            'Coverage period has already commenced; policies are non-refundable after departure.',
+        reasonFa:
+            'به دلیل فعال شدن دوره پوشش بیمه، امکان لغو و استرداد وجه وجود ندارد.',
       );
     }
 
@@ -652,8 +663,10 @@ class InsurancePricingCalculator {
         isEligible: true,
         refundAmount: policy.breakdown.totalPremium,
         refundPercentage: 1.0,
-        reasonEn: 'Full 100% refund approved under the 14-day free-look statutory cancellation guarantee.',
-        reasonFa: 'استرداد ۱۰۰٪ وجه بیمه‌نامه در چارچوب ضمانت انصراف ۱۴ روزه (پیش از شروع سفر).',
+        reasonEn:
+            'Full 100% refund approved under the 14-day free-look statutory cancellation guarantee.',
+        reasonFa:
+            'استرداد ۱۰۰٪ وجه بیمه‌نامه در چارچوب ضمانت انصراف ۱۴ روزه (پیش از شروع سفر).',
       );
     } else {
       // Prior to trip, but after 14-day free look window: standard 90% refund
@@ -662,8 +675,10 @@ class InsurancePricingCalculator {
         isEligible: true,
         refundAmount: refund,
         refundPercentage: 0.90,
-        reasonEn: '90% refund approved (cancelled prior to departure after 14-day free-look window).',
-        reasonFa: 'استرداد ۹۰٪ وجه بیمه‌نامه (انصراف خارج از مهلت ۱۴ روزه و پیش از شروع سفر).',
+        reasonEn:
+            '90% refund approved (cancelled prior to departure after 14-day free-look window).',
+        reasonFa:
+            'استرداد ۹۰٪ وجه بیمه‌نامه (انصراف خارج از مهلت ۱۴ روزه و پیش از شروع سفر).',
       );
     }
   }

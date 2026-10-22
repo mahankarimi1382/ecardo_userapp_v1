@@ -90,10 +90,7 @@ void main() {
 
   group('the checksum must be labelled as a checksum', () {
     test('is not presented as a cryptographic fingerprint', () {
-      expect(
-        renderedText(),
-        isNot(contains('Cryptographic Fingerprint')),
-      );
+      expect(renderedText(), isNot(contains('Cryptographic Fingerprint')));
       expect(renderedText(), isNot(contains('اثر انگشت رمزنگاری')));
     });
 

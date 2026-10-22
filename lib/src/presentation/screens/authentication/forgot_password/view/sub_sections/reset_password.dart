@@ -32,10 +32,12 @@ class _ResetPasswordState extends State<ResetPassword> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     final cardBg = isDark
         ? AppColors.darkSurface.withValues(alpha: 0.94)
@@ -48,8 +50,9 @@ class _ResetPasswordState extends State<ResetPassword> {
     final String otp = Get.arguments?['otp'] ?? '';
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       resizeToAvoidBottomInset: false,
       appBar: const CommonDefaultAppBar(),
       body: AmbientAuthBackground(
@@ -67,8 +70,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                         if (!isDark)
                           Positioned.fill(
                             child: ImageFiltered(
-                              imageFilter:
-                                  ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                              imageFilter: ImageFilter.blur(
+                                sigmaX: 20,
+                                sigmaY: 20,
+                              ),
                               child: Image.asset(
                                 PngAssets.splashFrame,
                                 fit: BoxFit.cover,
@@ -199,15 +204,17 @@ class _ResetPasswordState extends State<ResetPassword> {
                                               ? PngAssets.eyeCommonIcon
                                               : PngAssets.eyeHideCommonIcon,
                                         ),
-                                        color: controller
-                                                .isPasswordFocused.value
+                                        color:
+                                            controller.isPasswordFocused.value
                                             ? (isDark
-                                                ? AppColors.darkAccent
-                                                : AppColors.brandViolet)
+                                                  ? AppColors.darkAccent
+                                                  : AppColors.brandViolet)
                                             : (isDark
-                                                ? AppColors.darkTextSecondary
-                                                : AppColors.lightTextPrimary)
-                                                .withValues(alpha: 0.44),
+                                                      ? AppColors
+                                                            .darkTextSecondary
+                                                      : AppColors
+                                                            .lightTextPrimary)
+                                                  .withValues(alpha: 0.44),
                                       ),
                                     ),
                                   ),
@@ -218,8 +225,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                         SizedBox(height: 16.h),
                         CommonRequiredLabelAndDynamicField(
-                          labelText:
-                              localizations.resetPasswordConfirmPassword,
+                          labelText: localizations.resetPasswordConfirmPassword,
                           isLabelRequired: true,
                           dynamicField: Obx(
                             () => Semantics(
@@ -249,8 +255,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 ),
                                 suffixIcon: Semantics(
                                   button: true,
-                                  label: controller
-                                          .isConfirmPasswordVisible.value
+                                  label:
+                                      controller.isConfirmPasswordVisible.value
                                       ? 'Show password'
                                       : 'Hide password',
                                   child: InkWell(
@@ -274,19 +280,24 @@ class _ResetPasswordState extends State<ResetPassword> {
                                         height: 20.h,
                                         image: AssetImage(
                                           controller
-                                                  .isConfirmPasswordVisible.value
+                                                  .isConfirmPasswordVisible
+                                                  .value
                                               ? PngAssets.eyeCommonIcon
                                               : PngAssets.eyeHideCommonIcon,
                                         ),
-                                        color: controller
-                                                .isConfirmPasswordFocused.value
+                                        color:
+                                            controller
+                                                .isConfirmPasswordFocused
+                                                .value
                                             ? (isDark
-                                                ? AppColors.darkAccent
-                                                : AppColors.brandViolet)
+                                                  ? AppColors.darkAccent
+                                                  : AppColors.brandViolet)
                                             : (isDark
-                                                ? AppColors.darkTextSecondary
-                                                : AppColors.lightTextPrimary)
-                                                .withValues(alpha: 0.44),
+                                                      ? AppColors
+                                                            .darkTextSecondary
+                                                      : AppColors
+                                                            .lightTextPrimary)
+                                                  .withValues(alpha: 0.44),
                                       ),
                                     ),
                                   ),

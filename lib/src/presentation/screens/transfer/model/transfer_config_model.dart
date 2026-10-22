@@ -8,8 +8,9 @@ class TransferConfigModel {
   TransferConfigModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? TransferConfigData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? TransferConfigData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -19,8 +20,9 @@ class TransferConfigData {
   TransferConfigData({this.settings});
 
   TransferConfigData.fromJson(Map<String, dynamic> json) {
-    settings =
-        json['settings'] != null ? Settings.fromJson(json['settings']) : null;
+    settings = json['settings'] != null
+        ? Settings.fromJson(json['settings'])
+        : null;
   }
 }
 

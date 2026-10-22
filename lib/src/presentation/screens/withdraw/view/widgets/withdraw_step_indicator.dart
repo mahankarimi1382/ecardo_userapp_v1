@@ -22,9 +22,30 @@ class WithdrawStepIndicator extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final steps = [
-      l10nPick(context, en: 'Amount', fa: 'مبلغ', ar: 'المبلغ', tr: 'Miktar', ru: 'Сумма'),
-      l10nPick(context, en: 'Review', fa: 'بررسی', ar: 'مراجعة', tr: 'İnceleme', ru: 'Проверка'),
-      l10nPick(context, en: 'Success', fa: 'رسید', ar: 'الإيصال', tr: 'Makbuz', ru: 'Квитанция'),
+      l10nPick(
+        context,
+        en: 'Amount',
+        fa: 'مبلغ',
+        ar: 'المبلغ',
+        tr: 'Miktar',
+        ru: 'Сумма',
+      ),
+      l10nPick(
+        context,
+        en: 'Review',
+        fa: 'بررسی',
+        ar: 'مراجعة',
+        tr: 'İnceleme',
+        ru: 'Проверка',
+      ),
+      l10nPick(
+        context,
+        en: 'Success',
+        fa: 'رسید',
+        ar: 'الإيصال',
+        tr: 'Makbuz',
+        ru: 'Квитанция',
+      ),
     ];
 
     return Container(
@@ -42,15 +63,14 @@ class WithdrawStepIndicator extends StatelessWidget {
             : AppColors.lightCard,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         border: Border.all(
-          color: isDark
-              ? AppColors.darkBorder
-              : AppColors.lightBorder,
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : AppColors.lightShadow)
-                .withValues(alpha: isDark ? 0.25 : 0.04),
+            color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+              alpha: isDark ? 0.25 : 0.04,
+            ),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -64,7 +84,8 @@ class WithdrawStepIndicator extends StatelessWidget {
                 index: i,
                 label: steps[i],
                 isActive: i == currentStep,
-                isCompleted: i < currentStep ||
+                isCompleted:
+                    i < currentStep ||
                     (currentStep == steps.length - 1 && i == currentStep),
                 isDark: isDark,
                 colorScheme: colorScheme,
@@ -74,10 +95,7 @@ class WithdrawStepIndicator extends StatelessWidget {
               ),
             ),
             if (i < steps.length - 1)
-              _StepConnector(
-                isFilled: i < currentStep,
-                isDark: isDark,
-              ),
+              _StepConnector(isFilled: i < currentStep, isDark: isDark),
           ],
         ],
       ),
@@ -137,12 +155,9 @@ class _StepNode extends StatelessWidget {
               color: isActive
                   ? nodeColor
                   : (isCompleted
-                      ? nodeColor.withValues(alpha: 0.15)
-                      : Colors.transparent),
-              border: Border.all(
-                color: nodeColor,
-                width: isActive ? 2.5 : 1.5,
-              ),
+                        ? nodeColor.withValues(alpha: 0.15)
+                        : Colors.transparent),
+              border: Border.all(color: nodeColor, width: isActive ? 2.5 : 1.5),
               boxShadow: isActive
                   ? [
                       BoxShadow(
@@ -155,11 +170,7 @@ class _StepNode extends StatelessWidget {
             ),
             child: Center(
               child: isCompleted && !isActive
-                  ? Icon(
-                      Icons.check_rounded,
-                      size: 13,
-                      color: completedColor,
-                    )
+                  ? Icon(Icons.check_rounded, size: 13, color: completedColor)
                   : Text(
                       '${index + 1}',
                       style: TextStyle(
@@ -182,14 +193,18 @@ class _StepNode extends StatelessWidget {
                   ? FontWeight.w800
                   : (isCompleted ? FontWeight.w600 : FontWeight.w500),
               color: isActive
-                  ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                  ? (isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary)
                   : (isCompleted
-                      ? (isDark
-                          ? AppColors.darkTextPrimary.withValues(alpha: 0.8)
-                          : AppColors.lightTextPrimary.withValues(alpha: 0.8))
-                      : (isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextTertiary)),
+                        ? (isDark
+                              ? AppColors.darkTextPrimary.withValues(alpha: 0.8)
+                              : AppColors.lightTextPrimary.withValues(
+                                  alpha: 0.8,
+                                ))
+                        : (isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextTertiary)),
               letterSpacing: -0.2,
             ),
           ),
@@ -203,10 +218,7 @@ class _StepConnector extends StatelessWidget {
   final bool isFilled;
   final bool isDark;
 
-  const _StepConnector({
-    required this.isFilled,
-    required this.isDark,
-  });
+  const _StepConnector({required this.isFilled, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -218,9 +230,7 @@ class _StepConnector extends StatelessWidget {
           borderRadius: BorderRadius.circular(1),
           color: isFilled
               ? AppColors.success
-              : (isDark
-                  ? AppColors.darkBorder
-                  : AppColors.lightBorder),
+              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
       ),
     );

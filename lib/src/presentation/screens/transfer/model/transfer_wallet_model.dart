@@ -8,8 +8,9 @@ class TransferWalletModel {
   TransferWalletModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? TransferWalletData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? TransferWalletData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -74,10 +75,9 @@ class Wallets {
     isNationalDefault = json['is_national_default'] ?? false;
     isCrypto = json['is_crypto'];
     currencyId = json['currency_id'];
-    transferLimit =
-        json['transfer_limit'] != null
-            ? TransferLimit.fromJson(json['transfer_limit'])
-            : null;
+    transferLimit = json['transfer_limit'] != null
+        ? TransferLimit.fromJson(json['transfer_limit'])
+        : null;
     conversionRate = json['conversion_rate'];
   }
 }

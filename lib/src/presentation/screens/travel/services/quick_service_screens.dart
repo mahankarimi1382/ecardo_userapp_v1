@@ -192,10 +192,7 @@ class EmergencyServiceScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Icon(
-                      Icons.chevron_left_rounded,
-                      color: TravelTheme.muted,
-                    ),
+                    Icon(Icons.chevron_left_rounded, color: TravelTheme.muted),
                   ],
                 ),
               ),
@@ -359,9 +356,7 @@ class WalletServiceScreen extends StatelessWidget {
             width: double.infinity,
             text: localization.travelMyRequests,
             backgroundColor: TravelTheme.muted,
-            onPressed: () => Get.to(
-              () => const TravelServiceRequestsScreen(),
-            ),
+            onPressed: () => Get.to(() => const TravelServiceRequestsScreen()),
           ),
         ],
       ),

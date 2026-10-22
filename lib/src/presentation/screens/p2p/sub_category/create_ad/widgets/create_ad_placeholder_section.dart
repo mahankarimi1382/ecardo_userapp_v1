@@ -233,8 +233,8 @@ class CreateAdPlaceholderSection extends StatelessWidget {
           value: controller.selectedPriceType.value.isEmpty
               ? ''
               : controller.selectedPriceType.value == 'Float'
-                  ? localization.p2pFloat
-                  : localization.p2pFixed,
+              ? localization.p2pFloat
+              : localization.p2pFixed,
           fullWidth: true,
           onTap: _openPriceTypeDropdown,
           isRequired: true,
@@ -245,8 +245,8 @@ class CreateAdPlaceholderSection extends StatelessWidget {
             controller.selectedPriceType.value.isEmpty
                 ? localization.p2pPrice
                 : controller.selectedPriceType.value == 'Float'
-                    ? localization.p2pFloat
-                    : localization.p2pFixed,
+                ? localization.p2pFloat
+                : localization.p2pFixed,
             style: _labelStyle,
           ),
         ),
@@ -633,8 +633,8 @@ class CreateAdPlaceholderSection extends StatelessWidget {
     final selectedLabel = selectedWireValue == 'Float'
         ? localization.p2pFloat
         : selectedWireValue == 'Fixed'
-            ? localization.p2pFixed
-            : '';
+        ? localization.p2pFixed
+        : '';
     Get.bottomSheet(
       CommonDropdownBottomSheet(
         title: localization.p2pSelectPriceType,

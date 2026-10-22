@@ -76,12 +76,14 @@ class _SignInScreenState extends State<SignInScreen>
       duration: const Duration(milliseconds: 1800),
     )..repeat(reverse: true);
 
-    _bioPulseScale = Tween<double>(begin: 1.0, end: 1.08).animate(
-      CurvedAnimation(parent: _bioPulseCtrl, curve: Curves.easeInOut),
-    );
-    _bioGlowOpacity = Tween<double>(begin: 0.25, end: 0.65).animate(
-      CurvedAnimation(parent: _bioPulseCtrl, curve: Curves.easeInOut),
-    );
+    _bioPulseScale = Tween<double>(
+      begin: 1.0,
+      end: 1.08,
+    ).animate(CurvedAnimation(parent: _bioPulseCtrl, curve: Curves.easeInOut));
+    _bioGlowOpacity = Tween<double>(
+      begin: 0.25,
+      end: 0.65,
+    ).animate(CurvedAnimation(parent: _bioPulseCtrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -97,10 +99,12 @@ class _SignInScreenState extends State<SignInScreen>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     return PopScope(
       canPop: false,
@@ -108,8 +112,9 @@ class _SignInScreenState extends State<SignInScreen>
         showExitApplicationAlertDialog();
       },
       child: Scaffold(
-        backgroundColor:
-            isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        backgroundColor: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightBackground,
         appBar: const CommonDefaultAppBar(),
         body: AmbientAuthBackground(
           child: Stack(
@@ -148,7 +153,8 @@ class _SignInScreenState extends State<SignInScreen>
               // Full Screen Loading Overlay (when biometric or general submission in flight)
               Obx(
                 () => Visibility(
-                  visible: controller.isLoading.value &&
+                  visible:
+                      controller.isLoading.value &&
                       controller.showBiometricButton.value,
                   child: const CommonLoading(),
                 ),
@@ -179,10 +185,11 @@ class _SignInScreenState extends State<SignInScreen>
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: (isDark
-                              ? AppColors.mainSoftBlue
-                              : AppColors.brandViolet)
-                          .withValues(alpha: isDark ? 0.18 : 0.28),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet)
+                              .withValues(alpha: isDark ? 0.18 : 0.28),
                       blurRadius: 20,
                       spreadRadius: 2,
                     ),
@@ -336,10 +343,10 @@ class _SignInScreenState extends State<SignInScreen>
         ? Colors.white.withValues(alpha: 0.06)
         : AppColors.lightSurfaceVariant;
     final activeBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final activeText =
-        isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
-    final inactiveText =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final activeText = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+    final inactiveText = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     return Container(
       padding: EdgeInsets.all(4.w),
@@ -422,7 +429,9 @@ class _SignInScreenState extends State<SignInScreen>
                               fontWeight: _selectedTab == 0
                                   ? FontWeight.w900
                                   : FontWeight.w600,
-                              color: _selectedTab == 0 ? activeText : inactiveText,
+                              color: _selectedTab == 0
+                                  ? activeText
+                                  : inactiveText,
                             ),
                           ),
                         ),
@@ -500,7 +509,9 @@ class _SignInScreenState extends State<SignInScreen>
                               fontWeight: _selectedTab == 1
                                   ? FontWeight.w900
                                   : FontWeight.w600,
-                              color: _selectedTab == 1 ? activeText : inactiveText,
+                              color: _selectedTab == 1
+                                  ? activeText
+                                  : inactiveText,
                             ),
                           ),
                         ),
@@ -546,8 +557,8 @@ class _SignInScreenState extends State<SignInScreen>
                 color: controller.isEmailFocused.value
                     ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                     : (isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextTertiary),
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary),
               ),
             ),
           ),
@@ -581,8 +592,8 @@ class _SignInScreenState extends State<SignInScreen>
                 color: controller.isPasswordFocused.value
                     ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                     : (isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextTertiary),
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary),
               ),
               suffixIcon: Semantics(
                 label: controller.isPasswordVisible.value
@@ -832,15 +843,7 @@ class _SignInScreenState extends State<SignInScreen>
                   ],
                 ),
                 Text(
-                  '${l10nPick(
-                    context,
-                    en: 'Code sent to:',
-                    fa: 'کد ارسال شد به:',
-                    ar: 'أُرسل الرمز إلى:',
-                    zh: '验证码已发送至:',
-                    tr: 'Kod gönderildi:',
-                    ru: 'Код отправлен на:',
-                  )} $masked',
+                  '${l10nPick(context, en: 'Code sent to:', fa: 'کد ارسال شد به:', ar: 'أُرسل الرمز إلى:', zh: '验证码已发送至:', tr: 'Kod gönderildi:', ru: 'Код отправлен на:')} $masked',
                   style: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w600,
@@ -905,15 +908,7 @@ class _SignInScreenState extends State<SignInScreen>
                   children: [
                     Text(
                       otpController.countdown.value > 0
-                          ? "${l10nPick(
-                              context,
-                              en: 'Resend in',
-                              fa: 'ارسال مجدد تا',
-                              ar: 'إعادة الإرسال خلال',
-                              zh: '重新发送倒计时',
-                              tr: 'Kalan süre',
-                              ru: 'Повтор через',
-                            )} ${otpController.countdown.value}s"
+                          ? "${l10nPick(context, en: 'Resend in', fa: 'ارسال مجدد تا', ar: 'إعادة الإرسال خلال', zh: '重新发送倒计时', tr: 'Kalan süre', ru: 'Повтор через')} ${otpController.countdown.value}s"
                           : '',
                       style: TextStyle(
                         fontSize: 12.sp,
@@ -1004,15 +999,22 @@ class _SignInScreenState extends State<SignInScreen>
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: isDark
-                          ? const [AppColors.mainSoftBlue, AppColors.brandViolet]
-                          : const [AppColors.brandViolet, AppColors.brandVioletDeep],
+                          ? const [
+                              AppColors.mainSoftBlue,
+                              AppColors.brandViolet,
+                            ]
+                          : const [
+                              AppColors.brandViolet,
+                              AppColors.brandVioletDeep,
+                            ],
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: (isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.brandViolet)
-                            .withValues(alpha: _bioGlowOpacity.value),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: _bioGlowOpacity.value),
                         blurRadius: 14,
                         spreadRadius: 2,
                       ),
@@ -1118,10 +1120,8 @@ class _SignInScreenState extends State<SignInScreen>
         SizedBox(width: 4.w),
         GestureDetector(
           onTap: () {
-            final String? isCreateAccount =
-                Get.find<SettingsService>().getSetting(
-              "account_creation",
-            );
+            final String? isCreateAccount = Get.find<SettingsService>()
+                .getSetting("account_creation");
             if (isCreateAccount == null || isCreateAccount == "1") {
               Get.toNamed(BaseRoute.email);
             } else {
@@ -1171,14 +1171,10 @@ class _TelegramSignInButton extends StatelessWidget {
             : null;
         final enabled = settings?.getSetting('telegram_login') == '1';
         if (!enabled) {
-          ToastHelper().showErrorToast(
-            localizations.signInTelegramUnavailable,
-          );
+          ToastHelper().showErrorToast(localizations.signInTelegramUnavailable);
           return;
         }
-        ToastHelper().showErrorToast(
-          localizations.signInTelegramUnavailable,
-        );
+        ToastHelper().showErrorToast(localizations.signInTelegramUnavailable);
       },
       icon: Icon(
         Icons.send_rounded,
@@ -1190,7 +1186,9 @@ class _TelegramSignInButton extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 14.sp,
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: isDark
+              ? AppColors.darkTextPrimary
+              : AppColors.lightTextPrimary,
         ),
       ),
       style: OutlinedButton.styleFrom(
@@ -1201,7 +1199,9 @@ class _TelegramSignInButton extends StatelessWidget {
               : AppColors.lightBorder,
           width: 1.2,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
       ),
     );
   }
@@ -1253,7 +1253,9 @@ class _DemoAccountSignInButton extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.bolt_rounded,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                     size: 20.sp,
                   ),
                 ),
@@ -1305,7 +1307,9 @@ class _DemoAccountSignInButton extends StatelessWidget {
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 14.sp,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 ),
               ],
             ),

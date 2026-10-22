@@ -9,8 +9,9 @@ class HomeSkeletonLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final baseColor = isDark ? const Color(0xFF262625) : Colors.grey.shade300;
-    final highlightColor =
-        isDark ? const Color(0xFF383836) : Colors.grey.shade100;
+    final highlightColor = isDark
+        ? const Color(0xFF383836)
+        : Colors.grey.shade100;
     final blockColor = isDark ? const Color(0xFF262625) : AppColors.white;
 
     return Shimmer.fromColors(
@@ -208,11 +209,7 @@ class HomeSkeletonLoader extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 16),
-                            Container(
-                              height: 12,
-                              width: 40,
-                              color: blockColor,
-                            ),
+                            Container(height: 12, width: 40, color: blockColor),
                           ],
                         ),
                       ),

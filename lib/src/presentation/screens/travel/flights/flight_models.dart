@@ -643,11 +643,7 @@ class PassengerBreakdown {
   int get totalPassengers => adults + children + infants;
   int get seatedPassengers => adults + children;
 
-  PassengerBreakdown copyWith({
-    int? adults,
-    int? children,
-    int? infants,
-  }) {
+  PassengerBreakdown copyWith({int? adults, int? children, int? infants}) {
     return PassengerBreakdown(
       adults: adults ?? this.adults,
       children: children ?? this.children,
@@ -715,7 +711,12 @@ class FlightLegSegment {
     required this.durationText,
     required this.aircraftType,
     required this.cabinClassName,
-    this.amenities = const ['Wi-Fi', 'USB In-seat Power', 'Complimentary Meal', 'Entertainment Screen'],
+    this.amenities = const [
+      'Wi-Fi',
+      'USB In-seat Power',
+      'Complimentary Meal',
+      'Entertainment Screen',
+    ],
     this.baggageCabin = '1 × 7 kg',
     this.baggageChecked = '1 × 23 kg',
   });
@@ -883,9 +884,7 @@ class CabinSeatModel {
   bool get hasExtraLegroom =>
       feature == CabinSeatFeature.extraLegroom || isExitRow;
 
-  CabinSeatModel copyWith({
-    CabinSeatState? state,
-  }) {
+  CabinSeatModel copyWith({CabinSeatState? state}) {
     return CabinSeatModel(
       id: id,
       row: row,

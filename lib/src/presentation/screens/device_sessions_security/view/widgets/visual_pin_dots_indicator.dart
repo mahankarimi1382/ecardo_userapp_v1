@@ -105,10 +105,7 @@ class _VisualPinDotsIndicatorState extends State<VisualPinDotsIndicator>
         final offset = widget.isError
             ? math.sin(_shakeAnimation.value * math.pi * 4) * 8.0
             : 0.0;
-        return Transform.translate(
-          offset: Offset(offset, 0),
-          child: child,
-        );
+        return Transform.translate(offset: Offset(offset, 0), child: child);
       },
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -133,11 +130,17 @@ class _VisualPinDotsIndicatorState extends State<VisualPinDotsIndicator>
       fillColor = AppColors.success;
       borderColor = AppColors.success;
     } else if (isFilled) {
-      fillColor = widget.isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
-      borderColor = widget.isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+      fillColor = widget.isDark
+          ? AppColors.mainSoftBlue
+          : AppColors.lightPrimary;
+      borderColor = widget.isDark
+          ? AppColors.mainSoftBlue
+          : AppColors.lightPrimary;
     } else if (isActive) {
       fillColor = Colors.transparent;
-      borderColor = widget.isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+      borderColor = widget.isDark
+          ? AppColors.mainSoftBlue
+          : AppColors.lightPrimary;
     } else {
       fillColor = Colors.transparent;
       borderColor = widget.isDark
@@ -156,10 +159,7 @@ class _VisualPinDotsIndicatorState extends State<VisualPinDotsIndicator>
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: fillColor,
-        border: Border.all(
-          color: borderColor,
-          width: isActive ? 2.0 : 1.5,
-        ),
+        border: Border.all(color: borderColor, width: isActive ? 2.0 : 1.5),
         boxShadow: isFilled
             ? [
                 BoxShadow(

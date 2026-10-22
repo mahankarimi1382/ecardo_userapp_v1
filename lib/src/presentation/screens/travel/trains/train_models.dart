@@ -5,26 +5,26 @@ import 'package:flutter/material.dart';
 // ---------------------------------------------------------------------------
 
 enum TrainCategory {
-  highSpeed,   // ICE / TGV / Frecciarossa / High-Speed
-  express,     // IC / EC / Express
-  regional,    // RE / RB / Regional
-  nightSleeper // Nightjet / Euronight / Sleeper
+  highSpeed, // ICE / TGV / Frecciarossa / High-Speed
+  express, // IC / EC / Express
+  regional, // RE / RB / Regional
+  nightSleeper, // Nightjet / Euronight / Sleeper
 }
 
 extension TrainCategoryExt on TrainCategory {
   String get code => switch (this) {
-        TrainCategory.highSpeed => 'high_speed',
-        TrainCategory.express => 'express',
-        TrainCategory.regional => 'regional',
-        TrainCategory.nightSleeper => 'night_sleeper',
-      };
+    TrainCategory.highSpeed => 'high_speed',
+    TrainCategory.express => 'express',
+    TrainCategory.regional => 'regional',
+    TrainCategory.nightSleeper => 'night_sleeper',
+  };
 
   IconData get icon => switch (this) {
-        TrainCategory.highSpeed => Icons.bolt_rounded,
-        TrainCategory.express => Icons.speed_rounded,
-        TrainCategory.regional => Icons.train_rounded,
-        TrainCategory.nightSleeper => Icons.bedtime_rounded,
-      };
+    TrainCategory.highSpeed => Icons.bolt_rounded,
+    TrainCategory.express => Icons.speed_rounded,
+    TrainCategory.regional => Icons.train_rounded,
+    TrainCategory.nightSleeper => Icons.bedtime_rounded,
+  };
 
   String localizedLabel(BuildContext context, {required bool isRtl}) {
     return switch (this) {
@@ -45,71 +45,80 @@ extension TrainCategoryExt on TrainCategory {
 // ---------------------------------------------------------------------------
 
 enum SleeperBerthType {
-  none,            // Standard seating
-  couchette6,      // 6-berth shared couchette (DB / Nightjet style)
-  couchette4,      // 4-berth comfort couchette
-  doubleSleeper,   // 2-bed private sleeper cabin with washbasin
-  singleDeluxe,    // 1-bed private deluxe coupe with private shower/WC
+  none, // Standard seating
+  couchette6, // 6-berth shared couchette (DB / Nightjet style)
+  couchette4, // 4-berth comfort couchette
+  doubleSleeper, // 2-bed private sleeper cabin with washbasin
+  singleDeluxe, // 1-bed private deluxe coupe with private shower/WC
 }
 
 extension SleeperBerthTypeExt on SleeperBerthType {
   String get code => switch (this) {
-        SleeperBerthType.none => 'none',
-        SleeperBerthType.couchette6 => 'couchette_6',
-        SleeperBerthType.couchette4 => 'couchette_4',
-        SleeperBerthType.doubleSleeper => 'double_sleeper',
-        SleeperBerthType.singleDeluxe => 'single_deluxe',
-      };
+    SleeperBerthType.none => 'none',
+    SleeperBerthType.couchette6 => 'couchette_6',
+    SleeperBerthType.couchette4 => 'couchette_4',
+    SleeperBerthType.doubleSleeper => 'double_sleeper',
+    SleeperBerthType.singleDeluxe => 'single_deluxe',
+  };
 
   int get maxOccupants => switch (this) {
-        SleeperBerthType.none => 1,
-        SleeperBerthType.couchette6 => 6,
-        SleeperBerthType.couchette4 => 4,
-        SleeperBerthType.doubleSleeper => 2,
-        SleeperBerthType.singleDeluxe => 1,
-      };
+    SleeperBerthType.none => 1,
+    SleeperBerthType.couchette6 => 6,
+    SleeperBerthType.couchette4 => 4,
+    SleeperBerthType.doubleSleeper => 2,
+    SleeperBerthType.singleDeluxe => 1,
+  };
 
   IconData get icon => switch (this) {
-        SleeperBerthType.none => Icons.airline_seat_recline_normal_rounded,
-        SleeperBerthType.couchette6 => Icons.hotel_rounded,
-        SleeperBerthType.couchette4 => Icons.bed_rounded,
-        SleeperBerthType.doubleSleeper => Icons.king_bed_rounded,
-        SleeperBerthType.singleDeluxe => Icons.meeting_room_rounded,
-      };
+    SleeperBerthType.none => Icons.airline_seat_recline_normal_rounded,
+    SleeperBerthType.couchette6 => Icons.hotel_rounded,
+    SleeperBerthType.couchette4 => Icons.bed_rounded,
+    SleeperBerthType.doubleSleeper => Icons.king_bed_rounded,
+    SleeperBerthType.singleDeluxe => Icons.meeting_room_rounded,
+  };
 
   String localizedTitle({required bool isRtl}) => switch (this) {
-        SleeperBerthType.none =>
-          isRtl ? 'صندلی سالنی معمولی' : 'Standard Seating',
-        SleeperBerthType.couchette6 =>
-          isRtl ? 'کوپه‌ای ۶ تخته (Couchette 6)' : '6-Berth Couchette',
-        SleeperBerthType.couchette4 =>
-          isRtl ? 'کوپه‌ای ۴ تخته (Couchette 4)' : '4-Berth Comfort Couchette',
-        SleeperBerthType.doubleSleeper =>
-          isRtl ? 'کوپه دو تخته اختصاصی (Double)' : 'Double Sleeper Cabin',
-        SleeperBerthType.singleDeluxe =>
-          isRtl ? 'کوپه تک‌نفره لوکس (Single Deluxe)' : 'Single Deluxe Coupe',
-      };
+    SleeperBerthType.none => isRtl ? 'صندلی سالنی معمولی' : 'Standard Seating',
+    SleeperBerthType.couchette6 =>
+      isRtl ? 'کوپه‌ای ۶ تخته (Couchette 6)' : '6-Berth Couchette',
+    SleeperBerthType.couchette4 =>
+      isRtl ? 'کوپه‌ای ۴ تخته (Couchette 4)' : '4-Berth Comfort Couchette',
+    SleeperBerthType.doubleSleeper =>
+      isRtl ? 'کوپه دو تخته اختصاصی (Double)' : 'Double Sleeper Cabin',
+    SleeperBerthType.singleDeluxe =>
+      isRtl ? 'کوپه تک‌نفره لوکس (Single Deluxe)' : 'Single Deluxe Coupe',
+  };
 
   String localizedDescription({required bool isRtl}) => switch (this) {
-        SleeperBerthType.none =>
-          isRtl ? 'صندلی ارگونومیک با زاویه خواب' : 'Reclining seat with tray table',
-        SleeperBerthType.couchette6 =>
-          isRtl ? 'تخت، ملحفه و بالش تمیز، اقتصادی' : 'Bunks with clean linen, blanket & pillow',
-        SleeperBerthType.couchette4 =>
-          isRtl ? 'فضای بازتر، ۴ تخت، پذیرایی سبک' : 'Spacious 4 berths with mineral water',
-        SleeperBerthType.doubleSleeper =>
-          isRtl ? 'دو تخت راحت، روشویی اختصاصی، صبحانه' : '2 beds, private washbasin & breakfast',
-        SleeperBerthType.singleDeluxe =>
-          isRtl ? 'کابین کاملاً مستقل با سرویس بهداشتی و دوش' : 'En-suite WC/shower, premium amenity kit',
-      };
+    SleeperBerthType.none =>
+      isRtl
+          ? 'صندلی ارگونومیک با زاویه خواب'
+          : 'Reclining seat with tray table',
+    SleeperBerthType.couchette6 =>
+      isRtl
+          ? 'تخت، ملحفه و بالش تمیز، اقتصادی'
+          : 'Bunks with clean linen, blanket & pillow',
+    SleeperBerthType.couchette4 =>
+      isRtl
+          ? 'فضای بازتر، ۴ تخت، پذیرایی سبک'
+          : 'Spacious 4 berths with mineral water',
+    SleeperBerthType.doubleSleeper =>
+      isRtl
+          ? 'دو تخت راحت، روشویی اختصاصی، صبحانه'
+          : '2 beds, private washbasin & breakfast',
+    SleeperBerthType.singleDeluxe =>
+      isRtl
+          ? 'کابین کاملاً مستقل با سرویس بهداشتی و دوش'
+          : 'En-suite WC/shower, premium amenity kit',
+  };
 
   int pricePremium() => switch (this) {
-        SleeperBerthType.none => 0,
-        SleeperBerthType.couchette6 => 65000,
-        SleeperBerthType.couchette4 => 140000,
-        SleeperBerthType.doubleSleeper => 320000,
-        SleeperBerthType.singleDeluxe => 580000,
-      };
+    SleeperBerthType.none => 0,
+    SleeperBerthType.couchette6 => 65000,
+    SleeperBerthType.couchette4 => 140000,
+    SleeperBerthType.doubleSleeper => 320000,
+    SleeperBerthType.singleDeluxe => 580000,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -117,44 +126,44 @@ extension SleeperBerthTypeExt on SleeperBerthType {
 // ---------------------------------------------------------------------------
 
 enum CompartmentGenderRule {
-  mixed,       // General / Mixed gender
-  femaleOnly,  // Dedicated women-only compartment
-  maleOnly,    // Dedicated men-only compartment
-  privateCoupe // Entire coupe reserved for family/private use
+  mixed, // General / Mixed gender
+  femaleOnly, // Dedicated women-only compartment
+  maleOnly, // Dedicated men-only compartment
+  privateCoupe, // Entire coupe reserved for family/private use
 }
 
 extension CompartmentGenderRuleExt on CompartmentGenderRule {
   String get code => switch (this) {
-        CompartmentGenderRule.mixed => 'mixed',
-        CompartmentGenderRule.femaleOnly => 'female_only',
-        CompartmentGenderRule.maleOnly => 'male_only',
-        CompartmentGenderRule.privateCoupe => 'private_coupe',
-      };
+    CompartmentGenderRule.mixed => 'mixed',
+    CompartmentGenderRule.femaleOnly => 'female_only',
+    CompartmentGenderRule.maleOnly => 'male_only',
+    CompartmentGenderRule.privateCoupe => 'private_coupe',
+  };
 
   IconData get icon => switch (this) {
-        CompartmentGenderRule.mixed => Icons.people_alt_rounded,
-        CompartmentGenderRule.femaleOnly => Icons.female_rounded,
-        CompartmentGenderRule.maleOnly => Icons.male_rounded,
-        CompartmentGenderRule.privateCoupe => Icons.lock_outline_rounded,
-      };
+    CompartmentGenderRule.mixed => Icons.people_alt_rounded,
+    CompartmentGenderRule.femaleOnly => Icons.female_rounded,
+    CompartmentGenderRule.maleOnly => Icons.male_rounded,
+    CompartmentGenderRule.privateCoupe => Icons.lock_outline_rounded,
+  };
 
   String localizedTitle({required bool isRtl}) => switch (this) {
-        CompartmentGenderRule.mixed =>
-          isRtl ? 'کوپه عمومی (آقا و بانو)' : 'Mixed Compartment',
-        CompartmentGenderRule.femaleOnly =>
-          isRtl ? 'کوپه ویژه بانوان' : 'Women-Only Compartment',
-        CompartmentGenderRule.maleOnly =>
-          isRtl ? 'کوپه ویژه آقایان' : 'Men-Only Compartment',
-        CompartmentGenderRule.privateCoupe =>
-          isRtl ? 'کوپه دربست (خانواده / خصوصی)' : 'Private Coupe (Entire)',
-      };
+    CompartmentGenderRule.mixed =>
+      isRtl ? 'کوپه عمومی (آقا و بانو)' : 'Mixed Compartment',
+    CompartmentGenderRule.femaleOnly =>
+      isRtl ? 'کوپه ویژه بانوان' : 'Women-Only Compartment',
+    CompartmentGenderRule.maleOnly =>
+      isRtl ? 'کوپه ویژه آقایان' : 'Men-Only Compartment',
+    CompartmentGenderRule.privateCoupe =>
+      isRtl ? 'کوپه دربست (خانواده / خصوصی)' : 'Private Coupe (Entire)',
+  };
 
   String localizedBadge({required bool isRtl}) => switch (this) {
-        CompartmentGenderRule.mixed => isRtl ? 'عمومی' : 'Mixed',
-        CompartmentGenderRule.femaleOnly => isRtl ? 'ویژه بانوان' : 'Women Only',
-        CompartmentGenderRule.maleOnly => isRtl ? 'ویژه آقایان' : 'Men Only',
-        CompartmentGenderRule.privateCoupe => isRtl ? 'دربست' : 'Private',
-      };
+    CompartmentGenderRule.mixed => isRtl ? 'عمومی' : 'Mixed',
+    CompartmentGenderRule.femaleOnly => isRtl ? 'ویژه بانوان' : 'Women Only',
+    CompartmentGenderRule.maleOnly => isRtl ? 'ویژه آقایان' : 'Men Only',
+    CompartmentGenderRule.privateCoupe => isRtl ? 'دربست' : 'Private',
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -188,7 +197,7 @@ class IntermediateStop {
 // ---------------------------------------------------------------------------
 
 enum ConnectionSafetyLevel {
-  tight('Tight', Icons.timer_rounded, Colors.red),      // < 15 min
+  tight('Tight', Icons.timer_rounded, Colors.red), // < 15 min
   moderate('Moderate', Icons.info_rounded, Colors.orange), // 15 - 19 min
   safe('Safe', Icons.check_circle_rounded, Colors.green); // >= 20 min
 
@@ -198,7 +207,13 @@ enum ConnectionSafetyLevel {
 
   const ConnectionSafetyLevel(this.displayName, this.icon, this.color);
 
-  ConnectionTransferInfo createTransferInfo(int minutes, String arrPlatform, String depPlatform, String nextName, String nextNumber) {
+  ConnectionTransferInfo createTransferInfo(
+    int minutes,
+    String arrPlatform,
+    String depPlatform,
+    String nextName,
+    String nextNumber,
+  ) {
     return ConnectionTransferInfo(
       stationName: 'Station Hub',
       stationCode: 'HUB',
@@ -237,28 +252,34 @@ class ConnectionTransferInfo {
   }
 
   String localizedTitle({required bool isRtl}) => switch (safetyLevel) {
-        ConnectionSafetyLevel.tight => isRtl
-            ? 'هشدار تعویض قطار: زمان فشرده ($transferMinutes دقیقه)'
-            : 'Tight Connection Alert ($transferMinutes min)',
-        ConnectionSafetyLevel.moderate => isRtl
-            ? 'تعویض قطار معمولی ($transferMinutes دقیقه)'
-            : 'Moderate Connection ($transferMinutes min)',
-        ConnectionSafetyLevel.safe => isRtl
-            ? 'تعویض قطار ایمن و راحت ($transferMinutes دقیقه)'
-            : 'Safe Connection ($transferMinutes min)',
-      };
+    ConnectionSafetyLevel.tight =>
+      isRtl
+          ? 'هشدار تعویض قطار: زمان فشرده ($transferMinutes دقیقه)'
+          : 'Tight Connection Alert ($transferMinutes min)',
+    ConnectionSafetyLevel.moderate =>
+      isRtl
+          ? 'تعویض قطار معمولی ($transferMinutes دقیقه)'
+          : 'Moderate Connection ($transferMinutes min)',
+    ConnectionSafetyLevel.safe =>
+      isRtl
+          ? 'تعویض قطار ایمن و راحت ($transferMinutes دقیقه)'
+          : 'Safe Connection ($transferMinutes min)',
+  };
 
   String localizedMessage({required bool isRtl}) => switch (safetyLevel) {
-        ConnectionSafetyLevel.tight => isRtl
-            ? 'فرصت انتقال سکو کمتر از ۱۵ دقیقه است. در صورت تأخیر احتمالی قطار اول، ممکن است به قطار بعدی نرسید.'
-            : 'Transfer window is under 15 min. Minor delays on leg 1 may cause a missed connection. Recommended only with light luggage.',
-        ConnectionSafetyLevel.moderate => isRtl
-            ? 'زمان استاندارد انتقال بین سکوی $arrivalPlatform و سکوی $departurePlatform. لطفاً بی‌درنگ به سمت سکوی بعدی حرکت نمایید.'
-            : 'Standard transfer window between Platform $arrivalPlatform and Platform $departurePlatform. Walk directly to your departure platform.',
-        ConnectionSafetyLevel.safe => isRtl
-            ? 'فرصت کافی و مطمئن برای جابجایی بین سکوها، حمل بار و استفاده از خدمات ایستگاه.'
-            : 'Generous transfer buffer (> 20 min). Ample time for platform navigation, luggage transit, and station amenities.',
-      };
+    ConnectionSafetyLevel.tight =>
+      isRtl
+          ? 'فرصت انتقال سکو کمتر از ۱۵ دقیقه است. در صورت تأخیر احتمالی قطار اول، ممکن است به قطار بعدی نرسید.'
+          : 'Transfer window is under 15 min. Minor delays on leg 1 may cause a missed connection. Recommended only with light luggage.',
+    ConnectionSafetyLevel.moderate =>
+      isRtl
+          ? 'زمان استاندارد انتقال بین سکوی $arrivalPlatform و سکوی $departurePlatform. لطفاً بی‌درنگ به سمت سکوی بعدی حرکت نمایید.'
+          : 'Standard transfer window between Platform $arrivalPlatform and Platform $departurePlatform. Walk directly to your departure platform.',
+    ConnectionSafetyLevel.safe =>
+      isRtl
+          ? 'فرصت کافی و مطمئن برای جابجایی بین سکوها، حمل بار و استفاده از خدمات ایستگاه.'
+          : 'Generous transfer buffer (> 20 min). Ample time for platform navigation, luggage transit, and station amenities.',
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -356,7 +377,12 @@ List<RailJourney> generateRailJourneys({
   required String destination,
   required DateTime departureDate,
 }) {
-  final seed = (origin.hashCode ^ destination.hashCode ^ departureDate.day ^ departureDate.month).abs();
+  final seed =
+      (origin.hashCode ^
+              destination.hashCode ^
+              departureDate.day ^
+              departureDate.month)
+          .abs();
   final _ = _SeedRandom(seed);
 
   final operators = [
@@ -388,7 +414,12 @@ List<RailJourney> generateRailJourneys({
       departurePlatform: 'Platform 4',
       arrivalPlatform: 'Platform 7',
       isDirect: true,
-      amenities: ['High-speed Wi-Fi', 'Onboard Bistro', '220V Outlets', 'Quiet Zone'],
+      amenities: [
+        'High-speed Wi-Fi',
+        'Onboard Bistro',
+        '220V Outlets',
+        'Quiet Zone',
+      ],
       onTimePunctuality: 0.96,
       availableSleepers: const [
         SleeperBerthType.none,

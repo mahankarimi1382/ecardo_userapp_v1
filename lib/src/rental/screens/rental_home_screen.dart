@@ -22,7 +22,8 @@ class RentalHomeScreen extends StatefulWidget {
   State<RentalHomeScreen> createState() => _RentalHomeScreenState();
 }
 
-class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerProviderStateMixin {
+class _RentalHomeScreenState extends State<RentalHomeScreen>
+    with SingleTickerProviderStateMixin {
   final RentalController controller = Get.put(RentalController());
   late TabController _tabController;
 
@@ -44,29 +45,71 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
 
   String _categoryLabel(BuildContext context, String c) {
     switch (c) {
-      case 'ECONOMY': return l10nPick(context, en: 'Economy', fa: 'اقتصادی', ar: 'اقتصادي', zh: '经济型');
-      case 'SUV': return l10nPick(context, en: 'SUV', fa: 'شاسی‌بلند', ar: 'دفع رباعي', zh: 'SUV越野');
-      case 'LUXURY': return l10nPick(context, en: 'Luxury', fa: 'لاکچری', ar: 'فاخر', zh: '豪华商务');
-      case 'VAN': return l10nPick(context, en: 'Van', fa: 'ون خانوادگی', ar: 'فان', zh: '客运商务');
-      default: return l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', zh: '全部');
+      case 'ECONOMY':
+        return l10nPick(
+          context,
+          en: 'Economy',
+          fa: 'اقتصادی',
+          ar: 'اقتصادي',
+          zh: '经济型',
+        );
+      case 'SUV':
+        return l10nPick(
+          context,
+          en: 'SUV',
+          fa: 'شاسی‌بلند',
+          ar: 'دفع رباعي',
+          zh: 'SUV越野',
+        );
+      case 'LUXURY':
+        return l10nPick(
+          context,
+          en: 'Luxury',
+          fa: 'لاکچری',
+          ar: 'فاخر',
+          zh: '豪华商务',
+        );
+      case 'VAN':
+        return l10nPick(
+          context,
+          en: 'Van',
+          fa: 'ون خانوادگی',
+          ar: 'فان',
+          zh: '客运商务',
+        );
+      default:
+        return l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', zh: '全部');
     }
   }
 
   String _statusFa(String status) {
     switch (status) {
-      case 'DRAFT': return 'پیش‌نویس';
-      case 'AWAITING_DOCS': return 'در انتظار مدارک';
-      case 'AWAITING_PAYMENT': return 'در انتظار پرداخت';
-      case 'PENDING_CONFIRMATION': return 'منتظر تأیید میزبان';
-      case 'CONFIRMED': return 'رزرو قطعی';
-      case 'ACTIVE': return 'در حال اجاره';
-      case 'RETURNED': return 'مسترد شده';
-      case 'COMPLETED': return 'تکمیل‌شده';
-      case 'DISPUTED': return 'در اختلاف';
-      case 'CANCELLED': return 'لغو';
-      case 'REFUNDED': return 'برگشت وجه';
-      case 'EXPIRED': return 'منقضی';
-      default: return status;
+      case 'DRAFT':
+        return 'پیش‌نویس';
+      case 'AWAITING_DOCS':
+        return 'در انتظار مدارک';
+      case 'AWAITING_PAYMENT':
+        return 'در انتظار پرداخت';
+      case 'PENDING_CONFIRMATION':
+        return 'منتظر تأیید میزبان';
+      case 'CONFIRMED':
+        return 'رزرو قطعی';
+      case 'ACTIVE':
+        return 'در حال اجاره';
+      case 'RETURNED':
+        return 'مسترد شده';
+      case 'COMPLETED':
+        return 'تکمیل‌شده';
+      case 'DISPUTED':
+        return 'در اختلاف';
+      case 'CANCELLED':
+        return 'لغو';
+      case 'REFUNDED':
+        return 'برگشت وجه';
+      case 'EXPIRED':
+        return 'منقضی';
+      default:
+        return status;
     }
   }
 
@@ -81,7 +124,9 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
           padding: EdgeInsets.all(ECardoTokens.space5.r),
           decoration: BoxDecoration(
             color: ECardoTokens.surfaceCard(context),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(ECardoTokens.radius2xl.r)),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(ECardoTokens.radius2xl.r),
+            ),
             boxShadow: ECardoTokens.shadowSheet(context),
           ),
           child: Column(
@@ -102,10 +147,15 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.brand100(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm.r,
+                      ),
                     ),
                     child: Text(
                       '\$${car.dailyPrice}/day',
@@ -120,11 +170,13 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               ),
               SizedBox(height: ECardoTokens.space2.h),
               Text(
-                l10nPick(context,
+                l10nPick(
+                  context,
                   en: 'Security Deposit: \$${car.depositAmount} (Refundable)',
                   fa: 'ودیعه ضمانت نقدی: \$${car.depositAmount} (قابل استرداد)',
                   ar: 'مبلغ التأمين: \$${car.depositAmount}',
-                  zh: '押金：\$${car.depositAmount}（行程结束无损返还）'),
+                  zh: '押金：\$${car.depositAmount}（行程结束无损返还）',
+                ),
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: ECardoTokens.inkMuted(context),
@@ -132,7 +184,13 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               ),
               SizedBox(height: ECardoTokens.space3.h),
               Text(
-                l10nPick(context, en: 'Insurance tier (required)', fa: 'سطح پوشش بیمه (اجباری)', ar: 'مستوى التأمين', zh: '保险保障级别'),
+                l10nPick(
+                  context,
+                  en: 'Insurance tier (required)',
+                  fa: 'سطح پوشش بیمه (اجباری)',
+                  ar: 'مستوى التأمين',
+                  zh: '保险保障级别',
+                ),
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 12.sp,
@@ -141,7 +199,8 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               ),
               RadioGroup<String>(
                 groupValue: insuranceTier,
-                onChanged: (v) => setSheetState(() => insuranceTier = v ?? insuranceTier),
+                onChanged: (v) =>
+                    setSheetState(() => insuranceTier = v ?? insuranceTier),
                 child: Column(
                   children: [
                     for (final t in car.insuranceTiers)
@@ -166,11 +225,23 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                   Expanded(
                     child: Semantics(
                       button: true,
-                      label: l10nPick(context, en: 'Select pickup date', fa: 'انتخاب تاریخ تحویل', ar: 'تحديد تاريخ الاستلام', zh: '选择取车日期'),
+                      label: l10nPick(
+                        context,
+                        en: 'Select pickup date',
+                        fa: 'انتخاب تاریخ تحویل',
+                        ar: 'تحديد تاريخ الاستلام',
+                        zh: '选择取车日期',
+                      ),
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: ECardoTokens.borderStrong(context)),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
+                          side: BorderSide(
+                            color: ECardoTokens.borderStrong(context),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd.r,
+                            ),
+                          ),
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           minimumSize: Size(0, 44.h),
                         ),
@@ -178,15 +249,23 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           HapticFeedback.selectionClick();
                           final d = await showDatePicker(
                             context: sheetContext,
-                            initialDate: DateTime.now().add(const Duration(days: 1)),
+                            initialDate: DateTime.now().add(
+                              const Duration(days: 1),
+                            ),
                             firstDate: DateTime.now(),
-                            lastDate: DateTime.now().add(const Duration(days: 90)),
+                            lastDate: DateTime.now().add(
+                              const Duration(days: 90),
+                            ),
                           );
                           if (d != null) setSheetState(() => pickup = d);
                         },
                         child: Text(
                           pickup == null
-                              ? l10nPick(context, en: 'Pickup date', fa: 'تاریخ تحویل')
+                              ? l10nPick(
+                                  context,
+                                  en: 'Pickup date',
+                                  fa: 'تاریخ تحویل',
+                                )
                               : pickup!.toIso8601String().substring(0, 10),
                           style: TextStyle(
                             fontSize: 11.sp,
@@ -200,11 +279,23 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                   Expanded(
                     child: Semantics(
                       button: true,
-                      label: l10nPick(context, en: 'Select return date', fa: 'انتخاب تاریخ عودت', ar: 'تحديد تاريخ الإرجاع', zh: '选择还车日期'),
+                      label: l10nPick(
+                        context,
+                        en: 'Select return date',
+                        fa: 'انتخاب تاریخ عودت',
+                        ar: 'تحديد تاريخ الإرجاع',
+                        zh: '选择还车日期',
+                      ),
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: ECardoTokens.borderStrong(context)),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
+                          side: BorderSide(
+                            color: ECardoTokens.borderStrong(context),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd.r,
+                            ),
+                          ),
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           minimumSize: Size(0, 44.h),
                         ),
@@ -212,15 +303,23 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           HapticFeedback.selectionClick();
                           final d = await showDatePicker(
                             context: sheetContext,
-                            initialDate: (pickup ?? DateTime.now()).add(const Duration(days: 3)),
+                            initialDate: (pickup ?? DateTime.now()).add(
+                              const Duration(days: 3),
+                            ),
                             firstDate: pickup ?? DateTime.now(),
-                            lastDate: DateTime.now().add(const Duration(days: 120)),
+                            lastDate: DateTime.now().add(
+                              const Duration(days: 120),
+                            ),
                           );
                           if (d != null) setSheetState(() => returnAt = d);
                         },
                         child: Text(
                           returnAt == null
-                              ? l10nPick(context, en: 'Return date', fa: 'تاریخ عودت')
+                              ? l10nPick(
+                                  context,
+                                  en: 'Return date',
+                                  fa: 'تاریخ عودت',
+                                )
                               : returnAt!.toIso8601String().substring(0, 10),
                           style: TextStyle(
                             fontSize: 11.sp,
@@ -237,50 +336,80 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 width: double.infinity,
                 child: Semantics(
                   button: true,
-                  label: l10nPick(context, en: 'Confirm Reservation', fa: 'تأیید و ثبت پیش‌رزرو', ar: 'تأكيد الحجز', zh: '确认锁定预订'),
+                  label: l10nPick(
+                    context,
+                    en: 'Confirm Reservation',
+                    fa: 'تأیید و ثبت پیش‌رزرو',
+                    ar: 'تأكيد الحجز',
+                    zh: '确认锁定预订',
+                  ),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ECardoTokens.brand500(context),
                       foregroundColor: AppColors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd.r,
+                        ),
+                      ),
                       padding: EdgeInsets.symmetric(vertical: 14.h),
                       minimumSize: Size(double.infinity, 48.h),
                     ),
-                    onPressed: (pickup == null || returnAt == null) ? null : () async {
-                      HapticFeedback.lightImpact();
-                      controller.selectedBooking.value = RentalBookingModel(
-                        id: 0, bookingNo: '', car: car, insuranceTier: insuranceTier,
-                        rentalTotal: 0, extrasTotal: 0, status: '', events: [],
-                      );
-                      Get.back();
-                      final err = await controller.createBooking(
-                        pickup!.toIso8601String(),
-                        returnAt!.toIso8601String(),
-                        insuranceTier,
-                      );
-                      if (!context.mounted) return;
-                      if (err != null) {
-                        Get.snackbar(
-                          l10nPick(context, en: 'Error', fa: 'خطا'),
-                          err,
-                          backgroundColor: ECardoTokens.danger(context),
-                          colorText: AppColors.white,
-                        );
-                      } else {
-                        _tabController.animateTo(1);
-                        Get.snackbar(
-                          l10nPick(context, en: 'Booked', fa: 'رزرو شد'),
-                          l10nPick(context,
-                            en: 'Price locked for 1 hour — upload driver docs.',
-                            fa: 'قیمت ۱ ساعت قفل شد؛ مدارک راننده را بارگذاری کنید.'),
-                          backgroundColor: ECardoTokens.success(context),
-                          colorText: AppColors.white,
-                        );
-                      }
-                    },
+                    onPressed: (pickup == null || returnAt == null)
+                        ? null
+                        : () async {
+                            HapticFeedback.lightImpact();
+                            controller.selectedBooking.value =
+                                RentalBookingModel(
+                                  id: 0,
+                                  bookingNo: '',
+                                  car: car,
+                                  insuranceTier: insuranceTier,
+                                  rentalTotal: 0,
+                                  extrasTotal: 0,
+                                  status: '',
+                                  events: [],
+                                );
+                            Get.back();
+                            final err = await controller.createBooking(
+                              pickup!.toIso8601String(),
+                              returnAt!.toIso8601String(),
+                              insuranceTier,
+                            );
+                            if (!context.mounted) return;
+                            if (err != null) {
+                              Get.snackbar(
+                                l10nPick(context, en: 'Error', fa: 'خطا'),
+                                err,
+                                backgroundColor: ECardoTokens.danger(context),
+                                colorText: AppColors.white,
+                              );
+                            } else {
+                              _tabController.animateTo(1);
+                              Get.snackbar(
+                                l10nPick(context, en: 'Booked', fa: 'رزرو شد'),
+                                l10nPick(
+                                  context,
+                                  en: 'Price locked for 1 hour — upload driver docs.',
+                                  fa: 'قیمت ۱ ساعت قفل شد؛ مدارک راننده را بارگذاری کنید.',
+                                ),
+                                backgroundColor: ECardoTokens.success(context),
+                                colorText: AppColors.white,
+                              );
+                            }
+                          },
                     child: Text(
-                      l10nPick(context, en: 'Confirm Reservation', fa: 'تأیید و ثبت پیش‌رزرو', ar: 'تأكيد الحجز', zh: '确认锁定预订'),
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
+                      l10nPick(
+                        context,
+                        en: 'Confirm Reservation',
+                        fa: 'تأیید و ثبت پیش‌رزرو',
+                        ar: 'تأكيد الحجز',
+                        zh: '确认锁定预订',
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -300,7 +429,13 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
         backgroundColor: ECardoTokens.surfaceCard(context),
         elevation: 0,
         title: Text(
-          l10nPick(context, en: 'Car Rental', fa: 'رنت خودرو در سفر', ar: 'تأجير السيارات', zh: '境外车辆租赁'),
+          l10nPick(
+            context,
+            en: 'Car Rental',
+            fa: 'رنت خودرو در سفر',
+            ar: 'تأجير السيارات',
+            zh: '境外车辆租赁',
+          ),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
@@ -314,8 +449,24 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
           indicatorColor: ECardoTokens.brand500(context),
           indicatorWeight: 3.h,
           tabs: [
-            Tab(text: l10nPick(context, en: 'Vehicle Fleet', fa: 'ناوگان خودروها', ar: 'الأسطول', zh: '精选车队')),
-            Tab(text: l10nPick(context, en: 'My Bookings', fa: 'رزروهای من', ar: 'حجوزاتي', zh: '我的订单')),
+            Tab(
+              text: l10nPick(
+                context,
+                en: 'Vehicle Fleet',
+                fa: 'ناوگان خودروها',
+                ar: 'الأسطول',
+                zh: '精选车队',
+              ),
+            ),
+            Tab(
+              text: l10nPick(
+                context,
+                en: 'My Bookings',
+                fa: 'رزروهای من',
+                ar: 'حجوزاتي',
+                zh: '我的订单',
+              ),
+            ),
           ],
         ),
       ),
@@ -327,36 +478,53 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
             children: [
               SizedBox(
                 height: 48.h,
-                child: Obx(() => ListView(
-                  scrollDirection: Axis.horizontal,
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: ECardoTokens.space4.w, vertical: ECardoTokens.space2.h),
-                  children: categories.map((c) => Padding(
-                    padding: EdgeInsetsDirectional.only(end: ECardoTokens.space2.w),
-                    child: Semantics(
-                      button: true,
-                      selected: controller.selectedCategory.value == c,
-                      label: _categoryLabel(context, c),
-                      child: ChoiceChip(
-                        label: Text(_categoryLabel(context, c)),
-                        selected: controller.selectedCategory.value == c,
-                        selectedColor: ECardoTokens.brand500(context),
-                        backgroundColor: ECardoTokens.surfaceCard(context),
-                        labelStyle: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: controller.selectedCategory.value == c ? FontWeight.bold : FontWeight.normal,
-                          color: controller.selectedCategory.value == c
-                              ? AppColors.white
-                              : ECardoTokens.ink(context),
-                        ),
-                        onSelected: (_) {
-                          HapticFeedback.selectionClick();
-                          controller.selectedCategory.value = c;
-                          controller.fetchCars();
-                        },
-                      ),
+                child: Obx(
+                  () => ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: ECardoTokens.space4.w,
+                      vertical: ECardoTokens.space2.h,
                     ),
-                  )).toList(),
-                )),
+                    children: categories
+                        .map(
+                          (c) => Padding(
+                            padding: EdgeInsetsDirectional.only(
+                              end: ECardoTokens.space2.w,
+                            ),
+                            child: Semantics(
+                              button: true,
+                              selected: controller.selectedCategory.value == c,
+                              label: _categoryLabel(context, c),
+                              child: ChoiceChip(
+                                label: Text(_categoryLabel(context, c)),
+                                selected:
+                                    controller.selectedCategory.value == c,
+                                selectedColor: ECardoTokens.brand500(context),
+                                backgroundColor: ECardoTokens.surfaceCard(
+                                  context,
+                                ),
+                                labelStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight:
+                                      controller.selectedCategory.value == c
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  color: controller.selectedCategory.value == c
+                                      ? AppColors.white
+                                      : ECardoTokens.ink(context),
+                                ),
+                                onSelected: (_) {
+                                  HapticFeedback.selectionClick();
+                                  controller.selectedCategory.value = c;
+                                  controller.fetchCars();
+                                },
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
               ),
               Expanded(
                 child: Obx(() {
@@ -368,7 +536,9 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     return Center(
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
-                        padding: EdgeInsetsDirectional.all(ECardoTokens.space6.r),
+                        padding: EdgeInsetsDirectional.all(
+                          ECardoTokens.space6.r,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -428,11 +598,15 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                               ),
                               child: ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: ECardoTokens.brand500(context),
+                                  backgroundColor: ECardoTokens.brand500(
+                                    context,
+                                  ),
                                   foregroundColor: AppColors.white,
                                   minimumSize: Size(160.w, 44.h),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                                    borderRadius: BorderRadius.circular(
+                                      ECardoTokens.radiusMd.r,
+                                    ),
                                   ),
                                   padding: EdgeInsetsDirectional.symmetric(
                                     horizontal: ECardoTokens.space4.w,
@@ -443,7 +617,10 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                                   HapticFeedback.lightImpact();
                                   controller.fetchCars();
                                 },
-                                icon: const Icon(Icons.refresh_rounded, size: 18),
+                                icon: const Icon(
+                                  Icons.refresh_rounded,
+                                  size: 18,
+                                ),
                                 label: Text(
                                   l10nPick(
                                     context,
@@ -452,7 +629,10 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                                     ar: 'إعادة المحاولة',
                                     zh: '重试连接',
                                   ),
-                                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
@@ -504,7 +684,8 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: EdgeInsetsDirectional.all(ECardoTokens.space4.w),
                       itemCount: controller.cars.length,
-                      separatorBuilder: (_, _) => SizedBox(height: ECardoTokens.space6.h),
+                      separatorBuilder: (_, _) =>
+                          SizedBox(height: ECardoTokens.space6.h),
                       itemBuilder: (context, i) {
                         final car = controller.cars[i];
                         return _buildVehicleCard(context, car);
@@ -561,29 +742,36 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.all(ECardoTokens.space4.w),
                 itemCount: controller.myBookings.length,
-                separatorBuilder: (_, _) => SizedBox(height: ECardoTokens.space6.h),
+                separatorBuilder: (_, _) =>
+                    SizedBox(height: ECardoTokens.space6.h),
                 itemBuilder: (context, i) {
                   final b = controller.myBookings[i];
                   return Container(
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceCard(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
-                      border: Border.all(
-                        color: ECardoTokens.border(context),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg.r,
                       ),
+                      border: Border.all(color: ECardoTokens.border(context)),
                     ),
                     child: Semantics(
                       button: true,
-                      label: '${b.bookingNo}, ${b.car?.title ?? l10nPick(context, en: "Vehicle Rental", fa: "رزرو خودرو")}, ${_statusFa(b.status)}',
+                      label:
+                          '${b.bookingNo}, ${b.car?.title ?? l10nPick(context, en: "Vehicle Rental", fa: "رزرو خودرو")}, ${_statusFa(b.status)}',
                       child: ListTile(
-                        contentPadding: EdgeInsets.symmetric(horizontal: ECardoTokens.space4.w, vertical: ECardoTokens.space2.h),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: ECardoTokens.space4.w,
+                          vertical: ECardoTokens.space2.h,
+                        ),
                         minVerticalPadding: 12.h,
                         leading: Container(
                           width: 44.w,
                           height: 44.w,
                           decoration: BoxDecoration(
                             color: ECardoTokens.brand100(context),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusSm.r,
+                            ),
                           ),
                           child: Icon(
                             Icons.directions_car_rounded,
@@ -599,7 +787,12 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           ),
                         ),
                         subtitle: Text(
-                          b.car?.title ?? l10nPick(context, en: 'Vehicle Rental', fa: 'رزرو خودرو'),
+                          b.car?.title ??
+                              l10nPick(
+                                context,
+                                en: 'Vehicle Rental',
+                                fa: 'رزرو خودرو',
+                              ),
                           style: TextStyle(
                             fontSize: 11.5.sp,
                             color: ECardoTokens.inkMuted(context),
@@ -609,10 +802,15 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.h,
+                              ),
                               decoration: BoxDecoration(
                                 color: ECardoTokens.brand100(context),
-                                borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                                borderRadius: BorderRadius.circular(
+                                  ECardoTokens.radiusSm.r,
+                                ),
                               ),
                               child: Text(
                                 _statusFa(b.status),
@@ -673,7 +871,9 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                       height: 44.w,
                       decoration: BoxDecoration(
                         color: placeholder,
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd.r,
+                        ),
                       ),
                     ),
                     SizedBox(width: ECardoTokens.space3.w),
@@ -717,9 +917,7 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
       decoration: BoxDecoration(
         color: ECardoTokens.surfaceCard(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusXl.r),
-        border: Border.all(
-          color: ECardoTokens.border(context),
-        ),
+        border: Border.all(color: ECardoTokens.border(context)),
         boxShadow: ECardoTokens.shadowCard(context),
       ),
       child: Column(
@@ -768,33 +966,64 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
               ),
               Semantics(
                 label: car.isFleet
-                    ? l10nPick(context, en: 'Instant Fleet Confirmation', fa: 'تأیید آنی ناوگان')
-                    : l10nPick(context, en: 'Verified Host', fa: 'میزبان تأییدشده'),
+                    ? l10nPick(
+                        context,
+                        en: 'Instant Fleet Confirmation',
+                        fa: 'تأیید آنی ناوگان',
+                      )
+                    : l10nPick(
+                        context,
+                        en: 'Verified Host',
+                        fa: 'میزبان تأییدشده',
+                      ),
                 child: Container(
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: 8.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
                     color: car.isFleet
                         ? ECardoTokens.successBg(context)
                         : ECardoTokens.warningBg(context),
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusSm.r,
+                    ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        car.isFleet ? Icons.bolt_rounded : Icons.person_outline_rounded,
+                        car.isFleet
+                            ? Icons.bolt_rounded
+                            : Icons.person_outline_rounded,
                         size: 12.sp,
-                        color: car.isFleet ? ECardoTokens.success(context) : ECardoTokens.warning(context),
+                        color: car.isFleet
+                            ? ECardoTokens.success(context)
+                            : ECardoTokens.warning(context),
                       ),
                       SizedBox(width: 3.w),
                       Text(
                         car.isFleet
-                            ? l10nPick(context, en: 'Instant Fleet', fa: 'تأیید آنی', ar: 'تأكيد فوري', zh: '极速出车')
-                            : l10nPick(context, en: 'Host', fa: 'میزبان تأییدشده', ar: 'مضيف', zh: '认证车主'),
+                            ? l10nPick(
+                                context,
+                                en: 'Instant Fleet',
+                                fa: 'تأیید آنی',
+                                ar: 'تأكيد فوري',
+                                zh: '极速出车',
+                              )
+                            : l10nPick(
+                                context,
+                                en: 'Host',
+                                fa: 'میزبان تأییدشده',
+                                ar: 'مضيف',
+                                zh: '认证车主',
+                              ),
                         style: TextStyle(
                           fontSize: 10.sp,
                           fontWeight: FontWeight.bold,
-                          color: car.isFleet ? ECardoTokens.success(context) : ECardoTokens.warning(context),
+                          color: car.isFleet
+                              ? ECardoTokens.success(context)
+                              : ECardoTokens.warning(context),
                         ),
                       ),
                     ],
@@ -815,26 +1044,46 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 context: context,
                 icon: Icons.speed_rounded,
                 label: '${car.dailyKmLimit} km/day',
-                semanticsLabel: l10nPick(context, en: 'Daily distance limit: ${car.dailyKmLimit} km per day', fa: 'محدودیت تردد روزانه: ${car.dailyKmLimit} کیلومتر در روز'),
+                semanticsLabel: l10nPick(
+                  context,
+                  en: 'Daily distance limit: ${car.dailyKmLimit} km per day',
+                  fa: 'محدودیت تردد روزانه: ${car.dailyKmLimit} کیلومتر در روز',
+                ),
               ),
               if (car.transmission != null)
                 _buildSpecBadge(
                   context: context,
                   icon: Icons.tune_rounded,
                   label: car.transmission!,
-                  semanticsLabel: l10nPick(context, en: 'Transmission: ${car.transmission}', fa: 'گیربکس: ${car.transmission}'),
+                  semanticsLabel: l10nPick(
+                    context,
+                    en: 'Transmission: ${car.transmission}',
+                    fa: 'گیربکس: ${car.transmission}',
+                  ),
                 ),
               _buildSpecBadge(
                 context: context,
                 icon: Icons.shield_outlined,
-                label: l10nPick(context, en: 'Deposit: \$${car.depositAmount.toInt()}', fa: 'ودیعه: \$${car.depositAmount.toInt()}'),
-                semanticsLabel: l10nPick(context, en: 'Security deposit: \$${car.depositAmount.toInt()}', fa: 'ودیعه ضمانت نقدی: \$${car.depositAmount.toInt()}'),
+                label: l10nPick(
+                  context,
+                  en: 'Deposit: \$${car.depositAmount.toInt()}',
+                  fa: 'ودیعه: \$${car.depositAmount.toInt()}',
+                ),
+                semanticsLabel: l10nPick(
+                  context,
+                  en: 'Security deposit: \$${car.depositAmount.toInt()}',
+                  fa: 'ودیعه ضمانت نقدی: \$${car.depositAmount.toInt()}',
+                ),
               ),
               _buildSpecBadge(
                 context: context,
                 icon: Icons.person_outline_rounded,
                 label: 'Age ${car.minAge}+',
-                semanticsLabel: l10nPick(context, en: 'Minimum driver age: ${car.minAge} years', fa: 'حداقل سن مجاز راننده: ${car.minAge} سال'),
+                semanticsLabel: l10nPick(
+                  context,
+                  en: 'Minimum driver age: ${car.minAge} years',
+                  fa: 'حداقل سن مجاز راننده: ${car.minAge} سال',
+                ),
               ),
             ],
           ),
@@ -849,7 +1098,13 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10nPick(context, en: 'Daily rate', fa: 'نرخ روزانه', ar: 'السعر اليومي', zh: '日租金'),
+                    l10nPick(
+                      context,
+                      en: 'Daily rate',
+                      fa: 'نرخ روزانه',
+                      ar: 'السعر اليومي',
+                      zh: '日租金',
+                    ),
                     style: TextStyle(
                       fontSize: 11.sp,
                       color: ECardoTokens.inkMuted(context),
@@ -879,9 +1134,14 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     backgroundColor: ECardoTokens.brand500(context),
                     foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
+                    ),
                     minimumSize: Size(120.w, 44.h),
                     elevation: 0,
                   ),
@@ -890,8 +1150,17 @@ class _RentalHomeScreenState extends State<RentalHomeScreen> with SingleTickerPr
                     _showBookingSheet(context, car);
                   },
                   child: Text(
-                    l10nPick(context, en: 'Book Vehicle', fa: 'رزرو خودرو', ar: 'حجز الآن', zh: '立即预订'),
-                    style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
+                    l10nPick(
+                      context,
+                      en: 'Book Vehicle',
+                      fa: 'رزرو خودرو',
+                      ar: 'حجز الآن',
+                      zh: '立即预订',
+                    ),
+                    style: TextStyle(
+                      fontSize: 12.5.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),

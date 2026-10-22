@@ -42,24 +42,28 @@ class NotificationRouterHelper {
         );
         const iosSettings = DarwinInitializationSettings();
         final ok = await _bgPlugin!.initialize(
-          const InitializationSettings(android: androidSettings, iOS: iosSettings),
+          const InitializationSettings(
+            android: androidSettings,
+            iOS: iosSettings,
+          ),
         );
         _bgInitialized = ok ?? false;
         if (!_bgInitialized) return;
       }
 
-      final financial = type == 'transaction' ||
+      final financial =
+          type == 'transaction' ||
           type == 'transfer' ||
           type == 'deposit' ||
           type == 'withdraw' ||
           type == 'financial';
-      final security = type == 'security' ||
+      final security =
+          type == 'security' ||
           type == 'device_login' ||
           type == 'password_change' ||
           type == 'auth_alert';
-      final marketing = type == 'marketing' ||
-          type == 'promotion' ||
-          type == 'deal';
+      final marketing =
+          type == 'marketing' || type == 'promotion' || type == 'deal';
 
       String channelId = NotificationChannels.primaryId;
       String channelName = NotificationChannels.primaryName;

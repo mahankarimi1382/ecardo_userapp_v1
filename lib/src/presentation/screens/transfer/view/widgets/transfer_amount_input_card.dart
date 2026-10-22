@@ -53,13 +53,16 @@ class TransferAmountInputCard extends StatelessWidget {
         border: Border.all(
           color: focusNode.hasFocus
               ? colorScheme.primary
-              : colorScheme.outlineVariant.withValues(alpha: isDark ? 0.3 : 0.6),
+              : colorScheme.outlineVariant.withValues(
+                  alpha: isDark ? 0.3 : 0.6,
+                ),
           width: focusNode.hasFocus ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : AppColors.lightShadow)
-                .withValues(alpha: isDark ? 0.25 : 0.04),
+            color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+              alpha: isDark ? 0.25 : 0.04,
+            ),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -100,7 +103,9 @@ class TransferAmountInputCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isDark
                         ? colorScheme.primary.withValues(alpha: 0.15)
-                        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.7),
+                        : colorScheme.surfaceContainerHighest.withValues(
+                            alpha: 0.7,
+                          ),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                     border: Border.all(
                       color: colorScheme.primary.withValues(alpha: 0.3),
@@ -162,8 +167,12 @@ class TransferAmountInputCard extends StatelessWidget {
                   child: TextField(
                     controller: controller,
                     focusNode: focusNode,
-                    keyboardType: TextInputType.numberWithOptions(decimal: decimals > 0),
-                    inputFormatters: [AmountInputFormatter(maxDecimals: decimals)],
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: decimals > 0,
+                    ),
+                    inputFormatters: [
+                      AmountInputFormatter(maxDecimals: decimals),
+                    ],
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Plus Jakarta Sans',
@@ -204,11 +213,18 @@ class TransferAmountInputCard extends StatelessWidget {
                 )
               else if (currencyCode.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: AppSpacing.xs),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: AppSpacing.xs,
+                  ),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
-                      color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                      color: colorScheme.surfaceContainerHighest.withValues(
+                        alpha: 0.5,
+                      ),
                       borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                     ),
                     child: Text(
@@ -227,9 +243,7 @@ class TransferAmountInputCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.lg),
 
           // Quick Percentage Chips
-          _QuickPercentageRow(
-            onSelect: onPercentageSelected,
-          ),
+          _QuickPercentageRow(onSelect: onPercentageSelected),
           const SizedBox(height: AppSpacing.md),
 
           // Live Fee Estimation Pill
@@ -250,9 +264,7 @@ class TransferAmountInputCard extends StatelessWidget {
 class _QuickPercentageRow extends StatelessWidget {
   final ValueChanged<double> onSelect;
 
-  const _QuickPercentageRow({
-    required this.onSelect,
-  });
+  const _QuickPercentageRow({required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +276,18 @@ class _QuickPercentageRow extends StatelessWidget {
       {'label': '25%', 'value': 0.25},
       {'label': '50%', 'value': 0.50},
       {'label': '75%', 'value': 0.75},
-      {'label': l10nPick(context, en: 'Max', fa: 'حداکثر', ar: 'الكل', tr: 'Maks', ru: 'Макс'), 'value': 1.0, 'isMax': true},
+      {
+        'label': l10nPick(
+          context,
+          en: 'Max',
+          fa: 'حداکثر',
+          ar: 'الكل',
+          tr: 'Maks',
+          ru: 'Макс',
+        ),
+        'value': 1.0,
+        'isMax': true,
+      },
     ];
 
     return Row(
@@ -288,10 +311,14 @@ class _QuickPercentageRow extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
                     color: isMax
-                        ? colorScheme.primary.withValues(alpha: isDark ? 0.25 : 0.12)
+                        ? colorScheme.primary.withValues(
+                            alpha: isDark ? 0.25 : 0.12,
+                          )
                         : (isDark
-                            ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.6)
-                            : colorScheme.surfaceContainerLow),
+                              ? colorScheme.surfaceContainerHigh.withValues(
+                                  alpha: 0.6,
+                                )
+                              : colorScheme.surfaceContainerLow),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     border: Border.all(
                       color: isMax
@@ -307,7 +334,9 @@ class _QuickPercentageRow extends StatelessWidget {
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 12,
                         fontWeight: isMax ? FontWeight.w800 : FontWeight.w600,
-                        color: isMax ? colorScheme.primary : colorScheme.onSurface,
+                        color: isMax
+                            ? colorScheme.primary
+                            : colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -348,8 +377,15 @@ class _LiveFeeEstimationPill extends StatelessWidget {
     final feeText = chargeLoadFailed
         ? '—'
         : isFree
-            ? l10nPick(context, en: 'Free', fa: 'رایگان', ar: 'مجاني', tr: 'Ücretsiz', ru: 'Бесплатно')
-            : '${charge.toStringAsFixed(decimals)} $currencyCode';
+        ? l10nPick(
+            context,
+            en: 'Free',
+            fa: 'رایگان',
+            ar: 'مجاني',
+            tr: 'Ücretsiz',
+            ru: 'Бесплатно',
+          )
+        : '${charge.toStringAsFixed(decimals)} $currencyCode';
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -401,7 +437,9 @@ class _LiveFeeEstimationPill extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isFree
                       ? AppColors.successContainer
-                      : colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                      : colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.6,
+                        ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
                 ),
                 child: Text(

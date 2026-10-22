@@ -48,7 +48,8 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     required this.issueDate,
     required this.maturityDate,
     required this.status,
-    this.issuingEntity = 'eCardo International Digital Banking & Guarantee Partner',
+    this.issuingEntity =
+        'eCardo International Digital Banking & Guarantee Partner',
     this.verificationUrl,
     this.onDownloadPdf,
   });
@@ -66,14 +67,19 @@ class GuaranteeCertificateWidget extends StatelessWidget {
         : 'LG-2026-${caseModel.caseNo}';
     final now = DateTime.now();
     final issue = issued?.issueDate ?? now;
-    final expiry = issued?.expiryDate ?? now.add(Duration(days: (caseModel.validityMonths * 30).clamp(30, 720)));
-    final purposeTitle = caseModel.instrument?.name ?? 'ضمانت‌نامه حسن انجام تعهدات (Performance Bond)';
+    final expiry =
+        issued?.expiryDate ??
+        now.add(Duration(days: (caseModel.validityMonths * 30).clamp(30, 720)));
+    final purposeTitle =
+        caseModel.instrument?.name ??
+        'ضمانت‌نامه حسن انجام تعهدات (Performance Bond)';
 
     return GuaranteeCertificateWidget(
       key: key,
       referenceNumber: ref,
       beneficiaryName: caseModel.beneficiaryName,
-      applicantName: applicantName ?? 'متقاضی حقیقی/حقوقی ایکاردو (eCardo Verified)',
+      applicantName:
+          applicantName ?? 'متقاضی حقیقی/حقوقی ایکاردو (eCardo Verified)',
       purpose: purposeTitle,
       amount: caseModel.amount,
       currency: caseModel.currency,
@@ -102,7 +108,8 @@ class GuaranteeCertificateWidget extends StatelessWidget {
   /// authenticity signal overstates it; it is labelled as a checksum
   /// wherever it appears.
   String get _cryptographicFingerprint {
-    final raw = '$referenceNumber|$beneficiaryName|$amount|$currency|${issueDate.toIso8601String()}|$issuingEntity';
+    final raw =
+        '$referenceNumber|$beneficiaryName|$amount|$currency|${issueDate.toIso8601String()}|$issuingEntity';
     final bytes = utf8.encode(raw);
     final digest = sha256.convert(bytes);
     final hex = digest.toString().toUpperCase();
@@ -126,15 +133,24 @@ class GuaranteeCertificateWidget extends StatelessWidget {
   }
 
   /// Real-time Validity Badge Configuration
-  ({String labelFa, String labelEn, Color bgColor, Color textColor, Color borderColor, IconData icon})
-      _getValidityBadge(BuildContext context) {
+  ({
+    String labelFa,
+    String labelEn,
+    Color bgColor,
+    Color textColor,
+    Color borderColor,
+    IconData icon,
+  })
+  _getValidityBadge(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final st = status.toUpperCase();
     if (st == 'ISSUED' || st == 'ACTIVE' || st == 'IN_FORCE') {
       return (
         labelFa: 'معتبر و نافذ (ACTIVE)',
         labelEn: 'VALID & ACTIVE',
-        bgColor: isDark ? AppColors.success.withValues(alpha: 0.18) : AppColors.successContainer,
+        bgColor: isDark
+            ? AppColors.success.withValues(alpha: 0.18)
+            : AppColors.successContainer,
         textColor: AppColors.success,
         borderColor: AppColors.success.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.verified_rounded,
@@ -144,7 +160,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       return (
         labelFa: 'ابطال و تسویه‌شده (DISCHARGED)',
         labelEn: 'DISCHARGED & CLOSED',
-        bgColor: isDark ? AppColors.info.withValues(alpha: 0.18) : AppColors.infoContainer,
+        bgColor: isDark
+            ? AppColors.info.withValues(alpha: 0.18)
+            : AppColors.infoContainer,
         textColor: AppColors.info,
         borderColor: AppColors.info.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.task_alt_rounded,
@@ -154,7 +172,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       return (
         labelFa: 'مطالبه‌شده (فریز/CLAIMED)',
         labelEn: 'CLAIMED & FROZEN',
-        bgColor: isDark ? AppColors.error.withValues(alpha: 0.18) : AppColors.errorContainer,
+        bgColor: isDark
+            ? AppColors.error.withValues(alpha: 0.18)
+            : AppColors.errorContainer,
         textColor: AppColors.error,
         borderColor: AppColors.error.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.warning_rounded,
@@ -164,7 +184,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
       return (
         labelFa: 'منقضی‌شده (مهلت ۳۰ روزه)',
         labelEn: 'EXPIRED (WAITING PERIOD)',
-        bgColor: isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer,
+        bgColor: isDark
+            ? AppColors.warning.withValues(alpha: 0.18)
+            : AppColors.warningContainer,
         textColor: AppColors.warning,
         borderColor: AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.35),
         icon: Icons.timer_outlined,
@@ -174,8 +196,12 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     return (
       labelFa: 'پیش‌نویس سند (DRAFT)',
       labelEn: 'PRE-ISSUANCE DRAFT',
-      bgColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
-      textColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+      bgColor: isDark
+          ? AppColors.darkSurfaceVariant
+          : AppColors.lightSurfaceVariant,
+      textColor: isDark
+          ? AppColors.darkTextSecondary
+          : AppColors.lightTextSecondary,
       borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
       icon: Icons.article_outlined,
     );
@@ -185,12 +211,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
   String _generateVectorQrSvg(String payload) {
     try {
       final barcode = Barcode.qrCode();
-      return barcode.toSvg(
-        payload,
-        width: 110,
-        height: 110,
-        drawText: false,
-      );
+      return barcode.toSvg(payload, width: 110, height: 110, drawText: false);
     } catch (_) {
       return '<svg width="110" height="110"></svg>';
     }
@@ -234,7 +255,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
           theme: pw.ThemeData.withFont(base: font, bold: font),
           build: (pw.Context pdfContext) {
             return pw.Directionality(
-              textDirection: isRtl ? pw.TextDirection.rtl : pw.TextDirection.ltr,
+              textDirection: isRtl
+                  ? pw.TextDirection.rtl
+                  : pw.TextDirection.ltr,
               child: pw.Container(
                 decoration: pw.BoxDecoration(
                   border: pw.Border.all(color: PdfColors.teal800, width: 2.5),
@@ -250,7 +273,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Column(
-                          crossAxisAlignment: isRtl ? pw.CrossAxisAlignment.start : pw.CrossAxisAlignment.start,
+                          crossAxisAlignment: isRtl
+                              ? pw.CrossAxisAlignment.start
+                              : pw.CrossAxisAlignment.start,
                           children: [
                             pw.Text(
                               issuingEntity,
@@ -263,7 +288,10 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                             pw.SizedBox(height: 4),
                             pw.Text(
                               'DIGITAL LETTER OF GUARANTEE',
-                              style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey700),
+                              style: const pw.TextStyle(
+                                fontSize: 9,
+                                color: PdfColors.grey700,
+                              ),
                             ),
                             pw.SizedBox(height: 2),
                             // The previous text here read "Governing Rules:
@@ -284,7 +312,10 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                         ),
                         // Status Badge in PDF
                         pw.Container(
-                          padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          padding: const pw.EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
                           decoration: pw.BoxDecoration(
                             color: PdfColors.teal50,
                             border: pw.Border.all(color: PdfColors.teal700),
@@ -311,7 +342,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       child: pw.Column(
                         children: [
                           pw.Text(
-                            isRtl ? 'گواهی‌نامه رسمی ضمانت‌نامه بانکی' : 'OFFICIAL BANK GUARANTEE CERTIFICATE',
+                            isRtl
+                                ? 'گواهی‌نامه رسمی ضمانت‌نامه بانکی'
+                                : 'OFFICIAL BANK GUARANTEE CERTIFICATE',
                             style: pw.TextStyle(
                               fontSize: 16,
                               fontWeight: pw.FontWeight.bold,
@@ -342,15 +375,32 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       ),
                       child: pw.Column(
                         children: [
-                          _buildPdfRow(isRtl ? 'نام ذینفع:' : 'Beneficiary:', beneficiaryName),
+                          _buildPdfRow(
+                            isRtl ? 'نام ذینفع:' : 'Beneficiary:',
+                            beneficiaryName,
+                          ),
                           pw.SizedBox(height: 6),
-                          _buildPdfRow(isRtl ? 'نام متقاضی (مضمون‌عنه):' : 'Applicant:', applicantName),
+                          _buildPdfRow(
+                            isRtl ? 'نام متقاضی (مضمون‌عنه):' : 'Applicant:',
+                            applicantName,
+                          ),
                           pw.SizedBox(height: 6),
-                          _buildPdfRow(isRtl ? 'موضوع و نوع ضمانت‌نامه:' : 'Purpose / Type:', purpose),
+                          _buildPdfRow(
+                            isRtl
+                                ? 'موضوع و نوع ضمانت‌نامه:'
+                                : 'Purpose / Type:',
+                            purpose,
+                          ),
                           pw.SizedBox(height: 6),
-                          _buildPdfRow(isRtl ? 'تاریخ صدور:' : 'Issue Date:', _formatDate(issueDate)),
+                          _buildPdfRow(
+                            isRtl ? 'تاریخ صدور:' : 'Issue Date:',
+                            _formatDate(issueDate),
+                          ),
                           pw.SizedBox(height: 6),
-                          _buildPdfRow(isRtl ? 'تاریخ سررسید نهایی:' : 'Maturity Date:', _formatDate(maturityDate)),
+                          _buildPdfRow(
+                            isRtl ? 'تاریخ سررسید نهایی:' : 'Maturity Date:',
+                            _formatDate(maturityDate),
+                          ),
                         ],
                       ),
                     ),
@@ -359,7 +409,10 @@ class GuaranteeCertificateWidget extends StatelessWidget {
 
                     // Guaranteed Amount Banner
                     pw.Container(
-                      padding: const pw.EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                      padding: const pw.EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 16,
+                      ),
                       decoration: pw.BoxDecoration(
                         color: PdfColors.teal900,
                         borderRadius: pw.BorderRadius.circular(8),
@@ -367,8 +420,13 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       child: pw.Column(
                         children: [
                           pw.Text(
-                            isRtl ? 'حداکثر سقف تعهد مالی ضمانت‌نامه' : 'MAXIMUM GUARANTEED AMOUNT',
-                            style: const pw.TextStyle(fontSize: 10, color: PdfColors.teal100),
+                            isRtl
+                                ? 'حداکثر سقف تعهد مالی ضمانت‌نامه'
+                                : 'MAXIMUM GUARANTEED AMOUNT',
+                            style: const pw.TextStyle(
+                              fontSize: 10,
+                              color: PdfColors.teal100,
+                            ),
                           ),
                           pw.SizedBox(height: 6),
                           pw.Text(
@@ -392,30 +450,44 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       children: [
                         pw.Expanded(
                           child: pw.Column(
-                            crossAxisAlignment: isRtl ? pw.CrossAxisAlignment.start : pw.CrossAxisAlignment.start,
+                            crossAxisAlignment: isRtl
+                                ? pw.CrossAxisAlignment.start
+                                : pw.CrossAxisAlignment.start,
                             children: [
                               pw.Text(
                                 isRtl
                                     ? 'استعلام آنی اصالت سند در سامانه اعتبارسنجی ایکاردو:'
                                     : 'Real-time Verification via eCardo Portal:',
-                                style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+                                style: pw.TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
                               ),
                               pw.SizedBox(height: 4),
                               pw.Text(
                                 verifyUrl,
-                                style: const pw.TextStyle(fontSize: 8, color: PdfColors.blue800),
+                                style: const pw.TextStyle(
+                                  fontSize: 8,
+                                  color: PdfColors.blue800,
+                                ),
                               ),
                               pw.SizedBox(height: 4),
                               pw.Text(
                                 _cryptographicFingerprint,
-                                style: const pw.TextStyle(fontSize: 7.5, color: PdfColors.grey700),
+                                style: const pw.TextStyle(
+                                  fontSize: 7.5,
+                                  color: PdfColors.grey700,
+                                ),
                               ),
                               pw.SizedBox(height: 6),
                               pw.Text(
                                 isRtl
                                     ? 'این ضمانت‌نامه الکترونیکی دارای ثبت قطعی و تعهد پرداخت غیرقابل برگشت عندالمطالبه است.'
                                     : 'This electronic guarantee carries unconditional and irrevocable on-demand payment obligation.',
-                                style: const pw.TextStyle(fontSize: 7.5, color: PdfColors.grey600),
+                                style: const pw.TextStyle(
+                                  fontSize: 7.5,
+                                  color: PdfColors.grey600,
+                                ),
                               ),
                             ],
                           ),
@@ -457,7 +529,10 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                         ),
                         pw.Text(
                           'Page 1 of 1',
-                          style: const pw.TextStyle(fontSize: 7, color: PdfColors.grey600),
+                          style: const pw.TextStyle(
+                            fontSize: 7,
+                            color: PdfColors.grey600,
+                          ),
                         ),
                       ],
                     ),
@@ -496,9 +571,15 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     return pw.Row(
       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       children: [
-        pw.Text(label, style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey800)),
+        pw.Text(
+          label,
+          style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey800),
+        ),
         pw.SizedBox(width: 8),
-        pw.Text(value, style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold)),
+        pw.Text(
+          value,
+          style: pw.TextStyle(fontSize: 9, fontWeight: pw.FontWeight.bold),
+        ),
       ],
     );
   }
@@ -509,13 +590,23 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     final badge = _getValidityBadge(context);
     final qrSvg = _generateVectorQrSvg(_effectiveVerificationUrl);
 
-    final primaryAccent = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+    final primaryAccent = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.brandViolet;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final containerBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+    final containerBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightSurfaceVariant;
     final cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final textTertiary = isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
+    final textTertiary = isDark
+        ? AppColors.darkTextTertiary
+        : AppColors.lightTextTertiary;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.h),
@@ -523,12 +614,15 @@ class GuaranteeCertificateWidget extends StatelessWidget {
         color: cardBg,
         borderRadius: BorderRadius.circular(22.r),
         border: Border.all(
-          color: isDark ? AppColors.brandViolet.withValues(alpha: 0.5) : AppColors.brandViolet,
+          color: isDark
+              ? AppColors.brandViolet.withValues(alpha: 0.5)
+              : AppColors.brandViolet,
           width: 2.0,
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? AppColors.brandViolet : AppColors.brandVioletDeep).withValues(alpha: isDark ? 0.20 : 0.08),
+            color: (isDark ? AppColors.brandViolet : AppColors.brandVioletDeep)
+                .withValues(alpha: isDark ? 0.20 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -609,7 +703,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w900,
-                                color: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandVioletDeep,
                                 letterSpacing: 0.2,
                               ),
                             ),
@@ -639,11 +735,17 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                   Align(
                     alignment: AlignmentDirectional.centerStart,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
                         color: badge.bgColor,
                         borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(color: badge.borderColor, width: 1.2),
+                        border: Border.all(
+                          color: badge.borderColor,
+                          width: 1.2,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -673,7 +775,10 @@ class GuaranteeCertificateWidget extends StatelessWidget {
 
                   // Reference Number Box
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
                       color: containerBg,
                       borderRadius: BorderRadius.circular(10.r),
@@ -704,7 +809,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 fontSize: 12.5.sp,
                                 fontWeight: FontWeight.w900,
                                 fontFamily: 'monospace',
-                                color: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandVioletDeep,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -719,14 +826,21 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 zh: '复制保函登记编号',
                               ),
                               child: ConstrainedBox(
-                                constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
+                                constraints: BoxConstraints(
+                                  minWidth: 44.w,
+                                  minHeight: 44.h,
+                                ),
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(8.r),
                                   onTap: () async {
-                                    await Clipboard.setData(ClipboardData(text: referenceNumber));
+                                    await Clipboard.setData(
+                                      ClipboardData(text: referenceNumber),
+                                    );
                                     HapticFeedback.selectionClick();
                                     if (context.mounted) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
                                         SnackBar(
                                           content: Text(
                                             l10nPick(
@@ -853,11 +967,17 @@ class GuaranteeCertificateWidget extends StatelessWidget {
 
                   // Maximum Guaranteed Amount Banner
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 14.w),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 14.h,
+                      horizontal: 14.w,
+                    ),
                     decoration: BoxDecoration(
                       gradient: isDark
                           ? const LinearGradient(
-                              colors: [AppColors.brandVioletDeep, AppColors.deepBlack],
+                              colors: [
+                                AppColors.brandVioletDeep,
+                                AppColors.deepBlack,
+                              ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             )
@@ -865,7 +985,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14.r),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.brandViolet.withValues(alpha: isDark ? 0.35 : 0.25),
+                          color: AppColors.brandViolet.withValues(
+                            alpha: isDark ? 0.35 : 0.25,
+                          ),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -911,7 +1033,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.mainSoftBlue : AppColors.warmWhite,
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.warmWhite,
                               ),
                             ),
                           ],
@@ -990,7 +1114,8 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                                 l10nPick(
                                   context,
                                   fa: 'این گواهی خلاصهٔ اطلاعات است و به‌تنهایی اعتبار قانونی ندارد. برای استناد رسمی، اصلِ دارای مهر و امضای بانک صادرکننده لازم است.',
-                                  en: 'This is an informational summary and is not '
+                                  en:
+                                      'This is an informational summary and is not '
                                       'independently valid on its own. For official '
                                       'use, the bank-sealed and countersigned '
                                       'original is required.',
@@ -1031,10 +1156,15 @@ class GuaranteeCertificateWidget extends StatelessWidget {
                     ),
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? AppColors.brandViolet : AppColors.brandVioletDeep,
+                        backgroundColor: isDark
+                            ? AppColors.brandViolet
+                            : AppColors.brandVioletDeep,
                         foregroundColor: AppColors.white,
                         minimumSize: Size(double.infinity, 48.h),
-                        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 12.h,
+                          horizontal: 16.w,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
@@ -1110,7 +1240,9 @@ class GuaranteeCertificateWidget extends StatelessWidget {
     required bool isDark,
   }) {
     final bgColor = highlight
-        ? (isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer)
+        ? (isDark
+              ? AppColors.warning.withValues(alpha: 0.18)
+              : AppColors.warningContainer)
         : (isDark ? AppColors.darkCard : AppColors.lightCard);
     final borderColor = highlight
         ? AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.35)
@@ -1134,10 +1266,7 @@ class GuaranteeCertificateWidget extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: 9.sp,
-              color: labelColor,
-            ),
+            style: TextStyle(fontSize: 9.sp, color: labelColor),
           ),
           SizedBox(height: 2.h),
           Text(

@@ -112,8 +112,8 @@ void main() {
         const VerifyEmailScreen(),
         registrations: [
           () => registerController<VerifyEmailController>(
-                _TestVerifyEmailController(),
-              ),
+            _TestVerifyEmailController(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -132,8 +132,8 @@ void main() {
         dark: true,
         registrations: [
           () => registerController<VerifyEmailController>(
-                _TestVerifyEmailController(),
-              ),
+            _TestVerifyEmailController(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );

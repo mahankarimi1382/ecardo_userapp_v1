@@ -51,7 +51,9 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
         );
       },
       child: Scaffold(
-        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        backgroundColor: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightBackground,
         appBar: const CommonDefaultAppBar(),
         body: Stack(
           children: [
@@ -93,7 +95,9 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
+                        padding: EdgeInsetsDirectional.symmetric(
+                          horizontal: 18.w,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -135,7 +139,8 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                               itemCount: controller.fields.length,
                               itemBuilder: (context, index) {
                                 final field = controller.fields[index];
-                                final file = controller.fieldFiles[field.name ?? ""];
+                                final file =
+                                    controller.fieldFiles[field.name ?? ""];
 
                                 if (file == null) {
                                   return const SizedBox.shrink();
@@ -178,7 +183,10 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                 color: AppColors.black.withValues(alpha: 0.45),
                 child: Center(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 22.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24.w,
+                      vertical: 22.h,
+                    ),
                     margin: EdgeInsets.symmetric(horizontal: 36.w),
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.darkSurface : AppColors.white,
@@ -306,14 +314,19 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
     final validation = field.validation ?? "";
     final type = field.type ?? "";
     final primaryText = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryText = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryText = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final borderCol = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     final fileLength = file.existsSync() ? file.lengthSync() : 0;
     final sizeInMB = fileLength / (1024 * 1024);
     final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
-    final isValidSize = !UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes);
+    final isValidSize = !UploadHelper.exceedsSize(
+      file,
+      UploadHelper.maxKycDocBytes,
+    );
 
     return Container(
       decoration: BoxDecoration(
@@ -321,7 +334,8 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           width: 1.5,
-          color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(alpha: 0.45),
+          color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+              .withValues(alpha: 0.45),
         ),
         boxShadow: !isDark
             ? [
@@ -378,9 +392,7 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                   decoration: BoxDecoration(
-                    color: (isValidSize
-                            ? AppColors.success
-                            : AppColors.error)
+                    color: (isValidSize ? AppColors.success : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -489,7 +501,11 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                                   ),
                                   SizedBox(width: 4.w),
                                   Text(
-                                    l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
+                                    l10nPick(
+                                      context,
+                                      en: 'Preview',
+                                      fa: 'پیش‌نمایش',
+                                    ),
                                     style: const TextStyle(
                                       color: AppColors.white,
                                       fontSize: 10,
@@ -513,7 +529,11 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                   children: [
                     _buildQualityCheck(
                       Icons.crop_free_rounded,
-                      l10nPick(context, en: '4 Corners Visible', fa: '۴ گوشه مشخص'),
+                      l10nPick(
+                        context,
+                        en: '4 Corners Visible',
+                        fa: '۴ گوشه مشخص',
+                      ),
                       AppColors.success,
                       secondaryText,
                     ),
@@ -548,14 +568,16 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                           await controller.pickFile(field.name ?? "");
                         } else if (type == "camera") {
                           final result = await Get.to(
-                            () => BackCameraCapture(fieldName: field.name ?? ""),
+                            () =>
+                                BackCameraCapture(fieldName: field.name ?? ""),
                           );
                           if (result != null) {
                             controller.fieldFiles[field.name ?? ""] = result;
                           }
                         } else if (type == "front_camera") {
                           final result = await Get.to(
-                            () => FrontCameraCapture(fieldName: field.name ?? ""),
+                            () =>
+                                FrontCameraCapture(fieldName: field.name ?? ""),
                           );
                           if (result != null) {
                             controller.fieldFiles[field.name ?? ""] = result;
@@ -564,7 +586,9 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                       },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(
-                          color: isDark ? borderCol : AppColors.brandViolet.withValues(alpha: 0.6),
+                          color: isDark
+                              ? borderCol
+                              : AppColors.brandViolet.withValues(alpha: 0.6),
                           width: 1.2,
                         ),
                         shape: RoundedRectangleBorder(
@@ -574,7 +598,9 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                       icon: Icon(
                         Icons.refresh_rounded,
                         size: 18.sp,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
                       ),
                       label: Text(
                         type == "file"
@@ -583,7 +609,9 @@ class _KycSubmissionSectionState extends State<KycSubmissionSection> {
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                          color: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.brandViolet,
                         ),
                       ),
                     ),

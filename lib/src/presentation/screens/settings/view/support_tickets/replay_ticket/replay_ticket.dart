@@ -134,10 +134,10 @@ class _ReplayTicketState extends State<ReplayTicket> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        isDark ? AppColors.darkBackground : AppColors.lightBackground;
-    final primaryTextColor =
-        isDark ? AppColors.warmWhite : AppColors.deepBlack;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
+    final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -175,8 +175,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           children: [
                             if (ticket?.status != null)
                               Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.only(end: 8),
+                                padding: const EdgeInsetsDirectional.only(
+                                  end: 8,
+                                ),
                                 child: TicketStatusBadge(
                                   status: ticket!.status,
                                   isDark: isDark,
@@ -184,8 +185,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                 ),
                               ),
                             Padding(
-                              padding:
-                                  const EdgeInsetsDirectional.only(end: 18),
+                              padding: const EdgeInsetsDirectional.only(
+                                end: 18,
+                              ),
                               child: _buildCloseTicketButton(
                                 context,
                                 isDark,
@@ -195,16 +197,15 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           ],
                         )
                       : (ticket?.status != null)
-                          ? Padding(
-                              padding:
-                                  const EdgeInsetsDirectional.only(end: 18),
-                              child: TicketStatusBadge(
-                                status: ticket!.status,
-                                isDark: isDark,
-                                localization: localization,
-                              ),
-                            )
-                          : const SizedBox.shrink(),
+                      ? Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 18),
+                          child: TicketStatusBadge(
+                            status: ticket!.status,
+                            isDark: isDark,
+                            localization: localization,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
 
                 // Ticket Context Sub-header (Subject / Priority / Created date)
@@ -223,16 +224,19 @@ class _ReplayTicketState extends State<ReplayTicket> {
                 // Messages Chat Thread Area
                 Expanded(
                   child: Container(
-                    margin:
-                        const EdgeInsetsDirectional.symmetric(horizontal: 16),
-                    padding:
-                        const EdgeInsetsDirectional.symmetric(horizontal: 12),
+                    margin: const EdgeInsetsDirectional.symmetric(
+                      horizontal: 16,
+                    ),
+                    padding: const EdgeInsetsDirectional.symmetric(
+                      horizontal: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.darkSurface : AppColors.white,
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                       border: Border.all(
-                        color:
-                            isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
                         width: 1,
                       ),
                       boxShadow: [
@@ -254,10 +258,13 @@ class _ReplayTicketState extends State<ReplayTicket> {
                         final t = model.data?.ticket;
 
                         // Sort oldest to newest
-                        final messages = [...allMessages]..sort((a, b) {
-                            final da = DateTime.tryParse(a.createdAt ?? '') ??
+                        final messages = [...allMessages]
+                          ..sort((a, b) {
+                            final da =
+                                DateTime.tryParse(a.createdAt ?? '') ??
                                 DateTime.fromMillisecondsSinceEpoch(0);
-                            final db = DateTime.tryParse(b.createdAt ?? '') ??
+                            final db =
+                                DateTime.tryParse(b.createdAt ?? '') ??
                                 DateTime.fromMillisecondsSinceEpoch(0);
                             return da.compareTo(db);
                           });
@@ -362,8 +369,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
           ),
           boxShadow: [
             BoxShadow(
-              color: (isDark ? Colors.black : AppColors.brandViolet)
-                  .withValues(alpha: 0.08),
+              color: (isDark ? Colors.black : AppColors.brandViolet).withValues(
+                alpha: 0.08,
+              ),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -401,8 +409,8 @@ class _ReplayTicketState extends State<ReplayTicket> {
   ) {
     final hasTitle = ticket.title != null && ticket.title!.trim().isNotEmpty;
     final priority = ticket.priority;
-    final formattedCreated = ticket.createdAt != null &&
-            ticket.createdAt!.isNotEmpty
+    final formattedCreated =
+        ticket.createdAt != null && ticket.createdAt!.isNotEmpty
         ? _formatDate(ticket.createdAt!)
         : null;
 
@@ -519,10 +527,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
           Container(
             width: 5.5,
             height: 5.5,
-            decoration: BoxDecoration(
-              color: pColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: pColor, shape: BoxShape.circle),
           ),
           const SizedBox(width: 4),
           Text(
@@ -571,8 +576,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment:
-            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: isMe
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (isMe) ...[
@@ -580,16 +586,15 @@ class _ReplayTicketState extends State<ReplayTicket> {
             Flexible(
               flex: 8,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      AppColors.brandViolet,
-                      AppColors.brandVioletDeep,
-                    ],
+                    colors: [AppColors.brandViolet, AppColors.brandVioletDeep],
                   ),
                   borderRadius: bubbleBorderRadius,
                   border: Border.all(
@@ -622,11 +627,14 @@ class _ReplayTicketState extends State<ReplayTicket> {
             Flexible(
               flex: 8,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
-                  color:
-                      isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.white,
                   borderRadius: bubbleBorderRadius,
                   border: Border.all(
                     color: isDark
@@ -636,8 +644,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          AppColors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                      color: AppColors.black.withValues(
+                        alpha: isDark ? 0.25 : 0.04,
+                      ),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -651,8 +660,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                       children: [
                         CircleAvatar(
                           radius: 16,
-                          backgroundColor:
-                              AppColors.brandViolet.withValues(alpha: 0.15),
+                          backgroundColor: AppColors.brandViolet.withValues(
+                            alpha: 0.15,
+                          ),
                           backgroundImage: personAvatar.isNotEmpty
                               ? NetworkImage(personAvatar)
                               : null,
@@ -680,8 +690,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                               en: 'Support Agent',
                                               fa: 'پشتیبان',
                                             ),
-                                      style:
-                                          AppTextStyles.labelMedium.copyWith(
+                                      style: AppTextStyles.labelMedium.copyWith(
                                         fontWeight: FontWeight.w800,
                                         color: isDark
                                             ? AppColors.warmWhite
@@ -706,8 +715,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: isDark
-                                          ? AppColors.brandViolet
-                                              .withValues(alpha: 0.25)
+                                          ? AppColors.brandViolet.withValues(
+                                              alpha: 0.25,
+                                            )
                                           : AppColors.brandVioletContainer,
                                       borderRadius: BorderRadius.circular(4),
                                     ),
@@ -941,8 +951,11 @@ class _ReplayTicketState extends State<ReplayTicket> {
         ...attachments.map((attachment) {
           final cleanUrl = attachment.cleanUrl;
           final isImage = attachment.isImage || _isImageUrl(cleanUrl);
-          final fileName =
-              _extractFileName(cleanUrl, attachment.name, localization);
+          final fileName = _extractFileName(
+            cleanUrl,
+            attachment.name,
+            localization,
+          );
 
           if (isImage && cleanUrl.isNotEmpty) {
             return GestureDetector(
@@ -965,8 +978,8 @@ class _ReplayTicketState extends State<ReplayTicket> {
                   color: isMe
                       ? Colors.white.withValues(alpha: 0.12)
                       : (isDark
-                          ? AppColors.darkCard
-                          : AppColors.lightSurfaceVariant),
+                            ? AppColors.darkCard
+                            : AppColors.lightSurfaceVariant),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(11),
@@ -1049,13 +1062,12 @@ class _ReplayTicketState extends State<ReplayTicket> {
             ),
             child: Container(
               margin: const EdgeInsets.symmetric(vertical: 3),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
               decoration: BoxDecoration(
                 color: isMe
                     ? (isDark
-                        ? AppColors.darkSurface.withValues(alpha: 0.5)
-                        : AppColors.white.withValues(alpha: 0.15))
+                          ? AppColors.darkSurface.withValues(alpha: 0.5)
+                          : AppColors.white.withValues(alpha: 0.15))
                     : (isDark ? AppColors.darkCard : AppColors.white),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 border: Border.all(
@@ -1167,10 +1179,11 @@ class _ReplayTicketState extends State<ReplayTicket> {
                   height: 38,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: (isDark
-                            ? AppColors.mainSoftBlue
-                            : AppColors.brandViolet)
-                        .withValues(alpha: 0.12),
+                    color:
+                        (isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet)
+                            .withValues(alpha: 0.12),
                   ),
                   child: Icon(
                     Icons.add_photo_alternate_rounded,
@@ -1223,8 +1236,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                     return Obx(() {
                       final hasImages =
                           controller.controller.attachedImages.isNotEmpty;
-                      final isSending =
-                          controller.isReplayTicketLoading.value;
+                      final isSending = controller.isReplayTicketLoading.value;
                       final isActive = hasText || hasImages;
 
                       return Container(
@@ -1258,8 +1270,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           boxShadow: isActive
                               ? [
                                   BoxShadow(
-                                    color: AppColors.brandViolet
-                                        .withValues(alpha: 0.35),
+                                    color: AppColors.brandViolet.withValues(
+                                      alpha: 0.35,
+                                    ),
                                     blurRadius: 10,
                                     offset: const Offset(0, 3),
                                   ),
@@ -1296,8 +1309,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
 
   /// Horizontal thumbnail preview strip of selected images
   Widget _buildAttachmentPreview(BuildContext context, bool isDark) {
-    final MultipleImagePickerController multipleImagePickerController =
-        Get.put(MultipleImagePickerController());
+    final MultipleImagePickerController multipleImagePickerController = Get.put(
+      MultipleImagePickerController(),
+    );
 
     return Obx(() {
       if (multipleImagePickerController.images.isEmpty) {
@@ -1325,8 +1339,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           color: isDark
                               ? AppColors.darkCard
                               : AppColors.lightBackground,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
                           border: Border.all(
                             color: isDark
                                 ? AppColors.darkBorder
@@ -1334,8 +1349,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                           ),
                         ),
                         child: ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
                           child: Image.file(
                             imageFile,
                             width: 52,
@@ -1443,8 +1459,9 @@ class _ReplayTicketState extends State<ReplayTicket> {
                       ),
                       style: AppTextStyles.labelMedium.copyWith(
                         fontWeight: FontWeight.w700,
-                        color:
-                            isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                        color: isDark
+                            ? AppColors.warmWhite
+                            : AppColors.deepBlack,
                         fontSize: 13,
                       ),
                     ),
@@ -1524,14 +1541,16 @@ class _ReplayTicketState extends State<ReplayTicket> {
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 9),
                       side: BorderSide(
-                        color: (isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.brandViolet)
-                            .withValues(alpha: 0.5),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: 0.5),
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                     ),
                   ),
@@ -1572,8 +1591,7 @@ class _ReplayTicketState extends State<ReplayTicket> {
                     padding: const EdgeInsets.symmetric(vertical: 9),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusMd),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     ),
                   ),
                 ),
@@ -1602,8 +1620,10 @@ class _ReplayTicketState extends State<ReplayTicket> {
       builder: (dialogContext) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          insetPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 24,
+          ),
           child: Column(
             children: [
               // Top Bar
@@ -1666,10 +1686,8 @@ class _ReplayTicketState extends State<ReplayTicket> {
                                       Text(
                                         localization
                                             .replayTicketAttachmentError,
-                                        style:
-                                            AppTextStyles.bodyMedium.copyWith(
-                                          color: Colors.white70,
-                                        ),
+                                        style: AppTextStyles.bodyMedium
+                                            .copyWith(color: Colors.white70),
                                       ),
                                     ],
                                   ),

@@ -71,8 +71,9 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
     final int decimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: currency,
       siteCurrencyCode: currency,
-      siteCurrencyDecimals:
-          settings.getSetting("site_currency_decimals")?.toString(),
+      siteCurrencyDecimals: settings
+          .getSetting("site_currency_decimals")
+          ?.toString(),
       isCrypto: false,
     );
     final parsed = double.tryParse(rawAmount ?? "0") ?? 0.0;
@@ -109,9 +110,7 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: statusColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: statusColor.withValues(alpha: 0.3)),
         color: statusColor.withValues(alpha: 0.08),
       ),
       child: Text(
@@ -131,8 +130,9 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Obx(
         () => Stack(
@@ -143,7 +143,9 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                 Semantics(
                   header: true,
                   child: CommonAppBar(
-                    title: AppLocalizations.of(context)!.billPaymentHistoryTitle,
+                    title: AppLocalizations.of(
+                      context,
+                    )!.billPaymentHistoryTitle,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -191,8 +193,9 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
               title: AppLocalizations.of(context)!.billPaymentHistoryTitle,
               description: AppLocalizations.of(context)!.noDataFound,
               iconData: Icons.receipt_long_rounded,
-              primaryActionLabel:
-                  AppLocalizations.of(context)!.billPaymentScreenTitle,
+              primaryActionLabel: AppLocalizations.of(
+                context,
+              )!.billPaymentScreenTitle,
               onPrimaryAction: () {
                 HapticFeedback.lightImpact();
                 Get.back();
@@ -215,12 +218,16 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                   borderRadius: BorderRadius.circular(20),
                   color: isDark ? AppColors.darkSurface : AppColors.white,
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                     width: 1.0,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                      color: isDark
+                          ? AppColors.darkShadow
+                          : AppColors.lightShadow,
                       blurRadius: 15,
                       offset: const Offset(0, 3),
                     ),
@@ -265,9 +272,11 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                           decoration: BoxDecoration(
                                             color: isDark
                                                 ? AppColors.darkPrimaryContainer
-                                                : AppColors.brandVioletContainer,
-                                            borderRadius:
-                                                BorderRadius.circular(14),
+                                                : AppColors
+                                                      .brandVioletContainer,
+                                            borderRadius: BorderRadius.circular(
+                                              14,
+                                            ),
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(11),
@@ -287,18 +296,16 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                             children: [
                                               Text(
                                                 bill.serviceName ?? "",
-                                                overflow:
-                                                    TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   letterSpacing: 0,
-                                                  fontWeight:
-                                                      FontWeight.w900,
+                                                  fontWeight: FontWeight.w900,
                                                   fontSize: 15.5,
                                                   color: isDark
                                                       ? AppColors
-                                                          .darkTextPrimary
+                                                            .darkTextPrimary
                                                       : AppColors
-                                                          .lightTextPrimary,
+                                                            .lightTextPrimary,
                                                 ),
                                               ),
                                               const SizedBox(height: 4),
@@ -307,21 +314,19 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                                         bill.createdAt!
                                                             .contains(","))
                                                     ? bill.createdAt!
-                                                        .split(",")
-                                                        .first
+                                                          .split(",")
+                                                          .first
                                                     : (bill.createdAt ?? ""),
-                                                overflow:
-                                                    TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   letterSpacing: 0,
                                                   fontSize: 14,
                                                   color: isDark
                                                       ? AppColors
-                                                          .darkTextSecondary
+                                                            .darkTextSecondary
                                                       : AppColors
-                                                          .lightTextTertiary,
-                                                  fontWeight:
-                                                      FontWeight.w700,
+                                                            .lightTextTertiary,
+                                                  fontWeight: FontWeight.w700,
                                                 ),
                                               ),
                                             ],
@@ -346,14 +351,9 @@ class _BillPaymentHistoryState extends State<BillPaymentHistory>
                                         ),
                                       ),
                                       if (bill.status != null &&
-                                          bill.status!
-                                              .trim()
-                                              .isNotEmpty) ...[
+                                          bill.status!.trim().isNotEmpty) ...[
                                         const SizedBox(height: 4),
-                                        _buildStatusBadge(
-                                          context,
-                                          bill.status,
-                                        ),
+                                        _buildStatusBadge(context, bill.status),
                                       ],
                                     ],
                                   ),

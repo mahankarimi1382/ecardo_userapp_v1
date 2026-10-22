@@ -47,29 +47,36 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
 
     // Scaffold moved outside Obx so route/scaffold state does not needlessly rebuild
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Column(
         children: [
           SizedBox(height: 16.h),
           Obx(() {
             final card = controller.virtualCardDetailsModel.value.data;
-            final hasGenericContract = card?.display != null ||
+            final hasGenericContract =
+                card?.display != null ||
                 card?.capabilities != null ||
                 card?.funding != null ||
                 card?.actions != null;
             final canViewTransactions =
-                !hasGenericContract || card?.capabilities?.canViewTransactions == true;
+                !hasGenericContract ||
+                card?.capabilities?.canViewTransactions == true;
 
             return CommonAppBar(
-              title: localization?.virtualCardDetailsAppBarTitle ?? 'Card Details',
+              title:
+                  localization?.virtualCardDetailsAppBarTitle ?? 'Card Details',
               rightSideWidget: canViewTransactions
                   ? GestureDetector(
                       onTap: () {
                         Get.toNamed(
                           BaseRoute.virtualCardTransaction,
                           arguments: {
-                            "card_id": cardId.isNotEmpty ? cardId : (card?.cardId ?? id),
+                            "card_id": cardId.isNotEmpty
+                                ? cardId
+                                : (card?.cardId ?? id),
                             "endpoint": card?.actions?.transactionsEndpoint,
                           },
                         );
@@ -79,7 +86,9 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
                         child: Image.asset(
                           PngAssets.commonHistoryIcon,
                           width: 30.w,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     )
@@ -100,7 +109,9 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
                   Get.toNamed(
                     BaseRoute.virtualCardTransaction,
                     arguments: {
-                      "card_id": cardId.isNotEmpty ? cardId : (card?.cardId ?? id),
+                      "card_id": cardId.isNotEmpty
+                          ? cardId
+                          : (card?.cardId ?? id),
                       "endpoint": card?.actions?.transactionsEndpoint,
                     },
                   )?.then((_) {
@@ -122,7 +133,8 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
               }
 
               final card = controller.virtualCardDetailsModel.value.data;
-              final hasGenericContract = card?.display != null ||
+              final hasGenericContract =
+                  card?.display != null ||
                   card?.capabilities != null ||
                   card?.funding != null ||
                   card?.actions != null;
@@ -149,7 +161,8 @@ class _VirtualCardDetailsState extends State<VirtualCardDetails> {
       ),
       floatingActionButton: Obx(() {
         final card = controller.virtualCardDetailsModel.value.data;
-        final hasGenericContract = card?.display != null ||
+        final hasGenericContract =
+            card?.display != null ||
             card?.capabilities != null ||
             card?.funding != null ||
             card?.actions != null;
@@ -363,7 +376,9 @@ class _TabButton extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.black.withValues(alpha: isDark ? 0.30 : 0.06),
+                    color: AppColors.black.withValues(
+                      alpha: isDark ? 0.30 : 0.06,
+                    ),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -378,7 +393,9 @@ class _TabButton extends StatelessWidget {
               size: 15.sp,
               color: isSelected
                   ? activeColor
-                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary),
+                  : (isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextTertiary),
             ),
             SizedBox(width: 6.w),
             Text(
@@ -387,8 +404,12 @@ class _TabButton extends StatelessWidget {
                 fontSize: 12.sp,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected
-                    ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
-                    : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary),
+                    ? (isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary)
+                    : (isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary),
               ),
             ),
           ],
@@ -403,17 +424,15 @@ class _SensitiveCardDetailsModal extends StatefulWidget {
   final VirtualCardDetailsData? card;
   final bool isDark;
 
-  const _SensitiveCardDetailsModal({
-    required this.card,
-    required this.isDark,
-  });
+  const _SensitiveCardDetailsModal({required this.card, required this.isDark});
 
   @override
   State<_SensitiveCardDetailsModal> createState() =>
       _SensitiveCardDetailsModalState();
 }
 
-class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> {
+class _SensitiveCardDetailsModalState
+    extends State<_SensitiveCardDetailsModal> {
   bool _revealPan = false;
   bool _revealCvv = false;
 
@@ -427,9 +446,12 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
     final formattedPan = _formatPan(rawPan);
     final maskedPan = _maskPan(rawPan, card?.displayNumber);
     final cvv = card?.cvc ?? '—';
-    final expiryMonth = card?.expirationMonth?.toString().padLeft(2, '0') ?? '--';
+    final expiryMonth =
+        card?.expirationMonth?.toString().padLeft(2, '0') ?? '--';
     final expiryYear = card?.expirationYear?.toString() ?? '--';
-    final shortYear = expiryYear.length > 2 ? expiryYear.substring(expiryYear.length - 2) : expiryYear;
+    final shortYear = expiryYear.length > 2
+        ? expiryYear.substring(expiryYear.length - 2)
+        : expiryYear;
     final expiry = '$expiryMonth/$shortYear';
     final holderName = card?.cardHolder?.name ?? '—';
 
@@ -478,7 +500,9 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: isDark
-                          ? AppColors.darkPrimaryContainer.withValues(alpha: 0.40)
+                          ? AppColors.darkPrimaryContainer.withValues(
+                              alpha: 0.40,
+                            )
                           : AppColors.brandVioletContainer,
                     ),
                     child: Center(
@@ -507,7 +531,9 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         SizedBox(height: 2.h),
@@ -523,7 +549,9 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                           ),
                           style: TextStyle(
                             fontSize: 11.5.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextTertiary,
                           ),
                         ),
                       ],
@@ -542,7 +570,9 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                       child: Icon(
                         Icons.close_rounded,
                         size: 18.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ),
@@ -569,9 +599,13 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                 trailingAction: rawPan.isNotEmpty
                     ? IconButton(
                         icon: Icon(
-                          _revealPan ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                          _revealPan
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
                           size: 20.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                         onPressed: () {
                           HapticFeedback.lightImpact();
@@ -622,9 +656,13 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                       trailingAction: cvv != '—'
                           ? IconButton(
                               icon: Icon(
-                                _revealCvv ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                _revealCvv
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
                                 size: 20.sp,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                               onPressed: () {
                                 HapticFeedback.lightImpact();
@@ -673,11 +711,7 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.lock_rounded,
-                      size: 16.sp,
-                      color: activeColor,
-                    ),
+                    Icon(Icons.lock_rounded, size: 16.sp, color: activeColor),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
@@ -692,7 +726,9 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
                         ),
                         style: TextStyle(
                           fontSize: 11.5.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.deepBlack,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.deepBlack,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -726,7 +762,9 @@ class _SensitiveCardDetailsModalState extends State<_SensitiveCardDetailsModal> 
 
   String _formatPan(String pan) {
     if (pan.isEmpty) return '—';
-    return pan.replaceAllMapped(RegExp(r'.{4}'), (m) => '${m.group(0)} ').trim();
+    return pan
+        .replaceAllMapped(RegExp(r'.{4}'), (m) => '${m.group(0)} ')
+        .trim();
   }
 
   String _maskPan(String pan, String? display) {
@@ -780,7 +818,9 @@ class _SensitiveDataTile extends StatelessWidget {
                   label,
                   style: TextStyle(
                     fontSize: 11.5.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextTertiary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -791,7 +831,9 @@ class _SensitiveDataTile extends StatelessWidget {
                     fontSize: 14.5.sp,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ],
@@ -800,11 +842,7 @@ class _SensitiveDataTile extends StatelessWidget {
           ?trailingAction,
           if (copyValue != null && copyValue!.isNotEmpty && copyValue != '—')
             IconButton(
-              icon: Icon(
-                Icons.copy_rounded,
-                size: 18.sp,
-                color: activeColor,
-              ),
+              icon: Icon(Icons.copy_rounded, size: 18.sp, color: activeColor),
               onPressed: () {
                 HapticFeedback.lightImpact();
                 Clipboard.setData(ClipboardData(text: copyValue!));

@@ -244,10 +244,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
             child: Center(
               child: Opacity(
                 opacity: 0.16,
-                child: Image.asset(
-                  PngAssets.cardMap,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain),
               ),
             ),
           ),
@@ -278,8 +275,8 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
               animation: _flipAnimation,
               builder: (context, _) {
                 final angle = _flipAnimation.value * pi;
-                final shineOpacity =
-                    (sin(_flipAnimation.value * pi) * 0.24).clamp(0.0, 0.24);
+                final shineOpacity = (sin(_flipAnimation.value * pi) * 0.24)
+                    .clamp(0.0, 0.24);
 
                 return Transform(
                   transform: Matrix4.identity()
@@ -314,7 +311,9 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                                   ),
                                   colors: [
                                     Colors.white.withValues(alpha: 0.0),
-                                    Colors.white.withValues(alpha: shineOpacity),
+                                    Colors.white.withValues(
+                                      alpha: shineOpacity,
+                                    ),
                                     Colors.white.withValues(alpha: 0.0),
                                   ],
                                 ),
@@ -405,8 +404,8 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
   // ===========================================================================
   Widget _buildCardFront(BorderRadius borderRadius) {
     final effectiveNumber = widget.value;
-    final copyTarget = (widget.rawCardNumber != null &&
-            widget.rawCardNumber!.isNotEmpty)
+    final copyTarget =
+        (widget.rawCardNumber != null && widget.rawCardNumber!.isNotEmpty)
         ? widget.rawCardNumber!
         : (widget.value.replaceAll(RegExp(r'\s+'), ''));
 
@@ -478,7 +477,9 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                                   color: AppColors.white,
                                   shadows: [
                                     Shadow(
-                                      color: Colors.black.withValues(alpha: 0.45),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.45,
+                                      ),
                                       offset: const Offset(0, 1.5),
                                       blurRadius: 3,
                                     ),
@@ -507,7 +508,9 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                                       Icons.copy_rounded,
                                       key: const ValueKey('copy_icon'),
                                       size: 14.sp,
-                                      color: Colors.white.withValues(alpha: 0.70),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.70,
+                                      ),
                                     ),
                             ),
                           ],
@@ -518,8 +521,9 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusFull,
+                          ),
                           onTap: () {
                             HapticFeedback.lightImpact();
                             widget.onReveal?.call();
@@ -584,7 +588,9 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
   Widget _buildCardBack(BorderRadius borderRadius) {
     final effectiveCvv = widget.cvv?.isNotEmpty == true
         ? widget.cvv!
-        : (widget.secondLabel.toUpperCase() == 'CVC' ? widget.secondValue : '888');
+        : (widget.secondLabel.toUpperCase() == 'CVC'
+              ? widget.secondValue
+              : '888');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -613,9 +619,7 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
               ),
             ],
           ),
-          child: CustomPaint(
-            painter: _MagneticStripLusterPainter(),
-          ),
+          child: CustomPaint(painter: _MagneticStripLusterPainter()),
         ),
 
         SizedBox(height: 12.h),
@@ -856,16 +860,11 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
             offset: const Offset(0, 1.5),
           ),
         ],
-        border: Border.all(
-          color: const Color(0xFFFFF2AC),
-          width: 0.6,
-        ),
+        border: Border.all(color: const Color(0xFFFFF2AC), width: 0.6),
       ),
       child: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2.5),
-        child: CustomPaint(
-          painter: _EmvMicrochipTracePainter(),
-        ),
+        child: CustomPaint(painter: _EmvMicrochipTracePainter()),
       ),
     );
   }
@@ -1000,7 +999,8 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
 
   static Color? _color(String? value, Color? fallback) {
     final normalized = value?.trim().replaceFirst('#', '');
-    if (normalized == null || (normalized.length != 6 && normalized.length != 8)) {
+    if (normalized == null ||
+        (normalized.length != 6 && normalized.length != 8)) {
       return fallback;
     }
     final hex = normalized.length == 6 ? 'FF$normalized' : normalized;

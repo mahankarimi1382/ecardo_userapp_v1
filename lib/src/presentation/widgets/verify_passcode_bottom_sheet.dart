@@ -23,10 +23,7 @@ import 'package:ecardo_user/src/presentation/screens/device_sessions_security/vi
 class VerifyPasscodeBottomSheet extends StatefulWidget {
   final int pinLength;
 
-  const VerifyPasscodeBottomSheet({
-    super.key,
-    this.pinLength = 4,
-  });
+  const VerifyPasscodeBottomSheet({super.key, this.pinLength = 4});
 
   @override
   State<VerifyPasscodeBottomSheet> createState() =>
@@ -43,7 +40,8 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
   bool _isSuccess = false;
 
   void _onDigitTap(String digit) {
-    if (controller.isPasscodeVerifyLoading.value || _pin.length >= widget.pinLength) {
+    if (controller.isPasscodeVerifyLoading.value ||
+        _pin.length >= widget.pinLength) {
       return;
     }
 
@@ -118,8 +116,12 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
     final localization = AppLocalizations.of(context);
 
     final bgColor = isDark ? AppColors.darkCard : AppColors.white;
-    final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final subtextColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final subtextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       decoration: BoxDecoration(
@@ -166,14 +168,19 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                       width: 32.r,
                       height: 32.r,
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                            .withValues(alpha: 0.12),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.lock_rounded,
                         size: 16.r,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
                       ),
                     ),
                     SizedBox(width: 10.w),
@@ -201,7 +208,9 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                     width: 30.r,
                     height: 30.r,
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
+                      color: isDark
+                          ? AppColors.darkSurface
+                          : AppColors.lightBackground,
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -246,7 +255,9 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                           height: 22.r,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.2,
-                            color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet,
                           ),
                         ),
                       ),
@@ -290,7 +301,9 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                 'C',
                 style: AppTextStyles.titleMedium.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                 ),
               ),
               onTap: () {
@@ -319,7 +332,9 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
               child: Icon(
                 Icons.backspace_outlined,
                 size: 20.r,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
               onTap: _onBackspaceTap,
               isDark: isDark,
@@ -367,7 +382,9 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
               : AppColors.lightSecondaryContainer.withValues(alpha: 0.45),
           borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
           border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.lightOutlineVariant,
             width: 0.8,
           ),
         ),

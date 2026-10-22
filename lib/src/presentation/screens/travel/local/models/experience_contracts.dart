@@ -117,14 +117,14 @@ class ExperienceRefundCalculation {
   });
 
   Map<String, dynamic> toJson() => {
-        'original_amount': originalAmount,
-        'refundable_amount': refundableAmount,
-        'penalty_amount': penaltyAmount,
-        'currency': currency,
-        'refund_destination_wallet_currency': refundDestinationWalletCurrency,
-        'is_free_cancellation': isFreeCancellation,
-        'policy_summary': policySummary,
-      };
+    'original_amount': originalAmount,
+    'refundable_amount': refundableAmount,
+    'penalty_amount': penaltyAmount,
+    'currency': currency,
+    'refund_destination_wallet_currency': refundDestinationWalletCurrency,
+    'is_free_cancellation': isFreeCancellation,
+    'policy_summary': policySummary,
+  };
 
   factory ExperienceRefundCalculation.fromJson(Map<String, dynamic> json) {
     return ExperienceRefundCalculation(
@@ -174,7 +174,8 @@ class ExperienceCancellationPolicy {
         currency: currency,
         refundDestinationWalletCurrency: currency,
         isFreeCancellation: false,
-        policySummary: 'Non-refundable after scheduled departure or service time.',
+        policySummary:
+            'Non-refundable after scheduled departure or service time.',
       );
     }
 
@@ -191,7 +192,10 @@ class ExperienceCancellationPolicy {
       );
     }
 
-    final penalty = (totalAmount * (lateCancelPenaltyPercent / 100.0)).clamp(0.0, totalAmount);
+    final penalty = (totalAmount * (lateCancelPenaltyPercent / 100.0)).clamp(
+      0.0,
+      totalAmount,
+    );
     final refundable = (totalAmount - penalty).clamp(0.0, totalAmount);
 
     return ExperienceRefundCalculation(
@@ -207,11 +211,11 @@ class ExperienceCancellationPolicy {
   }
 
   Map<String, dynamic> toJson() => {
-        'free_cancellation_hours': freeCancellationHours,
-        'late_cancel_penalty_percent': lateCancelPenaltyPercent,
-        'is_refundable': isRefundable,
-        'policy_notes': policyNotes,
-      };
+    'free_cancellation_hours': freeCancellationHours,
+    'late_cancel_penalty_percent': lateCancelPenaltyPercent,
+    'is_refundable': isRefundable,
+    'policy_notes': policyNotes,
+  };
 
   factory ExperienceCancellationPolicy.fromJson(Map<String, dynamic> json) {
     return ExperienceCancellationPolicy(
@@ -252,26 +256,30 @@ class ExperienceSearchQuery {
   });
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'domain': domain.wireName,
-        if (keyword != null && keyword!.isNotEmpty) 'keyword': keyword,
-        if (city != null && city != 'ALL') 'city': city,
-        if (category != null) 'category': category,
-        if (date != null) 'date': date!.toIso8601String(),
-        'adults': adults,
-        'children': children,
-        if (maxPrice != null) 'max_price': maxPrice,
-        'currency': currency,
-      };
+    'schema_version': schemaVersion,
+    'domain': domain.wireName,
+    if (keyword != null && keyword!.isNotEmpty) 'keyword': keyword,
+    if (city != null && city != 'ALL') 'city': city,
+    if (category != null) 'category': category,
+    if (date != null) 'date': date!.toIso8601String(),
+    'adults': adults,
+    'children': children,
+    if (maxPrice != null) 'max_price': maxPrice,
+    'currency': currency,
+  };
 
   factory ExperienceSearchQuery.fromJson(Map<String, dynamic> json) {
     return ExperienceSearchQuery(
       schemaVersion: json['schema_version'] as String? ?? '1.0',
-      domain: ExperienceDomain.fromWireName(json['domain'] as String? ?? 'local'),
+      domain: ExperienceDomain.fromWireName(
+        json['domain'] as String? ?? 'local',
+      ),
       keyword: json['keyword'] as String?,
       city: json['city'] as String?,
       category: json['category'] as String?,
-      date: json['date'] != null ? DateTime.tryParse(json['date'] as String) : null,
+      date: json['date'] != null
+          ? DateTime.tryParse(json['date'] as String)
+          : null,
       adults: json['adults'] as int? ?? 1,
       children: json['children'] as int? ?? 0,
       maxPrice: (json['max_price'] as num?)?.toDouble(),
@@ -300,22 +308,25 @@ class ExperienceSearchResult {
   });
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'domain': domain.wireName,
-        'total_count': totalCount,
-        'is_degraded': isDegraded,
-        if (degradedReason != null) 'degraded_reason': degradedReason,
-        'items': items,
-      };
+    'schema_version': schemaVersion,
+    'domain': domain.wireName,
+    'total_count': totalCount,
+    'is_degraded': isDegraded,
+    if (degradedReason != null) 'degraded_reason': degradedReason,
+    'items': items,
+  };
 
   factory ExperienceSearchResult.fromJson(Map<String, dynamic> json) {
     return ExperienceSearchResult(
       schemaVersion: json['schema_version'] as String? ?? '1.0',
-      domain: ExperienceDomain.fromWireName(json['domain'] as String? ?? 'local'),
+      domain: ExperienceDomain.fromWireName(
+        json['domain'] as String? ?? 'local',
+      ),
       totalCount: json['total_count'] as int? ?? 0,
       isDegraded: json['is_degraded'] as bool? ?? false,
       degradedReason: json['degraded_reason'] as String?,
-      items: (json['items'] as List<dynamic>?)
+      items:
+          (json['items'] as List<dynamic>?)
               ?.map((e) => Map<String, dynamic>.from(e as Map))
               .toList() ??
           const [],

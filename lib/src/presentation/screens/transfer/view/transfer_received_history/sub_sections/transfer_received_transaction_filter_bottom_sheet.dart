@@ -146,7 +146,10 @@ class _TransferReceivedTransactionFilterBottomSheetState
                                         ),
                                       ),
                                       child: Text(
-                                        StatusLabelHelper.localize(localization, status),
+                                        StatusLabelHelper.localize(
+                                          localization,
+                                          status,
+                                        ),
                                         style: TextStyle(
                                           letterSpacing: 0,
                                           fontSize: 14,

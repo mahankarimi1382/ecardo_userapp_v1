@@ -136,50 +136,48 @@ void main() {
     // Mirror the real selection: first wallet with a positive balance is
     // the USD Main Wallet; the first different-code wallet is TOMAN (IRT).
     controller.fromWallet.value = wallets.first;
-    controller.toWallet.value =
-        wallets.firstWhere((w) => w.code != wallets.first.code);
+    controller.toWallet.value = wallets.firstWhere(
+      (w) => w.code != wallets.first.code,
+    );
   }
 
   Widget buildSubject() => GetMaterialApp(
-        // WAVE-REVIEW: مثل اپ واقعی (app.dart) — .w/.r ویجت‌ها به
-        // ScreenUtilInitializer نیاز دارند وگرنه LateInitializationError.
-        builder: (context, child) => ScreenUtilInit(
-          designSize: const Size(376, 812),
-          minTextAdapt: true,
-          child: child ?? const SizedBox.shrink(),
-        ),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('en'), Locale('fa')],
-        locale: const Locale('en'),
-        home: const Scaffold(body: ExchangeAmountStepSection()),
-      );
-
-  test(
-    'regression: the exchange wallet model parses the real owner payload '
-    '(4 wallets, USD main + IRT/CNY/USDT sub-wallets)',
-    () {
-      final model = ExchangeWalletModel.fromJson(
-        jsonDecode(_ownerWalletsPayload) as Map<String, dynamic>,
-      );
-      final wallets = model.data!.wallets!;
-      expect(model.status, 'success');
-      expect(wallets.length, 4);
-      expect(wallets[0].id, 0);
-      expect(wallets[0].code, 'USD');
-      expect(wallets[0].isDefault, true);
-      expect(wallets[1].code, 'IRT');
-      expect(wallets[3].code, 'USDT');
-      expect(wallets[3].isCrypto, true);
-      // The Main Wallet deliberately carries NO conversion_rate — the
-      // model must tolerate that (all-nullable parse).
-      expect(wallets[0].conversionRate, isNull);
-    },
+    // WAVE-REVIEW: مثل اپ واقعی (app.dart) — .w/.r ویجت‌ها به
+    // ScreenUtilInitializer نیاز دارند وگرنه LateInitializationError.
+    builder: (context, child) => ScreenUtilInit(
+      designSize: const Size(376, 812),
+      minTextAdapt: true,
+      child: child ?? const SizedBox.shrink(),
+    ),
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: const [Locale('en'), Locale('fa')],
+    locale: const Locale('en'),
+    home: const Scaffold(body: ExchangeAmountStepSection()),
   );
+
+  test('regression: the exchange wallet model parses the real owner payload '
+      '(4 wallets, USD main + IRT/CNY/USDT sub-wallets)', () {
+    final model = ExchangeWalletModel.fromJson(
+      jsonDecode(_ownerWalletsPayload) as Map<String, dynamic>,
+    );
+    final wallets = model.data!.wallets!;
+    expect(model.status, 'success');
+    expect(wallets.length, 4);
+    expect(wallets[0].id, 0);
+    expect(wallets[0].code, 'USD');
+    expect(wallets[0].isDefault, true);
+    expect(wallets[1].code, 'IRT');
+    expect(wallets[3].code, 'USDT');
+    expect(wallets[3].isCrypto, true);
+    // The Main Wallet deliberately carries NO conversion_rate — the
+    // model must tolerate that (all-nullable parse).
+    expect(wallets[0].conversionRate, isNull);
+  });
 
   testWidgets(
     'regression: the amount step builds with the real owner wallets — '
@@ -200,8 +198,11 @@ void main() {
           debugPrint('FRAMEWORK ERROR: ${e.exception}');
           debugPrint('culprit: ${e.context?.toDescription()}');
         }
-        expect(frameworkErrors, isEmpty,
-            reason: 'no widget-build exception expected');
+        expect(
+          frameworkErrors,
+          isEmpty,
+          reason: 'no widget-build exception expected',
+        );
 
         expect(find.text('Continue'), findsOneWidget);
         expect(find.text('Wallets Not Found'), findsNothing);
@@ -230,19 +231,16 @@ void main() {
     },
   );
 
-  test(
-    'regression: getExchangeRateConverter skips the convert call for an '
-    'empty amount (the entry-time 404 "Not Found" root cause)',
-    () async {
-      seedOwnerWallets();
-      controller.amountController.text = '';
-      // The NetworkService would be hit if the guard were missing; the
-      // real instance throws on a failed response in this environment —
-      // the guard must return BEFORE any request.
-      await controller.getExchangeRateConverter();
-      expect(controller.exchangeReviewRate.value, 0.0);
-      expect(controller.exchangeAmount.value, 0.0);
-      expect(controller.isExchangeConfigLoading.value, false);
-    },
-  );
+  test('regression: getExchangeRateConverter skips the convert call for an '
+      'empty amount (the entry-time 404 "Not Found" root cause)', () async {
+    seedOwnerWallets();
+    controller.amountController.text = '';
+    // The NetworkService would be hit if the guard were missing; the
+    // real instance throws on a failed response in this environment —
+    // the guard must return BEFORE any request.
+    await controller.getExchangeRateConverter();
+    expect(controller.exchangeReviewRate.value, 0.0);
+    expect(controller.exchangeAmount.value, 0.0);
+    expect(controller.isExchangeConfigLoading.value, false);
+  });
 }

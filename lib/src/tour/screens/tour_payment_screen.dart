@@ -35,14 +35,24 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
-          l10nPick(context, en: 'Confirm & Pay Tour', fa: 'تأیید و پرداخت نهایی تور'),
+          l10nPick(
+            context,
+            en: 'Confirm & Pay Tour',
+            fa: 'تأیید و پرداخت نهایی تور',
+          ),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
@@ -53,12 +63,17 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded, color: textPrimary, size: AppSpacing.iconSm.r),
+          icon: Icon(
+            Icons.arrow_back_ios_rounded,
+            color: textPrimary,
+            size: AppSpacing.iconSm.r,
+          ),
           onPressed: () => Get.back(),
         ),
       ),
       body: Obx(() {
-        if (controller.isLoadingDetail.value && controller.activeBooking.value == null) {
+        if (controller.isLoadingDetail.value &&
+            controller.activeBooking.value == null) {
           return Center(
             child: CircularProgressIndicator(
               color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
@@ -90,7 +105,9 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                 border: Border.all(color: borderColor),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 12,
                     offset: const Offset(0, 3),
                   ),
@@ -107,13 +124,20 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : TravelTheme.blue,
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.warning.withValues(alpha: 0.2) : Colors.amber.shade50,
+                          color: isDark
+                              ? AppColors.warning.withValues(alpha: 0.2)
+                              : Colors.amber.shade50,
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                         child: Text(
@@ -121,7 +145,9 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.warning : Colors.amber.shade900,
+                            color: isDark
+                                ? AppColors.warning
+                                : Colors.amber.shade900,
                           ),
                         ),
                       ),
@@ -142,7 +168,11 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                     style: TextStyle(fontSize: 11.sp, color: textSecondary),
                   ),
                   SizedBox(height: AppSpacing.md.h),
-                  Divider(color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+                  Divider(
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
+                  ),
                   SizedBox(height: AppSpacing.xs.h),
                   _buildSummaryRow(
                     l10nPick(context, en: 'Travelers:', fa: 'مسافران:'),
@@ -152,14 +182,22 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                   ),
                   SizedBox(height: AppSpacing.xs.h),
                   _buildSummaryRow(
-                    l10nPick(context, en: 'Accommodation Tier:', fa: 'درجه اقامت:'),
+                    l10nPick(
+                      context,
+                      en: 'Accommodation Tier:',
+                      fa: 'درجه اقامت:',
+                    ),
                     booking.tier,
                     textPrimary: textPrimary,
                     textSecondary: textSecondary,
                   ),
                   SizedBox(height: AppSpacing.xs.h),
                   _buildSummaryRow(
-                    l10nPick(context, en: 'Total Tour Price:', fa: 'مجموع بهای کل تور:'),
+                    l10nPick(
+                      context,
+                      en: 'Total Tour Price:',
+                      fa: 'مجموع بهای کل تور:',
+                    ),
                     '${_formatPrice(booking.totalPrice)} ${booking.currency}',
                     isBold: true,
                     textPrimary: textPrimary,
@@ -172,13 +210,25 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
 
             // Payment Mode Selector
             Text(
-              l10nPick(context, en: 'Choose Payment Option:', fa: 'نحوه پرداخت را انتخاب کنید:'),
-              style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w900, color: textPrimary),
+              l10nPick(
+                context,
+                en: 'Choose Payment Option:',
+                fa: 'نحوه پرداخت را انتخاب کنید:',
+              ),
+              style: TextStyle(
+                fontSize: 13.5.sp,
+                fontWeight: FontWeight.w900,
+                color: textPrimary,
+              ),
             ),
             SizedBox(height: AppSpacing.sm.h),
             _buildPaymentModeTile(
               mode: 'FULL',
-              title: l10nPick(context, en: 'Full Payment (100%)', fa: 'تسویه کامل (۱۰۰٪)'),
+              title: l10nPick(
+                context,
+                en: 'Full Payment (100%)',
+                fa: 'تسویه کامل (۱۰۰٪)',
+              ),
               subtitle: l10nPick(
                 context,
                 en: 'Pay full amount now and immediately receive your finalized tour voucher',
@@ -195,7 +245,11 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
             SizedBox(height: AppSpacing.sm.h),
             _buildPaymentModeTile(
               mode: 'DEPOSIT',
-              title: l10nPick(context, en: 'Deposit (30% Upfront)', fa: 'پرداخت بیعانه (۳۰٪ پیش‌پرداخت)'),
+              title: l10nPick(
+                context,
+                en: 'Deposit (30% Upfront)',
+                fa: 'پرداخت بیعانه (۳۰٪ پیش‌پرداخت)',
+              ),
               subtitle: l10nPick(
                 context,
                 en: 'Pay 30% to guarantee your seat lock; settle remainder up to 7 days before departure',
@@ -219,12 +273,15 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                 color: surfaceColor,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                 border: Border.all(
-                  color: (isDark ? AppColors.darkPrimary : TravelTheme.blue).withValues(alpha: 0.4),
+                  color: (isDark ? AppColors.darkPrimary : TravelTheme.blue)
+                      .withValues(alpha: 0.4),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -235,7 +292,8 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                   Container(
                     padding: EdgeInsets.all(AppSpacing.md.r),
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.darkPrimary : TravelTheme.blue).withValues(alpha: 0.12),
+                      color: (isDark ? AppColors.darkPrimary : TravelTheme.blue)
+                          .withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -250,7 +308,11 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10nPick(context, en: 'Pay from eCardo Wallet', fa: 'پرداخت از کیف پول اصلی eCardo'),
+                          l10nPick(
+                            context,
+                            en: 'Pay from eCardo Wallet',
+                            fa: 'پرداخت از کیف پول اصلی eCardo',
+                          ),
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
@@ -259,13 +321,24 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                         ),
                         SizedBox(height: 3.h),
                         Text(
-                          l10nPick(context, en: 'Instant deduction with double-entry security', fa: 'کسر آنی و مطمئن با پشتیبانی دفترکل مالی'),
-                          style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
+                          l10nPick(
+                            context,
+                            en: 'Instant deduction with double-entry security',
+                            fa: 'کسر آنی و مطمئن با پشتیبانی دفترکل مالی',
+                          ),
+                          style: TextStyle(
+                            fontSize: 10.5.sp,
+                            color: textSecondary,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Icon(Icons.check_circle_rounded, color: AppColors.success, size: 20.r),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.success,
+                    size: 20.r,
+                  ),
                 ],
               ),
             ),
@@ -277,7 +350,9 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
         if (booking == null) return const SizedBox.shrink();
 
         final depositAmount = (booking.totalPrice * 0.30);
-        final payableAmount = paymentMode == 'FULL' ? booking.totalPrice : depositAmount;
+        final payableAmount = paymentMode == 'FULL'
+            ? booking.totalPrice
+            : depositAmount;
 
         return Container(
           padding: EdgeInsets.symmetric(
@@ -304,8 +379,16 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                     children: [
                       Text(
                         paymentMode == 'FULL'
-                            ? l10nPick(context, en: 'Full Payment:', fa: 'پرداخت کل مبلغ:')
-                            : l10nPick(context, en: 'Deposit (30%):', fa: 'پیش‌پرداخت بیعانه:'),
+                            ? l10nPick(
+                                context,
+                                en: 'Full Payment:',
+                                fa: 'پرداخت کل مبلغ:',
+                              )
+                            : l10nPick(
+                                context,
+                                en: 'Deposit (30%):',
+                                fa: 'پیش‌پرداخت بیعانه:',
+                              ),
                         style: TextStyle(fontSize: 11.sp, color: textSecondary),
                       ),
                       SizedBox(height: 2.h),
@@ -325,9 +408,14 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                     backgroundColor: AppColors.success,
                     foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusLg.r,
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.w, vertical: 14.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xxl.w,
+                      vertical: 14.h,
+                    ),
                   ),
                   onPressed: controller.isBookingAction.value
                       ? null
@@ -336,11 +424,21 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                       ? const SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(color: AppColors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            color: AppColors.white,
+                            strokeWidth: 2,
+                          ),
                         )
                       : Text(
-                          l10nPick(context, en: 'Confirm & Pay', fa: 'تأیید و پرداخت نهایی'),
-                          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+                          l10nPick(
+                            context,
+                            en: 'Confirm & Pay',
+                            fa: 'تأیید و پرداخت نهایی',
+                          ),
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                 ),
               ],
@@ -361,7 +459,10 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: 11.sp, color: textSecondary)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 11.sp, color: textSecondary),
+        ),
         Text(
           value,
           style: TextStyle(
@@ -400,7 +501,9 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
         padding: EdgeInsets.all(AppSpacing.md.r),
         decoration: BoxDecoration(
           color: isSelected
-              ? (isDark ? AppColors.darkPrimaryContainer : TravelTheme.blue.withValues(alpha: 0.08))
+              ? (isDark
+                    ? AppColors.darkPrimaryContainer
+                    : TravelTheme.blue.withValues(alpha: 0.08))
               : surfaceColor,
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
           border: Border.all(
@@ -421,7 +524,9 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
             Row(
               children: [
                 Icon(
-                  isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                  isSelected
+                      ? Icons.radio_button_checked_rounded
+                      : Icons.radio_button_off_rounded,
                   color: isSelected ? primaryColor : textSecondary,
                   size: 20.r,
                 ),
@@ -433,21 +538,32 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                         title,
                         style: TextStyle(
                           fontSize: 13.sp,
-                          fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                          fontWeight: isSelected
+                              ? FontWeight.w800
+                              : FontWeight.w700,
                           color: isSelected ? primaryColor : textPrimary,
                         ),
                       ),
                       if (badgeText != null) ...[
                         SizedBox(width: AppSpacing.sm.w),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.amber,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusXs.r,
+                            ),
                           ),
                           child: Text(
                             badgeText,
-                            style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w900, color: AppColors.deepBlack),
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.deepBlack,
+                            ),
                           ),
                         ),
                       ],
@@ -469,7 +585,11 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
               padding: EdgeInsetsDirectional.only(start: 30.w),
               child: Text(
                 subtitle,
-                style: TextStyle(fontSize: 10.5.sp, color: textSecondary, height: 1.3),
+                style: TextStyle(
+                  fontSize: 10.5.sp,
+                  color: textSecondary,
+                  height: 1.3,
+                ),
               ),
             ),
           ],
@@ -490,13 +610,19 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
     if (updated != null) {
       Get.dialog(
         AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
           title: Row(
             children: [
               const Icon(Icons.check_circle_rounded, color: AppColors.success),
               SizedBox(width: AppSpacing.sm.w),
               Text(
-                l10nPick(context, en: 'Payment Successful!', fa: 'پرداخت با موفقیت انجام شد!'),
+                l10nPick(
+                  context,
+                  en: 'Payment Successful!',
+                  fa: 'پرداخت با موفقیت انجام شد!',
+                ),
                 style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
               ),
             ],
@@ -507,7 +633,11 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
               en: 'Your tour booking has been confirmed. You can now access and share your digital voucher.',
               fa: 'رزرو تور شما با موفقیت ثبت و تأیید شد. اکنون می‌توانید واچر دیجیتال سفر خود را مشاهده یا دانلود کنید.',
             ),
-            style: TextStyle(fontSize: 12.sp, color: TravelTheme.muted, height: 1.4),
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: TravelTheme.muted,
+              height: 1.4,
+            ),
           ),
           actions: [
             TextButton(
@@ -515,19 +645,25 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
                 Get.back();
                 Get.off(() => const TourMyBookingsScreen());
               },
-              child: Text(l10nPick(context, en: 'My Bookings', fa: 'رزروهای من')),
+              child: Text(
+                l10nPick(context, en: 'My Bookings', fa: 'رزروهای من'),
+              ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: TravelTheme.blue,
                 foregroundColor: AppColors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                ),
               ),
               onPressed: () {
                 Get.back();
                 Get.off(() => TourVoucherScreen(booking: updated));
               },
-              child: Text(l10nPick(context, en: 'View Voucher', fa: 'مشاهده واچر تور')),
+              child: Text(
+                l10nPick(context, en: 'View Voucher', fa: 'مشاهده واچر تور'),
+              ),
             ),
           ],
         ),
@@ -536,15 +672,19 @@ class _TourPaymentScreenState extends State<TourPaymentScreen> {
     } else {
       Get.snackbar(
         l10nPick(context, en: 'Payment Failed', fa: 'خطا در پرداخت'),
-        l10nPick(context, en: 'Insufficient balance or payment processing error.', fa: 'موجودی کیف پول کافی نیست یا در فرآیند پرداخت خطایی رخ داد.'),
+        l10nPick(
+          context,
+          en: 'Insufficient balance or payment processing error.',
+          fa: 'موجودی کیف پول کافی نیست یا در فرآیند پرداخت خطایی رخ داد.',
+        ),
       );
     }
   }
 
   String _formatPrice(double price) {
     return price.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 }

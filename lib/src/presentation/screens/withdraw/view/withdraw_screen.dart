@@ -38,12 +38,17 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                   ? null
                   : controller.selectedScreen.value == 1
                   ? BoxDecoration(
-                      color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                      color: isDark
+                          ? AppColors.darkBackground
+                          : AppColors.lightBackground,
                     )
                   : BoxDecoration(
                       gradient: LinearGradient(
                         colors: isDark
-                            ? [AppColors.darkSurfaceVariant, AppColors.darkBackground]
+                            ? [
+                                AppColors.darkSurfaceVariant,
+                                AppColors.darkBackground,
+                              ]
                             : [AppColors.white, AppColors.lightBackground],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -104,9 +109,7 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         ? AppColors.darkPrimary
                         : AppColors.lightPrimary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusLg,
-                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -120,7 +123,9 @@ class _WithdrawScreenState extends State<WithdrawScreen> {
                         Text(
                           localization.withdrawScreenAddAccountButton,
                           style: TextStyle(
-                            color: isDark ? AppColors.deepBlack : AppColors.white,
+                            color: isDark
+                                ? AppColors.deepBlack
+                                : AppColors.white,
                             fontWeight: FontWeight.w800,
                             fontSize: 14.5,
                             letterSpacing: 0,

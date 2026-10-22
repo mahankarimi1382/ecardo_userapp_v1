@@ -53,10 +53,12 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     final cardBg = isDark
         ? AppColors.darkSurface.withValues(alpha: 0.94)
@@ -66,8 +68,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
         : AppColors.lightBorder.withValues(alpha: 0.7);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: AmbientAuthBackground(
         child: Stack(
@@ -110,11 +113,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                     borderRadius: BorderRadius.circular(16.r),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: (isDark
-                                                ? AppColors.darkAccent
-                                                : AppColors.brandViolet)
-                                            .withValues(
-                                                alpha: isDark ? 0.16 : 0.25),
+                                        color:
+                                            (isDark
+                                                    ? AppColors.darkAccent
+                                                    : AppColors.brandViolet)
+                                                .withValues(
+                                                  alpha: isDark ? 0.16 : 0.25,
+                                                ),
                                         blurRadius: 18,
                                       ),
                                     ],
@@ -161,8 +166,12 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                               borderRadius: BorderRadius.circular(20.r),
                               border: Border.all(
                                 color: isDark
-                                    ? AppColors.darkAccent.withValues(alpha: 0.35)
-                                    : AppColors.brandViolet.withValues(alpha: 0.35),
+                                    ? AppColors.darkAccent.withValues(
+                                        alpha: 0.35,
+                                      )
+                                    : AppColors.brandViolet.withValues(
+                                        alpha: 0.35,
+                                      ),
                                 width: 1,
                               ),
                             ),
@@ -237,7 +246,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                       controller.countdown.value > 0
                                           ? "${localizations.verifyEmailResendAvailable} ${controller.countdown.value}s"
                                           : localizations
-                                              .verifyEmailRequestNewOtp,
+                                                .verifyEmailRequestNewOtp,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 13.5.sp,
@@ -259,8 +268,11 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                         child: PinCodeTextField(
                                           keyboardType: TextInputType.number,
                                           inputFormatters: [
-                                            const DigitNormalizationFormatter(maxLength: 6),
-                                            FilteringTextInputFormatter.digitsOnly,
+                                            const DigitNormalizationFormatter(
+                                              maxLength: 6,
+                                            ),
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
                                           ],
                                           cursorColor: isDark
                                               ? AppColors.darkAccent
@@ -271,7 +283,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                             color: primaryTextColor,
                                             letterSpacing: 0,
                                           ),
-                                          controller: controller.pinCodeController,
+                                          controller:
+                                              controller.pinCodeController,
                                           enableActiveFill:
                                               controller.isPinEnabled.value,
                                           pinTheme: PinTheme(
@@ -286,35 +299,46 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                                 ? AppColors.darkAccent
                                                 : AppColors.brandViolet,
                                             activeFillColor: isDark
-                                                ? AppColors.white.withValues(alpha: 0.06)
+                                                ? AppColors.white.withValues(
+                                                    alpha: 0.06,
+                                                  )
                                                 : AppColors.lightSurfaceVariant,
                                             inactiveColor: isDark
-                                                ? AppColors.white.withValues(alpha: 0.15)
+                                                ? AppColors.white.withValues(
+                                                    alpha: 0.15,
+                                                  )
                                                 : AppColors.lightBorder,
                                             inactiveFillColor: isDark
-                                                ? AppColors.white.withValues(alpha: 0.03)
+                                                ? AppColors.white.withValues(
+                                                    alpha: 0.03,
+                                                  )
                                                 : AppColors.transparent,
                                             selectedColor: isDark
                                                 ? AppColors.darkAccent
                                                 : AppColors.brandViolet,
                                             selectedFillColor: isDark
                                                 ? AppColors.darkAccent
-                                                    .withValues(alpha: 0.12)
-                                                : AppColors.brandVioletContainer,
+                                                      .withValues(alpha: 0.12)
+                                                : AppColors
+                                                      .brandVioletContainer,
                                             selectedBorderWidth: 1.5.w,
-                                            borderRadius:
-                                                BorderRadius.circular(14.r),
+                                            borderRadius: BorderRadius.circular(
+                                              14.r,
+                                            ),
                                           ),
                                           appContext: context,
                                           length: 6,
                                           onCompleted: (_) async {
                                             if (email != null &&
-                                                controller.pinCodeController.text
+                                                controller
+                                                        .pinCodeController
+                                                        .text
                                                         .length ==
                                                     6) {
-                                              await controller.validateVerifyEmail(
-                                                email: email!,
-                                              );
+                                              await controller
+                                                  .validateVerifyEmail(
+                                                    email: email!,
+                                                  );
                                             }
                                           },
                                         ),
@@ -329,7 +353,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                     height: 52.h,
                                     borderRadius: 16.r,
                                     onPressed: () async {
-                                      if (controller.pinCodeController.text
+                                      if (controller
+                                              .pinCodeController
+                                              .text
                                               .length ==
                                           6) {
                                         await controller.validateVerifyEmail(
@@ -374,8 +400,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                           },
                                           child: Semantics(
                                             button: true,
-                                            enabled: controller.countdown.value == 0,
-                                            label: localizations.verifyEmailResend,
+                                            enabled:
+                                                controller.countdown.value == 0,
+                                            label:
+                                                localizations.verifyEmailResend,
                                             child: Container(
                                               constraints: BoxConstraints(
                                                 minHeight: 44.h,
@@ -387,13 +415,17 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w900,
                                                   fontSize: 14.sp,
-                                                  color: controller
-                                                              .countdown.value >
+                                                  color:
+                                                      controller
+                                                              .countdown
+                                                              .value >
                                                           0
                                                       ? secondaryTextColor
                                                       : (isDark
-                                                          ? AppColors.darkAccent
-                                                          : AppColors.brandViolet),
+                                                            ? AppColors
+                                                                  .darkAccent
+                                                            : AppColors
+                                                                  .brandViolet),
                                                 ),
                                               ),
                                             ),

@@ -38,13 +38,7 @@ Widget _hostWidget(
       home: Directionality(
         textDirection: direction,
         child: Scaffold(
-          body: Center(
-            child: SizedBox(
-              width: 375,
-              height: 812,
-              child: child,
-            ),
-          ),
+          body: Center(child: SizedBox(width: 375, height: 812, child: child)),
         ),
       ),
     ),
@@ -59,7 +53,9 @@ void main() {
   });
 
   group('RecentTransactionsSection Elevation & Smart Clustering', () {
-    testWidgets('renders empty state when transaction list is empty', (tester) async {
+    testWidgets('renders empty state when transaction list is empty', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _hostWidget(const RecentTransactionsSection(transactions: [])),
       );
@@ -68,67 +64,78 @@ void main() {
       expect(find.text('No transactions yet'), findsOneWidget);
     });
 
-    testWidgets('clusters transactions into human-friendly groups (Today, Yesterday, Past)', (tester) async {
+    testWidgets(
+      'clusters transactions into human-friendly groups (Today, Yesterday, Past)',
+      (tester) async {
+        final now = DateTime.now().toUtc();
+        final nowIso = now.toIso8601String();
+        final yesterdayIso = now
+            .subtract(const Duration(days: 1))
+            .toIso8601String();
+        final pastIso = now
+            .subtract(const Duration(days: 14))
+            .toIso8601String();
+
+        final transactions = [
+          Transactions(
+            tnx: 'TX-TODAY-01',
+            type: 'Deposit',
+            amount: '100.00',
+            trxCurrencySymbol: r'$',
+            isPlus: true,
+            status: 'success',
+            createdAt: nowIso,
+          ),
+          Transactions(
+            tnx: 'TX-YEST-01',
+            type: 'Transfer',
+            amount: '50.00',
+            trxCurrencySymbol: r'$',
+            isPlus: false,
+            status: 'pending',
+            createdAt: yesterdayIso,
+          ),
+          Transactions(
+            tnx: 'TX-PAST-01',
+            type: 'Exchange',
+            amount: '200.00',
+            trxCurrencySymbol: r'$',
+            isPlus: false,
+            status: 'failed',
+            createdAt: pastIso,
+          ),
+        ];
+
+        await tester.pumpWidget(
+          _hostWidget(RecentTransactionsSection(transactions: transactions)),
+        );
+        await tester.pumpAndSettle();
+
+        // Verify cluster headers
+        expect(find.text('Today'), findsOneWidget);
+        expect(find.text('Yesterday'), findsOneWidget);
+        expect(find.text('Past'), findsOneWidget);
+
+        // Verify transaction amounts & signs
+        expect(find.text(r'+$ 100.00'), findsOneWidget);
+        expect(find.text(r'-$ 50.00'), findsOneWidget);
+        expect(find.text(r'-$ 200.00'), findsOneWidget);
+
+        // Verify status badges
+        expect(find.text('Success'), findsOneWidget);
+        expect(find.text('Pending'), findsOneWidget);
+        expect(find.text('Failed'), findsOneWidget);
+      },
+    );
+
+    testWidgets('clusters properly in Persian RTL locale (امروز, دیروز)', (
+      tester,
+    ) async {
       final now = DateTime.now().toUtc();
       final nowIso = now.toIso8601String();
-      final yesterdayIso = now.subtract(const Duration(days: 1)).toIso8601String();
-      final pastIso = now.subtract(const Duration(days: 14)).toIso8601String();
-
-      final transactions = [
-        Transactions(
-          tnx: 'TX-TODAY-01',
-          type: 'Deposit',
-          amount: '100.00',
-          trxCurrencySymbol: r'$',
-          isPlus: true,
-          status: 'success',
-          createdAt: nowIso,
-        ),
-        Transactions(
-          tnx: 'TX-YEST-01',
-          type: 'Transfer',
-          amount: '50.00',
-          trxCurrencySymbol: r'$',
-          isPlus: false,
-          status: 'pending',
-          createdAt: yesterdayIso,
-        ),
-        Transactions(
-          tnx: 'TX-PAST-01',
-          type: 'Exchange',
-          amount: '200.00',
-          trxCurrencySymbol: r'$',
-          isPlus: false,
-          status: 'failed',
-          createdAt: pastIso,
-        ),
-      ];
-
-      await tester.pumpWidget(
-        _hostWidget(RecentTransactionsSection(transactions: transactions)),
-      );
-      await tester.pumpAndSettle();
-
-      // Verify cluster headers
-      expect(find.text('Today'), findsOneWidget);
-      expect(find.text('Yesterday'), findsOneWidget);
-      expect(find.text('Past'), findsOneWidget);
-
-      // Verify transaction amounts & signs
-      expect(find.text(r'+$ 100.00'), findsOneWidget);
-      expect(find.text(r'-$ 50.00'), findsOneWidget);
-      expect(find.text(r'-$ 200.00'), findsOneWidget);
-
-      // Verify status badges
-      expect(find.text('Success'), findsOneWidget);
-      expect(find.text('Pending'), findsOneWidget);
-      expect(find.text('Failed'), findsOneWidget);
-    });
-
-    testWidgets('clusters properly in Persian RTL locale (امروز, دیروز)', (tester) async {
-      final now = DateTime.now().toUtc();
-      final nowIso = now.toIso8601String();
-      final yesterdayIso = now.subtract(const Duration(days: 1)).toIso8601String();
+      final yesterdayIso = now
+          .subtract(const Duration(days: 1))
+          .toIso8601String();
 
       final transactions = [
         Transactions(
@@ -166,27 +173,30 @@ void main() {
       expect(find.text('در انتظار'), findsOneWidget);
     });
 
-    testWidgets('renders category icon containers with rounded 14r and distinctive styling', (tester) async {
-      final transactions = [
-        Transactions(
-          tnx: 'TX-CAT-01',
-          type: 'Deposit',
-          amount: '80.00',
-          trxCurrencySymbol: r'$',
-          isPlus: true,
-          status: 'success',
-          createdAt: DateTime.now().toUtc().toIso8601String(),
-        ),
-      ];
+    testWidgets(
+      'renders category icon containers with rounded 14r and distinctive styling',
+      (tester) async {
+        final transactions = [
+          Transactions(
+            tnx: 'TX-CAT-01',
+            type: 'Deposit',
+            amount: '80.00',
+            trxCurrencySymbol: r'$',
+            isPlus: true,
+            status: 'success',
+            createdAt: DateTime.now().toUtc().toIso8601String(),
+          ),
+        ];
 
-      await tester.pumpWidget(
-        _hostWidget(RecentTransactionsSection(transactions: transactions)),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          _hostWidget(RecentTransactionsSection(transactions: transactions)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.south_west_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_downward_rounded), findsOneWidget);
-    });
+        expect(find.byIcon(Icons.south_west_rounded), findsOneWidget);
+        expect(find.byIcon(Icons.arrow_downward_rounded), findsOneWidget);
+      },
+    );
   });
 
   group('RecentTransactionDetails Digital Receipt Excellence', () {
@@ -209,7 +219,9 @@ void main() {
       description: 'Euro to Dollar Swap',
     );
 
-    testWidgets('renders 3 action buttons (Repeat, Share, Support)', (tester) async {
+    testWidgets('renders 3 action buttons (Repeat, Share, Support)', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _hostWidget(RecentTransactionDetails(transaction: luxuryTx)),
       );
@@ -223,21 +235,26 @@ void main() {
       expect(find.byIcon(Icons.headset_mic_rounded), findsOneWidget);
     });
 
-    testWidgets('renders breakdown rows including wallet, method, fee, and exchange rate', (tester) async {
-      await tester.pumpWidget(
-        _hostWidget(RecentTransactionDetails(transaction: luxuryTx)),
-      );
-      await tester.pumpAndSettle();
+    testWidgets(
+      'renders breakdown rows including wallet, method, fee, and exchange rate',
+      (tester) async {
+        await tester.pumpWidget(
+          _hostWidget(RecentTransactionDetails(transaction: luxuryTx)),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Primary USD (USD)'), findsOneWidget);
-      expect(find.text('Bank Wire'), findsOneWidget);
-      expect(find.text(r'-$2.50'), findsOneWidget);
-      expect(find.text('450.00 EUR'), findsOneWidget);
-      expect(find.text(r'-$502.50'), findsOneWidget);
-      expect(find.text('TX-RECEIPT-999'), findsOneWidget);
-    });
+        expect(find.text('Primary USD (USD)'), findsOneWidget);
+        expect(find.text('Bank Wire'), findsOneWidget);
+        expect(find.text(r'-$2.50'), findsOneWidget);
+        expect(find.text('450.00 EUR'), findsOneWidget);
+        expect(find.text(r'-$502.50'), findsOneWidget);
+        expect(find.text('TX-RECEIPT-999'), findsOneWidget);
+      },
+    );
 
-    testWidgets('renders Persian localized action buttons in RTL', (tester) async {
+    testWidgets('renders Persian localized action buttons in RTL', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _hostWidget(
           RecentTransactionDetails(transaction: luxuryTx),
@@ -253,17 +270,20 @@ void main() {
       expect(find.text('موفق'), findsOneWidget);
     });
 
-    testWidgets('renders dark mode theme without contrast clipping or overflow', (tester) async {
-      await tester.pumpWidget(
-        _hostWidget(
-          RecentTransactionDetails(transaction: luxuryTx),
-          themeMode: ThemeMode.dark,
-        ),
-      );
-      await tester.pumpAndSettle();
+    testWidgets(
+      'renders dark mode theme without contrast clipping or overflow',
+      (tester) async {
+        await tester.pumpWidget(
+          _hostWidget(
+            RecentTransactionDetails(transaction: luxuryTx),
+            themeMode: ThemeMode.dark,
+          ),
+        );
+        await tester.pumpAndSettle();
 
-      expect(tester.takeException(), isNull);
-      expect(find.byType(RecentTransactionDetails), findsOneWidget);
-    });
+        expect(tester.takeException(), isNull);
+        expect(find.byType(RecentTransactionDetails), findsOneWidget);
+      },
+    );
   });
 }

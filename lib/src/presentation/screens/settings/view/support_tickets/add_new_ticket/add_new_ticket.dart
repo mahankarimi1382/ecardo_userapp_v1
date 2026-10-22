@@ -201,11 +201,14 @@ class _AddNewTicketState extends State<AddNewTicket> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -229,14 +232,18 @@ class _AddNewTicketState extends State<AddNewTicket> {
                       topEnd: Radius.circular(24),
                     ),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                       width: 1.0,
                     ),
                     boxShadow: isDark
                         ? null
                         : [
                             BoxShadow(
-                              color: AppColors.deepBlack.withValues(alpha: 0.04),
+                              color: AppColors.deepBlack.withValues(
+                                alpha: 0.04,
+                              ),
                               blurRadius: 16,
                               offset: const Offset(0, -2),
                             ),
@@ -469,7 +476,10 @@ class _AddNewTicketState extends State<AddNewTicket> {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.success.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(4),
@@ -497,7 +507,9 @@ class _AddNewTicketState extends State<AddNewTicket> {
                             title,
                             style: TextStyle(
                               fontSize: 11,
-                              color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.softGray
+                                  : AppColors.lightTextSecondary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -522,7 +534,9 @@ class _AddNewTicketState extends State<AddNewTicket> {
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
                       ),
                     ),
                   ],
@@ -619,7 +633,8 @@ class _AddNewTicketState extends State<AddNewTicket> {
             itemBuilder: (context, index) {
               final dept = _departments[index];
               return Obx(() {
-                final isSelected = controller.selectedDepartment.value == dept.id;
+                final isSelected =
+                    controller.selectedDepartment.value == dept.id;
 
                 return InkWell(
                   onTap: () {
@@ -635,15 +650,15 @@ class _AddNewTicketState extends State<AddNewTicket> {
                       color: isSelected
                           ? dept.color.withValues(alpha: isDark ? 0.22 : 0.12)
                           : (isDark
-                              ? AppColors.darkBackground
-                              : AppColors.lightBackground),
+                                ? AppColors.darkBackground
+                                : AppColors.lightBackground),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
                             ? dept.color
                             : (isDark
-                                ? AppColors.darkBorder
-                                : AppColors.lightBorder),
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                         width: isSelected ? 1.4 : 1.0,
                       ),
                       boxShadow: isSelected
@@ -669,7 +684,9 @@ class _AddNewTicketState extends State<AddNewTicket> {
                           dept.label(context),
                           style: AppTextStyles.labelSmall.copyWith(
                             color: isSelected ? dept.color : secondaryColor,
-                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                            fontWeight: isSelected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
                             fontSize: 12,
                           ),
                         ),
@@ -729,7 +746,8 @@ class _AddNewTicketState extends State<AddNewTicket> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Obx(() {
-                  final isSelected = controller.selectedPriority.value == priority.id;
+                  final isSelected =
+                      controller.selectedPriority.value == priority.id;
 
                   return InkWell(
                     onTap: () {
@@ -743,17 +761,19 @@ class _AddNewTicketState extends State<AddNewTicket> {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? priority.color.withValues(alpha: isDark ? 0.22 : 0.12)
+                            ? priority.color.withValues(
+                                alpha: isDark ? 0.22 : 0.12,
+                              )
                             : (isDark
-                                ? AppColors.darkBackground
-                                : AppColors.lightBackground),
+                                  ? AppColors.darkBackground
+                                  : AppColors.lightBackground),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isSelected
                               ? priority.color
                               : (isDark
-                                  ? AppColors.darkBorder
-                                  : AppColors.lightBorder),
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorder),
                           width: isSelected ? 1.4 : 1.0,
                         ),
                         boxShadow: isSelected
@@ -778,9 +798,12 @@ class _AddNewTicketState extends State<AddNewTicket> {
                           Text(
                             priority.label(context),
                             style: AppTextStyles.labelSmall.copyWith(
-                              color: isSelected ? priority.color : secondaryColor,
-                              fontWeight:
-                                  isSelected ? FontWeight.w800 : FontWeight.w600,
+                              color: isSelected
+                                  ? priority.color
+                                  : secondaryColor,
+                              fontWeight: isSelected
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -849,7 +872,9 @@ class _AddNewTicketState extends State<AddNewTicket> {
         Obx(
           () => Container(
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+              color: isDark
+                  ? AppColors.darkBackground
+                  : AppColors.lightBackground,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: controller.isTitleFocused.value
@@ -862,8 +887,13 @@ class _AddNewTicketState extends State<AddNewTicket> {
               focusNode: controller.titleFocusNode,
               controller: controller.titleController,
               maxLength: 100,
-              buildCounter: (_, {required currentLength, required isFocused, maxLength}) =>
-                  null,
+              buildCounter:
+                  (
+                    _, {
+                    required currentLength,
+                    required isFocused,
+                    maxLength,
+                  }) => null,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: primaryColor,
                 fontWeight: FontWeight.w600,
@@ -949,7 +979,9 @@ class _AddNewTicketState extends State<AddNewTicket> {
         Obx(
           () => Container(
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+              color: isDark
+                  ? AppColors.darkBackground
+                  : AppColors.lightBackground,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: controller.isDescriptionFocused.value
@@ -964,8 +996,13 @@ class _AddNewTicketState extends State<AddNewTicket> {
               minLines: 4,
               maxLines: 7,
               maxLength: 1000,
-              buildCounter: (_, {required currentLength, required isFocused, maxLength}) =>
-                  null,
+              buildCounter:
+                  (
+                    _, {
+                    required currentLength,
+                    required isFocused,
+                    maxLength,
+                  }) => null,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: primaryColor,
                 fontSize: 13,
@@ -1024,11 +1061,14 @@ class _AddNewTicketState extends State<AddNewTicket> {
                 ),
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 1.5,
+                  ),
                   decoration: BoxDecoration(
                     color: (isDark
-                            ? AppColors.darkBackground
-                            : AppColors.lightBackground),
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -1051,13 +1091,17 @@ class _AddNewTicketState extends State<AddNewTicket> {
               ],
             ),
             Obx(() {
-              final count =
-                  controller.multipleImagePickerController.attachedImages.length;
+              final count = controller
+                  .multipleImagePickerController
+                  .attachedImages
+                  .length;
               if (count == 0) return const SizedBox.shrink();
               return Text(
                 '$count ${l10nPick(context, en: 'files attached', fa: 'فایل پیوست شد', ar: 'ملفات مرفقة', tr: 'dosya eklendi', ru: 'файлов прикреплено', zh: '个文件')}',
                 style: AppTextStyles.labelSmall.copyWith(
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.lightPrimary,
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
                 ),
@@ -1080,9 +1124,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
                   : AppColors.lightBackground,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isDark
-                    ? AppColors.darkBorder
-                    : AppColors.lightBorder,
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 width: 1.2,
               ),
             ),
@@ -1092,10 +1134,11 @@ class _AddNewTicketState extends State<AddNewTicket> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: (isDark
-                            ? AppColors.mainSoftBlue
-                            : AppColors.lightPrimary)
-                        .withValues(alpha: 0.12),
+                    color:
+                        (isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -1148,8 +1191,11 @@ class _AddNewTicketState extends State<AddNewTicket> {
 
         // Thumbnail Strip
         Obx(() {
-          final attachedEntries =
-              controller.multipleImagePickerController.attachedImages.entries.toList();
+          final attachedEntries = controller
+              .multipleImagePickerController
+              .attachedImages
+              .entries
+              .toList();
           if (attachedEntries.isEmpty) return const SizedBox.shrink();
 
           return Column(
@@ -1247,10 +1293,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
-                                Image.file(
-                                  file,
-                                  fit: BoxFit.cover,
-                                ),
+                                Image.file(file, fit: BoxFit.cover),
                                 Positioned(
                                   bottom: 0,
                                   left: 0,
@@ -1362,11 +1405,7 @@ class _AddNewTicketState extends State<AddNewTicket> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
-                  Icons.send_rounded,
-                  color: Colors.white,
-                  size: 18,
-                ),
+                const Icon(Icons.send_rounded, color: Colors.white, size: 18),
                 const SizedBox(width: 8),
                 Text(
                   l10nPick(

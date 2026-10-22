@@ -16,9 +16,7 @@ import 'package:ecardo_user/src/presentation/screens/p2p/controller/p2p_buy_ad_c
 class P2pOrderDetailsController extends GetxController {
   final int orderId;
 
-  P2pOrderDetailsController({
-    required this.orderId,
-  });
+  P2pOrderDetailsController({required this.orderId});
 
   final RxBool isLoading = false.obs;
   final RxBool isPaymentMethodsLoading = false.obs;
@@ -112,7 +110,8 @@ class P2pOrderDetailsController extends GetxController {
       final options = methods
           .map((method) {
             final id = method.paymentMethod?.id ?? method.id ?? 0;
-            final name = method.paymentMethod?.name ??
+            final name =
+                method.paymentMethod?.name ??
                 (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
             final fields = method.fields ?? <ad_payment_method.Field>[];
             final accountInfo = fields.isNotEmpty
@@ -164,12 +163,8 @@ class P2pOrderDetailsController extends GetxController {
     isUpdatingPaymentMethod.value = true;
     try {
       final response = await Get.find<NetworkService>().patch(
-        endpoint: ApiPath.updateOrderPaymentMethodEndpoint(
-          orderId: '$orderId',
-        ),
-        data: <String, dynamic>{
-          'payment_method_id': newPaymentMethodId,
-        },
+        endpoint: ApiPath.updateOrderPaymentMethodEndpoint(orderId: '$orderId'),
+        data: <String, dynamic>{'payment_method_id': newPaymentMethodId},
       );
 
       if (response.status == Status.completed) {

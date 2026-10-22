@@ -106,8 +106,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Column(
         children: [
@@ -289,8 +290,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       color: isDark
                           ? AppColors.darkBorder
                           : AppColors.lightBorder,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusSm),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xxl),
@@ -299,8 +299,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                     height: 200,
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.darkCard : AppColors.white,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusMd),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     ),
                   ),
                 ],
@@ -364,8 +363,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       final symbol = wallet.symbol ?? _currencySymbolFor(code);
 
                       return Padding(
-                        padding:
-                            const EdgeInsetsDirectional.only(end: AppSpacing.sm),
+                        padding: const EdgeInsetsDirectional.only(
+                          end: AppSpacing.sm,
+                        ),
                         child: Semantics(
                           button: true,
                           selected: isSelected,
@@ -392,8 +392,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                     color: isSelected
                                         ? AppColors.brandViolet
                                         : (isDark
-                                            ? AppColors.darkSurfaceVariant
-                                            : AppColors.lightSurfaceVariant),
+                                              ? AppColors.darkSurfaceVariant
+                                              : AppColors.lightSurfaceVariant),
                                     borderRadius: BorderRadius.circular(
                                       AppSpacing.radiusFull,
                                     ),
@@ -401,8 +401,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                       color: isSelected
                                           ? AppColors.brandViolet
                                           : (isDark
-                                              ? AppColors.darkBorder
-                                              : AppColors.lightOutlineVariant),
+                                                ? AppColors.darkBorder
+                                                : AppColors
+                                                      .lightOutlineVariant),
                                       width: 1,
                                     ),
                                     boxShadow: isSelected
@@ -421,45 +422,51 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                     children: [
                                       Text(
                                         symbol,
-                                        style:
-                                            AppTextStyles.labelMedium.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: isSelected
-                                              ? AppColors.white
-                                              : (isDark
-                                                  ? AppColors.mainSoftBlue
-                                                  : AppColors.brandViolet),
-                                        ),
+                                        style: AppTextStyles.labelMedium
+                                            .copyWith(
+                                              fontWeight: FontWeight.w700,
+                                              color: isSelected
+                                                  ? AppColors.white
+                                                  : (isDark
+                                                        ? AppColors.mainSoftBlue
+                                                        : AppColors
+                                                              .brandViolet),
+                                            ),
                                       ),
                                       const SizedBox(width: AppSpacing.xs),
                                       Text(
                                         code,
-                                        style:
-                                            AppTextStyles.labelMedium.copyWith(
-                                          fontWeight: isSelected
-                                              ? FontWeight.w700
-                                              : FontWeight.w600,
-                                          color: isSelected
-                                              ? AppColors.white
-                                              : (isDark
-                                                  ? AppColors.darkTextPrimary
-                                                  : AppColors.lightTextPrimary),
-                                        ),
+                                        style: AppTextStyles.labelMedium
+                                            .copyWith(
+                                              fontWeight: isSelected
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w600,
+                                              color: isSelected
+                                                  ? AppColors.white
+                                                  : (isDark
+                                                        ? AppColors
+                                                              .darkTextPrimary
+                                                        : AppColors
+                                                              .lightTextPrimary),
+                                            ),
                                       ),
                                       if (wallet.formattedBalance != null &&
-                                          wallet.formattedBalance!.isNotEmpty) ...[
+                                          wallet
+                                              .formattedBalance!
+                                              .isNotEmpty) ...[
                                         const SizedBox(width: AppSpacing.xs),
                                         Text(
                                           '(${wallet.formattedBalance})',
-                                          style:
-                                              AppTextStyles.labelSmall.copyWith(
+                                          style: AppTextStyles.labelSmall.copyWith(
                                             color: isSelected
-                                                ? AppColors.white
-                                                    .withValues(alpha: 0.85)
+                                                ? AppColors.white.withValues(
+                                                    alpha: 0.85,
+                                                  )
                                                 : (isDark
-                                                    ? AppColors.darkTextSecondary
-                                                    : AppColors
-                                                        .lightTextSecondary),
+                                                      ? AppColors
+                                                            .darkTextSecondary
+                                                      : AppColors
+                                                            .lightTextSecondary),
                                           ),
                                         ),
                                       ],
@@ -479,8 +486,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       final isSelected = _selectedCurrencyCode == code;
 
                       return Padding(
-                        padding:
-                            const EdgeInsetsDirectional.only(end: AppSpacing.sm),
+                        padding: const EdgeInsetsDirectional.only(
+                          end: AppSpacing.sm,
+                        ),
                         child: Semantics(
                           button: true,
                           selected: isSelected,
@@ -507,8 +515,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                     color: isSelected
                                         ? AppColors.brandViolet
                                         : (isDark
-                                            ? AppColors.darkSurfaceVariant
-                                            : AppColors.lightSurfaceVariant),
+                                              ? AppColors.darkSurfaceVariant
+                                              : AppColors.lightSurfaceVariant),
                                     borderRadius: BorderRadius.circular(
                                       AppSpacing.radiusFull,
                                     ),
@@ -516,8 +524,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                       color: isSelected
                                           ? AppColors.brandViolet
                                           : (isDark
-                                              ? AppColors.darkBorder
-                                              : AppColors.lightOutlineVariant),
+                                                ? AppColors.darkBorder
+                                                : AppColors
+                                                      .lightOutlineVariant),
                                       width: 1,
                                     ),
                                     boxShadow: isSelected
@@ -536,30 +545,33 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                                     children: [
                                       Text(
                                         symbol,
-                                        style:
-                                            AppTextStyles.labelMedium.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: isSelected
-                                              ? AppColors.white
-                                              : (isDark
-                                                  ? AppColors.mainSoftBlue
-                                                  : AppColors.brandViolet),
-                                        ),
+                                        style: AppTextStyles.labelMedium
+                                            .copyWith(
+                                              fontWeight: FontWeight.w700,
+                                              color: isSelected
+                                                  ? AppColors.white
+                                                  : (isDark
+                                                        ? AppColors.mainSoftBlue
+                                                        : AppColors
+                                                              .brandViolet),
+                                            ),
                                       ),
                                       const SizedBox(width: AppSpacing.xs),
                                       Text(
                                         code,
-                                        style:
-                                            AppTextStyles.labelMedium.copyWith(
-                                          fontWeight: isSelected
-                                              ? FontWeight.w700
-                                              : FontWeight.w600,
-                                          color: isSelected
-                                              ? AppColors.white
-                                              : (isDark
-                                                  ? AppColors.darkTextPrimary
-                                                  : AppColors.lightTextPrimary),
-                                        ),
+                                        style: AppTextStyles.labelMedium
+                                            .copyWith(
+                                              fontWeight: isSelected
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w600,
+                                              color: isSelected
+                                                  ? AppColors.white
+                                                  : (isDark
+                                                        ? AppColors
+                                                              .darkTextPrimary
+                                                        : AppColors
+                                                              .lightTextPrimary),
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -579,30 +591,28 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
   Widget _buildBrandedCard(BuildContext context, bool isDark) {
     final user = controller.userModel.value.data;
-    final fullName = [user?.firstName, user?.lastName]
-        .whereType<String>()
-        .where((s) => s.trim().isNotEmpty)
-        .join(' ');
+    final fullName = [
+      user?.firstName,
+      user?.lastName,
+    ].whereType<String>().where((s) => s.trim().isNotEmpty).join(' ');
     final displayName = fullName.isNotEmpty
         ? fullName
         : (user?.username ??
-            _qrL(
-              context,
-              en: 'eCardo Pay',
-              fa: 'اکاردو پی',
-              ar: 'إيكاردو باي',
-            ));
+              _qrL(
+                context,
+                en: 'eCardo Pay',
+                fa: 'اکاردو پی',
+                ar: 'إيكاردو باي',
+              ));
 
     final wallets = _getAvailableWallets();
     final selectedWallet =
         (wallets.isNotEmpty && _selectedWalletIndex < wallets.length)
-            ? wallets[_selectedWalletIndex]
-            : null;
+        ? wallets[_selectedWalletIndex]
+        : null;
 
-    final accountIdentifier = selectedWallet?.accountNo ??
-        user?.accountNumber ??
-        user?.email ??
-        '';
+    final accountIdentifier =
+        selectedWallet?.accountNo ?? user?.accountNumber ?? user?.email ?? '';
 
     final activeCurrencyTag = selectedWallet?.code ?? _selectedCurrencyCode;
 
@@ -643,8 +653,8 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                       : AppColors.lightSecondaryContainer,
                   backgroundImage:
                       (user?.avatar != null && user!.avatar!.isNotEmpty)
-                          ? NetworkImage(user.avatar!)
-                          : null,
+                      ? NetworkImage(user.avatar!)
+                      : null,
                   child: (user?.avatar == null || user!.avatar!.isEmpty)
                       ? Text(
                           displayName.isNotEmpty
@@ -714,8 +724,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
                     vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                        .withValues(alpha: 0.14),
+                    color:
+                        (isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet)
+                            .withValues(alpha: 0.14),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                   child: Text(
@@ -810,13 +823,11 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
     final wallets = _getAvailableWallets();
     final selectedWallet =
         (wallets.isNotEmpty && _selectedWalletIndex < wallets.length)
-            ? wallets[_selectedWalletIndex]
-            : null;
+        ? wallets[_selectedWalletIndex]
+        : null;
 
-    final textToCopy = selectedWallet?.accountNo ??
-        user?.accountNumber ??
-        user?.email ??
-        data;
+    final textToCopy =
+        selectedWallet?.accountNo ?? user?.accountNumber ?? user?.email ?? data;
 
     Clipboard.setData(ClipboardData(text: textToCopy));
     setState(() => _isCopied = true);
@@ -846,10 +857,7 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
       final file = await _renderAndSaveQrFile('share_ecardo_qr');
       if (file != null) {
         await SharePlus.instance.share(
-          ShareParams(
-            files: [XFile(file.path)],
-            text: shareText,
-          ),
+          ShareParams(files: [XFile(file.path)], text: shareText),
         );
       }
     } catch (e) {
@@ -889,7 +897,9 @@ class _QrCodeScreenState extends State<QrCodeScreen> {
 
       final result = await OpenFilex.open(file.path);
       if (result.type != ResultType.done) {
-        debugPrint('⚠️ downloadQr(): saved but could not open (${result.message})');
+        debugPrint(
+          '⚠️ downloadQr(): saved but could not open (${result.message})',
+        );
       }
       ToastHelper().showSuccessToast(localization.qrCodeScreenDownloadSuccess);
     } catch (e) {

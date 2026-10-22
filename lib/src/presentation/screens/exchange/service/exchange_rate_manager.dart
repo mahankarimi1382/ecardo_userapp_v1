@@ -21,10 +21,11 @@ import 'package:ecardo_user/src/presentation/screens/wallets/model/currencies_mo
 ///   - Provide clean lifecycle methods ([init], [dispose], [reset]).
 class ExchangeRateManager {
   ExchangeRateManager({ExchangeRateService? rateService})
-      : _rateService = rateService ??
-            (Get.isRegistered<ExchangeRateService>()
-                ? Get.find<ExchangeRateService>()
-                : ExchangeRateService());
+    : _rateService =
+          rateService ??
+          (Get.isRegistered<ExchangeRateService>()
+              ? Get.find<ExchangeRateService>()
+              : ExchangeRateService());
 
   final ExchangeRateService _rateService;
 
@@ -160,7 +161,8 @@ class ExchangeRateManager {
       if (rates.containsKey(code)) return rates[code];
       if (code == 'IRR') return 1.0;
       if (code == 'IRT' || code == 'TOMAN') return 10.0;
-      if (code == 'USDT' && rates.containsKey('USDT_IRT')) return rates['USDT_IRT'];
+      if (code == 'USDT' && rates.containsKey('USDT_IRT'))
+        return rates['USDT_IRT'];
       return null;
     }
 
@@ -214,18 +216,12 @@ class ExchangeRateManager {
 
     final fromCurrency = currenciesList.firstWhere(
       (c) => c.code == fromCode,
-      orElse: () => CurrenciesData(
-        conversionRate: "1",
-        code: fromCode,
-      ),
+      orElse: () => CurrenciesData(conversionRate: "1", code: fromCode),
     );
 
     final toCurrency = currenciesList.firstWhere(
       (c) => c.code == toCode,
-      orElse: () => CurrenciesData(
-        conversionRate: "1",
-        code: toCode,
-      ),
+      orElse: () => CurrenciesData(conversionRate: "1", code: toCode),
     );
 
     final double fromRate =
@@ -243,7 +239,8 @@ class ExchangeRateManager {
     }
 
     // Benchmark fallback if rates are 1.0 or 0 and currency codes differ
-    if (((targetStaticRate.value - 1.0).abs() < 1e-6 || targetStaticRate.value <= 0) &&
+    if (((targetStaticRate.value - 1.0).abs() < 1e-6 ||
+            targetStaticRate.value <= 0) &&
         fromCode.toUpperCase() != toCode.toUpperCase()) {
       final fallback = _benchmarkCrossRate(fromCode, toCode);
       if (fallback != null && fallback > 0) {

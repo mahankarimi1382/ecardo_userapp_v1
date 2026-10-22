@@ -18,19 +18,15 @@ import 'package:ecardo_user/src/presentation/screens/travel/esim/widgets/esim_da
 
 class _MockEsimTravelRepository implements TravelRepository {
   @override
-  Future<TravelBootstrap> getBootstrap() async => const TravelBootstrap(
-        currency: 'USD',
-        locale: 'en',
-        services: [],
-      );
+  Future<TravelBootstrap> getBootstrap() async =>
+      const TravelBootstrap(currency: 'USD', locale: 'en', services: []);
 
   @override
   Future<List<TravelSuggestion>> getSuggestions(
     TravelProductType type, {
     String query = '',
     int limit = 20,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async =>
@@ -47,11 +43,12 @@ class _MockEsimTravelRepository implements TravelRepository {
   Future<TravelOffer> getOfferDetails(
     TravelProductType type,
     String offerId,
-  ) async =>
-      throw UnimplementedError();
+  ) async => throw UnimplementedError();
 
   @override
-  Future<List<TravelEsimPackage>> getEsimPackages(String destinationCode) async =>
+  Future<List<TravelEsimPackage>> getEsimPackages(
+    String destinationCode,
+  ) async =>
       // Realistic backend payload matching lib/src/presentation/screens/travel/core/data/travel_api_repository.dart
       const [
         TravelEsimPackage(
@@ -84,7 +81,8 @@ class _MockEsimTravelRepository implements TravelRepository {
   Future<List<TravelTraveler>> getTravelers() async => const [];
 
   @override
-  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) async => traveler;
+  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) async =>
+      traveler;
 
   @override
   Future<TravelTravelerProfile> getTravelerProfile() async =>
@@ -107,15 +105,13 @@ class _MockEsimTravelRepository implements TravelRepository {
     required TravelMoney expectedTotal,
     required String idempotencyKey,
     required TravelBookingDetails bookingDetails,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelOrder> payReservation({
     required TravelReservation reservation,
     required String idempotencyKey,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelOrder> requestRefund({
@@ -124,21 +120,19 @@ class _MockEsimTravelRepository implements TravelRepository {
     String? customerNote,
     required String eligibilityVersion,
     required String idempotencyKey,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelCancellationEligibility> getCancellationEligibility(
     TravelOrder order,
-  ) async =>
-      TravelCancellationEligibility(
-        eligible: false,
-        penalty: const TravelMoney(amount: 0, currency: 'USD'),
-        refundable: order.total,
-        refundDestination: 'original_wallet',
-        requiresSupplierReview: false,
-        version: '1',
-      );
+  ) async => TravelCancellationEligibility(
+    eligible: false,
+    penalty: const TravelMoney(amount: 0, currency: 'USD'),
+    refundable: order.total,
+    refundDestination: 'original_wallet',
+    requiresSupplierReview: false,
+    version: '1',
+  );
 
   @override
   Future<TravelOrderTimeline> getOrderEvents(TravelOrder order) async =>
@@ -154,8 +148,7 @@ class _MockEsimTravelRepository implements TravelRepository {
     String? origin,
     String? destination,
     String? travelDate,
-  }) async =>
-      {'id': 'notify-test', 'status': 'active'};
+  }) async => {'id': 'notify-test', 'status': 'active'};
 }
 
 // ============================================================================
@@ -186,7 +179,8 @@ void main() {
       home: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
-        builder: (context, _) => Scaffold(body: SingleChildScrollView(child: child)),
+        builder: (context, _) =>
+            Scaffold(body: SingleChildScrollView(child: child)),
       ),
     );
   }
@@ -194,12 +188,16 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     Get.reset();
-    final controller = TravelController(repository: _MockEsimTravelRepository());
+    final controller = TravelController(
+      repository: _MockEsimTravelRepository(),
+    );
     Get.put<TravelController>(controller);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(SystemChannels.platform, (MethodCall methodCall) async {
-      return null;
-    });
+        .setMockMethodCallHandler(SystemChannels.platform, (
+          MethodCall methodCall,
+        ) async {
+          return null;
+        });
   });
 
   tearDown(() {
@@ -208,53 +206,62 @@ void main() {
         .setMockMethodCallHandler(SystemChannels.platform, null);
   });
 
-// ============================================================================
-// UNIT TESTS: MODEL & DESERIALIZATION
-// ============================================================================
+  // ============================================================================
+  // UNIT TESTS: MODEL & DESERIALIZATION
+  // ============================================================================
 
   group('eSIM Model Deserialization Tests', () {
-    test('TravelEsimPackage correctly deserializes from realistic backend payload', () {
-      final pkg = const TravelEsimPackage(
-        id: 'esim-tr-10gb-30d',
-        destinationCode: 'TR',
-        dataLabel: '10 GB',
-        validityDays: 30,
-        total: TravelMoney(amount: 1900, currency: 'USD'),
-        isPopular: true,
-      );
+    test(
+      'TravelEsimPackage correctly deserializes from realistic backend payload',
+      () {
+        final pkg = const TravelEsimPackage(
+          id: 'esim-tr-10gb-30d',
+          destinationCode: 'TR',
+          dataLabel: '10 GB',
+          validityDays: 30,
+          total: TravelMoney(amount: 1900, currency: 'USD'),
+          isPopular: true,
+        );
 
-      expect(pkg.id, equals('esim-tr-10gb-30d'));
-      expect(pkg.destinationCode, equals('TR'));
-      expect(pkg.dataLabel, equals('10 GB'));
-      expect(pkg.validityDays, equals(30));
-      expect(pkg.total.amount, equals(1900.0));
-      expect(pkg.total.currency, equals('USD'));
-      expect(pkg.isPopular, isTrue);
-    });
+        expect(pkg.id, equals('esim-tr-10gb-30d'));
+        expect(pkg.destinationCode, equals('TR'));
+        expect(pkg.dataLabel, equals('10 GB'));
+        expect(pkg.validityDays, equals(30));
+        expect(pkg.total.amount, equals(1900.0));
+        expect(pkg.total.currency, equals('USD'));
+        expect(pkg.isPopular, isTrue);
+      },
+    );
 
-    test('TravelMoney handles floating point amounts without precision loss', () {
-      final m1 = const TravelMoney(amount: 19.99, currency: 'USD');
-      expect(m1.amount, equals(19.99));
-      expect(m1.currency, equals('USD'));
+    test(
+      'TravelMoney handles floating point amounts without precision loss',
+      () {
+        final m1 = const TravelMoney(amount: 19.99, currency: 'USD');
+        expect(m1.amount, equals(19.99));
+        expect(m1.currency, equals('USD'));
 
-      final m2 = const TravelMoney(amount: 0.01, currency: 'IRR');
-      expect(m2.amount, equals(0.01));
-      expect(m2.currency, equals('IRR'));
-    });
+        final m2 = const TravelMoney(amount: 0.01, currency: 'IRR');
+        expect(m2.amount, equals(0.01));
+        expect(m2.currency, equals('IRR'));
+      },
+    );
 
-    test('Unlimited data packages (symbol ∞) are represented as plain "∞" label', () {
-      final unlimited = const TravelEsimPackage(
-        id: 'esim-global-unlimited',
-        destinationCode: 'GLOBAL',
-        dataLabel: '∞',
-        validityDays: 7,
-        total: TravelMoney(amount: 2800, currency: 'USD'),
-        isPopular: false,
-      );
+    test(
+      'Unlimited data packages (symbol ∞) are represented as plain "∞" label',
+      () {
+        final unlimited = const TravelEsimPackage(
+          id: 'esim-global-unlimited',
+          destinationCode: 'GLOBAL',
+          dataLabel: '∞',
+          validityDays: 7,
+          total: TravelMoney(amount: 2800, currency: 'USD'),
+          isPopular: false,
+        );
 
-      expect(unlimited.dataLabel, equals('∞'));
-      expect(unlimited.validityDays, equals(7));
-    });
+        expect(unlimited.dataLabel, equals('∞'));
+        expect(unlimited.validityDays, equals(7));
+      },
+    );
 
     test('Popular flag defaults to false when omitted', () {
       const pkg = TravelEsimPackage(
@@ -269,9 +276,9 @@ void main() {
     });
   });
 
-// ============================================================================
-// WIDGET TESTS: EsimDataUsageGauge UI AT DESIGN SIZE
-// ============================================================================
+  // ============================================================================
+  // WIDGET TESTS: EsimDataUsageGauge UI AT DESIGN SIZE
+  // ============================================================================
 
   group('EsimDataUsageGauge - Dark Mode & RTL Tests', () {
     void setPhoneSurface(WidgetTester tester) {
@@ -315,86 +322,83 @@ void main() {
       },
     );
 
-    testWidgets(
-      'renders properly in RTL at design size without overflow',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('renders properly in RTL at design size without overflow', (
+      tester,
+    ) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const EsimDataUsageGauge(
-              totalDataGb: 10.0,
-              usedDataGb: 8.0,
-              daysRemaining: 7,
-              countryOrRegion: 'تایلند',
-              planName: 'بسته تورم استوری',
-            ),
-            isDark: false,
-            locale: const Locale('fa'),
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const EsimDataUsageGauge(
+            totalDataGb: 10.0,
+            usedDataGb: 8.0,
+            daysRemaining: 7,
+            countryOrRegion: 'تایلند',
+            planName: 'بسته تورم استوری',
           ),
-        );
+          isDark: false,
+          locale: const Locale('fa'),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        expect(find.textContaining('تایلند'), findsOneWidget);
-        expect(find.textContaining('سیم‌کارت فعال'), findsOneWidget);
-        expect(find.textContaining('2.0 GB'), findsOneWidget);
-        expect(find.textContaining('7 Days left'), findsOneWidget);
-      },
-    );
+      expect(find.textContaining('تایلند'), findsOneWidget);
+      expect(find.textContaining('سیم‌کارت فعال'), findsOneWidget);
+      expect(find.textContaining('2.0 GB'), findsOneWidget);
+      expect(find.textContaining('7 Days left'), findsOneWidget);
+    });
 
-    testWidgets(
-      'shows low data alert (<15%) with red indicator in RTL',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('shows low data alert (<15%) with red indicator in RTL', (
+      tester,
+    ) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const EsimDataUsageGauge(
-              totalDataGb: 5.0,
-              usedDataGb: 4.35, // 0.65 remaining = 13% < 15%
-              daysRemaining: 3,
-              countryOrRegion: 'دبی',
-            ),
-            isDark: true,
-            locale: const Locale('ar'),
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const EsimDataUsageGauge(
+            totalDataGb: 5.0,
+            usedDataGb: 4.35, // 0.65 remaining = 13% < 15%
+            daysRemaining: 3,
+            countryOrRegion: 'دبی',
           ),
-        );
+          isDark: true,
+          locale: const Locale('ar'),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        expect(find.textContaining('تنبيه'), findsOneWidget);
-        expect(find.textContaining('دبی'), findsOneWidget);
-      },
-    );
+      expect(find.textContaining('تنبيه'), findsOneWidget);
+      expect(find.textContaining('دبی'), findsOneWidget);
+    });
   });
 
   group('EsimDataUsageGauge - Light Mode Tests', () {
-    testWidgets(
-      'renders primary metrics in light theme at design size',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('renders primary metrics in light theme at design size', (
+      tester,
+    ) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const EsimDataUsageGauge(
-              totalDataGb: 20.0,
-              usedDataGb: 5.0,
-              daysRemaining: 30,
-              countryOrRegion: 'Germany · EU',
-            ),
-            isDark: false,
-            locale: const Locale('de'),
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const EsimDataUsageGauge(
+            totalDataGb: 20.0,
+            usedDataGb: 5.0,
+            daysRemaining: 30,
+            countryOrRegion: 'Germany · EU',
           ),
-        );
+          isDark: false,
+          locale: const Locale('de'),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        expect(find.textContaining('15.0 GB'), findsOneWidget);
-        expect(find.textContaining('Remaining of 20.0 GB'), findsOneWidget);
-        expect(find.textContaining('30 Days left'), findsOneWidget);
-      },
-    );
+      expect(find.textContaining('15.0 GB'), findsOneWidget);
+      expect(find.textContaining('Remaining of 20.0 GB'), findsOneWidget);
+      expect(find.textContaining('30 Days left'), findsOneWidget);
+    });
 
     testWidgets(
       'changes gradient based on usage percentage: green >35%, warning 15–35%, danger <15%',
@@ -449,9 +453,9 @@ void main() {
     );
   });
 
-// ============================================================================
-// WIDGET TESTS: EsimActivationCard - Dark Mode & RTL
-// ============================================================================
+  // ============================================================================
+  // WIDGET TESTS: EsimActivationCard - Dark Mode & RTL
+  // ============================================================================
 
   group('EsimActivationCard - Platform Tabs & Installation Steps', () {
     void setPhoneSurface(WidgetTester tester) {
@@ -501,40 +505,39 @@ void main() {
       },
     );
 
-    testWidgets(
-      'copies activation fields to clipboard with haptic feedback',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('copies activation fields to clipboard with haptic feedback', (
+      tester,
+    ) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const EsimActivationCard(
-              smdpAddress: 'demo-server.esim.global',
-              activationCode: r'LPA:1@demo-server.esim.global$TEST-ACT-CODE',
-              confirmationCode: 'TEST-CONF',
-            ),
-            isDark: false,
-            locale: const Locale('zh'),
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const EsimActivationCard(
+            smdpAddress: 'demo-server.esim.global',
+            activationCode: r'LPA:1@demo-server.esim.global$TEST-ACT-CODE',
+            confirmationCode: 'TEST-CONF',
           ),
-        );
+          isDark: false,
+          locale: const Locale('zh'),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        // Find copy buttons
-        final copyButtons = find.byIcon(Icons.copy_rounded);
-        expect(copyButtons, findsWidgets);
-        await tester.ensureVisible(copyButtons.first);
-        await tester.tap(copyButtons.first);
-        await tester.pump();
-        await tester.pump(const Duration(milliseconds: 300));
+      // Find copy buttons
+      final copyButtons = find.byIcon(Icons.copy_rounded);
+      expect(copyButtons, findsWidgets);
+      await tester.ensureVisible(copyButtons.first);
+      await tester.tap(copyButtons.first);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
 
-        // After copying, checkmark appears
-        expect(find.byIcon(Icons.check_circle_rounded), findsAtLeastNWidgets(1));
+      // After copying, checkmark appears
+      expect(find.byIcon(Icons.check_circle_rounded), findsAtLeastNWidgets(1));
 
-        // Advance clock past the revert duration to cleanly settle timers
-        await tester.pump(const Duration(seconds: 3));
-      },
-    );
+      // Advance clock past the revert duration to cleanly settle timers
+      await tester.pump(const Duration(seconds: 3));
+    });
 
     testWidgets(
       'displays "None (Not Required)" when confirmation code is null or "None"',
@@ -555,105 +558,101 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        expect(
-          find.textContaining('None (Not Required)'),
-          findsOneWidget,
-        );
+        expect(find.textContaining('None (Not Required)'), findsOneWidget);
       },
     );
 
-    testWidgets(
-      'renders installation steps in RTL (Persian/Arabic)',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('renders installation steps in RTL (Persian/Arabic)', (
+      tester,
+    ) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const EsimActivationCard(
-              smdpAddress: 'ir.provider.ir',
-              activationCode: 'IR-ACT-2024',
-            ),
-            isDark: false,
-            locale: const Locale('fa'),
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const EsimActivationCard(
+            smdpAddress: 'ir.provider.ir',
+            activationCode: 'IR-ACT-2024',
           ),
-        );
+          isDark: false,
+          locale: const Locale('fa'),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        expect(find.text('راهنمای فعال‌سازی و بارکد eSIM'), findsOneWidget);
-        expect(find.text('۱. مراجعه به بخش Cellular'), findsOneWidget);
+      expect(find.text('راهنمای فعال‌سازی و بارکد eSIM'), findsOneWidget);
+      expect(find.text('۱. مراجعه به بخش Cellular'), findsOneWidget);
 
-        // iOS tab
-        expect(find.text('iOS (iPhone / iPad)'), findsOneWidget);
+      // iOS tab
+      expect(find.text('iOS (iPhone / iPad)'), findsOneWidget);
 
-        // Scroll and switch to Android
-        final androidTab = find.text('Android');
-        await tester.ensureVisible(androidTab);
-        await tester.tap(androidTab);
-        await tester.pumpAndSettle();
+      // Scroll and switch to Android
+      final androidTab = find.text('Android');
+      await tester.ensureVisible(androidTab);
+      await tester.tap(androidTab);
+      await tester.pumpAndSettle();
 
-        expect(find.text('۱. مراجعه به بخش مدیریت سیم‌کارت'), findsOneWidget);
-      },
-    );
+      expect(find.text('۱. مراجعه به بخش مدیریت سیم‌کارت'), findsOneWidget);
+    });
 
-    testWidgets(
-      'tap-to-enlarge QR opens dialog with enlarged SVG',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('tap-to-enlarge QR opens dialog with enlarged SVG', (
+      tester,
+    ) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const EsimActivationCard(
-              smdpAddress: 'qr.test.ecardo.io',
-              activationCode: 'QR-ACT-TST',
-            ),
-            isDark: false,
-            locale: const Locale('en'),
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const EsimActivationCard(
+            smdpAddress: 'qr.test.ecardo.io',
+            activationCode: 'QR-ACT-TST',
           ),
-        );
+          isDark: false,
+          locale: const Locale('en'),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        // Tap "Tap to enlarge QR"
-        final tapToEnlarge = find.text('Tap to enlarge QR');
-        expect(tapToEnlarge, findsOneWidget);
+      // Tap "Tap to enlarge QR"
+      final tapToEnlarge = find.text('Tap to enlarge QR');
+      expect(tapToEnlarge, findsOneWidget);
 
-        // Scroll into view and tap
-        await tester.ensureVisible(tapToEnlarge);
-        await tester.tap(tapToEnlarge);
-        await tester.pumpAndSettle();
+      // Scroll into view and tap
+      await tester.ensureVisible(tapToEnlarge);
+      await tester.tap(tapToEnlarge);
+      await tester.pumpAndSettle();
 
-        // Dialog should appear with enlarged QR (SVG)
-        expect(find.byType(Dialog), findsOneWidget);
-        expect(find.byType(svg.SvgPicture), findsWidgets);
-      },
-    );
+      // Dialog should appear with enlarged QR (SVG)
+      expect(find.byType(Dialog), findsOneWidget);
+      expect(find.byType(svg.SvgPicture), findsWidgets);
+    });
   });
 
   group('EsimActivationCard - Accessibility Labels', () {
-    testWidgets(
-      'QR code container has semantic label for screen readers',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('QR code container has semantic label for screen readers', (
+      tester,
+    ) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const EsimActivationCard(
-              smdpAddress: 'accessibility-test.qr.io',
-              activationCode: 'ACCESS-ACT',
-            ),
-            isDark: true,
-            locale: const Locale('en'),
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const EsimActivationCard(
+            smdpAddress: 'accessibility-test.qr.io',
+            activationCode: 'ACCESS-ACT',
           ),
-        );
+          isDark: true,
+          locale: const Locale('en'),
+        ),
+      );
 
-        await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-        // The QR gesture detector should have a semantics label
-        final qrContainerSemantics = find.bySemanticsLabel(RegExp(r'eSIM activation QR code'));
-        expect(qrContainerSemantics, findsOneWidget);
-      },
-    );
+      // The QR gesture detector should have a semantics label
+      final qrContainerSemantics = find.bySemanticsLabel(
+        RegExp(r'eSIM activation QR code'),
+      );
+      expect(qrContainerSemantics, findsOneWidget);
+    });
 
     testWidgets(
       'iOS vs Android tabs are marked with labels for accessibility',
@@ -711,32 +710,29 @@ void main() {
       },
     );
 
-    testWidgets(
-      'controller handles network error gracefully',
-      (tester) async {
-        setPhoneSurface(tester);
+    testWidgets('controller handles network error gracefully', (tester) async {
+      setPhoneSurface(tester);
 
-        await tester.pumpWidget(
-          wrapWithTheme(
-            const SizedBox(),
-            isDark: true,
-            locale: const Locale('fa'),
-          ),
-        );
+      await tester.pumpWidget(
+        wrapWithTheme(
+          const SizedBox(),
+          isDark: true,
+          locale: const Locale('fa'),
+        ),
+      );
 
-        await tester.pump();
+      await tester.pump();
 
-        final badRepo = MockEsimTravelRepositoryWithError();
-        final controller = TravelController(repository: badRepo);
-        Get.replace<TravelController>(controller);
+      final badRepo = MockEsimTravelRepositoryWithError();
+      final controller = TravelController(repository: badRepo);
+      Get.replace<TravelController>(controller);
 
-        final success = await controller.loadEsimPackages('XX');
+      final success = await controller.loadEsimPackages('XX');
 
-        expect(success, isFalse);
-        expect(controller.esimPackages.isEmpty, isTrue);
-        expect(controller.searchError.value, isNotNull);
-      },
-    );
+      expect(success, isFalse);
+      expect(controller.esimPackages.isEmpty, isTrue);
+      expect(controller.searchError.value, isNotNull);
+    });
   });
 }
 
@@ -746,19 +742,15 @@ void main() {
 
 class MockEsimTravelRepositoryWithError implements TravelRepository {
   @override
-  Future<TravelBootstrap> getBootstrap() async => const TravelBootstrap(
-        currency: 'USD',
-        locale: 'en',
-        services: [],
-      );
+  Future<TravelBootstrap> getBootstrap() async =>
+      const TravelBootstrap(currency: 'USD', locale: 'en', services: []);
 
   @override
   Future<List<TravelSuggestion>> getSuggestions(
     TravelProductType type, {
     String query = '',
     int limit = 20,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async =>
@@ -775,18 +767,19 @@ class MockEsimTravelRepositoryWithError implements TravelRepository {
   Future<TravelOffer> getOfferDetails(
     TravelProductType type,
     String offerId,
-  ) async =>
-      throw UnimplementedError();
+  ) async => throw UnimplementedError();
 
   @override
-  Future<List<TravelEsimPackage>> getEsimPackages(String destinationCode) async =>
-      throw Exception('Backend API unreachable');
+  Future<List<TravelEsimPackage>> getEsimPackages(
+    String destinationCode,
+  ) async => throw Exception('Backend API unreachable');
 
   @override
   Future<List<TravelTraveler>> getTravelers() async => const [];
 
   @override
-  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) async => traveler;
+  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) async =>
+      traveler;
 
   @override
   Future<TravelTravelerProfile> getTravelerProfile() async =>
@@ -796,8 +789,7 @@ class MockEsimTravelRepositoryWithError implements TravelRepository {
   Future<TravelTravelerProfile> updateTravelerProfile(
     TravelPassenger passenger, {
     String phone = '',
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<List<TravelOrder>> getOrders() async => const [];
@@ -809,15 +801,13 @@ class MockEsimTravelRepositoryWithError implements TravelRepository {
     required TravelMoney expectedTotal,
     required String idempotencyKey,
     required TravelBookingDetails bookingDetails,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelOrder> payReservation({
     required TravelReservation reservation,
     required String idempotencyKey,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelOrder> requestRefund({
@@ -826,21 +816,19 @@ class MockEsimTravelRepositoryWithError implements TravelRepository {
     String? customerNote,
     required String eligibilityVersion,
     required String idempotencyKey,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelCancellationEligibility> getCancellationEligibility(
     TravelOrder order,
-  ) async =>
-      TravelCancellationEligibility(
-        eligible: false,
-        penalty: const TravelMoney(amount: 0, currency: 'USD'),
-        refundable: order.total,
-        refundDestination: 'original_wallet',
-        requiresSupplierReview: false,
-        version: '1',
-      );
+  ) async => TravelCancellationEligibility(
+    eligible: false,
+    penalty: const TravelMoney(amount: 0, currency: 'USD'),
+    refundable: order.total,
+    refundDestination: 'original_wallet',
+    requiresSupplierReview: false,
+    version: '1',
+  );
 
   @override
   Future<TravelOrderTimeline> getOrderEvents(TravelOrder order) async =>
@@ -856,6 +844,5 @@ class MockEsimTravelRepositoryWithError implements TravelRepository {
     String? origin,
     String? destination,
     String? travelDate,
-  }) async =>
-      {'error': 'mock-failure'};
+  }) async => {'error': 'mock-failure'};
 }

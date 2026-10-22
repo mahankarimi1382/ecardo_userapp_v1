@@ -66,9 +66,9 @@ void main() {
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('PonnamKarthik/fluttertoast'),
-      (MethodCall methodCall) async => true,
-    );
+          const MethodChannel('PonnamKarthik/fluttertoast'),
+          (MethodCall methodCall) async => true,
+        );
     SharedPreferences.setMockInitialValues({});
     Get.reset();
     Get.put<TokenService>(TokenService());
@@ -116,25 +116,28 @@ void main() {
       expect(symbol.dailyChangePct, closeTo(1.97333, 0.001));
     });
 
-    test('StockSymbolModel calculates change percentage correctly for negative values', () {
-      final json = {
-        'id': 104,
-        'ticker': 'TSLA',
-        'name_fa': 'تسلا',
-        'name_en': 'Tesla Inc.',
-        'industry': 'Automotive',
-        'last_price': 254.60,
-        'prev_close': 262.30,
-        'day_high': 264.00,
-        'day_low': 251.20,
-        'volume_24h': 76100000,
-        'high_volatility': true,
-        'is_tradeable': true,
-      };
+    test(
+      'StockSymbolModel calculates change percentage correctly for negative values',
+      () {
+        final json = {
+          'id': 104,
+          'ticker': 'TSLA',
+          'name_fa': 'تسلا',
+          'name_en': 'Tesla Inc.',
+          'industry': 'Automotive',
+          'last_price': 254.60,
+          'prev_close': 262.30,
+          'day_high': 264.00,
+          'day_low': 251.20,
+          'volume_24h': 76100000,
+          'high_volatility': true,
+          'is_tradeable': true,
+        };
 
-      final symbol = StockSymbolModel.fromJson(json);
-      expect(symbol.changePercent, closeTo(-2.936, 0.001));
-    });
+        final symbol = StockSymbolModel.fromJson(json);
+        expect(symbol.changePercent, closeTo(-2.936, 0.001));
+      },
+    );
 
     test('StockMarketModel parses market rules, commission and symbols', () {
       final json = {
@@ -403,13 +406,12 @@ void main() {
   // ============================================================================
 
   group('Stock Trading - Screen Rendering Tests (Light/Dark/RTL)', () {
-    testWidgets('renders StockHomeScreen in Light mode without overflow', (tester) async {
+    testWidgets('renders StockHomeScreen in Light mode without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockHomeScreen(),
-          locale: const Locale('en'),
-        ),
+        wrapWithTheme(const StockHomeScreen(), locale: const Locale('en')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -418,7 +420,9 @@ void main() {
       expect(find.text('Global Stock Trading'), findsOneWidget);
     });
 
-    testWidgets('renders StockHomeScreen in Dark mode without overflow', (tester) async {
+    testWidgets('renders StockHomeScreen in Dark mode without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
@@ -433,13 +437,12 @@ void main() {
       expect(find.byType(StockHomeScreen), findsOneWidget);
     });
 
-    testWidgets('renders StockHomeScreen in Persian (RTL) without overflow', (tester) async {
+    testWidgets('renders StockHomeScreen in Persian (RTL) without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockHomeScreen(),
-          locale: const Locale('fa'),
-        ),
+        wrapWithTheme(const StockHomeScreen(), locale: const Locale('fa')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -448,13 +451,12 @@ void main() {
       expect(find.text('بورس و سهام بین‌الملل'), findsOneWidget);
     });
 
-    testWidgets('renders StockHomeScreen in Arabic (RTL) without overflow', (tester) async {
+    testWidgets('renders StockHomeScreen in Arabic (RTL) without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockHomeScreen(),
-          locale: const Locale('ar'),
-        ),
+        wrapWithTheme(const StockHomeScreen(), locale: const Locale('ar')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -462,13 +464,12 @@ void main() {
       expect(find.byType(StockHomeScreen), findsOneWidget);
     });
 
-    testWidgets('renders StockHomeScreen in Chinese (LTR) without overflow', (tester) async {
+    testWidgets('renders StockHomeScreen in Chinese (LTR) without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockHomeScreen(),
-          locale: const Locale('zh'),
-        ),
+        wrapWithTheme(const StockHomeScreen(), locale: const Locale('zh')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -476,7 +477,9 @@ void main() {
       expect(find.byType(StockHomeScreen), findsOneWidget);
     });
 
-    testWidgets('renders StockOrderScreen form without overflow', (tester) async {
+    testWidgets('renders StockOrderScreen form without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       final controller = Get.put(StockController());
       controller.selectedMarket.value = const StockMarketModel(
@@ -499,10 +502,7 @@ void main() {
       controller.selectSymbol(controller.selectedMarket.value!.symbols.first);
 
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockOrderScreen(),
-          locale: const Locale('en'),
-        ),
+        wrapWithTheme(const StockOrderScreen(), locale: const Locale('en')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -511,7 +511,9 @@ void main() {
       expect(find.textContaining('Order'), findsWidgets);
     });
 
-    testWidgets('renders StockOrderScreen in RTL without overflow', (tester) async {
+    testWidgets('renders StockOrderScreen in RTL without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       final controller = Get.put(StockController());
       controller.selectedMarket.value = const StockMarketModel(
@@ -534,10 +536,7 @@ void main() {
       controller.selectSymbol(controller.selectedMarket.value!.symbols.first);
 
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockOrderScreen(),
-          locale: const Locale('fa'),
-        ),
+        wrapWithTheme(const StockOrderScreen(), locale: const Locale('fa')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -545,7 +544,9 @@ void main() {
       expect(find.byType(StockOrderScreen), findsOneWidget);
     });
 
-    testWidgets('renders StockConfirmScreen review card without overflow', (tester) async {
+    testWidgets('renders StockConfirmScreen review card without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
         wrapWithTheme(
@@ -560,7 +561,9 @@ void main() {
       expect(find.text('Confirm Stock Order'), findsOneWidget);
     });
 
-    testWidgets('renders StockConfirmScreen with risk checkbox visible', (tester) async {
+    testWidgets('renders StockConfirmScreen with risk checkbox visible', (
+      tester,
+    ) async {
       phoneSurface(tester);
       final controller = Get.put(StockController());
       controller.riskAcknowledged.value = false;
@@ -578,13 +581,12 @@ void main() {
       expect(find.byType(Checkbox), findsOneWidget);
     });
 
-    testWidgets('renders StockTrackingScreen Orders tab without overflow', (tester) async {
+    testWidgets('renders StockTrackingScreen Orders tab without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockTrackingScreen(),
-          locale: const Locale('en'),
-        ),
+        wrapWithTheme(const StockTrackingScreen(), locale: const Locale('en')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -593,13 +595,12 @@ void main() {
       expect(find.text('Stock Orders & Portfolio'), findsOneWidget);
     });
 
-    testWidgets('renders StockTrackingScreen Portfolio tab without overflow', (tester) async {
+    testWidgets('renders StockTrackingScreen Portfolio tab without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockTrackingScreen(),
-          locale: const Locale('en'),
-        ),
+        wrapWithTheme(const StockTrackingScreen(), locale: const Locale('en')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -610,13 +611,12 @@ void main() {
       expect(find.text('Holdings'), findsOneWidget);
     });
 
-    testWidgets('renders StockIntroScreen hero card without overflow', (tester) async {
+    testWidgets('renders StockIntroScreen hero card without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockIntroScreen(),
-          locale: const Locale('en'),
-        ),
+        wrapWithTheme(const StockIntroScreen(), locale: const Locale('en')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -628,10 +628,7 @@ void main() {
     testWidgets('renders StockIntroScreen market cards grid', (tester) async {
       phoneSurface(tester);
       await tester.pumpWidget(
-        wrapWithTheme(
-          const StockIntroScreen(),
-          locale: const Locale('en'),
-        ),
+        wrapWithTheme(const StockIntroScreen(), locale: const Locale('en')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));
@@ -670,9 +667,18 @@ void main() {
         nameFa: 'NASDAQ',
         nameEn: 'NASDAQ',
         baseCurrency: 'USD',
-        symbols: [StockSymbolModel(id: 1, ticker: 'AAPL', nameFa: 'Apple', nameEn: 'Apple', lastPrice: 220)],
+        symbols: [
+          StockSymbolModel(
+            id: 1,
+            ticker: 'AAPL',
+            nameFa: 'Apple',
+            nameEn: 'Apple',
+            lastPrice: 220,
+          ),
+        ],
       );
-      controller.selectedSymbol.value = controller.selectedMarket.value!.symbols.first;
+      controller.selectedSymbol.value =
+          controller.selectedMarket.value!.symbols.first;
       controller.quantity.value = 0.0;
 
       final error = controller.validateOrder();
@@ -711,10 +717,17 @@ void main() {
         nameEn: 'NASDAQ',
         baseCurrency: 'USD',
         symbols: [
-          StockSymbolModel(id: 1, ticker: 'AAPL', nameFa: 'Apple', nameEn: 'Apple', lastPrice: 220),
+          StockSymbolModel(
+            id: 1,
+            ticker: 'AAPL',
+            nameFa: 'Apple',
+            nameEn: 'Apple',
+            lastPrice: 220,
+          ),
         ],
       );
-      controller.selectedSymbol.value = controller.selectedMarket.value!.symbols.first;
+      controller.selectedSymbol.value =
+          controller.selectedMarket.value!.symbols.first;
       controller.quantity.value = 10.0;
       controller.riskAcknowledged.value = true;
 
@@ -755,30 +768,33 @@ void main() {
       expect(estDate.day, 7); // Oct 5 + 2 days = Oct 7
     });
 
-    test('StockOrderModel calculates settlement date T+2 with default dates', () {
-      final order = StockOrderModel(
-        orderNo: 'ORD-TEST-002',
-        ticker: 'NVDA',
-        nameFa: 'انویدیا',
-        side: 'SELL',
-        type: 'LIMIT',
-        qty: 5.0,
-        limitPrice: 135.0,
-        stopPrice: 0.0,
-        marketCurrency: 'USD',
-        payCurrency: 'USDT',
-        payAmount: 675.0,
-        executedFxRate: 1.0,
-        avgExecPrice: 135.0,
-        commissionAmount: 1.01,
-        status: 'SUBMITTED',
-        settlementDays: 2,
-      );
+    test(
+      'StockOrderModel calculates settlement date T+2 with default dates',
+      () {
+        final order = StockOrderModel(
+          orderNo: 'ORD-TEST-002',
+          ticker: 'NVDA',
+          nameFa: 'انویدیا',
+          side: 'SELL',
+          type: 'LIMIT',
+          qty: 5.0,
+          limitPrice: 135.0,
+          stopPrice: 0.0,
+          marketCurrency: 'USD',
+          payCurrency: 'USDT',
+          payAmount: 675.0,
+          executedFxRate: 1.0,
+          avgExecPrice: 135.0,
+          commissionAmount: 1.01,
+          status: 'SUBMITTED',
+          settlementDays: 2,
+        );
 
-      expect(order.createdAt, isNull);
-      final estDate = order.settlementDate;
-      expect(estDate.day, DateTime.now().add(const Duration(days: 2)).day);
-    });
+        expect(order.createdAt, isNull);
+        final estDate = order.settlementDate;
+        expect(estDate.day, DateTime.now().add(const Duration(days: 2)).day);
+      },
+    );
   });
 
   // ============================================================================
@@ -795,7 +811,9 @@ void main() {
 
     test('RiskQuestionModel structure verification', () {
       final controller = Get.put<StockController>(StockController());
-      final q1 = controller.defaultRiskQuestions.firstWhere((q) => q.id == 'Q1');
+      final q1 = controller.defaultRiskQuestions.firstWhere(
+        (q) => q.id == 'Q1',
+      );
 
       expect(q1.id, 'Q1');
       expect(q1.category, 'EXPERIENCE');

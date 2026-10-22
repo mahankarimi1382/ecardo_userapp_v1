@@ -137,8 +137,12 @@ class IssuedInstrumentModel {
       id: (json['id'] as num?)?.toInt() ?? 0,
       bankRef: json['bank_ref']?.toString() ?? '',
       documentRef: json['document_ref']?.toString() ?? '',
-      issueDate: json['issue_date'] != null ? DateTime.tryParse(json['issue_date'].toString()) : null,
-      expiryDate: json['expiry_date'] != null ? DateTime.tryParse(json['expiry_date'].toString()) : null,
+      issueDate: json['issue_date'] != null
+          ? DateTime.tryParse(json['issue_date'].toString())
+          : null,
+      expiryDate: json['expiry_date'] != null
+          ? DateTime.tryParse(json['expiry_date'].toString())
+          : null,
     );
   }
 }
@@ -217,10 +221,14 @@ class GuaranteeCaseModel {
       id: (json['id'] as num?)?.toInt() ?? 0,
       caseNo: json['case_no']?.toString() ?? '',
       instrument: json['instrument'] is Map<String, dynamic>
-          ? GuaranteeInstrumentModel.fromJson(json['instrument'] as Map<String, dynamic>)
+          ? GuaranteeInstrumentModel.fromJson(
+              json['instrument'] as Map<String, dynamic>,
+            )
           : null,
       bankOffer: json['bank_offer'] is Map<String, dynamic>
-          ? GuaranteeBankOfferModel.fromJson(json['bank_offer'] as Map<String, dynamic>)
+          ? GuaranteeBankOfferModel.fromJson(
+              json['bank_offer'] as Map<String, dynamic>,
+            )
           : null,
       beneficiaryName: json['beneficiary_name']?.toString() ?? '',
       amount: (json['amount'] as num?)?.toDouble() ?? 0,
@@ -228,16 +236,27 @@ class GuaranteeCaseModel {
       validityMonths: (json['validity_months'] as num?)?.toInt() ?? 0,
       status: json['status']?.toString() ?? 'DRAFT',
       margin: json['margin'] is Map<String, dynamic>
-          ? GuaranteeMarginModel.fromJson(json['margin'] as Map<String, dynamic>)
+          ? GuaranteeMarginModel.fromJson(
+              json['margin'] as Map<String, dynamic>,
+            )
           : null,
       issued: json['issued'] is Map<String, dynamic>
-          ? IssuedInstrumentModel.fromJson(json['issued'] as Map<String, dynamic>)
+          ? IssuedInstrumentModel.fromJson(
+              json['issued'] as Map<String, dynamic>,
+            )
           : null,
       documents: ((json['documents'] as List?) ?? [])
-          .map((e) => CaseDocumentModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) =>
+                CaseDocumentModel.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
       events: ((json['events'] as List?) ?? [])
-          .map((e) => GuaranteeEventModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) => GuaranteeEventModel.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
           .toList(),
       contractRef: json['contract_ref']?.toString(),
       claimReason: json['claim_reason']?.toString(),
@@ -275,7 +294,9 @@ class GuaranteeEventModel {
       actorRole: json['actor_role']?.toString() ?? 'SYSTEM',
       reason: json['reason']?.toString(),
       source: json['source']?.toString(),
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
+          : null,
     );
   }
 }

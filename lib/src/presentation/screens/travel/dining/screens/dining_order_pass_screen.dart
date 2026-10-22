@@ -16,10 +16,7 @@ import '../../local/widgets/experience_ui_components.dart';
 class DiningOrderPassScreen extends StatefulWidget {
   final DiningOrderModel order;
 
-  const DiningOrderPassScreen({
-    super.key,
-    required this.order,
-  });
+  const DiningOrderPassScreen({super.key, required this.order});
 
   @override
   State<DiningOrderPassScreen> createState() => _DiningOrderPassScreenState();
@@ -57,7 +54,10 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
       title: currentOrder.restaurantName,
       calculation: calc,
       onConfirmCancellation: (reason) async {
-        final success = await controller.cancelOrder(currentOrder.orderId, reason: reason);
+        final success = await controller.cancelOrder(
+          currentOrder.orderId,
+          reason: reason,
+        );
         if (success) {
           final updated = controller.myOrders.firstWhereOrNull(
             (o) => o.orderId == currentOrder.orderId,
@@ -86,7 +86,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
     final isCancelled = currentOrder.isCancelled;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : const Color(0xFFFFFBEB),
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : const Color(0xFFFFFBEB),
       appBar: AppBar(
         backgroundColor: isCancelled ? const Color(0xFF991B1B) : gourmetRed,
         elevation: 0,
@@ -146,8 +148,13 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                         Expanded(
                           child: Row(
                             children: [
-                              Icon(Icons.dinner_dining_rounded,
-                                  color: isCancelled ? AppColors.white : Colors.white, size: 22.sp),
+                              Icon(
+                                Icons.dinner_dining_rounded,
+                                color: isCancelled
+                                    ? AppColors.white
+                                    : Colors.white,
+                                size: 22.sp,
+                              ),
                               SizedBox(width: 8.w),
                               Flexible(
                                 child: Text(
@@ -166,21 +173,29 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                         ),
                         SizedBox(width: 8.w),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: isCancelled
                                 ? AppColors.error.withValues(alpha: 0.2)
                                 : AppColors.success.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12.r),
                             border: Border.all(
-                                color: isCancelled ? AppColors.error : AppColors.success),
+                              color: isCancelled
+                                  ? AppColors.error
+                                  : AppColors.success,
+                            ),
                           ),
                           child: Text(
                             isCancelled ? 'لغو شده' : 'تأیید شده',
                             style: TextStyle(
                               fontSize: 10.5.sp,
                               fontWeight: FontWeight.w800,
-                              color: isCancelled ? Colors.white : AppColors.success,
+                              color: isCancelled
+                                  ? Colors.white
+                                  : AppColors.success,
                             ),
                           ),
                         ),
@@ -199,7 +214,11 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                     SizedBox(height: 6.h),
                     Row(
                       children: [
-                        Icon(Icons.flight_takeoff_rounded, size: 14.sp, color: Colors.white70),
+                        Icon(
+                          Icons.flight_takeoff_rounded,
+                          size: 14.sp,
+                          color: Colors.white70,
+                        ),
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
@@ -227,8 +246,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                     (i) => Expanded(
                       child: Container(
                         height: 2,
-                        color:
-                            i % 2 == 0 ? Colors.transparent : AppColors.white.withValues(alpha: 0.4),
+                        color: i % 2 == 0
+                            ? Colors.transparent
+                            : AppColors.white.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -245,7 +265,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                      color: isDark
+                          ? AppColors.darkShadow
+                          : AppColors.lightShadow,
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -259,7 +281,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                         Expanded(
                           child: _buildDetailTile(
                             'سفارش در تاریخ',
-                            DateFormat('yyyy/MM/dd').format(currentOrder.orderedAt),
+                            DateFormat(
+                              'yyyy/MM/dd',
+                            ).format(currentOrder.orderedAt),
                             Icons.calendar_today_rounded,
                             isDark,
                           ),
@@ -293,13 +317,16 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                                 : '${currentOrder.totalAmount.toStringAsFixed(0)} ${currentOrder.currency}',
                             Icons.account_balance_wallet_outlined,
                             isDark,
-                            valueColor: isCancelled ? AppColors.info : AppColors.success,
+                            valueColor: isCancelled
+                                ? AppColors.info
+                                : AppColors.success,
                           ),
                         ),
                       ],
                     ),
 
-                    if (isCancelled && currentOrder.cancellationReason != null) ...[
+                    if (isCancelled &&
+                        currentOrder.cancellationReason != null) ...[
                       SizedBox(height: 14.h),
                       Container(
                         width: double.infinity,
@@ -307,7 +334,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.error.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                          border: Border.all(
+                            color: AppColors.error.withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Text(
                           'توضیحات لغو: ${currentOrder.cancellationReason}',
@@ -330,7 +359,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: 10.h),
@@ -342,10 +373,14 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                           children: [
                             Flexible(
                               child: Text(
-                                it.quantity > 1 ? '${it.quantity} × ${it.item.title}' : it.item.title,
+                                it.quantity > 1
+                                    ? '${it.quantity} × ${it.item.title}'
+                                    : it.item.title,
                                 style: TextStyle(
                                   fontSize: 12.sp,
-                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -356,7 +391,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ],
@@ -373,7 +410,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         Text(
@@ -381,7 +420,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w900,
-                            color: isCancelled ? AppColors.error : AppColors.success,
+                            color: isCancelled
+                                ? AppColors.error
+                                : AppColors.success,
                           ),
                         ),
                       ],
@@ -393,7 +434,10 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
 
                     // Barcode Section
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 12.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.white,
                         borderRadius: BorderRadius.circular(10.r),
@@ -414,7 +458,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                               fontWeight: FontWeight.w900,
                               fontFamily: 'monospace',
                               letterSpacing: 2.0,
-                              color: isDark ? AppColors.darkTextPrimary : const Color(0xFF2E2E2E),
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : const Color(0xFF2E2E2E),
                             ),
                           ),
                         ],
@@ -426,7 +472,9 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
 
@@ -482,15 +530,22 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
       children: [
         Row(
           children: [
-            Icon(icon, size: 14.sp,
-                color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+            Icon(
+              icon,
+              size: 14.sp,
+              color: isDark
+                  ? AppColors.darkTextTertiary
+                  : AppColors.lightTextTertiary,
+            ),
             SizedBox(width: 4.w),
             Flexible(
               child: Text(
                 label,
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -504,8 +559,11 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w800,
-            color: valueColor ??
-                (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            color:
+                valueColor ??
+                (isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary),
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

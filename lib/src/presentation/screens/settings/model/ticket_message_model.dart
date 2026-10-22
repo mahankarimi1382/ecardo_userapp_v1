@@ -8,8 +8,9 @@ class TicketMessageModel {
   TicketMessageModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? TicketMessageData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? TicketMessageData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -119,7 +120,10 @@ class Attachments {
         t == 'svg') {
       return true;
     }
-    final u = (url ?? '').toLowerCase().replaceAll(RegExp(r'["\[\]]'), '').trim();
+    final u = (url ?? '')
+        .toLowerCase()
+        .replaceAll(RegExp(r'["\[\]]'), '')
+        .trim();
     return u.endsWith('.png') ||
         u.endsWith('.jpg') ||
         u.endsWith('.jpeg') ||

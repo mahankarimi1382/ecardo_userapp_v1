@@ -22,11 +22,7 @@ import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/withdraw/view/widgets/withdraw_destination_card.dart';
 
 /// Transaction status for the digital receipt header badge.
-enum ReceiptStatus {
-  success,
-  pending,
-  failed,
-}
+enum ReceiptStatus { success, pending, failed }
 
 /// Structured key-value row for the receipt body.
 class ReceiptRowData {
@@ -89,7 +85,11 @@ class TicketClipper extends CustomClipper<Path> {
 
     // 3. Top-right corner
     if (r > 0) {
-      path.arcToPoint(Offset(w, r), radius: Radius.circular(r), clockwise: true);
+      path.arcToPoint(
+        Offset(w, r),
+        radius: Radius.circular(r),
+        clockwise: true,
+      );
     } else {
       path.lineTo(w, 0);
     }
@@ -111,7 +111,11 @@ class TicketClipper extends CustomClipper<Path> {
 
     // 7. Bottom-right corner
     if (r > 0) {
-      path.arcToPoint(Offset(w - r, h), radius: Radius.circular(r), clockwise: true);
+      path.arcToPoint(
+        Offset(w - r, h),
+        radius: Radius.circular(r),
+        clockwise: true,
+      );
     } else {
       path.lineTo(w, h);
     }
@@ -121,7 +125,11 @@ class TicketClipper extends CustomClipper<Path> {
 
     // 9. Bottom-left corner
     if (r > 0) {
-      path.arcToPoint(Offset(0, h - r), radius: Radius.circular(r), clockwise: true);
+      path.arcToPoint(
+        Offset(0, h - r),
+        radius: Radius.circular(r),
+        clockwise: true,
+      );
     } else {
       path.lineTo(0, h);
     }
@@ -143,7 +151,11 @@ class TicketClipper extends CustomClipper<Path> {
 
     // 13. Top-left corner
     if (r > 0) {
-      path.arcToPoint(Offset(r, 0), radius: Radius.circular(r), clockwise: true);
+      path.arcToPoint(
+        Offset(r, 0),
+        radius: Radius.circular(r),
+        clockwise: true,
+      );
     } else {
       path.lineTo(0, 0);
     }
@@ -194,12 +206,7 @@ class TicketBorderPainter extends CustomPainter {
     final path = clipper.getClip(size);
 
     if (drawShadow) {
-      canvas.drawShadow(
-        path,
-        Colors.black.withValues(alpha: 0.08),
-        8.0,
-        true,
-      );
+      canvas.drawShadow(path, Colors.black.withValues(alpha: 0.08), 8.0, true);
     }
 
     final fillPaint = Paint()
@@ -349,24 +356,37 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _measureNotchPosition());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _measureNotchPosition(),
+    );
   }
 
   @override
   void didUpdateWidget(DigitalReceiptTicket oldWidget) {
     super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _measureNotchPosition());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _measureNotchPosition(),
+    );
   }
 
   void _measureNotchPosition() {
     if (!mounted) return;
-    final separatorBox = _separatorKey.currentContext?.findRenderObject() as RenderBox?;
-    final ticketBox = _ticketContainerKey.currentContext?.findRenderObject() as RenderBox?;
+    final separatorBox =
+        _separatorKey.currentContext?.findRenderObject() as RenderBox?;
+    final ticketBox =
+        _ticketContainerKey.currentContext?.findRenderObject() as RenderBox?;
 
-    if (separatorBox != null && ticketBox != null && separatorBox.hasSize && ticketBox.hasSize) {
-      final offset = separatorBox.localToGlobal(Offset.zero, ancestor: ticketBox);
+    if (separatorBox != null &&
+        ticketBox != null &&
+        separatorBox.hasSize &&
+        ticketBox.hasSize) {
+      final offset = separatorBox.localToGlobal(
+        Offset.zero,
+        ancestor: ticketBox,
+      );
       final calculatedY = offset.dy + (separatorBox.size.height / 2);
-      if (_measuredNotchY == null || (_measuredNotchY! - calculatedY).abs() > 0.5) {
+      if (_measuredNotchY == null ||
+          (_measuredNotchY! - calculatedY).abs() > 0.5) {
         setState(() {
           _measuredNotchY = calculatedY;
         });
@@ -375,7 +395,8 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
   }
 
   String _resolveDateTimeString(BuildContext context) {
-    if (widget.formattedDateTime != null && widget.formattedDateTime!.isNotEmpty) {
+    if (widget.formattedDateTime != null &&
+        widget.formattedDateTime!.isNotEmpty) {
       return widget.formattedDateTime!;
     }
     final dt = widget.dateTime ?? DateTime.now();
@@ -404,25 +425,28 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
       'tnx': widget.transactionId ?? '',
       if (widget.primaryAmount != null) 'amount': widget.primaryAmount,
       if (widget.primaryCurrency != null) 'currency': widget.primaryCurrency,
-      if (widget.dateTime != null) 'timestamp': widget.dateTime!.toIso8601String(),
+      if (widget.dateTime != null)
+        'timestamp': widget.dateTime!.toIso8601String(),
       'status': widget.status.name,
     };
   }
 
   String _generateBarcodeSvg(String rawReference) {
-    final ref = rawReference.trim().isEmpty ? 'ECAR-00000000' : rawReference.trim();
+    final ref = rawReference.trim().isEmpty
+        ? 'ECAR-00000000'
+        : rawReference.trim();
     try {
       final barcode = Barcode.code128();
-      return barcode.toSvg(
-        ref,
-        width: 240,
-        height: 48,
-        drawText: false,
-      );
+      return barcode.toSvg(ref, width: 240, height: 48, drawText: false);
     } catch (e) {
       debugPrint('Barcode generation fallback: $e');
       try {
-        return Barcode.code39().toSvg(ref, width: 240, height: 48, drawText: false);
+        return Barcode.code39().toSvg(
+          ref,
+          width: 240,
+          height: 48,
+          drawText: false,
+        );
       } catch (_) {
         return '<svg width="240" height="48"></svg>';
       }
@@ -433,15 +457,15 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
     try {
       final data = jsonEncode(payload);
       final qr = Barcode.qrCode();
-      return qr.toSvg(
-        data,
-        width: 120,
-        height: 120,
-      );
+      return qr.toSvg(data, width: 120, height: 120);
     } catch (e) {
       debugPrint('QR generation error: $e');
       try {
-        return Barcode.qrCode().toSvg('eCardo-Receipt', width: 120, height: 120);
+        return Barcode.qrCode().toSvg(
+          'eCardo-Receipt',
+          width: 120,
+          height: 120,
+        );
       } catch (_) {
         return '<svg width="120" height="120"></svg>';
       }
@@ -631,9 +655,27 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
       final isRtl = const {'fa', 'ar'}.contains(locale.languageCode);
 
       final String statusText = switch (widget.status) {
-        ReceiptStatus.success => l10nPick(context, en: 'SUCCESS', fa: 'موفق', ar: 'ناجح', zh: '成功'),
-        ReceiptStatus.pending => l10nPick(context, en: 'PENDING', fa: 'در انتظار', ar: 'قيد الانتظار', zh: '处理中'),
-        ReceiptStatus.failed => l10nPick(context, en: 'FAILED', fa: 'ناموفق', ar: 'فشل', zh: '失败'),
+        ReceiptStatus.success => l10nPick(
+          context,
+          en: 'SUCCESS',
+          fa: 'موفق',
+          ar: 'ناجح',
+          zh: '成功',
+        ),
+        ReceiptStatus.pending => l10nPick(
+          context,
+          en: 'PENDING',
+          fa: 'در انتظار',
+          ar: 'قيد الانتظار',
+          zh: '处理中',
+        ),
+        ReceiptStatus.failed => l10nPick(
+          context,
+          en: 'FAILED',
+          fa: 'ناموفق',
+          ar: 'فشل',
+          zh: '失败',
+        ),
       };
       final allRows = _collectAllRows(context);
       final formattedDate = _resolveDateTimeString(context);
@@ -676,7 +718,9 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
           theme: pw.ThemeData.withFont(base: font, bold: font),
           build: (pwContext) {
             return pw.Directionality(
-              textDirection: isRtl ? pw.TextDirection.rtl : pw.TextDirection.ltr,
+              textDirection: isRtl
+                  ? pw.TextDirection.rtl
+                  : pw.TextDirection.ltr,
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.stretch,
                 children: [
@@ -686,7 +730,9 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                     crossAxisAlignment: pw.CrossAxisAlignment.center,
                     children: [
                       pw.Column(
-                        crossAxisAlignment: isRtl ? pw.CrossAxisAlignment.end : pw.CrossAxisAlignment.start,
+                        crossAxisAlignment: isRtl
+                            ? pw.CrossAxisAlignment.end
+                            : pw.CrossAxisAlignment.start,
                         children: [
                           pw.Text(
                             'eCardo',
@@ -713,10 +759,15 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                         ],
                       ),
                       pw.Container(
-                        padding: const pw.EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: const pw.EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                         decoration: pw.BoxDecoration(
                           color: statusBgColor,
-                          borderRadius: const pw.BorderRadius.all(pw.Radius.circular(10)),
+                          borderRadius: const pw.BorderRadius.all(
+                            pw.Radius.circular(10),
+                          ),
                           border: pw.Border.all(color: statusColor, width: 0.8),
                         ),
                         child: pw.Text(
@@ -773,39 +824,46 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                   pw.SizedBox(height: 20),
 
                   // Key-value rows table
-                  ...allRows.map(
-                    (row) {
-                      String rowValue = row.value ?? '';
-                      if (row.amount != null && row.decimals != null) {
-                        rowValue = '${_formatAmount(row.amount!, row.decimals!)} ${row.currencyCode ?? ''}';
-                      }
-                      return pw.Container(
-                        padding: const pw.EdgeInsets.symmetric(vertical: 8),
-                        decoration: const pw.BoxDecoration(
-                          border: pw.Border(
-                            bottom: pw.BorderSide(color: PdfColors.grey200, width: 0.6),
+                  ...allRows.map((row) {
+                    String rowValue = row.value ?? '';
+                    if (row.amount != null && row.decimals != null) {
+                      rowValue =
+                          '${_formatAmount(row.amount!, row.decimals!)} ${row.currencyCode ?? ''}';
+                    }
+                    return pw.Container(
+                      padding: const pw.EdgeInsets.symmetric(vertical: 8),
+                      decoration: const pw.BoxDecoration(
+                        border: pw.Border(
+                          bottom: pw.BorderSide(
+                            color: PdfColors.grey200,
+                            width: 0.6,
                           ),
                         ),
-                        child: pw.Row(
-                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                          children: [
-                            pw.Text(
-                              row.label,
-                              style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
+                      ),
+                      child: pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text(
+                            row.label,
+                            style: const pw.TextStyle(
+                              fontSize: 10,
+                              color: PdfColors.grey700,
                             ),
-                            pw.Text(
-                              rowValue,
-                              style: pw.TextStyle(
-                                fontSize: 10,
-                                fontWeight: row.isHighlighted ? pw.FontWeight.bold : pw.FontWeight.normal,
-                                color: PdfColor.fromInt(0xFF161614),
-                              ),
+                          ),
+                          pw.Text(
+                            rowValue,
+                            style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: row.isHighlighted
+                                  ? pw.FontWeight.bold
+                                  : pw.FontWeight.normal,
+                              color: PdfColor.fromInt(0xFF161614),
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
 
                   pw.Spacer(),
 
@@ -819,7 +877,9 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                             padding: const pw.EdgeInsets.all(8),
                             decoration: pw.BoxDecoration(
                               border: pw.Border.all(color: PdfColors.grey300),
-                              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+                              borderRadius: const pw.BorderRadius.all(
+                                pw.Radius.circular(8),
+                              ),
                             ),
                             child: pw.BarcodeWidget(
                               barcode: pw.Barcode.qrCode(),
@@ -866,7 +926,10 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                       zh: 'eCardo官方电子交易凭证 - 具备加密验证',
                     ),
                     textAlign: pw.TextAlign.center,
-                    style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey600),
+                    style: const pw.TextStyle(
+                      fontSize: 8,
+                      color: PdfColors.grey600,
+                    ),
                   ),
                 ],
               ),
@@ -930,7 +993,10 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
               ),
               child: Container(
                 color: Colors.transparent,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1073,28 +1139,40 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
   }
 
   Widget _buildStatusBadge(BuildContext context) {
-    final (bgColor, borderColor, textColor, icon, label) = switch (widget.status) {
+    final (
+      bgColor,
+      borderColor,
+      textColor,
+      icon,
+      label,
+    ) = switch (widget.status) {
       ReceiptStatus.success => (
-          AppColors.successContainer,
-          AppColors.success.withValues(alpha: 0.35),
-          AppColors.success,
-          Icons.check_circle_rounded,
-          l10nPick(context, en: 'Success', fa: 'موفق', ar: 'ناجح', zh: '成功'),
-        ),
+        AppColors.successContainer,
+        AppColors.success.withValues(alpha: 0.35),
+        AppColors.success,
+        Icons.check_circle_rounded,
+        l10nPick(context, en: 'Success', fa: 'موفق', ar: 'ناجح', zh: '成功'),
+      ),
       ReceiptStatus.pending => (
-          AppColors.warningContainer,
-          AppColors.warning.withValues(alpha: 0.35),
-          AppColors.warning,
-          Icons.schedule_rounded,
-          l10nPick(context, en: 'Pending', fa: 'در انتظار', ar: 'قيد الانتظار', zh: '处理中'),
+        AppColors.warningContainer,
+        AppColors.warning.withValues(alpha: 0.35),
+        AppColors.warning,
+        Icons.schedule_rounded,
+        l10nPick(
+          context,
+          en: 'Pending',
+          fa: 'در انتظار',
+          ar: 'قيد الانتظار',
+          zh: '处理中',
         ),
+      ),
       ReceiptStatus.failed => (
-          AppColors.errorContainer,
-          AppColors.error.withValues(alpha: 0.35),
-          AppColors.error,
-          Icons.cancel_rounded,
-          l10nPick(context, en: 'Failed', fa: 'ناموفق', ar: 'فشل', zh: '失败'),
-        ),
+        AppColors.errorContainer,
+        AppColors.error.withValues(alpha: 0.35),
+        AppColors.error,
+        Icons.cancel_rounded,
+        l10nPick(context, en: 'Failed', fa: 'ناموفق', ar: 'فشل', zh: '失败'),
+      ),
     };
 
     return Container(
@@ -1123,7 +1201,10 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
   }
 
   Widget _buildHeroAmount() {
-    final formatted = _formatAmount(widget.primaryAmount!, widget.primaryDecimals);
+    final formatted = _formatAmount(
+      widget.primaryAmount!,
+      widget.primaryDecimals,
+    );
     final parts = formatted.split('.');
     final integerPart = parts[0];
     final decimalPart = parts.length > 1 ? parts[1] : '';
@@ -1154,7 +1235,8 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                 color: AppColors.lightTextPrimary.withValues(alpha: 0.55),
               ),
             ),
-          if (widget.primaryCurrency != null && widget.primaryCurrency!.isNotEmpty) ...[
+          if (widget.primaryCurrency != null &&
+              widget.primaryCurrency!.isNotEmpty) ...[
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
@@ -1180,7 +1262,9 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
   Widget _buildRowWidget(BuildContext context, ReceiptRowData row) {
     String valueText = row.value ?? '';
     if (row.amount != null && row.decimals != null) {
-      valueText = '${_formatAmount(row.amount!, row.decimals!)} ${row.currencyCode ?? ''}'.trim();
+      valueText =
+          '${_formatAmount(row.amount!, row.decimals!)} ${row.currencyCode ?? ''}'
+              .trim();
     }
 
     return Padding(
@@ -1203,7 +1287,8 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
           const SizedBox(width: 12),
           Expanded(
             flex: 6,
-            child: row.customValueWidget ??
+            child:
+                row.customValueWidget ??
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -1212,7 +1297,9 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                         valueText,
                         textAlign: TextAlign.end,
                         style: TextStyle(
-                          fontWeight: row.isHighlighted ? FontWeight.w900 : FontWeight.w700,
+                          fontWeight: row.isHighlighted
+                              ? FontWeight.w900
+                              : FontWeight.w700,
                           fontSize: row.isHighlighted ? 15 : 13,
                           color: row.valueColor ?? AppColors.lightTextPrimary,
                           letterSpacing: row.isCopyable ? 0.5 : 0,
@@ -1242,7 +1329,9 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: AppColors.lightPrimary.withValues(alpha: 0.05),
+                            color: AppColors.lightPrimary.withValues(
+                              alpha: 0.05,
+                            ),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Icon(
@@ -1288,10 +1377,7 @@ class _DigitalReceiptTicketState extends State<DigitalReceiptTicket> {
           const SizedBox(height: 12),
         ],
         if (widget.showBarcode && tnx.isNotEmpty) ...[
-          SvgPicture.string(
-            _generateBarcodeSvg(tnx),
-            height: 42,
-          ),
+          SvgPicture.string(_generateBarcodeSvg(tnx), height: 42),
           const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

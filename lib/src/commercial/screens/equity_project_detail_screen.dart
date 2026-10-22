@@ -14,10 +14,7 @@ import 'equity_invest_checkout_screen.dart';
 class EquityProjectDetailScreen extends StatefulWidget {
   final String projectId;
 
-  const EquityProjectDetailScreen({
-    super.key,
-    required this.projectId,
-  });
+  const EquityProjectDetailScreen({super.key, required this.projectId});
 
   @override
   State<EquityProjectDetailScreen> createState() =>
@@ -49,15 +46,18 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor:
-            isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: isDark
+            ? AppColors.darkSurface
+            : AppColors.lightSurface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -91,9 +91,7 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
       ),
       body: Obx(() {
         if (controller.isLoadingDetail.value) {
-          return Center(
-            child: CircularProgressIndicator(color: primaryAccent),
-          );
+          return Center(child: CircularProgressIndicator(color: primaryAccent));
         }
 
         final detail = controller.selectedDetail.value;
@@ -160,9 +158,7 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
                           ),
                         ],
                       ),
-                      isDark
-                          ? AppColors.darkSurface
-                          : AppColors.lightSurface,
+                      isDark ? AppColors.darkSurface : AppColors.lightSurface,
                     ),
                   ),
                 ],
@@ -189,8 +185,9 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
     bool isDark,
   ) {
     final project = detail.base;
-    final primaryAccent =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg.r),
@@ -341,7 +338,11 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
       padding: EdgeInsets.all(AppSpacing.lg.r),
       children: [
         Text(
-          l10nPick(context, fa: 'درباره طرح و شرکت مجری', en: 'Executive Summary'),
+          l10nPick(
+            context,
+            fa: 'درباره طرح و شرکت مجری',
+            en: 'Executive Summary',
+          ),
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w800,
@@ -364,7 +365,11 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
         SizedBox(height: AppSpacing.xl.h),
         // Key Metrics Grid
         Text(
-          l10nPick(context, fa: 'شاخص‌های کلیدی مالی', en: 'Financial Highlights'),
+          l10nPick(
+            context,
+            fa: 'شاخص‌های کلیدی مالی',
+            en: 'Financial Highlights',
+          ),
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w800,
@@ -379,7 +384,8 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
             Expanded(
               child: _buildMetricTile(
                 title: 'ارزش‌گذاری فعلی',
-                value: '${detail.valuationAmount.toStringAsFixed(0)} ${detail.base.currency}',
+                value:
+                    '${detail.valuationAmount.toStringAsFixed(0)} ${detail.base.currency}',
                 icon: Icons.assessment_outlined,
                 isDark: isDark,
               ),
@@ -401,7 +407,8 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
             Expanded(
               child: _buildMetricTile(
                 title: 'حداقل ورود',
-                value: '${detail.base.minInvestment.toStringAsFixed(0)} ${detail.base.currency}',
+                value:
+                    '${detail.base.minInvestment.toStringAsFixed(0)} ${detail.base.currency}',
                 icon: Icons.payments_outlined,
                 isDark: isDark,
               ),
@@ -500,7 +507,9 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
                     decoration: BoxDecoration(
                       color: milestone.isCompleted
                           ? AppColors.success
-                          : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          : (isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
@@ -554,9 +563,15 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 6.w, vertical: 2.h),
+                              horizontal: 6.w,
+                              vertical: 2.h,
+                            ),
                             decoration: BoxDecoration(
-                              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
+                              color:
+                                  (isDark
+                                          ? AppColors.darkPrimary
+                                          : AppColors.lightPrimary)
+                                      .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                             child: Text(
@@ -687,8 +702,9 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
     EquityProjectDetailModel detail,
     bool isDark,
   ) {
-    final primaryAccent =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg.r),
@@ -718,7 +734,11 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
               ),
             ),
-            icon: Icon(Icons.calculate_outlined, size: 18.sp, color: primaryAccent),
+            icon: Icon(
+              Icons.calculate_outlined,
+              size: 18.sp,
+              color: primaryAccent,
+            ),
             label: Text(
               'محاسبه سود',
               style: TextStyle(
@@ -729,10 +749,7 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
             ),
             onPressed: () {
               HapticFeedback.lightImpact();
-              InvestmentCalculatorSheet.show(
-                context,
-                project: detail.base,
-              );
+              InvestmentCalculatorSheet.show(context, project: detail.base);
             },
           ),
           SizedBox(width: AppSpacing.md.w),
@@ -749,9 +766,7 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
               ),
               onPressed: () {
                 HapticFeedback.mediumImpact();
-                Get.to(
-                  () => EquityInvestCheckoutScreen(project: detail.base),
-                );
+                Get.to(() => EquityInvestCheckoutScreen(project: detail.base));
               },
               child: Text(
                 'سرمایه‌گذاری در طرح',
@@ -782,11 +797,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: _bgColor,
-      child: _tabBar,
-    );
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(color: _bgColor, child: _tabBar);
   }
 
   @override

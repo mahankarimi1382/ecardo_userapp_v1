@@ -167,10 +167,14 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                 decoration: BoxDecoration(
                   color: isDark
                       ? AppColors.darkSurfaceVariant.withValues(alpha: 0.5)
-                      : AppColors.lightSecondaryContainer.withValues(alpha: 0.35),
+                      : AppColors.lightSecondaryContainer.withValues(
+                          alpha: 0.35,
+                        ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Column(
@@ -194,8 +198,12 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                             ),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? AppColors.darkPrimary.withValues(alpha: 0.15)
-                                  : AppColors.lightPrimary.withValues(alpha: 0.08),
+                                  ? AppColors.darkPrimary.withValues(
+                                      alpha: 0.15,
+                                    )
+                                  : AppColors.lightPrimary.withValues(
+                                      alpha: 0.08,
+                                    ),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusSm,
                               ),
@@ -227,7 +235,8 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                     // Quick-amount chips
                     Obx(() {
                       final wallet = controller.wallet.value;
-                      final balance = double.tryParse(wallet?.balance ?? '0') ?? 1000.0;
+                      final balance =
+                          double.tryParse(wallet?.balance ?? '0') ?? 1000.0;
                       return QuickAmountSelector(
                         textController: controller.amountController,
                         availableBalance: balance > 0 ? balance : 1000.0,
@@ -269,7 +278,8 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
               // Instant KYC / Gateway limit error alert in red
               Obx(() {
                 final enteredAmount =
-                    double.tryParse(controller.amountController.text.trim()) ?? 0.0;
+                    double.tryParse(controller.amountController.text.trim()) ??
+                    0.0;
                 final gateway = controller.gatewayMethod.value;
                 if (gateway == null ||
                     gateway.formattedName == null ||
@@ -277,8 +287,10 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                     enteredAmount <= 0) {
                   return const SizedBox.shrink();
                 }
-                final min = double.tryParse(gateway.minimumDeposit ?? '0') ?? 0.0;
-                final max = double.tryParse(gateway.maximumDeposit ?? '0') ?? 0.0;
+                final min =
+                    double.tryParse(gateway.minimumDeposit ?? '0') ?? 0.0;
+                final max =
+                    double.tryParse(gateway.maximumDeposit ?? '0') ?? 0.0;
 
                 final isBelowMin = min > 0 && enteredAmount < min;
                 final isAboveMax = max > 0 && enteredAmount > max;
@@ -349,7 +361,9 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg,
+                        ),
                         color: isDark
                             ? AppColors.darkSurfaceVariant
                             : AppColors.lightPrimary.withValues(alpha: 0.08),

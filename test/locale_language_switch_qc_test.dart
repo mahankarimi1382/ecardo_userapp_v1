@@ -145,8 +145,9 @@ void main() {
   ) async {
     final switching = service.setLanguage(code);
     await tester.pump(); // offAllNamed → waypoint, first endOfFrame settles
-    await tester
-        .pump(const Duration(milliseconds: 450)); // fire the 400 ms delay
+    await tester.pump(
+      const Duration(milliseconds: 450),
+    ); // fire the 400 ms delay
     await tester.pumpAndSettle(); // apply + restore navigation settles
     await switching;
     await tester.pumpAndSettle();
@@ -156,7 +157,8 @@ void main() {
     expect(
       Get.currentRoute,
       startRoute,
-      reason: 'the language switch must return the user to the route they '
+      reason:
+          'the language switch must return the user to the route they '
           'started from (via the locale-transition waypoint)',
     );
     expect(
@@ -184,7 +186,8 @@ void main() {
       expect(
         _Probe.built,
         containsAllInOrder(['start', 'localeTransition', 'start']),
-        reason: 'the switch must clear the stack to the waypoint and then '
+        reason:
+            'the switch must clear the stack to the waypoint and then '
             'recreate the active screen under the new locale',
       );
       expect(
@@ -204,8 +207,9 @@ void main() {
     expect(service.locale.value, const Locale('en'));
     expect(currentDirection(), TextDirection.ltr);
     expectRestoredActiveRoute();
-    expect(_Probe.built, ['start'],
-        reason: 'an unsupported code must not navigate at all');
+    expect(_Probe.built, [
+      'start',
+    ], reason: 'an unsupported code must not navigate at all');
     expect(await SettingsService.getLanguageLocaleCurrentState(), isNull);
   });
 
@@ -216,8 +220,11 @@ void main() {
 
       await switchLanguage(tester, service, 'en');
 
-      expect(_Probe.built, ['start'],
-          reason: 're-selecting the active language must not rebuild anything');
+      expect(
+        _Probe.built,
+        ['start'],
+        reason: 're-selecting the active language must not rebuild anything',
+      );
       expectRestoredActiveRoute();
     },
   );
@@ -242,23 +249,22 @@ void main() {
     },
   );
 
-  testWidgets(
-    'consecutive switches across LTR/RTL languages stay consistent',
-    (tester) async {
-      final service = await pumpLanguageApp(tester);
+  testWidgets('consecutive switches across LTR/RTL languages stay consistent', (
+    tester,
+  ) async {
+    final service = await pumpLanguageApp(tester);
 
-      await switchLanguage(tester, service, 'zh');
-      expect(currentDirection(), TextDirection.ltr);
-      await switchLanguage(tester, service, 'ar');
-      expect(currentDirection(), TextDirection.rtl);
-      await switchLanguage(tester, service, 'fa');
+    await switchLanguage(tester, service, 'zh');
+    expect(currentDirection(), TextDirection.ltr);
+    await switchLanguage(tester, service, 'ar');
+    expect(currentDirection(), TextDirection.rtl);
+    await switchLanguage(tester, service, 'fa');
 
-      expect(service.locale.value, const Locale('fa'));
-      expect(Get.locale, const Locale('fa'));
-      expect(currentWidgetLocale(), const Locale('fa'));
-      expect(currentDirection(), TextDirection.rtl);
-      expectRestoredActiveRoute();
-      expect(await SettingsService.getLanguageLocaleCurrentState(), 'fa');
-    },
-  );
+    expect(service.locale.value, const Locale('fa'));
+    expect(Get.locale, const Locale('fa'));
+    expect(currentWidgetLocale(), const Locale('fa'));
+    expect(currentDirection(), TextDirection.rtl);
+    expectRestoredActiveRoute();
+    expect(await SettingsService.getLanguageLocaleCurrentState(), 'fa');
+  });
 }

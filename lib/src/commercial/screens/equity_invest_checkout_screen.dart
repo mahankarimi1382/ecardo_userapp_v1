@@ -12,10 +12,7 @@ import '../widgets/equity_project_card.dart';
 class EquityInvestCheckoutScreen extends StatefulWidget {
   final EquityProjectItem project;
 
-  const EquityInvestCheckoutScreen({
-    super.key,
-    required this.project,
-  });
+  const EquityInvestCheckoutScreen({super.key, required this.project});
 
   @override
   State<EquityInvestCheckoutScreen> createState() =>
@@ -38,8 +35,7 @@ class _EquityInvestCheckoutScreenState
         : Get.put(CommercialController());
 
     _amount = widget.project.minInvestment;
-    _amountController =
-        TextEditingController(text: _amount.toStringAsFixed(0));
+    _amountController = TextEditingController(text: _amount.toStringAsFixed(0));
   }
 
   @override
@@ -67,19 +63,22 @@ class _EquityInvestCheckoutScreenState
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     final estimatedAnnualDividend =
         (_amount * widget.project.annualYieldPercent) / 100.0;
     final estimatedShares = (_amount / 50.0).clamp(1.0, 100000.0).round();
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor:
-            isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: isDark
+            ? AppColors.darkSurface
+            : AppColors.lightSurface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -168,7 +167,8 @@ class _EquityInvestCheckoutScreenState
           Container(
             padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                  .withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
             ),
             child: Icon(
@@ -269,9 +269,7 @@ class _EquityInvestCheckoutScreenState
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                 borderSide: BorderSide(
-                  color: isDark
-                      ? AppColors.darkBorder
-                      : AppColors.lightBorder,
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
@@ -286,25 +284,57 @@ class _EquityInvestCheckoutScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildPresetChip(
-                l10nPick(context, en: 'Base (Min)', fa: 'پایه (حداقل)', ar: 'الأساسي (الحد الأدنى)', tr: 'Taban (Min)', ru: 'Базовый (Мин)', zh: '基础（最低）'),
+                l10nPick(
+                  context,
+                  en: 'Base (Min)',
+                  fa: 'پایه (حداقل)',
+                  ar: 'الأساسي (الحد الأدنى)',
+                  tr: 'Taban (Min)',
+                  ru: 'Базовый (Мин)',
+                  zh: '基础（最低）',
+                ),
                 1.0,
                 isDark,
                 primaryAccent,
               ),
               _buildPresetChip(
-                l10nPick(context, en: '2x', fa: '۲ برابر', ar: 'ضعفان', tr: '2 Katı', ru: '2x', zh: '2倍'),
+                l10nPick(
+                  context,
+                  en: '2x',
+                  fa: '۲ برابر',
+                  ar: 'ضعفان',
+                  tr: '2 Katı',
+                  ru: '2x',
+                  zh: '2倍',
+                ),
                 2.0,
                 isDark,
                 primaryAccent,
               ),
               _buildPresetChip(
-                l10nPick(context, en: '5x', fa: '۵ برابر', ar: '5 أضعاف', tr: '5 Katı', ru: '5x', zh: '5倍'),
+                l10nPick(
+                  context,
+                  en: '5x',
+                  fa: '۵ برابر',
+                  ar: '5 أضعاف',
+                  tr: '5 Katı',
+                  ru: '5x',
+                  zh: '5倍',
+                ),
                 5.0,
                 isDark,
                 primaryAccent,
               ),
               _buildPresetChip(
-                l10nPick(context, en: '10x', fa: '۱۰ برابر', ar: '10 أضعاف', tr: '10 Katı', ru: '10x', zh: '10倍'),
+                l10nPick(
+                  context,
+                  en: '10x',
+                  fa: '۱۰ برابر',
+                  ar: '10 أضعاف',
+                  tr: '10 Katı',
+                  ru: '10x',
+                  zh: '10倍',
+                ),
                 10.0,
                 isDark,
                 primaryAccent,
@@ -333,9 +363,7 @@ class _EquityInvestCheckoutScreenState
         decoration: BoxDecoration(
           color: isSelected
               ? primaryAccent
-              : (isDark
-                  ? AppColors.darkSurface
-                  : AppColors.lightSurface),
+              : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
           border: Border.all(
             color: isSelected
@@ -351,8 +379,8 @@ class _EquityInvestCheckoutScreenState
             color: isSelected
                 ? AppColors.white
                 : (isDark
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary),
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary),
           ),
         ),
       ),
@@ -379,7 +407,11 @@ class _EquityInvestCheckoutScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, fa: 'محاسبه عایدی و مالکیت سهم', en: 'Projected Returns'),
+            l10nPick(
+              context,
+              fa: 'محاسبه عایدی و مالکیت سهم',
+              en: 'Projected Returns',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
@@ -390,21 +422,53 @@ class _EquityInvestCheckoutScreenState
           ),
           SizedBox(height: AppSpacing.md.h),
           _buildRowDetail(
-            l10nPick(context, en: 'Allocated digital shares:', fa: 'تعداد سهام تخصیص‌یافته:', ar: 'عدد الأسهم المخصصة:', tr: 'Tahsis edilen dijital hisseler:', ru: 'Выделенные цифровые акции:', zh: '分配的数字股份：'),
+            l10nPick(
+              context,
+              en: 'Allocated digital shares:',
+              fa: 'تعداد سهام تخصیص‌یافته:',
+              ar: 'عدد الأسهم المخصصة:',
+              tr: 'Tahsis edilen dijital hisseler:',
+              ru: 'Выделенные цифровые акции:',
+              zh: '分配的数字股份：',
+            ),
             '$shares ${l10nPick(context, en: 'Digital Shares', fa: 'سهم دیجیتال', ar: 'سهم رقمي', tr: 'Dijital Hisse', ru: 'цифровых акций', zh: '份数字股份')}',
             isDark,
           ),
           SizedBox(height: 6.h),
           _buildRowDetail(
-            l10nPick(context, en: 'Projected annual dividend:', fa: 'سود سهام پیش‌بینی سالانه:', ar: 'أرباح الأسهم المتوقعة سنوياً:', tr: 'Tahmini yıllık temettü:', ru: 'Прогнозируемый годовой дивиденд:', zh: '预计年度股息：'),
+            l10nPick(
+              context,
+              en: 'Projected annual dividend:',
+              fa: 'سود سهام پیش‌بینی سالانه:',
+              ar: 'أرباح الأسهم المتوقعة سنوياً:',
+              tr: 'Tahmini yıllık temettü:',
+              ru: 'Прогнозируемый годовой дивиденд:',
+              zh: '预计年度股息：',
+            ),
             '${annualDividend.toStringAsFixed(0)} ${widget.project.currency} (${widget.project.annualYieldPercent}%)',
             isDark,
             highlightValue: true,
           ),
           SizedBox(height: 6.h),
           _buildRowDetail(
-            l10nPick(context, en: 'Payout frequency:', fa: 'دوره واریز سود:', ar: 'دورية توزيع الأرباح:', tr: 'Ödeme sıklığı:', ru: 'Периодичность выплат:', zh: '派息周期：'),
-            l10nPick(context, en: 'Quarterly Distribution', fa: 'سه‌ماهه (Quarterly)', ar: 'توزيع ربع سنوي', tr: 'Üç Aylık Dağıtım', ru: 'Ежеквартальное распределение', zh: '季度分红'),
+            l10nPick(
+              context,
+              en: 'Payout frequency:',
+              fa: 'دوره واریز سود:',
+              ar: 'دورية توزيع الأرباح:',
+              tr: 'Ödeme sıklığı:',
+              ru: 'Периодичность выплат:',
+              zh: '派息周期：',
+            ),
+            l10nPick(
+              context,
+              en: 'Quarterly Distribution',
+              fa: 'سه‌ماهه (Quarterly)',
+              ar: 'توزيع ربع سنوي',
+              tr: 'Üç Aylık Dağıtım',
+              ru: 'Ежеквартальное распределение',
+              zh: '季度分红',
+            ),
             isDark,
           ),
           SizedBox(height: 6.h),
@@ -444,8 +508,8 @@ class _EquityInvestCheckoutScreenState
             color: highlightValue
                 ? AppColors.success
                 : (isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.lightTextPrimary),
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary),
           ),
         ),
       ],
@@ -552,8 +616,7 @@ class _EquityInvestCheckoutScreenState
     bool isDark,
     Color primaryAccent,
   ) {
-    final isValid =
-        _amount >= widget.project.minInvestment && _agreedToTerms;
+    final isValid = _amount >= widget.project.minInvestment && _agreedToTerms;
 
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg.r),
@@ -671,8 +734,7 @@ class _EquityInvestCheckoutScreenState
                     ? AppColors.darkPrimary
                     : AppColors.lightPrimary,
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusSm.r),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                 ),
               ),
               onPressed: () {

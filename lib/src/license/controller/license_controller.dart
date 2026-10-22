@@ -59,7 +59,8 @@ class LicenseController extends GetxController {
       String ep = '/user/licenses/catalog';
       final qp = <String>[];
       if (category != null && category != 'all') qp.add('category=$category');
-      if (search != null && search.isNotEmpty) qp.add('search=${Uri.encodeComponent(search)}');
+      if (search != null && search.isNotEmpty)
+        qp.add('search=${Uri.encodeComponent(search)}');
       if (qp.isNotEmpty) ep += '?${qp.join('&')}';
 
       final ApiResponse<Map<String, dynamic>> res = await _networkService.get(
@@ -68,7 +69,9 @@ class LicenseController extends GetxController {
 
       if (res.status == Status.completed && res.data != null) {
         final list = res.data!['data']?['products'] as List? ?? [];
-        products.value = list.map((item) => LicenseProductItem.fromJson(item)).toList();
+        products.value = list
+            .map((item) => LicenseProductItem.fromJson(item))
+            .toList();
         if (products.isEmpty) {
           hasBackendError.value = true;
           isServiceAvailable.value = false;
@@ -134,19 +137,28 @@ class LicenseController extends GetxController {
         final orderData = res.data!['data'];
         final order = LicenseOrderItem.fromJson(orderData);
         currentOrder.value = order;
-        startCountdown(order.priceLockRemainingSeconds > 0 ? order.priceLockRemainingSeconds : 900);
+        startCountdown(
+          order.priceLockRemainingSeconds > 0
+              ? order.priceLockRemainingSeconds
+              : 900,
+        );
         return order;
       } else {
-        ToastHelper().showErrorToast(res.message ?? l10nPickAuto(
-          en: 'Failed to create order.',
-          fa: 'خطا در ایجاد سفارش.',
-        ));
+        ToastHelper().showErrorToast(
+          res.message ??
+              l10nPickAuto(
+                en: 'Failed to create order.',
+                fa: 'خطا در ایجاد سفارش.',
+              ),
+        );
       }
     } catch (e) {
-      ToastHelper().showErrorToast(l10nPickAuto(
-        en: 'Error creating license order.',
-        fa: 'خطا در ایجاد سفارش لایسنس.',
-      ));
+      ToastHelper().showErrorToast(
+        l10nPickAuto(
+          en: 'Error creating license order.',
+          fa: 'خطا در ایجاد سفارش لایسنس.',
+        ),
+      );
     } finally {
       isCreatingOrder.value = false;
     }
@@ -168,22 +180,29 @@ class LicenseController extends GetxController {
         final order = LicenseOrderItem.fromJson(res.data!['data']);
         currentOrder.value = order;
         _timer?.cancel();
-        ToastHelper().showSuccessToast(l10nPickAuto(
-          en: 'Payment successful! License key delivered.',
-          fa: 'پرداخت موفقیت‌آمیز بود! کلید لایسنس تحویل داده شد.',
-        ));
+        ToastHelper().showSuccessToast(
+          l10nPickAuto(
+            en: 'Payment successful! License key delivered.',
+            fa: 'پرداخت موفقیت‌آمیز بود! کلید لایسنس تحویل داده شد.',
+          ),
+        );
         return true;
       } else {
-        ToastHelper().showErrorToast(res.message ?? l10nPickAuto(
-          en: 'Wallet payment failed.',
-          fa: 'پرداخت از کیف پول با خطا مواجه شد.',
-        ));
+        ToastHelper().showErrorToast(
+          res.message ??
+              l10nPickAuto(
+                en: 'Wallet payment failed.',
+                fa: 'پرداخت از کیف پول با خطا مواجه شد.',
+              ),
+        );
       }
     } catch (e) {
-      ToastHelper().showErrorToast(l10nPickAuto(
-        en: 'Payment processing error.',
-        fa: 'خطا در پردازش پرداخت.',
-      ));
+      ToastHelper().showErrorToast(
+        l10nPickAuto(
+          en: 'Payment processing error.',
+          fa: 'خطا در پردازش پرداخت.',
+        ),
+      );
     } finally {
       isPaying.value = false;
     }
@@ -219,10 +238,12 @@ class LicenseController extends GetxController {
 
       if (res.status == Status.completed && res.data != null) {
         currentOrder.value = LicenseOrderItem.fromJson(res.data!['data']);
-        ToastHelper().showSuccessToast(l10nPickAuto(
-          en: 'Activation confirmed!',
-          fa: 'فعال‌سازی با موفقیت تأیید شد!',
-        ));
+        ToastHelper().showSuccessToast(
+          l10nPickAuto(
+            en: 'Activation confirmed!',
+            fa: 'فعال‌سازی با موفقیت تأیید شد!',
+          ),
+        );
         return true;
       }
     } catch (_) {}
@@ -238,7 +259,9 @@ class LicenseController extends GetxController {
 
       if (res.status == Status.completed && res.data != null) {
         final list = res.data!['data']?['licenses'] as List? ?? [];
-        myLicenses.value = list.map((item) => LicenseKeyItem.fromJson(item)).toList();
+        myLicenses.value = list
+            .map((item) => LicenseKeyItem.fromJson(item))
+            .toList();
       }
     } catch (_) {
     } finally {
@@ -255,7 +278,9 @@ class LicenseController extends GetxController {
 
       if (res.status == Status.completed && res.data != null) {
         final list = res.data!['data']?['orders'] as List? ?? [];
-        myOrders.value = list.map((item) => LicenseOrderItem.fromJson(item)).toList();
+        myOrders.value = list
+            .map((item) => LicenseOrderItem.fromJson(item))
+            .toList();
       }
     } catch (_) {
     } finally {
@@ -272,17 +297,21 @@ class LicenseController extends GetxController {
 
       if (res.status == Status.completed) {
         _timer?.cancel();
-        ToastHelper().showSuccessToast(l10nPickAuto(
-          en: 'Order cancelled.',
-          fa: 'سفارش لغو شد.',
-        ));
+        ToastHelper().showSuccessToast(
+          l10nPickAuto(en: 'Order cancelled.', fa: 'سفارش لغو شد.'),
+        );
         return true;
       }
     } catch (_) {}
     return false;
   }
 
-  Future<bool> submitDispute(int orderId, String reasonType, String description, {String? screenshot}) async {
+  Future<bool> submitDispute(
+    int orderId,
+    String reasonType,
+    String description, {
+    String? screenshot,
+  }) async {
     try {
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
         endpoint: '/user/licenses/orders/$orderId/dispute',
@@ -294,27 +323,34 @@ class LicenseController extends GetxController {
       );
 
       if (res.status == Status.completed) {
-        ToastHelper().showSuccessToast(l10nPickAuto(
-          en: 'Dispute submitted. Support will review within 48 hours.',
-          fa: 'گزارش اختلاف ثبت شد. پشتیبانی ظرف ۴۸ ساعت بررسی خواهد کرد.',
-        ));
+        ToastHelper().showSuccessToast(
+          l10nPickAuto(
+            en: 'Dispute submitted. Support will review within 48 hours.',
+            fa: 'گزارش اختلاف ثبت شد. پشتیبانی ظرف ۴۸ ساعت بررسی خواهد کرد.',
+          ),
+        );
         return true;
       } else {
-        ToastHelper().showErrorToast(res.message ?? l10nPickAuto(
-          en: 'Failed to submit dispute.',
-          fa: 'خطا در ثبت اختلاف.',
-        ));
+        ToastHelper().showErrorToast(
+          res.message ??
+              l10nPickAuto(
+                en: 'Failed to submit dispute.',
+                fa: 'خطا در ثبت اختلاف.',
+              ),
+        );
       }
     } catch (_) {
-      ToastHelper().showErrorToast(l10nPickAuto(
-        en: 'Error reporting issue.',
-        fa: 'خطا در ارسال گزارش.',
-      ));
+      ToastHelper().showErrorToast(
+        l10nPickAuto(en: 'Error reporting issue.', fa: 'خطا در ارسال گزارش.'),
+      );
     }
     return false;
   }
 
-  Future<LicenseOrderItem?> renewLicense(int keyId, {int? durationMonths}) async {
+  Future<LicenseOrderItem?> renewLicense(
+    int keyId, {
+    int? durationMonths,
+  }) async {
     try {
       final ApiResponse<Map<String, dynamic>> res = await _networkService.post(
         endpoint: '/user/licenses/renew/$keyId',
@@ -324,7 +360,11 @@ class LicenseController extends GetxController {
       if (res.status == Status.completed && res.data != null) {
         final order = LicenseOrderItem.fromJson(res.data!['data']);
         currentOrder.value = order;
-        startCountdown(order.priceLockRemainingSeconds > 0 ? order.priceLockRemainingSeconds : 900);
+        startCountdown(
+          order.priceLockRemainingSeconds > 0
+              ? order.priceLockRemainingSeconds
+              : 900,
+        );
         return order;
       }
     } catch (_) {}

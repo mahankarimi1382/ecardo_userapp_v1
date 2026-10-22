@@ -29,7 +29,9 @@ class P2pOrderDetailsScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Obx(() {
         if (controller.isLoading.value && controller.orderData.value == null) {
@@ -45,7 +47,9 @@ class P2pOrderDetailsScreen extends StatelessWidget {
                 letterSpacing: 0,
                 fontWeight: FontWeight.w600,
                 fontSize: 14.sp,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextPrimary.withValues(alpha: 0.6),
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextPrimary.withValues(alpha: 0.6),
               ),
             ),
           );

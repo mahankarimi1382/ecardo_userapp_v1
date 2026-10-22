@@ -20,6 +20,7 @@ import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_ac
 class AddPaymentMethodController extends GetxController {
   /// وضعیت بارگذاری لیست روش‌های پرداخت
   final RxBool isMethodsLoading = false.obs;
+
   /// وضعیت ارسال فرم
   final RxBool isSubmitLoading = false.obs;
 
@@ -36,6 +37,7 @@ class AddPaymentMethodController extends GetxController {
 
   /// روش پرداخت انتخاب‌شده
   final Rxn<PaymentMethod> selectedPaymentMethod = Rxn<PaymentMethod>();
+
   /// لیست روش‌های پرداخت موجود
   final RxList<PaymentMethod> paymentMethodList = <PaymentMethod>[].obs;
 
@@ -59,6 +61,7 @@ class AddPaymentMethodController extends GetxController {
   void onClose() {
     paymentMethodFocusNode.dispose();
     paymentMethodController.dispose();
+
     /// آزادسازی تمام کنترلرهای متن
     for (final entry in dynamicFieldControllers.entries) {
       final controller = entry.value['controller'] as TextEditingController?;
@@ -163,8 +166,7 @@ class AddPaymentMethodController extends GetxController {
         final fieldType = entry.value['type'] as String? ?? 'text';
         final fieldValidation =
             entry.value['validation'] as String? ?? 'nullable';
-        final controller =
-            entry.value['controller'] as TextEditingController?;
+        final controller = entry.value['controller'] as TextEditingController?;
         final fieldValue = controller?.text.trim() ?? '';
         final xFile = selectedImages[fieldName];
 
@@ -259,8 +261,11 @@ class AddPaymentMethodController extends GetxController {
   /// متن خطای پیش‌فرض
   String get _defaultErrorText => () {
     final context = Get.context ?? Get.overlayContext ?? Get.key.currentContext;
-    if (context == null) return AppLocalizations.of(Get.context!)?.allControllerLoadError ?? 'Something went wrong';
-    return AppLocalizations.of(context)?.allControllerLoadError ?? 'Something went wrong';
+    if (context == null)
+      return AppLocalizations.of(Get.context!)?.allControllerLoadError ??
+          'Something went wrong';
+    return AppLocalizations.of(context)?.allControllerLoadError ??
+        'Something went wrong';
   }();
 
   /// تشخیص نوع محتوای فایل بر اساس پسوند
@@ -269,7 +274,8 @@ class AddPaymentMethodController extends GetxController {
     final lower = fileName.toLowerCase();
     if (lower.endsWith('.pdf')) return dio.DioMediaType('application', 'pdf');
     if (lower.endsWith('.png')) return dio.DioMediaType('image', 'png');
-    if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return dio.DioMediaType('image', 'jpeg');
+    if (lower.endsWith('.jpg') || lower.endsWith('.jpeg'))
+      return dio.DioMediaType('image', 'jpeg');
     if (lower.endsWith('.webp')) return dio.DioMediaType('image', 'webp');
     return dio.DioMediaType('application', 'octet-stream');
   }

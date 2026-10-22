@@ -66,5 +66,3 @@ abstract interface class TravelRepository {
     String? travelDate,
   });
 }
-
-

@@ -19,7 +19,9 @@ class NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final loc = AppLocalizations.of(context);
 
     final title = l10nPick(
@@ -32,7 +34,8 @@ class NotFoundScreen extends StatelessWidget {
       zh: '404 - 找不到页面',
     );
 
-    final description = loc?.allControllerLoadError ??
+    final description =
+        loc?.allControllerLoadError ??
         l10nPick(
           context,
           en: 'This screen is not available or has been moved. Return to the home screen to continue.',
@@ -43,7 +46,8 @@ class NotFoundScreen extends StatelessWidget {
           zh: '该页面不可用或已被移除。返回首页以继续。',
         );
 
-    final backHomeLabel = loc?.addMoneySuccessBackHome ??
+    final backHomeLabel =
+        loc?.addMoneySuccessBackHome ??
         l10nPick(
           context,
           en: 'Back to Home',
@@ -57,15 +61,15 @@ class NotFoundScreen extends StatelessWidget {
     final canPop = Get.key.currentState?.canPop() == true;
     final secondaryLabel = canPop
         ? (loc?.updateGoBack ??
-            l10nPick(
-              context,
-              en: 'Go Back',
-              fa: 'بازگشت',
-              ar: 'رجوع',
-              tr: 'Geri Dön',
-              ru: 'Назад',
-              zh: '返回',
-            ))
+              l10nPick(
+                context,
+                en: 'Go Back',
+                fa: 'بازگشت',
+                ar: 'رجوع',
+                tr: 'Geri Dön',
+                ru: 'Назад',
+                zh: '返回',
+              ))
         : null;
 
     return Scaffold(
@@ -77,7 +81,9 @@ class NotFoundScreen extends StatelessWidget {
             child: EcardoEmptyState(
               title: title,
               description: description,
-              glowColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+              glowColor: isDark
+                  ? AppColors.mainSoftBlue
+                  : AppColors.brandViolet,
               customIllustration: _NotFoundIllustration(isDark: isDark),
               primaryActionLabel: backHomeLabel,
               onPrimaryAction: () {
@@ -158,7 +164,9 @@ class _NotFoundIllustration extends StatelessWidget {
               color: isDark ? AppColors.darkCard : AppColors.white,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: isDark ? 0.40 : 0.08),
+                  color: AppColors.black.withValues(
+                    alpha: isDark ? 0.40 : 0.08,
+                  ),
                   blurRadius: 18,
                   offset: const Offset(0, 6),
                 ),
@@ -178,7 +186,10 @@ class _NotFoundIllustration extends StatelessWidget {
             bottom: 4,
             right: 8,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3.5),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 3.5,
+              ),
               decoration: BoxDecoration(
                 gradient: AppColors.brandGradient,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusFull),

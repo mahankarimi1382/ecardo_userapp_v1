@@ -92,7 +92,9 @@ class CardFreezeOverlay extends StatelessWidget {
                           end: Alignment.bottomRight,
                           colors: [
                             AppColors.mainSoftBlue.withValues(alpha: 0.25),
-                            AppColors.brandVioletContainer.withValues(alpha: 0.16),
+                            AppColors.brandVioletContainer.withValues(
+                              alpha: 0.16,
+                            ),
                             AppColors.mainSoftBlue.withValues(alpha: 0.27),
                           ],
                         ),
@@ -449,7 +451,9 @@ class VirtualCardSecurityControls extends StatelessWidget {
                 child: Icon(
                   Icons.security_rounded,
                   size: 17.sp,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 ),
               ),
               SizedBox(width: 10.w),
@@ -552,10 +556,7 @@ class VirtualCardSecurityControls extends StatelessWidget {
               toggled: isFrozen,
               label: isFrozen ? 'Unfreeze card' : 'Freeze card',
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 44,
-                ),
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                 child: Center(
                   child: Switch.adaptive(
                     value: isFrozen,
@@ -581,7 +582,9 @@ class VirtualCardSecurityControls extends StatelessWidget {
                 : AppColors.softGray,
             iconBgColor: isOnlinePaymentsEnabled
                 ? AppColors.lightSecondaryContainer
-                : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant),
+                : (isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightSurfaceVariant),
             title: l10nPick(
               context,
               en: 'Online Payments',
@@ -614,10 +617,7 @@ class VirtualCardSecurityControls extends StatelessWidget {
               toggled: isOnlinePaymentsEnabled,
               label: 'Online payments',
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 44,
-                ),
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                 child: Center(
                   child: Switch.adaptive(
                     value: isOnlinePaymentsEnabled,
@@ -650,15 +650,7 @@ class VirtualCardSecurityControls extends StatelessWidget {
               zh: '支出限额',
             ),
             subtitle:
-                '${_formatAmount(dailySpendLimit)} $currency ${l10nPick(
-              context,
-              en: 'daily limit configured',
-              fa: 'سقف روزانه تنظیم‌شده',
-              ar: 'الحد اليومي المحدد',
-              tr: 'günlük limit ayarlandı',
-              ru: 'дневной лимит настроен',
-              zh: '已配置的每日限额',
-            )}',
+                '${_formatAmount(dailySpendLimit)} $currency ${l10nPick(context, en: 'daily limit configured', fa: 'سقف روزانه تنظیم‌شده', ar: 'الحد اليومي المحدد', tr: 'günlük limit ayarlandı', ru: 'дневной лимит настроен', zh: '已配置的每日限额')}',
             onTap: () => _showSpendingLimitsModal(context),
             trailing: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
@@ -684,14 +676,18 @@ class VirtualCardSecurityControls extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                     ),
                   ),
                   SizedBox(width: 4.w),
                   Icon(
                     Icons.chevron_right_rounded,
                     size: 16.sp,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                 ],
               ),
@@ -729,7 +725,9 @@ class VirtualCardSecurityControls extends StatelessWidget {
               trailing: Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 15.sp,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.softGray,
               ),
             ),
             SizedBox(height: 12.h),
@@ -837,7 +835,9 @@ class VirtualCardSecurityControls extends StatelessWidget {
                   Icon(
                     Icons.pin_rounded,
                     size: 14.sp,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                   SizedBox(width: 4.w),
                   Text(
@@ -853,7 +853,9 @@ class VirtualCardSecurityControls extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                     ),
                   ),
                 ],
@@ -961,10 +963,7 @@ class _SecurityActionTile extends StatelessWidget {
                   ],
                 ),
               ),
-              if (trailing != null) ...[
-                SizedBox(width: 8.w),
-                trailing!,
-              ],
+              if (trailing != null) ...[SizedBox(width: 8.w), trailing!],
             ],
           ),
         ),
@@ -995,7 +994,8 @@ class _SpendingLimitsBottomSheet extends StatefulWidget {
       _SpendingLimitsBottomSheetState();
 }
 
-class _SpendingLimitsBottomSheetState extends State<_SpendingLimitsBottomSheet> {
+class _SpendingLimitsBottomSheetState
+    extends State<_SpendingLimitsBottomSheet> {
   late double _daily;
   late double _monthly;
 
@@ -1041,7 +1041,9 @@ class _SpendingLimitsBottomSheetState extends State<_SpendingLimitsBottomSheet> 
               width: 44.w,
               height: 4.h,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF4A4A4A) : const Color(0xFFD0D0D0),
+                color: isDark
+                    ? const Color(0xFF4A4A4A)
+                    : const Color(0xFFD0D0D0),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
               ),
             ),
@@ -1249,7 +1251,9 @@ class _SpendingLimitsBottomSheetState extends State<_SpendingLimitsBottomSheet> 
                     fontFamily: 'monospace',
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                 ),
               ),
@@ -1289,8 +1293,10 @@ class _SpendingLimitsBottomSheetState extends State<_SpendingLimitsBottomSheet> 
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 5.h,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.brandViolet
@@ -1300,8 +1306,8 @@ class _SpendingLimitsBottomSheetState extends State<_SpendingLimitsBottomSheet> 
                       color: isSelected
                           ? AppColors.brandViolet
                           : (isDark
-                              ? const Color(0xFF444442)
-                              : const Color(0xFFD1D5DB)),
+                                ? const Color(0xFF444442)
+                                : const Color(0xFFD1D5DB)),
                       width: 1,
                     ),
                   ),
@@ -1309,13 +1315,14 @@ class _SpendingLimitsBottomSheetState extends State<_SpendingLimitsBottomSheet> 
                     NumberFormat('#,###').format(preset),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      fontWeight:
-                          isSelected ? FontWeight.w800 : FontWeight.w600,
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w600,
                       color: isSelected
                           ? Colors.white
                           : (isDark
-                              ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary),
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                     ),
                   ),
                 ),
@@ -1388,7 +1395,8 @@ class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
       if (response.status == Status.completed && response.data != null) {
         final data = response.data!['data'] ?? response.data!;
         final code = data['code']?.toString() ?? '';
-        final expiresIn = int.tryParse(data['expires_in']?.toString() ?? '90') ?? 90;
+        final expiresIn =
+            int.tryParse(data['expires_in']?.toString() ?? '90') ?? 90;
 
         HapticFeedback.heavyImpact();
         SystemSound.play(SystemSoundType.click);
@@ -1475,7 +1483,9 @@ class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
               width: 44.w,
               height: 4.h,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF4A4A4A) : const Color(0xFFD0D0D0),
+                color: isDark
+                    ? const Color(0xFF4A4A4A)
+                    : const Color(0xFFD0D0D0),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
               ),
             ),
@@ -1559,20 +1569,25 @@ class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
           if (_isLoading)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 36.h),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             )
           else if (_error != null)
             Padding(
               padding: EdgeInsets.symmetric(vertical: 24.h),
               child: Column(
                 children: [
-                  Icon(Icons.error_outline_rounded, color: AppColors.error, size: 36.sp),
+                  Icon(
+                    Icons.error_outline_rounded,
+                    color: AppColors.error,
+                    size: 36.sp,
+                  ),
                   SizedBox(height: 8.h),
                   Text(_error!, style: const TextStyle(color: AppColors.error)),
                   SizedBox(height: 12.h),
-                  ElevatedButton(onPressed: _fetchOtp, child: const Text('Retry')),
+                  ElevatedButton(
+                    onPressed: _fetchOtp,
+                    child: const Text('Retry'),
+                  ),
                 ],
               ),
             )
@@ -1602,9 +1617,7 @@ class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
                         fontSize: 32.sp,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 8.w,
-                        color: isDark
-                            ? Colors.white
-                            : const Color(0xFF5B21B6),
+                        color: isDark ? Colors.white : const Color(0xFF5B21B6),
                       ),
                     ),
                     SizedBox(width: 14.w),
@@ -1647,7 +1660,9 @@ class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w700,
                     color: _secondsRemaining > 20
-                        ? (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)
+                        ? (isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary)
                         : AppColors.error,
                   ),
                 ),
@@ -1660,7 +1675,13 @@ class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
               ElevatedButton.icon(
                 onPressed: _fetchOtp,
                 icon: const Icon(Icons.refresh_rounded),
-                label: Text(l10nPick(context, en: 'Generate New OTP', fa: 'دریافت رمز جدید')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    en: 'Generate New OTP',
+                    fa: 'دریافت رمز جدید',
+                  ),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF8B5CF6),
                   foregroundColor: Colors.white,

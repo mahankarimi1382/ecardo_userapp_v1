@@ -10,11 +10,7 @@ class EscrowStatusBadge extends StatelessWidget {
   final String status;
   final String? label;
 
-  const EscrowStatusBadge({
-    super.key,
-    required this.status,
-    this.label,
-  });
+  const EscrowStatusBadge({super.key, required this.status, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +22,9 @@ class EscrowStatusBadge extends StatelessWidget {
 
     switch (status) {
       case 'DRAFT':
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
         text = isDark ? AppColors.darkTextSecondary : AppColors.softGray;
         icon = Icons.edit_note_rounded;
         display = l10nPick(context, fa: 'پیش‌نویس', en: 'Draft');
@@ -37,7 +35,11 @@ class EscrowStatusBadge extends StatelessWidget {
             : AppColors.warningContainer;
         text = AppColors.warning;
         icon = Icons.handshake_outlined;
-        display = l10nPick(context, fa: 'در انتظار تأیید', en: 'Awaiting Agreement');
+        display = l10nPick(
+          context,
+          fa: 'در انتظار تأیید',
+          en: 'Awaiting Agreement',
+        );
         break;
       case 'AWAITING_PAYMENT':
         bg = isDark
@@ -45,7 +47,11 @@ class EscrowStatusBadge extends StatelessWidget {
             : AppColors.warningContainer;
         text = AppColors.warning;
         icon = Icons.payment_rounded;
-        display = l10nPick(context, fa: 'در انتظار پرداخت', en: 'Awaiting Payment');
+        display = l10nPick(
+          context,
+          fa: 'در انتظار پرداخت',
+          en: 'Awaiting Payment',
+        );
         break;
       case 'FUNDS_HELD':
         bg = isDark
@@ -53,7 +59,11 @@ class EscrowStatusBadge extends StatelessWidget {
             : AppColors.infoContainer;
         text = AppColors.info;
         icon = Icons.lock_clock_rounded;
-        display = l10nPick(context, fa: 'امان نزد پلتفرم', en: 'Funds in Escrow');
+        display = l10nPick(
+          context,
+          fa: 'امان نزد پلتفرم',
+          en: 'Funds in Escrow',
+        );
         break;
       case 'IN_DELIVERY':
         bg = isDark
@@ -98,7 +108,9 @@ class EscrowStatusBadge extends StatelessWidget {
         break;
       case 'CANCELLED':
       case 'EXPIRED':
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
         text = isDark ? AppColors.darkTextTertiary : AppColors.softGray;
         icon = Icons.cancel_outlined;
         display = status == 'EXPIRED'
@@ -106,7 +118,9 @@ class EscrowStatusBadge extends StatelessWidget {
             : l10nPick(context, fa: 'لغو شده', en: 'Cancelled');
         break;
       default:
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
         text = isDark ? AppColors.darkTextSecondary : AppColors.softGray;
         icon = Icons.info_outline_rounded;
     }
@@ -116,10 +130,7 @@ class EscrowStatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(
-          color: text.withValues(alpha: 0.25),
-          width: 0.8,
-        ),
+        border: Border.all(color: text.withValues(alpha: 0.25), width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

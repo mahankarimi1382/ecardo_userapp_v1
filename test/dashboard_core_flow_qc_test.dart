@@ -62,72 +62,77 @@ void main() {
       'data': {
         'kyc_level': 2,
         'passcode': '0',
-        'addons': {
-          'travel': true,
-          'p2p_trading': true,
-        },
+        'addons': {'travel': true, 'p2p_trading': true},
       },
     });
   });
 
   tearDown(Get.reset);
 
-  void setPhoneSurface(WidgetTester tester, {double width = 360, double height = 800}) {
+  void setPhoneSurface(
+    WidgetTester tester, {
+    double width = 360,
+    double height = 800,
+  }) {
     tester.view.physicalSize = Size(width * 2, height * 2);
     tester.view.devicePixelRatio = 2;
     addTearDown(tester.view.reset);
   }
 
   group('ActionButtonSection UI/UX', () {
-    testWidgets('renders all 4 core actions (Transfer, Exchange, Deposit, Withdraw) without overflow on 360px screen', (tester) async {
-      setPhoneSurface(tester, width: 360);
+    testWidgets(
+      'renders all 4 core actions (Transfer, Exchange, Deposit, Withdraw) without overflow on 360px screen',
+      (tester) async {
+        setPhoneSurface(tester, width: 360);
 
-      await tester.pumpWidget(
-        GetMaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en'), Locale('fa')],
-          locale: const Locale('en'),
-          home: const Scaffold(
-            body: Center(
-              child: ActionButtonSection(),
-            ),
+        await tester.pumpWidget(
+          GetMaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('en'), Locale('fa')],
+            locale: const Locale('en'),
+            home: const Scaffold(body: Center(child: ActionButtonSection())),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Transfer'), findsOneWidget);
-      expect(find.text('Exchange'), findsOneWidget);
-      expect(find.text('Deposit'), findsOneWidget);
-      expect(find.text('Withdraw'), findsOneWidget);
+        expect(find.text('Transfer'), findsOneWidget);
+        expect(find.text('Exchange'), findsOneWidget);
+        expect(find.text('Deposit'), findsOneWidget);
+        expect(find.text('Withdraw'), findsOneWidget);
 
-      expect(find.byIcon(Icons.swap_horiz_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.currency_exchange_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.add_circle_outline_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.account_balance_wallet_outlined), findsOneWidget);
+        expect(find.byIcon(Icons.swap_horiz_rounded), findsOneWidget);
+        expect(find.byIcon(Icons.currency_exchange_rounded), findsOneWidget);
+        expect(find.byIcon(Icons.add_circle_outline_rounded), findsOneWidget);
+        expect(
+          find.byIcon(Icons.account_balance_wallet_outlined),
+          findsOneWidget,
+        );
 
-      // Verify touch target >= 44x44
-      final inkWells = find.descendant(
-        of: find.byType(ActionButtonSection),
-        matching: find.byType(InkWell),
-      );
-      expect(inkWells, findsNWidgets(4));
+        // Verify touch target >= 44x44
+        final inkWells = find.descendant(
+          of: find.byType(ActionButtonSection),
+          matching: find.byType(InkWell),
+        );
+        expect(inkWells, findsNWidgets(4));
 
-      for (int i = 0; i < 4; i++) {
-        final size = tester.getSize(inkWells.at(i));
-        expect(size.width, greaterThanOrEqualTo(44.0));
-        expect(size.height, greaterThanOrEqualTo(44.0));
-      }
+        for (int i = 0; i < 4; i++) {
+          final size = tester.getSize(inkWells.at(i));
+          expect(size.width, greaterThanOrEqualTo(44.0));
+          expect(size.height, greaterThanOrEqualTo(44.0));
+        }
 
-      expect(tester.takeException(), isNull);
-    });
+        expect(tester.takeException(), isNull);
+      },
+    );
 
-    testWidgets('renders properly in Persian (RTL) without overflow on 360px', (tester) async {
+    testWidgets('renders properly in Persian (RTL) without overflow on 360px', (
+      tester,
+    ) async {
       setPhoneSurface(tester, width: 360);
 
       await tester.pumpWidget(
@@ -140,11 +145,7 @@ void main() {
           ],
           supportedLocales: const [Locale('en'), Locale('fa')],
           locale: const Locale('fa'),
-          home: const Scaffold(
-            body: Center(
-              child: ActionButtonSection(),
-            ),
-          ),
+          home: const Scaffold(body: Center(child: ActionButtonSection())),
         ),
       );
       await tester.pumpAndSettle();
@@ -159,74 +160,79 @@ void main() {
   });
 
   group('BusinessServicesSection & Equity Projects Tile', () {
-    testWidgets('renders Equity Projects tile with corporate fare icon and navigates to commercial projects', (tester) async {
-      setPhoneSurface(tester, width: 360);
+    testWidgets(
+      'renders Equity Projects tile with corporate fare icon and navigates to commercial projects',
+      (tester) async {
+        setPhoneSurface(tester, width: 360);
 
-      await tester.pumpWidget(
-        GetMaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en'), Locale('fa')],
-          locale: const Locale('en'),
-          routes: {
-            BaseRoute.commercialProjects: (ctx) => const Scaffold(body: Text('CommercialProjectsTarget')),
-          },
-          home: const Scaffold(
-            body: SingleChildScrollView(
-              child: BusinessServicesSection(),
+        await tester.pumpWidget(
+          GetMaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('en'), Locale('fa')],
+            locale: const Locale('en'),
+            routes: {
+              BaseRoute.commercialProjects: (ctx) =>
+                  const Scaffold(body: Text('CommercialProjectsTarget')),
+            },
+            home: const Scaffold(
+              body: SingleChildScrollView(child: BusinessServicesSection()),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('Equity Projects'), findsOneWidget);
-      expect(find.byIcon(Icons.corporate_fare_rounded), findsOneWidget);
+        expect(find.text('Equity Projects'), findsOneWidget);
+        expect(find.byIcon(Icons.corporate_fare_rounded), findsOneWidget);
 
-      // Verify touch targets of service tiles in the grid >= 44x44
-      final serviceTiles = find.byType(ServiceTileView);
-      expect(serviceTiles, findsWidgets);
-      final firstTileSize = tester.getSize(serviceTiles.first);
-      expect(firstTileSize.width, greaterThanOrEqualTo(44.0));
-      expect(firstTileSize.height, greaterThanOrEqualTo(44.0));
+        // Verify touch targets of service tiles in the grid >= 44x44
+        final serviceTiles = find.byType(ServiceTileView);
+        expect(serviceTiles, findsWidgets);
+        final firstTileSize = tester.getSize(serviceTiles.first);
+        expect(firstTileSize.width, greaterThanOrEqualTo(44.0));
+        expect(firstTileSize.height, greaterThanOrEqualTo(44.0));
 
-      expect(tester.takeException(), isNull);
-    });
+        expect(tester.takeException(), isNull);
+      },
+    );
 
-    testWidgets('renders Equity Projects in Persian (سرمایه‌گذاری تجاری) without overflow', (tester) async {
-      setPhoneSurface(tester, width: 360);
+    testWidgets(
+      'renders Equity Projects in Persian (سرمایه‌گذاری تجاری) without overflow',
+      (tester) async {
+        setPhoneSurface(tester, width: 360);
 
-      await tester.pumpWidget(
-        GetMaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en'), Locale('fa')],
-          locale: const Locale('fa'),
-          home: const Scaffold(
-            body: SingleChildScrollView(
-              child: BusinessServicesSection(),
+        await tester.pumpWidget(
+          GetMaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('en'), Locale('fa')],
+            locale: const Locale('fa'),
+            home: const Scaffold(
+              body: SingleChildScrollView(child: BusinessServicesSection()),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('سرمایه‌گذاری تجاری'), findsOneWidget);
-      expect(find.byIcon(Icons.corporate_fare_rounded), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
+        expect(find.text('سرمایه‌گذاری تجاری'), findsOneWidget);
+        expect(find.byIcon(Icons.corporate_fare_rounded), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
   });
 
   group('TravelServicesSection Core 4 Row', () {
-    testWidgets('first row features Flights, Hotels, eSIM, and Taxi', (tester) async {
+    testWidgets('first row features Flights, Hotels, eSIM, and Taxi', (
+      tester,
+    ) async {
       setPhoneSurface(tester, width: 360);
 
       await tester.pumpWidget(
@@ -240,9 +246,7 @@ void main() {
           supportedLocales: const [Locale('en'), Locale('fa')],
           locale: const Locale('en'),
           home: const Scaffold(
-            body: SingleChildScrollView(
-              child: TravelServicesSection(),
-            ),
+            body: SingleChildScrollView(child: TravelServicesSection()),
           ),
         ),
       );
@@ -263,53 +267,58 @@ void main() {
   });
 
   group('MyWalletSection & MultiCurrencyFlipCard Touch Targets', () {
-    testWidgets('flip button has at least 44x44 touch target and localized tooltip', (tester) async {
-      setPhoneSurface(tester, width: 360);
+    testWidgets(
+      'flip button has at least 44x44 touch target and localized tooltip',
+      (tester) async {
+        setPhoneSurface(tester, width: 360);
 
-      final wallet = Wallets(
-        id: 1,
-        name: 'USD Wallet',
-        code: 'USD',
-        symbol: '\$',
-        balance: '1250.50',
-        accountNo: '1234 5678 9012 3456',
-        isDefault: true,
-      );
+        final wallet = Wallets(
+          id: 1,
+          name: 'USD Wallet',
+          code: 'USD',
+          symbol: '\$',
+          balance: '1250.50',
+          accountNo: '1234 5678 9012 3456',
+          isDefault: true,
+        );
 
-      await tester.pumpWidget(
-        GetMaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en'), Locale('fa')],
-          locale: const Locale('en'),
-          home: Scaffold(
-            body: Center(
-              child: MultiCurrencyFlipCard(
-                wallet: wallet,
-                width: 320,
-                height: 196,
+        await tester.pumpWidget(
+          GetMaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [Locale('en'), Locale('fa')],
+            locale: const Locale('en'),
+            home: Scaffold(
+              body: Center(
+                child: MultiCurrencyFlipCard(
+                  wallet: wallet,
+                  width: 320,
+                  height: 196,
+                ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      final flipButton = find.byTooltip('Flip card');
-      expect(flipButton, findsOneWidget);
+        final flipButton = find.byTooltip('Flip card');
+        expect(flipButton, findsOneWidget);
 
-      final flipSize = tester.getSize(flipButton);
-      expect(flipSize.width, greaterThanOrEqualTo(44.0));
-      expect(flipSize.height, greaterThanOrEqualTo(44.0));
+        final flipSize = tester.getSize(flipButton);
+        expect(flipSize.width, greaterThanOrEqualTo(44.0));
+        expect(flipSize.height, greaterThanOrEqualTo(44.0));
 
-      expect(tester.takeException(), isNull);
-    });
+        expect(tester.takeException(), isNull);
+      },
+    );
 
-    testWidgets('carousel caps card width on tablet surface (800px width)', (tester) async {
+    testWidgets('carousel caps card width on tablet surface (800px width)', (
+      tester,
+    ) async {
       setPhoneSurface(tester, width: 800, height: 1200);
 
       final wallet = Wallets(

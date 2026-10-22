@@ -10,8 +10,9 @@ class NotificationsModel {
   NotificationsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? NotificationsData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? NotificationsData.fromJson(json['data'])
+        : null;
   }
 }
 

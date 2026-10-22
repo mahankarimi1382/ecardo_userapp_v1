@@ -53,7 +53,10 @@ class CommonIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
-    final bool isDirectional = icon.contains('arrow') || icon.contains('Back') || icon.contains('back');
+    final bool isDirectional =
+        icon.contains('arrow') ||
+        icon.contains('Back') ||
+        icon.contains('back');
 
     final iconWidget = Image.asset(
       icon,
@@ -84,16 +87,14 @@ class CommonIconButton extends StatelessWidget {
         onTap: isLoading == true
             ? null
             : (onPressed == null
-                ? null
-                : () {
-                    AppHaptics.light();
-                    onPressed!();
-                  }),
+                  ? null
+                  : () {
+                      AppHaptics.light();
+                      onPressed!();
+                    }),
         child: Container(
           width: width?.w,
-          constraints: BoxConstraints(
-            minHeight: (height ?? 48).h,
-          ),
+          constraints: BoxConstraints(minHeight: (height ?? 48).h),
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
           alignment: Alignment.center,
           decoration: BoxDecoration(

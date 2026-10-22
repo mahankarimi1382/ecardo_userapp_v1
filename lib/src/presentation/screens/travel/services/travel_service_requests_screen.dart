@@ -85,7 +85,10 @@ class _TravelServiceRequestsScreenState
                 Text(
                   localization.travelRequestEmptyTitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 SizedBox(height: 6.h),
                 Text(
@@ -126,7 +129,9 @@ class _RequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final createdAt = DateFormat('yyyy-MM-dd · HH:mm').format(request.createdAt);
+    final createdAt = DateFormat(
+      'yyyy-MM-dd · HH:mm',
+    ).format(request.createdAt);
     return TravelCard(
       onTap: request.details.isEmpty
           ? null
@@ -187,10 +192,7 @@ class _RequestCard extends StatelessWidget {
                 children: [
                   Text(
                     localization.travelRequestSubmittedAt,
-                    style: TextStyle(
-                      color: TravelTheme.muted,
-                      fontSize: 10.sp,
-                    ),
+                    style: TextStyle(color: TravelTheme.muted, fontSize: 10.sp),
                   ),
                   Text(
                     createdAt,
@@ -230,7 +232,10 @@ class _RequestCard extends StatelessWidget {
               children: [
                 Text(
                   localization.travelRequestDetails,
-                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
                 SizedBox(height: 12.h),
                 Flexible(

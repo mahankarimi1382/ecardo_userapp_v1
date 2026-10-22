@@ -12,10 +12,7 @@ import 'package:ecardo_user/src/presentation/screens/transactions/model/transact
 class TransactionSummaryCard extends StatelessWidget {
   final List<Transactions> transactions;
 
-  const TransactionSummaryCard({
-    super.key,
-    required this.transactions,
-  });
+  const TransactionSummaryCard({super.key, required this.transactions});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +33,9 @@ class TransactionSummaryCard extends StatelessWidget {
 
     String currencySymbol = '';
     for (final tx in transactions) {
-      if (currencySymbol.isEmpty && tx.trxCurrencySymbol != null && tx.trxCurrencySymbol!.isNotEmpty) {
+      if (currencySymbol.isEmpty &&
+          tx.trxCurrencySymbol != null &&
+          tx.trxCurrencySymbol!.isNotEmpty) {
         currencySymbol = tx.trxCurrencySymbol!;
       }
       final amount = tx.numericAmount;
@@ -49,7 +48,9 @@ class TransactionSummaryCard extends StatelessWidget {
       }
     }
     if (!isMultiCurrency && currencySymbol.isEmpty) {
-      currencySymbol = currencyCodes.isNotEmpty ? '${currencyCodes.first} ' : '\$';
+      currencySymbol = currencyCodes.isNotEmpty
+          ? '${currencyCodes.first} '
+          : '\$';
     }
 
     final String inflowDisplay = isMultiCurrency
@@ -154,7 +155,8 @@ class TransactionSummaryCard extends StatelessWidget {
                       ar: 'إجمالي الوارد',
                     ),
                     amount: inflowDisplay,
-                    countLabel: '$inflowCount ${l10nPick(context, en: 'in', fa: 'ورودی', ar: 'وارد')}',
+                    countLabel:
+                        '$inflowCount ${l10nPick(context, en: 'in', fa: 'ورودی', ar: 'وارد')}',
                     color: AppColors.success,
                     icon: Icons.arrow_downward_rounded,
                     isDark: isDark,
@@ -180,7 +182,8 @@ class TransactionSummaryCard extends StatelessWidget {
                       ar: 'إجمالي الصادر',
                     ),
                     amount: outflowDisplay,
-                    countLabel: '$outflowCount ${l10nPick(context, en: 'out', fa: 'خروجی', ar: 'صادر')}',
+                    countLabel:
+                        '$outflowCount ${l10nPick(context, en: 'out', fa: 'خروجی', ar: 'صادر')}',
                     color: AppColors.error,
                     icon: Icons.arrow_upward_rounded,
                     isDark: isDark,

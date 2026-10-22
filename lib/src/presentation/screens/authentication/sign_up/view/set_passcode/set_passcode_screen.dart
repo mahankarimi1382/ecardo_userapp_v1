@@ -35,9 +35,7 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
         : Get.put(SetPasscodeController());
   }
 
-  static final _digitLimit = [
-    const DigitNormalizationFormatter(maxLength: 4),
-  ];
+  static final _digitLimit = [const DigitNormalizationFormatter(maxLength: 4)];
 
   void _skip() {
     final route = controller.nextRoute;
@@ -98,8 +96,10 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
                       children: [
                         Positioned.fill(
                           child: ImageFiltered(
-                            imageFilter:
-                                ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                            imageFilter: ImageFilter.blur(
+                              sigmaX: 20,
+                              sigmaY: 20,
+                            ),
                             child: Image.asset(
                               PngAssets.splashFrame,
                               fit: BoxFit.cover,

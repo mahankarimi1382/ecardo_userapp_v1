@@ -82,14 +82,18 @@ class QuickAmountSelectorWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.warmWhite
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 Text(
                   'انتخاب با ۱ لمس',
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -109,7 +113,8 @@ class QuickAmountSelectorWidget extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final package = standardPackages[index];
-            final isSelected = selectedAmount == package.amountToman.toString() ||
+            final isSelected =
+                selectedAmount == package.amountToman.toString() ||
                 selectedAmount == package.amountRials.toString();
 
             return _QuickAmountChip(
@@ -117,7 +122,8 @@ class QuickAmountSelectorWidget extends StatelessWidget {
               currency: currency,
               isSelected: isSelected,
               isDark: isDark,
-              onTap: () => onAmountSelected(package.amountToman, package.amountRials),
+              onTap: () =>
+                  onAmountSelected(package.amountToman, package.amountRials),
             );
           },
         ),
@@ -149,7 +155,9 @@ class _QuickAmountChip extends StatelessWidget {
         ? AppColors.mainSoftBlue.withValues(alpha: 0.16)
         : AppColors.mainSoftBlue.withValues(alpha: 0.12);
 
-    final inactiveBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final inactiveBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
 
     return AnimatedContainer(
       duration: AppDurations.fast,
@@ -166,7 +174,8 @@ class _QuickAmountChip extends StatelessWidget {
         boxShadow: isSelected
             ? [
                 BoxShadow(
-                  color: (isDark ? AppColors.mainSoftBlue : Colors.black).withValues(alpha: 0.15),
+                  color: (isDark ? AppColors.mainSoftBlue : Colors.black)
+                      .withValues(alpha: 0.15),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -199,8 +208,12 @@ class _QuickAmountChip extends StatelessWidget {
                               fontWeight: FontWeight.w800,
                               letterSpacing: 0,
                               color: isSelected
-                                  ? (isDark ? Colors.white : AppColors.deepBlack)
-                                  : (isDark ? AppColors.warmWhite : AppColors.lightTextPrimary),
+                                  ? (isDark
+                                        ? Colors.white
+                                        : AppColors.deepBlack)
+                                  : (isDark
+                                        ? AppColors.warmWhite
+                                        : AppColors.lightTextPrimary),
                             ),
                           ),
                           SizedBox(width: 4.w),
@@ -230,10 +243,16 @@ class _QuickAmountChip extends StatelessWidget {
                 ),
                 if (package.badgeText != null)
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: (package.badgeColor ?? AppColors.warning).withValues(alpha: 0.18),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                      color: (package.badgeColor ?? AppColors.warning)
+                          .withValues(alpha: 0.18),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusFull,
+                      ),
                       border: Border.all(
                         color: package.badgeColor ?? AppColors.warning,
                         width: 0.8,
@@ -264,8 +283,8 @@ class _QuickAmountChip extends StatelessWidget {
 
   String _formatNumber(int number) {
     return number.toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 }

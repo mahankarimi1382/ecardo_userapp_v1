@@ -182,10 +182,12 @@ class AcceptRequestDropdown extends StatelessWidget {
                             "1";
                         Get.back();
                         if (isPasscodeEnabled) {
-                          final dynamic verified = await Get.bottomSheet<dynamic>(
-                            const VerifyPasscodeBottomSheet(),
-                          );
-                          final isVerified = verified != null &&
+                          final dynamic verified =
+                              await Get.bottomSheet<dynamic>(
+                                const VerifyPasscodeBottomSheet(),
+                              );
+                          final isVerified =
+                              verified != null &&
                               verified != false &&
                               (verified is! String || verified.isNotEmpty);
                           if (!isVerified) return;

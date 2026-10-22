@@ -33,9 +33,9 @@ class EpayCardController extends GetxController {
       if (response.status == Status.completed && response.data != null) {
         final list = response.data!['data'];
         epayCards.assignAll(
-          (list is List ? list : [])
-              .whereType<Map>()
-              .map((m) => Map<String, dynamic>.from(m)),
+          (list is List ? list : []).whereType<Map>().map(
+            (m) => Map<String, dynamic>.from(m),
+          ),
         );
       }
     } catch (e) {
@@ -54,12 +54,14 @@ class EpayCardController extends GetxController {
         data: {'payment_method': 'wallet'},
       );
       if (response.status == Status.completed) {
-        ToastHelper().showSuccessToast(_pick(
-          en: 'PayCardo card issued successfully',
-          fa: 'کارت PayCardo با موفقیت صادر شد',
-          ar: 'تم إصدار بطاقة PayCardo بنجاح',
-          zh: 'PayCardo 卡发行成功',
-        ));
+        ToastHelper().showSuccessToast(
+          _pick(
+            en: 'PayCardo card issued successfully',
+            fa: 'کارت PayCardo با موفقیت صادر شد',
+            ar: 'تم إصدار بطاقة PayCardo بنجاح',
+            zh: 'PayCardo 卡发行成功',
+          ),
+        );
         await fetchEpayCards();
       }
     } catch (e) {
@@ -72,12 +74,14 @@ class EpayCardController extends GetxController {
   /// شارژ کارت فعال (۲٪ کارمزد سمت سرور؛ از کیف USDT/USD کاربر).
   Future<void> topUpCard(double amount) async {
     if (amount < 1) {
-      ToastHelper().showErrorToast(_pick(
-        en: 'Minimum top-up is \$1',
-        fa: 'حداقل شارژ ۱ دلار است',
-        ar: 'الحد الأدنى للشحن ١ دولار',
-        zh: '最低充值 1 美元',
-      ));
+      ToastHelper().showErrorToast(
+        _pick(
+          en: 'Minimum top-up is \$1',
+          fa: 'حداقل شارژ ۱ دلار است',
+          ar: 'الحد الأدنى للشحن ١ دولار',
+          zh: '最低充值 1 美元',
+        ),
+      );
       return;
     }
     isActionLoading.value = true;
@@ -87,12 +91,14 @@ class EpayCardController extends GetxController {
         data: {'amount': amount},
       );
       if (response.status == Status.completed) {
-        ToastHelper().showSuccessToast(_pick(
-          en: 'Card topped up successfully (2% fee)',
-          fa: 'شارژ موفق — کارمزد ۲٪ کسر شد',
-          ar: 'تم الشحن بنجاح (رسوم ٢٪)',
-          zh: '充值成功（2% 手续费）',
-        ));
+        ToastHelper().showSuccessToast(
+          _pick(
+            en: 'Card topped up successfully (2% fee)',
+            fa: 'شارژ موفق — کارمزد ۲٪ کسر شد',
+            ar: 'تم الشحن بنجاح (رسوم ٢٪)',
+            zh: '充值成功（2% 手续费）',
+          ),
+        );
         await fetchEpayCards();
       }
     } catch (e) {

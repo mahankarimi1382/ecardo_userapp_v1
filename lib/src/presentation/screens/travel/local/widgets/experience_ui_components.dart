@@ -34,12 +34,15 @@ class ExperienceNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final validUrl = imageUrl != null &&
+    final validUrl =
+        imageUrl != null &&
         imageUrl!.trim().isNotEmpty &&
         (imageUrl!.startsWith('http://') || imageUrl!.startsWith('https://'));
 
     final placeholder = Shimmer.fromColors(
-      baseColor: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.3),
+      baseColor: isDark
+          ? AppColors.darkCard
+          : AppColors.greyLight.withValues(alpha: 0.3),
       highlightColor: isDark ? AppColors.darkSurface : AppColors.white,
       child: Container(
         width: width,
@@ -57,13 +60,17 @@ class ExperienceNetworkImage extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurfaceVariant,
         borderRadius: BorderRadius.circular(borderRadius.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Center(
         child: Icon(
           fallbackIcon,
           size: (height * 0.35).clamp(20.0, 48.0).sp,
-          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+          color: isDark
+              ? AppColors.darkTextTertiary
+              : AppColors.lightTextTertiary,
         ),
       ),
     );
@@ -105,12 +112,17 @@ class ExperienceCatalogSkeleton extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ListView.builder(
-      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg.w,
+        vertical: AppSpacing.md.h,
+      ),
       itemCount: itemCount,
       itemBuilder: (_, _) {
         return Shimmer.fromColors(
           baseColor: isDark ? AppColors.darkCard : const Color(0xFFE2E8F0),
-          highlightColor: isDark ? AppColors.darkSurface : const Color(0xFFF8FAFC),
+          highlightColor: isDark
+              ? AppColors.darkSurface
+              : const Color(0xFFF8FAFC),
           child: Container(
             margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
             height: 180.h,
@@ -154,7 +166,9 @@ class ExperienceOfflineBanner extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11.5.sp,
                 fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ),
@@ -168,7 +182,12 @@ class ExperienceOfflineBanner extends StatelessWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: Text(
-              l10nPick(context, fa: 'تلاش مجدد', en: 'Retry', ar: 'إعادة المحاولة'),
+              l10nPick(
+                context,
+                fa: 'تلاش مجدد',
+                en: 'Retry',
+                ar: 'إعادة المحاولة',
+              ),
               style: TextStyle(
                 fontSize: 11.5.sp,
                 fontWeight: FontWeight.w800,
@@ -210,7 +229,9 @@ class ExperienceEmptyView extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(AppSpacing.xl.r),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCard : AppColors.lightSurfaceVariant,
+                color: isDark
+                    ? AppColors.darkCard
+                    : AppColors.lightSurfaceVariant,
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, size: 48.sp, color: AppColors.greyLight),
@@ -222,7 +243,9 @@ class ExperienceEmptyView extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: 8.h),
@@ -231,26 +254,40 @@ class ExperienceEmptyView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
                 height: 1.4,
               ),
             ),
             SizedBox(height: 20.h),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkCard : AppColors.lightSurface,
-                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                backgroundColor: isDark
+                    ? AppColors.darkCard
+                    : AppColors.lightSurface,
+                foregroundColor: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+                side: BorderSide(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
                 elevation: 0,
                 minimumSize: Size(140.w, 44.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
               ),
               onPressed: () {
                 HapticFeedback.lightImpact();
                 onReset();
               },
               child: Text(
-                l10nPick(context, fa: 'حذف فیلترها و مشاهده همه', en: 'Clear Filters & Show All'),
+                l10nPick(
+                  context,
+                  fa: 'حذف فیلترها و مشاهده همه',
+                  en: 'Clear Filters & Show All',
+                ),
                 style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
               ),
             ),
@@ -282,14 +319,24 @@ class ExperienceErrorView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline_rounded, size: 48.sp, color: AppColors.error),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 48.sp,
+              color: AppColors.error,
+            ),
             SizedBox(height: 12.h),
             Text(
-              l10nPick(context, fa: 'خطا در برقراری ارتباط', en: 'Connection Error'),
+              l10nPick(
+                context,
+                fa: 'خطا در برقراری ارتباط',
+                en: 'Connection Error',
+              ),
               style: TextStyle(
                 fontSize: 15.sp,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: 6.h),
@@ -298,7 +345,9 @@ class ExperienceErrorView extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
             SizedBox(height: 16.h),
@@ -309,7 +358,9 @@ class ExperienceErrorView extends StatelessWidget {
                 minimumSize: Size(120.w, 44.h),
                 backgroundColor: AppColors.lightPrimary,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
               ),
               onPressed: () {
                 HapticFeedback.lightImpact();
@@ -338,7 +389,9 @@ Future<bool?> showExperienceCancellationSheet({
     isScrollControlled: true,
     backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl.r)),
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(AppSpacing.radiusXl.r),
+      ),
     ),
     builder: (ctx) {
       String selectedReason = 'تغییر برنامه سفر (Change of Travel Plans)';
@@ -369,7 +422,11 @@ Future<bool?> showExperienceCancellationSheet({
                 SizedBox(height: 16.h),
                 Row(
                   children: [
-                    const Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 24),
+                    const Icon(
+                      Icons.warning_amber_rounded,
+                      color: AppColors.warning,
+                      size: 24,
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
@@ -377,7 +434,9 @@ Future<bool?> showExperienceCancellationSheet({
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
@@ -391,7 +450,9 @@ Future<bool?> showExperienceCancellationSheet({
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -400,10 +461,14 @@ Future<bool?> showExperienceCancellationSheet({
                 Container(
                   padding: EdgeInsets.all(AppSpacing.md.r),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkCard : AppColors.lightSurfaceVariant,
+                    color: isDark
+                        ? AppColors.darkCard
+                        : AppColors.lightSurfaceVariant,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
                   ),
                   child: Column(
@@ -411,7 +476,9 @@ Future<bool?> showExperienceCancellationSheet({
                       _refundRow(
                         'مبلغ پرداخت‌شده:',
                         '${calculation.originalAmount.toStringAsFixed(0)} ${calculation.currency}',
-                        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                         isDark,
                       ),
                       SizedBox(height: 8.h),
@@ -438,7 +505,9 @@ Future<bool?> showExperienceCancellationSheet({
                   calculation.policySummary,
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                    color: isDark
+                        ? AppColors.darkTextTertiary
+                        : AppColors.lightTextTertiary,
                     height: 1.4,
                   ),
                 ),
@@ -492,8 +561,13 @@ Future<bool?> showExperienceCancellationSheet({
   );
 }
 
-Widget _refundRow(String label, String value, Color valueColor, bool isDark,
-    {bool isBold = false}) {
+Widget _refundRow(
+  String label,
+  String value,
+  Color valueColor,
+  bool isDark, {
+  bool isBold = false,
+}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -501,7 +575,9 @@ Widget _refundRow(String label, String value, Color valueColor, bool isDark,
         label,
         style: TextStyle(
           fontSize: 11.5.sp,
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
         ),
       ),
       Text(

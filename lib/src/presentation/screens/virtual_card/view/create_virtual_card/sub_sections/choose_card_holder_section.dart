@@ -14,10 +14,7 @@ import 'package:ecardo_user/src/presentation/screens/virtual_card/model/card_hol
 class ChooseCardHolderSection extends StatelessWidget {
   final bool showSubmitButton;
 
-  const ChooseCardHolderSection({
-    super.key,
-    this.showSubmitButton = true,
-  });
+  const ChooseCardHolderSection({super.key, this.showSubmitButton = true});
 
   @override
   Widget build(BuildContext context) {

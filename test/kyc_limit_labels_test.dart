@@ -26,18 +26,19 @@ void main() {
       'exchange_monthly': 9000,
     });
 
+    expect(rows.where((r) => r.measureLabel == 'per day').single.value, '150');
     expect(
-      rows.where((r) => r.measureLabel == 'per day').single.value,
-      '150',
+      rows.where((r) => r.measureLabel == 'per day').single.groupLabel,
+      'Cash-out',
     );
-    expect(rows.where((r) => r.measureLabel == 'per day').single.groupLabel,
-        'Cash-out');
     expect(
       rows.where((r) => r.measureLabel == 'per month').single.value,
       '9,000',
     );
-    expect(rows.where((r) => r.measureLabel == 'per month').single.groupLabel,
-        'Exchange');
+    expect(
+      rows.where((r) => r.measureLabel == 'per month').single.groupLabel,
+      'Exchange',
+    );
   });
 
   test('both spellings present yield exactly one row per measure', () {

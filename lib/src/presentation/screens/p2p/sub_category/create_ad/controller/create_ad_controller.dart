@@ -420,7 +420,8 @@ class CreateAdController extends GetxController {
   void togglePaymentMethodSelection(PaymentAccount account) {
     final accountId = account.id;
     if (accountId == null) return;
-    final label = account.paymentMethod?.name ??
+    final label =
+        account.paymentMethod?.name ??
         (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
 
     if (selectedPaymentMethodIds.contains(accountId)) {

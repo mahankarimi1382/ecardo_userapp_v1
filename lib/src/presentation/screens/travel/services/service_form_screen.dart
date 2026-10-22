@@ -51,10 +51,7 @@ class _TravelServiceFormScreenState extends State<TravelServiceFormScreen> {
   }
 
   TextEditingController _controllerFor(TravelFormFieldSpec spec) {
-    return _controllers.putIfAbsent(
-      spec.key,
-      () => TextEditingController(),
-    );
+    return _controllers.putIfAbsent(spec.key, () => TextEditingController());
   }
 
   Future<void> _pickDateTime(TravelFormFieldSpec spec) async {
@@ -197,8 +194,7 @@ class _TravelServiceFormScreenState extends State<TravelServiceFormScreen> {
               (option) => DropdownMenuItem(value: option, child: Text(option)),
             )
             .toList(),
-        validator: (value) =>
-            spec.required && (value == null || value.isEmpty)
+        validator: (value) => spec.required && (value == null || value.isEmpty)
             ? localization.travelFormRequired
             : null,
         onChanged: (value) => _values[spec.key] = value ?? '',
@@ -221,7 +217,9 @@ class _TravelServiceFormScreenState extends State<TravelServiceFormScreen> {
           : spec.type == TravelFormFieldType.number
           ? TextInputType.number
           : TextInputType.text,
-      maxLines: spec.type == TravelFormFieldType.textarea ? spec.maxLines ?? 3 : 1,
+      maxLines: spec.type == TravelFormFieldType.textarea
+          ? spec.maxLines ?? 3
+          : 1,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: spec.type == TravelFormFieldType.textarea
@@ -309,9 +307,7 @@ class TravelServiceRequestSuccessScreen extends StatelessWidget {
             width: double.infinity,
             text: localization.travelMyRequests,
             backgroundColor: TravelTheme.blue,
-            onPressed: () => Get.off(
-              () => const TravelServiceRequestsScreen(),
-            ),
+            onPressed: () => Get.off(() => const TravelServiceRequestsScreen()),
           ),
           SizedBox(height: 10.h),
           CommonButton(
@@ -331,7 +327,10 @@ class TravelServiceRequestSuccessScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp)),
+          Text(
+            label,
+            style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp),
+          ),
           TravelBidiText(
             value,
             style: const TextStyle(fontWeight: FontWeight.w800),
@@ -362,8 +361,7 @@ class TravelRequestStatusChip extends StatelessWidget {
       TravelServiceRequestStatus.approved => TravelTheme.green,
       TravelServiceRequestStatus.rejected => TravelTheme.red,
       TravelServiceRequestStatus.underReview ||
-      TravelServiceRequestStatus.pending =>
-        TravelTheme.warning,
+      TravelServiceRequestStatus.pending => TravelTheme.warning,
     };
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),

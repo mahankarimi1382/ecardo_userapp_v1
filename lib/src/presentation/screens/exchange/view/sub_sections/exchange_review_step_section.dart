@@ -55,14 +55,16 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
     final fromDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: fromCode,
       siteCurrencyCode: settings.getSetting("site_currency") ?? 'USD',
-      siteCurrencyDecimals: settings.getSetting("site_currency_decimals") ?? '2',
+      siteCurrencyDecimals:
+          settings.getSetting("site_currency_decimals") ?? '2',
       isCrypto: fromWallet?.isCrypto ?? false,
     );
 
     final toDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: toCode,
       siteCurrencyCode: settings.getSetting("site_currency") ?? 'USD',
-      siteCurrencyDecimals: settings.getSetting("site_currency_decimals") ?? '2',
+      siteCurrencyDecimals:
+          settings.getSetting("site_currency_decimals") ?? '2',
       isCrypto: toWallet?.isCrypto ?? false,
     );
 
@@ -116,8 +118,9 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                           decoration: BoxDecoration(
                             color: isDark
                                 ? AppColors.mainSoftBlue.withValues(alpha: 0.16)
-                                : AppColors.lightPrimaryContainer
-                                    .withValues(alpha: 0.5),
+                                : AppColors.lightPrimaryContainer.withValues(
+                                    alpha: 0.5,
+                                  ),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -188,8 +191,9 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                         color: isDark
                             ? AppColors.darkSurfaceVariant
                             : AppColors.lightBackground.withValues(alpha: 0.6),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,8 +214,9 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
-                                  color:
-                                      ExchangeDesignTokens.textTertiary(context),
+                                  color: ExchangeDesignTokens.textTertiary(
+                                    context,
+                                  ),
                                   letterSpacing: 0.3,
                                 ),
                               ),
@@ -221,8 +226,8 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                                   style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w800,
-                                    color: controller.liveChangePercent.value! >=
-                                            0
+                                    color:
+                                        controller.liveChangePercent.value! >= 0
                                         ? AppColors.success
                                         : AppColors.error,
                                     fontFeatures: const [
@@ -262,18 +267,13 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                           await controller.acknowledgeRateChange();
                         },
                       )
-                    : const SizedBox(
-                        key: ValueKey('no_drift'),
-                        height: 0,
-                      ),
+                    : const SizedBox(key: ValueKey('no_drift'), height: 0),
               ),
               if (isStale) const SizedBox(height: AppSpacing.lg),
 
               // Glassmorphic review summary card
               Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.lg,
-                ),
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
                 decoration: BoxDecoration(
                   color: ExchangeDesignTokens.cardSurface(context),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
@@ -286,9 +286,8 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                   children: [
                     _ReviewRow(
                       title: loc.exchangeReviewAmount,
-                      amount: double.tryParse(
-                            controller.amountController.text,
-                          ) ??
+                      amount:
+                          double.tryParse(controller.amountController.text) ??
                           0.0,
                       decimals: fromDecimals,
                       currencyCode: fromCode,
@@ -377,27 +376,43 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                     final bool isPasscodeEnabled =
                         settings.getSetting("exchange_passcode_status") != "0";
 
-                    final storedPasscode = controller.userModel.value.data?.passcode ??
+                    final storedPasscode =
+                        controller.userModel.value.data?.passcode ??
                         (Get.isRegistered<HomeController>()
-                            ? Get.find<HomeController>().userModel.value.data?.passcode
+                            ? Get.find<HomeController>()
+                                  .userModel
+                                  .value
+                                  .data
+                                  ?.passcode
                             : null);
-                    final hasPasscodeFlag = controller.userModel.value.data?.hasPasscode ??
+                    final hasPasscodeFlag =
+                        controller.userModel.value.data?.hasPasscode ??
                         (Get.isRegistered<HomeController>()
-                            ? Get.find<HomeController>().userModel.value.data?.hasPasscode
+                            ? Get.find<HomeController>()
+                                  .userModel
+                                  .value
+                                  .data
+                                  ?.hasPasscode
                             : null);
-                    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+                    final hasPasscode = PasscodeHelper.userHasPasscode(
+                      storedPasscode,
+                      hasPasscodeFlag,
+                    );
 
                     // Prompt for passcode if user has set a passcode on their account or if feature requires it
-                    final shouldPromptPasscode = hasPasscode ||
-                        (storedPasscode != null && storedPasscode.isNotEmpty && storedPasscode != '0') ||
+                    final shouldPromptPasscode =
+                        hasPasscode ||
+                        (storedPasscode != null &&
+                            storedPasscode.isNotEmpty &&
+                            storedPasscode != '0') ||
                         (hasPasscodeFlag == true) ||
                         isPasscodeEnabled;
 
                     if (shouldPromptPasscode) {
                       final dynamic verifiedPasscode =
                           await Get.bottomSheet<dynamic>(
-                        const VerifyPasscodeBottomSheet(),
-                      );
+                            const VerifyPasscodeBottomSheet(),
+                          );
                       if (verifiedPasscode == null ||
                           verifiedPasscode.toString().isEmpty) {
                         _swipeKey.currentState?.reset();
@@ -447,12 +462,9 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
   }
 
   Widget _divider(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-        child: Divider(
-          height: 0,
-          color: ExchangeDesignTokens.divider(context),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+    child: Divider(height: 0, color: ExchangeDesignTokens.divider(context)),
+  );
 }
 
 class _ReviewRow extends StatelessWidget {
@@ -515,9 +527,9 @@ class _ReviewRow extends StatelessWidget {
               currencyCode: currencyCode,
               integerColor:
                   amountColor ?? ExchangeDesignTokens.textPrimary(context),
-              decimalColor: (amountColor ??
-                      ExchangeDesignTokens.textPrimary(context))
-                  .withValues(alpha: 0.55),
+              decimalColor:
+                  (amountColor ?? ExchangeDesignTokens.textPrimary(context))
+                      .withValues(alpha: 0.55),
               integerStyle: TextStyle(
                 fontWeight: emphasize ? FontWeight.w900 : FontWeight.w700,
                 fontSize: emphasize ? 18 : 15,
@@ -526,9 +538,9 @@ class _ReviewRow extends StatelessWidget {
               decimalStyle: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: emphasize ? 14 : 12,
-                color: (amountColor ??
-                        ExchangeDesignTokens.textPrimary(context))
-                    .withValues(alpha: 0.55),
+                color:
+                    (amountColor ?? ExchangeDesignTokens.textPrimary(context))
+                        .withValues(alpha: 0.55),
               ),
             ),
         ],
@@ -591,9 +603,7 @@ class _RateDriftBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.warningContainer,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(
-          color: AppColors.warning.withValues(alpha: 0.35),
-        ),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.35)),
       ),
       child: Row(
         children: [
@@ -620,10 +630,7 @@ class _RateDriftBanner extends StatelessWidget {
             child: GestureDetector(
               onTap: isLoading ? null : onAcknowledge,
               child: Container(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 32,
-                ),
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 32),
                 padding: const EdgeInsetsDirectional.symmetric(
                   horizontal: AppSpacing.md,
                   vertical: AppSpacing.xs,

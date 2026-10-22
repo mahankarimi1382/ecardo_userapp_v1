@@ -82,10 +82,7 @@ class _AddMoneyPendingStepSectionState
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      PngAssets.commonPendingIcon,
-                      width: 72,
-                    ),
+                    Image.asset(PngAssets.commonPendingIcon, width: 72),
                     const SizedBox(height: AppSpacing.md),
                     Text(
                       localization.addMoneyPendingTitle,
@@ -112,11 +109,15 @@ class _AddMoneyPendingStepSectionState
                   color: isDark ? AppColors.darkCard : AppColors.lightCard,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                      color: isDark
+                          ? AppColors.darkShadow
+                          : AppColors.lightShadow,
                       blurRadius: AppSpacing.md,
                       offset: const Offset(0, 3),
                     ),

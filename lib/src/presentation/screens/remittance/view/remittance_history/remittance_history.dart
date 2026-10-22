@@ -10,12 +10,14 @@ import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance
 class RemittanceHistoryScreen extends StatefulWidget {
   const RemittanceHistoryScreen({super.key});
   @override
-  State<RemittanceHistoryScreen> createState() => _RemittanceHistoryScreenState();
+  State<RemittanceHistoryScreen> createState() =>
+      _RemittanceHistoryScreenState();
 }
 
 class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
   // BUG-09: RemittanceBinding is now registered for all remittance routes.
-  final RemittanceController controller = Get.isRegistered<RemittanceController>()
+  final RemittanceController controller =
+      Get.isRegistered<RemittanceController>()
       ? Get.find<RemittanceController>()
       : Get.put(RemittanceController());
   final ScrollController _scrollController = ScrollController();
@@ -35,7 +37,8 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       controller.loadMoreHistory();
     }
   }
@@ -50,9 +53,19 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
         elevation: 0,
         centerTitle: true,
         leading: const BackButton(color: AppColors.lightTextPrimary),
-        title: Text(l.remittanceHistoryTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+        title: Text(
+          l.remittanceHistoryTitle,
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.lightTextPrimary,
+          ),
+        ),
         actions: [
-          IconButton(icon: const Icon(Icons.add, color: AppColors.lightPrimary), onPressed: () => Get.toNamed(BaseRoute.remittance)),
+          IconButton(
+            icon: const Icon(Icons.add, color: AppColors.lightPrimary),
+            onPressed: () => Get.toNamed(BaseRoute.remittance),
+          ),
         ],
       ),
       body: Obx(() {
@@ -60,24 +73,42 @@ class _RemittanceHistoryScreenState extends State<RemittanceHistoryScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         if (controller.history.isEmpty) {
-          return _EmptyState(onRefresh: () => controller.fetchHistory(refresh: true), l: l);
+          return _EmptyState(
+            onRefresh: () => controller.fetchHistory(refresh: true),
+            l: l,
+          );
         }
         return RefreshIndicator(
           onRefresh: () => controller.fetchHistory(refresh: true),
           child: ListView.builder(
             controller: _scrollController,
             padding: EdgeInsets.all(16.w),
-            itemCount: controller.history.length + (controller.historyHasMore.value ? 1 : 0),
+            itemCount:
+                controller.history.length +
+                (controller.historyHasMore.value ? 1 : 0),
             itemBuilder: (context, index) {
               if (index == controller.history.length) {
-                return Padding(padding: EdgeInsets.all(16.w), child: const Center(child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))));
+                return Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: const Center(
+                    child: SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                );
               }
               return _RemittanceCard(
                 remittance: controller.history[index],
                 controller: controller,
                 onTap: () {
-                  controller.selectedRemittance.value = controller.history[index];
-                  Get.toNamed(BaseRoute.remittanceDetails, arguments: controller.history[index].uuid);
+                  controller.selectedRemittance.value =
+                      controller.history[index];
+                  Get.toNamed(
+                    BaseRoute.remittanceDetails,
+                    arguments: controller.history[index].uuid,
+                  );
                 },
                 l: l,
               );
@@ -94,18 +125,40 @@ class _EmptyState extends StatelessWidget {
   final AppLocalizations l;
   const _EmptyState({required this.onRefresh, required this.l});
   @override
-  Widget build(BuildContext context) => Center(child: Padding(
-    padding: EdgeInsets.all(32.w),
-    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(Icons.receipt_long, size: 64.sp, color: AppColors.lightBorder),
-      SizedBox(height: 16.h),
-      Text(l.remittanceNoHistory, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextSecondary)),
-      SizedBox(height: 8.h),
-      Text(l.remittanceNoHistoryHint, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary), textAlign: TextAlign.center),
-      SizedBox(height: 24.h),
-      ElevatedButton(onPressed: onRefresh, child: Text(l.remittanceRefresh)),
-    ]),
-  ));
+  Widget build(BuildContext context) => Center(
+    child: Padding(
+      padding: EdgeInsets.all(32.w),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.receipt_long, size: 64.sp, color: AppColors.lightBorder),
+          SizedBox(height: 16.h),
+          Text(
+            l.remittanceNoHistory,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.lightTextSecondary,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            l.remittanceNoHistoryHint,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: AppColors.lightTextSecondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 24.h),
+          ElevatedButton(
+            onPressed: onRefresh,
+            child: Text(l.remittanceRefresh),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _RemittanceCard extends StatelessWidget {
@@ -113,7 +166,12 @@ class _RemittanceCard extends StatelessWidget {
   final RemittanceController controller;
   final VoidCallback onTap;
   final AppLocalizations l;
-  const _RemittanceCard({required this.remittance, required this.controller, required this.onTap, required this.l});
+  const _RemittanceCard({
+    required this.remittance,
+    required this.controller,
+    required this.onTap,
+    required this.l,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -124,50 +182,148 @@ class _RemittanceCard extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(bottom: 12.h),
         padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(color: AppColors.lightSurface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.lightBorder)),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Expanded(child: Text(remittance.trx, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary), maxLines: 1, overflow: TextOverflow.ellipsis)),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-              child: Text(remittanceStatusLabel(status, l), style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600, color: statusColor)),
+        decoration: BoxDecoration(
+          color: AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.lightBorder),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    remittance.trx,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.lightTextPrimary,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    remittanceStatusLabel(status, l),
+                    style: TextStyle(
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w600,
+                      color: statusColor,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ]),
-          SizedBox(height: 12.h),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(l.remittanceSend, style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
-              // M-7 — decimals now come from DynamicDecimalsHelper via the
-              // controller (API-driven); falls back to 2 like before.
-              Text(controller.formatAmount(remittance.sendAmount, currencyId: remittance.sendCurrencyId), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
-            ]),
-            Icon(Icons.arrow_forward, color: AppColors.lightTextSecondary, size: 16.sp),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Text(l.remittanceReceive, style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
-              Text(controller.formatAmount(remittance.receiveAmount, currencyId: remittance.receiveCurrencyId), style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
-            ]),
-          ]),
-          if (remittance.createdAt != null) ...[
-            SizedBox(height: 8.h),
-            Divider(color: AppColors.lightBorder, height: 1),
-            SizedBox(height: 8.h),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(l.remittanceDate, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
-              Text(_formatDate(remittance.createdAt!), style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
-            ]),
+            SizedBox(height: 12.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.remittanceSend,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: AppColors.lightTextSecondary,
+                      ),
+                    ),
+                    // M-7 — decimals now come from DynamicDecimalsHelper via the
+                    // controller (API-driven); falls back to 2 like before.
+                    Text(
+                      controller.formatAmount(
+                        remittance.sendAmount,
+                        currencyId: remittance.sendCurrencyId,
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.lightTextPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+                Icon(
+                  Icons.arrow_forward,
+                  color: AppColors.lightTextSecondary,
+                  size: 16.sp,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      l.remittanceReceive,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: AppColors.lightTextSecondary,
+                      ),
+                    ),
+                    Text(
+                      controller.formatAmount(
+                        remittance.receiveAmount,
+                        currencyId: remittance.receiveCurrencyId,
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.lightTextPrimary,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            if (remittance.createdAt != null) ...[
+              SizedBox(height: 8.h),
+              Divider(color: AppColors.lightBorder, height: 1),
+              SizedBox(height: 8.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l.remittanceDate,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: AppColors.lightTextSecondary,
+                    ),
+                  ),
+                  Text(
+                    _formatDate(remittance.createdAt!),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ]),
+        ),
       ),
     );
   }
 
   Color _statusColor(RemittanceStatus s) => switch (s) {
-    RemittanceStatus.completed || RemittanceStatus.destinationPaid || RemittanceStatus.refundCompleted => AppColors.success,
-    RemittanceStatus.rejected || RemittanceStatus.expired || RemittanceStatus.cancelled => AppColors.error,
-    RemittanceStatus.draft || RemittanceStatus.waitingInformation || RemittanceStatus.waitingDocuments => AppColors.grey,
+    RemittanceStatus.completed ||
+    RemittanceStatus.destinationPaid ||
+    RemittanceStatus.refundCompleted => AppColors.success,
+    RemittanceStatus.rejected ||
+    RemittanceStatus.expired ||
+    RemittanceStatus.cancelled => AppColors.error,
+    RemittanceStatus.draft ||
+    RemittanceStatus.waitingInformation ||
+    RemittanceStatus.waitingDocuments => AppColors.grey,
     _ => AppColors.warning,
   };
 
-  String _formatDate(DateTime dt) => '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  String _formatDate(DateTime dt) =>
+      '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
 }

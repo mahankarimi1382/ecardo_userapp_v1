@@ -30,7 +30,8 @@ class UploadHelper {
       if (fileLength <= 400 * 1024) return file;
 
       final name = file.path.toLowerCase();
-      final isImage = name.endsWith('.jpg') ||
+      final isImage =
+          name.endsWith('.jpg') ||
           name.endsWith('.jpeg') ||
           name.endsWith('.png') ||
           name.endsWith('.webp');
@@ -84,7 +85,8 @@ class UploadHelper {
     if (lower.endsWith('.gif')) return dio.DioMediaType('image', 'gif');
     if (lower.endsWith('.svg')) return dio.DioMediaType('image', 'svg+xml');
     if (lower.endsWith('.pdf')) return dio.DioMediaType('application', 'pdf');
-    if (lower.endsWith('.doc')) return dio.DioMediaType('application', 'msword');
+    if (lower.endsWith('.doc'))
+      return dio.DioMediaType('application', 'msword');
     if (lower.endsWith('.docx')) {
       return dio.DioMediaType(
         'application',

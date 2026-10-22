@@ -42,10 +42,16 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
       // Backend unavailable / 404
       Get.dialog(
         AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
           title: Row(
             children: [
-              Icon(Icons.shield_outlined, color: const Color(0xFFF59E0B), size: 24.sp),
+              Icon(
+                Icons.shield_outlined,
+                color: const Color(0xFFF59E0B),
+                size: 24.sp,
+              ),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
@@ -56,7 +62,10 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
                     ar: 'حالة بوابة سبام المصرفية',
                     zh: 'SEPAM银行网关状态',
                   ),
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ],
@@ -75,7 +84,9 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF0D9488),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
               ),
               onPressed: () {
                 Get.back();
@@ -190,7 +201,8 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
                     context,
                     labelFa: 'مبلغ اسمی ضمانت‌نامه',
                     labelEn: 'Face Amount',
-                    value: '${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${controller.currencyInput.value}',
+                    value:
+                        '${amount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${controller.currencyInput.value}',
                     isBold: true,
                   ),
                   const Divider(height: 20),
@@ -198,7 +210,8 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
                     context,
                     labelFa: 'وجه التزام نقدی تودیعی ($marginPct٪)',
                     labelEn: 'Cash Margin Required',
-                    value: '${margin.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${controller.currencyInput.value}',
+                    value:
+                        '${margin.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${controller.currencyInput.value}',
                     valueColor: const Color(0xFF0D9488),
                     isBold: true,
                   ),
@@ -207,14 +220,16 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
                     context,
                     labelFa: 'کارمزد صدور سالانه بانکی ($feePct٪)',
                     labelEn: 'Bank Issuance Fee',
-                    value: '${fee.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${controller.currencyInput.value}',
+                    value:
+                        '${fee.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${controller.currencyInput.value}',
                   ),
                   const Divider(height: 20),
                   _buildRow(
                     context,
                     labelFa: 'مدت اعتبار',
                     labelEn: 'Validity',
-                    value: '${controller.validityMonthsInput.value} ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
+                    value:
+                        '${controller.validityMonthsInput.value} ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
                   ),
                   if (controller.contractRefInput.value.isNotEmpty) ...[
                     const Divider(height: 20),
@@ -253,7 +268,8 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          controller.termsAccepted.value = !controller.termsAccepted.value;
+                          controller.termsAccepted.value =
+                              !controller.termsAccepted.value;
                         },
                         child: Padding(
                           padding: EdgeInsets.only(top: 8.h),
@@ -297,7 +313,10 @@ class _GuaranteeConfirmScreenState extends State<GuaranteeConfirmScreen> {
       children: [
         Text(
           l10nPick(context, fa: labelFa, en: labelEn),
-          style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary),
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: AppColors.lightTextSecondary,
+          ),
         ),
         Text(
           value,

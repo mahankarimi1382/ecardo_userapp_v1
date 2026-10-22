@@ -22,70 +22,91 @@ void main() {
   }
 
   group('CommercialProjectsScreen', () {
-    testWidgets('renders commercial projects screen with tabs and equity projects', (tester) async {
-      phoneSurface(tester);
+    testWidgets(
+      'renders commercial projects screen with tabs and equity projects',
+      (tester) async {
+        phoneSurface(tester);
 
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
-            home: CommercialProjectsScreen(),
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (context, child) =>
+                const MaterialApp(home: CommercialProjectsScreen()),
           ),
-        ),
-      );
+        );
 
-      // Verify app bar title
-      expect(find.text('Commercial & Equity Projects'), findsOneWidget);
+        // Verify app bar title
+        expect(find.text('Commercial & Equity Projects'), findsOneWidget);
 
-      // Verify tabs exist
-      expect(find.text('Equity Projects'), findsOneWidget);
-      expect(find.text('Corporate KYC'), findsOneWidget);
+        // Verify tabs exist
+        expect(find.text('Equity Projects'), findsOneWidget);
+        expect(find.text('Corporate KYC'), findsOneWidget);
 
-      // Equity crowdfunding has not launched. The screen must announce this
-      // before any sample project is presented as an offer.
-      expect(find.text('Coming Soon'), findsOneWidget);
-      expect(find.text('Equity crowdfunding is not available yet'), findsOneWidget);
-      expect(find.textContaining('not a promise of return'), findsOneWidget);
+        // Equity crowdfunding has not launched. The screen must announce this
+        // before any sample project is presented as an offer.
+        expect(find.text('Coming Soon'), findsOneWidget);
+        expect(
+          find.text('Equity crowdfunding is not available yet'),
+          findsOneWidget,
+        );
+        expect(find.textContaining('not a promise of return'), findsOneWidget);
 
-      // Verify equity projects rendered
-      expect(find.textContaining('eCardo Regional Remittance Node'), findsOneWidget);
-      expect(find.text('Preview'), findsWidgets);
-      // Sample yields must never appear as a bare, quotable figure.
-      expect(find.text('26.5% p.a.'), findsNothing);
-      expect(find.text('Illustrative — 26.5% p.a.'), findsOneWidget);
-      expect(find.text('Invest Now'), findsNothing);
-      expect(tester.takeException(), isNull);
-    });
+        // Verify equity projects rendered
+        expect(
+          find.textContaining('eCardo Regional Remittance Node'),
+          findsOneWidget,
+        );
+        expect(find.text('Preview'), findsWidgets);
+        // Sample yields must never appear as a bare, quotable figure.
+        expect(find.text('26.5% p.a.'), findsNothing);
+        expect(find.text('Illustrative — 26.5% p.a.'), findsOneWidget);
+        expect(find.text('Invest Now'), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
 
-    testWidgets('switches to Corporate KYC tab and displays document checklist', (tester) async {
-      phoneSurface(tester);
+    testWidgets(
+      'switches to Corporate KYC tab and displays document checklist',
+      (tester) async {
+        phoneSurface(tester);
 
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
-            home: CommercialProjectsScreen(),
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (context, child) =>
+                const MaterialApp(home: CommercialProjectsScreen()),
           ),
-        ),
-      );
+        );
 
-      // Tap on Corporate KYC tab
-      final kycTab = find.text('Corporate KYC');
-      await tester.ensureVisible(kycTab);
-      await tester.pumpAndSettle();
-      await tester.tap(kycTab);
-      await tester.pumpAndSettle();
+        // Tap on Corporate KYC tab
+        final kycTab = find.text('Corporate KYC');
+        await tester.ensureVisible(kycTab);
+        await tester.pumpAndSettle();
+        await tester.tap(kycTab);
+        await tester.pumpAndSettle();
 
-      // Verify document checklist headers and items
-      expect(find.text('Corporate KYC & Licensing Documents'), findsOneWidget);
-      expect(find.textContaining('Official Commercial Gazette'), findsOneWidget);
-      expect(find.textContaining('Board of Directors Resolution'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
+        // Verify document checklist headers and items
+        expect(
+          find.text('Corporate KYC & Licensing Documents'),
+          findsOneWidget,
+        );
+        expect(
+          find.textContaining('Official Commercial Gazette'),
+          findsOneWidget,
+        );
+        expect(
+          find.textContaining('Board of Directors Resolution'),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
   });
 
   group('EquityProjectCard', () {
-    testWidgets('computes funding progress ratio and handles invest click', (tester) async {
+    testWidgets('computes funding progress ratio and handles invest click', (
+      tester,
+    ) async {
       bool investTapped = false;
       phoneSurface(tester);
       const project = EquityProjectItem(
@@ -131,33 +152,38 @@ void main() {
   });
 
   group('LoanCalculatorSlider', () {
-    testWidgets('renders loan amount bounds, term options, and grace period options', (tester) async {
-      phoneSurface(tester);
+    testWidgets(
+      'renders loan amount bounds, term options, and grace period options',
+      (tester) async {
+        phoneSurface(tester);
 
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
-            home: Scaffold(
-              body: SingleChildScrollView(
-                child: LoanCalculatorSlider(
-                  minAmount: 10000000.0,
-                  maxAmount: 100000000.0,
-                  annualInterestRate: 18.0,
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (context, child) => const MaterialApp(
+              home: Scaffold(
+                body: SingleChildScrollView(
+                  child: LoanCalculatorSlider(
+                    minAmount: 10000000.0,
+                    maxAmount: 100000000.0,
+                    annualInterestRate: 18.0,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      // Verify term options
-      expect(find.textContaining('12'), findsWidgets);
-    });
+        // Verify term options
+        expect(find.textContaining('12'), findsWidgets);
+      },
+    );
   });
 
   group('GuaranteeCollateralCard', () {
-    testWidgets('renders collateral types (Cash, Crypto, Promissory, Bank)', (tester) async {
+    testWidgets('renders collateral types (Cash, Crypto, Promissory, Bank)', (
+      tester,
+    ) async {
       // The collateral titles come from GuaranteeCollateralType.titleFa via
       // l10nPick, which resolves against Localizations.localeOf(context).
       // Without an explicit fa locale the host falls back to en and the card

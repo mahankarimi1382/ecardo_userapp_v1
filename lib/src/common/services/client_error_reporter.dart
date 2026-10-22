@@ -26,11 +26,13 @@ class ClientErrorReporter {
 
   int _sessionCount = 0;
   DateTime? _lastSentAt;
-  final Dio _dio = Dio(BaseOptions(
-    connectTimeout: const Duration(seconds: 4),
-    receiveTimeout: const Duration(seconds: 4),
-    contentType: Headers.jsonContentType,
-  ));
+  final Dio _dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 4),
+      receiveTimeout: const Duration(seconds: 4),
+      contentType: Headers.jsonContentType,
+    ),
+  );
 
   String? _currentRoute;
 
@@ -78,12 +80,15 @@ class ClientErrorReporter {
     required String screen,
   }) async {
     try {
-      await _dio.post(_endpoint, data: {
-        'message': message,
-        'stack': stack,
-        'screen': screen,
-        'app_version': '1.0.100',
-      });
+      await _dio.post(
+        _endpoint,
+        data: {
+          'message': message,
+          'stack': stack,
+          'screen': screen,
+          'app_version': '1.0.100',
+        },
+      );
     } catch (_) {
       // گزارش‌دهی نباید خودش خطا بسازد — ساکت رد می‌شود.
     }

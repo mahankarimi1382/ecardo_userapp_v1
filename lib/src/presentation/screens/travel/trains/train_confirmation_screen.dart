@@ -69,7 +69,8 @@ class TrainConfirmationScreen extends StatefulWidget {
   });
 
   @override
-  State<TrainConfirmationScreen> createState() => _TrainConfirmationScreenState();
+  State<TrainConfirmationScreen> createState() =>
+      _TrainConfirmationScreenState();
 }
 
 class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
@@ -93,21 +94,14 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
   }
 
   String _generatePassBarcodeSvg() {
-    final content = 'UIC918-3:${widget.reference}:${widget.trainNumber}:${widget.origin}:${widget.destination}';
+    final content =
+        'UIC918-3:${widget.reference}:${widget.trainNumber}:${widget.origin}:${widget.destination}';
     if (_activeVoucherType == RailPassVoucherType.aztec) {
       final barcode = Barcode.aztec();
-      return barcode.toSvg(
-        content,
-        width: 140,
-        height: 140,
-      );
+      return barcode.toSvg(content, width: 140, height: 140);
     } else {
       final barcode = Barcode.qrCode();
-      return barcode.toSvg(
-        content,
-        width: 140,
-        height: 140,
-      );
+      return barcode.toSvg(content, width: 140, height: 140);
     }
   }
 
@@ -128,10 +122,7 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.close_rounded,
-            color: ECardoTokens.ink(context),
-          ),
+          icon: Icon(Icons.close_rounded, color: ECardoTokens.ink(context)),
           onPressed: () => Get.offAllNamed(BaseRoute.travel),
         ),
         title: Text(
@@ -160,7 +151,9 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                     ),
                     side: BorderSide(color: ECardoTokens.border(context)),
                   ),
@@ -309,7 +302,9 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                           padding: EdgeInsets.all(8.r),
                           decoration: BoxDecoration(
                             color: ECardoTokens.brand100(context),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusSm,
+                            ),
                           ),
                           child: Icon(
                             widget.category?.icon ?? Icons.train_rounded,
@@ -342,11 +337,20 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                       ],
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 5.h,
+                      ),
                       decoration: BoxDecoration(
                         color: ECardoTokens.brand100(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                        border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.2)),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
+                        border: Border.all(
+                          color: ECardoTokens.brand500(
+                            context,
+                          ).withValues(alpha: 0.2),
+                        ),
                       ),
                       child: Text(
                         widget.reference,
@@ -401,10 +405,15 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                             ),
                           SizedBox(height: 4.h),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 3.h,
+                            ),
                             decoration: BoxDecoration(
                               color: ECardoTokens.surfaceSunken(context),
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusSm,
+                              ),
                             ),
                             child: Text(
                               widget.departurePlatform ?? 'Platform 1',
@@ -431,14 +440,22 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                           ),
                           SizedBox(height: 4.h),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 3.h,
+                            ),
                             decoration: BoxDecoration(
                               color: ECardoTokens.brand100(context),
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusSm,
+                              ),
                             ),
                             child: Text(
                               widget.category != null
-                                  ? widget.category!.localizedLabel(context, isRtl: isRtl)
+                                  ? widget.category!.localizedLabel(
+                                      context,
+                                      isRtl: isRtl,
+                                    )
                                   : 'Rail Express',
                               style: TextStyle(
                                 fontSize: 9.sp,
@@ -483,10 +500,15 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                             ),
                           SizedBox(height: 4.h),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 3.h,
+                            ),
                             decoration: BoxDecoration(
                               color: ECardoTokens.surfaceSunken(context),
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusSm,
+                              ),
                             ),
                             child: Text(
                               widget.arrivalPlatform ?? 'Platform 2',
@@ -512,25 +534,45 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                   children: [
                     Expanded(
                       child: _VoucherFact(
-                        label: l10nPick(context, en: 'Travel Date', fa: 'تاریخ سفر', ar: 'تاريخ السفر', zh: '出行日期'),
+                        label: l10nPick(
+                          context,
+                          en: 'Travel Date',
+                          fa: 'تاریخ سفر',
+                          ar: 'تاريخ السفر',
+                          zh: '出行日期',
+                        ),
                         value: formattedDate,
                         icon: Icons.calendar_today_rounded,
                       ),
                     ),
                     Expanded(
                       child: _VoucherFact(
-                        label: l10nPick(context, en: 'Train No.', fa: 'شماره قطار', ar: 'رقم القطار', zh: '车次'),
+                        label: l10nPick(
+                          context,
+                          en: 'Train No.',
+                          fa: 'شماره قطار',
+                          ar: 'رقم القطار',
+                          zh: '车次',
+                        ),
                         value: widget.trainNumber,
                         icon: Icons.numbers_rounded,
                       ),
                     ),
                     Expanded(
                       child: _VoucherFact(
-                        label: l10nPick(context, en: 'Class', fa: 'کلاس سالن', ar: 'الدرجة', zh: '席别'),
+                        label: l10nPick(
+                          context,
+                          en: 'Class',
+                          fa: 'کلاس سالن',
+                          ar: 'الدرجة',
+                          zh: '席别',
+                        ),
                         value: widget.sleeperType != null
                             ? widget.sleeperType!.localizedTitle(isRtl: isRtl)
                             : widget.trainClass,
-                        icon: widget.sleeperType?.icon ?? Icons.airline_seat_recline_extra_rounded,
+                        icon:
+                            widget.sleeperType?.icon ??
+                            Icons.airline_seat_recline_extra_rounded,
                       ),
                     ),
                   ],
@@ -540,15 +582,28 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                 if (widget.genderRule != null) ...[
                   SizedBox(height: 12.h),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.sand100(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      border: Border.all(color: ECardoTokens.sand400(context).withValues(alpha: 0.3)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      border: Border.all(
+                        color: ECardoTokens.sand400(
+                          context,
+                        ).withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       children: [
-                        Icon(widget.genderRule!.icon, color: ECardoTokens.sand600(context), size: 18.r),
+                        Icon(
+                          widget.genderRule!.icon,
+                          color: ECardoTokens.sand600(context),
+                          size: 18.r,
+                        ),
                         SizedBox(width: 8.w),
                         Expanded(
                           child: Text(
@@ -571,10 +626,15 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                   Container(
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
-                      color: widget.transferInfo!.safetyLevel.color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      color: widget.transferInfo!.safetyLevel.color.withValues(
+                        alpha: 0.1,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       border: Border.all(
-                        color: widget.transferInfo!.safetyLevel.color.withValues(alpha: 0.3),
+                        color: widget.transferInfo!.safetyLevel.color
+                            .withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -590,7 +650,9 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.transferInfo!.localizedTitle(isRtl: isRtl),
+                                widget.transferInfo!.localizedTitle(
+                                  isRtl: isRtl,
+                                ),
                                 style: TextStyle(
                                   fontSize: 11.5.sp,
                                   fontWeight: FontWeight.w800,
@@ -602,7 +664,8 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                                 '${widget.transferInfo!.stationName} · ${widget.transferInfo!.arrivalPlatform} → ${widget.transferInfo!.departurePlatform}',
                                 style: TextStyle(
                                   fontSize: 10.sp,
-                                  color: widget.transferInfo!.safetyLevel.color.withValues(alpha: 0.9),
+                                  color: widget.transferInfo!.safetyLevel.color
+                                      .withValues(alpha: 0.9),
                                 ),
                               ),
                             ],
@@ -619,7 +682,13 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
 
                 // Passengers List
                 Text(
-                  l10nPick(context, en: 'Passenger(s) & Berth Allocation', fa: 'مسافران و تخت‌های تخصیص‌یافته', ar: 'المسافرون وتخصيص المقاعد', zh: '乘车人及座位/铺位分配'),
+                  l10nPick(
+                    context,
+                    en: 'Passenger(s) & Berth Allocation',
+                    fa: 'مسافران و تخت‌های تخصیص‌یافته',
+                    ar: 'المسافرون وتخصيص المقاعد',
+                    zh: '乘车人及座位/铺位分配',
+                  ),
                   style: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w800,
@@ -630,13 +699,19 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
 
                 ...widget.passengers.asMap().entries.map((entry) {
                   final p = entry.value;
-                  final seatNumber = p['seat'] ?? 'Carriage 3 / Berth ${entry.key + 12}';
+                  final seatNumber =
+                      p['seat'] ?? 'Carriage 3 / Berth ${entry.key + 12}';
                   return Container(
                     margin: EdgeInsets.only(bottom: 8.h),
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 10.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceSunken(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       border: Border.all(color: ECardoTokens.border(context)),
                     ),
                     child: Row(
@@ -661,14 +736,17 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  p['name']?.isNotEmpty == true ? p['name']! : 'Passenger ${entry.key + 1}',
+                                  p['name']?.isNotEmpty == true
+                                      ? p['name']!
+                                      : 'Passenger ${entry.key + 1}',
                                   style: TextStyle(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w700,
                                     color: ECardoTokens.ink(context),
                                   ),
                                 ),
-                                if (p['national_code'] != null && p['national_code']!.isNotEmpty)
+                                if (p['national_code'] != null &&
+                                    p['national_code']!.isNotEmpty)
                                   Text(
                                     'ID: ${p['national_code']!}',
                                     style: TextStyle(
@@ -682,10 +760,15 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                           ],
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: ECardoTokens.brand100(context),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusSm,
+                            ),
                           ),
                           child: Text(
                             seatNumber,
@@ -702,7 +785,8 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                 }),
 
                 // Intermediate stops toggle if available
-                if (widget.intermediateStops != null && widget.intermediateStops!.isNotEmpty) ...[
+                if (widget.intermediateStops != null &&
+                    widget.intermediateStops!.isNotEmpty) ...[
                   SizedBox(height: 8.h),
                   InkWell(
                     onTap: () => setState(() => _showAllStops = !_showAllStops),
@@ -726,7 +810,9 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                             ),
                           ),
                           Icon(
-                            _showAllStops ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                            _showAllStops
+                                ? Icons.keyboard_arrow_up_rounded
+                                : Icons.keyboard_arrow_down_rounded,
                             color: ECardoTokens.brand500(context),
                             size: 18.r,
                           ),
@@ -749,10 +835,7 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                   child: Column(
                     children: [
                       // Linear barcode 128
-                      SvgPicture.string(
-                        _generateBarcodeSvg(),
-                        height: 48.h,
-                      ),
+                      SvgPicture.string(_generateBarcodeSvg(), height: 48.h),
                       SizedBox(height: 6.h),
                       Text(
                         widget.reference,
@@ -776,15 +859,23 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w700,
-                                color: _activeVoucherType == RailPassVoucherType.aztec
+                                color:
+                                    _activeVoucherType ==
+                                        RailPassVoucherType.aztec
                                     ? ECardoTokens.inkOnBrand
                                     : ECardoTokens.ink(context),
                               ),
                             ),
-                            selected: _activeVoucherType == RailPassVoucherType.aztec,
+                            selected:
+                                _activeVoucherType == RailPassVoucherType.aztec,
                             selectedColor: ECardoTokens.brand900(context),
-                            backgroundColor: ECardoTokens.surfaceSunken(context),
-                            onSelected: (_) => setState(() => _activeVoucherType = RailPassVoucherType.aztec),
+                            backgroundColor: ECardoTokens.surfaceSunken(
+                              context,
+                            ),
+                            onSelected: (_) => setState(
+                              () => _activeVoucherType =
+                                  RailPassVoucherType.aztec,
+                            ),
                           ),
                           SizedBox(width: 8.w),
                           ChoiceChip(
@@ -793,15 +884,24 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w700,
-                                color: _activeVoucherType == RailPassVoucherType.qrCode
+                                color:
+                                    _activeVoucherType ==
+                                        RailPassVoucherType.qrCode
                                     ? ECardoTokens.inkOnBrand
                                     : ECardoTokens.ink(context),
                               ),
                             ),
-                            selected: _activeVoucherType == RailPassVoucherType.qrCode,
+                            selected:
+                                _activeVoucherType ==
+                                RailPassVoucherType.qrCode,
                             selectedColor: ECardoTokens.brand900(context),
-                            backgroundColor: ECardoTokens.surfaceSunken(context),
-                            onSelected: (_) => setState(() => _activeVoucherType = RailPassVoucherType.qrCode),
+                            backgroundColor: ECardoTokens.surfaceSunken(
+                              context,
+                            ),
+                            onSelected: (_) => setState(
+                              () => _activeVoucherType =
+                                  RailPassVoucherType.qrCode,
+                            ),
                           ),
                         ],
                       ),
@@ -812,8 +912,12 @@ class _TrainConfirmationScreenState extends State<TrainConfirmationScreen> {
                         padding: EdgeInsets.all(14.r),
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                          border: Border.all(color: ECardoTokens.border(context)),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
+                          border: Border.all(
+                            color: ECardoTokens.border(context),
+                          ),
                           boxShadow: ECardoTokens.shadowCard(context),
                         ),
                         child: SvgPicture.string(
@@ -1015,7 +1119,9 @@ class _ConfirmationStopTimeline extends StatelessWidget {
                         stop.stationName,
                         style: TextStyle(
                           fontSize: 11.5.sp,
-                          fontWeight: isFirst || isLast ? FontWeight.w800 : FontWeight.w600,
+                          fontWeight: isFirst || isLast
+                              ? FontWeight.w800
+                              : FontWeight.w600,
                           color: ECardoTokens.ink(context),
                         ),
                       ),

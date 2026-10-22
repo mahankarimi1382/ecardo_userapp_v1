@@ -10,10 +10,7 @@ void main() {
         currency: 'IRT',
         method: Method(
           fields: [
-            Fields(
-              name: 'sheba_number',
-              value: 'IR820170000000123456789012',
-            ),
+            Fields(name: 'sheba_number', value: 'IR820170000000123456789012'),
           ],
         ),
       );
@@ -27,12 +24,7 @@ void main() {
         methodName: 'Bank Melli',
         currency: 'IRT',
         method: Method(
-          fields: [
-            Fields(
-              name: 'card_number',
-              value: '6037997123456789',
-            ),
-          ],
+          fields: [Fields(name: 'card_number', value: '6037997123456789')],
         ),
       );
 

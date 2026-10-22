@@ -26,14 +26,18 @@ class VisaApplicationScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(context, en: 'Visa Application', fa: 'فرم درخواست ویزا'),
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -42,7 +46,9 @@ class VisaApplicationScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           onPressed: () => Get.back(),
@@ -78,7 +84,9 @@ class VisaApplicationScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                             Text(
@@ -87,18 +95,26 @@ class VisaApplicationScreen extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 11.5.sp,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ],
                         ),
                       ),
                       Text(
-                        formatVisaPrice(catalog.totalFee, catalog.currency, context: context),
+                        formatVisaPrice(
+                          catalog.totalFee,
+                          catalog.currency,
+                          context: context,
+                        ),
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w900,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightSecondary,
                         ),
                       ),
                     ],
@@ -115,16 +131,24 @@ class VisaApplicationScreen extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.person_outline_rounded,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightSecondary,
                             size: AppSpacing.iconSm.r,
                           ),
                           SizedBox(width: AppSpacing.sm.w),
                           Text(
-                            l10nPick(context, en: 'Applicant Information', fa: 'مشخصات متقاضی (مطابق گذرنامه)'),
+                            l10nPick(
+                              context,
+                              en: 'Applicant Information',
+                              fa: 'مشخصات متقاضی (مطابق گذرنامه)',
+                            ),
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                         ],
@@ -136,7 +160,11 @@ class VisaApplicationScreen extends StatelessWidget {
                         context: context,
                         isDark: isDark,
                         controller: controller.fullNameController,
-                        label: l10nPick(context, en: 'Full Name (Latin as in passport)', fa: 'نام و نام خانوادگی به انگلیسی'),
+                        label: l10nPick(
+                          context,
+                          en: 'Full Name (Latin as in passport)',
+                          fa: 'نام و نام خانوادگی به انگلیسی',
+                        ),
                         hint: 'e.g. ALI REZAEI',
                         keyboardType: TextInputType.name,
                       ),
@@ -147,7 +175,11 @@ class VisaApplicationScreen extends StatelessWidget {
                         context: context,
                         isDark: isDark,
                         controller: controller.passportNumberController,
-                        label: l10nPick(context, en: 'Passport Number', fa: 'شماره گذرنامه'),
+                        label: l10nPick(
+                          context,
+                          en: 'Passport Number',
+                          fa: 'شماره گذرنامه',
+                        ),
                         hint: 'e.g. A12345678',
                         keyboardType: TextInputType.text,
                       ),
@@ -158,7 +190,11 @@ class VisaApplicationScreen extends StatelessWidget {
                         context: context,
                         isDark: isDark,
                         controller: controller.phoneController,
-                        label: l10nPick(context, en: 'Contact Phone Number', fa: 'شماره تماس'),
+                        label: l10nPick(
+                          context,
+                          en: 'Contact Phone Number',
+                          fa: 'شماره تماس',
+                        ),
                         hint: 'e.g. +989123456789',
                         keyboardType: TextInputType.phone,
                       ),
@@ -169,7 +205,11 @@ class VisaApplicationScreen extends StatelessWidget {
                         context: context,
                         isDark: isDark,
                         controller: controller.emailController,
-                        label: l10nPick(context, en: 'Email Address (for e-visa delivery)', fa: 'ایمیل دریافت ویزا الکترونیک'),
+                        label: l10nPick(
+                          context,
+                          en: 'Email Address (for e-visa delivery)',
+                          fa: 'ایمیل دریافت ویزا الکترونیک',
+                        ),
                         hint: 'e.g. yourname@example.com',
                         keyboardType: TextInputType.emailAddress,
                       ),
@@ -177,11 +217,17 @@ class VisaApplicationScreen extends StatelessWidget {
 
                       // Travel Date Picker
                       Text(
-                        l10nPick(context, en: 'Intended Travel Date', fa: 'تاریخ تقریبی سفر'),
+                        l10nPick(
+                          context,
+                          en: 'Intended Travel Date',
+                          fa: 'تاریخ تقریبی سفر',
+                        ),
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.xs.h),
@@ -191,7 +237,9 @@ class VisaApplicationScreen extends StatelessWidget {
                           final now = DateTime.now();
                           final picked = await showDatePicker(
                             context: context,
-                            initialDate: controller.travelDate.value ?? now.add(const Duration(days: 7)),
+                            initialDate:
+                                controller.travelDate.value ??
+                                now.add(const Duration(days: 7)),
                             firstDate: now,
                             lastDate: now.add(const Duration(days: 365)),
                           );
@@ -199,16 +247,26 @@ class VisaApplicationScreen extends StatelessWidget {
                             controller.travelDate.value = picked;
                           }
                         },
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd.r,
+                        ),
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.md.w,
                             vertical: AppSpacing.md.h,
                           ),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                            color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMd.r,
+                            ),
+                            border: Border.all(
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
+                            ),
+                            color: isDark
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.white,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -216,18 +274,28 @@ class VisaApplicationScreen extends StatelessWidget {
                               Text(
                                 controller.travelDate.value != null
                                     ? "${controller.travelDate.value!.year}-${controller.travelDate.value!.month.toString().padLeft(2, '0')}-${controller.travelDate.value!.day.toString().padLeft(2, '0')}"
-                                    : l10nPick(context, en: 'Select date', fa: 'انتخاب تاریخ'),
+                                    : l10nPick(
+                                        context,
+                                        en: 'Select date',
+                                        fa: 'انتخاب تاریخ',
+                                      ),
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   color: controller.travelDate.value != null
-                                      ? (isDark ? AppColors.darkTextPrimary : AppColors.deepBlack)
-                                      : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                                      ? (isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.deepBlack)
+                                      : (isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.softGray),
                                 ),
                               ),
                               Icon(
                                 Icons.calendar_today_outlined,
                                 size: AppSpacing.iconSm.r,
-                                color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightSecondary,
                               ),
                             ],
                           ),
@@ -247,16 +315,24 @@ class VisaApplicationScreen extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.upload_file_rounded,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightSecondary,
                             size: AppSpacing.iconSm.r,
                           ),
                           SizedBox(width: AppSpacing.sm.w),
                           Text(
-                            l10nPick(context, en: 'Document Checklist', fa: 'چک‌لیست مدارک موردنیاز'),
+                            l10nPick(
+                              context,
+                              en: 'Document Checklist',
+                              fa: 'چک‌لیست مدارک موردنیاز',
+                            ),
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                         ],
@@ -270,7 +346,9 @@ class VisaApplicationScreen extends StatelessWidget {
                         ),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.md.h),
@@ -280,8 +358,16 @@ class VisaApplicationScreen extends StatelessWidget {
                         _buildUploadItem(
                           controller: controller,
                           docKey: 'passport_scan',
-                          title: l10nPick(context, en: 'Passport Scan', fa: 'اسکن صفحه اول گذرنامه'),
-                          instructions: l10nPick(context, en: 'Must be valid for at least 6 months.', fa: 'حداقل ۶ ماه اعتبار قانونی داشته باشد.'),
+                          title: l10nPick(
+                            context,
+                            en: 'Passport Scan',
+                            fa: 'اسکن صفحه اول گذرنامه',
+                          ),
+                          instructions: l10nPick(
+                            context,
+                            en: 'Must be valid for at least 6 months.',
+                            fa: 'حداقل ۶ ماه اعتبار قانونی داشته باشد.',
+                          ),
                           isRequired: true,
                         )
                       else
@@ -306,7 +392,9 @@ class VisaApplicationScreen extends StatelessWidget {
                 color: AppColors.black.withValues(alpha: 0.35),
                 child: Center(
                   child: CircularProgressIndicator(
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightSecondary,
                   ),
                 ),
               ),
@@ -338,7 +426,9 @@ class VisaApplicationScreen extends StatelessWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+              backgroundColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightSecondary,
               foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(
@@ -350,7 +440,11 @@ class VisaApplicationScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  l10nPick(context, en: 'Proceed to Payment', fa: 'تأیید و رفتن به پرداخت'),
+                  l10nPick(
+                    context,
+                    en: 'Proceed to Payment',
+                    fa: 'تأیید و رفتن به پرداخت',
+                  ),
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
@@ -415,14 +509,18 @@ class VisaApplicationScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w600,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ),
         SizedBox(height: AppSpacing.xs.h),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
             color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
           ),
           child: TextField(
@@ -430,13 +528,17 @@ class VisaApplicationScreen extends StatelessWidget {
             keyboardType: keyboardType,
             style: TextStyle(
               fontSize: 13.5.sp,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: TextStyle(
                 fontSize: 12.5.sp,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.softGray,
               ),
               border: InputBorder.none,
               contentPadding: EdgeInsets.symmetric(

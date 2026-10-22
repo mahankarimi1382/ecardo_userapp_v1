@@ -23,8 +23,8 @@ class AddPaymentMethod extends StatefulWidget {
 class _AddPaymentMethodState extends State<AddPaymentMethod> {
   AddPaymentMethodController get controller =>
       Get.isRegistered<AddPaymentMethodController>()
-          ? Get.find<AddPaymentMethodController>()
-          : Get.put(AddPaymentMethodController());
+      ? Get.find<AddPaymentMethodController>()
+      : Get.put(AddPaymentMethodController());
   final PaymentAccountController paymentAccountController = Get.find();
 
   @override
@@ -138,48 +138,48 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 16),
-                              ...controller.dynamicFieldControllers.entries.map((
-                                entry,
-                              ) {
-                                final fieldName = entry.key;
-                                final fieldData = entry.value;
-                                final fieldController =
-                                    fieldData['controller']
-                                        as TextEditingController;
-                                final validation =
-                                    fieldData['validation'] as String;
-                                final type = fieldData['type'] as String;
-                                final isRequired = validation == 'required';
-                                final isTextArea = type == 'textarea';
-                                final isFile = type == 'file';
+                              ...controller.dynamicFieldControllers.entries.map(
+                                (entry) {
+                                  final fieldName = entry.key;
+                                  final fieldData = entry.value;
+                                  final fieldController =
+                                      fieldData['controller']
+                                          as TextEditingController;
+                                  final validation =
+                                      fieldData['validation'] as String;
+                                  final type = fieldData['type'] as String;
+                                  final isRequired = validation == 'required';
+                                  final isTextArea = type == 'textarea';
+                                  final isFile = type == 'file';
 
-                                return Column(
-                                  children: [
-                                    CommonRequiredLabelAndDynamicField(
-                                      labelText: fieldName,
-                                      isLabelRequired: isRequired,
-                                      dynamicField: isFile
-                                          ? _buildUploadSection(
-                                              title: fieldName,
-                                              fieldName: fieldName,
-                                            )
-                                          : CommonTextInputField(
-                                              backgroundColor:
-                                                  AppColors.transparent,
-                                              hintText: isTextArea
-                                                  ? 'Enter $fieldName'
-                                                  : 'Enter $fieldName',
-                                              controller: fieldController,
-                                              maxLine: isTextArea ? 5 : 1,
-                                              keyboardType: isTextArea
-                                                  ? TextInputType.multiline
-                                                  : TextInputType.text,
-                                            ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                  ],
-                                );
-                              }),
+                                  return Column(
+                                    children: [
+                                      CommonRequiredLabelAndDynamicField(
+                                        labelText: fieldName,
+                                        isLabelRequired: isRequired,
+                                        dynamicField: isFile
+                                            ? _buildUploadSection(
+                                                title: fieldName,
+                                                fieldName: fieldName,
+                                              )
+                                            : CommonTextInputField(
+                                                backgroundColor:
+                                                    AppColors.transparent,
+                                                hintText: isTextArea
+                                                    ? 'Enter $fieldName'
+                                                    : 'Enter $fieldName',
+                                                controller: fieldController,
+                                                maxLine: isTextArea ? 5 : 1,
+                                                keyboardType: isTextArea
+                                                    ? TextInputType.multiline
+                                                    : TextInputType.text,
+                                              ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                    ],
+                                  );
+                                },
+                              ),
                             ],
                           );
                         }),
@@ -303,10 +303,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
             child: Center(child: CircularProgressIndicator()),
           );
         }
-        return Image.memory(
-          snapshot.data!,
-          fit: BoxFit.cover,
-        );
+        return Image.memory(snapshot.data!, fit: BoxFit.cover);
       },
     );
   }

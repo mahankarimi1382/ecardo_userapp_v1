@@ -45,7 +45,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
     const amberColor = Color(0xFFD97706);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
@@ -53,7 +55,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -70,7 +74,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -89,9 +95,13 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
       body: Column(
         children: [
           // Offline Banner
-          Obx(() => controller.isOffline.value
-              ? ExperienceOfflineBanner(onRetry: () => controller.loadCatalog())
-              : const SizedBox.shrink()),
+          Obx(
+            () => controller.isOffline.value
+                ? ExperienceOfflineBanner(
+                    onRetry: () => controller.loadCatalog(),
+                  )
+                : const SizedBox.shrink(),
+          ),
 
           // Transit Hub Selector Row
           Container(
@@ -113,21 +123,29 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                       h['label']!,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
                         color: isSelected
                             ? Colors.white
-                            : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                            : (isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary),
                       ),
                     ),
                     selected: isSelected,
                     selectedColor: amberColor,
-                    backgroundColor: isDark ? AppColors.darkCard : AppColors.lightSurface,
+                    backgroundColor: isDark
+                        ? AppColors.darkCard
+                        : AppColors.lightSurface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.r),
                       side: BorderSide(
                         color: isSelected
                             ? amberColor
-                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            : (isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                       ),
                     ),
                     onSelected: (_) {
@@ -142,12 +160,17 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
 
           // Search Field
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: 4.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg.w,
+              vertical: 4.h,
+            ),
             child: TextField(
               onChanged: controller.onSearchChanged,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
               decoration: InputDecoration(
                 hintText: l10nPick(
@@ -157,23 +180,38 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                 ),
                 hintStyle: TextStyle(
                   fontSize: 11.5.sp,
-                  color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+                  color: isDark
+                      ? AppColors.darkTextHint
+                      : AppColors.lightTextHint,
                 ),
-                prefixIcon: Icon(Icons.search_rounded,
-                    size: 18.sp,
-                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+                prefixIcon: Icon(
+                  Icons.search_rounded,
+                  size: 18.sp,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
+                ),
                 filled: true,
                 fillColor: isDark ? AppColors.darkCard : AppColors.lightSurface,
-                contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 12.w),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10.h,
+                  horizontal: 12.w,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
-                  borderSide:
-                      BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  borderSide: BorderSide(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
-                  borderSide:
-                      BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  borderSide: BorderSide(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
                 ),
               ),
             ),
@@ -202,7 +240,8 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
 
                 case ExperienceServiceState.offline:
                   return ExperienceErrorView(
-                    errorMessage: 'اتصال شبکه قطع است. برای دریافت داده‌های تازه دوباره تلاش کنید.',
+                    errorMessage:
+                        'اتصال شبکه قطع است. برای دریافت داده‌های تازه دوباره تلاش کنید.',
                     onRetry: () => controller.loadCatalog(),
                   );
 
@@ -228,7 +267,12 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                     itemCount: list.length,
                     itemBuilder: (context, index) {
                       final rest = list[index];
-                      return _buildRestaurantCard(context, rest, isDark, amberColor);
+                      return _buildRestaurantCard(
+                        context,
+                        rest,
+                        isDark,
+                        amberColor,
+                      );
                     },
                   );
 
@@ -258,7 +302,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
           boxShadow: [
             BoxShadow(
               color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -285,7 +331,10 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                     children: [
                       Flexible(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 3.h,
+                          ),
                           decoration: BoxDecoration(
                             color: amberColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(6.r),
@@ -305,22 +354,29 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                       SizedBox(width: 8.w),
                       Row(
                         children: [
-                          const Icon(Icons.star_rounded, color: AppColors.warning, size: 15),
+                          const Icon(
+                            Icons.star_rounded,
+                            color: AppColors.warning,
+                            size: 15,
+                          ),
                           SizedBox(width: 4.w),
                           Text(
                             '${rest.rating}',
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                           Text(
                             ' (${rest.reviewsCount})',
                             style: TextStyle(
                               fontSize: 10.sp,
-                              color:
-                                  isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary,
                             ),
                           ),
                         ],
@@ -333,24 +389,31 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       height: 1.3,
                     ),
                   ),
                   SizedBox(height: 6.h),
                   Row(
                     children: [
-                      Icon(Icons.flight_takeoff_rounded,
-                          size: 14.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+                      Icon(
+                        Icons.flight_takeoff_rounded,
+                        size: 14.sp,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
+                      ),
                       SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
                           rest.terminalLocation,
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color:
-                                isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -364,10 +427,21 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                     spacing: 8.w,
                     runSpacing: 6.h,
                     children: [
-                      _buildPill(Icons.access_time_rounded, rest.openingHours, isDark),
                       _buildPill(
-                          Icons.timer_outlined, 'آماده‌سازی ~${rest.avgPrepMinutes} دقیقه', isDark),
-                      _buildPill(Icons.menu_book_rounded, '${rest.menu.length} آیتم منو', isDark),
+                        Icons.access_time_rounded,
+                        rest.openingHours,
+                        isDark,
+                      ),
+                      _buildPill(
+                        Icons.timer_outlined,
+                        'آماده‌سازی ~${rest.avgPrepMinutes} دقیقه',
+                        isDark,
+                      ),
+                      _buildPill(
+                        Icons.menu_book_rounded,
+                        '${rest.menu.length} آیتم منو',
+                        isDark,
+                      ),
                     ],
                   ),
                   SizedBox(height: 12.h),
@@ -384,8 +458,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                               'حداقل سفارش',
                               style: TextStyle(
                                 fontSize: 10.sp,
-                                color:
-                                    isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                                color: isDark
+                                    ? AppColors.darkTextTertiary
+                                    : AppColors.lightTextTertiary,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -406,7 +481,10 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: amberColor,
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 8.h,
+                          ),
                           minimumSize: Size(110.w, 44.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6.r),
@@ -415,10 +493,14 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                         ),
                         onPressed: () {
                           HapticFeedback.lightImpact();
-                          Get.to(() => RestaurantDetailScreen(restaurant: rest));
+                          Get.to(
+                            () => RestaurantDetailScreen(restaurant: rest),
+                          );
                         },
-                        child: const Text('مشاهده منو و سفارش',
-                            style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          'مشاهده منو و سفارش',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -441,15 +523,21 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon,
-              size: 12.sp,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+          Icon(
+            icon,
+            size: 12.sp,
+            color: isDark
+                ? AppColors.darkTextTertiary
+                : AppColors.lightTextTertiary,
+          ),
           SizedBox(width: 4.w),
           Text(
             label,
             style: TextStyle(
               fontSize: 10.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -464,12 +552,16 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
       isScrollControlled: true,
       backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl.r)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXl.r),
+        ),
       ),
       builder: (ctx) {
         return Container(
           padding: EdgeInsets.all(AppSpacing.lg.r),
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.75),
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.75,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -489,7 +581,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w900,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               SizedBox(height: 12.h),
@@ -501,7 +595,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                       child: Text(
                         'شما سفارش غذای فعالی ندارید.',
                         style: TextStyle(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     );
@@ -513,7 +609,9 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                       final order = orders[idx];
                       return Card(
                         margin: EdgeInsets.only(bottom: 10.h),
-                        color: isDark ? AppColors.darkCard : AppColors.lightSurface,
+                        color: isDark
+                            ? AppColors.darkCard
+                            : AppColors.lightSurface,
                         child: ListTile(
                           title: Text(
                             order.restaurantName,
@@ -524,7 +622,10 @@ class _DiningCatalogScreenState extends State<DiningCatalogScreen> {
                           subtitle: Text(
                             '${order.items.length} آیتم • ${order.totalAmount.toStringAsFixed(0)} ${order.currency}',
                           ),
-                          trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                          trailing: const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 14,
+                          ),
                           onTap: () {
                             Navigator.pop(ctx);
                             Get.to(() => DiningOrderPassScreen(order: order));

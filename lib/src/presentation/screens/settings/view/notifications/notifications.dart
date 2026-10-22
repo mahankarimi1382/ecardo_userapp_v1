@@ -194,8 +194,13 @@ class _NotificationsState extends State<Notifications>
     );
   }
 
-  void _handleNotificationTap(String title, String message, String type,
-      {String? link, String? payload}) {
+  void _handleNotificationTap(
+    String title,
+    String message,
+    String type, {
+    String? link,
+    String? payload,
+  }) {
     HapticFeedback.lightImpact();
     NotificationRouter.route(
       context,
@@ -230,7 +235,9 @@ class _NotificationsState extends State<Notifications>
         ? Get.find<NotificationHistoryService>()
         : null;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     return Scaffold(
@@ -247,13 +254,23 @@ class _NotificationsState extends State<Notifications>
                   padding: EdgeInsetsDirectional.only(end: pad),
                   child: TextButton.icon(
                     style: TextButton.styleFrom(
-                      foregroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      foregroundColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                         side: BorderSide(
-                          color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                              .withValues(alpha: 0.35),
+                          color:
+                              (isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.lightPrimary)
+                                  .withValues(alpha: 0.35),
                         ),
                       ),
                     ),
@@ -263,7 +280,9 @@ class _NotificationsState extends State<Notifications>
                       localization.notificationsMarkAllReadButton,
                       style: AppTextStyles.labelSmall.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.lightPrimary,
                       ),
                     ),
                   ),
@@ -278,27 +297,67 @@ class _NotificationsState extends State<Notifications>
                   padding: EdgeInsets.symmetric(horizontal: pad),
                   children: [
                     _chip(
-                      l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', tr: 'Tümü', ru: 'Все', zh: '全部'),
+                      l10nPick(
+                        context,
+                        en: 'All',
+                        fa: 'همه',
+                        ar: 'الكل',
+                        tr: 'Tümü',
+                        ru: 'Все',
+                        zh: '全部',
+                      ),
                       _NotifFilter.all,
                       isDark,
                     ),
                     _chip(
-                      l10nPick(context, en: 'Security', fa: 'امنیتی', ar: 'الأمان', tr: 'Güvenlik', ru: 'Безопасность', zh: '安全'),
+                      l10nPick(
+                        context,
+                        en: 'Security',
+                        fa: 'امنیتی',
+                        ar: 'الأمان',
+                        tr: 'Güvenlik',
+                        ru: 'Безопасность',
+                        zh: '安全',
+                      ),
                       _NotifFilter.security,
                       isDark,
                     ),
                     _chip(
-                      l10nPick(context, en: 'Financial', fa: 'مالی', ar: 'مالي', tr: 'Finansal', ru: 'Финансовые', zh: '财务'),
+                      l10nPick(
+                        context,
+                        en: 'Financial',
+                        fa: 'مالی',
+                        ar: 'مالي',
+                        tr: 'Finansal',
+                        ru: 'Финансовые',
+                        zh: '财务',
+                      ),
                       _NotifFilter.financial,
                       isDark,
                     ),
                     _chip(
-                      l10nPick(context, en: 'Promo', fa: 'پیشنهادات', ar: 'عروض', tr: 'Promosyon', ru: 'Акции', zh: '优惠'),
+                      l10nPick(
+                        context,
+                        en: 'Promo',
+                        fa: 'پیشنهادات',
+                        ar: 'عروض',
+                        tr: 'Promosyon',
+                        ru: 'Акции',
+                        zh: '优惠',
+                      ),
                       _NotifFilter.promo,
                       isDark,
                     ),
                     _chip(
-                      l10nPick(context, en: 'Unread', fa: 'خوانده‌نشده', ar: 'غير مقروءة', tr: 'Okunmamış', ru: 'Непрочитанные', zh: '未读'),
+                      l10nPick(
+                        context,
+                        en: 'Unread',
+                        fa: 'خوانده‌نشده',
+                        ar: 'غير مقروءة',
+                        tr: 'Okunmamış',
+                        ru: 'Непрочитанные',
+                        zh: '未读',
+                      ),
                       _NotifFilter.unread,
                       isDark,
                     ),
@@ -308,12 +367,18 @@ class _NotificationsState extends State<Notifications>
               SizedBox(height: AppSpacing.sm),
               Expanded(
                 child: RefreshIndicator(
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.lightPrimary,
                   onRefresh: refreshData,
                   child: Obx(() {
                     final localItems = history?.items.toList() ?? const [];
-                    final server = controller
-                            .notificationModel.value.data?.notifications ??
+                    final server =
+                        controller
+                            .notificationModel
+                            .value
+                            .data
+                            ?.notifications ??
                         const [];
 
                     if (controller.isLoading.value &&
@@ -408,11 +473,15 @@ class _NotificationsState extends State<Notifications>
                               animateGlow: true,
                               iconData: _emptyIconForFilter(_filter),
                               iconColor: _categoryColor(_filter, isDark),
-                              glowColor: _categoryColor(_filter, isDark)
-                                  .withValues(alpha: 0.35),
+                              glowColor: _categoryColor(
+                                _filter,
+                                isDark,
+                              ).withValues(alpha: 0.35),
                               title: _emptyTitleForFilter(context, _filter),
-                              description:
-                                  _emptyDescriptionForFilter(context, _filter),
+                              description: _emptyDescriptionForFilter(
+                                context,
+                                _filter,
+                              ),
                               primaryActionLabel: l10nPick(
                                 context,
                                 en: 'Refresh',
@@ -436,7 +505,8 @@ class _NotificationsState extends State<Notifications>
                                   : null,
                               onSecondaryAction: _filter != _NotifFilter.all
                                   ? () => setState(
-                                      () => _filter = _NotifFilter.all)
+                                      () => _filter = _NotifFilter.all,
+                                    )
                                   : null,
                             ),
                           ),
@@ -445,11 +515,13 @@ class _NotificationsState extends State<Notifications>
                     }
 
                     // Group Server notifications by date
-                    final Map<_DateGroup, List<Notificationss>> groupedServer = {};
+                    final Map<_DateGroup, List<Notificationss>> groupedServer =
+                        {};
                     for (final n in filteredServer) {
                       DateTime dt = DateTime.now();
                       try {
-                        if (n.createdAt != null) dt = DateTime.parse(n.createdAt!);
+                        if (n.createdAt != null)
+                          dt = DateTime.parse(n.createdAt!);
                       } catch (_) {}
                       final group = _classifyDate(dt);
                       groupedServer.putIfAbsent(group, () => []).add(n);
@@ -495,7 +567,12 @@ class _NotificationsState extends State<Notifications>
                               }),
                             ],
                         ],
-                        SizedBox(height: AppSpacing.bottomSafe(context, AppSpacing.xxl)),
+                        SizedBox(
+                          height: AppSpacing.bottomSafe(
+                            context,
+                            AppSpacing.xxl,
+                          ),
+                        ),
                       ],
                     );
                   }),
@@ -505,7 +582,8 @@ class _NotificationsState extends State<Notifications>
           ),
           Obx(
             () => Visibility(
-              visible: controller.isPageLoading.value ||
+              visible:
+                  controller.isPageLoading.value ||
                   controller.isNotificationsLoading.value,
               child: const CommonLoading(),
             ),
@@ -552,7 +630,9 @@ class _NotificationsState extends State<Notifications>
                       width: 140,
                       height: 14,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkCard : AppColors.lightWarmGray.withValues(alpha: 0.3),
+                        color: isDark
+                            ? AppColors.darkCard
+                            : AppColors.lightWarmGray.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -561,7 +641,9 @@ class _NotificationsState extends State<Notifications>
                       width: double.infinity,
                       height: 12,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkCard : AppColors.lightWarmGray.withValues(alpha: 0.2),
+                        color: isDark
+                            ? AppColors.darkCard
+                            : AppColors.lightWarmGray.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -835,22 +917,20 @@ class _NotificationsState extends State<Notifications>
     );
   }
 
-  Widget _serverTile(
-    Notificationss n,
-    bool isDark,
-    Color primaryTextColor,
-  ) {
+  Widget _serverTile(Notificationss n, bool isDark, Color primaryTextColor) {
     final isUnread = n.isRead == false;
     final cardBg = isDark
         ? (isUnread
-            ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
-            : AppColors.darkSurface)
+              ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
+              : AppColors.darkSurface)
         : (isUnread
-            ? AppColors.lightSecondaryContainer.withValues(alpha: 0.45)
-            : AppColors.white);
+              ? AppColors.lightSecondaryContainer.withValues(alpha: 0.45)
+              : AppColors.white);
 
     final borderColor = isUnread
-        ? (isDark ? AppColors.mainSoftBlue.withValues(alpha: 0.4) : AppColors.lightPrimary.withValues(alpha: 0.3))
+        ? (isDark
+              ? AppColors.mainSoftBlue.withValues(alpha: 0.4)
+              : AppColors.lightPrimary.withValues(alpha: 0.3))
         : (isDark ? AppColors.darkBorder : AppColors.lightBorder);
 
     return Container(
@@ -886,7 +966,9 @@ class _NotificationsState extends State<Notifications>
                     height: 7,
                     margin: const EdgeInsetsDirectional.only(top: 14, end: 8),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -896,8 +978,10 @@ class _NotificationsState extends State<Notifications>
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: _typeColor(n.type ?? '', isDark)
-                        .withValues(alpha: 0.12),
+                    color: _typeColor(
+                      n.type ?? '',
+                      isDark,
+                    ).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
                   child: Padding(
@@ -921,7 +1005,9 @@ class _NotificationsState extends State<Notifications>
                       Text(
                         n.title ?? n.message ?? '',
                         style: AppTextStyles.titleSmall.copyWith(
-                          fontWeight: isUnread ? FontWeight.w800 : FontWeight.w600,
+                          fontWeight: isUnread
+                              ? FontWeight.w800
+                              : FontWeight.w600,
                           color: primaryTextColor,
                         ),
                       ),
@@ -931,7 +1017,9 @@ class _NotificationsState extends State<Notifications>
                           child: Text(
                             n.message!,
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.softGray
+                                  : AppColors.lightTextSecondary,
                               height: 1.35,
                             ),
                           ),
@@ -941,7 +1029,9 @@ class _NotificationsState extends State<Notifications>
                         JalaliDateHelper.format(n.createdAt),
                         style: AppTextStyles.labelSmall.copyWith(
                           fontSize: 11,
-                          color: isDark ? AppColors.softGray.withValues(alpha: 0.7) : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.softGray.withValues(alpha: 0.7)
+                              : AppColors.lightTextTertiary,
                         ),
                       ),
                     ],
@@ -967,14 +1057,16 @@ class _NotificationsState extends State<Notifications>
   ) {
     final cardBg = isDark
         ? (!item.read
-            ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
-            : AppColors.darkSurface)
+              ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
+              : AppColors.darkSurface)
         : (!item.read
-            ? AppColors.lightSecondaryContainer.withValues(alpha: 0.45)
-            : AppColors.white);
+              ? AppColors.lightSecondaryContainer.withValues(alpha: 0.45)
+              : AppColors.white);
 
     final borderColor = !item.read
-        ? (isDark ? AppColors.mainSoftBlue.withValues(alpha: 0.4) : AppColors.lightPrimary.withValues(alpha: 0.3))
+        ? (isDark
+              ? AppColors.mainSoftBlue.withValues(alpha: 0.4)
+              : AppColors.lightPrimary.withValues(alpha: 0.3))
         : (isDark ? AppColors.darkBorder : AppColors.lightBorder);
 
     return Container(
@@ -996,8 +1088,12 @@ class _NotificationsState extends State<Notifications>
             }
             // NOTIF-LINK: local history items carry the FCM payload — route
             // through it instead of discarding it.
-            _handleNotificationTap(item.title, item.body, item.type,
-                payload: item.payload);
+            _handleNotificationTap(
+              item.title,
+              item.body,
+              item.type,
+              payload: item.payload,
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -1010,7 +1106,9 @@ class _NotificationsState extends State<Notifications>
                     height: 7,
                     margin: const EdgeInsetsDirectional.only(top: 14, end: 8),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -1018,8 +1116,10 @@ class _NotificationsState extends State<Notifications>
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: _typeColor(item.type, isDark)
-                        .withValues(alpha: 0.12),
+                    color: _typeColor(
+                      item.type,
+                      isDark,
+                    ).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
                   child: Icon(
@@ -1036,8 +1136,12 @@ class _NotificationsState extends State<Notifications>
                       Text(
                         item.title,
                         style: AppTextStyles.titleSmall.copyWith(
-                          fontWeight: !item.read ? FontWeight.w800 : FontWeight.w600,
-                          color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                          fontWeight: !item.read
+                              ? FontWeight.w800
+                              : FontWeight.w600,
+                          color: isDark
+                              ? AppColors.warmWhite
+                              : AppColors.deepBlack,
                         ),
                       ),
                       if (item.body.isNotEmpty)
@@ -1048,7 +1152,9 @@ class _NotificationsState extends State<Notifications>
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyles.bodySmall.copyWith(
-                              color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.softGray
+                                  : AppColors.lightTextSecondary,
                               height: 1.35,
                             ),
                           ),
@@ -1058,7 +1164,9 @@ class _NotificationsState extends State<Notifications>
                         _relativeTime(context, item.at),
                         style: AppTextStyles.labelSmall.copyWith(
                           fontSize: 11,
-                          color: isDark ? AppColors.softGray.withValues(alpha: 0.7) : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.softGray.withValues(alpha: 0.7)
+                              : AppColors.lightTextTertiary,
                         ),
                       ),
                     ],
@@ -1132,7 +1240,8 @@ class NotificationRouter {
     // router below for safety).
     if (link != null && link.isNotEmpty) {
       final isRoute =
-          link.startsWith('/') || Get.routeTree.routes.any((r) => r.name == link);
+          link.startsWith('/') ||
+          Get.routeTree.routes.any((r) => r.name == link);
       if (isRoute) {
         Get.toNamed(link);
         return;
@@ -1149,7 +1258,8 @@ class NotificationRouter {
     // no explicit link exists.
 
     // 1. Ticket / Support
-    final isTicket = tp.contains('ticket') ||
+    final isTicket =
+        tp.contains('ticket') ||
         tp.contains('support') ||
         combined.contains('ticket') ||
         combined.contains('support') ||
@@ -1168,7 +1278,8 @@ class NotificationRouter {
     }
 
     // 2. Virtual Card
-    final isVirtualCard = tp.contains('virtual_card') ||
+    final isVirtualCard =
+        tp.contains('virtual_card') ||
         tp.contains('virtualcard') ||
         tp == 'card' ||
         combined.contains('virtual card') ||
@@ -1185,7 +1296,8 @@ class NotificationRouter {
     }
 
     // 3. KYC / Verification
-    final isKyc = tp.contains('kyc') ||
+    final isKyc =
+        tp.contains('kyc') ||
         tp.contains('id_verification') ||
         tp.contains('verification') ||
         combined.contains('kyc') ||
@@ -1210,7 +1322,8 @@ class NotificationRouter {
     }
 
     // 4. Update / Version
-    final isUpdate = tp.contains('app_update') ||
+    final isUpdate =
+        tp.contains('app_update') ||
         tp == 'update' ||
         tp.contains('version') ||
         combined.contains('app update') ||
@@ -1249,7 +1362,8 @@ class NotificationRouter {
     }
 
     // 5. Transfer / Transaction / Payment / Deposit
-    final isFinancial = tp.contains('deposit') ||
+    final isFinancial =
+        tp.contains('deposit') ||
         tp.contains('transfer') ||
         tp.contains('transaction') ||
         tp.contains('payment') ||
@@ -1345,7 +1459,9 @@ class NotificationRouter {
           ),
           decoration: BoxDecoration(
             color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusXl),
+            ),
           ),
           padding: EdgeInsets.only(
             left: AppSpacing.xl,
@@ -1375,13 +1491,18 @@ class NotificationRouter {
                     width: 42,
                     height: 42,
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                          .withValues(alpha: 0.12),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.lightPrimary)
+                              .withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     ),
                     child: Icon(
                       typeIcon(type),
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
                       size: 22,
                     ),
                   ),
@@ -1398,7 +1519,9 @@ class NotificationRouter {
                         zh: '通知详情',
                       ),
                       style: AppTextStyles.titleMedium.copyWith(
-                        color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                        color: isDark
+                            ? AppColors.warmWhite
+                            : AppColors.deepBlack,
                       ),
                     ),
                   ),
@@ -1417,7 +1540,9 @@ class NotificationRouter {
                       SelectableText(
                         displayTitle,
                         style: AppTextStyles.titleSmall.copyWith(
-                          color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                          color: isDark
+                              ? AppColors.warmWhite
+                              : AppColors.deepBlack,
                         ),
                       ),
                       if (message.trim().isNotEmpty) ...[
@@ -1427,7 +1552,9 @@ class NotificationRouter {
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: isDark
                                 ? AppColors.warmWhite.withValues(alpha: 0.8)
-                                : AppColors.lightTextPrimary.withValues(alpha: 0.85),
+                                : AppColors.lightTextPrimary.withValues(
+                                    alpha: 0.85,
+                                  ),
                             height: 1.5,
                           ),
                         ),

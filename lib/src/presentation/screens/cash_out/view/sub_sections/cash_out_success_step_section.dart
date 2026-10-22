@@ -56,17 +56,21 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
       isCrypto: wallet?.isCrypto ?? false,
     );
 
-    final rawAmount = controller.successCashOutData.value?["final_amount"] ??
+    final rawAmount =
+        controller.successCashOutData.value?["final_amount"] ??
         controller.amountController.text;
     final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
 
-    final tnxId = _nonEmpty(controller.successCashOutData.value?["tnx"]?.toString());
+    final tnxId = _nonEmpty(
+      controller.successCashOutData.value?["tnx"]?.toString(),
+    );
     final createdAt =
         controller.successCashOutData.value?["created_at"]?.toString() ?? '';
     final rawCharge = controller.successCashOutData.value?["charge"];
-    final chargeStr = (double.tryParse(rawCharge?.toString() ?? '0') ??
-            controller.charge.value)
-        .toStringAsFixed(calculateDecimals);
+    final chargeStr =
+        (double.tryParse(rawCharge?.toString() ?? '0') ??
+                controller.charge.value)
+            .toStringAsFixed(calculateDecimals);
     final agentAid = controller.agentAidController.text.trim();
 
     return Obx(
@@ -112,8 +116,9 @@ class _CashOutSuccessStepSectionState extends State<CashOutSuccessStepSection> {
                         ru: 'Квитанция о выдаче наличных',
                       ),
                       transactionReference: tnxId,
-                      formattedTimestamp:
-                          createdAt.isNotEmpty ? createdAt : null,
+                      formattedTimestamp: createdAt.isNotEmpty
+                          ? createdAt
+                          : null,
                       primaryAmount: amount,
                       primaryCurrency: currency,
                       primaryDecimals: calculateDecimals,

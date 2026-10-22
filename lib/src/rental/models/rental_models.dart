@@ -48,8 +48,7 @@ class CarModel {
     if (json['features'] is List) {
       parsedFeatures = json['features'] as List;
     } else if (json['features'] is Map) {
-      parsedFeatures = (json['features'] as Map)
-          .entries
+      parsedFeatures = (json['features'] as Map).entries
           .where((e) => e.value == true || '${e.value}' == '1')
           .map((e) => e.key.toString())
           .toList();
@@ -255,8 +254,12 @@ class RentalBookingModel {
       car: json['car'] is Map<String, dynamic>
           ? CarModel.fromJson(json['car'] as Map<String, dynamic>)
           : null,
-      pickupAt: json['pickup_at'] != null ? DateTime.tryParse(json['pickup_at'].toString()) : null,
-      returnAt: json['return_at'] != null ? DateTime.tryParse(json['return_at'].toString()) : null,
+      pickupAt: json['pickup_at'] != null
+          ? DateTime.tryParse(json['pickup_at'].toString())
+          : null,
+      returnAt: json['return_at'] != null
+          ? DateTime.tryParse(json['return_at'].toString())
+          : null,
       pickupLocation: json['pickup_location']?.toString(),
       extras: json['extras'] is Map<String, dynamic>
           ? json['extras'] as Map<String, dynamic>
@@ -272,16 +275,28 @@ class RentalBookingModel {
           ? RentalDepositModel.fromJson(json['deposit'] as Map<String, dynamic>)
           : null,
       driverDocs: ((json['driver_docs'] as List?) ?? [])
-          .map((e) => DriverDocModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) => DriverDocModel.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
       handovers: ((json['handovers'] as List?) ?? [])
-          .map((e) => RentalHandoverModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) => RentalHandoverModel.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
           .toList(),
       claims: ((json['claims'] as List?) ?? [])
-          .map((e) => DamageClaimModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) =>
+                DamageClaimModel.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
       events: ((json['events'] as List?) ?? [])
-          .map((e) => RentalEventModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) =>
+                RentalEventModel.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
     );
   }
@@ -305,7 +320,9 @@ class RentalEventModel {
       id: (json['id'] as num?)?.toInt() ?? 0,
       actorRole: json['actor_role']?.toString() ?? 'SYSTEM',
       reason: json['reason']?.toString(),
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
+          : null,
     );
   }
 }

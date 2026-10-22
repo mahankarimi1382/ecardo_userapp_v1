@@ -15,7 +15,11 @@ class LoanApiService extends getx.GetxService {
       final list = response.data!['data']?['products'] as List?;
       if (list != null) {
         return list
-            .map((e) => LoanProductModel.fromJson(Map<String, dynamic>.from(e as Map)))
+            .map(
+              (e) => LoanProductModel.fromJson(
+                Map<String, dynamic>.from(e as Map),
+              ),
+            )
             .toList();
       }
     }
@@ -29,7 +33,10 @@ class LoanApiService extends getx.GetxService {
       final list = response.data!['data']?['cases'] as List?;
       if (list != null) {
         return list
-            .map((e) => LoanCaseModel.fromJson(Map<String, dynamic>.from(e as Map)))
+            .map(
+              (e) =>
+                  LoanCaseModel.fromJson(Map<String, dynamic>.from(e as Map)),
+            )
             .toList();
       }
     }
@@ -56,13 +63,16 @@ class LoanApiService extends getx.GetxService {
     String? purpose,
     double? documentedIncome,
   }) async {
-    final response = await _network.post(endpoint: '/loan/apply', data: {
-      'product_id': productId,
-      'requested_amount': requestedAmount,
-      'tenure_months': tenureMonths,
-      'purpose': purpose,
-      'documented_income': documentedIncome,
-    });
+    final response = await _network.post(
+      endpoint: '/loan/apply',
+      data: {
+        'product_id': productId,
+        'requested_amount': requestedAmount,
+        'tenure_months': tenureMonths,
+        'purpose': purpose,
+        'documented_income': documentedIncome,
+      },
+    );
     if (response.status == Status.completed && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }
@@ -71,37 +81,54 @@ class LoanApiService extends getx.GetxService {
 
   /// Accept offer (گام ۳) — BTN_ACCEPT_OFFER
   Future<bool> acceptOffer(int caseId) async {
-    final response = await _network.post(endpoint: '/loan/cases/$caseId/accept-offer', data: {});
+    final response = await _network.post(
+      endpoint: '/loan/cases/$caseId/accept-offer',
+      data: {},
+    );
     return response.status == Status.completed;
   }
 
   /// Post cash collateral — BTN_POST_CASH
-  Future<bool> postCashCollateral(int caseId, double amount, String asset) async {
-    final response = await _network.post(endpoint: '/loan/cases/$caseId/collateral/cash', data: {
-      'amount': amount,
-      'asset': asset,
-    });
+  Future<bool> postCashCollateral(
+    int caseId,
+    double amount,
+    String asset,
+  ) async {
+    final response = await _network.post(
+      endpoint: '/loan/cases/$caseId/collateral/cash',
+      data: {'amount': amount, 'asset': asset},
+    );
     return response.status == Status.completed;
   }
 
   /// Post crypto collateral — BTN_POST_CRYPTO
-  Future<bool> postCryptoCollateral(int caseId, double amount, String asset) async {
-    final response = await _network.post(endpoint: '/loan/cases/$caseId/collateral/crypto', data: {
-      'amount': amount,
-      'asset': asset,
-    });
+  Future<bool> postCryptoCollateral(
+    int caseId,
+    double amount,
+    String asset,
+  ) async {
+    final response = await _network.post(
+      endpoint: '/loan/cases/$caseId/collateral/crypto',
+      data: {'amount': amount, 'asset': asset},
+    );
     return response.status == Status.completed;
   }
 
   /// Sign guarantee (ضامن) — BTN_SIGN_GUARANTEE
   Future<bool> signGuarantee(int caseId) async {
-    final response = await _network.post(endpoint: '/loan/cases/$caseId/guarantor', data: {});
+    final response = await _network.post(
+      endpoint: '/loan/cases/$caseId/guarantor',
+      data: {},
+    );
     return response.status == Status.completed;
   }
 
   /// Sign contract — BTN_SIGN_CONTRACT
   Future<bool> signContract(int caseId, {String role = 'BORROWER'}) async {
-    final response = await _network.post(endpoint: '/loan/cases/$caseId/sign', data: {'role': role});
+    final response = await _network.post(
+      endpoint: '/loan/cases/$caseId/sign',
+      data: {'role': role},
+    );
     return response.status == Status.completed;
   }
 
@@ -116,13 +143,19 @@ class LoanApiService extends getx.GetxService {
 
   /// Early repayment — BTN_EARLY_REPAY
   Future<bool> earlyRepayment(int caseId) async {
-    final response = await _network.post(endpoint: '/loan/cases/$caseId/early-repayment', data: {});
+    final response = await _network.post(
+      endpoint: '/loan/cases/$caseId/early-repayment',
+      data: {},
+    );
     return response.status == Status.completed;
   }
 
   /// Cancel application (C1) — BTN_CANCEL_APPLICATION
   Future<bool> cancel(int caseId) async {
-    final response = await _network.post(endpoint: '/loan/cases/$caseId/cancel', data: {});
+    final response = await _network.post(
+      endpoint: '/loan/cases/$caseId/cancel',
+      data: {},
+    );
     return response.status == Status.completed;
   }
 }

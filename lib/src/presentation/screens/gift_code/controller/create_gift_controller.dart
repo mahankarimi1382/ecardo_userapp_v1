@@ -189,14 +189,11 @@ class CreateGiftController extends GetxController {
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: wallet.value!.code!,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting(
-        "site_currency",
-      ) ??
-      'USD',
-      siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-        "site_currency_decimals",
-      ) ??
-      '2',
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
+          '2',
       isCrypto: wallet.value!.isCrypto!,
     );
 
@@ -299,7 +296,10 @@ class CreateGiftController extends GetxController {
         clearFields();
         ToastHelper().showSuccessToast(response.data!["message"]);
       } else if (response.status == Status.error) {
-        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
+        if (PasscodeHelper.isPasscodeRequired(
+          response.message,
+          wasPasscodeProvided: wasPasscodeProvided,
+        )) {
           isCreateGiftLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -326,7 +326,10 @@ class CreateGiftController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ createGift() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
+      if (PasscodeHelper.isPasscodeRequired(
+        e,
+        wasPasscodeProvided: wasPasscodeProvided,
+      )) {
         isCreateGiftLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),

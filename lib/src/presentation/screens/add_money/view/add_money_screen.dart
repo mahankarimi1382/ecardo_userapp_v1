@@ -103,11 +103,11 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                                       child: Padding(
                                         padding:
                                             const EdgeInsetsDirectional.only(
-                                          end: AppSpacing.page,
-                                          start: AppSpacing.sm,
-                                          top: AppSpacing.sm,
-                                          bottom: AppSpacing.sm,
-                                        ),
+                                              end: AppSpacing.page,
+                                              start: AppSpacing.sm,
+                                              top: AppSpacing.sm,
+                                              bottom: AppSpacing.sm,
+                                            ),
                                         child: Image.asset(
                                           PngAssets.commonHistoryIcon,
                                           width: AppSpacing.iconLg,
@@ -162,8 +162,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                         ? const AddMoneyReviewStepSection()
                         : controller.currentStep.value == 2
                         ? (controller.successPaymentData.value != null
-                            ? const AddMoneySuccessStepSection()
-                            : const AddMoneyPendingStepSection())
+                              ? const AddMoneySuccessStepSection()
+                              : const AddMoneyPendingStepSection())
                         : const SizedBox.shrink();
                   }),
                 ),
@@ -217,14 +217,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
           gradient: LinearGradient(
             colors: isDark
-                ? [
-                    const Color(0xFF1E2836),
-                    const Color(0xFF151C26),
-                  ]
-                : [
-                    AppColors.deepBlack,
-                    const Color(0xFF2A2A28),
-                  ],
+                ? [const Color(0xFF1E2836), const Color(0xFF151C26)]
+                : [AppColors.deepBlack, const Color(0xFF2A2A28)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -260,7 +254,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
                       width: 1,
                     ),
                   ),
-                  child: currentWallet.isDefault == true ||
+                  child:
+                      currentWallet.isDefault == true ||
                           currentWallet.icon == null ||
                           currentWallet.icon!.isEmpty
                       ? Text(

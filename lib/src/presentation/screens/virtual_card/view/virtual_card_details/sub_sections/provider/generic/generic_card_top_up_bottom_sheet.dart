@@ -17,10 +17,7 @@ import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model
 class GenericCardTopUpBottomSheet extends StatefulWidget {
   final String cardId;
 
-  const GenericCardTopUpBottomSheet({
-    super.key,
-    required this.cardId,
-  });
+  const GenericCardTopUpBottomSheet({super.key, required this.cardId});
 
   @override
   State<GenericCardTopUpBottomSheet> createState() =>
@@ -137,158 +134,153 @@ class _GenericCardTopUpBottomSheetState
                     if (!keyboardVisible)
                       _BalanceBanner(
                         title: _balanceTitle(localization, funding),
-                        value: _balanceValue(
-                          card,
-                          funding,
-                          selectedWallet,
-                        ),
+                        value: _balanceValue(card, funding, selectedWallet),
                       ),
-                      if (supportsWallet && supportsGateway) ...[
-                        SizedBox(height: 16.h),
-                        _FundingTabs(
-                          value: fundingSource,
-                          onChanged: (value) {
-                            setState(() => fundingSource = value);
-                            _review();
-                          },
-                        ),
-                      ],
-                      if (funding != null &&
-                          supportsWallet &&
-                          fundingSource == 'irr_wallet') ...[
-                        SizedBox(height: 16.h),
-                        CommonRequiredLabelAndDynamicField(
-                          labelText: 'IRR wallet',
-                          isLabelRequired: true,
-                          dynamicField: CommonTextInputField(
-                            backgroundColor: AppColors.lightBackground,
-                            hintText: 'Select IRR wallet',
-                            controller: walletController,
-                            readOnly: true,
-                            suffixIcon: Image.asset(
-                              PngAssets.arrowDownCommonIcon,
-                            ),
-                            onTap: () {
-                              Get.bottomSheet(
-                                CommonDropdownBottomSheetThree<Wallets>(
-                                  items: controller.irrWallets,
-                                  selectedItem: selectedWallet,
-                                  bottomSheetHeight: 400.h,
-                                  isShowTitle: true,
-                                  title: 'Select IRR Wallet',
-                                  notFoundText: 'No IRR wallet found',
-                                  getDisplayText: _walletText,
-                                  areItemsEqual: (first, second) =>
-                                      first.id == second.id,
-                                  onItemSelected: (wallet) {
-                                    setState(() {
-                                      walletId = wallet.id;
-                                      walletController.text =
-                                          _walletText(wallet);
-                                    });
-                                  },
-                                ),
-                                isScrollControlled: true,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                      if (funding != null &&
-                          supportsGateway &&
-                          fundingSource == 'gateway') ...[
-                        SizedBox(height: 16.h),
-                        CommonRequiredLabelAndDynamicField(
-                          labelText: 'Payment gateway',
-                          isLabelRequired: true,
-                          dynamicField: CommonTextInputField(
-                            backgroundColor: AppColors.lightBackground,
-                            hintText: 'Select payment gateway',
-                            controller: gatewayController,
-                            readOnly: true,
-                            suffixIcon: Image.asset(
-                              PngAssets.arrowDownCommonIcon,
-                            ),
-                            onTap: () {
-                              final selected = gateways.firstWhereOrNull(
-                                (gateway) => gateway.id == gatewayMethodId,
-                              );
-                              Get.bottomSheet(
-                                CommonDropdownBottomSheetThree<CardGateway>(
-                                  items: gateways,
-                                  selectedItem: selected,
-                                  bottomSheetHeight: 400.h,
-                                  isShowTitle: true,
-                                  title: 'Select Payment Gateway',
-                                  notFoundText: 'No payment gateway found',
-                                  getDisplayText: _gatewayText,
-                                  getItemSubtitle: (gateway) =>
-                                      '${gateway.minimumDeposit} - '
-                                      '${gateway.maximumDeposit} '
-                                      '${gateway.currency ?? card?.currency ?? ''}',
-                                  areItemsEqual: (first, second) =>
-                                      first.id == second.id,
-                                  onItemSelected: (gateway) {
-                                    setState(() {
-                                      gatewayMethodId = gateway.id;
-                                      gatewayController.text =
-                                          _gatewayText(gateway);
-                                    });
-                                    _review();
-                                  },
-                                ),
-                                isScrollControlled: true,
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                    if (supportsWallet && supportsGateway) ...[
+                      SizedBox(height: 16.h),
+                      _FundingTabs(
+                        value: fundingSource,
+                        onChanged: (value) {
+                          setState(() => fundingSource = value);
+                          _review();
+                        },
+                      ),
+                    ],
+                    if (funding != null &&
+                        supportsWallet &&
+                        fundingSource == 'irr_wallet') ...[
                       SizedBox(height: 16.h),
                       CommonRequiredLabelAndDynamicField(
-                        labelText: localization.cardTopUpLabelAmount,
+                        labelText: 'IRR wallet',
                         isLabelRequired: true,
-                        dynamicField: Obx(
-                          () => CommonTextInputField(
-                            backgroundColor: AppColors.lightBackground,
-                            controller: controller.amountController,
-                            focusNode: controller.amountFocusNode,
-                            isFocused: controller.isAmountFocused.value,
-                            keyboardType: TextInputType.numberWithOptions(
-                              decimal: funding == null,
-                            ),
-                            hintText: '',
-                            onChanged: (_) => _review(),
+                        dynamicField: CommonTextInputField(
+                          backgroundColor: AppColors.lightBackground,
+                          hintText: 'Select IRR wallet',
+                          controller: walletController,
+                          readOnly: true,
+                          suffixIcon: Image.asset(
+                            PngAssets.arrowDownCommonIcon,
                           ),
-                        ),
-                      ),
-                      if (limitText.isNotEmpty) ...[
-                        SizedBox(height: 4.h),
-                        Text(
-                          limitText,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12.sp,
-                            color: AppColors.error,
-                          ),
-                        ),
-                      ],
-                      SizedBox(height: 30.h),
-                      _ReviewSection(controller: controller, card: card),
-                      SizedBox(height: 30.h),
-                      Obx(
-                        () => CommonButton(
-                          isLoading:
-                              controller.isCardBalanceTopUpLoading.value,
-                          text: localization.cardTopUpButtonTopupNow,
-                          onPressed: () =>
-                              controller.cardBalanceTopUpFromContract(
-                                cardId: widget.cardId,
-                                fundingSource: fundingSource,
-                                walletId: walletId,
-                                gatewayMethodId: gatewayMethodId,
+                          onTap: () {
+                            Get.bottomSheet(
+                              CommonDropdownBottomSheetThree<Wallets>(
+                                items: controller.irrWallets,
+                                selectedItem: selectedWallet,
+                                bottomSheetHeight: 400.h,
+                                isShowTitle: true,
+                                title: 'Select IRR Wallet',
+                                notFoundText: 'No IRR wallet found',
+                                getDisplayText: _walletText,
+                                areItemsEqual: (first, second) =>
+                                    first.id == second.id,
+                                onItemSelected: (wallet) {
+                                  setState(() {
+                                    walletId = wallet.id;
+                                    walletController.text = _walletText(wallet);
+                                  });
+                                },
                               ),
+                              isScrollControlled: true,
+                            );
+                          },
                         ),
                       ),
+                    ],
+                    if (funding != null &&
+                        supportsGateway &&
+                        fundingSource == 'gateway') ...[
+                      SizedBox(height: 16.h),
+                      CommonRequiredLabelAndDynamicField(
+                        labelText: 'Payment gateway',
+                        isLabelRequired: true,
+                        dynamicField: CommonTextInputField(
+                          backgroundColor: AppColors.lightBackground,
+                          hintText: 'Select payment gateway',
+                          controller: gatewayController,
+                          readOnly: true,
+                          suffixIcon: Image.asset(
+                            PngAssets.arrowDownCommonIcon,
+                          ),
+                          onTap: () {
+                            final selected = gateways.firstWhereOrNull(
+                              (gateway) => gateway.id == gatewayMethodId,
+                            );
+                            Get.bottomSheet(
+                              CommonDropdownBottomSheetThree<CardGateway>(
+                                items: gateways,
+                                selectedItem: selected,
+                                bottomSheetHeight: 400.h,
+                                isShowTitle: true,
+                                title: 'Select Payment Gateway',
+                                notFoundText: 'No payment gateway found',
+                                getDisplayText: _gatewayText,
+                                getItemSubtitle: (gateway) =>
+                                    '${gateway.minimumDeposit} - '
+                                    '${gateway.maximumDeposit} '
+                                    '${gateway.currency ?? card?.currency ?? ''}',
+                                areItemsEqual: (first, second) =>
+                                    first.id == second.id,
+                                onItemSelected: (gateway) {
+                                  setState(() {
+                                    gatewayMethodId = gateway.id;
+                                    gatewayController.text = _gatewayText(
+                                      gateway,
+                                    );
+                                  });
+                                  _review();
+                                },
+                              ),
+                              isScrollControlled: true,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: 16.h),
+                    CommonRequiredLabelAndDynamicField(
+                      labelText: localization.cardTopUpLabelAmount,
+                      isLabelRequired: true,
+                      dynamicField: Obx(
+                        () => CommonTextInputField(
+                          backgroundColor: AppColors.lightBackground,
+                          controller: controller.amountController,
+                          focusNode: controller.amountFocusNode,
+                          isFocused: controller.isAmountFocused.value,
+                          keyboardType: TextInputType.numberWithOptions(
+                            decimal: funding == null,
+                          ),
+                          hintText: '',
+                          onChanged: (_) => _review(),
+                        ),
+                      ),
+                    ),
+                    if (limitText.isNotEmpty) ...[
+                      SizedBox(height: 4.h),
+                      Text(
+                        limitText,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12.sp,
+                          color: AppColors.error,
+                        ),
+                      ),
+                    ],
+                    SizedBox(height: 30.h),
+                    _ReviewSection(controller: controller, card: card),
+                    SizedBox(height: 30.h),
+                    Obx(
+                      () => CommonButton(
+                        isLoading: controller.isCardBalanceTopUpLoading.value,
+                        text: localization.cardTopUpButtonTopupNow,
+                        onPressed: () =>
+                            controller.cardBalanceTopUpFromContract(
+                              cardId: widget.cardId,
+                              fundingSource: fundingSource,
+                              walletId: walletId,
+                              gatewayMethodId: gatewayMethodId,
+                            ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -340,10 +332,7 @@ class _GenericCardTopUpBottomSheetState
     return gateway?.name ?? gateway?.gatewayCode ?? '';
   }
 
-  static String _limitText(
-    VirtualCardDetailsData? card,
-    CardFunding? funding,
-  ) {
+  static String _limitText(VirtualCardDetailsData? card, CardFunding? funding) {
     if (funding != null) {
       return '${funding.minimumTopup} - ${funding.maximumTopup} '
           '${card?.currency ?? ''}';
@@ -357,10 +346,7 @@ class _GenericCardTopUpBottomSheetState
     return '$minimum - $maximum $currency';
   }
 
-  String _balanceTitle(
-    AppLocalizations localization,
-    CardFunding? funding,
-  ) {
+  String _balanceTitle(AppLocalizations localization, CardFunding? funding) {
     if (funding == null || fundingSource == 'irr_wallet') {
       return localization.cardTopUpMainWalletBalance;
     }
@@ -398,10 +384,7 @@ class _BalanceBanner extends StatelessWidget {
   final String title;
   final String value;
 
-  const _BalanceBanner({
-    required this.title,
-    required this.value,
-  });
+  const _BalanceBanner({required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -453,10 +436,7 @@ class _FundingTabs extends StatelessWidget {
   final String value;
   final ValueChanged<String> onChanged;
 
-  const _FundingTabs({
-    required this.value,
-    required this.onChanged,
-  });
+  const _FundingTabs({required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -509,10 +489,7 @@ class _ReviewSection extends StatelessWidget {
   final VirtualCardDetailsController controller;
   final VirtualCardDetailsData? card;
 
-  const _ReviewSection({
-    required this.controller,
-    required this.card,
-  });
+  const _ReviewSection({required this.controller, required this.card});
 
   @override
   Widget build(BuildContext context) {
@@ -616,10 +593,7 @@ class _ReviewDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20.h),
-      child: Divider(
-        height: 0,
-        color: AppColors.black.withValues(alpha: 0.10),
-      ),
+      child: Divider(height: 0, color: AppColors.black.withValues(alpha: 0.10)),
     );
   }
 }
@@ -632,11 +606,7 @@ class _Divider extends StatelessWidget {
       height: 1.h,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.white,
-            Colors.grey.shade400,
-            AppColors.white,
-          ],
+          colors: [AppColors.white, Colors.grey.shade400, AppColors.white],
         ),
       ),
     );

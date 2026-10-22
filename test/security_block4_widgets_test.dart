@@ -32,8 +32,9 @@ void main() {
       addTearDown(tester.view.reset);
     }
 
-    testWidgets('renders the frozen banner and reports the toggle',
-        (tester) async {
+    testWidgets('renders the frozen banner and reports the toggle', (
+      tester,
+    ) async {
       bool freezeToggled = false;
       phoneSurface(tester);
 
@@ -48,11 +49,7 @@ void main() {
               body: CardFreezeOverlay(
                 isFrozen: true,
                 onFreezeToggled: (val) => freezeToggled = val,
-                child: Container(
-                  width: 400,
-                  height: 400,
-                  color: Colors.blue,
-                ),
+                child: Container(width: 400, height: 400, color: Colors.blue),
               ),
             ),
           ),
@@ -84,8 +81,9 @@ void main() {
       expect(freezeToggled, isFalse);
     });
 
-    testWidgets('does not show the frozen banner when the card is active',
-        (tester) async {
+    testWidgets('does not show the frozen banner when the card is active', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
@@ -96,11 +94,7 @@ void main() {
               body: CardFreezeOverlay(
                 isFrozen: false,
                 onFreezeToggled: (_) {},
-                child: Container(
-                  width: 300,
-                  height: 180,
-                  color: Colors.blue,
-                ),
+                child: Container(width: 300, height: 180, color: Colors.blue),
               ),
             ),
           ),

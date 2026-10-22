@@ -35,10 +35,13 @@ class IrrCardOrderSection extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               [
-                product.issuer?.name,
-                product.issuer?.countryCode,
-                product.issuer?.network,
-              ].whereType<String>().where((value) => value.isNotEmpty).join(' · '),
+                    product.issuer?.name,
+                    product.issuer?.countryCode,
+                    product.issuer?.network,
+                  ]
+                  .whereType<String>()
+                  .where((value) => value.isNotEmpty)
+                  .join(' · '),
               style: TextStyle(
                 color: AppColors.lightTextTertiary,
                 fontSize: 13.sp,
@@ -100,10 +103,7 @@ class IrrCardOrderSection extends StatelessWidget {
           ...product.applicationFields.map(
             (field) => Padding(
               padding: EdgeInsets.only(bottom: 16.h),
-              child: _ApplicationField(
-                field: field,
-                controller: controller,
-              ),
+              child: _ApplicationField(field: field, controller: controller),
             ),
           ),
           _FundingSourceSection(product: product, controller: controller),
@@ -151,10 +151,7 @@ class _ApplicationField extends StatelessWidget {
   final CardApplicationField field;
   final CreateVirtualCardController controller;
 
-  const _ApplicationField({
-    required this.field,
-    required this.controller,
-  });
+  const _ApplicationField({required this.field, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -186,9 +183,7 @@ class _ApplicationField extends StatelessWidget {
               AppColors.lightTextTertiary,
               BlendMode.srcIn,
             ),
-            child: Image.asset(
-              PngAssets.calenderCommonIcon,
-            ),
+            child: Image.asset(PngAssets.calenderCommonIcon),
           ),
           suffixIconWidth: 25,
           suffixIconHeight: 25,
@@ -303,7 +298,8 @@ class _FundingSourceSection extends StatelessWidget {
             controller.irrWallets.isEmpty) ...[
           SizedBox(height: 8.h),
           _MessageBox(
-            message: 'No ${product.currency ?? 'USD'} wallet is available for this account.',
+            message:
+                'No ${product.currency ?? 'USD'} wallet is available for this account.',
             color: AppColors.error,
           ),
         ],
@@ -383,10 +379,7 @@ class _BooleanChoice extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;
 
-  const _BooleanChoice({
-    required this.value,
-    required this.onChanged,
-  });
+  const _BooleanChoice({required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +432,10 @@ class _MessageBox extends StatelessWidget {
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12.r),
       ),
-      child: Text(message, style: TextStyle(color: color, fontSize: 13.sp)),
+      child: Text(
+        message,
+        style: TextStyle(color: color, fontSize: 13.sp),
+      ),
     );
   }
 }

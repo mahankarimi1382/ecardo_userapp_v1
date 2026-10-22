@@ -73,8 +73,8 @@ class ConnectivityWatchService extends GetxService with WidgetsBindingObserver {
       isVpn.value = false;
       return;
     }
-    final offline = results.isEmpty ||
-        results.every((r) => r == ConnectivityResult.none);
+    final offline =
+        results.isEmpty || results.every((r) => r == ConnectivityResult.none);
     isOffline.value = offline;
     isVpn.value = results.contains(ConnectivityResult.vpn) && !offline;
   }
@@ -160,11 +160,10 @@ class ConnectivityWatchService extends GetxService with WidgetsBindingObserver {
     if (_lastToastAt == null ||
         now.difference(_lastToastAt!) > _toastThrottle) {
       _lastToastAt = now;
-      final loc =
-          Get.context != null ? AppLocalizations.of(Get.context!) : null;
-      ToastHelper().showSuccessToast(
-        loc?.networkReconnected ?? 'Back online',
-      );
+      final loc = Get.context != null
+          ? AppLocalizations.of(Get.context!)
+          : null;
+      ToastHelper().showSuccessToast(loc?.networkReconnected ?? 'Back online');
     }
 
     if (Get.currentRoute == BaseRoute.noInternetConnection) {

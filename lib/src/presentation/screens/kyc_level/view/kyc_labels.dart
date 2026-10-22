@@ -110,11 +110,23 @@ class KycLimitLabels {
   /// Daily/monthly caps also arrive under the server's `*_daily_limit` /
   /// `*_monthly_limit` spelling — resolved via [_dailyMonthlyAliases].
   static const Set<String> knownKeys = {
-    'cashin_minimum', 'cashin_maximum', 'cashin_daily', 'cashin_monthly',
-    'cashout_minimum', 'cashout_maximum', 'cashout_daily', 'cashout_monthly',
-    'exchange_minimum', 'exchange_maximum', 'exchange_daily', 'exchange_monthly',
-    'transfer_maximum', 'transfer_daily_limit',
-    'payment_maximum', 'gift_maximum', 'paycardo_topup_limit',
+    'cashin_minimum',
+    'cashin_maximum',
+    'cashin_daily',
+    'cashin_monthly',
+    'cashout_minimum',
+    'cashout_maximum',
+    'cashout_daily',
+    'cashout_monthly',
+    'exchange_minimum',
+    'exchange_maximum',
+    'exchange_daily',
+    'exchange_monthly',
+    'transfer_maximum',
+    'transfer_daily_limit',
+    'payment_maximum',
+    'gift_maximum',
+    'paycardo_topup_limit',
   };
 
   /// Server sends daily/monthly caps as `<group>_daily_limit` /
@@ -165,38 +177,60 @@ class KycLimitLabels {
         case 'cashin_maximum':
           result.add(_row(loc, _group(loc, Group.cashin), Measure.max, value));
         case 'cashin_daily':
-          result.add(_row(loc, _group(loc, Group.cashin), Measure.daily, value));
+          result.add(
+            _row(loc, _group(loc, Group.cashin), Measure.daily, value),
+          );
         case 'cashin_monthly':
-          result.add(_row(loc, _group(loc, Group.cashin), Measure.monthly, value));
+          result.add(
+            _row(loc, _group(loc, Group.cashin), Measure.monthly, value),
+          );
         case 'cashout_minimum':
           result.add(_row(loc, _group(loc, Group.cashout), Measure.min, value));
         case 'cashout_maximum':
           result.add(_row(loc, _group(loc, Group.cashout), Measure.max, value));
         case 'cashout_daily':
-          result.add(_row(loc, _group(loc, Group.cashout), Measure.daily, value));
+          result.add(
+            _row(loc, _group(loc, Group.cashout), Measure.daily, value),
+          );
         case 'cashout_monthly':
-          result.add(_row(loc, _group(loc, Group.cashout), Measure.monthly, value));
+          result.add(
+            _row(loc, _group(loc, Group.cashout), Measure.monthly, value),
+          );
         case 'exchange_minimum':
-          result.add(_row(loc, _group(loc, Group.exchange), Measure.min, value));
+          result.add(
+            _row(loc, _group(loc, Group.exchange), Measure.min, value),
+          );
         case 'exchange_maximum':
-          result.add(_row(loc, _group(loc, Group.exchange), Measure.max, value));
+          result.add(
+            _row(loc, _group(loc, Group.exchange), Measure.max, value),
+          );
         case 'exchange_daily':
-          result.add(_row(loc, _group(loc, Group.exchange), Measure.daily, value));
+          result.add(
+            _row(loc, _group(loc, Group.exchange), Measure.daily, value),
+          );
         case 'exchange_monthly':
-          result.add(_row(loc, _group(loc, Group.exchange), Measure.monthly, value));
+          result.add(
+            _row(loc, _group(loc, Group.exchange), Measure.monthly, value),
+          );
         case 'transfer_maximum':
-          result.add(_row(loc, _group(loc, Group.transfer), Measure.max, value));
+          result.add(
+            _row(loc, _group(loc, Group.transfer), Measure.max, value),
+          );
         case 'transfer_daily_limit':
-          result.add(_row(loc, _group(loc, Group.transfer), Measure.daily, value));
+          result.add(
+            _row(loc, _group(loc, Group.transfer), Measure.daily, value),
+          );
         case 'payment_maximum':
           result.add(_row(loc, _group(loc, Group.payment), Measure.max, value));
         case 'gift_maximum':
           result.add(_row(loc, _group(loc, Group.gift), Measure.max, value));
         case 'paycardo_topup_limit':
-          result.add(KycLimitRow(
-            groupLabel: loc?.kycLimitPaycardoTopup ?? 'PayCardo top-up',
-            value: value,
-          ));
+          result.add(
+            KycLimitRow(
+              groupLabel: loc?.kycLimitPaycardoTopup ?? 'PayCardo top-up',
+              value: value,
+            ),
+          );
       }
     }
     return result;

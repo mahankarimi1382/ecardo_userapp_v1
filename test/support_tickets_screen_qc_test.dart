@@ -41,9 +41,9 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('PonnamKarthik/fluttertoast'),
-      (MethodCall methodCall) async => true,
-    );
+          const MethodChannel('PonnamKarthik/fluttertoast'),
+          (MethodCall methodCall) async => true,
+        );
     Get.reset();
     Get.put<TokenService>(TokenService());
     Get.put<NetworkService>(NetworkService());
@@ -135,54 +135,63 @@ void main() {
   });
 
   group('SupportTickets & AddNewTicket widget smoke tests', () {
-    testWidgets('TicketStatusBadge renders with pulse controller for in_progress',
-        (tester) async {
-      await tester.pumpWidget(
-        _wrap(
-          Builder(
-            builder: (context) {
-              final l10n = AppLocalizations.of(context)!;
-              return TicketStatusBadge(
-                status: 'in_progress',
-                isDark: false,
-                localization: l10n,
-              );
-            },
+    testWidgets(
+      'TicketStatusBadge renders with pulse controller for in_progress',
+      (tester) async {
+        await tester.pumpWidget(
+          _wrap(
+            Builder(
+              builder: (context) {
+                final l10n = AppLocalizations.of(context)!;
+                return TicketStatusBadge(
+                  status: 'in_progress',
+                  isDark: false,
+                  localization: l10n,
+                );
+              },
+            ),
           ),
-        ),
-      );
-      await tester.pump(const Duration(milliseconds: 100));
-      expect(find.byType(TicketStatusBadge), findsOneWidget);
-    });
+        );
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(find.byType(TicketStatusBadge), findsOneWidget);
+      },
+    );
 
-    testWidgets('SupportTickets list screen renders empty state and filter chips',
-        (tester) async {
-      final controller = Get.put(SupportTicketController());
-      controller.supportTicketModel.value = SupportTicketModel(
-        data: SupportTicketData(tickets: [], pagination: Pagination(total: 0)),
-      );
-      controller.isLoading.value = false;
-      controller.isInitialDataLoaded.value = true;
+    testWidgets(
+      'SupportTickets list screen renders empty state and filter chips',
+      (tester) async {
+        final controller = Get.put(SupportTicketController());
+        controller.supportTicketModel.value = SupportTicketModel(
+          data: SupportTicketData(
+            tickets: [],
+            pagination: Pagination(total: 0),
+          ),
+        );
+        controller.isLoading.value = false;
+        controller.isInitialDataLoaded.value = true;
 
-      await tester.pumpWidget(_wrap(const SupportTickets()));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(_wrap(const SupportTickets()));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(SupportTickets), findsOneWidget);
-      // Floating action button exists
-      expect(find.text('ثبت تیکت جدید'), findsOneWidget);
-    });
+        expect(find.byType(SupportTickets), findsOneWidget);
+        // Floating action button exists
+        expect(find.text('ثبت تیکت جدید'), findsOneWidget);
+      },
+    );
 
-    testWidgets('AddNewTicket screen renders department and priority selectors',
-        (tester) async {
-      Get.put(AddNewTicketController());
-      await tester.pumpWidget(_wrap(const AddNewTicket()));
-      await tester.pumpAndSettle();
+    testWidgets(
+      'AddNewTicket screen renders department and priority selectors',
+      (tester) async {
+        Get.put(AddNewTicketController());
+        await tester.pumpWidget(_wrap(const AddNewTicket()));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(AddNewTicket), findsOneWidget);
-      expect(find.text('دپارتمان / موضوع'), findsOneWidget);
-      expect(find.text('اولویت بررسی'), findsOneWidget);
-      expect(find.text('راهنمای دریافت پاسخ سریع‌تر'), findsOneWidget);
-      expect(find.text('ثبت و ارسال تیکت'), findsOneWidget);
-    });
+        expect(find.byType(AddNewTicket), findsOneWidget);
+        expect(find.text('دپارتمان / موضوع'), findsOneWidget);
+        expect(find.text('اولویت بررسی'), findsOneWidget);
+        expect(find.text('راهنمای دریافت پاسخ سریع‌تر'), findsOneWidget);
+        expect(find.text('ثبت و ارسال تیکت'), findsOneWidget);
+      },
+    );
   });
 }

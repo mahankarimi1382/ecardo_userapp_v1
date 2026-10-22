@@ -17,10 +17,7 @@ import 'boat_voucher_screen.dart';
 class BoatDetailScreen extends StatefulWidget {
   final BoatExperienceModel boat;
 
-  const BoatDetailScreen({
-    super.key,
-    required this.boat,
-  });
+  const BoatDetailScreen({super.key, required this.boat});
 
   @override
   State<BoatDetailScreen> createState() => _BoatDetailScreenState();
@@ -61,7 +58,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     const oceanColor = Color(0xFF0077B6);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
@@ -69,7 +68,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -77,11 +78,17 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
           },
         ),
         title: Text(
-          l10nPick(context, fa: 'جزئیات شناور و گشت دریایی', en: 'Boat Experience Details'),
+          l10nPick(
+            context,
+            fa: 'جزئیات شناور و گشت دریایی',
+            en: 'Boat Experience Details',
+          ),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -155,7 +162,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
         boxShadow: [
           BoxShadow(
             color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -186,7 +195,10 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   children: [
                     Flexible(
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
                           color: oceanColor.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6.r),
@@ -205,14 +217,20 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ),
                     Row(
                       children: [
-                        const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
+                        const Icon(
+                          Icons.star_rounded,
+                          color: AppColors.warning,
+                          size: 16,
+                        ),
                         SizedBox(width: 4.w),
                         Text(
                           '${widget.boat.rating} (${widget.boat.reviewsCount} نظر)',
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       ],
@@ -225,7 +243,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w900,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     height: 1.3,
                   ),
                 ),
@@ -239,7 +259,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                         widget.boat.marinaName,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -250,14 +272,20 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                 SizedBox(height: 6.h),
                 Row(
                   children: [
-                    Icon(Icons.person_pin_rounded, size: 15.sp, color: AppColors.success),
+                    Icon(
+                      Icons.person_pin_rounded,
+                      size: 15.sp,
+                      color: AppColors.success,
+                    ),
                     SizedBox(width: 4.w),
                     Text(
                       widget.boat.captainName,
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -276,17 +304,25 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, fa: 'مشخصات فنی و استانداردهای دریانوردی', en: 'Vessel Specifications'),
+            l10nPick(
+              context,
+              fa: 'مشخصات فنی و استانداردهای دریانوردی',
+              en: 'Vessel Specifications',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 10.h),
@@ -330,13 +366,21 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildSpecTile(String label, String value, IconData icon, bool isDark, Color oceanColor) {
+  Widget _buildSpecTile(
+    String label,
+    String value,
+    IconData icon,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 6.w),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         children: [
@@ -347,7 +391,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 2.h),
@@ -355,7 +401,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             label,
             style: TextStyle(
               fontSize: 10.sp,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+              color: isDark
+                  ? AppColors.darkTextTertiary
+                  : AppColors.lightTextTertiary,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -365,13 +413,19 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildDatePickerCard(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildDatePickerCard(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -385,19 +439,27 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: 2.h),
-                Obx(() => Text(
-                      DateFormat('yyyy/MM/dd (EEEE)').format(controller.selectedDate.value),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                      ),
-                    )),
+                Obx(
+                  () => Text(
+                    DateFormat(
+                      'yyyy/MM/dd (EEEE)',
+                    ).format(controller.selectedDate.value),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -406,11 +468,19 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             style: OutlinedButton.styleFrom(
               minimumSize: Size(90.w, 44.h),
               side: BorderSide(color: oceanColor),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.r),
+              ),
             ),
-            icon: Icon(Icons.edit_calendar_rounded, size: 16.sp, color: oceanColor),
-            label: Text(l10nPick(context, fa: 'تغییر تاریخ', en: 'Change'),
-                style: TextStyle(color: oceanColor, fontSize: 11.5.sp)),
+            icon: Icon(
+              Icons.edit_calendar_rounded,
+              size: 16.sp,
+              color: oceanColor,
+            ),
+            label: Text(
+              l10nPick(context, fa: 'تغییر تاریخ', en: 'Change'),
+              style: TextStyle(color: oceanColor, fontSize: 11.5.sp),
+            ),
             onPressed: _pickDate,
           ),
         ],
@@ -418,23 +488,35 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildTimeSlotSelector(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildTimeSlotSelector(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, fa: 'انتخاب سانس حرکت شناور', en: 'Departure Slot'),
+            l10nPick(
+              context,
+              fa: 'انتخاب سانس حرکت شناور',
+              en: 'Departure Slot',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 10.h),
@@ -452,25 +534,36 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     },
                     borderRadius: BorderRadius.circular(8.r),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 10.h,
+                      ),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? oceanColor.withValues(alpha: 0.12)
-                            : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                            : (isDark
+                                  ? AppColors.darkSurface
+                                  : AppColors.lightSurface),
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
                           color: isSelected
                               ? oceanColor
-                              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                              : (isDark
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorder),
                           width: isSelected ? 1.5 : 1.0,
                         ),
                       ),
                       child: Row(
                         children: [
                           Icon(
-                            isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+                            isSelected
+                                ? Icons.radio_button_checked
+                                : Icons.radio_button_off,
                             size: 18.sp,
-                            color: isSelected ? oceanColor : AppColors.greyLight,
+                            color: isSelected
+                                ? oceanColor
+                                : AppColors.greyLight,
                           ),
                           SizedBox(width: 8.w),
                           Expanded(
@@ -478,8 +571,12 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                               slot,
                               style: TextStyle(
                                 fontSize: 12.sp,
-                                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                fontWeight: isSelected
+                                    ? FontWeight.w800
+                                    : FontWeight.w500,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                           ),
@@ -496,7 +593,11 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildDurationSelector(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildDurationSelector(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     final durations = [1, 2, 3, 4];
 
     return Container(
@@ -504,7 +605,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -514,7 +617,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 10.h),
@@ -538,12 +643,16 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                         decoration: BoxDecoration(
                           color: isSelected
                               ? oceanColor
-                              : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                              : (isDark
+                                    ? AppColors.darkSurface
+                                    : AppColors.lightSurface),
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
                             color: isSelected
                                 ? oceanColor
-                                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                : (isDark
+                                      ? AppColors.darkBorder
+                                      : AppColors.lightBorder),
                           ),
                         ),
                         child: Center(
@@ -551,10 +660,14 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                             '$h ساعت',
                             style: TextStyle(
                               fontSize: 12.sp,
-                              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                              fontWeight: isSelected
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
                               color: isSelected
                                   ? AppColors.white
-                                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                                  : (isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary),
                             ),
                           ),
                         ),
@@ -570,13 +683,19 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildPassengerSelector(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildPassengerSelector(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -585,18 +704,26 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                l10nPick(context, fa: 'تعداد مسافران همراه', en: 'Passengers Count'),
+                l10nPick(
+                  context,
+                  fa: 'تعداد مسافران همراه',
+                  en: 'Passengers Count',
+                ),
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               Text(
                 'حداکثر: ${widget.boat.maxPassengers} نفر',
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                 ),
               ),
             ],
@@ -609,15 +736,25 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('بزرگسالان',
-                      style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-                  Text('${widget.boat.hourlyRate.toStringAsFixed(0)} ${widget.boat.currency} / ساعت',
-                      style: TextStyle(
-                          fontSize: 10.5.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                  Text(
+                    'بزرگسالان',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                  Text(
+                    '${widget.boat.hourlyRate.toStringAsFixed(0)} ${widget.boat.currency} / ساعت',
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextTertiary,
+                    ),
+                  ),
                 ],
               ),
               Obx(() {
@@ -640,7 +777,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     IconButton(
@@ -666,18 +805,27 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('کودکان (۲ تا ۱۲ سال)',
-                      style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
                   Text(
-                      widget.boat.childRate > 0
-                          ? '${widget.boat.childRate.toStringAsFixed(0)} ${widget.boat.currency} / ساعت'
-                          : 'تعرفه نیم‌بها',
-                      style: TextStyle(
-                          fontSize: 10.5.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                    'کودکان (۲ تا ۱۲ سال)',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                  Text(
+                    widget.boat.childRate > 0
+                        ? '${widget.boat.childRate.toStringAsFixed(0)} ${widget.boat.currency} / ساعت'
+                        : 'تعرفه نیم‌بها',
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextTertiary,
+                    ),
+                  ),
                 ],
               ),
               Obx(() {
@@ -700,7 +848,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     IconButton(
@@ -723,23 +873,35 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildAddonsSection(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildAddonsSection(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, fa: 'خدمات جانبی و تفریحات انتخابی', en: 'Optional Add-ons'),
+            l10nPick(
+              context,
+              fa: 'خدمات جانبی و تفریحات انتخابی',
+              en: 'Optional Add-ons',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 10.h),
@@ -757,7 +919,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   subtitle: Text(
@@ -779,7 +943,11 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildCancellationPolicyCard(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildCancellationPolicyCard(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     final policy = widget.boat.cancellationPolicy;
 
     return Container(
@@ -787,21 +955,29 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.shield_outlined, color: AppColors.success, size: 18.sp),
+              Icon(
+                Icons.shield_outlined,
+                color: AppColors.success,
+                size: 18.sp,
+              ),
               SizedBox(width: 6.w),
               Text(
                 'شرایط لغو و ضمانت استرداد وجه',
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ],
@@ -811,7 +987,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             '• لغو رایگان تا ${policy.freeCancellationHours} ساعت پیش از حرکت با عودت ۱۰۰٪ به کیف پول دلاری',
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               height: 1.4,
             ),
           ),
@@ -820,7 +998,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             '• لغو کمتر از ${policy.freeCancellationHours} ساعت: ${policy.lateCancelPenaltyPercent.toStringAsFixed(0)}٪ جریمه کنسلی اعمال می‌گردد.',
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               height: 1.4,
             ),
           ),
@@ -829,23 +1009,35 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildFeaturesCard(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildFeaturesCard(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, fa: 'امکانات و تجهیزات موجود روی شناور', en: 'Included Amenities'),
+            l10nPick(
+              context,
+              fa: 'امکانات و تجهیزات موجود روی شناور',
+              en: 'Included Amenities',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 10.h),
@@ -854,14 +1046,20 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
               padding: EdgeInsets.only(bottom: 6.h),
               child: Row(
                 children: [
-                  Icon(Icons.check_circle_rounded, color: AppColors.success, size: 16.sp),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.success,
+                    size: 16.sp,
+                  ),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
                       feat,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ),
@@ -874,13 +1072,19 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildAdvisoryCard(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildAdvisoryCard(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -894,7 +1098,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ],
@@ -905,7 +1111,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 4.h),
@@ -913,7 +1121,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             'وضعیت امواج: ${widget.boat.seaConditionsAdvisory}',
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           SizedBox(height: 4.h),
@@ -921,7 +1131,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             'سیاست سوخت: ${widget.boat.fuelPolicy}',
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ],
@@ -935,7 +1147,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -945,7 +1159,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -954,7 +1170,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
             style: TextStyle(
               fontSize: 12.sp,
               height: 1.6,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ],
@@ -962,12 +1180,20 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
     );
   }
 
-  Widget _buildBottomCheckoutBar(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildBottomCheckoutBar(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.white,
-        border: Border(top: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder)),
+        border: Border(
+          top: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
+        ),
         boxShadow: [
           BoxShadow(
             color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -978,8 +1204,10 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
       ),
       child: Obx(() {
         final total = controller.calculateTotalPrice(widget.boat);
-        final isSubmitting = controller.uiState.value == ExperienceServiceState.processing;
-        final totalGuests = controller.passengerCount.value + controller.childrenCount.value;
+        final isSubmitting =
+            controller.uiState.value == ExperienceServiceState.processing;
+        final totalGuests =
+            controller.passengerCount.value + controller.childrenCount.value;
 
         return Row(
           children: [
@@ -991,7 +1219,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                   'مبلغ نهایی ($totalGuests نفر)',
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                    color: isDark
+                        ? AppColors.darkTextTertiary
+                        : AppColors.lightTextTertiary,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -1021,7 +1251,9 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ? null
                     : () async {
                         HapticFeedback.heavyImpact();
-                        final booking = await controller.bookBoat(boat: widget.boat);
+                        final booking = await controller.bookBoat(
+                          boat: widget.boat,
+                        );
                         if (booking != null) {
                           Get.off(() => BoatVoucherScreen(booking: booking));
                         }
@@ -1030,7 +1262,10 @@ class _BoatDetailScreenState extends State<BoatDetailScreen> {
                     ? SizedBox(
                         width: 20.w,
                         height: 20.h,
-                        child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
                       )
                     : Text(
                         'پرداخت و صدور بلیت دریایی',

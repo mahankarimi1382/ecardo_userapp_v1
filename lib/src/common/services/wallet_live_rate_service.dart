@@ -82,8 +82,7 @@ class WalletLiveRateService extends GetxService {
           ..clear()
           ..addAll(map);
         // Alias USDT → USDT_IRT when only the IRT pair is published.
-        if (!ratesIrr.containsKey('USDT') &&
-            ratesIrr.containsKey('USDT_IRT')) {
+        if (!ratesIrr.containsKey('USDT') && ratesIrr.containsKey('USDT_IRT')) {
           ratesIrr['USDT'] = ratesIrr['USDT_IRT']!;
         }
         _fetchedAt = DateTime.now();
@@ -115,11 +114,13 @@ class WalletLiveRateService extends GetxService {
                 : null)
             ?.toUpperCase() ??
         '';
-    final decimals = int.tryParse(
+    final decimals =
+        int.tryParse(
           Get.isRegistered<SettingsService>()
-              ? (Get.find<SettingsService>()
-                      .getSetting('site_currency_decimals') ??
-                  '0')
+              ? (Get.find<SettingsService>().getSetting(
+                      'site_currency_decimals',
+                    ) ??
+                    '0')
               : '0',
         ) ??
         0;
@@ -148,7 +149,8 @@ class WalletLiveRateService extends GetxService {
           // Heuristic: if rate looks like an inverse (tiny for a major FX
           // pair against IRR), invert it. 1 USD ≈ 2e6 IRR → rate < 1e-3
           // almost certainly means "wallet per 1 site".
-          final looksInverse = rate < 0.001 &&
+          final looksInverse =
+              rate < 0.001 &&
               (code == 'USD' ||
                   code == 'EUR' ||
                   code == 'GBP' ||
@@ -164,14 +166,20 @@ class WalletLiveRateService extends GetxService {
         ? Get.find<SettingsService>().rateUnitRx.value
         : 'toman';
     final sUpper = site.toUpperCase().trim();
-    final isIranianUnit = sUpper == 'IRT' || sUpper == 'TOMAN' || sUpper == 'TMN' || sUpper == 'IRR';
+    final isIranianUnit =
+        sUpper == 'IRT' ||
+        sUpper == 'TOMAN' ||
+        sUpper == 'TMN' ||
+        sUpper == 'IRR';
 
     final labelCurrency = isIranianUnit
         ? (unit == 'irr' ? 'ریال' : 'تومان')
         : (site.isNotEmpty ? site : 'USD');
 
     final abs = eqInSite.abs();
-    final fixed = isIranianUnit ? (unit == 'irr' ? 0 : 0) : decimals.clamp(0, 2);
+    final fixed = isIranianUnit
+        ? (unit == 'irr' ? 0 : 0)
+        : decimals.clamp(0, 2);
     String formatted;
     if (abs >= 1000) {
       formatted = _withThousands(eqInSite, fixed);

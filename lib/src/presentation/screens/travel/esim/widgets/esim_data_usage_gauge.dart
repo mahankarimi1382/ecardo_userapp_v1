@@ -48,8 +48,10 @@ class EsimDataUsageGauge extends StatelessWidget {
   });
 
   /// Remaining data in GB, clamped between 0 and totalDataGb.
-  double get remainingDataGb =>
-      (totalDataGb - usedDataGb).clamp(0.0, totalDataGb > 0 ? totalDataGb : 0.0);
+  double get remainingDataGb => (totalDataGb - usedDataGb).clamp(
+    0.0,
+    totalDataGb > 0 ? totalDataGb : 0.0,
+  );
 
   /// Remaining ratio from 0.0 to 1.0.
   double get remainingRatio =>
@@ -101,9 +103,15 @@ class EsimDataUsageGauge extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = TravelTheme.isDark(context);
     final cardBg = TravelTheme.cardSurfaceFor(context);
-    final statBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8F9FA);
-    final linearTrackBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFECEFF1);
-    final arcTrackBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0F2F5);
+    final statBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : const Color(0xFFF8F9FA);
+    final linearTrackBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : const Color(0xFFECEFF1);
+    final arcTrackBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : const Color(0xFFF0F2F5);
 
     return Container(
       decoration: BoxDecoration(
@@ -304,7 +312,9 @@ class EsimDataUsageGauge extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 27.sp,
                                       fontWeight: FontWeight.w900,
-                                      color: TravelTheme.textPrimaryFor(context),
+                                      color: TravelTheme.textPrimaryFor(
+                                        context,
+                                      ),
                                       letterSpacing: -0.5,
                                     ),
                                   ),
@@ -318,7 +328,9 @@ class EsimDataUsageGauge extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w700,
-                                      color: TravelTheme.textSecondaryFor(context),
+                                      color: TravelTheme.textSecondaryFor(
+                                        context,
+                                      ),
                                     ),
                                   ),
                                 ),

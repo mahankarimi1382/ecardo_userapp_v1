@@ -64,7 +64,9 @@ class _RequestMoneySuccessStepSectionState
         double.tryParse(controller.requestAmountController.text) ?? 0.0;
 
     final String recipientName =
-        (requestData?["recipient"]?["name"] ?? controller.recipientUidController.text).toString();
+        (requestData?["recipient"]?["name"] ??
+                controller.recipientUidController.text)
+            .toString();
 
     return Obx(
       () => controller.isRequestMoneyLoading.value
@@ -109,39 +111,47 @@ class _RequestMoneySuccessStepSectionState
                       // `MoneyRequestResource` exposes `id` (and no `tnx`); use
                       // the server id when present and show a pending label
                       // otherwise. Never invent a reference.
-                      transactionReference: _nonEmpty(requestData?["tnx"]?.toString()) ??
+                      transactionReference:
+                          _nonEmpty(requestData?["tnx"]?.toString()) ??
                           _nonEmpty(requestData?["id"]?.toString()),
                       status: EcardoReceiptStatus.success,
                       items: [
                         EcardoReceiptItem(
-                          label: localization.requestMoneySuccessStepSectionRecipientName,
+                          label: localization
+                              .requestMoneySuccessStepSectionRecipientName,
                           value: recipientName,
                         ),
                         EcardoReceiptItem(
-                          label: localization.requestMoneySuccessStepSectionRequestWalletName,
+                          label: localization
+                              .requestMoneySuccessStepSectionRequestWalletName,
                           value: currentWallet?.name ?? walletCode,
                         ),
                         EcardoReceiptItem(
-                          label: localization.requestMoneySuccessStepSectionAmount,
+                          label:
+                              localization.requestMoneySuccessStepSectionAmount,
                           amount: reqAmount,
                           currency: walletCode,
                           decimals: calculateDecimals,
                         ),
                         EcardoReceiptItem(
-                          label: localization.requestMoneySuccessStepSectionCharge,
+                          label:
+                              localization.requestMoneySuccessStepSectionCharge,
                           amount: successChargeValue,
                           currency: walletCode,
                           decimals: calculateDecimals,
                         ),
                         EcardoReceiptItem(
-                          label: localization.requestMoneySuccessStepSectionFinalAmount,
+                          label: localization
+                              .requestMoneySuccessStepSectionFinalAmount,
                           amount: successFinalAmountValue > 0
                               ? successFinalAmountValue
                               : reqAmount + successChargeValue,
                           currency: walletCode,
                           decimals: calculateDecimals,
                           isHighlighted: true,
-                          valueColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                          valueColor: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.deepBlack,
                         ),
                       ],
                       note: l10nPick(
@@ -168,7 +178,8 @@ class _RequestMoneySuccessStepSectionState
                         await controller.fetchWallets();
                       },
                       width: double.infinity,
-                      text: localization.requestMoneySuccessStepSectionRequestAgainButton,
+                      text: localization
+                          .requestMoneySuccessStepSectionRequestAgainButton,
                     ),
                     const SizedBox(height: AppSpacing.md),
                     CommonButton(
@@ -179,7 +190,8 @@ class _RequestMoneySuccessStepSectionState
                         await Get.find<HomeController>().loadData();
                       },
                       width: double.infinity,
-                      text: localization.requestMoneySuccessStepSectionBackHomeButton,
+                      text: localization
+                          .requestMoneySuccessStepSectionBackHomeButton,
                       backgroundColor: isDark
                           ? AppColors.darkSurfaceVariant
                           : AppColors.lightPrimary.withValues(alpha: 0.06),

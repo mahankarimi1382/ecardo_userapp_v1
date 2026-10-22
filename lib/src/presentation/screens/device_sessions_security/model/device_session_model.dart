@@ -4,12 +4,7 @@ import 'package:ecardo_user/src/helper/jalali_date_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 /// Supported physical device forms for active sessions.
-enum DeviceFormFactor {
-  phone,
-  tablet,
-  desktop,
-  browser,
-}
+enum DeviceFormFactor { phone, tablet, desktop, browser }
 
 /// Backwards compatibility alias
 typedef DeviceType = DeviceFormFactor;
@@ -70,7 +65,13 @@ enum DeviceOs {
       case DeviceOs.linux:
         return 'Linux';
       case DeviceOs.web:
-        return l10nPick(context, en: 'Web Browser', fa: 'مرورگر وب', ar: 'متصفح الويب', zh: '网页浏览器');
+        return l10nPick(
+          context,
+          en: 'Web Browser',
+          fa: 'مرورگر وب',
+          ar: 'متصفح الويب',
+          zh: '网页浏览器',
+        );
     }
   }
 }
@@ -216,7 +217,13 @@ class DeviceSessionItem {
   String formattedRelativeLastActive(BuildContext context) {
     final diff = DateTime.now().difference(lastActive);
     if (diff.inSeconds < 60) {
-      return l10nPick(context, en: 'Just now', fa: 'همین الان', ar: 'الآن', zh: '刚刚');
+      return l10nPick(
+        context,
+        en: 'Just now',
+        fa: 'همین الان',
+        ar: 'الآن',
+        zh: '刚刚',
+      );
     }
     if (diff.inMinutes < 60) {
       return l10nPick(

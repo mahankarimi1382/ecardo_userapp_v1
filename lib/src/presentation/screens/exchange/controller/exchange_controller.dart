@@ -44,14 +44,15 @@ class ExchangeController extends GetxController {
     ExchangeRateService? rateService,
     ExchangeRateManager? rateManager,
     ExchangeValidationService? validationService,
-  })  : _rateService = rateService ??
-            (Get.isRegistered<ExchangeRateService>()
-                ? Get.find<ExchangeRateService>()
-                : ExchangeRateService()),
-        _validationService =
-            validationService ?? const ExchangeValidationService() {
-    _rateManager = rateManager ??
-        ExchangeRateManager(rateService: _rateService);
+  }) : _rateService =
+           rateService ??
+           (Get.isRegistered<ExchangeRateService>()
+               ? Get.find<ExchangeRateService>()
+               : ExchangeRateService()),
+       _validationService =
+           validationService ?? const ExchangeValidationService() {
+    _rateManager =
+        rateManager ?? ExchangeRateManager(rateService: _rateService);
   }
 
   final ExchangeRateService _rateService;
@@ -76,8 +77,7 @@ class ExchangeController extends GetxController {
   final RxDouble exchangeAmount = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
   final RxList<CurrenciesData> currenciesList = <CurrenciesData>[].obs;
-  final Rx<ExchangeConfigModel> exchangeConfigModel =
-      ExchangeConfigModel().obs;
+  final Rx<ExchangeConfigModel> exchangeConfigModel = ExchangeConfigModel().obs;
   final Rx<ConverterModel> converterModel = ConverterModel().obs;
   final Rxn<Map<String, dynamic>> successExchangeData =
       Rxn<Map<String, dynamic>>();
@@ -165,11 +165,7 @@ class ExchangeController extends GetxController {
 
   Future<void> loadData() async {
     isLoading.value = true;
-    await Future.wait([
-      fetchWallets(),
-      fetchCurrencies(),
-      fetchUser(),
-    ]);
+    await Future.wait([fetchWallets(), fetchCurrencies(), fetchUser()]);
     calculateExchange();
     await fetchExchangeConfig();
     unawaited(_loadRecentPairs());
@@ -204,10 +200,7 @@ class ExchangeController extends GetxController {
 
   /// Subscribes the rate service to the currently selected from/to codes.
   void _subscribeToRateService() {
-    _rateManager.subscribeWallets(
-      fromWallet.value?.code,
-      toWallet.value?.code,
-    );
+    _rateManager.subscribeWallets(fromWallet.value?.code, toWallet.value?.code);
   }
 
   // ------------------ amount focus ------------------
@@ -344,7 +337,8 @@ class ExchangeController extends GetxController {
       );
       if (response.status == Status.completed && response.data != null) {
         converterModel.value = ConverterModel.fromJson(response.data!);
-        charge.value = double.tryParse(
+        charge.value =
+            double.tryParse(
               converterModel.value.data?.convertedAmount ?? "0",
             ) ??
             0.0;
@@ -382,11 +376,10 @@ class ExchangeController extends GetxController {
       );
       if (response.status == Status.completed && response.data != null) {
         converterModel.value = ConverterModel.fromJson(response.data!);
-        exchangeReviewRate.value = double.tryParse(
-              converterModel.value.data?.rate ?? "0",
-            ) ??
-            0.0;
-        exchangeAmount.value = double.tryParse(
+        exchangeReviewRate.value =
+            double.tryParse(converterModel.value.data?.rate ?? "0") ?? 0.0;
+        exchangeAmount.value =
+            double.tryParse(
               converterModel.value.data?.convertedAmount ?? "0",
             ) ??
             0.0;
@@ -415,7 +408,7 @@ class ExchangeController extends GetxController {
           Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
       siteCurrencyDecimals:
           Get.find<SettingsService>().getSetting("site_currency_decimals") ??
-              '2',
+          '2',
       isCrypto: from?.isCrypto ?? false,
     );
 
@@ -471,9 +464,7 @@ class ExchangeController extends GetxController {
     }
 
     if (response.status == Status.completed && response.data != null) {
-      final exchangeWalletsModel = ExchangeWalletModel.fromJson(
-        response.data!,
-      );
+      final exchangeWalletsModel = ExchangeWalletModel.fromJson(response.data!);
 
       final wallets = exchangeWalletsModel.data?.wallets ?? [];
       fromExchangeWalletsList.assignAll(wallets);
@@ -482,15 +473,16 @@ class ExchangeController extends GetxController {
 
       if (fromExchangeWalletsList.isNotEmpty &&
           toExchangeWalletsList.isNotEmpty) {
-        final arguments =
-            Get.arguments is Map ? Get.arguments as Map : {};
-        final requestedFromId = arguments['from_wallet'] ?? arguments['wallet_id'];
-        final requestedFrom =
-            arguments['from_currency']?.toString().toUpperCase();
-        final requestedTo =
-            arguments['to_currency']?.toString().toUpperCase();
+        final arguments = Get.arguments is Map ? Get.arguments as Map : {};
+        final requestedFromId =
+            arguments['from_wallet'] ?? arguments['wallet_id'];
+        final requestedFrom = arguments['from_currency']
+            ?.toString()
+            .toUpperCase();
+        final requestedTo = arguments['to_currency']?.toString().toUpperCase();
 
-        fromWallet.value = fromExchangeWalletsList.firstWhereOrNull(
+        fromWallet.value =
+            fromExchangeWalletsList.firstWhereOrNull(
               (wallet) =>
                   (requestedFromId != null &&
                       wallet.id.toString() == requestedFromId.toString()) ||
@@ -504,7 +496,8 @@ class ExchangeController extends GetxController {
             ) ??
             fromExchangeWalletsList.first;
 
-        toWallet.value = toExchangeWalletsList.firstWhereOrNull(
+        toWallet.value =
+            toExchangeWalletsList.firstWhereOrNull(
               (wallet) => wallet.code?.toUpperCase() == requestedTo,
             ) ??
             toExchangeWalletsList.firstWhereOrNull(
@@ -701,7 +694,10 @@ class ExchangeController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
+        if (PasscodeHelper.isPasscodeRequired(
+          response.message,
+          wasPasscodeProvided: wasPasscodeProvided,
+        )) {
           isExchangeWalletLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -731,7 +727,8 @@ class ExchangeController extends GetxController {
       debugPrint('❌ exchangeWallet() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       final errStr = e.toString().toLowerCase();
-      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+      final isTimeout =
+          NetworkErrorHelper.isTimeout(e) ||
           errStr.contains('timed out') ||
           errStr.contains('timeout') ||
           errStr.contains('connectiontimeout') ||
@@ -749,7 +746,10 @@ class ExchangeController extends GetxController {
             zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复兑换。',
           ),
         );
-      } else if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
+      } else if (PasscodeHelper.isPasscodeRequired(
+        e,
+        wasPasscodeProvided: wasPasscodeProvided,
+      )) {
         isExchangeWalletLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -801,8 +801,9 @@ class ExchangeController extends GetxController {
   bool get isAmountValid {
     final from = fromWallet.value;
     final to = toWallet.value;
-    final text =
-        amountInput.value.isNotEmpty ? amountInput.value : amountController.text;
+    final text = amountInput.value.isNotEmpty
+        ? amountInput.value
+        : amountController.text;
     return _validationService.isAmountValid(
       fromWallet: from,
       toWallet: to,

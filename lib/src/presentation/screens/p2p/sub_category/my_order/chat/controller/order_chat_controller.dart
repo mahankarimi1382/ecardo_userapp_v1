@@ -29,6 +29,7 @@ class OrderChatController extends GetxController {
 
   /// وضعیت بارگذاری پیام‌ها
   final RxBool isLoading = false.obs;
+
   /// وضعیت ارسال پیام
   final RxBool isSending = false.obs;
 

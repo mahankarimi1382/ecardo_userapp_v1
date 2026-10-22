@@ -55,8 +55,9 @@ class P2pScreen extends StatelessWidget {
     final p2pController = _controller;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       floatingActionButton: Obx(() {
         final tabIndex = p2pController.selectedTopTabIndex.value;
@@ -69,16 +70,13 @@ class P2pScreen extends StatelessWidget {
           button: true,
           label: localization.p2pCreateAd,
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: 48.w,
-              minHeight: 48.h,
-            ),
+            constraints: BoxConstraints(minWidth: 48.w, minHeight: 48.h),
             child: FloatingActionButton.extended(
               heroTag: 'p2p_create_ad_fab',
-              backgroundColor:
-                  isDark ? AppColors.darkPrimary : AppColors.brandViolet,
-              foregroundColor:
-                  isDark ? AppColors.deepBlack : AppColors.white,
+              backgroundColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.brandViolet,
+              foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
               elevation: 4,
               onPressed: () {
                 HapticFeedback.lightImpact();
@@ -110,20 +108,18 @@ class P2pScreen extends StatelessWidget {
               backLogicFunction: p2pController.onP2pBackPressed,
               rightSideIcon:
                   _showFilterIconByTab(p2pController.selectedTopTabIndex.value)
-                      ? PngAssets.commonFilterIcon
-                      : null,
+                  ? PngAssets.commonFilterIcon
+                  : null,
               onPressed:
                   _showFilterIconByTab(p2pController.selectedTopTabIndex.value)
-                      ? () => _onFilterTap(p2pController)
-                      : null,
+                  ? () => _onFilterTap(p2pController)
+                  : null,
             ),
           ),
           SizedBox(height: AppSpacing.sm.h),
           _buildTopTabBar(context, isDark, p2pController),
           SizedBox(height: AppSpacing.md.h),
-          Expanded(
-            child: _buildTabContent(context, isDark, p2pController),
-          ),
+          Expanded(child: _buildTabContent(context, isDark, p2pController)),
         ],
       ),
     );
@@ -170,10 +166,7 @@ class P2pScreen extends StatelessWidget {
               label: tabTitle,
               selected: isSelected,
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 44.w,
-                  minHeight: 44.h,
-                ),
+                constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
                 child: Material(
                   color: AppColors.transparent,
                   child: InkWell(
@@ -181,8 +174,9 @@ class P2pScreen extends StatelessWidget {
                       HapticFeedback.lightImpact();
                       p2pController.onTopTabSelected(index);
                     },
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusFull.r),
+                    borderRadius: BorderRadius.circular(
+                      AppSpacing.radiusFull.r,
+                    ),
                     child: Ink(
                       padding: EdgeInsetsDirectional.symmetric(
                         horizontal: 16.w,
@@ -191,19 +185,20 @@ class P2pScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? (isDark
-                                ? AppColors.darkPrimary
-                                : AppColors.brandViolet)
+                                  ? AppColors.darkPrimary
+                                  : AppColors.brandViolet)
                             : (isDark
-                                ? AppColors.darkSurface
-                                : AppColors.lightSurface),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusFull.r),
+                                  ? AppColors.darkSurface
+                                  : AppColors.lightSurface),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull.r,
+                        ),
                         border: Border.all(
                           color: isSelected
                               ? AppColors.transparent
                               : (isDark
-                                  ? AppColors.darkBorder
-                                  : AppColors.lightBorder),
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorder),
                         ),
                       ),
                       child: Center(
@@ -211,16 +206,17 @@ class P2pScreen extends StatelessWidget {
                           tabTitle,
                           style: TextStyle(
                             letterSpacing: 0,
-                            fontWeight:
-                                isSelected ? FontWeight.w800 : FontWeight.w600,
+                            fontWeight: isSelected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
                             fontSize: 12.5.sp,
                             color: isSelected
                                 ? (isDark
-                                    ? AppColors.deepBlack
-                                    : AppColors.white)
+                                      ? AppColors.deepBlack
+                                      : AppColors.white)
                                 : (isDark
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary),
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary),
                           ),
                         ),
                       ),
@@ -249,9 +245,7 @@ class P2pScreen extends StatelessWidget {
         children: [
           Expanded(child: _buildBuySellToggle(context, isDark, p2pController)),
           SizedBox(width: AppSpacing.md.w),
-          Expanded(
-            child: _buildAssetSelector(context, isDark, p2pController),
-          ),
+          Expanded(child: _buildAssetSelector(context, isDark, p2pController)),
         ],
       ),
     );
@@ -263,8 +257,9 @@ class P2pScreen extends StatelessWidget {
     P2pController p2pController,
   ) {
     final localization = AppLocalizations.of(context)!;
-    final surfaceColor =
-        isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     return Obx(() {
@@ -301,8 +296,7 @@ class P2pScreen extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: activeColor,
-                    borderRadius:
-                        BorderRadius.circular(AppSpacing.radiusSm.r),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                     boxShadow: [
                       BoxShadow(
                         color: activeColor.withValues(alpha: 0.35),
@@ -331,8 +325,9 @@ class P2pScreen extends StatelessWidget {
                       child: Material(
                         color: AppColors.transparent,
                         child: InkWell(
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
                           onTap: () {
                             if (!isBuy) {
                               HapticFeedback.selectionClick();
@@ -349,8 +344,8 @@ class P2pScreen extends StatelessWidget {
                                   color: isBuy
                                       ? AppColors.white
                                       : (isDark
-                                          ? AppColors.darkTextSecondary
-                                          : AppColors.softGray),
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.softGray),
                                 ),
                                 SizedBox(width: 4.w),
                                 AnimatedDefaultTextStyle(
@@ -364,8 +359,8 @@ class P2pScreen extends StatelessWidget {
                                     color: isBuy
                                         ? AppColors.white
                                         : (isDark
-                                            ? AppColors.darkTextSecondary
-                                            : AppColors.softGray),
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.softGray),
                                   ),
                                   child: Text(localization.p2pBuy),
                                 ),
@@ -390,8 +385,9 @@ class P2pScreen extends StatelessWidget {
                       child: Material(
                         color: AppColors.transparent,
                         child: InkWell(
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
                           onTap: () {
                             if (isBuy) {
                               HapticFeedback.selectionClick();
@@ -408,8 +404,8 @@ class P2pScreen extends StatelessWidget {
                                   color: !isBuy
                                       ? AppColors.white
                                       : (isDark
-                                          ? AppColors.darkTextSecondary
-                                          : AppColors.softGray),
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.softGray),
                                 ),
                                 SizedBox(width: 4.w),
                                 AnimatedDefaultTextStyle(
@@ -423,8 +419,8 @@ class P2pScreen extends StatelessWidget {
                                     color: !isBuy
                                         ? AppColors.white
                                         : (isDark
-                                            ? AppColors.darkTextSecondary
-                                            : AppColors.softGray),
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.softGray),
                                   ),
                                   child: Text(localization.p2pSell),
                                 ),
@@ -450,20 +446,19 @@ class P2pScreen extends StatelessWidget {
     P2pController p2pController,
   ) {
     final localization = AppLocalizations.of(context)!;
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final surfaceColor =
-        isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     return Semantics(
       button: true,
       label: localization.p2pSelectAsset,
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 44.w,
-          minHeight: 44.h,
-        ),
+        constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
         child: Material(
           color: AppColors.transparent,
           child: InkWell(
@@ -542,8 +537,9 @@ class P2pScreen extends StatelessWidget {
     P2pController p2pController,
   ) {
     final localization = AppLocalizations.of(context)!;
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -607,7 +603,11 @@ class P2pScreen extends StatelessWidget {
             semanticsLabel: localization.p2pFilterPaymentMethod,
             onTap: () {
               HapticFeedback.lightImpact();
-              _openPaymentMethodFilterBottomSheet(context, isDark, p2pController);
+              _openPaymentMethodFilterBottomSheet(
+                context,
+                isDark,
+                p2pController,
+              );
             },
           ),
         ],
@@ -626,13 +626,19 @@ class P2pScreen extends StatelessWidget {
         'icon': Icons.verified_user_rounded,
       },
       {
-        'label':
-            l10nPick(context, en: 'Completion >95%', fa: 'تکمیل بالای ۹۵٪'),
+        'label': l10nPick(
+          context,
+          en: 'Completion >95%',
+          fa: 'تکمیل بالای ۹۵٪',
+        ),
         'icon': Icons.thumb_up_alt_rounded,
       },
       {
-        'label':
-            l10nPick(context, en: 'Fast Payout (≤15m)', fa: 'آزادسازی فوری'),
+        'label': l10nPick(
+          context,
+          en: 'Fast Payout (≤15m)',
+          fa: 'آزادسازی فوری',
+        ),
         'icon': Icons.bolt_rounded,
       },
     ];
@@ -650,12 +656,12 @@ class P2pScreen extends StatelessWidget {
               button: true,
               label: label,
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: 44.h,
-                ),
+                constraints: BoxConstraints(minHeight: 44.h),
                 child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 8.h,
+                  ),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: isDark
@@ -807,10 +813,7 @@ class P2pScreen extends StatelessWidget {
       button: true,
       label: semanticsLabel,
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 44.w,
-          minHeight: 44.h,
-        ),
+        constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
         child: Material(
           color: AppColors.transparent,
           child: InkWell(
@@ -883,10 +886,12 @@ class P2pScreen extends StatelessWidget {
       text: p2pController.selectedAmountValue.value,
     );
     final localization = AppLocalizations.of(Get.context!)!;
-    final surfaceColor =
-        isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     Get.bottomSheet(
       Container(
@@ -908,9 +913,7 @@ class P2pScreen extends StatelessWidget {
                 width: 45.w,
                 height: 5.h,
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkBorder
-                      : AppColors.lightDivider,
+                  color: isDark ? AppColors.darkBorder : AppColors.lightDivider,
                   borderRadius: BorderRadius.circular(30.r),
                 ),
               ),
@@ -940,8 +943,9 @@ class P2pScreen extends StatelessWidget {
                       color: AppColors.transparent,
                       child: InkWell(
                         onTap: Get.back,
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusSm.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm.r,
+                        ),
                         child: Center(
                           child: Icon(
                             Icons.close_rounded,
@@ -976,8 +980,7 @@ class P2pScreen extends StatelessWidget {
                     : AppColors.lightBackground,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                 border: Border.all(
-                  color:
-                      isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
               child: TextField(
@@ -1020,8 +1023,7 @@ class P2pScreen extends StatelessWidget {
                   backgroundColor: isDark
                       ? AppColors.darkPrimary
                       : AppColors.brandViolet,
-                  textColor:
-                      isDark ? AppColors.deepBlack : AppColors.white,
+                  textColor: isDark ? AppColors.deepBlack : AppColors.white,
                   onPressed: () {
                     HapticFeedback.lightImpact();
                     p2pController.applyAmountFilter(amountTextController.text);
@@ -1058,10 +1060,12 @@ class P2pScreen extends StatelessWidget {
       return;
     }
 
-    final surfaceColor =
-        isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final textPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     await Get.bottomSheet(
       StatefulBuilder(
@@ -1082,9 +1086,7 @@ class P2pScreen extends StatelessWidget {
                 width: 45.w,
                 height: 5.h,
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkBorder
-                      : AppColors.lightDivider,
+                  color: isDark ? AppColors.darkBorder : AppColors.lightDivider,
                   borderRadius: BorderRadius.circular(30.r),
                 ),
               ),
@@ -1115,8 +1117,9 @@ class P2pScreen extends StatelessWidget {
                           color: AppColors.transparent,
                           child: InkWell(
                             onTap: Get.back,
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                             child: Center(
                               child: Icon(
                                 Icons.close_rounded,
@@ -1134,9 +1137,7 @@ class P2pScreen extends StatelessWidget {
               SizedBox(height: AppSpacing.sm.h),
               Divider(
                 height: 1,
-                color: isDark
-                    ? AppColors.darkDivider
-                    : AppColors.lightDivider,
+                color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
               ),
               Expanded(
                 child: Obx(() {
@@ -1176,8 +1177,7 @@ class P2pScreen extends StatelessWidget {
                   return ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.all(18.w),
-                    itemCount:
-                        p2pController.availablePaymentAccounts.length,
+                    itemCount: p2pController.availablePaymentAccounts.length,
                     separatorBuilder: (_, _) =>
                         SizedBox(height: AppSpacing.cardGap.h),
                     itemBuilder: (context, index) {
@@ -1185,7 +1185,8 @@ class P2pScreen extends StatelessWidget {
                           p2pController.availablePaymentAccounts[index];
                       final paymentMethodId =
                           account.paymentMethod?.id ?? account.id;
-                      final isSelected = paymentMethodId != null &&
+                      final isSelected =
+                          paymentMethodId != null &&
                           p2pController.selectedPaymentMethodIds.contains(
                             paymentMethodId,
                           );
@@ -1195,19 +1196,20 @@ class P2pScreen extends StatelessWidget {
                         label: account.paymentMethod?.name ?? '',
                         selected: isSelected,
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: 44.h,
-                          ),
+                          constraints: BoxConstraints(minHeight: 44.h),
                           child: Material(
                             color: AppColors.transparent,
                             child: InkWell(
                               onTap: () {
                                 HapticFeedback.lightImpact();
-                                p2pController.togglePaymentMethodFilter(account);
+                                p2pController.togglePaymentMethodFilter(
+                                  account,
+                                );
                                 setSheetState(() {});
                               },
-                              borderRadius:
-                                  BorderRadius.circular(AppSpacing.radiusMd.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd.r,
+                              ),
                               child: Ink(
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 14.w,
@@ -1216,23 +1218,24 @@ class P2pScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: isSelected
                                       ? (isDark
-                                          ? AppColors.darkPrimary
-                                              .withValues(alpha: 0.15)
-                                          : AppColors.brandVioletContainer)
+                                            ? AppColors.darkPrimary.withValues(
+                                                alpha: 0.15,
+                                              )
+                                            : AppColors.brandVioletContainer)
                                       : (isDark
-                                          ? AppColors.darkSurfaceVariant
-                                          : AppColors.lightBackground),
+                                            ? AppColors.darkSurfaceVariant
+                                            : AppColors.lightBackground),
                                   borderRadius: BorderRadius.circular(
                                     AppSpacing.radiusMd.r,
                                   ),
                                   border: Border.all(
                                     color: isSelected
                                         ? (isDark
-                                            ? AppColors.darkPrimary
-                                            : AppColors.brandViolet)
+                                              ? AppColors.darkPrimary
+                                              : AppColors.brandViolet)
                                         : (isDark
-                                            ? AppColors.darkBorder
-                                            : AppColors.lightBorder),
+                                              ? AppColors.darkBorder
+                                              : AppColors.lightBorder),
                                   ),
                                 ),
                                 child: Row(
@@ -1251,15 +1254,16 @@ class P2pScreen extends StatelessWidget {
                                     Icon(
                                       isSelected
                                           ? Icons.check_circle_rounded
-                                          : Icons.radio_button_unchecked_rounded,
+                                          : Icons
+                                                .radio_button_unchecked_rounded,
                                       size: 20.w,
                                       color: isSelected
                                           ? (isDark
-                                              ? AppColors.darkPrimary
-                                              : AppColors.brandViolet)
+                                                ? AppColors.darkPrimary
+                                                : AppColors.brandViolet)
                                           : (isDark
-                                              ? AppColors.darkTextSecondary
-                                              : AppColors.softGray),
+                                                ? AppColors.darkTextSecondary
+                                                : AppColors.softGray),
                                     ),
                                   ],
                                 ),
@@ -1287,8 +1291,7 @@ class P2pScreen extends StatelessWidget {
                       backgroundColor: isDark
                           ? AppColors.darkPrimary
                           : AppColors.brandViolet,
-                      textColor:
-                          isDark ? AppColors.deepBlack : AppColors.white,
+                      textColor: isDark ? AppColors.deepBlack : AppColors.white,
                       onPressed: () {
                         HapticFeedback.lightImpact();
                         p2pController.applyPaymentMethodFilter();

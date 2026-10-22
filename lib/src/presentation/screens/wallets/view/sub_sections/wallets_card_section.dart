@@ -46,12 +46,24 @@ class HeroWalletCardTheme {
 
   static HeroWalletCardTheme forWallet(Wallets wallet) {
     final code = (wallet.code ?? 'USD').toUpperCase().trim();
-    final isCrypto = wallet.isCrypto == true ||
-        const {'BTC', 'ETH', 'USDT', 'USDC', 'BNB', 'SOL', 'TRX', 'XRP', 'LTC'}.contains(code);
+    final isCrypto =
+        wallet.isCrypto == true ||
+        const {
+          'BTC',
+          'ETH',
+          'USDT',
+          'USDC',
+          'BNB',
+          'SOL',
+          'TRX',
+          'XRP',
+          'LTC',
+        }.contains(code);
 
     if (isCrypto) {
       if (code == 'BTC') {
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 BTC ≈ \$${wallet.conversionRate}'
             : '1 BTC ≈ \$68,450.00';
         return HeroWalletCardTheme(
@@ -72,7 +84,8 @@ class HeroWalletCardTheme {
           meshGlowColors: const [Color(0x35FFB020), Color(0x20FF8F00)],
         );
       } else if (code == 'ETH') {
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 ETH ≈ \$${wallet.conversionRate}'
             : '1 ETH ≈ \$3,520.00';
         return HeroWalletCardTheme(
@@ -94,7 +107,8 @@ class HeroWalletCardTheme {
         );
       } else {
         // USDT / Default Crypto
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 $code ≈ \$${wallet.conversionRate}'
             : '1 USDT = 1.00 USD';
         return HeroWalletCardTheme(
@@ -137,7 +151,8 @@ class HeroWalletCardTheme {
           isTrendPositive: true,
         );
       case 'EUR':
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 EUR ≈ \$${wallet.conversionRate}'
             : '1 EUR ≈ \$1.08 USD';
         return HeroWalletCardTheme(
@@ -157,7 +172,8 @@ class HeroWalletCardTheme {
           isTrendPositive: true,
         );
       case 'AED':
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 AED ≈ \$${wallet.conversionRate}'
             : '1 AED ≈ \$0.272 USD';
         return HeroWalletCardTheme(
@@ -178,7 +194,8 @@ class HeroWalletCardTheme {
         );
       case 'IRR':
       case 'TOMAN':
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 USD ≈ ${wallet.conversionRate}'
             : '1 USD ≈ 65,000 Toman';
         return HeroWalletCardTheme(
@@ -198,7 +215,8 @@ class HeroWalletCardTheme {
           isTrendPositive: true,
         );
       case 'TRY':
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 TRY ≈ \$${wallet.conversionRate}'
             : '1 TRY ≈ \$0.029 USD';
         return HeroWalletCardTheme(
@@ -219,7 +237,8 @@ class HeroWalletCardTheme {
         );
       case 'CNY':
       case 'RMB':
-        final rate = wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
+        final rate =
+            wallet.conversionRate != null && wallet.conversionRate!.isNotEmpty
             ? '1 CNY ≈ \$${wallet.conversionRate}'
             : '1 CNY ≈ \$0.138 USD';
         return HeroWalletCardTheme(
@@ -308,15 +327,15 @@ class _FrostedMeshPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final p1 = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          primaryGlow,
-          primaryGlow.withValues(alpha: 0.0),
-        ],
-      ).createShader(Rect.fromCircle(
-        center: Offset(size.width * 0.15, size.height * 0.15),
-        radius: size.width * 0.45,
-      ));
+      ..shader =
+          RadialGradient(
+            colors: [primaryGlow, primaryGlow.withValues(alpha: 0.0)],
+          ).createShader(
+            Rect.fromCircle(
+              center: Offset(size.width * 0.15, size.height * 0.15),
+              radius: size.width * 0.45,
+            ),
+          );
     canvas.drawCircle(
       Offset(size.width * 0.15, size.height * 0.15),
       size.width * 0.45,
@@ -324,15 +343,15 @@ class _FrostedMeshPainter extends CustomPainter {
     );
 
     final p2 = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          secondaryGlow,
-          secondaryGlow.withValues(alpha: 0.0),
-        ],
-      ).createShader(Rect.fromCircle(
-        center: Offset(size.width * 0.85, size.height * 0.85),
-        radius: size.width * 0.4,
-      ));
+      ..shader =
+          RadialGradient(
+            colors: [secondaryGlow, secondaryGlow.withValues(alpha: 0.0)],
+          ).createShader(
+            Rect.fromCircle(
+              center: Offset(size.width * 0.85, size.height * 0.85),
+              radius: size.width * 0.4,
+            ),
+          );
     canvas.drawCircle(
       Offset(size.width * 0.85, size.height * 0.85),
       size.width * 0.4,
@@ -412,16 +431,11 @@ class _EmvChipWidget extends StatelessWidget {
             offset: const Offset(0, 1.5),
           ),
         ],
-        border: Border.all(
-          color: const Color(0xFFFFF2AC),
-          width: 0.6,
-        ),
+        border: Border.all(color: const Color(0xFFFFF2AC), width: 0.6),
       ),
       child: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2.5),
-        child: CustomPaint(
-          painter: _EmvChipPainter(),
-        ),
+        child: CustomPaint(painter: _EmvChipPainter()),
       ),
     );
   }
@@ -477,11 +491,7 @@ class HeroWalletCard extends StatefulWidget {
   final Wallets wallet;
   final VoidCallback? onTap;
 
-  const HeroWalletCard({
-    super.key,
-    required this.wallet,
-    this.onTap,
-  });
+  const HeroWalletCard({super.key, required this.wallet, this.onTap});
 
   @override
   State<HeroWalletCard> createState() => _HeroWalletCardState();
@@ -544,8 +554,10 @@ class _HeroWalletCardState extends State<HeroWalletCard>
       animation: _flipAnimation,
       builder: (context, child) {
         final angle = _flipAnimation.value * pi;
-        final shineOpacity =
-            (sin(_flipAnimation.value * pi) * 0.22).clamp(0.0, 0.22);
+        final shineOpacity = (sin(_flipAnimation.value * pi) * 0.22).clamp(
+          0.0,
+          0.22,
+        );
 
         return Transform(
           transform: Matrix4.identity()
@@ -632,7 +644,8 @@ class _HeroWalletCardState extends State<HeroWalletCard>
           offset: const Offset(0, 4),
         ),
       ],
-      onTap: widget.onTap ??
+      onTap:
+          widget.onTap ??
           () {
             Get.toNamed(
               BaseRoute.walletsDetails,
@@ -995,10 +1008,11 @@ class _HeroWalletCardState extends State<HeroWalletCard>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: (theme.isTrendPositive
-                          ? AppColors.success
-                          : AppColors.error)
-                      .withValues(alpha: 0.6),
+                  color:
+                      (theme.isTrendPositive
+                              ? AppColors.success
+                              : AppColors.error)
+                          .withValues(alpha: 0.6),
                   blurRadius: 4,
                   spreadRadius: 1,
                 ),
@@ -1024,10 +1038,9 @@ class _HeroWalletCardState extends State<HeroWalletCard>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 4.5, vertical: 1),
             decoration: BoxDecoration(
-              color: (theme.isTrendPositive
-                      ? AppColors.success
-                      : AppColors.error)
-                  .withValues(alpha: 0.20),
+              color:
+                  (theme.isTrendPositive ? AppColors.success : AppColors.error)
+                      .withValues(alpha: 0.20),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
@@ -1249,98 +1262,72 @@ class _HeroWalletCardState extends State<HeroWalletCard>
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 14),
-          // Magnetic Stripe
-          Container(
-            height: 32,
-            color: Colors.black.withValues(alpha: 0.85),
-          ),
-          const SizedBox(height: 14),
+          children: [
+            const SizedBox(height: 14),
+            // Magnetic Stripe
+            Container(height: 32, color: Colors.black.withValues(alpha: 0.85)),
+            const SizedBox(height: 14),
 
-          // Account Number & Copy & Flip Back
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 32,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    alignment: AlignmentDirectional.centerStart.resolve(
-                      Directionality.of(context),
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.16),
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.24),
-                        width: 0.8,
+            // Account Number & Copy & Flip Back
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 32,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      alignment: AlignmentDirectional.centerStart.resolve(
+                        Directionality.of(context),
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.24),
+                          width: 0.8,
+                        ),
+                      ),
+                      child: Text(
+                        accountNo,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        textDirection: TextDirection.ltr,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontFamily: 'monospace',
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                        ),
                       ),
                     ),
-                    child: Text(
-                      accountNo,
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                      textDirection: TextDirection.ltr,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 11,
-                        fontFamily: 'monospace',
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Copy Account Number
+                  IconButton(
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(
+                      minWidth: 38,
+                      minHeight: 38,
                     ),
+                    tooltip: l10nPick(
+                      context,
+                      en: 'Copy account number',
+                      fa: 'کپی شماره حساب',
+                      ar: 'نسخ رقم الحساب',
+                      zh: '复制账号',
+                      tr: 'Hesap numarasını kopyala',
+                      ru: 'Скопировать номер счёта',
+                    ),
+                    icon: const Icon(
+                      Icons.copy_rounded,
+                      color: Colors.white,
+                      size: 17,
+                    ),
+                    onPressed: () => _copyAccountNo(accountNo),
                   ),
-                ),
-                const SizedBox(width: 8),
-                // Copy Account Number
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 38,
-                    minHeight: 38,
-                  ),
-                  tooltip: l10nPick(
-                    context,
-                    en: 'Copy account number',
-                    fa: 'کپی شماره حساب',
-                    ar: 'نسخ رقم الحساب',
-                    zh: '复制账号',
-                    tr: 'Hesap numarasını kopyala',
-                    ru: 'Скопировать номер счёта',
-                  ),
-                  icon: const Icon(
-                    Icons.copy_rounded,
-                    color: Colors.white,
-                    size: 17,
-                  ),
-                  onPressed: () => _copyAccountNo(accountNo),
-                ),
-                // Flip back icon button
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
-                    minWidth: 38,
-                    minHeight: 38,
-                  ),
-                  icon: const Icon(
-                    Icons.flip_to_front_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  onPressed: _flipCard,
-                  tooltip: l10nPick(
-                    context,
-                    en: 'Show front',
-                    fa: 'نمایش روی کارت',
-                    ar: 'إظهار وجه البطاقة',
-                    zh: '显示正面',
-                    tr: 'Ön yüzü göster',
-                    ru: 'Показать лицевую сторону',
-                  ),
-                ),
-                if (!isDefault)
+                  // Flip back icon button
                   IconButton(
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(
@@ -1348,64 +1335,87 @@ class _HeroWalletCardState extends State<HeroWalletCard>
                       minHeight: 38,
                     ),
                     icon: const Icon(
-                      Icons.delete_outline_rounded,
-                      color: AppColors.error,
-                      size: 19,
+                      Icons.flip_to_front_rounded,
+                      color: Colors.white,
+                      size: 18,
                     ),
-                    onPressed: () {
-                      Get.bottomSheet(
-                        DeleteWalletBottomSheet(
-                          walletId: widget.wallet.id.toString(),
-                        ),
-                      );
-                    },
+                    onPressed: _flipCard,
                     tooltip: l10nPick(
                       context,
-                      en: 'Delete wallet',
-                      fa: 'حذف کیف پول',
-                      ar: 'حذف المحفظة',
-                      tr: 'Cüzdanı sil',
-                      ru: 'Удалить кошелёк',
-                      zh: '删除钱包',
+                      en: 'Show front',
+                      fa: 'نمایش روی کارت',
+                      ar: 'إظهار وجه البطاقة',
+                      zh: '显示正面',
+                      tr: 'Ön yüzü göster',
+                      ru: 'Показать лицевую сторону',
                     ),
                   ),
-              ],
+                  if (!isDefault)
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 38,
+                        minHeight: 38,
+                      ),
+                      icon: const Icon(
+                        Icons.delete_outline_rounded,
+                        color: AppColors.error,
+                        size: 19,
+                      ),
+                      onPressed: () {
+                        Get.bottomSheet(
+                          DeleteWalletBottomSheet(
+                            walletId: widget.wallet.id.toString(),
+                          ),
+                        );
+                      },
+                      tooltip: l10nPick(
+                        context,
+                        en: 'Delete wallet',
+                        fa: 'حذف کیف پول',
+                        ar: 'حذف المحفظة',
+                        tr: 'Cüzdanı sil',
+                        ru: 'Удалить кошелёк',
+                        zh: '删除钱包',
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          // Details row
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  theme.currencyName,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.85),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
+            // Details row
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    theme.currencyName,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.85),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  'ID: #${widget.wallet.id ?? 0}',
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.65),
-                    fontSize: 11,
-                    fontFamily: 'monospace',
+                  Text(
+                    'ID: #${widget.wallet.id ?? 0}',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.65),
+                      fontSize: 11,
+                      fontFamily: 'monospace',
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          const Spacer(),
+            const Spacer(),
 
-          // Quick Action Bar on Back
-          Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 14),
-            child: _buildQuickActionBar(context, widget.wallet, theme),
-          ),
+            // Quick Action Bar on Back
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 14),
+              child: _buildQuickActionBar(context, widget.wallet, theme),
+            ),
           ],
         ),
       ),
@@ -1495,10 +1505,7 @@ class WalletsCardSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: ECardoTokens.surfaceCard(context),
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        border: Border.all(
-          color: ECardoTokens.border(context),
-          width: 1.0,
-        ),
+        border: Border.all(color: ECardoTokens.border(context), width: 1.0),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -19,7 +19,9 @@ class LicenseIntroScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -36,10 +38,18 @@ class LicenseIntroScreen extends StatelessWidget {
               child: IconButton(
                 icon: Icon(
                   Icons.vpn_key_rounded,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                   size: AppSpacing.iconMd.sp,
                 ),
-                tooltip: l10nPick(context, fa: 'لایسنس‌های من', en: 'My Licenses', ar: 'تراخيصي', zh: '我的许可证'),
+                tooltip: l10nPick(
+                  context,
+                  fa: 'لایسنس‌های من',
+                  en: 'My Licenses',
+                  ar: 'تراخيصي',
+                  zh: '我的许可证',
+                ),
                 onPressed: () => Get.to(() => const LicenseMyLicensesScreen()),
               ),
             ),
@@ -58,14 +68,19 @@ class LicenseIntroScreen extends StatelessWidget {
               ar: 'الدخول إلى متجر التراخيص',
               zh: '进入许可证商城',
             ),
-            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+            backgroundColor: isDark
+                ? AppColors.darkPrimary
+                : AppColors.lightPrimary,
             textColor: isDark ? AppColors.deepBlack : AppColors.white,
             onPressed: () => Get.to(() => const LicenseStoreScreen()),
           ),
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.lg.w,
+          vertical: AppSpacing.md.h,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -92,7 +107,11 @@ class LicenseIntroScreen extends StatelessWidget {
                           color: AppColors.success.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.verified_rounded, color: const Color(0xFF34D399), size: 26.sp),
+                        child: Icon(
+                          Icons.verified_rounded,
+                          color: const Color(0xFF34D399),
+                          size: 26.sp,
+                        ),
                       ),
                       SizedBox(width: AppSpacing.md.w),
                       Expanded(
@@ -104,7 +123,11 @@ class LicenseIntroScreen extends StatelessWidget {
                             ar: 'ضمان أصالة التراخيص الرقمية بنسبة ١٠٠٪',
                             zh: '100% 正版官方数字授权保障',
                           ),
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.white),
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -142,7 +165,9 @@ class LicenseIntroScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -152,8 +177,10 @@ class LicenseIntroScreen extends StatelessWidget {
               icon: Icons.window_rounded,
               titleFa: 'سیستم‌عامل و آفیس (Windows & Office)',
               titleEn: 'OS & Productivity',
-              descFa: 'لایسنس‌های دائمی Windows 11 Pro، Microsoft Office 365 و ابزارهای اداری اورجینال.',
-              descEn: 'Retail & OEM lifetime licenses for Windows 11 Pro, Office 365, and enterprise suites.',
+              descFa:
+                  'لایسنس‌های دائمی Windows 11 Pro، Microsoft Office 365 و ابزارهای اداری اورجینال.',
+              descEn:
+                  'Retail & OEM lifetime licenses for Windows 11 Pro, Office 365, and enterprise suites.',
             ),
             _buildCategoryTile(
               context,
@@ -161,8 +188,10 @@ class LicenseIntroScreen extends StatelessWidget {
               icon: Icons.code_rounded,
               titleFa: 'ابزارهای توسعه و برنامه‌نویسی (Developer Tools)',
               titleEn: 'Developer & Cloud Tools',
-              descFa: 'اشتراک‌های رسمی JetBrains All Products Pack، GitHub Copilot و ابزارهای DevOps.',
-              descEn: 'Official developer seats for JetBrains All Products, GitHub Copilot, and cloud IDEs.',
+              descFa:
+                  'اشتراک‌های رسمی JetBrains All Products Pack، GitHub Copilot و ابزارهای DevOps.',
+              descEn:
+                  'Official developer seats for JetBrains All Products, GitHub Copilot, and cloud IDEs.',
             ),
             _buildCategoryTile(
               context,
@@ -170,8 +199,10 @@ class LicenseIntroScreen extends StatelessWidget {
               icon: Icons.auto_awesome_rounded,
               titleFa: 'سرویس‌های هوش مصنوعی (AI Subscriptions)',
               titleEn: 'AI Platform Seats',
-              descFa: 'اکانت‌های اختصاصی ChatGPT Plus، Claude Pro، Midjourney با شارژ قانونی ارزی.',
-              descEn: 'Dedicated seats for ChatGPT Plus, Claude Pro, and Midjourney with compliant settlement.',
+              descFa:
+                  'اکانت‌های اختصاصی ChatGPT Plus، Claude Pro، Midjourney با شارژ قانونی ارزی.',
+              descEn:
+                  'Dedicated seats for ChatGPT Plus, Claude Pro, and Midjourney with compliant settlement.',
             ),
             _buildCategoryTile(
               context,
@@ -179,8 +210,10 @@ class LicenseIntroScreen extends StatelessWidget {
               icon: Icons.security_rounded,
               titleFa: 'امنیت و آنتی‌ویروس (Antivirus & Security)',
               titleEn: 'Cybersecurity & Antivirus',
-              descFa: 'لایسنس رسمی ESET Internet Security، Kaspersky و VPNهای سازمانی اختصاصی.',
-              descEn: 'Genuine multi-device seats for ESET Internet Security, Kaspersky, and secure tunnels.',
+              descFa:
+                  'لایسنس رسمی ESET Internet Security، Kaspersky و VPNهای سازمانی اختصاصی.',
+              descEn:
+                  'Genuine multi-device seats for ESET Internet Security, Kaspersky, and secure tunnels.',
             ),
 
             SizedBox(height: AppSpacing.xl.h),
@@ -197,14 +230,40 @@ class LicenseIntroScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
-            _buildStepRow(context, isDark: isDark, step: '۱', titleFa: 'انتخاب نسخه نرم‌افزار و مدت اعتبار', titleEn: 'Choose Edition & Duration'),
-            _buildStepRow(context, isDark: isDark, step: '۲', titleFa: 'کسر وجه از کیف پول ریالی یا ارزی', titleEn: 'Seamless Wallet Settlement'),
-            _buildStepRow(context, isDark: isDark, step: '۳', titleFa: 'تحویل خودکار کد لایسنس در صندوق امن', titleEn: 'Instant Key Reveal in Vault'),
-            _buildStepRow(context, isDark: isDark, step: '۴', titleFa: 'پشتیبانی و امکان ثبت اختلاف تا ۴۸ ساعت', titleEn: '48h Warranty & Dispute Protection'),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۱',
+              titleFa: 'انتخاب نسخه نرم‌افزار و مدت اعتبار',
+              titleEn: 'Choose Edition & Duration',
+            ),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۲',
+              titleFa: 'کسر وجه از کیف پول ریالی یا ارزی',
+              titleEn: 'Seamless Wallet Settlement',
+            ),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۳',
+              titleFa: 'تحویل خودکار کد لایسنس در صندوق امن',
+              titleEn: 'Instant Key Reveal in Vault',
+            ),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۴',
+              titleFa: 'پشتیبانی و امکان ثبت اختلاف تا ۴۸ ساعت',
+              titleEn: '48h Warranty & Dispute Protection',
+            ),
           ],
         ),
       ),
@@ -236,7 +295,8 @@ class LicenseIntroScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppSpacing.sm.r),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
+              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                  .withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -255,7 +315,9 @@ class LicenseIntroScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: 3.h),
@@ -263,7 +325,9 @@ class LicenseIntroScreen extends StatelessWidget {
                   l10nPick(context, fa: descFa, en: descEn),
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -309,7 +373,9 @@ class LicenseIntroScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
         ],

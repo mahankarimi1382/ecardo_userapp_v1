@@ -37,14 +37,22 @@ class _VisaListScreenState extends State<VisaListScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
-          l10nPick(context, en: 'My Visa Applications', fa: 'درخواست‌های ویزای من'),
+          l10nPick(
+            context,
+            en: 'My Visa Applications',
+            fa: 'درخواست‌های ویزای من',
+          ),
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -53,7 +61,9 @@ class _VisaListScreenState extends State<VisaListScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           tooltip: l10nPick(context, en: 'Back', fa: 'بازگشت'),
@@ -73,11 +83,34 @@ class _VisaListScreenState extends State<VisaListScreen> {
               child: Obx(() {
                 final current = _controller.selectedFilterStatus.value;
                 final filters = [
-                  {'id': 'ALL', 'label': l10nPick(context, en: 'All', fa: 'همه')},
-                  {'id': 'UNDER_REVIEW', 'label': l10nPick(context, en: 'Reviewing', fa: 'در حال بررسی')},
-                  {'id': 'AWAITING_PAYMENT', 'label': l10nPick(context, en: 'Payment', fa: 'منتظر پرداخت')},
-                  {'id': 'APPROVED', 'label': l10nPick(context, en: 'Approved', fa: 'صادرشده')},
-                  {'id': 'REJECTED', 'label': l10nPick(context, en: 'Rejected', fa: 'ردشده')},
+                  {
+                    'id': 'ALL',
+                    'label': l10nPick(context, en: 'All', fa: 'همه'),
+                  },
+                  {
+                    'id': 'UNDER_REVIEW',
+                    'label': l10nPick(
+                      context,
+                      en: 'Reviewing',
+                      fa: 'در حال بررسی',
+                    ),
+                  },
+                  {
+                    'id': 'AWAITING_PAYMENT',
+                    'label': l10nPick(
+                      context,
+                      en: 'Payment',
+                      fa: 'منتظر پرداخت',
+                    ),
+                  },
+                  {
+                    'id': 'APPROVED',
+                    'label': l10nPick(context, en: 'Approved', fa: 'صادرشده'),
+                  },
+                  {
+                    'id': 'REJECTED',
+                    'label': l10nPick(context, en: 'Rejected', fa: 'ردشده'),
+                  },
                 ];
 
                 return ListView.separated(
@@ -99,11 +132,17 @@ class _VisaListScreenState extends State<VisaListScreen> {
                       child: InkWell(
                         onTap: () {
                           HapticFeedback.lightImpact();
-                          _controller.selectedFilterStatus.value = f['id'] as String;
+                          _controller.selectedFilterStatus.value =
+                              f['id'] as String;
                         },
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXl.r,
+                        ),
                         child: Container(
-                          constraints: const BoxConstraints(minHeight: 44, minWidth: 44),
+                          constraints: const BoxConstraints(
+                            minHeight: 44,
+                            minWidth: 44,
+                          ),
                           alignment: Alignment.center,
                           padding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.md.w,
@@ -111,18 +150,30 @@ class _VisaListScreenState extends State<VisaListScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? (isDark ? AppColors.darkPrimary : AppColors.lightSecondary)
-                                : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+                                ? (isDark
+                                      ? AppColors.darkPrimary
+                                      : AppColors.lightSecondary)
+                                : (isDark
+                                      ? AppColors.darkSurfaceVariant
+                                      : AppColors.lightBackground),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusXl.r,
+                            ),
                           ),
                           child: Text(
                             f['label'] as String,
                             style: TextStyle(
                               fontSize: 11.5.sp,
-                              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                              fontWeight: isSelected
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
                               color: isSelected
-                                  ? (isDark ? AppColors.deepBlack : AppColors.white)
-                                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                                  ? (isDark
+                                        ? AppColors.deepBlack
+                                        : AppColors.white)
+                                  : (isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary),
                             ),
                           ),
                         ),
@@ -141,7 +192,8 @@ class _VisaListScreenState extends State<VisaListScreen> {
             Expanded(
               child: Obx(() {
                 // 1. Loading State (Shimmer skeleton)
-                if (_controller.isLoadingRequests.value && _controller.myRequests.isEmpty) {
+                if (_controller.isLoadingRequests.value &&
+                    _controller.myRequests.isEmpty) {
                   return _buildLoadingSkeleton(isDark);
                 }
 
@@ -153,15 +205,25 @@ class _VisaListScreenState extends State<VisaListScreen> {
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       child: EcardoEmptyState(
-                        title: l10nPick(context, en: 'No visa applications found', fa: 'هیچ پرونده ویزایی یافت نشد'),
+                        title: l10nPick(
+                          context,
+                          en: 'No visa applications found',
+                          fa: 'هیچ پرونده ویزایی یافت نشد',
+                        ),
                         description: l10nPick(
                           context,
                           en: 'Apply for your destination visa and track the status in real time.',
                           fa: 'کشور مقصد خود را انتخاب کرده و درخواست ویزا را به صورت آنلاین ثبت نمایید.',
                         ),
                         iconData: Icons.assignment_outlined,
-                        glowColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                        primaryActionLabel: l10nPick(context, en: 'New Application', fa: 'ثبت درخواست جدید'),
+                        glowColor: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                        primaryActionLabel: l10nPick(
+                          context,
+                          en: 'New Application',
+                          fa: 'ثبت درخواست جدید',
+                        ),
                         onPrimaryAction: () {
                           HapticFeedback.lightImpact();
                           Get.back();
@@ -179,7 +241,8 @@ class _VisaListScreenState extends State<VisaListScreen> {
                     vertical: AppSpacing.lg.h,
                   ),
                   itemCount: list.length,
-                  separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+                  separatorBuilder: (_, _) =>
+                      SizedBox(height: AppSpacing.cardGap.h),
                   itemBuilder: (context, index) {
                     final req = list[index];
                     return _VisaRequestCard(
@@ -200,8 +263,12 @@ class _VisaListScreenState extends State<VisaListScreen> {
   }
 
   Widget _buildLoadingSkeleton(bool isDark) {
-    final baseColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-    final highlightColor = isDark ? AppColors.darkSurface : AppColors.lightOutlineVariant;
+    final baseColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightSurfaceVariant;
+    final highlightColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightOutlineVariant;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -237,110 +304,130 @@ class _VisaRequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: '${request.countryName}, ${request.visaTitle}, ${request.applicantName}',
+      label:
+          '${request.countryName}, ${request.visaTitle}, ${request.applicantName}',
       child: VisaCard(
         onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  VisaCountryFlag(flagUrl: request.countryFlag, size: 36),
-                  SizedBox(width: AppSpacing.sm.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        request.countryName,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    VisaCountryFlag(flagUrl: request.countryFlag, size: 36),
+                    SizedBox(width: AppSpacing.sm.w),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          request.countryName,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w800,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
+                          ),
                         ),
-                      ),
-                      Text(
-                        request.visaTitle,
-                        style: TextStyle(
-                          fontSize: 11.5.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        Text(
+                          request.visaTitle,
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              VisaStatusBadge(status: request.status),
-            ],
-          ),
-          Divider(
-            height: AppSpacing.xl,
-            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    request.applicantName,
-                    style: TextStyle(
-                      fontSize: 12.5.sp,
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ],
                     ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Text(
-                      request.caseNo,
+                  ],
+                ),
+                VisaStatusBadge(status: request.status),
+              ],
+            ),
+            Divider(
+              height: AppSpacing.xl,
+              color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      request.applicantName,
                       style: TextStyle(
-                        fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        fontSize: 12.5.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    formatVisaPrice(request.totalFee, request.currency, context: context),
-                    style: TextStyle(
-                      fontSize: 13.5.sp,
-                      fontWeight: FontWeight.w900,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 2.h),
-                  Row(
-                    children: [
-                      Text(
-                        l10nPick(context, en: 'Track', fa: 'رهگیری'),
+                    SizedBox(height: 2.h),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Text(
+                        request.caseNo,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
-                      Icon(
-                        Icons.chevron_right_rounded,
-                        size: 16.r,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      formatVisaPrice(
+                        request.totalFee,
+                        request.currency,
+                        context: context,
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.w900,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightSecondary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Row(
+                      children: [
+                        Text(
+                          l10nPick(context, en: 'Track', fa: 'رهگیری'),
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w700,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightSecondary,
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right_rounded,
+                          size: 16.r,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightSecondary,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
-    ),);
+    );
   }
 }

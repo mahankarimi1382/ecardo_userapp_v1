@@ -54,21 +54,26 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
         return const CommonLoading();
       }
 
-      final amountNum = double.tryParse(controller.amountController.text) ?? 0.0;
+      final amountNum =
+          double.tryParse(controller.amountController.text) ?? 0.0;
       final formattedAmount = amountNum.toStringAsFixed(calculateDecimals);
 
       final recipientUid = controller.recipientUidController.text.trim();
-      final matchedBeneficiary = controller.findBeneficiaryByAccount(recipientUid);
-      final recipientDisplayName = matchedBeneficiary?.nickname ??
+      final matchedBeneficiary = controller.findBeneficiaryByAccount(
+        recipientUid,
+      );
+      final recipientDisplayName =
+          matchedBeneficiary?.nickname ??
           matchedBeneficiary?.receiver?.name ??
           'Recipient';
 
-      final isFree = controller.charge.value <= 0.0 && !controller.chargeLoadFailed.value;
+      final isFree =
+          controller.charge.value <= 0.0 && !controller.chargeLoadFailed.value;
       final feeText = controller.chargeLoadFailed.value
           ? '—'
           : isFree
-              ? 'Free (0.00 $walletCode)'
-              : "${controller.charge.value.toStringAsFixed(calculateDecimals)} $walletCode";
+          ? 'Free (0.00 $walletCode)'
+          : "${controller.charge.value.toStringAsFixed(calculateDecimals)} $walletCode";
 
       final totalText = controller.chargeLoadFailed.value
           ? '—'
@@ -118,7 +123,9 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                       context,
                       title: localization.transferReviewStepSectionAmount,
                       content: "$formattedAmount $walletCode",
-                      contentColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                      contentColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.deepBlack,
                       isBold: true,
                     ),
                     _buildDivider(colorScheme),
@@ -131,7 +138,8 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                     _buildDivider(colorScheme),
                     _buildSummaryRow(
                       context,
-                      title: localization.transferReviewStepSectionRecipientAccount,
+                      title: localization
+                          .transferReviewStepSectionRecipientAccount,
                       content: recipientUid,
                       contentColor: colorScheme.onSurface,
                     ),
@@ -140,7 +148,9 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                       context,
                       title: localization.transferReviewStepSectionCharge,
                       content: feeText,
-                      contentColor: isFree ? AppColors.success : AppColors.error,
+                      contentColor: isFree
+                          ? AppColors.success
+                          : AppColors.error,
                       isTag: isFree,
                     ),
                     if (currentWallet?.conversionRate != null &&
@@ -157,8 +167,11 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                           ru: 'Курс обмена',
                           zh: '汇率',
                         ),
-                        content: '1 $walletCode ≈ ${currentWallet.conversionRate}',
-                        contentColor: colorScheme.onSurface.withValues(alpha: 0.7),
+                        content:
+                            '1 $walletCode ≈ ${currentWallet.conversionRate}',
+                        contentColor: colorScheme.onSurface.withValues(
+                          alpha: 0.7,
+                        ),
                       ),
                     ],
                     _buildDivider(colorScheme),
@@ -207,7 +220,9 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                   ),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.4)
+                        ? colorScheme.surfaceContainerHigh.withValues(
+                            alpha: 0.4,
+                          )
                         : colorScheme.surfaceContainerLow,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                     border: Border.all(
@@ -315,7 +330,10 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     TransferController controller,
   ) async {
     final bool isPasscodeSettingEnabled =
-        Get.find<SettingsService>().getSetting("transfer_money_passcode_status") == "1";
+        Get.find<SettingsService>().getSetting(
+          "transfer_money_passcode_status",
+        ) ==
+        "1";
 
     if (!isPasscodeSettingEnabled) {
       await controller.transferAmount();
@@ -327,12 +345,17 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
     if (storedPasscode == null || storedPasscode.isEmpty) {
       if (Get.isRegistered<HomeController>()) {
-        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
-        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+        storedPasscode =
+            Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??=
+            Get.find<HomeController>().userModel.value.data?.hasPasscode;
       }
     }
 
-    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+    final hasPasscode = PasscodeHelper.userHasPasscode(
+      storedPasscode,
+      hasPasscodeFlag,
+    );
 
     if (!hasPasscode) {
       HapticFeedback.mediumImpact();
@@ -355,12 +378,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
           en: 'Set PIN Now',
           ar: 'تعيين الرمز الآن',
         ),
-        textCancel: l10nPick(
-          context,
-          fa: 'انصراف',
-          en: 'Cancel',
-          ar: 'إلغاء',
-        ),
+        textCancel: l10nPick(context, fa: 'انصراف', en: 'Cancel', ar: 'إلغاء'),
         buttonColor: AppColors.lightPrimary,
         confirmTextColor: Colors.white,
         onConfirm: () async {
@@ -378,7 +396,8 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     final dynamic verified = await Get.bottomSheet<dynamic>(
       const VerifyPasscodeBottomSheet(),
     );
-    if (verified == null || !PasscodeHelper.isValidFormat(verified.toString())) {
+    if (verified == null ||
+        !PasscodeHelper.isValidFormat(verified.toString())) {
       return;
     }
     await controller.transferAmount(passcode: verified.toString());
@@ -448,8 +467,8 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                 fontWeight: isHero
                     ? FontWeight.w900
                     : isBold
-                        ? FontWeight.w800
-                        : FontWeight.w700,
+                    ? FontWeight.w800
+                    : FontWeight.w700,
                 fontSize: isHero ? 18 : 14,
                 color: contentColor,
               ),

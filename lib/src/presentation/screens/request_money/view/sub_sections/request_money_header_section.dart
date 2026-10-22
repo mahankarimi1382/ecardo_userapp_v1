@@ -41,7 +41,8 @@ class RequestMoneyHeaderSection extends StatelessWidget {
                         child: IconButton(
                           visualDensity: VisualDensity.compact,
                           padding: EdgeInsets.zero,
-                          tooltip: localization.requestMoneyHeaderSectionHistory,
+                          tooltip:
+                              localization.requestMoneyHeaderSectionHistory,
                           onPressed: () {
                             HapticFeedback.lightImpact();
                             _buildHistoryNavigation(context, isDark);
@@ -75,18 +76,18 @@ class RequestMoneyHeaderSection extends StatelessWidget {
                         fontSize: 14.5,
                         backgroundColor: controller.selectedScreen.value == 0
                             ? (isDark
-                                ? AppColors.darkPrimary
-                                : AppColors.lightPrimary)
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
                             : (isDark
-                                ? AppColors.darkSurfaceVariant
-                                : AppColors.white),
+                                  ? AppColors.darkSurfaceVariant
+                                  : AppColors.white),
                         textColor: controller.selectedScreen.value == 0
-                            ? (isDark
-                                ? AppColors.deepBlack
-                                : AppColors.white)
+                            ? (isDark ? AppColors.deepBlack : AppColors.white)
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary.withValues(
+                                      alpha: 0.8,
+                                    )),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.md),
@@ -102,18 +103,18 @@ class RequestMoneyHeaderSection extends StatelessWidget {
                         fontSize: 14.5,
                         backgroundColor: controller.selectedScreen.value != 0
                             ? (isDark
-                                ? AppColors.darkPrimary
-                                : AppColors.lightPrimary)
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
                             : (isDark
-                                ? AppColors.darkSurfaceVariant
-                                : AppColors.white),
+                                  ? AppColors.darkSurfaceVariant
+                                  : AppColors.white),
                         textColor: controller.selectedScreen.value != 0
-                            ? (isDark
-                                ? AppColors.deepBlack
-                                : AppColors.white)
+                            ? (isDark ? AppColors.deepBlack : AppColors.white)
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary.withValues(
+                                      alpha: 0.8,
+                                    )),
                       ),
                     ),
                   ],

@@ -42,7 +42,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
       isScrollControlled: true,
       backgroundColor: ECardoTokens.surfaceCard(context),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(ECardoTokens.radius2xl)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(ECardoTokens.radius2xl),
+        ),
       ),
       builder: (ctx) {
         return SafeArea(
@@ -60,7 +62,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                       margin: EdgeInsets.only(bottom: ECardoTokens.space4.h),
                       decoration: BoxDecoration(
                         color: ECardoTokens.border(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusFull),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusFull,
+                        ),
                       ),
                     ),
                   ),
@@ -70,9 +74,15 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                         padding: EdgeInsets.all(ECardoTokens.space2.r),
                         decoration: BoxDecoration(
                           color: ECardoTokens.brand100(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                         ),
-                        child: Icon(Icons.verified_user_rounded, color: ECardoTokens.brand500(context), size: 22.sp),
+                        child: Icon(
+                          Icons.verified_user_rounded,
+                          color: ECardoTokens.brand500(context),
+                          size: 22.sp,
+                        ),
                       ),
                       SizedBox(width: ECardoTokens.space3.w),
                       Expanded(
@@ -115,13 +125,19 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                       padding: EdgeInsets.all(ECardoTokens.space3.r),
                       decoration: BoxDecoration(
                         color: ECardoTokens.surfaceSunken(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10nPick(context, fa: '${q.id}: ${q.questionFa}', en: '${q.id}: ${q.questionEn}'),
+                            l10nPick(
+                              context,
+                              fa: '${q.id}: ${q.questionFa}',
+                              en: '${q.id}: ${q.questionEn}',
+                            ),
                             style: TextStyle(
                               fontSize: 11.sp,
                               fontWeight: FontWeight.w700,
@@ -136,16 +152,26 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                               final isSelected = answers[q.id] == opt.key;
                               return ChoiceChip(
                                 label: Text(
-                                  l10nPick(context, fa: opt.labelFa, en: opt.labelEn),
+                                  l10nPick(
+                                    context,
+                                    fa: opt.labelFa,
+                                    en: opt.labelEn,
+                                  ),
                                   style: TextStyle(
                                     fontSize: 10.sp,
-                                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
-                                    color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                                    fontWeight: isSelected
+                                        ? FontWeight.w800
+                                        : FontWeight.w500,
+                                    color: isSelected
+                                        ? ECardoTokens.inkOnBrand
+                                        : ECardoTokens.ink(context),
                                   ),
                                 ),
                                 selected: isSelected,
                                 selectedColor: ECardoTokens.brand700(context),
-                                backgroundColor: ECardoTokens.surfaceCard(context),
+                                backgroundColor: ECardoTokens.surfaceCard(
+                                  context,
+                                ),
                                 onSelected: (val) {
                                   if (val) {
                                     HapticFeedback.selectionClick();
@@ -166,16 +192,31 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                       Expanded(
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: ECardoTokens.borderStrong(context)),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+                            side: BorderSide(
+                              color: ECardoTokens.borderStrong(context),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: ECardoTokens.space3.h),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusLg,
+                              ),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              vertical: ECardoTokens.space3.h,
+                            ),
                           ),
                           onPressed: () => Navigator.pop(ctx),
                           child: Text(
-                            l10nPick(context, fa: 'انصراف', en: 'Cancel', ar: 'إلغاء', zh: '取消'),
-                            style: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
+                            l10nPick(
+                              context,
+                              fa: 'انصراف',
+                              en: 'Cancel',
+                              ar: 'إلغاء',
+                              zh: '取消',
+                            ),
+                            style: TextStyle(
+                              color: ECardoTokens.inkMuted(context),
+                              fontSize: 12.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -187,16 +228,26 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                             backgroundColor: ECardoTokens.brand700(context),
                             foregroundColor: ECardoTokens.inkOnBrand,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusLg,
+                              ),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: ECardoTokens.space3.h),
+                            padding: EdgeInsets.symmetric(
+                              vertical: ECardoTokens.space3.h,
+                            ),
                           ),
                           onPressed: () async {
                             Navigator.pop(ctx);
                             await controller.submitRiskQuiz(answers);
                             if (!context.mounted) return;
                             Get.snackbar(
-                              l10nPick(context, fa: 'تأیید شد', en: 'Verified', ar: 'تم التحقق', zh: '已完成评估'),
+                              l10nPick(
+                                context,
+                                fa: 'تأیید شد',
+                                en: 'Verified',
+                                ar: 'تم التحقق',
+                                zh: '已完成评估',
+                              ),
                               l10nPick(
                                 context,
                                 fa: 'پروفایل ریسک و اهرم مجاز معاملاتی شما با موفقیت به روز شد.',
@@ -210,8 +261,17 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                             );
                           },
                           child: Text(
-                            l10nPick(context, fa: 'ثبت و فعال‌سازی حساب', en: 'Submit Assessment', ar: 'تأكيد وحفظ', zh: '提交并激活交易'),
-                            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
+                            l10nPick(
+                              context,
+                              fa: 'ثبت و فعال‌سازی حساب',
+                              en: 'Submit Assessment',
+                              ar: 'تأكيد وحفظ',
+                              zh: '提交并激活交易',
+                            ),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                         ),
                       ),
@@ -253,7 +313,13 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                   color: ECardoTokens.brand500(context),
                   size: 22.sp,
                 ),
-                tooltip: l10nPick(context, fa: 'پیگیری سفارش‌ها', en: 'Tracking', ar: 'المتابعة', zh: '订单追踪'),
+                tooltip: l10nPick(
+                  context,
+                  fa: 'پیگیری سفارش‌ها',
+                  en: 'Tracking',
+                  ar: 'المتابعة',
+                  zh: '订单追踪',
+                ),
                 onPressed: () {
                   HapticFeedback.lightImpact();
                   Get.to(() => const StockTrackingScreen());
@@ -279,7 +345,8 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
               vertical: ECardoTokens.space3.h,
             ),
             children: [
-              if (controller.hasBackendError.value && controller.markets.isEmpty)
+              if (controller.hasBackendError.value &&
+                  controller.markets.isEmpty)
                 FinancialServiceUnavailableBanner(
                   serviceNameFa: 'بورس‌های بین‌الملل و کارگزاری',
                   serviceNameEn: 'International Brokerage & Stocks',
@@ -324,7 +391,10 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
     );
   }
 
-  Widget _buildPortfolioHeroCard(BuildContext context, StockController controller) {
+  Widget _buildPortfolioHeroCard(
+    BuildContext context,
+    StockController controller,
+  ) {
     final summary = controller.portfolioSummary.value;
     final totalUsd = summary?.totalValueUsd ?? 8450.0;
     final pnlUsd = summary?.totalUnrealizedPnlUsd ?? 1250.0;
@@ -392,7 +462,10 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
               SizedBox(width: ECardoTokens.space2.w),
               // T+2 Settlement Rule Pill
               Container(
-                padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space2.w, vertical: 3.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ECardoTokens.space2.w,
+                  vertical: 3.h,
+                ),
                 decoration: BoxDecoration(
                   color: ECardoTokens.sand400(context).withValues(alpha: 0.25),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
@@ -448,12 +521,21 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                   // Unrealized P&L Badge
                   Expanded(
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space2.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ECardoTokens.space2.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
                         color: isPos
-                            ? ECardoTokens.success(context).withValues(alpha: 0.2)
-                            : ECardoTokens.danger(context).withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            ? ECardoTokens.success(
+                                context,
+                              ).withValues(alpha: 0.2)
+                            : ECardoTokens.danger(
+                                context,
+                              ).withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
                       ),
                       alignment: AlignmentDirectional.centerEnd,
                       child: Text(
@@ -463,7 +545,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w800,
-                          color: isPos ? ECardoTokens.success(context) : ECardoTokens.danger(context),
+                          color: isPos
+                              ? ECardoTokens.success(context)
+                              : ECardoTokens.danger(context),
                         ),
                       ),
                     ),
@@ -481,8 +565,17 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
               child: Row(
                 children: [
                   Text(
-                    l10nPick(context, fa: 'توزیع ارزها:', en: 'FX Exposure:', ar: 'توزيع العملات:', zh: '币种敞口：'),
-                    style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkOnBrandMuted(context)),
+                    l10nPick(
+                      context,
+                      fa: 'توزیع ارزها:',
+                      en: 'FX Exposure:',
+                      ar: 'توزيع العملات:',
+                      zh: '币种敞口：',
+                    ),
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      color: ECardoTokens.inkOnBrandMuted(context),
+                    ),
                   ),
                   SizedBox(width: ECardoTokens.space2.w),
                   _buildCurrencyChip('USD 75%'),
@@ -508,12 +601,19 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 9.5.sp, color: ECardoTokens.inkOnBrand, fontWeight: FontWeight.w700),
+        style: TextStyle(
+          fontSize: 9.5.sp,
+          color: ECardoTokens.inkOnBrand,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
 
-  Widget _buildActionTilesRow(BuildContext context, StockController controller) {
+  Widget _buildActionTilesRow(
+    BuildContext context,
+    StockController controller,
+  ) {
     return Row(
       children: [
         Expanded(
@@ -587,7 +687,10 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: ECardoTokens.space3.h, horizontal: 4.w),
+        padding: EdgeInsets.symmetric(
+          vertical: ECardoTokens.space3.h,
+          horizontal: 4.w,
+        ),
         decoration: BoxDecoration(
           color: ECardoTokens.surfaceCard(context),
           borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
@@ -634,7 +737,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
       decoration: BoxDecoration(
         color: ECardoTokens.warningBg(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-        border: Border.all(color: ECardoTokens.warning(context).withValues(alpha: 0.4)),
+        border: Border.all(
+          color: ECardoTokens.warning(context).withValues(alpha: 0.4),
+        ),
       ),
       child: Row(
         children: [
@@ -644,7 +749,11 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
               color: ECardoTokens.warning(context).withValues(alpha: 0.2),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.shield_rounded, color: ECardoTokens.warning(context), size: 18.sp),
+            child: Icon(
+              Icons.shield_rounded,
+              color: ECardoTokens.warning(context),
+              size: 18.sp,
+            ),
           ),
           SizedBox(width: ECardoTokens.space3.w),
           Expanded(
@@ -657,7 +766,11 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                   runSpacing: 2.h,
                   children: [
                     Text(
-                      l10nPick(context, fa: 'پروفایل ریسک:', en: 'Risk Profile:'),
+                      l10nPick(
+                        context,
+                        fa: 'پروفایل ریسک:',
+                        en: 'Risk Profile:',
+                      ),
                       style: TextStyle(
                         fontSize: 11.5.sp,
                         fontWeight: FontWeight.w800,
@@ -665,10 +778,15 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 1.h,
+                      ),
                       decoration: BoxDecoration(
                         color: ECardoTokens.brand100(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
                       ),
                       child: Text(
                         tierLabel,
@@ -705,7 +823,13 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
               minimumSize: Size.zero,
             ),
             child: Text(
-              l10nPick(context, fa: 'ویرایش', en: 'Edit', ar: 'تعديل', zh: '重新测评'),
+              l10nPick(
+                context,
+                fa: 'ویرایش',
+                en: 'Edit',
+                ar: 'تعديل',
+                zh: '重新测评',
+              ),
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w800,
@@ -718,9 +842,15 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
     );
   }
 
-  Widget _buildExchangeSelector(BuildContext context, StockController controller) {
+  Widget _buildExchangeSelector(
+    BuildContext context,
+    StockController controller,
+  ) {
     final exchanges = [
-      {'code': 'ALL', 'label': l10nPick(context, fa: 'همه بورس‌ها', en: 'All Markets')},
+      {
+        'code': 'ALL',
+        'label': l10nPick(context, fa: 'همه بورس‌ها', en: 'All Markets'),
+      },
       {'code': 'NASDAQ', 'label': 'NASDAQ'},
       {'code': 'NYSE', 'label': 'NYSE'},
       {'code': 'HKEX', 'label': 'HKEX'},
@@ -743,7 +873,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                color: isSelected
+                    ? ECardoTokens.inkOnBrand
+                    : ECardoTokens.ink(context),
               ),
             ),
             selected: isSelected,
@@ -752,7 +884,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
               side: BorderSide(
-                color: isSelected ? ECardoTokens.brand700(context) : ECardoTokens.border(context),
+                color: isSelected
+                    ? ECardoTokens.brand700(context)
+                    : ECardoTokens.border(context),
               ),
             ),
             padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space2.w),
@@ -768,12 +902,39 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
     );
   }
 
-  Widget _buildSegmentedHeader(BuildContext context, StockController controller) {
+  Widget _buildSegmentedHeader(
+    BuildContext context,
+    StockController controller,
+  ) {
     final tabs = [
-      l10nPick(context, fa: 'همه نمادها', en: 'Trending', ar: 'الشائعة', zh: '核心标的'),
-      l10nPick(context, fa: 'بیشترین رشد', en: 'Top Gainers', ar: 'الأكثر صعوداً', zh: '涨幅榜'),
-      l10nPick(context, fa: 'بیشترین افت', en: 'Top Losers', ar: 'الأكثر هبوطاً', zh: '跌幅榜'),
-      l10nPick(context, fa: 'دیده‌بان من', en: 'Watchlist', ar: 'المفضلة', zh: '自选股'),
+      l10nPick(
+        context,
+        fa: 'همه نمادها',
+        en: 'Trending',
+        ar: 'الشائعة',
+        zh: '核心标的',
+      ),
+      l10nPick(
+        context,
+        fa: 'بیشترین رشد',
+        en: 'Top Gainers',
+        ar: 'الأكثر صعوداً',
+        zh: '涨幅榜',
+      ),
+      l10nPick(
+        context,
+        fa: 'بیشترین افت',
+        en: 'Top Losers',
+        ar: 'الأكثر هبوطاً',
+        zh: '跌幅榜',
+      ),
+      l10nPick(
+        context,
+        fa: 'دیده‌بان من',
+        en: 'Watchlist',
+        ar: 'المفضلة',
+        zh: '自选股',
+      ),
     ];
 
     return Container(
@@ -795,9 +956,13 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                 duration: const Duration(milliseconds: 200),
                 padding: EdgeInsets.symmetric(vertical: 7.h),
                 decoration: BoxDecoration(
-                  color: isSelected ? ECardoTokens.surfaceCard(context) : Colors.transparent,
+                  color: isSelected
+                      ? ECardoTokens.surfaceCard(context)
+                      : Colors.transparent,
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                  boxShadow: isSelected ? ECardoTokens.shadowCard(context) : null,
+                  boxShadow: isSelected
+                      ? ECardoTokens.shadowCard(context)
+                      : null,
                 ),
                 child: Text(
                   tabs[index],
@@ -805,7 +970,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                   style: TextStyle(
                     fontSize: 10.5.sp,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                    color: isSelected ? ECardoTokens.brand700(context) : ECardoTokens.inkMuted(context),
+                    color: isSelected
+                        ? ECardoTokens.brand700(context)
+                        : ECardoTokens.inkMuted(context),
                   ),
                 ),
               ),
@@ -816,7 +983,10 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
     );
   }
 
-  Widget _buildSymbolsSection(BuildContext context, StockController controller) {
+  Widget _buildSymbolsSection(
+    BuildContext context,
+    StockController controller,
+  ) {
     List<StockSymbolModel> list;
 
     if (_selectedTab == 1) {
@@ -869,13 +1039,21 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
     }
 
     return Column(
-      children: list.map((s) => _buildSymbolCard(context, controller, s)).toList(),
+      children: list
+          .map((s) => _buildSymbolCard(context, controller, s))
+          .toList(),
     );
   }
 
-  Widget _buildSymbolCard(BuildContext context, StockController controller, StockSymbolModel s) {
+  Widget _buildSymbolCard(
+    BuildContext context,
+    StockController controller,
+    StockSymbolModel s,
+  ) {
     final isPos = s.dailyChangePct >= 0;
-    final changeColor = isPos ? ECardoTokens.success(context) : ECardoTokens.danger(context);
+    final changeColor = isPos
+        ? ECardoTokens.success(context)
+        : ECardoTokens.danger(context);
     final isFav = controller.isWatchlisted(s.ticker);
 
     return Container(
@@ -984,7 +1162,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      isPos ? Icons.arrow_drop_up_rounded : Icons.arrow_drop_down_rounded,
+                      isPos
+                          ? Icons.arrow_drop_up_rounded
+                          : Icons.arrow_drop_down_rounded,
                       size: 13.sp,
                       color: changeColor,
                     ),
@@ -1008,7 +1188,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
           IconButton(
             icon: Icon(
               isFav ? Icons.star_rounded : Icons.star_outline_rounded,
-              color: isFav ? ECardoTokens.sand600(context) : ECardoTokens.inkMuted(context),
+              color: isFav
+                  ? ECardoTokens.sand600(context)
+                  : ECardoTokens.inkMuted(context),
               size: 20.sp,
             ),
             tooltip: l10nPick(context, fa: 'دیده‌بان', en: 'Watchlist'),
@@ -1023,7 +1205,9 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: ECardoTokens.brand700(context),
               foregroundColor: ECardoTokens.inkOnBrand,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+              ),
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
               minimumSize: Size.zero,
               elevation: 0,
@@ -1034,7 +1218,13 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
               Get.to(() => const StockOrderScreen());
             },
             child: Text(
-              l10nPick(context, fa: 'معامله', en: 'Trade', ar: 'تداول', zh: '交易'),
+              l10nPick(
+                context,
+                fa: 'معامله',
+                en: 'Trade',
+                ar: 'تداول',
+                zh: '交易',
+              ),
               style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700),
             ),
           ),

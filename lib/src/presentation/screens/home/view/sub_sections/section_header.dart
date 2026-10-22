@@ -49,10 +49,16 @@ class SectionHeader extends StatelessWidget {
                 onTap: onTap,
                 borderRadius: BorderRadius.circular(8),
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                  constraints: const BoxConstraints(
+                    minWidth: 44,
+                    minHeight: 44,
+                  ),
                   child: Container(
                     alignment: AlignmentDirectional.centerEnd,
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
                     child: Text(
                       localizations.sectionHeaderSeeAll,
                       style: TextStyle(

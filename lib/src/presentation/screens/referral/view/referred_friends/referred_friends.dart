@@ -44,7 +44,12 @@ Future<void> _copyReferralLink(BuildContext context) async {
     code = Get.find<ReferralController>().referralModel.value.data?.code;
   }
   if ((code == null || code.isEmpty) && Get.isRegistered<HomeController>()) {
-    code = Get.find<HomeController>().dashboardModel.value.data?.referral?.referralCode;
+    code = Get.find<HomeController>()
+        .dashboardModel
+        .value
+        .data
+        ?.referral
+        ?.referralCode;
   }
   if (code == null || code.isEmpty) {
     try {
@@ -72,7 +77,8 @@ class ReferredFriends extends StatefulWidget {
 }
 
 class _ReferredFriendsState extends State<ReferredFriends> {
-  final ReferredFriendsController controller = Get.find<ReferredFriendsController>();
+  final ReferredFriendsController controller =
+      Get.find<ReferredFriendsController>();
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +86,9 @@ class _ReferredFriendsState extends State<ReferredFriends> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Column(
         children: [
@@ -98,7 +106,9 @@ class _ReferredFriendsState extends State<ReferredFriends> {
               child: IconButton(
                 icon: Icon(
                   Icons.link_rounded,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 ),
                 tooltip: _refL(
                   context,
@@ -134,7 +144,9 @@ class _ReferredFriendsState extends State<ReferredFriends> {
                 HapticFeedback.lightImpact();
                 Get.toNamed(BaseRoute.referralTree);
               },
-              backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+              backgroundColor: isDark
+                  ? AppColors.mainSoftBlue
+                  : AppColors.brandViolet,
               foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),

@@ -50,8 +50,9 @@ class CreativeFloatingTextField extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final hasError = errorText != null && errorText!.isNotEmpty;
 
-    final primaryAccent =
-        isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack;
+    final primaryAccent = isDark
+        ? const Color(0xFF38BDF8)
+        : AppColors.deepBlack;
 
     // Field surface background
     final fieldBg = isDark
@@ -132,10 +133,10 @@ class CreativeFloatingTextField extends StatelessWidget {
                 color: hasError
                     ? const Color(0xFFEF4444)
                     : (isFocused
-                        ? primaryAccent
-                        : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextTertiary)),
+                          ? primaryAccent
+                          : (isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextTertiary)),
               ),
               floatingLabelBehavior: FloatingLabelBehavior.auto,
               floatingLabelStyle: TextStyle(
@@ -144,10 +145,10 @@ class CreativeFloatingTextField extends StatelessWidget {
                 color: hasError
                     ? const Color(0xFFEF4444)
                     : (isFocused
-                        ? primaryAccent
-                        : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary)),
+                          ? primaryAccent
+                          : (isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary)),
               ),
               hintText: hint,
               hintStyle: TextStyle(

@@ -141,10 +141,7 @@ class SignInController extends GetxController {
       Get.offAllNamed(BaseRoute.navigation);
       resetFields();
     } else {
-      Get.toNamed(
-        BaseRoute.signUpStatus,
-        arguments: {"is_login_state": true},
-      );
+      Get.toNamed(BaseRoute.signUpStatus, arguments: {"is_login_state": true});
     }
   }
 
@@ -153,13 +150,14 @@ class SignInController extends GetxController {
       final bio = BiometricAuthService();
       final available = await bio.isBiometricAvailable();
       final enabledPref = await SettingsService.getBiometricEnableOrDisable();
-      final enabled = enabledPref == true ||
-          settingsService.currentBiometric.value == true;
+      final enabled =
+          enabledPref == true || settingsService.currentBiometric.value == true;
       final email = await SettingsService.getLoggedInUserEmail();
       final token = Get.isRegistered<TokenService>()
           ? Get.find<TokenService>().accessToken.value
           : null;
-      final hasSession = (email != null && email.isNotEmpty) ||
+      final hasSession =
+          (email != null && email.isNotEmpty) ||
           (token != null && token.isNotEmpty);
       showBiometricButton.value = available && enabled && hasSession;
     } catch (_) {
@@ -250,7 +248,9 @@ class SignInController extends GetxController {
         return;
       }
       try {
-        unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
+        unawaited(
+          FirebaseMessagingService.instance().registerTokenWithBackend(),
+        );
       } catch (_) {}
       final response = await Get.find<NetworkService>().get(
         endpoint: ApiPath.userEndpoint,
@@ -260,12 +260,14 @@ class SignInController extends GetxController {
         await setLogInState();
         _routeAfterAuth();
       } else {
-        ToastHelper().showErrorToast(_pick(
-          en: 'Biometric sign-in failed.',
-          fa: 'ورود با بیومتریک ناموفق بود.',
-          ar: 'فشل تسجيل الدخول بالخصائص الحيوية.',
-          zh: '生物识别登录失败。',
-        ));
+        ToastHelper().showErrorToast(
+          _pick(
+            en: 'Biometric sign-in failed.',
+            fa: 'ورود با بیومتریک ناموفق بود.',
+            ar: 'فشل تسجيل الدخول بالخصائص الحيوية.',
+            zh: '生物识别登录失败。',
+          ),
+        );
       }
     } catch (e) {
       ToastHelper().showErrorToast(_friendlyNetworkError(e));
@@ -278,10 +280,12 @@ class SignInController extends GetxController {
     unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
     unawaited(refreshBiometricButton());
     if (Get.isRegistered<PermissionFlowService>()) {
-      unawaited(Get.find<PermissionFlowService>().requestNotification(
-        context: Get.context,
-        explain: true,
-      ));
+      unawaited(
+        Get.find<PermissionFlowService>().requestNotification(
+          context: Get.context,
+          explain: true,
+        ),
+      );
     }
   }
 
@@ -299,10 +303,7 @@ class SignInController extends GetxController {
       }
     } catch (e) {
       debugPrint('❌ retryFetchUserProfile error: $e');
-      _handleFetchUserFailure(
-        useBiometric: useBiometric,
-        error: e,
-      );
+      _handleFetchUserFailure(useBiometric: useBiometric, error: e);
     } finally {
       isLoading.value = false;
     }
@@ -331,10 +332,7 @@ class SignInController extends GetxController {
           ar: 'خطأ في الاتصال',
           zh: '网络连接错误',
         ),
-        titleStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
+        titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         middleText: _pick(
           en: 'Signed in successfully, but loading your profile failed due to a network glitch. Tap Retry to continue without re-entering credentials.',
           fa: 'ورود با موفقیت انجام شد، اما دریافت اطلاعات به دلیل خطای شبکه ناموفق بود. برای ادامه بدون ورود مجدد مشخصات، تلاش مجدد را بزنید.',
@@ -348,12 +346,7 @@ class SignInController extends GetxController {
           ar: 'إعادة المحاولة',
           zh: '重试',
         ),
-        textCancel: _pick(
-          en: 'Cancel',
-          fa: 'انصراف',
-          ar: 'إلغاء',
-          zh: '取消',
-        ),
+        textCancel: _pick(en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
         buttonColor: AppColors.lightPrimary,
         confirmTextColor: Colors.white,
         barrierDismissible: true,
@@ -451,7 +444,8 @@ class SignInController extends GetxController {
 
   void _handleLoginFailure(String? msg) {
     final lower = (msg ?? '').toLowerCase();
-    final bool isUserNotFound = lower.contains('not found') ||
+    final bool isUserNotFound =
+        lower.contains('not found') ||
         lower.contains('یافت نشد') ||
         lower.contains('ثبت‌نام') ||
         lower.contains('ثبت نام') ||
@@ -480,12 +474,7 @@ class SignInController extends GetxController {
           ar: 'تسجيل جديد',
           zh: '立即注册',
         ),
-        textCancel: _pick(
-          en: 'Cancel',
-          fa: 'انصراف',
-          ar: 'إلغاء',
-          zh: '取消',
-        ),
+        textCancel: _pick(en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
         buttonColor: AppColors.lightPrimary,
         confirmTextColor: Colors.white,
         onConfirm: () {
@@ -512,8 +501,9 @@ class SignInController extends GetxController {
         userModel.value = UserModel.fromJson(response.data!);
 
         if (userModel.value.data?.twoFa == true) {
-          pendingTwoFaEmail.value =
-              useBiometric ? biometricEmail.value : emailController.text;
+          pendingTwoFaEmail.value = useBiometric
+              ? biometricEmail.value
+              : emailController.text;
           Get.toNamed(BaseRoute.twoFactorAuth);
         } else {
           // Verify secure token presence before declaring persistent login
@@ -521,7 +511,9 @@ class SignInController extends GetxController {
               ? Get.find<TokenService>().accessToken.value
               : null;
           if (currentToken == null || currentToken.isEmpty) {
-            debugPrint('❌ fetchUser: Missing token in TokenService. Secure storage write failed.');
+            debugPrint(
+              '❌ fetchUser: Missing token in TokenService. Secure storage write failed.',
+            );
             await Get.find<SettingsService>().wipeSession();
             ToastHelper().showErrorToast(
               _pick(
@@ -543,7 +535,8 @@ class SignInController extends GetxController {
         hasPendingProfileFetch.value = false;
         return true;
       } else {
-        final errorMsg = response.message ??
+        final errorMsg =
+            response.message ??
             localizationOrNull?.allControllerLoadError ??
             _pick(
               en: 'Failed to load user profile.',
@@ -617,7 +610,9 @@ class SignInController extends GetxController {
                     zh: '设置备用 PIN？',
                   ),
                   style: const TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: 16),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -635,24 +630,28 @@ class SignInController extends GetxController {
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () => Get.back(result: false),
-                        child: Text(_pick(
-                          en: 'Later',
-                          fa: 'بعداً',
-                          ar: 'لاحقًا',
-                          zh: '稍后',
-                        )),
+                        child: Text(
+                          _pick(
+                            en: 'Later',
+                            fa: 'بعداً',
+                            ar: 'لاحقًا',
+                            zh: '稍后',
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () => Get.back(result: true),
-                        child: Text(_pick(
-                          en: 'Set PIN',
-                          fa: 'تنظیم PIN',
-                          ar: 'تعيين PIN',
-                          zh: '设置 PIN',
-                        )),
+                        child: Text(
+                          _pick(
+                            en: 'Set PIN',
+                            fa: 'تنظیم PIN',
+                            ar: 'تعيين PIN',
+                            zh: '设置 PIN',
+                          ),
+                        ),
                       ),
                     ),
                   ],

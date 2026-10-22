@@ -62,7 +62,9 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
           padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
           child: Obx(() {
             final vehicle = _controller.selectedVehicle.value;
-            final fare = vehicle != null ? _controller.calculateTotalFare(vehicle) : 0;
+            final fare = vehicle != null
+                ? _controller.calculateTotalFare(vehicle)
+                : 0;
             final expired = _controller.isQuoteExpired.value;
             return Row(
               children: [
@@ -86,20 +88,32 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w900,
-                                color: expired ? ECardoTokens.danger(context) : ECardoTokens.brand500(context),
+                                color: expired
+                                    ? ECardoTokens.danger(context)
+                                    : ECardoTokens.brand500(context),
                               ),
                             ),
                           ),
                           if (vehicle != null && !expired) ...[
                             SizedBox(width: 6.w),
                             Container(
-                              padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
+                              padding: EdgeInsetsDirectional.symmetric(
+                                horizontal: 6.w,
+                                vertical: 2.h,
+                              ),
                               decoration: BoxDecoration(
                                 color: ECardoTokens.brand100(context),
-                                borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                                borderRadius: BorderRadius.circular(
+                                  ECardoTokens.radiusSm,
+                                ),
                               ),
                               child: Text(
-                                l10nPick(context, en: 'FIXED', fa: 'قطعی', ar: 'ثابت'),
+                                l10nPick(
+                                  context,
+                                  en: 'FIXED',
+                                  fa: 'قطعی',
+                                  ar: 'ثابت',
+                                ),
                                 style: TextStyle(
                                   fontSize: 8.5.sp,
                                   fontWeight: FontWeight.w900,
@@ -119,10 +133,23 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                   width: 160.w,
                   child: CommonButton(
                     text: expired
-                        ? l10nPick(context, en: 'Refresh Price', fa: 'استعلام مجدد', ar: 'تحديث السعر')
-                        : l10nPick(context, en: 'Confirm Vehicle', fa: 'تأیید خودرو و ادامه', ar: 'تأكيد ومتابعة', zh: '确认车型并继续'),
+                        ? l10nPick(
+                            context,
+                            en: 'Refresh Price',
+                            fa: 'استعلام مجدد',
+                            ar: 'تحديث السعر',
+                          )
+                        : l10nPick(
+                            context,
+                            en: 'Confirm Vehicle',
+                            fa: 'تأیید خودرو و ادامه',
+                            ar: 'تأكيد ومتابعة',
+                            zh: '确认车型并继续',
+                          ),
                     textColor: ECardoTokens.inkOnBrand,
-                    backgroundColor: expired ? ECardoTokens.warning(context) : ECardoTokens.brand500(context),
+                    backgroundColor: expired
+                        ? ECardoTokens.warning(context)
+                        : ECardoTokens.brand500(context),
                     onPressed: () {
                       AppHaptics.selection();
                       if (expired) {
@@ -159,7 +186,13 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        l10nPick(context, en: 'Trip Summary', fa: 'خلاصه مسیر ترانسفر', ar: 'ملخص الرحلة', zh: '行程摘要'),
+                        l10nPick(
+                          context,
+                          en: 'Trip Summary',
+                          fa: 'خلاصه مسیر ترانسفر',
+                          ar: 'ملخص الرحلة',
+                          zh: '行程摘要',
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -183,14 +216,22 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                 SizedBox(height: ECardoTokens.space2.h),
                 Row(
                   children: [
-                    Icon(Icons.trip_origin_rounded, size: 16, color: ECardoTokens.brand500(context)),
+                    Icon(
+                      Icons.trip_origin_rounded,
+                      size: 16,
+                      color: ECardoTokens.brand500(context),
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: TravelBidiText(
                         _controller.originController.text,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textPrimary),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -198,14 +239,22 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                 SizedBox(height: 6.h),
                 Row(
                   children: [
-                    Icon(Icons.location_on_rounded, size: 16, color: ECardoTokens.danger(context)),
+                    Icon(
+                      Icons.location_on_rounded,
+                      size: 16,
+                      color: ECardoTokens.danger(context),
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: TravelBidiText(
                         _controller.destinationController.text,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: textPrimary),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -214,7 +263,9 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                   final q = _controller.quote.value;
                   if (q == null) return const SizedBox.shrink();
                   return Padding(
-                    padding: EdgeInsetsDirectional.only(top: ECardoTokens.space2.h),
+                    padding: EdgeInsetsDirectional.only(
+                      top: ECardoTokens.space2.h,
+                    ),
                     child: Wrap(
                       spacing: 10.w,
                       runSpacing: 4.h,
@@ -229,7 +280,8 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                         ),
                         _SummaryPill(
                           icon: Icons.groups_rounded,
-                          text: '${_controller.passengerCount.value} ${l10nPick(context, en: 'pax', fa: 'نفر')}'
+                          text:
+                              '${_controller.passengerCount.value} ${l10nPick(context, en: 'pax', fa: 'نفر')}'
                               ' · ${_controller.luggageCount.value} ${l10nPick(context, en: 'bags', fa: 'چمدان')}',
                         ),
                       ],
@@ -246,8 +298,18 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
 
           // Section title
           Text(
-            l10nPick(context, en: 'Available Vehicle Options', fa: 'ناوگان در دسترس', ar: 'الخيارات المتاحة', zh: '可选车型列表'),
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w900, color: textPrimary),
+            l10nPick(
+              context,
+              en: 'Available Vehicle Options',
+              fa: 'ناوگان در دسترس',
+              ar: 'الخيارات المتاحة',
+              zh: '可选车型列表',
+            ),
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w900,
+              color: textPrimary,
+            ),
           ),
           SizedBox(height: ECardoTokens.space3.h),
 
@@ -256,13 +318,20 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
             final state = _controller.uiState.value;
 
             if (state == TaxiUiState.loading || state == TaxiUiState.skeleton) {
-              return const TravelShimmerLoading(type: TravelShimmerType.list, count: 3);
+              return const TravelShimmerLoading(
+                type: TravelShimmerType.list,
+                count: 3,
+              );
             }
 
             if (state == TaxiUiState.unauthorized) {
               return TravelEmptyState(
                 icon: Icons.lock_outline_rounded,
-                title: l10nPick(context, en: 'Sign-in required', fa: 'نیاز به ورود کاربر'),
+                title: l10nPick(
+                  context,
+                  en: 'Sign-in required',
+                  fa: 'نیاز به ورود کاربر',
+                ),
                 message: l10nPick(
                   context,
                   en: 'Please log in to fetch live fixed rates for your route.',
@@ -275,29 +344,48 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
 
             if (state == TaxiUiState.error) {
               return TravelErrorState(
-                title: l10nPick(context, en: 'Rate enquiry failed', fa: 'خطا در استعلام کرایه'),
+                title: l10nPick(
+                  context,
+                  en: 'Rate enquiry failed',
+                  fa: 'خطا در استعلام کرایه',
+                ),
                 message: _controller.errorMessage.value ?? 'unavailable',
                 onRetry: _controller.fetchVehicleEstimates,
-                retryText: l10nPick(context, en: 'Try Again', fa: 'تلاش دوباره'),
+                retryText: l10nPick(
+                  context,
+                  en: 'Try Again',
+                  fa: 'تلاش دوباره',
+                ),
               );
             }
 
-            if (state == TaxiUiState.empty || _controller.availableVehicles.isEmpty) {
+            if (state == TaxiUiState.empty ||
+                _controller.availableVehicles.isEmpty) {
               return TravelEmptyState(
                 icon: Icons.directions_car_filled_rounded,
-                title: l10nPick(context, en: 'No vehicles available', fa: 'هیچ خودروای موجود نیست'),
+                title: l10nPick(
+                  context,
+                  en: 'No vehicles available',
+                  fa: 'هیچ خودروای موجود نیست',
+                ),
                 message: l10nPick(
                   context,
                   en: 'Our fleet is fully booked for this time window. Try a different pickup hour.',
                   fa: 'ناوگان تشریفات در این بازه زمانی تکمیل ظرفیت است. ساعت دیگری را امتحان فرمایید.',
                 ),
-                actionText: l10nPick(context, en: 'Change Time', fa: 'تغییر زمان'),
+                actionText: l10nPick(
+                  context,
+                  en: 'Change Time',
+                  fa: 'تغییر زمان',
+                ),
                 onAction: () => Get.back(),
               );
             }
 
             final quotesByVehicle = <String, RideVehicleQuote>{};
-            for (final entry in _controller.quote.value?.vehicleQuotes ?? const <RideVehicleQuote>[]) {
+            for (final entry
+                in _controller.quote.value?.vehicleQuotes ??
+                    const <RideVehicleQuote>[]) {
               quotesByVehicle[entry.vehicleClass.id] = entry;
             }
 
@@ -309,15 +397,22 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
                   opacity: unavailable ? 0.55 : 1,
                   child: TaxiVehicleCard(
                     vehicle: vehicle,
-                    totalFare: entry?.totalFare ?? _controller.calculateTotalFare(vehicle),
-                    isSelected: _controller.selectedVehicle.value?.id == vehicle.id,
+                    totalFare:
+                        entry?.totalFare ??
+                        _controller.calculateTotalFare(vehicle),
+                    isSelected:
+                        _controller.selectedVehicle.value?.id == vehicle.id,
                     passengerCount: _controller.passengerCount.value,
                     luggageCount: _controller.luggageCount.value,
                     onTap: () {
                       if (unavailable) {
                         showTravelMessage(
                           context,
-                          title: l10nPick(context, en: 'Capacity exceeded', fa: 'ظرفیت غیرکافی'),
+                          title: l10nPick(
+                            context,
+                            en: 'Capacity exceeded',
+                            fa: 'ظرفیت غیرکافی',
+                          ),
                           message: l10nPick(
                             context,
                             en: '${vehicle.titleEn} seats ${vehicle.maxPassengers} pax and ${vehicle.maxLuggage} bags.',
@@ -338,17 +433,24 @@ class _TaxiVehiclesScreenState extends State<TaxiVehiclesScreen> {
           SizedBox(height: ECardoTokens.space2.h),
           Obx(() {
             final source = _controller.quoteSource.value;
-            if (source != RideDataSource.network) return const SizedBox.shrink();
+            if (source != RideDataSource.network)
+              return const SizedBox.shrink();
             return Container(
               padding: EdgeInsetsDirectional.all(ECardoTokens.space3.r),
               decoration: BoxDecoration(
                 color: ECardoTokens.successBg(context),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
-                border: Border.all(color: ECardoTokens.success(context).withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: ECardoTokens.success(context).withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.receipt_long_rounded, color: ECardoTokens.success(context), size: 20),
+                  Icon(
+                    Icons.receipt_long_rounded,
+                    color: ECardoTokens.success(context),
+                    size: 20,
+                  ),
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(

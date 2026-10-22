@@ -20,11 +20,7 @@ class LoanDetailScreen extends StatefulWidget {
   final int caseId;
   final LoanCaseModel? initialCase;
 
-  const LoanDetailScreen({
-    super.key,
-    required this.caseId,
-    this.initialCase,
-  });
+  const LoanDetailScreen({super.key, required this.caseId, this.initialCase});
 
   @override
   State<LoanDetailScreen> createState() => _LoanDetailScreenState();
@@ -52,7 +48,10 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
           child: Obx(() {
-            final c = controller.selectedCase.value ?? widget.initialCase ?? LoanController.sampleActiveLoan;
+            final c =
+                controller.selectedCase.value ??
+                widget.initialCase ??
+                LoanController.sampleActiveLoan;
             return CommonAppBar(
               title: c.caseNo.isNotEmpty ? 'Loan ${c.caseNo}' : 'Loan LN-2208',
               isBackLogicApply: true,
@@ -62,11 +61,15 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
         ),
       ),
       body: Obx(() {
-        if (controller.isLoadingDetail.value && controller.selectedCase.value == null) {
+        if (controller.isLoadingDetail.value &&
+            controller.selectedCase.value == null) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final c = controller.selectedCase.value ?? widget.initialCase ?? LoanController.sampleActiveLoan;
+        final c =
+            controller.selectedCase.value ??
+            widget.initialCase ??
+            LoanController.sampleActiveLoan;
         final nextInst = c.nextInstallment;
         final nextAmount = nextInst?.amount ?? 1140.0;
         final isWarning = c.isCollateralWarning;
@@ -94,7 +97,11 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10nPick(context, fa: 'مانده بدهی اصل وام', en: 'Outstanding balance'),
+                      l10nPick(
+                        context,
+                        fa: 'مانده بدهی اصل وام',
+                        en: 'Outstanding balance',
+                      ),
                       style: TextStyle(
                         fontSize: 12.5.sp,
                         fontWeight: FontWeight.w600,
@@ -125,10 +132,15 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                     // Next due banner
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 10.h,
+                      ),
                       decoration: BoxDecoration(
                         color: ECardoTokens.surfaceSunken(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd.r,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,10 +157,15 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 2.h,
+                                ),
                                 decoration: BoxDecoration(
                                   color: ECardoTokens.warningBg(context),
-                                  borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                                  borderRadius: BorderRadius.circular(
+                                    ECardoTokens.radiusSm.r,
+                                  ),
                                 ),
                                 child: Text(
                                   l10nPick(context, fa: 'سررسید', en: 'Due'),
@@ -187,7 +204,11 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    l10nPick(context, fa: 'وضعیت وثیقه شما', en: 'Your collateral'),
+                    l10nPick(
+                      context,
+                      fa: 'وضعیت وثیقه شما',
+                      en: 'Your collateral',
+                    ),
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w800,
@@ -196,12 +217,19 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                   ),
                   if (isWarning)
                     GestureDetector(
-                      onTap: () => Get.to(() => LoanCollateralWarningScreen(loanCase: c)),
+                      onTap: () => Get.to(
+                        () => LoanCollateralWarningScreen(loanCase: c),
+                      ),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.dangerBg(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusSm.r,
+                          ),
                         ),
                         child: Text(
                           l10nPick(context, fa: 'هشدار کسری', en: 'Warning'),
@@ -234,13 +262,18 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                     _buildMetricRow(
                       context,
                       label: l10nPick(context, fa: 'تتر قفل‌شده', en: 'Locked'),
-                      value: '${c.lockedCollateralUsdt.toStringAsFixed(0)} USDT',
+                      value:
+                          '${c.lockedCollateralUsdt.toStringAsFixed(0)} USDT',
                       valueColor: ECardoTokens.ink(context),
                     ),
                     Divider(color: ECardoTokens.border(context), height: 16.h),
                     _buildMetricRow(
                       context,
-                      label: l10nPick(context, fa: 'نسبت پوشش فعلی', en: 'Coverage now'),
+                      label: l10nPick(
+                        context,
+                        fa: 'نسبت پوشش فعلی',
+                        en: 'Coverage now',
+                      ),
                       value: '${c.coverageNowPct.toStringAsFixed(0)}%',
                       valueColor: isWarning
                           ? ECardoTokens.danger(context)
@@ -250,7 +283,11 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                     Divider(color: ECardoTokens.border(context), height: 16.h),
                     _buildMetricRow(
                       context,
-                      label: l10nPick(context, fa: 'آستانه فروش اجباری', en: 'Sold if it drops to'),
+                      label: l10nPick(
+                        context,
+                        fa: 'آستانه فروش اجباری',
+                        en: 'Sold if it drops to',
+                      ),
                       value: '120%',
                       valueColor: ECardoTokens.inkMuted(context),
                     ),
@@ -262,7 +299,11 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
 
               // ------------------ Payment Schedule ------------------
               Text(
-                l10nPick(context, fa: 'جدول اقساط و سررسیدها', en: 'Payment schedule'),
+                l10nPick(
+                  context,
+                  fa: 'جدول اقساط و سررسیدها',
+                  en: 'Payment schedule',
+                ),
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w800,
@@ -300,22 +341,22 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                                   color: isPaid
                                       ? ECardoTokens.successBg(context)
                                       : isDue
-                                          ? ECardoTokens.warningBg(context)
-                                          : ECardoTokens.surfaceSunken(context),
+                                      ? ECardoTokens.warningBg(context)
+                                      : ECardoTokens.surfaceSunken(context),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   isPaid
                                       ? Icons.check_rounded
                                       : isDue
-                                          ? Icons.access_time_rounded
-                                          : Icons.schedule_rounded,
+                                      ? Icons.access_time_rounded
+                                      : Icons.schedule_rounded,
                                   size: 16.sp,
                                   color: isPaid
                                       ? ECardoTokens.success(context)
                                       : isDue
-                                          ? ECardoTokens.warning(context)
-                                          : ECardoTokens.inkMuted(context),
+                                      ? ECardoTokens.warning(context)
+                                      : ECardoTokens.inkMuted(context),
                                 ),
                               ),
                               SizedBox(width: ECardoTokens.space3.w),
@@ -333,7 +374,11 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                                     ),
                                     if (isPaid)
                                       Text(
-                                        l10nPick(context, fa: 'پرداخت‌شده', en: 'paid'),
+                                        l10nPick(
+                                          context,
+                                          fa: 'پرداخت‌شده',
+                                          en: 'paid',
+                                        ),
                                         style: TextStyle(
                                           fontSize: 11.sp,
                                           fontWeight: FontWeight.w600,
@@ -342,7 +387,11 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                                       )
                                     else if (isDue)
                                       Text(
-                                        l10nPick(context, fa: 'سررسید جاری', en: 'due'),
+                                        l10nPick(
+                                          context,
+                                          fa: 'سررسید جاری',
+                                          en: 'due',
+                                        ),
                                         style: TextStyle(
                                           fontSize: 11.sp,
                                           fontWeight: FontWeight.w700,
@@ -366,7 +415,10 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                           ),
                         ),
                         if (!isLast)
-                          Divider(color: ECardoTokens.border(context), height: 1),
+                          Divider(
+                            color: ECardoTokens.border(context),
+                            height: 1,
+                          ),
                       ],
                     );
                   }).toList(),
@@ -396,27 +448,54 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ECardoTokens.ink(context),
-                      side: BorderSide(color: ECardoTokens.borderStrong(context)),
+                      side: BorderSide(
+                        color: ECardoTokens.borderStrong(context),
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusLg.r,
+                        ),
                       ),
                     ),
                     onPressed: () {
                       HapticFeedback.lightImpact();
-                      final c = controller.selectedCase.value ?? widget.initialCase ?? LoanController.sampleActiveLoan;
-                      final sTitle = l10nPick(context, fa: 'تسویه موفق', en: 'Settled');
-                      final sMsg = l10nPick(context, fa: 'وام تسویه شد و ۱۵,۰۰۰ تتر به کیف پول شما بازگشت.', en: 'Loan settled and collateral released.');
+                      final c =
+                          controller.selectedCase.value ??
+                          widget.initialCase ??
+                          LoanController.sampleActiveLoan;
+                      final sTitle = l10nPick(
+                        context,
+                        fa: 'تسویه موفق',
+                        en: 'Settled',
+                      );
+                      final sMsg = l10nPick(
+                        context,
+                        fa: 'وام تسویه شد و ۱۵,۰۰۰ تتر به کیف پول شما بازگشت.',
+                        en: 'Loan settled and collateral released.',
+                      );
                       final sBg = ECardoTokens.successBg(context);
                       final sColor = ECardoTokens.success(context);
                       Get.defaultDialog(
-                        title: l10nPick(context, fa: 'تسویه زودهنگام کل وام', en: 'Pay it off early'),
+                        title: l10nPick(
+                          context,
+                          fa: 'تسویه زودهنگام کل وام',
+                          en: 'Pay it off early',
+                        ),
                         middleText: l10nPick(
                           context,
                           fa: 'مبلغ کل ${c.outstandingAmount.toStringAsFixed(2)} دلار بدون کارمزد یا جریمه از کیف پول شما کسر و وثیقه فوراً آزاد خواهد شد.',
                           en: 'Pay full ${c.outstandingAmount.toStringAsFixed(2)} USD now? Remaining interest is waived and collateral released immediately.',
                         ),
-                        textConfirm: l10nPick(context, fa: 'تسویه کامل', en: 'Pay it off'),
-                        textCancel: l10nPick(context, fa: 'انصراف', en: 'Cancel'),
+                        textConfirm: l10nPick(
+                          context,
+                          fa: 'تسویه کامل',
+                          en: 'Pay it off',
+                        ),
+                        textCancel: l10nPick(
+                          context,
+                          fa: 'انصراف',
+                          en: 'Cancel',
+                        ),
                         buttonColor: ECardoTokens.brand900(context),
                         confirmTextColor: Colors.white,
                         onConfirm: () async {
@@ -454,27 +533,52 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
                       foregroundColor: ECardoTokens.inkOnBrand,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusLg.r,
+                        ),
                       ),
                     ),
                     onPressed: () {
                       HapticFeedback.mediumImpact();
-                      final c = controller.selectedCase.value ?? widget.initialCase ?? LoanController.sampleActiveLoan;
+                      final c =
+                          controller.selectedCase.value ??
+                          widget.initialCase ??
+                          LoanController.sampleActiveLoan;
                       final inst = c.nextInstallment;
                       final amount = inst?.amount ?? 1140.0;
-                      final pTitle = l10nPick(context, fa: 'پرداخت موفق', en: 'Payment success');
-                      final pMsg = l10nPick(context, fa: 'قسط با موفقیت پرداخت شد.', en: 'Installment paid successfully.');
+                      final pTitle = l10nPick(
+                        context,
+                        fa: 'پرداخت موفق',
+                        en: 'Payment success',
+                      );
+                      final pMsg = l10nPick(
+                        context,
+                        fa: 'قسط با موفقیت پرداخت شد.',
+                        en: 'Installment paid successfully.',
+                      );
                       final pBg = ECardoTokens.successBg(context);
                       final pColor = ECardoTokens.success(context);
                       Get.defaultDialog(
-                        title: l10nPick(context, fa: 'پرداخت قسط', en: 'Pay installment'),
+                        title: l10nPick(
+                          context,
+                          fa: 'پرداخت قسط',
+                          en: 'Pay installment',
+                        ),
                         middleText: l10nPick(
                           context,
                           fa: 'مبلغ ${amount.toStringAsFixed(2)} دلار از موجودی کیف پول پرداخت شود؟',
                           en: 'Pay ${amount.toStringAsFixed(2)} USD from your wallet balance?',
                         ),
-                        textConfirm: l10nPick(context, fa: 'پرداخت قسط', en: 'Pay now'),
-                        textCancel: l10nPick(context, fa: 'انصراف', en: 'Cancel'),
+                        textConfirm: l10nPick(
+                          context,
+                          fa: 'پرداخت قسط',
+                          en: 'Pay now',
+                        ),
+                        textCancel: l10nPick(
+                          context,
+                          fa: 'انصراف',
+                          en: 'Cancel',
+                        ),
                         buttonColor: ECardoTokens.brand900(context),
                         confirmTextColor: Colors.white,
                         onConfirm: () async {
@@ -514,7 +618,20 @@ class _LoanDetailScreenState extends State<LoanDetailScreen> {
 
   String _formatInstallmentDate(LoanInstallmentModel inst) {
     if (inst.dueDate == null) return 'Installment ${inst.seq}';
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     final m = months[inst.dueDate!.month - 1];
     return '${inst.dueDate!.day} $m';
   }

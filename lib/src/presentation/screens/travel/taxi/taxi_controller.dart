@@ -19,16 +19,18 @@ class TaxiController extends GetxController {
   final Rx<TaxiRideType> selectedRideType = TaxiRideType.airportTransfer.obs;
   final Rx<AirportTransferDirection> transferDirection =
       AirportTransferDirection.fromAirport.obs;
-  final Rx<DateTime> pickupDate =
-      DateTime.now().add(const Duration(days: 1)).obs;
+  final Rx<DateTime> pickupDate = DateTime.now()
+      .add(const Duration(days: 1))
+      .obs;
   final RxString pickupTime = '10:00'.obs;
   final RxInt passengerCount = 1.obs;
   final RxInt luggageCount = 1.obs;
   final RxInt childSeatCount = 0.obs;
   final RxBool meetAndGreet = true.obs;
 
-  final originController =
-      TextEditingController(text: 'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱');
+  final originController = TextEditingController(
+    text: 'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱',
+  );
   final destinationController = TextEditingController(text: 'تهران، میدان ونک');
   final terminalController = TextEditingController();
   final flightNumberController = TextEditingController();
@@ -46,8 +48,9 @@ class TaxiController extends GetxController {
   static const Duration geoDebounceDuration = Duration(milliseconds: 350);
 
   // ---------------------------------------------------------------- catalog
-  final RxList<TaxiVehicleClass> availableVehicles =
-      <TaxiVehicleClass>[...TaxiApiService.fallbackVehicles].obs;
+  final RxList<TaxiVehicleClass> availableVehicles = <TaxiVehicleClass>[
+    ...TaxiApiService.fallbackVehicles,
+  ].obs;
   final Rxn<TaxiVehicleClass> selectedVehicle = Rxn<TaxiVehicleClass>(
     TaxiApiService.fallbackVehicles.length > 1
         ? TaxiApiService.fallbackVehicles[1]
@@ -84,9 +87,11 @@ class TaxiController extends GetxController {
   static List<TaxiVehicleClass> get defaultVehicles =>
       TaxiApiService.fallbackVehicles;
 
-  bool get hasQuote => quote.value != null && quote.value!.vehicleQuotes.isNotEmpty;
+  bool get hasQuote =>
+      quote.value != null && quote.value!.vehicleQuotes.isNotEmpty;
 
-  bool get isAirportRide => selectedRideType.value == TaxiRideType.airportTransfer;
+  bool get isAirportRide =>
+      selectedRideType.value == TaxiRideType.airportTransfer;
 
   int get totalFare {
     final vehicle = selectedVehicle.value;
@@ -148,7 +153,8 @@ class TaxiController extends GetxController {
     availableVehicles.assignAll(vehiclesResult.data);
     savedPlaces.assignAll(placesResult.data);
 
-    final stillSelected = selectedVehicle.value == null ||
+    final stillSelected =
+        selectedVehicle.value == null ||
         !availableVehicles.any((v) => v.id == selectedVehicle.value!.id);
     if (stillSelected) {
       selectedVehicle.value = availableVehicles.isNotEmpty
@@ -188,7 +194,10 @@ class TaxiController extends GetxController {
       return;
     }
     isSearchingPlaces.value = true;
-    _geoDebounce = Timer(geoDebounceDuration, () => _runGeoSearch(query, field));
+    _geoDebounce = Timer(
+      geoDebounceDuration,
+      () => _runGeoSearch(query, field),
+    );
   }
 
   Future<void> _runGeoSearch(String query, String field) async {
@@ -310,9 +319,10 @@ class TaxiController extends GetxController {
     if (backendQuote != null && !isQuoteExpired.value) {
       return backendQuote.totalFare;
     }
-    var fare = (vehicle.basePrice *
-            (selectedRideType.value == TaxiRideType.intercity ? 1.6 : 1.0))
-        .round();
+    var fare =
+        (vehicle.basePrice *
+                (selectedRideType.value == TaxiRideType.intercity ? 1.6 : 1.0))
+            .round();
     if (meetAndGreet.value) fare += TaxiApiService.meetAndGreetFeeIrr;
     fare += childSeatCount.value * TaxiApiService.childSeatFeeIrr;
     return fare;
@@ -349,14 +359,16 @@ class TaxiController extends GetxController {
     }
     if (selectedVehicle.value != null &&
         TaxiApiService.capacityViolationFor(
-          vehicle: selectedVehicle.value!,
-          passengerCount: passengerCount.value,
-          luggageCount: luggageCount.value,
-        ) !=
+              vehicle: selectedVehicle.value!,
+              passengerCount: passengerCount.value,
+              luggageCount: luggageCount.value,
+            ) !=
             null) {
       errors.add('vehicle_capacity_exceeded');
     }
-    if (pickupDate.value.isBefore(DateTime.now().subtract(const Duration(hours: 2)))) {
+    if (pickupDate.value.isBefore(
+      DateTime.now().subtract(const Duration(hours: 2)),
+    )) {
       errors.add('pickup_in_past');
     }
 
@@ -376,7 +388,8 @@ class TaxiController extends GetxController {
       return null;
     }
 
-    final vehicle = selectedVehicle.value ??
+    final vehicle =
+        selectedVehicle.value ??
         (availableVehicles.isNotEmpty ? availableVehicles.first : null);
     if (vehicle == null) {
       uiState.value = TaxiUiState.empty;

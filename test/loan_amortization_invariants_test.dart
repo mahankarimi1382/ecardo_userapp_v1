@@ -56,11 +56,11 @@ class _LoanCase {
       'tenure=$tenureMonths mo, grace=$graceMonths mo)';
 
   List<InstallmentItem> schedule() => InstallmentItem.generateSchedule(
-        principal: principal,
-        annualInterestRatePct: annualRatePct,
-        tenureMonths: tenureMonths,
-        gracePeriodMonths: graceMonths,
-      );
+    principal: principal,
+    annualInterestRatePct: annualRatePct,
+    tenureMonths: tenureMonths,
+    gracePeriodMonths: graceMonths,
+  );
 
   double sumPrincipal(List<InstallmentItem> s) =>
       s.fold<double>(0.0, (a, i) => a + i.principalAmount);
@@ -83,11 +83,13 @@ final List<_LoanCase> _cases = const [
 
 /// Cases that actually have effective grace AND a positive rate — the
 /// interest-only property is only meaningful when interest is non-zero.
-final List<_LoanCase> _graceCases =
-    _cases.where((c) => c.effectiveGraceMonths > 0 && c.annualRatePct > 0).toList();
+final List<_LoanCase> _graceCases = _cases
+    .where((c) => c.effectiveGraceMonths > 0 && c.annualRatePct > 0)
+    .toList();
 
-final List<_LoanCase> _zeroRateCases =
-    _cases.where((c) => c.annualRatePct == 0).toList();
+final List<_LoanCase> _zeroRateCases = _cases
+    .where((c) => c.annualRatePct == 0)
+    .toList();
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -112,7 +114,8 @@ void main() {
         expect(
           s.length,
           c.tenureMonths,
-          reason: 'Schedule must contain exactly one installment per month '
+          reason:
+              'Schedule must contain exactly one installment per month '
               'of tenure. Got ${s.length} for tenure ${c.tenureMonths}.',
         );
 
@@ -120,7 +123,8 @@ void main() {
         expect(
           (principalSum - c.principal).abs(),
           lessThanOrEqualTo(0.01),
-          reason: 'Sum of all principal portions ($principalSum) must equal the '
+          reason:
+              'Sum of all principal portions ($principalSum) must equal the '
               'loan principal (${c.principal}). A shortfall means the borrower '
               'ends the term still owing money; an excess means the schedule '
               'over-amortizes and inflates the quoted total.',
@@ -129,7 +133,8 @@ void main() {
         expect(
           s.last.remainingBalance,
           closeTo(0.0, 0.01),
-          reason: 'The LAST installment must retire the debt: remaining '
+          reason:
+              'The LAST installment must retire the debt: remaining '
               'balance is ${s.last.remainingBalance}, expected 0.',
         );
       });
@@ -147,7 +152,8 @@ void main() {
         expect(
           graceItems.length,
           g,
-          reason: 'Expected $g interest-only installments before amortization '
+          reason:
+              'Expected $g interest-only installments before amortization '
               'begins, got ${graceItems.length}.',
         );
 
@@ -155,20 +161,23 @@ void main() {
           expect(
             item.principalAmount,
             closeTo(0.0, 0.0),
-            reason: 'Grace installment #${item.installmentNumber} must defer '
+            reason:
+                'Grace installment #${item.installmentNumber} must defer '
                 'ALL principal (principal part was ${item.principalAmount}).',
           );
           expect(
             item.interestAmount,
             greaterThan(0),
-            reason: 'Grace installment #${item.installmentNumber} must still '
+            reason:
+                'Grace installment #${item.installmentNumber} must still '
                 'charge interest (interest was ${item.interestAmount}); a zero '
                 'means the grace period is silently free.',
           );
           expect(
             item.remainingBalance,
             closeTo(c.principal, 0.01),
-            reason: 'Balance must be unchanged during grace. Installment '
+            reason:
+                'Balance must be unchanged during grace. Installment '
                 '#${item.installmentNumber} showed balance '
                 '${item.remainingBalance}, expected the untouched '
                 '${c.principal}.',
@@ -176,7 +185,8 @@ void main() {
           expect(
             item.isGracePeriod,
             isTrue,
-            reason: 'Installment #${item.installmentNumber} is inside the grace '
+            reason:
+                'Installment #${item.installmentNumber} is inside the grace '
                 'window but is not flagged as such — the UI would not badge it.',
           );
         }
@@ -192,7 +202,8 @@ void main() {
           expect(
             item.remainingBalance,
             closeTo(runningBalance - item.principalAmount, 0.01),
-            reason: 'Balance roll-forward broken at installment '
+            reason:
+                'Balance roll-forward broken at installment '
                 '#${item.installmentNumber}: previous balance $runningBalance '
                 'minus principal ${item.principalAmount} should be '
                 '${runningBalance - item.principalAmount}, but the schedule '
@@ -221,7 +232,8 @@ void main() {
         expect(
           (controllerTotal - scheduleTotal).abs(),
           lessThanOrEqualTo(1.0),
-          reason: 'calculateTotalRepayment() returned $controllerTotal but the '
+          reason:
+              'calculateTotalRepayment() returned $controllerTotal but the '
               'generated schedule implies $scheduleTotal '
               '(principal ${c.principal} + interest ${c.sumInterest(s)}). The '
               'two implementations of the amortization disagree, so the borrower '
@@ -241,20 +253,23 @@ void main() {
           expect(
             item.principalAmount,
             greaterThanOrEqualTo(0),
-            reason: 'Negative principal (${item.principalAmount}) on installment '
+            reason:
+                'Negative principal (${item.principalAmount}) on installment '
                 '#${item.installmentNumber} — the loan would grow instead of '
                 'shrinking.',
           );
           expect(
             item.interestAmount,
             greaterThanOrEqualTo(0),
-            reason: 'Negative interest (${item.interestAmount}) on installment '
+            reason:
+                'Negative interest (${item.interestAmount}) on installment '
                 '#${item.installmentNumber}.',
           );
           expect(
             item.remainingBalance,
             greaterThanOrEqualTo(0),
-            reason: 'Negative remaining balance (${item.remainingBalance}) on '
+            reason:
+                'Negative remaining balance (${item.remainingBalance}) on '
                 'installment #${item.installmentNumber}.',
           );
         }
@@ -278,7 +293,8 @@ void main() {
         expect(
           emi,
           closeTo(c.principal / c.amortizingMonths, 0.01),
-          reason: 'At 0% the installment must be principal spread evenly over '
+          reason:
+              'At 0% the installment must be principal spread evenly over '
               'the ${c.amortizingMonths} amortizing months '
               '(= ${c.principal / c.amortizingMonths}), got $emi.',
         );
@@ -286,7 +302,8 @@ void main() {
         expect(
           c.sumInterest(s),
           closeTo(0.0, 0.0),
-          reason: 'At 0% annual rate the total interest must be exactly 0, got '
+          reason:
+              'At 0% annual rate the total interest must be exactly 0, got '
               '${c.sumInterest(s)}.',
         );
 
@@ -299,7 +316,8 @@ void main() {
         expect(
           total,
           closeTo(c.principal, 0.01),
-          reason: 'At 0% the borrower repays exactly the principal '
+          reason:
+              'At 0% the borrower repays exactly the principal '
               '(${c.principal}), got $total.',
         );
       });
@@ -332,7 +350,8 @@ void main() {
         expect(
           c.amortizingMonths,
           1,
-          reason: 'The amortizing window must never collapse to zero or go '
+          reason:
+              'The amortizing window must never collapse to zero or go '
               'negative for ${c.label} (got ${c.amortizingMonths}).',
         );
         expect(
@@ -348,18 +367,21 @@ void main() {
         expect(
           total.isFinite,
           isTrue,
-          reason: 'Total repayment must be a finite number for ${c.label}, '
+          reason:
+              'Total repayment must be a finite number for ${c.label}, '
               'got $total.',
         );
         expect(
           s.where((i) => i.isGracePeriod).length,
           c.tenureMonths - 1,
-          reason: 'Exactly tenure-1 grace installments expected for ${c.label}.',
+          reason:
+              'Exactly tenure-1 grace installments expected for ${c.label}.',
         );
         expect(
           s.last.remainingBalance,
           closeTo(0.0, 0.01),
-          reason: 'The single amortizing installment must retire the debt for '
+          reason:
+              'The single amortizing installment must retire the debt for '
               '${c.label}.',
         );
       }
@@ -373,7 +395,8 @@ void main() {
           tenureMonths: 12,
         ),
         0.0,
-        reason: 'A zero loan must quote a zero installment, not NaN or '
+        reason:
+            'A zero loan must quote a zero installment, not NaN or '
             'Infinity.',
       );
       expect(
@@ -393,7 +416,8 @@ void main() {
           tenureMonths: 12,
         ),
         isEmpty,
-        reason: 'A zero loan must generate an empty schedule, not installments '
+        reason:
+            'A zero loan must generate an empty schedule, not installments '
             'of NaN.',
       );
     });

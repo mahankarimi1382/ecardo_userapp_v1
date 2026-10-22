@@ -58,9 +58,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
   }
 
   List<TextInputFormatter> get _fmt => [
-        FilteringTextInputFormatter.digitsOnly,
-        LengthLimitingTextInputFormatter(_pinLength),
-      ];
+    FilteringTextInputFormatter.digitsOnly,
+    LengthLimitingTextInputFormatter(_pinLength),
+  ];
 
   void _setPinLength(int length) {
     if (_pinLength == length) return;
@@ -79,9 +79,13 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextTertiary;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -142,8 +146,18 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                   return SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: c.hasPasscode.value
-                        ? _managed(loc, isDark, primaryTextColor, secondaryTextColor)
-                        : _set(loc, isDark, primaryTextColor, secondaryTextColor),
+                        ? _managed(
+                            loc,
+                            isDark,
+                            primaryTextColor,
+                            secondaryTextColor,
+                          )
+                        : _set(
+                            loc,
+                            isDark,
+                            primaryTextColor,
+                            secondaryTextColor,
+                          ),
                   );
                 }),
               ),
@@ -164,7 +178,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
     return Container(
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.6),
+        color: isDark
+            ? AppColors.darkCard
+            : AppColors.greyLight.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
       ),
       child: Row(
@@ -180,7 +196,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
 
   Widget _buildLengthTab(int length, bool isDark) {
     final isSelected = _pinLength == length;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
     return InkWell(
       onTap: () => _setPinLength(length),
@@ -215,12 +233,28 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
             SizedBox(width: 6.w),
             Text(
               length == 4
-                  ? l10nPick(context, en: '4 Digits', fa: '۴ رقم', ar: '4 أرقام', zh: '4位')
-                  : l10nPick(context, en: '6 Digits', fa: '۶ رقم', ar: '6 أرقام', zh: '6位'),
+                  ? l10nPick(
+                      context,
+                      en: '4 Digits',
+                      fa: '۴ رقم',
+                      ar: '4 أرقام',
+                      zh: '4位',
+                    )
+                  : l10nPick(
+                      context,
+                      en: '6 Digits',
+                      fa: '۶ رقم',
+                      ar: '6 أرقام',
+                      zh: '6位',
+                    ),
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected ? primaryColor : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+                color: isSelected
+                    ? primaryColor
+                    : (isDark
+                          ? AppColors.softGray
+                          : AppColors.lightTextSecondary),
               ),
             ),
           ],
@@ -235,10 +269,12 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
     Color primaryTextColor,
     Color secondaryTextColor,
   ) {
-    final isConfirmMismatch = c.passcodeController.text.length == _pinLength &&
+    final isConfirmMismatch =
+        c.passcodeController.text.length == _pinLength &&
         c.confirmController.text.length == _pinLength &&
         c.passcodeController.text != c.confirmController.text;
-    final isConfirmMatch = c.passcodeController.text.length == _pinLength &&
+    final isConfirmMatch =
+        c.passcodeController.text.length == _pinLength &&
         c.confirmController.text.length == _pinLength &&
         c.passcodeController.text == c.confirmController.text;
 
@@ -267,7 +303,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                     keyboardType: TextInputType.number,
                     obscureText: true,
                     inputFormatters: _fmt,
-                    backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                    backgroundColor: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground,
                     textStyle: AppTextStyles.titleMedium.copyWith(
                       color: primaryTextColor,
                       letterSpacing: 4,
@@ -306,7 +344,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                     keyboardType: TextInputType.number,
                     obscureText: true,
                     inputFormatters: _fmt,
-                    backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                    backgroundColor: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground,
                     textStyle: AppTextStyles.titleMedium.copyWith(
                       color: primaryTextColor,
                       letterSpacing: 4,
@@ -358,10 +398,12 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
     Color primaryTextColor,
     Color secondaryTextColor,
   ) {
-    final isChangeMismatch = c.newController.text.length == _pinLength &&
+    final isChangeMismatch =
+        c.newController.text.length == _pinLength &&
         c.changeConfirmController.text.length == _pinLength &&
         c.newController.text != c.changeConfirmController.text;
-    final isChangeMatch = c.newController.text.length == _pinLength &&
+    final isChangeMatch =
+        c.newController.text.length == _pinLength &&
         c.changeConfirmController.text.length == _pinLength &&
         c.newController.text == c.changeConfirmController.text;
 
@@ -406,7 +448,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                     keyboardType: TextInputType.number,
                     obscureText: true,
                     inputFormatters: _fmt,
-                    backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                    backgroundColor: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground,
                     textStyle: AppTextStyles.titleMedium.copyWith(
                       color: primaryTextColor,
                       letterSpacing: 4,
@@ -444,7 +488,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                     keyboardType: TextInputType.number,
                     obscureText: true,
                     inputFormatters: _fmt,
-                    backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                    backgroundColor: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground,
                     textStyle: AppTextStyles.titleMedium.copyWith(
                       color: primaryTextColor,
                       letterSpacing: 4,
@@ -482,7 +528,9 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                     keyboardType: TextInputType.number,
                     obscureText: true,
                     inputFormatters: _fmt,
-                    backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                    backgroundColor: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground,
                     textStyle: AppTextStyles.titleMedium.copyWith(
                       color: primaryTextColor,
                       letterSpacing: 4,
@@ -570,8 +618,12 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                     isFocused: c.isPasswordFocused.value,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
-                    backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-                    textStyle: AppTextStyles.bodyMedium.copyWith(color: primaryTextColor),
+                    backgroundColor: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightBackground,
+                    textStyle: AppTextStyles.bodyMedium.copyWith(
+                      color: primaryTextColor,
+                    ),
                   ),
                 ),
               ),

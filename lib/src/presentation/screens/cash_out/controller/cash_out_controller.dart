@@ -113,7 +113,8 @@ class CashOutController extends GetxController {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {}
   }
@@ -133,7 +134,8 @@ class CashOutController extends GetxController {
       debugPrint('❌ fetchCashOutConfig() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isCashoutConfigLoading.value = false;
@@ -186,7 +188,8 @@ class CashOutController extends GetxController {
       debugPrint('❌ getChargeConverter() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {}
   }
@@ -194,7 +197,8 @@ class CashOutController extends GetxController {
   bool validateAmountStep() {
     if (chargeLoadFailed.value) {
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
       return false;
     }
@@ -208,7 +212,8 @@ class CashOutController extends GetxController {
 
     if (agentAidController.text.isEmpty) {
       ToastHelper().showErrorToast(
-        localization?.cashOutValidationEnterAgentAid ?? 'Please enter agent AID',
+        localization?.cashOutValidationEnterAgentAid ??
+            'Please enter agent AID',
       );
       return false;
     }
@@ -233,29 +238,29 @@ class CashOutController extends GetxController {
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: walletCode,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting(
-            "site_currency",
-          ) ??
-          'USD',
-      siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-            "site_currency_decimals",
-          ) ??
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
           '2',
       isCrypto: isCrypto,
     );
 
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
-    final double min = double.tryParse(currentWallet.cashoutLimit?.min ?? '') ?? 0.0;
+    final double min =
+        double.tryParse(currentWallet.cashoutLimit?.min ?? '') ?? 0.0;
     final double max =
-        double.tryParse(currentWallet.cashoutLimit?.max ?? '') ?? double.infinity;
+        double.tryParse(currentWallet.cashoutLimit?.max ?? '') ??
+        double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
         localization?.cashOutValidationAmountMinimum(
-          min.toStringAsFixed(calculateDecimals),
-          walletCode,
-        ) ?? 'Minimum cash out amount is ${min.toStringAsFixed(calculateDecimals)} $walletCode',
+              min.toStringAsFixed(calculateDecimals),
+              walletCode,
+            ) ??
+            'Minimum cash out amount is ${min.toStringAsFixed(calculateDecimals)} $walletCode',
       );
       return false;
     }
@@ -263,9 +268,10 @@ class CashOutController extends GetxController {
     if (enteredAmount > max) {
       ToastHelper().showErrorToast(
         localization?.cashOutValidationAmountMaximum(
-          max.toStringAsFixed(calculateDecimals),
-          walletCode,
-        ) ?? 'Maximum cash out amount is ${max.toStringAsFixed(calculateDecimals)} $walletCode',
+              max.toStringAsFixed(calculateDecimals),
+              walletCode,
+            ) ??
+            'Maximum cash out amount is ${max.toStringAsFixed(calculateDecimals)} $walletCode',
       );
       return false;
     }
@@ -276,9 +282,10 @@ class CashOutController extends GetxController {
     if (totalRequired > availableBalance) {
       ToastHelper().showErrorToast(
         localization?.exchangeValidationInsufficientBalance(
-          availableBalance.toStringAsFixed(calculateDecimals),
-          walletCode,
-        ) ?? 'Insufficient balance: ${availableBalance.toStringAsFixed(calculateDecimals)} $walletCode',
+              availableBalance.toStringAsFixed(calculateDecimals),
+              walletCode,
+            ) ??
+            'Insufficient balance: ${availableBalance.toStringAsFixed(calculateDecimals)} $walletCode',
       );
       return false;
     }
@@ -307,7 +314,8 @@ class CashOutController extends GetxController {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isLoading.value = false;
@@ -345,7 +353,10 @@ class CashOutController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
+        if (PasscodeHelper.isPasscodeRequired(
+          response.message,
+          wasPasscodeProvided: wasPasscodeProvided,
+        )) {
           isCashOutLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -375,7 +386,8 @@ class CashOutController extends GetxController {
       debugPrint('❌ cashOut() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       final errStr = e.toString().toLowerCase();
-      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+      final isTimeout =
+          NetworkErrorHelper.isTimeout(e) ||
           errStr.contains('timed out') ||
           errStr.contains('timeout') ||
           errStr.contains('connectiontimeout') ||
@@ -393,7 +405,10 @@ class CashOutController extends GetxController {
             zh: '请求响应超时。请在重新提交前核实交易状态，以避免重复提现。',
           ),
         );
-      } else if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
+      } else if (PasscodeHelper.isPasscodeRequired(
+        e,
+        wasPasscodeProvided: wasPasscodeProvided,
+      )) {
         isCashOutLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -413,7 +428,8 @@ class CashOutController extends GetxController {
         );
       } else {
         ToastHelper().showErrorToast(
-          localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+          localization?.allControllerLoadError ??
+              'An error occurred while loading data.',
         );
       }
     } finally {
@@ -436,7 +452,8 @@ class CashOutController extends GetxController {
       debugPrint('❌ fetchBeneficiary() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isBeneficiaryLoading.value = false;

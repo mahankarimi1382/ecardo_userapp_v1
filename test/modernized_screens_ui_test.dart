@@ -50,10 +50,7 @@ class _MockKycController extends KycLevelController {
   void onInit() {}
 }
 
-Widget _wrapWithApp(
-  Widget child, {
-  ThemeMode mode = ThemeMode.light,
-}) {
+Widget _wrapWithApp(Widget child, {ThemeMode mode = ThemeMode.light}) {
   return ScreenUtilInit(
     designSize: const Size(390, 844),
     minTextAdapt: true,
@@ -73,7 +70,11 @@ Widget _wrapWithApp(
   );
 }
 
-void setPhoneSurface(WidgetTester tester, {double width = 390, double height = 844}) {
+void setPhoneSurface(
+  WidgetTester tester, {
+  double width = 390,
+  double height = 844,
+}) {
   tester.view.physicalSize = Size(width * 2, height * 2);
   tester.view.devicePixelRatio = 2;
   addTearDown(tester.view.reset);
@@ -99,8 +100,9 @@ void main() {
   });
 
   group('WalletsScreen Modernization', () {
-    testWidgets('Renders Shimmer loading state when isLoading is true',
-        (tester) async {
+    testWidgets('Renders Shimmer loading state when isLoading is true', (
+      tester,
+    ) async {
       final controller = Get.put<WalletsController>(_MockWalletsController());
       controller.isLoading.value = true;
 
@@ -110,36 +112,43 @@ void main() {
       expect(find.byType(Shimmer), findsOneWidget);
     });
 
-    testWidgets('Renders robust Error state with retry button when isError is true',
-        (tester) async {
-      final controller = Get.put<WalletsController>(_MockWalletsController());
-      controller.isLoading.value = false;
-      controller.isError.value = true;
+    testWidgets(
+      'Renders robust Error state with retry button when isError is true',
+      (tester) async {
+        final controller = Get.put<WalletsController>(_MockWalletsController());
+        controller.isLoading.value = false;
+        controller.isError.value = true;
 
-      await tester.pumpWidget(_wrapWithApp(const WalletsScreen()));
-      await tester.pump();
+        await tester.pumpWidget(_wrapWithApp(const WalletsScreen()));
+        await tester.pump();
 
-      expect(find.byType(EcardoErrorView), findsOneWidget);
-      expect(find.byIcon(Icons.cloud_off_rounded), findsOneWidget);
-    });
+        expect(find.byType(EcardoErrorView), findsOneWidget);
+        expect(find.byIcon(Icons.cloud_off_rounded), findsOneWidget);
+      },
+    );
 
     testWidgets(
-        'Renders clean Empty state with Create Wallet and Add Money when list is empty',
-        (tester) async {
-      final controller = Get.put<WalletsController>(_MockWalletsController());
-      controller.isLoading.value = false;
-      controller.isError.value = false;
-      controller.walletsList.clear();
+      'Renders clean Empty state with Create Wallet and Add Money when list is empty',
+      (tester) async {
+        final controller = Get.put<WalletsController>(_MockWalletsController());
+        controller.isLoading.value = false;
+        controller.isError.value = false;
+        controller.walletsList.clear();
 
-      await tester.pumpWidget(_wrapWithApp(const WalletsScreen()));
-      await tester.pump();
+        await tester.pumpWidget(_wrapWithApp(const WalletsScreen()));
+        await tester.pump();
 
-      expect(find.byType(EcardoEmptyState), findsOneWidget);
-      expect(find.byIcon(Icons.account_balance_wallet_outlined), findsOneWidget);
-    });
+        expect(find.byType(EcardoEmptyState), findsOneWidget);
+        expect(
+          find.byIcon(Icons.account_balance_wallet_outlined),
+          findsOneWidget,
+        );
+      },
+    );
 
-    testWidgets('Renders dark theme flawlessly for WalletsScreen',
-        (tester) async {
+    testWidgets('Renders dark theme flawlessly for WalletsScreen', (
+      tester,
+    ) async {
       final controller = Get.put<WalletsController>(_MockWalletsController());
       controller.isLoading.value = false;
       controller.isError.value = false;
@@ -151,13 +160,17 @@ void main() {
       await tester.pump();
 
       expect(find.byType(WalletsScreen), findsOneWidget);
-      expect(find.byIcon(Icons.account_balance_wallet_outlined), findsOneWidget);
+      expect(
+        find.byIcon(Icons.account_balance_wallet_outlined),
+        findsOneWidget,
+      );
     });
   });
 
   group('WelcomeScreen Modernization', () {
-    testWidgets('Renders correctly in light mode with accessible buttons',
-        (tester) async {
+    testWidgets('Renders correctly in light mode with accessible buttons', (
+      tester,
+    ) async {
       setPhoneSurface(tester);
       await tester.pumpWidget(_wrapWithApp(const WelcomeScreen()));
       await tester.pumpAndSettle();
@@ -167,23 +180,26 @@ void main() {
       expect(find.text('Create Account'), findsOneWidget);
     });
 
-    testWidgets('Renders correctly in dark mode without text/contrast clipping',
-        (tester) async {
-      setPhoneSurface(tester);
-      await tester.pumpWidget(
-        _wrapWithApp(const WelcomeScreen(), mode: ThemeMode.dark),
-      );
-      await tester.pumpAndSettle();
+    testWidgets(
+      'Renders correctly in dark mode without text/contrast clipping',
+      (tester) async {
+        setPhoneSurface(tester);
+        await tester.pumpWidget(
+          _wrapWithApp(const WelcomeScreen(), mode: ThemeMode.dark),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.byType(WelcomeScreen), findsOneWidget);
-      expect(find.text('Sign In'), findsOneWidget);
-      expect(find.text('Create Account'), findsOneWidget);
-    });
+        expect(find.byType(WelcomeScreen), findsOneWidget);
+        expect(find.text('Sign In'), findsOneWidget);
+        expect(find.text('Create Account'), findsOneWidget);
+      },
+    );
   });
 
   group('HomeScreen & HomeSkeletonLoader Modernization', () {
-    testWidgets('HomeSkeletonLoader renders in light and dark mode',
-        (tester) async {
+    testWidgets('HomeSkeletonLoader renders in light and dark mode', (
+      tester,
+    ) async {
       setPhoneSurface(tester);
       await tester.pumpWidget(
         _wrapWithApp(const HomeSkeletonLoader(), mode: ThemeMode.light),
@@ -198,46 +214,51 @@ void main() {
       expect(find.byType(Shimmer), findsOneWidget);
     });
 
-    testWidgets('HomeScreen applies dynamic SystemUiOverlayStyle during skeleton load',
-        (tester) async {
-      setPhoneSurface(tester);
-      final home = Get.put<HomeController>(_MockHomeController());
-      home.isLoading.value = true;
+    testWidgets(
+      'HomeScreen applies dynamic SystemUiOverlayStyle during skeleton load',
+      (tester) async {
+        setPhoneSurface(tester);
+        final home = Get.put<HomeController>(_MockHomeController());
+        home.isLoading.value = true;
 
-      await tester.pumpWidget(
-        _wrapWithApp(const HomeScreen(), mode: ThemeMode.dark),
-      );
-      await tester.pump();
+        await tester.pumpWidget(
+          _wrapWithApp(const HomeScreen(), mode: ThemeMode.dark),
+        );
+        await tester.pump();
 
-      expect(
-        find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
-        findsWidgets,
-      );
-      expect(find.byType(HomeSkeletonLoader), findsOneWidget);
-    });
+        expect(
+          find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
+          findsWidgets,
+        );
+        expect(find.byType(HomeSkeletonLoader), findsOneWidget);
+      },
+    );
 
-    testWidgets('HomeScreen applies dynamic SystemUiOverlayStyle on error state in dark mode',
-        (tester) async {
-      setPhoneSurface(tester);
-      final home = Get.put<HomeController>(_MockHomeController());
-      home.isLoading.value = false;
-      home.loadError.value = 'Failed to load home data';
+    testWidgets(
+      'HomeScreen applies dynamic SystemUiOverlayStyle on error state in dark mode',
+      (tester) async {
+        setPhoneSurface(tester);
+        final home = Get.put<HomeController>(_MockHomeController());
+        home.isLoading.value = false;
+        home.loadError.value = 'Failed to load home data';
 
-      await tester.pumpWidget(
-        _wrapWithApp(const HomeScreen(), mode: ThemeMode.dark),
-      );
-      await tester.pump();
+        await tester.pumpWidget(
+          _wrapWithApp(const HomeScreen(), mode: ThemeMode.dark),
+        );
+        await tester.pump();
 
-      expect(
-        find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
-        findsWidgets,
-      );
-      expect(find.text('Failed to load home data'), findsOneWidget);
-      expect(find.byIcon(Icons.cloud_off_rounded), findsOneWidget);
-    });
+        expect(
+          find.byType(AnnotatedRegion<SystemUiOverlayStyle>),
+          findsWidgets,
+        );
+        expect(find.text('Failed to load home data'), findsOneWidget);
+        expect(find.byIcon(Icons.cloud_off_rounded), findsOneWidget);
+      },
+    );
 
-    testWidgets('HomeScreen slivers render seamlessly in dark mode',
-        (tester) async {
+    testWidgets('HomeScreen slivers render seamlessly in dark mode', (
+      tester,
+    ) async {
       setPhoneSurface(tester);
       final home = Get.put<HomeController>(_MockHomeController());
       home.dashboardModel.value = DashboardModel.fromJson({

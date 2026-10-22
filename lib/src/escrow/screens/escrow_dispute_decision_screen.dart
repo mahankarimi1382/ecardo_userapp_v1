@@ -27,7 +27,9 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locked = order.totalEscrowAmount > 0 ? order.totalEscrowAmount : 868.60;
+    final locked = order.totalEscrowAmount > 0
+        ? order.totalEscrowAmount
+        : 868.60;
     final buyerRefund = decision.buyerRefundAmount;
     final sellerPayout = decision.sellerPayoutAmount;
     final fee = decision.feeAmount;
@@ -73,13 +75,22 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.successBg(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm.r,
+                      ),
                     ),
                     child: Text(
-                      l10nPick(context, fa: 'مختومه · ۷ اکتبر', en: 'Closed · 7 Oct'),
+                      l10nPick(
+                        context,
+                        fa: 'مختومه · ۷ اکتبر',
+                        en: 'Closed · 7 Oct',
+                      ),
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w800,
@@ -140,13 +151,21 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
                 children: [
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'کل وجه قفل‌شده', en: 'Was locked'),
+                    label: l10nPick(
+                      context,
+                      fa: 'کل وجه قفل‌شده',
+                      en: 'Was locked',
+                    ),
                     value: '${locked.toStringAsFixed(2)} USD',
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'استرداد به کیف پول شما', en: 'Back to you'),
+                    label: l10nPick(
+                      context,
+                      fa: 'استرداد به کیف پول شما',
+                      en: 'Back to you',
+                    ),
                     value: '+${buyerRefund.toStringAsFixed(2)} USD',
                     valueColor: ECardoTokens.success(context),
                     isBold: true,
@@ -154,23 +173,36 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'پرداخت به فروشنده', en: 'To the seller'),
+                    label: l10nPick(
+                      context,
+                      fa: 'پرداخت به فروشنده',
+                      en: 'To the seller',
+                    ),
                     value: '${sellerPayout.toStringAsFixed(2)} USD',
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'کارمزد داوری و اسکرو (۶۰ / ۴۰)', en: 'Escrow fee · split 60 / 40'),
+                    label: l10nPick(
+                      context,
+                      fa: 'کارمزد داوری و اسکرو (۶۰ / ۴۰)',
+                      en: 'Escrow fee · split 60 / 40',
+                    ),
                     value: '${fee.toStringAsFixed(2)} USD',
                     valueColor: ECardoTokens.inkMuted(context),
                   ),
                   SizedBox(height: 12.h),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceSunken(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm.r,
+                      ),
                     ),
                     child: Text(
                       l10nPick(
@@ -222,10 +254,18 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.verified_outlined, color: ECardoTokens.brand500(context), size: 18.sp),
+                      Icon(
+                        Icons.verified_outlined,
+                        color: ECardoTokens.brand500(context),
+                        size: 18.sp,
+                      ),
                       SizedBox(width: 6.w),
                       Text(
-                        l10nPick(context, fa: 'مدارک بررسی‌شده: ۳ فایل از هر دو طرف', en: 'Evidence reviewed · 3 files from both sides'),
+                        l10nPick(
+                          context,
+                          fa: 'مدارک بررسی‌شده: ۳ فایل از هر دو طرف',
+                          en: 'Evidence reviewed · 3 files from both sides',
+                        ),
                         style: TextStyle(
                           fontSize: 12.5.sp,
                           fontWeight: FontWeight.w700,
@@ -271,7 +311,9 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
                     foregroundColor: ECardoTokens.inkOnBrand,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg.r,
+                      ),
                     ),
                   ),
                   onPressed: () {
@@ -279,8 +321,15 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
                     Get.offAll(() => const EscrowListScreen());
                   },
                   child: Text(
-                    l10nPick(context, fa: 'بازگشت به فهرست معاملات', en: 'Back to my deals'),
-                    style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
+                    l10nPick(
+                      context,
+                      fa: 'بازگشت به فهرست معاملات',
+                      en: 'Back to my deals',
+                    ),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
@@ -290,21 +339,34 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
                   foregroundColor: ECardoTokens.ink(context),
                   side: BorderSide(color: ECardoTokens.borderStrong(context)),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusLg.r,
+                    ),
                   ),
                 ),
                 onPressed: () {
                   HapticFeedback.lightImpact();
                   Get.snackbar(
                     l10nPick(context, fa: 'دانلود پرونده', en: 'Download'),
-                    l10nPick(context, fa: 'صورت‌جلسه رسمی داوری ذخیره شد.', en: 'Decision record PDF downloaded.'),
+                    l10nPick(
+                      context,
+                      fa: 'صورت‌جلسه رسمی داوری ذخیره شد.',
+                      en: 'Decision record PDF downloaded.',
+                    ),
                     backgroundColor: ECardoTokens.infoBg(context),
                     colorText: ECardoTokens.info(context),
                   );
                 },
                 child: Text(
-                  l10nPick(context, fa: 'دانلود پرونده رسمی رأی (PDF)', en: 'Download decision record'),
-                  style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w700),
+                  l10nPick(
+                    context,
+                    fa: 'دانلود پرونده رسمی رأی (PDF)',
+                    en: 'Download decision record',
+                  ),
+                  style: TextStyle(
+                    fontSize: 13.5.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -328,7 +390,9 @@ class EscrowDisputeDecisionScreen extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 13.sp,
-            color: isBold ? ECardoTokens.ink(context) : ECardoTokens.inkMuted(context),
+            color: isBold
+                ? ECardoTokens.ink(context)
+                : ECardoTokens.inkMuted(context),
             fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
           ),
         ),

@@ -50,7 +50,9 @@ void main() {
   // 1. COMMON VIRTUAL CARD VIEW TESTS
   // =========================================================================
   group('CommonVirtualCardView Creative & Token Tests', () {
-    testWidgets('renders realistic card visual with masked PAN and EMV chip', (tester) async {
+    testWidgets('renders realistic card visual with masked PAN and EMV chip', (
+      tester,
+    ) async {
       for (final brightness in [Brightness.light, Brightness.dark]) {
         await tester.pumpWidget(
           wrapWithTheme(
@@ -80,7 +82,9 @@ void main() {
       }
     });
 
-    testWidgets('tap on PAN reveal eye icon triggers onReveal callback', (tester) async {
+    testWidgets('tap on PAN reveal eye icon triggers onReveal callback', (
+      tester,
+    ) async {
       bool revealed = false;
 
       await tester.pumpWidget(
@@ -108,7 +112,9 @@ void main() {
       expect(revealed, isTrue);
     });
 
-    testWidgets('renders frosted-glass freeze overlay when card is frozen', (tester) async {
+    testWidgets('renders frosted-glass freeze overlay when card is frozen', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         wrapWithTheme(
           child: const CommonVirtualCardView(
@@ -134,24 +140,27 @@ void main() {
   // 2. REFERRAL NODE TESTS
   // =========================================================================
   group('ReferralNode Tests', () {
-    testWidgets('renders node with name and fallback monogram in light and dark mode', (tester) async {
-      for (final brightness in [Brightness.light, Brightness.dark]) {
-        await tester.pumpWidget(
-          wrapWithTheme(
-            brightness: brightness,
-            child: const ReferralNode(
-              name: 'Alexander Hamilton',
-              avatarUrl: '',
-              isRoot: true,
+    testWidgets(
+      'renders node with name and fallback monogram in light and dark mode',
+      (tester) async {
+        for (final brightness in [Brightness.light, Brightness.dark]) {
+          await tester.pumpWidget(
+            wrapWithTheme(
+              brightness: brightness,
+              child: const ReferralNode(
+                name: 'Alexander Hamilton',
+                avatarUrl: '',
+                isRoot: true,
+              ),
             ),
-          ),
-        );
+          );
 
-        expect(find.text('Alexander Hamilton'), findsOneWidget);
-        expect(find.text('A'), findsOneWidget);
-        expect(find.byIcon(Icons.star_rounded), findsOneWidget);
-      }
-    });
+          expect(find.text('Alexander Hamilton'), findsOneWidget);
+          expect(find.text('A'), findsOneWidget);
+          expect(find.byIcon(Icons.star_rounded), findsOneWidget);
+        }
+      },
+    );
   });
 
   // =========================================================================
@@ -169,8 +178,14 @@ void main() {
           'is_shown_referral_rules': true,
           'rules': [
             {'icon': 'tick', 'rule': 'Friend registers with your invite code'},
-            {'icon': 'tick', 'rule': 'Friend completes tier 1 KYC verification'},
-            {'icon': 'close', 'rule': 'Duplicate account registrations not allowed'},
+            {
+              'icon': 'tick',
+              'rule': 'Friend completes tier 1 KYC verification',
+            },
+            {
+              'icon': 'close',
+              'rule': 'Duplicate account registrations not allowed',
+            },
           ],
         },
       });

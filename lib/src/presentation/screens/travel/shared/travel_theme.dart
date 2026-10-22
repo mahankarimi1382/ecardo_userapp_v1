@@ -83,24 +83,22 @@ class TravelTheme {
       isDark(context) ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
 
   /// Theme-aware secondary text color.
-  static Color textSecondaryFor(BuildContext context) =>
-      isDark(context) ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+  static Color textSecondaryFor(BuildContext context) => isDark(context)
+      ? AppColors.darkTextSecondary
+      : AppColors.lightTextSecondary;
 
   /// Theme-aware muted text alias.
-  static Color textMutedFor(BuildContext context) =>
-      textSecondaryFor(context);
+  static Color textMutedFor(BuildContext context) => textSecondaryFor(context);
 
   /// Theme-aware border/divider color.
-  static Color borderFor(BuildContext context) =>
-      isDark(context)
-          ? AppColors.lightWarmGray.withValues(alpha: 0.2)
-          : AppColors.lightBorder;
+  static Color borderFor(BuildContext context) => isDark(context)
+      ? AppColors.lightWarmGray.withValues(alpha: 0.2)
+      : AppColors.lightBorder;
 
   /// Theme-aware primary brand color.
-  static Color primaryFor(BuildContext context) =>
-      isDark(context)
-          ? AppColors.darkPrimary
-          : Theme.of(context).colorScheme.primary;
+  static Color primaryFor(BuildContext context) => isDark(context)
+      ? AppColors.darkPrimary
+      : Theme.of(context).colorScheme.primary;
 
   /// Theme-aware accent color.
   static Color accentFor(BuildContext context) => AppColors.mainSoftBlue;

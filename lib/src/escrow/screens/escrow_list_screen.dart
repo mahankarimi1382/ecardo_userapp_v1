@@ -90,10 +90,14 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
         List<EscrowOrderModel> filteredOrders;
         switch (_selectedFilterIndex) {
           case 1: // Awaiting
-            filteredOrders = allOrders.where((o) => o.isPendingAgreement).toList();
+            filteredOrders = allOrders
+                .where((o) => o.isPendingAgreement)
+                .toList();
             break;
           case 2: // Held
-            filteredOrders = allOrders.where((o) => o.isFundsHeld || o.isInspection).toList();
+            filteredOrders = allOrders
+                .where((o) => o.isFundsHeld || o.isInspection)
+                .toList();
             break;
           case 3: // Dispute
             filteredOrders = allOrders.where((o) => o.isDisputed).toList();
@@ -132,7 +136,9 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
                           color: isSelected
                               ? ECardoTokens.brand900(context)
                               : ECardoTokens.surfaceCard(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusFull.r),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusFull.r,
+                          ),
                           border: Border.all(
                             color: isSelected
                                 ? ECardoTokens.brand900(context)
@@ -144,8 +150,12 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
                           _filterLabel(context, _filters[index]),
                           style: TextStyle(
                             fontSize: 12.5.sp,
-                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                            color: isSelected ? Colors.white : ECardoTokens.ink(context),
+                            fontWeight: isSelected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
+                            color: isSelected
+                                ? Colors.white
+                                : ECardoTokens.ink(context),
                           ),
                         ),
                       ),
@@ -157,10 +167,12 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
               SizedBox(height: ECardoTokens.space4.h),
 
               // ------------------ Deals Cards ------------------
-              ...filteredOrders.map((o) => Padding(
-                    padding: EdgeInsets.only(bottom: ECardoTokens.space3.h),
-                    child: _buildDealCard(context, o),
-                  )),
+              ...filteredOrders.map(
+                (o) => Padding(
+                  padding: EdgeInsets.only(bottom: ECardoTokens.space3.h),
+                  child: _buildDealCard(context, o),
+                ),
+              ),
 
               SizedBox(height: ECardoTokens.space8.h),
             ],
@@ -198,10 +210,7 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
                   ar: 'معاملة ضمان جديدة',
                   zh: '发起新的担保交易',
                 ),
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
               ),
             ),
           ),
@@ -263,11 +272,13 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
                     color: isDisputed
                         ? ECardoTokens.dangerBg(context)
                         : isInspection
-                            ? ECardoTokens.sand100(context)
-                            : isFundsHeld
-                                ? ECardoTokens.successBg(context)
-                                : ECardoTokens.brand100(context),
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                        ? ECardoTokens.sand100(context)
+                        : isFundsHeld
+                        ? ECardoTokens.successBg(context)
+                        : ECardoTokens.brand100(context),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusSm.r,
+                    ),
                   ),
                   child: Text(
                     _statusChipText(context, o),
@@ -277,10 +288,10 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
                       color: isDisputed
                           ? ECardoTokens.danger(context)
                           : isInspection
-                              ? ECardoTokens.sand600(context)
-                              : isFundsHeld
-                                  ? ECardoTokens.success(context)
-                                  : ECardoTokens.brand700(context),
+                          ? ECardoTokens.sand600(context)
+                          : isFundsHeld
+                          ? ECardoTokens.success(context)
+                          : ECardoTokens.brand700(context),
                     ),
                   ),
                 ),
@@ -319,8 +330,8 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
                 color: isDisputed
                     ? ECardoTokens.danger(context)
                     : isInspection
-                        ? ECardoTokens.sand600(context)
-                        : ECardoTokens.inkMuted(context),
+                    ? ECardoTokens.sand600(context)
+                    : ECardoTokens.inkMuted(context),
               ),
             ),
           ],
@@ -331,8 +342,10 @@ class _EscrowListScreenState extends State<EscrowListScreen> {
 
   String _statusChipText(BuildContext context, EscrowOrderModel o) {
     if (o.isDisputed) return l10nPick(context, fa: 'در اختلاف', en: 'Dispute');
-    if (o.isInspection) return l10nPick(context, fa: 'بازرسی', en: 'Inspection');
-    if (o.isFundsHeld) return l10nPick(context, fa: 'وجه قفل‌شده', en: 'Funds held');
+    if (o.isInspection)
+      return l10nPick(context, fa: 'بازرسی', en: 'Inspection');
+    if (o.isFundsHeld)
+      return l10nPick(context, fa: 'وجه قفل‌شده', en: 'Funds held');
     return l10nPick(context, fa: 'در انتظار', en: 'Pending');
   }
 

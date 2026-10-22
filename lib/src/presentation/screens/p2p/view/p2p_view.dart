@@ -38,7 +38,9 @@ class P2pViewScreen extends GetView<P2pController> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Column(
         children: [
@@ -97,13 +99,17 @@ class P2pViewScreen extends GetView<P2pController> {
                 padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                      ? (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
                       : (isDark ? AppColors.darkSurface : AppColors.white),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull.r),
                   border: Border.all(
                     color: isSelected
                         ? Colors.transparent
-                        : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        : (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder),
                   ),
                 ),
                 child: Center(
@@ -115,7 +121,9 @@ class P2pViewScreen extends GetView<P2pController> {
                       fontSize: 12.5.sp,
                       color: isSelected
                           ? (isDark ? AppColors.deepBlack : AppColors.white)
-                          : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                          : (isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
                     ),
                   ),
                 ),
@@ -132,7 +140,9 @@ class P2pViewScreen extends GetView<P2pController> {
   }
 
   Widget _buildTradeAndAssetRow(BuildContext context, bool isDark) {
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
@@ -180,7 +190,9 @@ class P2pViewScreen extends GetView<P2pController> {
                     Icon(
                       Icons.keyboard_arrow_down_rounded,
                       size: 22.w,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.softGray,
                     ),
                   ],
                 ),
@@ -266,18 +278,24 @@ class P2pViewScreen extends GetView<P2pController> {
                             size: 14.r,
                             color: isBuy
                                 ? AppColors.white
-                                : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                                : (isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.softGray),
                           ),
                           SizedBox(width: 4.w),
                           AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 180),
                             style: TextStyle(
                               letterSpacing: 0,
-                              fontWeight: isBuy ? FontWeight.w800 : FontWeight.w600,
+                              fontWeight: isBuy
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
                               fontSize: 13.5.sp,
                               color: isBuy
                                   ? AppColors.white
-                                  : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                                  : (isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.softGray),
                             ),
                             child: Text(localization.p2pBuy),
                           ),
@@ -304,18 +322,24 @@ class P2pViewScreen extends GetView<P2pController> {
                             size: 14.r,
                             color: !isBuy
                                 ? AppColors.white
-                                : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                                : (isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.softGray),
                           ),
                           SizedBox(width: 4.w),
                           AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 180),
                             style: TextStyle(
                               letterSpacing: 0,
-                              fontWeight: !isBuy ? FontWeight.w800 : FontWeight.w600,
+                              fontWeight: !isBuy
+                                  ? FontWeight.w800
+                                  : FontWeight.w600,
                               fontSize: 13.5.sp,
                               color: !isBuy
                                   ? AppColors.white
-                                  : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                                  : (isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.softGray),
                             ),
                             child: Text(localization.p2pSell),
                           ),
@@ -354,7 +378,9 @@ class P2pViewScreen extends GetView<P2pController> {
   AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
 
   Widget _buildFilterRow(BuildContext context, bool isDark) {
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -426,10 +452,30 @@ class P2pViewScreen extends GetView<P2pController> {
   /// Offer Filter Chips for quick segmentation (Verified, High Completion, Instant)
   Widget _buildOfferQuickFilterChips(BuildContext context, bool isDark) {
     final filters = [
-      {'label': l10nPick(context, en: 'All Offers', fa: 'همه پیشنهادها'), 'icon': Icons.tune_rounded},
-      {'label': l10nPick(context, en: 'Verified PRO', fa: 'فروشندگان معتبر'), 'icon': Icons.verified_user_rounded},
-      {'label': l10nPick(context, en: 'Completion >95%', fa: 'تکمیل بالای ۹۵٪'), 'icon': Icons.thumb_up_alt_rounded},
-      {'label': l10nPick(context, en: 'Fast Payout (≤15m)', fa: 'آزادسازی فوری'), 'icon': Icons.bolt_rounded},
+      {
+        'label': l10nPick(context, en: 'All Offers', fa: 'همه پیشنهادها'),
+        'icon': Icons.tune_rounded,
+      },
+      {
+        'label': l10nPick(context, en: 'Verified PRO', fa: 'فروشندگان معتبر'),
+        'icon': Icons.verified_user_rounded,
+      },
+      {
+        'label': l10nPick(
+          context,
+          en: 'Completion >95%',
+          fa: 'تکمیل بالای ۹۵٪',
+        ),
+        'icon': Icons.thumb_up_alt_rounded,
+      },
+      {
+        'label': l10nPick(
+          context,
+          en: 'Fast Payout (≤15m)',
+          fa: 'آزادسازی فوری',
+        ),
+        'icon': Icons.bolt_rounded,
+      },
     ];
 
     return SingleChildScrollView(
@@ -445,7 +491,9 @@ class P2pViewScreen extends GetView<P2pController> {
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.white,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -453,7 +501,9 @@ class P2pViewScreen extends GetView<P2pController> {
                   Icon(
                     f['icon'] as IconData,
                     size: 13.r,
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightSecondary,
                   ),
                   SizedBox(width: 5.w),
                   Text(
@@ -461,7 +511,9 @@ class P2pViewScreen extends GetView<P2pController> {
                     style: TextStyle(
                       fontSize: 11.5.sp,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -513,7 +565,8 @@ class P2pViewScreen extends GetView<P2pController> {
           ),
 
           // 4-States Handling (Loading, Error, Empty, Content)
-          if ((controller.isMarketplaceLoading.value && controller.p2pAds.isEmpty) ||
+          if ((controller.isMarketplaceLoading.value &&
+                  controller.p2pAds.isEmpty) ||
               controller.isCurrenciesLoading.value) ...[
             Expanded(child: _buildP2pShimmer(isDark)),
           ] else if (controller.p2pAds.isEmpty) ...[
@@ -529,9 +582,17 @@ class P2pViewScreen extends GetView<P2pController> {
                       SizedBox(height: AppSpacing.md.h),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                          foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                          backgroundColor: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
+                          foregroundColor: isDark
+                              ? AppColors.deepBlack
+                              : AppColors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMd.r,
+                            ),
+                          ),
                         ),
                         onPressed: () {
                           HapticFeedback.lightImpact();
@@ -539,7 +600,11 @@ class P2pViewScreen extends GetView<P2pController> {
                         },
                         icon: const Icon(Icons.refresh_rounded, size: 18),
                         label: Text(
-                          l10nPick(context, en: 'Refresh Offers', fa: 'تازه‌سازی آگهی‌ها'),
+                          l10nPick(
+                            context,
+                            en: 'Refresh Offers',
+                            fa: 'تازه‌سازی آگهی‌ها',
+                          ),
                         ),
                       ),
                     ],
@@ -559,7 +624,9 @@ class P2pViewScreen extends GetView<P2pController> {
                   return false;
                 },
                 child: RefreshIndicator(
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                   onRefresh: () =>
                       controller.fetchMarketplaceAds(isRefresh: true),
                   child: ListView.separated(
@@ -576,7 +643,9 @@ class P2pViewScreen extends GetView<P2pController> {
                           padding: EdgeInsets.symmetric(vertical: 14.h),
                           child: Center(
                             child: LoadingAnimationWidget.staggeredDotsWave(
-                              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                              color: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary,
                               size: 28.sp,
                             ),
                           ),
@@ -603,8 +672,12 @@ class P2pViewScreen extends GetView<P2pController> {
   }
 
   Widget _buildP2pShimmer(bool isDark) {
-    final baseColor = isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300;
-    final highlightColor = isDark ? AppColors.darkSurface : Colors.grey.shade100;
+    final baseColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : Colors.grey.shade300;
+    final highlightColor = isDark
+        ? AppColors.darkSurface
+        : Colors.grey.shade100;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
 
     return Shimmer.fromColors(
@@ -730,7 +803,9 @@ class P2pViewScreen extends GetView<P2pController> {
                         height: 38.h,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                         ),
                       ),
                     ],
@@ -810,7 +885,9 @@ class P2pViewScreen extends GetView<P2pController> {
     );
     final localization = AppLocalizations.of(Get.context!)!;
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     Get.bottomSheet(
       Container(
@@ -832,7 +909,9 @@ class P2pViewScreen extends GetView<P2pController> {
                 width: 45.w,
                 height: 5.h,
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                  color: isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightTextPrimary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(30.r),
                 ),
               ),
@@ -876,10 +955,14 @@ class P2pViewScreen extends GetView<P2pController> {
               padding: EdgeInsets.symmetric(horizontal: 14.w),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                color: isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightBackground,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                 border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightTextPrimary.withValues(alpha: 0.13),
+                  color: isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightTextPrimary.withValues(alpha: 0.13),
                 ),
               ),
               child: TextField(
@@ -895,7 +978,9 @@ class P2pViewScreen extends GetView<P2pController> {
                   isCollapsed: true,
                   hintText: localization.p2pEnterAmount,
                   hintStyle: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.softGray,
                   ),
                 ),
                 style: TextStyle(
@@ -909,7 +994,9 @@ class P2pViewScreen extends GetView<P2pController> {
             SizedBox(height: AppSpacing.lg.h),
             CommonButton(
               text: localization.addMoneyFilterButton,
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              backgroundColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightPrimary,
               textColor: isDark ? AppColors.deepBlack : AppColors.white,
               onPressed: () {
                 HapticFeedback.lightImpact();
@@ -942,7 +1029,9 @@ class P2pViewScreen extends GetView<P2pController> {
     }
 
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     await Get.bottomSheet(
       StatefulBuilder(
@@ -963,7 +1052,9 @@ class P2pViewScreen extends GetView<P2pController> {
                 width: 45.w,
                 height: 5.h,
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                  color: isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightTextPrimary.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(30.r),
                 ),
               ),
@@ -1003,7 +1094,9 @@ class P2pViewScreen extends GetView<P2pController> {
                   if (controller.isPaymentMethodsLoading.value) {
                     return Center(
                       child: CircularProgressIndicator(
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     );
                   }
@@ -1016,7 +1109,9 @@ class P2pViewScreen extends GetView<P2pController> {
                           letterSpacing: 0,
                           fontWeight: FontWeight.w600,
                           fontSize: 14.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.softGray,
                         ),
                       ),
                     );
@@ -1026,7 +1121,8 @@ class P2pViewScreen extends GetView<P2pController> {
                     physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.all(18.w),
                     itemCount: controller.availablePaymentAccounts.length,
-                    separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+                    separatorBuilder: (_, _) =>
+                        SizedBox(height: AppSpacing.cardGap.h),
                     itemBuilder: (context, index) {
                       final account =
                           controller.availablePaymentAccounts[index];
@@ -1051,13 +1147,27 @@ class P2pViewScreen extends GetView<P2pController> {
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? (isDark ? AppColors.darkPrimary.withValues(alpha: 0.15) : AppColors.lightPrimary.withValues(alpha: 0.10))
-                                : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                                ? (isDark
+                                      ? AppColors.darkPrimary.withValues(
+                                          alpha: 0.15,
+                                        )
+                                      : AppColors.lightPrimary.withValues(
+                                          alpha: 0.10,
+                                        ))
+                                : (isDark
+                                      ? AppColors.darkSurfaceVariant
+                                      : AppColors.lightBackground),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMd.r,
+                            ),
                             border: Border.all(
                               color: isSelected
-                                  ? (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
-                                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                  ? (isDark
+                                        ? AppColors.darkPrimary
+                                        : AppColors.lightPrimary)
+                                  : (isDark
+                                        ? AppColors.darkBorder
+                                        : AppColors.lightBorder),
                             ),
                           ),
                           child: Row(
@@ -1079,8 +1189,12 @@ class P2pViewScreen extends GetView<P2pController> {
                                     : Icons.radio_button_unchecked_rounded,
                                 size: 20.w,
                                 color: isSelected
-                                    ? (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
-                                    : (isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                                    ? (isDark
+                                          ? AppColors.darkPrimary
+                                          : AppColors.lightPrimary)
+                                    : (isDark
+                                          ? AppColors.darkTextSecondary
+                                          : AppColors.softGray),
                               ),
                             ],
                           ),
@@ -1094,7 +1208,9 @@ class P2pViewScreen extends GetView<P2pController> {
                 padding: EdgeInsetsDirectional.fromSTEB(18.w, 0, 18.w, 20.h),
                 child: CommonButton(
                   text: localization.addMoneyFilterButton,
-                  backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  backgroundColor: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                   textColor: isDark ? AppColors.deepBlack : AppColors.white,
                   onPressed: () {
                     HapticFeedback.lightImpact();

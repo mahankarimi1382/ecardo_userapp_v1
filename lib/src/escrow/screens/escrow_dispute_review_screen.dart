@@ -27,17 +27,23 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final d = dispute ?? order.dispute ?? const EscrowDisputeModel(
+    final d =
+        dispute ??
+        order.dispute ??
+        const EscrowDisputeModel(
           id: 118,
           caseNumber: 'DSP-118',
           type: 'Not as described',
-          description: 'Received roll is 50 micron instead of 80 micron requested in contract.',
+          description:
+              'Received roll is 50 micron instead of 80 micron requested in contract.',
           status: 'UNDER_REVIEW',
           requestedOutcome: 'Full refund · 860.00 USD',
           evidenceFiles: ['Received-roll-1.jpg'],
         );
 
-    final lockedAmount = order.totalEscrowAmount > 0 ? order.totalEscrowAmount : 868.60;
+    final lockedAmount = order.totalEscrowAmount > 0
+        ? order.totalEscrowAmount
+        : 868.60;
 
     return Scaffold(
       backgroundColor: ECardoTokens.surfaceCanvas(context),
@@ -74,13 +80,22 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.warningBg(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm.r,
+                      ),
                     ),
                     child: Text(
-                      l10nPick(context, fa: 'در حال بررسی داوری', en: 'Under review'),
+                      l10nPick(
+                        context,
+                        fa: 'در حال بررسی داوری',
+                        en: 'Under review',
+                      ),
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w800,
@@ -148,27 +163,43 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                   _buildProgressStep(
                     context,
                     stepNum: '1',
-                    title: l10nPick(context, fa: 'ثبت اختلاف توسط شما', en: 'You filed the dispute'),
+                    title: l10nPick(
+                      context,
+                      fa: 'ثبت اختلاف توسط شما',
+                      en: 'You filed the dispute',
+                    ),
                     sub: '2 Oct · 1 photo, 1 description',
                     isDone: true,
                   ),
                   _buildProgressStep(
                     context,
                     stepNum: '2',
-                    title: l10nPick(context, fa: 'مهلت پاسخ فروشنده', en: 'Seller is answering'),
+                    title: l10nPick(
+                      context,
+                      fa: 'مهلت پاسخ فروشنده',
+                      en: 'Seller is answering',
+                    ),
                     sub: '48h to respond · 19h left',
                     isActive: true,
                   ),
                   _buildProgressStep(
                     context,
                     stepNum: '3',
-                    title: l10nPick(context, fa: 'بررسی مستندات توسط کارشناس', en: 'eCardo reviews the evidence'),
+                    title: l10nPick(
+                      context,
+                      fa: 'بررسی مستندات توسط کارشناس',
+                      en: 'eCardo reviews the evidence',
+                    ),
                     sub: 'May ask either side for more',
                   ),
                   _buildProgressStep(
                     context,
                     stepNum: '4',
-                    title: l10nPick(context, fa: 'صدور رأی و پرداخت وجه', en: 'Decision and payout'),
+                    title: l10nPick(
+                      context,
+                      fa: 'صدور رأی و پرداخت وجه',
+                      en: 'Decision and payout',
+                    ),
                     sub: 'Written reason sent to both sides',
                     isLast: true,
                   ),
@@ -213,7 +244,11 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildDetailRow(
                     context,
-                    label: l10nPick(context, fa: 'خروجی درخواستی', en: 'Requested'),
+                    label: l10nPick(
+                      context,
+                      fa: 'خروجی درخواستی',
+                      en: 'Requested',
+                    ),
                     value: d.requestedOutcome,
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
@@ -222,7 +257,10 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                     children: [
                       Text(
                         l10nPick(context, fa: 'مدارک ضمیمه', en: 'Evidence'),
-                        style: TextStyle(fontSize: 13.sp, color: ECardoTokens.inkMuted(context)),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
                       ),
                       Text(
                         '${d.evidenceFiles.length} file',
@@ -251,11 +289,18 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.gavel_rounded, color: ECardoTokens.success(context)),
+                    Icon(
+                      Icons.gavel_rounded,
+                      color: ECardoTokens.success(context),
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
-                        l10nPick(context, fa: 'رأی داوری صادر شده است', en: 'Arbitration decision issued'),
+                        l10nPick(
+                          context,
+                          fa: 'رأی داوری صادر شده است',
+                          en: 'Arbitration decision issued',
+                        ),
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w700,
@@ -266,14 +311,19 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                     TextButton(
                       onPressed: () {
                         HapticFeedback.lightImpact();
-                        Get.to(() => EscrowDisputeDecisionScreen(
-                              order: order,
-                              decision: d.decision!,
-                            ));
+                        Get.to(
+                          () => EscrowDisputeDecisionScreen(
+                            order: order,
+                            decision: d.decision!,
+                          ),
+                        );
                       },
                       child: Text(
                         l10nPick(context, fa: 'مشاهده رأی', en: 'View'),
-                        style: TextStyle(fontWeight: FontWeight.w800, color: ECardoTokens.success(context)),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.success(context),
+                        ),
                       ),
                     ),
                   ],
@@ -301,9 +351,15 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ECardoTokens.danger(context),
-                      side: BorderSide(color: ECardoTokens.danger(context).withValues(alpha: 0.5)),
+                      side: BorderSide(
+                        color: ECardoTokens.danger(
+                          context,
+                        ).withValues(alpha: 0.5),
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusLg.r,
+                        ),
                       ),
                     ),
                     onPressed: () {
@@ -311,8 +367,15 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                       _showWithdrawDialog(context);
                     },
                     child: Text(
-                      l10nPick(context, fa: 'انصراف از اختلاف', en: 'Withdraw dispute'),
-                      style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w700),
+                      l10nPick(
+                        context,
+                        fa: 'انصراف از اختلاف',
+                        en: 'Withdraw dispute',
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -327,21 +390,38 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                       foregroundColor: ECardoTokens.inkOnBrand,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusLg.r,
+                        ),
                       ),
                     ),
                     onPressed: () {
                       HapticFeedback.lightImpact();
                       Get.snackbar(
-                        l10nPick(context, fa: 'بارگذاری مدارک', en: 'Upload evidence'),
-                        l10nPick(context, fa: 'لطفاً فایل‌های تکمیلی را انتخاب فرمایید.', en: 'Please select supplementary files.'),
+                        l10nPick(
+                          context,
+                          fa: 'بارگذاری مدارک',
+                          en: 'Upload evidence',
+                        ),
+                        l10nPick(
+                          context,
+                          fa: 'لطفاً فایل‌های تکمیلی را انتخاب فرمایید.',
+                          en: 'Please select supplementary files.',
+                        ),
                         backgroundColor: ECardoTokens.infoBg(context),
                         colorText: ECardoTokens.info(context),
                       );
                     },
                     child: Text(
-                      l10nPick(context, fa: 'افزودن مدرک', en: 'Add more evidence'),
-                      style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w800),
+                      l10nPick(
+                        context,
+                        fa: 'افزودن مدرک',
+                        en: 'Add more evidence',
+                      ),
+                      style: TextStyle(
+                        fontSize: 13.5.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -355,7 +435,11 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
 
   void _showWithdrawDialog(BuildContext context) {
     final wTitle = l10nPick(context, fa: 'انصراف ثبت شد', en: 'Withdrawn');
-    final wMsg = l10nPick(context, fa: 'اختلاف لغو گردید و پرونده به روال عادی بازگشت.', en: 'Dispute withdrawn successfully.');
+    final wMsg = l10nPick(
+      context,
+      fa: 'اختلاف لغو گردید و پرونده به روال عادی بازگشت.',
+      en: 'Dispute withdrawn successfully.',
+    );
     final wBg = ECardoTokens.successBg(context);
     final wColor = ECardoTokens.success(context);
 
@@ -366,19 +450,18 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
         fa: 'با انصراف شما، پرونده اختلاف مختومه شده و وجه طبق روال عادی آزاد خواهد شد. آیا مطمئن هستید؟',
         en: 'Withdrawing the dispute will cancel arbitration and resume normal settlement. Are you sure?',
       ),
-      textConfirm: l10nPick(context, fa: 'تأیید انصراف', en: 'Confirm withdraw'),
+      textConfirm: l10nPick(
+        context,
+        fa: 'تأیید انصراف',
+        en: 'Confirm withdraw',
+      ),
       textCancel: l10nPick(context, fa: 'بازگشت', en: 'Cancel'),
       buttonColor: ECardoTokens.danger(context),
       confirmTextColor: Colors.white,
       onConfirm: () {
         Get.back();
         Get.back();
-        Get.snackbar(
-          wTitle,
-          wMsg,
-          backgroundColor: wBg,
-          colorText: wColor,
-        );
+        Get.snackbar(wTitle, wMsg, backgroundColor: wBg, colorText: wColor);
       },
     );
   }
@@ -404,26 +487,32 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                 color: isDone
                     ? ECardoTokens.successBg(context)
                     : isActive
-                        ? ECardoTokens.brand100(context)
-                        : ECardoTokens.surfaceSunken(context),
+                    ? ECardoTokens.brand100(context)
+                    : ECardoTokens.surfaceSunken(context),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isDone
                       ? ECardoTokens.success(context)
                       : isActive
-                          ? ECardoTokens.brand900(context)
-                          : ECardoTokens.border(context),
+                      ? ECardoTokens.brand900(context)
+                      : ECardoTokens.border(context),
                 ),
               ),
               child: Center(
                 child: isDone
-                    ? Icon(Icons.check_rounded, size: 14.sp, color: ECardoTokens.success(context))
+                    ? Icon(
+                        Icons.check_rounded,
+                        size: 14.sp,
+                        color: ECardoTokens.success(context),
+                      )
                     : Text(
                         stepNum,
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w800,
-                          color: isActive ? ECardoTokens.brand900(context) : ECardoTokens.inkMuted(context),
+                          color: isActive
+                              ? ECardoTokens.brand900(context)
+                              : ECardoTokens.inkMuted(context),
                         ),
                       ),
               ),
@@ -432,7 +521,9 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
               Container(
                 width: 2.w,
                 height: 32.h,
-                color: isDone ? ECardoTokens.success(context) : ECardoTokens.border(context),
+                color: isDone
+                    ? ECardoTokens.success(context)
+                    : ECardoTokens.border(context),
               ),
           ],
         ),
@@ -453,7 +544,9 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
                 sub,
                 style: TextStyle(
                   fontSize: 11.5.sp,
-                  color: isActive ? ECardoTokens.sand600(context) : ECardoTokens.inkMuted(context),
+                  color: isActive
+                      ? ECardoTokens.sand600(context)
+                      : ECardoTokens.inkMuted(context),
                 ),
               ),
               if (!isLast) SizedBox(height: 12.h),
@@ -464,7 +557,11 @@ class EscrowDisputeReviewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, {required String label, required String value}) {
+  Widget _buildDetailRow(
+    BuildContext context, {
+    required String label,
+    required String value,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

@@ -98,7 +98,8 @@ class CurrencySparklineChart extends StatelessWidget {
     final double diff = baseRate - startRate;
 
     // Deterministic seed ensures zero visual jitter on rebuilds
-    final int seed = ((baseRate.abs() * 1000).toInt() ^
+    final int seed =
+        ((baseRate.abs() * 1000).toInt() ^
         (changePercent.abs() * 100).toInt() ^
         0x5F3759DF);
     final math.Random rng = math.Random(seed);
@@ -141,11 +142,11 @@ class CurrencySparklineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<double> points = _resolvePoints();
     final bool isPositive = _isPositiveTrend(points);
-    final Color trendColor = customLineColor ??
-        (isPositive ? AppColors.success : AppColors.error);
+    final Color trendColor =
+        customLineColor ?? (isPositive ? AppColors.success : AppColors.error);
 
-    final effectiveSurfaceColor = surfaceColor ??
-        ExchangeDesignTokens.cardSurface(context);
+    final effectiveSurfaceColor =
+        surfaceColor ?? ExchangeDesignTokens.cardSurface(context);
 
     return SizedBox(
       width: width,

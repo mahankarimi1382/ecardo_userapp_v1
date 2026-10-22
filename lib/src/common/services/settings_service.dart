@@ -131,12 +131,14 @@ class SettingsService extends GetxService {
   final FlutterSecureStorage _secureStorage;
 
   SettingsService({FlutterSecureStorage? secureStorage})
-      : _secureStorage = secureStorage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(encryptedSharedPreferences: true),
-              iOptions:
-                  IOSOptions(accessibility: KeychainAccessibility.first_unlock),
-            );
+    : _secureStorage =
+          secureStorage ??
+          const FlutterSecureStorage(
+            aOptions: AndroidOptions(encryptedSharedPreferences: true),
+            iOptions: IOSOptions(
+              accessibility: KeychainAccessibility.first_unlock,
+            ),
+          );
 
   /// A-SEC (1.0.51): biometric gate uses the bearer token, not a stored
   /// password. Call this after login so legacy installs drop the old secret.
@@ -145,7 +147,9 @@ class SettingsService extends GetxService {
       try {
         await _secureStorage.delete(key: currentPasswordKey);
       } catch (e) {
-        debugPrint('clearLoggedInUserPassword secure storage delete failed: $e');
+        debugPrint(
+          'clearLoggedInUserPassword secure storage delete failed: $e',
+        );
       }
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(currentPasswordKey);
@@ -324,7 +328,9 @@ class SettingsService extends GetxService {
           appSettings[key] = value.toString();
         }
       });
-      debugPrint('♻️ settings restored from cache (${appSettings.length} keys)');
+      debugPrint(
+        '♻️ settings restored from cache (${appSettings.length} keys)',
+      );
       return appSettings.isNotEmpty;
     } catch (e) {
       debugPrint('⚠️ settings backup restore failed: $e');
@@ -413,12 +419,16 @@ class SettingsService extends GetxService {
               : AppLockService();
           if (!await appLock.hasPinSet()) {
             await appLock.setPin(legacyPin);
-            debugPrint('🛡️ Migrated legacy plaintext PIN from SharedPreferences to AppLockService');
+            debugPrint(
+              '🛡️ Migrated legacy plaintext PIN from SharedPreferences to AppLockService',
+            );
           }
         }
       }
       await prefs.remove(_legacyAppPinKey);
-      debugPrint('🛡️ Permanently removed legacy app_pin_4 from SharedPreferences');
+      debugPrint(
+        '🛡️ Permanently removed legacy app_pin_4 from SharedPreferences',
+      );
     } catch (e) {
       debugPrint('⚠️ migrateLegacyPin failed: $e');
     }

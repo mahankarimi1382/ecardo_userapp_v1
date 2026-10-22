@@ -25,7 +25,8 @@ class MyAdsDetailsBottomSheet extends StatelessWidget {
         ? ad.assetFiatPair!
         : '${ad.assetCurrency?.code ?? '-'} / ${ad.fiatCurrency?.code ?? '-'}';
     final totalAmountText = '${ad.totalAmount ?? '0'} '.trim();
-    final completedTradeText = '${ad.completedOrders ?? 0} ${localization.p2pOrders}';
+    final completedTradeText =
+        '${ad.completedOrders ?? 0} ${localization.p2pOrders}';
     final paymentMethods = ad.paymentMethods
         ?.map((method) => method.paymentMethod?.name ?? '')
         .where((name) => name.trim().isNotEmpty)
@@ -112,7 +113,10 @@ class MyAdsDetailsBottomSheet extends StatelessWidget {
               padding: EdgeInsetsDirectional.fromSTEB(18.w, 16.h, 18.w, 28.h),
               child: Column(
                 children: [
-                  _buildDetailsRow(localization.p2pAdNumberTitle, ad.adNumber ?? '--'),
+                  _buildDetailsRow(
+                    localization.p2pAdNumberTitle,
+                    ad.adNumber ?? '--',
+                  ),
                   _buildDetailsRow(
                     localization.p2pType,
                     adType,
@@ -121,8 +125,14 @@ class MyAdsDetailsBottomSheet extends StatelessWidget {
                         : AppColors.error,
                   ),
                   _buildDetailsRow(localization.p2pAssetFiat, pairText),
-                  _buildDetailsRow(localization.p2pTotalAmount, totalAmountText),
-                  _buildDetailsRow(localization.p2pCompletedTradeQty, completedTradeText),
+                  _buildDetailsRow(
+                    localization.p2pTotalAmount,
+                    totalAmountText,
+                  ),
+                  _buildDetailsRow(
+                    localization.p2pCompletedTradeQty,
+                    completedTradeText,
+                  ),
                   _buildDetailsRow(
                     localization.p2pOrderLimit,
                     ad.orderLimit?.trim().isNotEmpty == true
@@ -149,7 +159,10 @@ class MyAdsDetailsBottomSheet extends StatelessWidget {
                         ? ad.lastUpdated!
                         : '--',
                   ),
-                  _buildDetailsRow(localization.p2pCreateTime, createTime.toString()),
+                  _buildDetailsRow(
+                    localization.p2pCreateTime,
+                    createTime.toString(),
+                  ),
                   _buildDetailsRow(
                     localization.p2pStatus,
                     statusText,

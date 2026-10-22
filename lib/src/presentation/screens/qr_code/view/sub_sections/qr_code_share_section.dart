@@ -34,14 +34,10 @@ class QrCodeShareSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final resolvedCopyLabel = copyLabel ??
+    final resolvedCopyLabel =
+        copyLabel ??
         (isCopied
-            ? l10nPick(
-                context,
-                en: 'Copied!',
-                fa: 'کپی شد!',
-                ar: 'تم النسخ!',
-              )
+            ? l10nPick(context, en: 'Copied!', fa: 'کپی شد!', ar: 'تم النسخ!')
             : l10nPick(
                 context,
                 en: 'Copy Data',
@@ -56,13 +52,9 @@ class QrCodeShareSection extends StatelessWidget {
       ar: 'ينسخ معرف رمز QR للدفع إلى الحافظة',
     );
 
-    final resolvedShareLabel = shareLabel ??
-        l10nPick(
-          context,
-          en: 'Share QR',
-          fa: 'اشتراک‌گذاری',
-          ar: 'مشاركة QR',
-        );
+    final resolvedShareLabel =
+        shareLabel ??
+        l10nPick(context, en: 'Share QR', fa: 'اشتراک‌گذاری', ar: 'مشاركة QR');
 
     final resolvedShareHint = l10nPick(
       context,
@@ -129,8 +121,8 @@ class QrCodeShareSection extends StatelessWidget {
     required VoidCallback onTap,
     Color? iconColor,
   }) {
-    final effectiveIconColor = iconColor ??
-        (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet);
+    final effectiveIconColor =
+        iconColor ?? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet);
 
     return Semantics(
       button: true,
@@ -138,10 +130,7 @@ class QrCodeShareSection extends StatelessWidget {
       label: label,
       hint: semanticHint,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          minHeight: 48,
-          minWidth: 48,
-        ),
+        constraints: const BoxConstraints(minHeight: 48, minWidth: 48),
         child: Material(
           color: AppColors.transparent,
           child: InkWell(

@@ -24,7 +24,10 @@ class KycLevelController extends GetxController {
   final Rx<KycRejectedData?> rejectionData = Rx<KycRejectedData?>(null);
 
   @override
-  void onInit() { super.onInit(); fetchStatus(); }
+  void onInit() {
+    super.onInit();
+    fetchStatus();
+  }
 
   // BUGFIX: these two had no try/catch, so a failed request left isLoading
   // stuck true (permanent spinner) AND threw out of onInit. The second effect
@@ -36,10 +39,15 @@ class KycLevelController extends GetxController {
   Future<void> fetchLevels() async {
     isLoading.value = true;
     try {
-      final response = await _networkService.get(endpoint: ApiPath.kycLevelLevelsEndpoint);
+      final response = await _networkService.get(
+        endpoint: ApiPath.kycLevelLevelsEndpoint,
+      );
       if (response.status == Status.completed) {
         final data = response.data?['data'] as List<dynamic>?;
-        if (data != null) levels.value = data.map((e) => KycLevel.fromJson(e as Map<String, dynamic>)).toList();
+        if (data != null)
+          levels.value = data
+              .map((e) => KycLevel.fromJson(e as Map<String, dynamic>))
+              .toList();
       }
     } catch (e) {
       debugPrint('❌ fetchLevels() error: $e');
@@ -51,7 +59,9 @@ class KycLevelController extends GetxController {
   Future<void> fetchStatus() async {
     isLoading.value = true;
     try {
-      final response = await _networkService.get(endpoint: ApiPath.kycLevelStatusEndpoint);
+      final response = await _networkService.get(
+        endpoint: ApiPath.kycLevelStatusEndpoint,
+      );
       if (response.status == Status.completed) {
         final data = response.data?['data'] as Map<String, dynamic>?;
         if (data != null) {
@@ -72,7 +82,9 @@ class KycLevelController extends GetxController {
 
   Future<void> fetchRejectionData() async {
     try {
-      final response = await _networkService.get(endpoint: ApiPath.kycRejectedEndpoint);
+      final response = await _networkService.get(
+        endpoint: ApiPath.kycRejectedEndpoint,
+      );
       if (response.status == Status.completed && response.data != null) {
         final model = KycRejectedModel.fromJson(response.data!);
         rejectionData.value = model.data;
@@ -94,7 +106,10 @@ class KycLevelController extends GetxController {
   ///  - value is an existing local file  -> MultipartFile under documents[key]
   ///  - value is anything else (e.g. an already-uploaded server path on web)
   ///      -> plain string field under documents[key]
-  Future<bool> submitDocuments({required Map<String, String> documents, int? targetLevel}) async {
+  Future<bool> submitDocuments({
+    required Map<String, String> documents,
+    int? targetLevel,
+  }) async {
     isSubmitting.value = true;
     try {
       final formData = dio.FormData();
@@ -104,7 +119,8 @@ class KycLevelController extends GetxController {
 
       for (final entry in documents.entries) {
         final key = 'documents[${entry.key}]';
-        final isLocalFile = !kIsWeb && entry.value.isNotEmpty && File(entry.value).existsSync();
+        final isLocalFile =
+            !kIsWeb && entry.value.isNotEmpty && File(entry.value).existsSync();
         if (isLocalFile) {
           final file = File(entry.value);
           if (UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes)) {
@@ -128,7 +144,10 @@ class KycLevelController extends GetxController {
         }
       }
 
-      if (formData.files.isEmpty && formData.fields.where((f) => f.key.startsWith('documents[')).isEmpty) {
+      if (formData.files.isEmpty &&
+          formData.fields
+              .where((f) => f.key.startsWith('documents['))
+              .isEmpty) {
         isSubmitting.value = false;
         // v1.0.24: localized (nullable l10n — controller may live longer than
         // the current language context).
@@ -152,20 +171,25 @@ class KycLevelController extends GetxController {
       isSubmitting.value = false;
       uploadProgress.value = 0.0;
       if (response.status == Status.completed) {
-        ToastHelper().showSuccessToast(response.data?['data']?['message'] ?? 'Documents submitted.');
+        ToastHelper().showSuccessToast(
+          response.data?['data']?['message'] ?? 'Documents submitted.',
+        );
         await fetchStatus();
         return true;
       } else if (response.status == Status.error) {
         final localization = AppLocalizations.of(Get.context!);
         ToastHelper().showErrorToast(
-          response.message ?? localization?.kycUploadFailed ?? 'Upload failed. Please try again.',
+          response.message ??
+              localization?.kycUploadFailed ??
+              'Upload failed. Please try again.',
         );
       }
     } catch (e) {
       isSubmitting.value = false;
       debugPrint('KYC submit failed: $e');
-      final localization =
-          Get.context == null ? null : AppLocalizations.of(Get.context!);
+      final localization = Get.context == null
+          ? null
+          : AppLocalizations.of(Get.context!);
       ToastHelper().showErrorToast(
         localization?.kycUploadFailed ?? 'Upload failed. Please try again.',
       );

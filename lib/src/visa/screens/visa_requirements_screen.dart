@@ -19,14 +19,18 @@ class VisaRequirementsScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           item.countryName,
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -35,7 +39,9 @@ class VisaRequirementsScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           onPressed: () => Get.back(),
@@ -65,7 +71,9 @@ class VisaRequirementsScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w900,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                           SizedBox(height: 2.h),
@@ -73,7 +81,9 @@ class VisaRequirementsScreen extends StatelessWidget {
                             '${l10nPick(context, en: 'Visa Type', fa: 'نوع روادید')}: ${item.visaType}',
                             style: TextStyle(
                               fontSize: 11.5.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -87,7 +97,9 @@ class VisaRequirementsScreen extends StatelessWidget {
                     item.description,
                     style: TextStyle(
                       fontSize: 12.5.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                       height: 1.4,
                     ),
                   ),
@@ -103,51 +115,97 @@ class VisaRequirementsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10nPick(context, en: 'Fee Breakdown', fa: 'تعرفه و هزینه‌های ویزا'),
+                  l10nPick(
+                    context,
+                    en: 'Fee Breakdown',
+                    fa: 'تعرفه و هزینه‌های ویزا',
+                  ),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: AppSpacing.md.h),
                 _priceRow(
                   isDark: isDark,
-                  title: l10nPick(context, en: 'Platform Service Fee', fa: 'هزینه خدمات و بررسی تخصصی'),
-                  amount: formatVisaPrice(item.serviceFee, item.currency, context: context),
-                  subtitle: l10nPick(context, en: 'Application prep & consultant audit', fa: 'تشکیل پرونده و اعتبارسنجی مدارک'),
+                  title: l10nPick(
+                    context,
+                    en: 'Platform Service Fee',
+                    fa: 'هزینه خدمات و بررسی تخصصی',
+                  ),
+                  amount: formatVisaPrice(
+                    item.serviceFee,
+                    item.currency,
+                    context: context,
+                  ),
+                  subtitle: l10nPick(
+                    context,
+                    en: 'Application prep & consultant audit',
+                    fa: 'تشکیل پرونده و اعتبارسنجی مدارک',
+                  ),
                 ),
                 Divider(
                   height: AppSpacing.xl,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: isDark
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
                 ),
                 _priceRow(
                   isDark: isDark,
-                  title: l10nPick(context, en: 'Government & Embassy Fee', fa: 'تعرفه رسمی دولتی و صدور مرجع'),
-                  amount: formatVisaPrice(item.govFee, item.currency, context: context),
-                  subtitle: l10nPick(context, en: 'Non-refundable after embassy submission', fa: 'غیرقابل استرداد پس از ثبت در مرجع صادرکننده'),
+                  title: l10nPick(
+                    context,
+                    en: 'Government & Embassy Fee',
+                    fa: 'تعرفه رسمی دولتی و صدور مرجع',
+                  ),
+                  amount: formatVisaPrice(
+                    item.govFee,
+                    item.currency,
+                    context: context,
+                  ),
+                  subtitle: l10nPick(
+                    context,
+                    en: 'Non-refundable after embassy submission',
+                    fa: 'غیرقابل استرداد پس از ثبت در مرجع صادرکننده',
+                  ),
                 ),
                 Divider(
                   height: AppSpacing.xl,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: isDark
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Total Amount', fa: 'مجموع کل پرداختی'),
+                      l10nPick(
+                        context,
+                        en: 'Total Amount',
+                        fa: 'مجموع کل پرداختی',
+                      ),
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     Text(
-                      formatVisaPrice(item.totalFee, item.currency, context: context),
+                      formatVisaPrice(
+                        item.totalFee,
+                        item.currency,
+                        context: context,
+                      ),
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightSecondary,
                       ),
                     ),
                   ],
@@ -166,16 +224,24 @@ class VisaRequirementsScreen extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.fact_check_outlined,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightSecondary,
                       size: AppSpacing.iconSm.r,
                     ),
                     SizedBox(width: AppSpacing.sm.w),
                     Text(
-                      l10nPick(context, en: 'Required Documents', fa: 'مدارک و پیش‌نیازهای لازم'),
+                      l10nPick(
+                        context,
+                        en: 'Required Documents',
+                        fa: 'مدارک و پیش‌نیازهای لازم',
+                      ),
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ],
@@ -183,14 +249,22 @@ class VisaRequirementsScreen extends StatelessWidget {
                 SizedBox(height: AppSpacing.md.h),
                 if (item.requiredDocs.isEmpty)
                   Text(
-                    l10nPick(context, en: 'Passport scan is required.', fa: 'اسکن گذرنامه با حداقل ۶ ماه اعتبار الزامی است.'),
+                    l10nPick(
+                      context,
+                      en: 'Passport scan is required.',
+                      fa: 'اسکن گذرنامه با حداقل ۶ ماه اعتبار الزامی است.',
+                    ),
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   )
                 else
-                  ...item.requiredDocs.map((doc) => _DocRequirementTile(doc: doc, isDark: isDark)),
+                  ...item.requiredDocs.map(
+                    (doc) => _DocRequirementTile(doc: doc, isDark: isDark),
+                  ),
               ],
             ),
           ),
@@ -198,31 +272,48 @@ class VisaRequirementsScreen extends StatelessWidget {
 
           // Policy & Rules Card
           VisaCard(
-            color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+            color: isDark
+                ? AppColors.darkSurfaceVariant
+                : AppColors.lightBackground,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10nPick(context, en: 'Important Guidelines', fa: 'نکات و ضوابط ضروری'),
+                  l10nPick(
+                    context,
+                    en: 'Important Guidelines',
+                    fa: 'نکات و ضوابط ضروری',
+                  ),
                   style: TextStyle(
                     fontSize: 13.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: AppSpacing.sm.h),
                 _bulletPoint(
                   isDark: isDark,
                   icon: Icons.access_time_rounded,
-                  text: '${l10nPick(context, en: 'Estimated Processing Time', fa: 'مدت‌زمان تقریبی صدور')}: ${item.processingDaysMin} ${l10nPick(context, en: 'to', fa: 'تا')} ${item.processingDaysMax} ${l10nPick(context, en: 'business days', fa: 'روز کاری')}',
+                  text:
+                      '${l10nPick(context, en: 'Estimated Processing Time', fa: 'مدت‌زمان تقریبی صدور')}: ${item.processingDaysMin} ${l10nPick(context, en: 'to', fa: 'تا')} ${item.processingDaysMax} ${l10nPick(context, en: 'business days', fa: 'روز کاری')}',
                 ),
                 SizedBox(height: AppSpacing.xs.h),
                 _bulletPoint(
                   isDark: isDark,
                   icon: Icons.fingerprint_rounded,
                   text: item.needsBiometric
-                      ? l10nPick(context, en: 'Biometric appointment is required in person.', fa: 'نیاز به انگشت‌نگاری و حضور در سفارت دارد.')
-                      : l10nPick(context, en: '100% online E-Visa, no in-person visit needed.', fa: 'صددرصد آنلاین (E-Visa) بدون نیاز به مراجعه حضوری.'),
+                      ? l10nPick(
+                          context,
+                          en: 'Biometric appointment is required in person.',
+                          fa: 'نیاز به انگشت‌نگاری و حضور در سفارت دارد.',
+                        )
+                      : l10nPick(
+                          context,
+                          en: '100% online E-Visa, no in-person visit needed.',
+                          fa: 'صددرصد آنلاین (E-Visa) بدون نیاز به مراجعه حضوری.',
+                        ),
                 ),
                 SizedBox(height: AppSpacing.xs.h),
                 _bulletPoint(
@@ -262,7 +353,9 @@ class VisaRequirementsScreen extends StatelessWidget {
               Get.to(() => VisaApplicationScreen(catalog: item));
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+              backgroundColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightSecondary,
               foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(
@@ -274,7 +367,11 @@ class VisaRequirementsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  l10nPick(context, en: 'Start Application', fa: 'شروع ثبت درخواست ویزا'),
+                  l10nPick(
+                    context,
+                    en: 'Start Application',
+                    fa: 'شروع ثبت درخواست ویزا',
+                  ),
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
@@ -308,7 +405,9 @@ class VisaRequirementsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12.5.sp,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -316,7 +415,9 @@ class VisaRequirementsScreen extends StatelessWidget {
                 subtitle,
                 style: TextStyle(
                   fontSize: 10.5.sp,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -327,7 +428,9 @@ class VisaRequirementsScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 13.5.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
       ],
@@ -353,7 +456,9 @@ class VisaRequirementsScreen extends StatelessWidget {
             text,
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               height: 1.35,
             ),
           ),
@@ -379,13 +484,17 @@ class _DocRequirementTile extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(6.r),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+              color: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightBackground,
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
             ),
             child: Icon(
               Icons.attach_file_rounded,
               size: 16.r,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           SizedBox(width: AppSpacing.sm.w),
@@ -403,16 +512,23 @@ class _DocRequirementTile extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.5.sp,
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
                     if (doc.required) ...[
                       SizedBox(width: AppSpacing.xs.w),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 1.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.error.withValues(alpha: 0.2) : AppColors.errorContainer,
+                          color: isDark
+                              ? AppColors.error.withValues(alpha: 0.2)
+                              : AppColors.errorContainer,
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
@@ -433,7 +549,9 @@ class _DocRequirementTile extends StatelessWidget {
                     doc.instructions,
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],

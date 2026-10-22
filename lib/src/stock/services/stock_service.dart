@@ -19,8 +19,13 @@ class StockService extends getx.GetxService {
   }
 
   /// Submit risk assessment quiz answers
-  Future<Map<String, dynamic>?> submitRiskQuiz(Map<String, String> answers) async {
-    final response = await _network.post(endpoint: '/stock/risk-quiz', data: {'answers': answers});
+  Future<Map<String, dynamic>?> submitRiskQuiz(
+    Map<String, String> answers,
+  ) async {
+    final response = await _network.post(
+      endpoint: '/stock/risk-quiz',
+      data: {'answers': answers},
+    );
     if (response.status == Status.completed && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }
@@ -45,7 +50,13 @@ class StockService extends getx.GetxService {
     if (response.status == Status.completed && response.data != null) {
       final list = response.data!['data'] as List?;
       if (list != null) {
-        return list.map((e) => StockMarketModel.fromJson(Map<String, dynamic>.from(e as Map))).toList();
+        return list
+            .map(
+              (e) => StockMarketModel.fromJson(
+                Map<String, dynamic>.from(e as Map),
+              ),
+            )
+            .toList();
       }
     }
     return [];
@@ -57,7 +68,9 @@ class StockService extends getx.GetxService {
     required String to,
     required double amount,
   }) async {
-    final response = await _network.get(endpoint: '/stock/fx-quote?from=$from&to=$to&amount=$amount');
+    final response = await _network.get(
+      endpoint: '/stock/fx-quote?from=$from&to=$to&amount=$amount',
+    );
     if (response.status == Status.completed && response.data != null) {
       return response.data!['data'] as Map<String, dynamic>?;
     }

@@ -32,7 +32,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     final monthlyEmi = controller.calculateMonthlyInstallment(
       principal: _calcAmount,
@@ -42,7 +44,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
     final totalRepayment = monthlyEmi * _calcTenure;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -80,7 +84,10 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.md.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.page.w,
+          vertical: AppSpacing.md.h,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -99,7 +106,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -171,7 +180,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
               ),
               style: AppTextStyles.titleSmall.copyWith(
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -180,7 +191,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,14 +210,18 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                           zh: '申请金额',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       Text(
                         '${_calcAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'واحد', en: 'Units', ar: 'وحدة', zh: '单位')}',
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -232,14 +249,18 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                           zh: '分期月数',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       Text(
                         '$_calcTenure ${l10nPick(context, fa: 'ماه', en: 'Months', ar: 'شهر', zh: '个月')}',
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -262,7 +283,12 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                       );
                     }).toList(),
                   ),
-                  Divider(height: 24, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+                  Divider(
+                    height: 24,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -276,14 +302,18 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       Text(
                         '${monthlyEmi.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'واحد', en: 'Units', ar: 'وحدة', zh: '单位')}',
                         style: AppTextStyles.bodyMedium.copyWith(
                           fontWeight: FontWeight.w900,
-                          color: isDark ? const Color(0xFF4ADE80) : const Color(0xFF059669),
+                          color: isDark
+                              ? const Color(0xFF4ADE80)
+                              : const Color(0xFF059669),
                         ),
                       ),
                     ],
@@ -301,14 +331,21 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                           zh: '还款总额：',
                         ),
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       Text(
-                        totalRepayment.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},'),
+                        totalRepayment.toInt().toString().replaceAllMapped(
+                          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                          (m) => '${m[1]},',
+                        ),
                         style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -330,7 +367,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
               ),
               style: AppTextStyles.titleSmall.copyWith(
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -340,8 +379,10 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
               step: '۱',
               titleFa: 'ثبت آنلاین فرم درخواست',
               titleEn: 'Submit Online Application',
-              descFa: 'انتخاب طرح، مشخص‌کردن مبلغ و بارگذاری اطلاعات اولیه درآمدی.',
-              descEn: 'Select product, enter amount and supply income indicators.',
+              descFa:
+                  'انتخاب طرح، مشخص‌کردن مبلغ و بارگذاری اطلاعات اولیه درآمدی.',
+              descEn:
+                  'Select product, enter amount and supply income indicators.',
             ),
             _buildStepCard(
               context,
@@ -349,8 +390,10 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
               step: '۲',
               titleFa: 'اعتبارسنجی خودکار و صدور آفر',
               titleEn: 'Automated Scoring & Offer',
-              descFa: 'سنجش شاخص ریسک و اعلام سقف مصوب و نرخ بهره نهایی در کارتابل.',
-              descEn: 'Risk-engine evaluates limits and generates official loan offer.',
+              descFa:
+                  'سنجش شاخص ریسک و اعلام سقف مصوب و نرخ بهره نهایی در کارتابل.',
+              descEn:
+                  'Risk-engine evaluates limits and generates official loan offer.',
             ),
             _buildStepCard(
               context,
@@ -358,8 +401,10 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
               step: '۳',
               titleFa: 'تودیع وثیقه و امضای دیجیتال',
               titleEn: 'Collateral & Digital Signature',
-              descFa: 'تودیع وثیقه انتخابی و امضای الکترونیک قرارداد بدون مراجعه حضوری.',
-              descEn: 'Pledge collateral and sign digital loan contract seamlessly.',
+              descFa:
+                  'تودیع وثیقه انتخابی و امضای الکترونیک قرارداد بدون مراجعه حضوری.',
+              descEn:
+                  'Pledge collateral and sign digital loan contract seamlessly.',
             ),
             _buildStepCard(
               context,
@@ -367,8 +412,10 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
               step: '۴',
               titleFa: 'واریز آنی به کیف پول',
               titleEn: 'Instant Wallet Disbursement',
-              descFa: 'واریز وجه تسهیلات به والت اصلی و فعال‌سازی جدول بازپرداخت اقساط.',
-              descEn: 'Funds credited directly to primary wallet with automated schedule.',
+              descFa:
+                  'واریز وجه تسهیلات به والت اصلی و فعال‌سازی جدول بازپرداخت اقساط.',
+              descEn:
+                  'Funds credited directly to primary wallet with automated schedule.',
             ),
             SizedBox(height: AppSpacing.xxl.h),
           ],
@@ -392,7 +439,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,7 +451,9 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
             height: 26.w,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer,
+              color: isDark
+                  ? AppColors.darkPrimaryContainer
+                  : AppColors.lightPrimaryContainer,
               shape: BoxShape.circle,
             ),
             child: Text(
@@ -422,14 +473,18 @@ class _LoanIntroScreenState extends State<LoanIntroScreen> {
                   l10nPick(context, fa: titleFa, en: titleEn),
                   style: AppTextStyles.bodyMedium.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: 3.h),
                 Text(
                   l10nPick(context, fa: descFa, en: descEn),
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     height: 1.4,
                   ),
                 ),

@@ -103,7 +103,8 @@ class _BillPaymentResultStepSectionState
     final isDark = theme.brightness == Brightness.dark;
     final colorScheme = theme.colorScheme;
 
-    final title = _headline ??
+    final title =
+        _headline ??
         l10nPick(
           context,
           en: 'Bill Payment Submitted',
@@ -133,10 +134,7 @@ class _BillPaymentResultStepSectionState
             const SizedBox(height: AppSpacing.md),
 
             // 1. Celebratory Success Animation
-            TransferSuccessCelebration(
-              title: title,
-              subtitle: subtitle,
-            ),
+            TransferSuccessCelebration(title: title, subtitle: subtitle),
 
             const SizedBox(height: AppSpacing.xl),
 
@@ -166,7 +164,9 @@ class _BillPaymentResultStepSectionState
                   label: widget.payableLabel,
                   value: widget.payableValue,
                   isHighlighted: true,
-                  valueColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  valueColor: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 ),
                 if (_statusText != null)
                   EcardoReceiptItem(

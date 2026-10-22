@@ -8,10 +8,9 @@ class PaymentSettingsModel {
   PaymentSettingsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null
-            ? PaymentSettingsData.fromJson(json['data'])
-            : null;
+    data = json['data'] != null
+        ? PaymentSettingsData.fromJson(json['data'])
+        : null;
   }
 }
 

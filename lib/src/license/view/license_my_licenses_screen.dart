@@ -17,10 +17,12 @@ class LicenseMyLicensesScreen extends StatefulWidget {
   const LicenseMyLicensesScreen({super.key});
 
   @override
-  State<LicenseMyLicensesScreen> createState() => _LicenseMyLicensesScreenState();
+  State<LicenseMyLicensesScreen> createState() =>
+      _LicenseMyLicensesScreenState();
 }
 
-class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with SingleTickerProviderStateMixin {
+class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen>
+    with SingleTickerProviderStateMixin {
   late final LicenseController controller;
   late TabController _tabController;
   final Set<int> _revealedKeys = <int>{};
@@ -46,7 +48,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -62,13 +66,30 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
               padding: EdgeInsetsDirectional.only(end: AppSpacing.lg.w),
               child: Semantics(
                 button: true,
-                label: l10nPick(context, en: 'License Store', fa: 'فروشگاه لایسنس', ar: 'متجر التراخيص', zh: '授权商城'),
+                label: l10nPick(
+                  context,
+                  en: 'License Store',
+                  fa: 'فروشگاه لایسنس',
+                  ar: 'متجر التراخيص',
+                  zh: '授权商城',
+                ),
                 child: IconButton(
-                  constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                  tooltip: l10nPick(context, en: 'License Store', fa: 'فروشگاه لایسنس', ar: 'متجر التراخيص', zh: '授权商城'),
+                  constraints: const BoxConstraints(
+                    minWidth: 44,
+                    minHeight: 44,
+                  ),
+                  tooltip: l10nPick(
+                    context,
+                    en: 'License Store',
+                    fa: 'فروشگاه لایسنس',
+                    ar: 'متجر التراخيص',
+                    zh: '授权商城',
+                  ),
                   icon: Icon(
                     Icons.shopping_bag_outlined,
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                     size: AppSpacing.iconMd.sp,
                   ),
                   onPressed: () {
@@ -88,15 +109,23 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
               color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
               border: Border(
                 bottom: BorderSide(
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: isDark
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
                 ),
               ),
             ),
             child: TabBar(
               controller: _tabController,
-              labelColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-              unselectedLabelColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-              indicatorColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              labelColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightPrimary,
+              unselectedLabelColor: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+              indicatorColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightPrimary,
               indicatorWeight: 3.h,
               tabs: [
                 Tab(
@@ -105,7 +134,15 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                     children: [
                       Icon(Icons.vpn_key_rounded, size: AppSpacing.iconXs.sp),
                       SizedBox(width: AppSpacing.sm.w),
-                      Text(l10nPick(context, en: 'Active Keys', fa: 'کلیدهای فعال', ar: 'مفاتيح نشطة', zh: '有效密钥')),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Active Keys',
+                          fa: 'کلیدهای فعال',
+                          ar: 'مفاتيح نشطة',
+                          zh: '有效密钥',
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -115,7 +152,15 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                     children: [
                       Icon(Icons.history_rounded, size: AppSpacing.iconXs.sp),
                       SizedBox(width: AppSpacing.sm.w),
-                      Text(l10nPick(context, en: 'Expired Archive', fa: 'آرشیو منقضی‌شده', ar: 'أرشيف منتهي', zh: '已过期归档')),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Expired Archive',
+                          fa: 'آرشیو منقضی‌شده',
+                          ar: 'أرشيف منتهي',
+                          zh: '已过期归档',
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -124,18 +169,33 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
           ),
           Expanded(
             child: Obx(() {
-              if (controller.isLoadingMyLicenses.value && controller.myLicenses.isEmpty) {
+              if (controller.isLoadingMyLicenses.value &&
+                  controller.myLicenses.isEmpty) {
                 return _buildLoadingSkeleton(isDark);
               }
 
-              final activeList = controller.myLicenses.where((k) => !k.isExpired).toList();
-              final expiredList = controller.myLicenses.where((k) => k.isExpired).toList();
+              final activeList = controller.myLicenses
+                  .where((k) => !k.isExpired)
+                  .toList();
+              final expiredList = controller.myLicenses
+                  .where((k) => k.isExpired)
+                  .toList();
 
               return TabBarView(
                 controller: _tabController,
                 children: [
-                  _buildList(context, activeList, isActive: true, isDark: isDark),
-                  _buildList(context, expiredList, isActive: false, isDark: isDark),
+                  _buildList(
+                    context,
+                    activeList,
+                    isActive: true,
+                    isDark: isDark,
+                  ),
+                  _buildList(
+                    context,
+                    expiredList,
+                    isActive: false,
+                    isDark: isDark,
+                  ),
                 ],
               );
             }),
@@ -169,7 +229,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                   width: 36.w,
                   height: 36.w,
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant),
+                    color: (isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightSurfaceVariant),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                   ),
                 ),
@@ -177,7 +239,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                 Expanded(
                   child: Container(
                     height: 16.h,
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightSurfaceVariant,
                   ),
                 ),
               ],
@@ -186,7 +250,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
             Container(
               height: 48.h,
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                color: isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightSurfaceVariant,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
               ),
             ),
@@ -196,12 +262,19 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
     );
   }
 
-  Widget _buildList(BuildContext context, List<LicenseKeyItem> list, {required bool isActive, required bool isDark}) {
+  Widget _buildList(
+    BuildContext context,
+    List<LicenseKeyItem> list, {
+    required bool isActive,
+    required bool isDark,
+  }) {
     if (list.isEmpty) {
       return SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: EcardoEmptyState(
-          iconData: isActive ? Icons.lock_outline_rounded : Icons.history_toggle_off_rounded,
+          iconData: isActive
+              ? Icons.lock_outline_rounded
+              : Icons.history_toggle_off_rounded,
           glowColor: isActive
               ? (isDark ? AppColors.brandViolet : AppColors.mainSoftBlue)
               : (isDark ? AppColors.softGray : AppColors.lightWarmGray),
@@ -261,12 +334,17 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
         padding: EdgeInsets.all(AppSpacing.lg.r),
         itemCount: list.length,
         separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
-        itemBuilder: (context, i) => _buildVaultLicenseCard(context, list[i], isDark: isDark),
+        itemBuilder: (context, i) =>
+            _buildVaultLicenseCard(context, list[i], isDark: isDark),
       ),
     );
   }
 
-  Widget _buildVaultLicenseCard(BuildContext context, LicenseKeyItem item, {required bool isDark}) {
+  Widget _buildVaultLicenseCard(
+    BuildContext context,
+    LicenseKeyItem item, {
+    required bool isDark,
+  }) {
     final isRevealed = _revealedKeys.contains(item.id);
     final displayedKey = isRevealed
         ? (item.licenseKey.isNotEmpty ? item.licenseKey : item.keyMasked)
@@ -299,12 +377,16 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                 width: 40.w,
                 height: 40.w,
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightSecondaryContainer,
+                  color: isDark
+                      ? AppColors.darkPrimaryContainer
+                      : AppColors.lightSecondaryContainer,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                 ),
                 child: Icon(
                   Icons.vpn_key_rounded,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                   size: AppSpacing.iconSm.sp,
                 ),
               ),
@@ -318,7 +400,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -328,26 +412,53 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                           '${item.edition} • ${item.durationMonths} ${l10nPick(context, en: 'Months', fa: 'ماهه', ar: 'شهر', zh: '个月')}',
                           style: TextStyle(
                             fontSize: 11.5.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                         SizedBox(width: AppSpacing.sm.w),
                         Semantics(
-                          label: l10nPick(context, en: 'Genuine Retail License', fa: 'لایسنس اورجینال قانونی', ar: 'ترخيص أصلي معتمد', zh: '官方正版授权'),
+                          label: l10nPick(
+                            context,
+                            en: 'Genuine Retail License',
+                            fa: 'لایسنس اورجینال قانونی',
+                            ar: 'ترخيص أصلي معتمد',
+                            zh: '官方正版授权',
+                          ),
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 2.h,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.success.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusXs.r,
+                              ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.verified_user_rounded, size: 10.sp, color: AppColors.success),
+                                Icon(
+                                  Icons.verified_user_rounded,
+                                  size: 10.sp,
+                                  color: AppColors.success,
+                                ),
                                 SizedBox(width: 3.w),
                                 Text(
-                                  l10nPick(context, en: 'Genuine Retail', fa: 'اورجینال قانونی', ar: 'ترخيص أصلي', zh: '官方正版'),
-                                  style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w700, color: AppColors.success),
+                                  l10nPick(
+                                    context,
+                                    en: 'Genuine Retail',
+                                    fa: 'اورجینال قانونی',
+                                    ar: 'ترخيص أصلي',
+                                    zh: '官方正版',
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 9.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.success,
+                                  ),
                                 ),
                               ],
                             ),
@@ -360,7 +471,13 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
               ),
               Semantics(
                 label: item.isExpired
-                    ? l10nPick(context, en: 'Status: Expired', fa: 'وضعیت: منقضی‌شده', ar: 'الحالة: منتهي', zh: '状态: 已过期')
+                    ? l10nPick(
+                        context,
+                        en: 'Status: Expired',
+                        fa: 'وضعیت: منقضی‌شده',
+                        ar: 'الحالة: منتهي',
+                        zh: '状态: 已过期',
+                      )
                     : '${item.daysRemaining ?? 30} ${l10nPick(context, en: 'days remaining', fa: 'روز باقی‌مانده از اعتبار', ar: 'يوم متبقي', zh: '天剩余')}',
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
@@ -372,12 +489,20 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                   ),
                   child: Text(
                     item.isExpired
-                        ? l10nPick(context, en: 'Expired', fa: 'منقضی‌شده', ar: 'منتهي', zh: '已过期')
+                        ? l10nPick(
+                            context,
+                            en: 'Expired',
+                            fa: 'منقضی‌شده',
+                            ar: 'منتهي',
+                            zh: '已过期',
+                          )
                         : '${item.daysRemaining ?? 30} ${l10nPick(context, en: 'Days Left', fa: 'روز باقی‌مانده', ar: 'يوم متبقي', zh: '天剩余')}',
                     style: TextStyle(
                       fontSize: 10.5.sp,
                       fontWeight: FontWeight.bold,
-                      color: item.isExpired ? AppColors.error : AppColors.success,
+                      color: item.isExpired
+                          ? AppColors.error
+                          : AppColors.success,
                     ),
                   ),
                 ),
@@ -389,9 +514,14 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
 
           // Digital Key Vault Container (One-Tap Copy + Reveal Toggle)
           Container(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.md.w,
+              vertical: AppSpacing.sm.h,
+            ),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+              color: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightSurfaceVariant,
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
               border: Border.all(
                 color: isDark ? AppColors.darkOutline : AppColors.lightOutline,
@@ -402,7 +532,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                 Icon(
                   isRevealed ? Icons.lock_open_rounded : Icons.lock_rounded,
                   size: AppSpacing.iconXs.sp,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                 ),
                 SizedBox(width: AppSpacing.sm.w),
                 Expanded(
@@ -416,13 +548,21 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                       zh: '许可证密钥: $displayedKey。点击复制。',
                     ),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                       onTap: () {
                         HapticFeedback.lightImpact();
-                        final textToCopy = item.licenseKey.isNotEmpty ? item.licenseKey : item.keyMasked;
+                        final textToCopy = item.licenseKey.isNotEmpty
+                            ? item.licenseKey
+                            : item.keyMasked;
                         Clipboard.setData(ClipboardData(text: textToCopy));
                         ToastHelper().showSuccessToast(
-                          l10nPick(context, en: 'Digital license key copied!', fa: 'کلید لایسنس دیجیتال کپی شد!'),
+                          l10nPick(
+                            context,
+                            en: 'Digital license key copied!',
+                            fa: 'کلید لایسنس دیجیتال کپی شد!',
+                          ),
                         );
                       },
                       child: Padding(
@@ -434,7 +574,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                             fontFamily: 'monospace',
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       ),
@@ -444,17 +586,40 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                 Semantics(
                   button: true,
                   label: isRevealed
-                      ? l10nPick(context, en: 'Hide license key', fa: 'مخفی‌سازی کلید لایسنس', ar: 'إخفاء المفتاح', zh: '隐藏密钥')
-                      : l10nPick(context, en: 'Reveal license key', fa: 'نمایش کلید لایسنس', ar: 'إظهار المفتاح', zh: '显示密钥'),
+                      ? l10nPick(
+                          context,
+                          en: 'Hide license key',
+                          fa: 'مخفی‌سازی کلید لایسنس',
+                          ar: 'إخفاء المفتاح',
+                          zh: '隐藏密钥',
+                        )
+                      : l10nPick(
+                          context,
+                          en: 'Reveal license key',
+                          fa: 'نمایش کلید لایسنس',
+                          ar: 'إظهار المفتاح',
+                          zh: '显示密钥',
+                        ),
                   child: IconButton(
-                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                    constraints: const BoxConstraints(
+                      minWidth: 44,
+                      minHeight: 44,
+                    ),
                     tooltip: isRevealed
-                        ? l10nPick(context, en: 'Hide key', fa: 'مخفی‌سازی کلید')
+                        ? l10nPick(
+                            context,
+                            en: 'Hide key',
+                            fa: 'مخفی‌سازی کلید',
+                          )
                         : l10nPick(context, en: 'Reveal key', fa: 'نمایش کلید'),
                     icon: Icon(
-                      isRevealed ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      isRevealed
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       size: 18.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                     onPressed: () {
                       HapticFeedback.selectionClick();
@@ -470,21 +635,38 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                 ),
                 Semantics(
                   button: true,
-                  label: l10nPick(context, en: 'Copy license key to clipboard', fa: 'کپی کلید لایسنس در حافظه', ar: 'نسخ المفتاح', zh: '复制密钥'),
+                  label: l10nPick(
+                    context,
+                    en: 'Copy license key to clipboard',
+                    fa: 'کپی کلید لایسنس در حافظه',
+                    ar: 'نسخ المفتاح',
+                    zh: '复制密钥',
+                  ),
                   child: IconButton(
-                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                    constraints: const BoxConstraints(
+                      minWidth: 44,
+                      minHeight: 44,
+                    ),
                     tooltip: l10nPick(context, en: 'Copy key', fa: 'کپی کلید'),
                     icon: Icon(
                       Icons.copy_rounded,
                       size: 18.sp,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
                     ),
                     onPressed: () {
                       HapticFeedback.lightImpact();
-                      final textToCopy = item.licenseKey.isNotEmpty ? item.licenseKey : item.keyMasked;
+                      final textToCopy = item.licenseKey.isNotEmpty
+                          ? item.licenseKey
+                          : item.keyMasked;
                       Clipboard.setData(ClipboardData(text: textToCopy));
                       ToastHelper().showSuccessToast(
-                        l10nPick(context, en: 'Digital license key copied!', fa: 'کلید لایسنس دیجیتال کپی شد!'),
+                        l10nPick(
+                          context,
+                          en: 'Digital license key copied!',
+                          fa: 'کلید لایسنس دیجیتال کپی شد!',
+                        ),
                       );
                     },
                   ),
@@ -504,7 +686,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                   Icon(
                     Icons.event_outlined,
                     size: 13.sp,
-                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                    color: isDark
+                        ? AppColors.darkTextTertiary
+                        : AppColors.lightTextTertiary,
                   ),
                   SizedBox(width: 4.w),
                   Text(
@@ -513,7 +697,9 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                         : '',
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextTertiary,
                     ),
                   ),
                 ],
@@ -543,11 +729,13 @@ class _LicenseMyLicensesScreenState extends State<LicenseMyLicensesScreen> with 
                     final newOrd = await controller.renewLicense(item.id);
                     if (!context.mounted) return;
                     if (newOrd != null) {
-                      ToastHelper().showSuccessToast(l10nPick(
-                        context,
-                        en: 'Renewal order created!',
-                        fa: 'سفارش تمدید لایسنس ثبت شد!',
-                      ));
+                      ToastHelper().showSuccessToast(
+                        l10nPick(
+                          context,
+                          en: 'Renewal order created!',
+                          fa: 'سفارش تمدید لایسنس ثبت شد!',
+                        ),
+                      );
                     }
                   },
                 ),

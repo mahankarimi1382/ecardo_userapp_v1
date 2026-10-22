@@ -179,7 +179,8 @@ class CreateVirtualCardController extends GetxController {
       );
       if (response.status != Status.completed || response.data == null) {
         cardProductsError.value =
-            response.message ?? AppLocalizations.of(Get.context!)!.vcUnableLoadProducts;
+            response.message ??
+            AppLocalizations.of(Get.context!)!.vcUnableLoadProducts;
         return;
       }
 
@@ -195,7 +196,9 @@ class CreateVirtualCardController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCardProducts() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      cardProductsError.value = AppLocalizations.of(Get.context!)!.vcUnableLoadProducts;
+      cardProductsError.value = AppLocalizations.of(
+        Get.context!,
+      )!.vcUnableLoadProducts;
     } finally {
       hasLoadedCardProducts.value = true;
       isCardProductsLoading.value = false;
@@ -313,15 +316,24 @@ class CreateVirtualCardController extends GetxController {
 
       final model = WalletsModel.fromJson(response.data!);
       final all = model.data?.wallets ?? [];
-      final prodCurrency = selectedCardProduct.value?.currency?.toUpperCase() ?? 'USD';
+      final prodCurrency =
+          selectedCardProduct.value?.currency?.toUpperCase() ?? 'USD';
 
       if (prodCurrency == 'IRR' || prodCurrency == 'IRT') {
         irrWallets.assignAll(
-          all.where((w) => w.code?.toUpperCase() == 'IRR' || w.code?.toUpperCase() == 'IRT'),
+          all.where(
+            (w) =>
+                w.code?.toUpperCase() == 'IRR' ||
+                w.code?.toUpperCase() == 'IRT',
+          ),
         );
       } else if (prodCurrency == 'USD') {
         irrWallets.assignAll(
-          all.where((w) => w.code?.toUpperCase() == 'USD' || w.code?.toUpperCase() == 'USDT'),
+          all.where(
+            (w) =>
+                w.code?.toUpperCase() == 'USD' ||
+                w.code?.toUpperCase() == 'USDT',
+          ),
         );
       } else {
         irrWallets.assignAll(
@@ -381,9 +393,12 @@ class CreateVirtualCardController extends GetxController {
     isCreateVirtualCardLoading.value = true;
     try {
       final product = selectedCardProduct.value!;
-      final amount = num.tryParse(amountController.text.replaceAll(',', '').trim()) ?? 0;
+      final amount =
+          num.tryParse(amountController.text.replaceAll(',', '').trim()) ?? 0;
       final holder = selectedTab.value ? selectedCardHolder.value : null;
-      final isWalletFund = fundingSource.value == 'irr_wallet' || fundingSource.value == 'wallet';
+      final isWalletFund =
+          fundingSource.value == 'irr_wallet' ||
+          fundingSource.value == 'wallet';
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.postCardOrdersEndpoint,
         data: {
@@ -397,7 +412,8 @@ class CreateVirtualCardController extends GetxController {
           'request_physical': requestPhysical.value,
           'name': holder?.name ?? nameController.text.trim(),
           'email': holder?.email ?? emailController.text.trim(),
-          'phone_number': holder?.phoneNumber ?? phoneNumberController.text.trim(),
+          'phone_number':
+              holder?.phoneNumber ?? phoneNumberController.text.trim(),
           'address': holder?.address ?? addressController.text.trim(),
           'country': holder?.country ?? selectedCountry.value?.code,
           'city': holder?.city ?? cityController.text.trim(),
@@ -412,8 +428,9 @@ class CreateVirtualCardController extends GetxController {
           errorMsg.contains('Insufficient') || errorMsg.contains('balance')
               ? 'موجودی کیف پول انتخابی کافی نیست. لطفاً ابتدا کیف پول خود را شارژ یا تبدیل فرمایید.'
               : errorMsg.isNotEmpty
-                  ? errorMsg
-                  : (localization?.allControllerLoadError ?? 'خطا در ثبت سفارش کارت'),
+              ? errorMsg
+              : (localization?.allControllerLoadError ??
+                    'خطا در ثبت سفارش کارت'),
         );
         return;
       }
@@ -444,7 +461,8 @@ class CreateVirtualCardController extends GetxController {
           status == 'failed' ||
           status == 'cancelled') {
         ToastHelper().showErrorToast(
-          failureMessage ?? AppLocalizations.of(Get.context!)!.vcOrderNotCompleted,
+          failureMessage ??
+              AppLocalizations.of(Get.context!)!.vcOrderNotCompleted,
         );
         return;
       }
@@ -474,22 +492,17 @@ class CreateVirtualCardController extends GetxController {
     if (responseData is! Map) return null;
     final data = responseData.cast<String, dynamic>();
     final orderData = data['order'];
-    return orderData is Map
-        ? orderData.cast<String, dynamic>()
-        : data;
+    return orderData is Map ? orderData.cast<String, dynamic>() : data;
   }
 
-  Map<String, dynamic> _applicationData(
-    List<CardApplicationField> fields,
-  ) {
+  Map<String, dynamic> _applicationData(List<CardApplicationField> fields) {
     return {
       for (final field in fields)
         field.name: switch (field.type) {
           'boolean' => applicationBooleanValues[field.name]?.value ?? false,
-          'number' =>
-            num.tryParse(
-              applicationFieldControllers[field.name]?.text.trim() ?? '',
-            ),
+          'number' => num.tryParse(
+            applicationFieldControllers[field.name]?.text.trim() ?? '',
+          ),
           _ => applicationFieldControllers[field.name]?.text.trim() ?? '',
         },
     };
@@ -498,11 +511,15 @@ class CreateVirtualCardController extends GetxController {
   bool validateIrrCardFields() {
     final product = selectedCardProduct.value;
     if (product == null) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcProductUnavailable);
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.vcProductUnavailable,
+      );
       return false;
     }
 
-    final amount = num.tryParse(amountController.text.replaceAll(',', '').trim());
+    final amount = num.tryParse(
+      amountController.text.replaceAll(',', '').trim(),
+    );
     if (amount == null || amount <= 0) {
       ToastHelper().showErrorToast(
         product.currency?.toUpperCase() == 'IRR'
@@ -511,30 +528,34 @@ class CreateVirtualCardController extends GetxController {
       );
       return false;
     }
-    if (product.minimumInitialLoad > 0 &&
-        amount < product.minimumInitialLoad) {
+    if (product.minimumInitialLoad > 0 && amount < product.minimumInitialLoad) {
       ToastHelper().showErrorToast(
         product.currency?.toUpperCase() == 'IRR'
-            ? AppLocalizations.of(Get.context!)!.vcMinInitialLoad(product.minimumInitialLoad)
+            ? AppLocalizations.of(
+                Get.context!,
+              )!.vcMinInitialLoad(product.minimumInitialLoad)
             : 'Minimum initial load is ${product.minimumInitialLoad} ${product.currency ?? ''}',
       );
       return false;
     }
-    if (product.maximumInitialLoad > 0 &&
-        amount > product.maximumInitialLoad) {
+    if (product.maximumInitialLoad > 0 && amount > product.maximumInitialLoad) {
       ToastHelper().showErrorToast(
         product.currency?.toUpperCase() == 'IRR'
-            ? AppLocalizations.of(Get.context!)!.vcMaxInitialLoad(product.maximumInitialLoad)
+            ? AppLocalizations.of(
+                Get.context!,
+              )!.vcMaxInitialLoad(product.maximumInitialLoad)
             : 'Maximum initial load is ${product.maximumInitialLoad} ${product.currency ?? ''}',
       );
       return false;
     }
-    if (fundingSource.value == 'irr_wallet' || fundingSource.value == 'wallet') {
+    if (fundingSource.value == 'irr_wallet' ||
+        fundingSource.value == 'wallet') {
       if (selectedIrrWallet.value == null) {
         ToastHelper().showErrorToast('Please select a funding wallet.');
         return false;
       }
-      final walletBal = double.tryParse(selectedIrrWallet.value?.balance ?? '0') ?? 0.0;
+      final walletBal =
+          double.tryParse(selectedIrrWallet.value?.balance ?? '0') ?? 0.0;
       final requiredTotal = amount + product.creationFee;
       if (walletBal < requiredTotal) {
         ToastHelper().showErrorToast(
@@ -544,7 +565,9 @@ class CreateVirtualCardController extends GetxController {
       }
     }
     if (fundingSource.value == 'gateway' && selectedGateway.value == null) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcSelectGateway);
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.vcSelectGateway,
+      );
       return false;
     }
     if (selectedTab.value && selectedCardHolder.value == null) {
@@ -561,7 +584,9 @@ class CreateVirtualCardController extends GetxController {
         (holder?.state ?? stateController.text.trim()).isEmpty ||
         (holder?.postalCode ?? postalCodeController.text.trim()).isEmpty ||
         (holder?.address ?? addressController.text.trim()).isEmpty) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcCompleteCardholder);
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.vcCompleteCardholder,
+      );
       return false;
     }
     if (!GetUtils.isEmail(email)) {
@@ -586,9 +611,13 @@ class CreateVirtualCardController extends GetxController {
 
   String _cardOrderStatusMessage(String status) {
     return switch (status) {
-      'payment_pending' => AppLocalizations.of(Get.context!)!.vcStatusPaymentPending,
-      'pending' || 'provisioning' => AppLocalizations.of(Get.context!)!.vcStatusProvisioning,
-      'active' || 'completed' => AppLocalizations.of(Get.context!)!.vcStatusReady,
+      'payment_pending' => AppLocalizations.of(
+        Get.context!,
+      )!.vcStatusPaymentPending,
+      'pending' ||
+      'provisioning' => AppLocalizations.of(Get.context!)!.vcStatusProvisioning,
+      'active' ||
+      'completed' => AppLocalizations.of(Get.context!)!.vcStatusReady,
       _ => AppLocalizations.of(Get.context!)!.vcStatusCreated,
     };
   }
@@ -606,7 +635,9 @@ class CreateVirtualCardController extends GetxController {
         final rawProviders = cardProvidersModel.data ?? [];
         // Filter out legacy template providers (Stripe/Strowallet) that fail on regional issuance
         cardProvidersList.assignAll(
-          rawProviders.where((p) => p.code != 'stripe' && p.code != 'strowallet'),
+          rawProviders.where(
+            (p) => p.code != 'stripe' && p.code != 'strowallet',
+          ),
         );
       }
     } catch (e, stackTrace) {
@@ -706,8 +737,9 @@ class CreateVirtualCardController extends GetxController {
           errorMsg.contains('unable to serve')
               ? 'این ارائه‌دهنده کارت برای کشور ایران در دسترس نیست. لطفاً کارت داخلی eCardo را انتخاب فرمایید.'
               : errorMsg.isNotEmpty
-                  ? errorMsg
-                  : (localization?.allControllerLoadError ?? 'Failed to create virtual card'),
+              ? errorMsg
+              : (localization?.allControllerLoadError ??
+                    'Failed to create virtual card'),
         );
       }
     } catch (e, stackTrace) {
@@ -717,7 +749,8 @@ class CreateVirtualCardController extends GetxController {
       ToastHelper().showErrorToast(
         errStr.contains('unable to serve')
             ? 'این ارائه‌دهنده کارت برای کشور ایران در دسترس نیست. لطفاً کارت داخلی eCardo را انتخاب فرمایید.'
-            : (localization?.allControllerLoadError ?? 'Failed to create virtual card'),
+            : (localization?.allControllerLoadError ??
+                  'Failed to create virtual card'),
       );
     } finally {
       isCreateVirtualCardLoading.value = false;

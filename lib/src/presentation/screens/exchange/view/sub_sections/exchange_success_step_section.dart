@@ -30,8 +30,7 @@ class ExchangeSuccessStepSection extends StatefulWidget {
       _ExchangeSuccessStepSectionState();
 }
 
-class _ExchangeSuccessStepSectionState
-    extends State<ExchangeSuccessStepSection>
+class _ExchangeSuccessStepSectionState extends State<ExchangeSuccessStepSection>
     with SingleTickerProviderStateMixin {
   final ExchangeController controller = Get.find();
   final settingsService = Get.find<SettingsService>();
@@ -131,8 +130,7 @@ class _ExchangeSuccessStepSectionState
                       backgroundColor: isDark
                           ? AppColors.mainSoftBlue
                           : AppColors.lightPrimary,
-                      textColor:
-                          isDark ? AppColors.deepBlack : AppColors.white,
+                      textColor: isDark ? AppColors.deepBlack : AppColors.white,
                       text: loc.exchangeSuccessExchangeAgain,
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -202,8 +200,7 @@ class _ExchangeSuccessStepSectionState
       formattedDate = createdStr;
     }
 
-    final payAmount =
-        double.tryParse(t["pay_amount"]?.toString() ?? '') ?? 0.0;
+    final payAmount = double.tryParse(t["pay_amount"]?.toString() ?? '') ?? 0.0;
     final convertedAmount =
         double.tryParse(t["amount"]?.toString() ?? '') ?? 0.0;
     final charge = double.tryParse(t["charge"]?.toString() ?? '') ?? 0.0;

@@ -30,33 +30,42 @@ void main() {
   // TASK-UI-01: THEME WCAG CONTRAST
   // =========================================================================
   group('TASK-UI-01: LightTheme WCAG AA Contrast Fix', () {
-    testWidgets('onSecondary is deepBlack (#161614) for WCAG 2.2 AA compliance against teal',
-        (tester) async {
-      late BuildContext capturedContext;
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Builder(
-            builder: (context) {
-              capturedContext = context;
-              return const SizedBox();
-            },
+    testWidgets(
+      'onSecondary is deepBlack (#161614) for WCAG 2.2 AA compliance against teal',
+      (tester) async {
+        late BuildContext capturedContext;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                capturedContext = context;
+                return const SizedBox();
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      final theme = LightTheme().lightTheme(capturedContext);
-      expect(theme.colorScheme.secondary, equals(AppColors.lightSecondary)); // #00BFA6
-      expect(theme.colorScheme.onSecondary, equals(AppColors.deepBlack)); // #161614
-      expect(theme.colorScheme.onSecondary, isNot(equals(AppColors.white)));
-    });
+        final theme = LightTheme().lightTheme(capturedContext);
+        expect(
+          theme.colorScheme.secondary,
+          equals(AppColors.lightSecondary),
+        ); // #00BFA6
+        expect(
+          theme.colorScheme.onSecondary,
+          equals(AppColors.deepBlack),
+        ); // #161614
+        expect(theme.colorScheme.onSecondary, isNot(equals(AppColors.white)));
+      },
+    );
   });
 
   // =========================================================================
   // TASK-LOC-01: ARABIC LOCALIZATION FALLBACK
   // =========================================================================
   group('TASK-LOC-01: Arabic Localization Fallback to English', () {
-    testWidgets('l10nPick falls back to English when Arabic string is absent',
-        (tester) async {
+    testWidgets('l10nPick falls back to English when Arabic string is absent', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
@@ -126,7 +135,9 @@ void main() {
       );
       // Valid Sheba with spaces
       expect(
-        RemittanceReceiverSection.validateSheba('IR82 0170 0000 0012 3456 7890 12'),
+        RemittanceReceiverSection.validateSheba(
+          'IR82 0170 0000 0012 3456 7890 12',
+        ),
         isNull,
       );
       // Valid lowercase ir
@@ -162,7 +173,10 @@ void main() {
       expect(RemittanceReceiverSection.isValidLuhn('4532015112843211'), isTrue);
       expect(RemittanceReceiverSection.isValidLuhn('4000000000000002'), isTrue);
       // Invalid Luhn
-      expect(RemittanceReceiverSection.isValidLuhn('4532015112843218'), isFalse);
+      expect(
+        RemittanceReceiverSection.isValidLuhn('4532015112843218'),
+        isFalse,
+      );
       // Wrong length
       expect(RemittanceReceiverSection.isValidLuhn('12345'), isFalse);
     });
@@ -210,7 +224,10 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final isValid = RemittanceReceiverSection.validate(context, controller);
+              final isValid = RemittanceReceiverSection.validate(
+                context,
+                controller,
+              );
               return Text('valid: $isValid');
             },
           ),
@@ -235,7 +252,10 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final isValid = RemittanceReceiverSection.validate(context, controller);
+              final isValid = RemittanceReceiverSection.validate(
+                context,
+                controller,
+              );
               return Text('valid: $isValid');
             },
           ),
@@ -245,7 +265,9 @@ void main() {
       expect(find.text('valid: false'), findsOneWidget);
     });
 
-    testWidgets('validate returns true when Sheba and Card are valid', (tester) async {
+    testWidgets('validate returns true when Sheba and Card are valid', (
+      tester,
+    ) async {
       Get.testMode = true;
       if (!Get.isRegistered<NetworkService>()) {
         Get.put<NetworkService>(_DummyNetworkService());
@@ -261,7 +283,10 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              final isValid = RemittanceReceiverSection.validate(context, controller);
+              final isValid = RemittanceReceiverSection.validate(
+                context,
+                controller,
+              );
               return Text('valid: $isValid');
             },
           ),
@@ -277,12 +302,16 @@ void main() {
   // =========================================================================
   group('TASK-UI-02: WithdrawDestinationCard.maskAccountNumber', () {
     test('masks Iranian Sheba string properly', () {
-      final masked = WithdrawDestinationCard.maskAccountNumber('IR820170000000123456789012');
+      final masked = WithdrawDestinationCard.maskAccountNumber(
+        'IR820170000000123456789012',
+      );
       expect(masked, equals('IR82 •••• •••• •••• 9012'));
     });
 
     test('masks 16-digit card string properly', () {
-      final masked = WithdrawDestinationCard.maskAccountNumber('6037991234567890');
+      final masked = WithdrawDestinationCard.maskAccountNumber(
+        '6037991234567890',
+      );
       expect(masked, equals('•••• •••• •••• 7890'));
     });
 
@@ -301,7 +330,9 @@ void main() {
   // TASK-UI-01: RTL SLIDER TESTS (EcardoSwipeButton & SwipeToConfirmSlider)
   // =========================================================================
   group('TASK-UI-01: RTL Swipe Slider Tests', () {
-    testWidgets('EcardoSwipeButton works in RTL (Persian/Arabic) mode', (tester) async {
+    testWidgets('EcardoSwipeButton works in RTL (Persian/Arabic) mode', (
+      tester,
+    ) async {
       bool completed = false;
 
       await tester.pumpWidget(
@@ -338,7 +369,9 @@ void main() {
       expect(completed, isTrue);
     });
 
-    testWidgets('SwipeToConfirmSlider works in RTL (Persian/Arabic) mode', (tester) async {
+    testWidgets('SwipeToConfirmSlider works in RTL (Persian/Arabic) mode', (
+      tester,
+    ) async {
       bool confirmed = false;
 
       await tester.pumpWidget(
@@ -374,7 +407,9 @@ void main() {
       expect(confirmed, isTrue);
     });
 
-    testWidgets('EcardoSwipeButton in LTR continues to swipe left-to-right', (tester) async {
+    testWidgets('EcardoSwipeButton in LTR continues to swipe left-to-right', (
+      tester,
+    ) async {
       bool completed = false;
 
       await tester.pumpWidget(

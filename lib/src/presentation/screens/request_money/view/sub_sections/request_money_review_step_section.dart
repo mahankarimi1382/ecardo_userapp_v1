@@ -60,19 +60,24 @@ class _RequestMoneyReviewStepSectionState
 
     final bool isPasscodeEnabled =
         Get.find<SettingsService>().getSetting(
-              "request_money_accept_passcode_status",
-            ) ==
-            "1";
+          "request_money_accept_passcode_status",
+        ) ==
+        "1";
 
     String? storedPasscode = controller.userModel.value.data?.passcode;
     bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
     if (storedPasscode == null || storedPasscode.isEmpty) {
       if (Get.isRegistered<HomeController>()) {
-        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
-        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+        storedPasscode =
+            Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??=
+            Get.find<HomeController>().userModel.value.data?.hasPasscode;
       }
     }
-    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+    final hasPasscode = PasscodeHelper.userHasPasscode(
+      storedPasscode,
+      hasPasscodeFlag,
+    );
 
     if (isPasscodeEnabled && hasPasscode) {
       final dynamic verified = await Get.bottomSheet<dynamic>(

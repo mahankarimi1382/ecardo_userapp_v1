@@ -21,14 +21,22 @@ class OrderChatMessageBubble extends StatelessWidget {
     final attachment = message.attachment;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final primaryAccent = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+    final primaryAccent = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.brandViolet;
     final otherBg = isDark ? AppColors.darkSurface : const Color(0xFFF1F5F9);
     final otherBorder = isDark ? AppColors.darkBorder : const Color(0xFFE2E8F0);
-    final otherTextColor = isDark ? AppColors.darkTextPrimary : const Color(0xFF1E293B);
-    final otherSubText = isDark ? AppColors.darkTextSecondary : const Color(0xFF64748B);
+    final otherTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : const Color(0xFF1E293B);
+    final otherSubText = isDark
+        ? AppColors.darkTextSecondary
+        : const Color(0xFF64748B);
 
     return Align(
-      alignment: isMe ? AlignmentDirectional.centerEnd : AlignmentDirectional.centerStart,
+      alignment: isMe
+          ? AlignmentDirectional.centerEnd
+          : AlignmentDirectional.centerStart,
       child: Container(
         constraints: BoxConstraints(maxWidth: 290.w),
         margin: EdgeInsets.only(bottom: 12.h),
@@ -73,7 +81,9 @@ class OrderChatMessageBubble extends StatelessWidget {
                         letterSpacing: 0,
                         fontWeight: FontWeight.w700,
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                        color: isDark
+                            ? AppColors.warmWhite
+                            : AppColors.deepBlack,
                       ),
                     ),
                   ),
@@ -174,7 +184,9 @@ class OrderChatMessageBubble extends StatelessWidget {
             ],
             SizedBox(height: 6.h),
             Align(
-              alignment: !isMe ? AlignmentDirectional.centerStart : AlignmentDirectional.centerEnd,
+              alignment: !isMe
+                  ? AlignmentDirectional.centerStart
+                  : AlignmentDirectional.centerEnd,
               child: Text(
                 _formatDateTime(message.createdAt),
                 style: TextStyle(

@@ -67,7 +67,9 @@ class TourListScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(
@@ -80,7 +82,9 @@ class TourListScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
@@ -89,7 +93,9 @@ class TourListScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           tooltip: l10nPick(context, en: 'Back', fa: 'بازگشت'),
@@ -144,9 +150,14 @@ class TourListScreen extends StatelessWidget {
                 separatorBuilder: (_, _) => SizedBox(width: AppSpacing.sm.w),
                 itemBuilder: (context, index) {
                   final cat = categories[index];
-                  final label = l10nPick(context, en: cat['label_en']!, fa: cat['label_fa']!);
+                  final label = l10nPick(
+                    context,
+                    en: cat['label_en']!,
+                    fa: cat['label_fa']!,
+                  );
                   return Obx(() {
-                    final isSelected = controller.selectedCategory.value == cat['code'];
+                    final isSelected =
+                        controller.selectedCategory.value == cat['code'];
                     return Semantics(
                       button: true,
                       selected: isSelected,
@@ -157,21 +168,35 @@ class TourListScreen extends StatelessWidget {
                           label,
                           style: TextStyle(
                             fontSize: 11.sp,
-                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                            fontWeight: isSelected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
                             color: isSelected
                                 ? AppColors.white
-                                : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                                : (isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary),
                           ),
                         ),
-                        backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
-                        selectedColor: isDark ? AppColors.mutedBlue : TravelTheme.blue,
+                        backgroundColor: isDark
+                            ? AppColors.darkSurface
+                            : AppColors.white,
+                        selectedColor: isDark
+                            ? AppColors.mutedBlue
+                            : TravelTheme.blue,
                         checkmarkColor: AppColors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusXl.r,
+                          ),
                           side: BorderSide(
                             color: isSelected
-                                ? (isDark ? AppColors.mutedBlue : TravelTheme.blue)
-                                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                ? (isDark
+                                      ? AppColors.mutedBlue
+                                      : TravelTheme.blue)
+                                : (isDark
+                                      ? AppColors.darkBorder
+                                      : AppColors.lightBorder),
                           ),
                         ),
                         onSelected: (val) {
@@ -202,10 +227,14 @@ class TourListScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.darkSurface : AppColors.white,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                    border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: AppColors.warning.withValues(alpha: 0.3),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                        color: isDark
+                            ? AppColors.darkShadow
+                            : AppColors.lightShadow,
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -238,7 +267,9 @@ class TourListScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.sm.h),
@@ -252,7 +283,9 @@ class TourListScreen extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.softGray,
                           fontSize: 11.5.sp,
                           height: 1.5,
                         ),
@@ -269,11 +302,17 @@ class TourListScreen extends StatelessWidget {
                         ),
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
-                            foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                            backgroundColor: isDark
+                                ? AppColors.darkPrimary
+                                : TravelTheme.blue,
+                            foregroundColor: isDark
+                                ? AppColors.deepBlack
+                                : AppColors.white,
                             minimumSize: const Size(44, 44),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd.r,
+                              ),
                             ),
                             padding: EdgeInsetsDirectional.symmetric(
                               horizontal: AppSpacing.xl.w,
@@ -293,7 +332,10 @@ class TourListScreen extends StatelessWidget {
                               ar: 'إعادة المحاولة',
                               zh: '重试连接',
                             ),
-                            style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
@@ -306,20 +348,27 @@ class TourListScreen extends StatelessWidget {
               if (controller.tours.isEmpty) {
                 return Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 20.w),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 40.h,
+                      horizontal: 20.w,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           padding: EdgeInsets.all(AppSpacing.xl.r),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                            color: isDark
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.lightBackground,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.explore_off_outlined,
                             size: 48.r,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.softGray,
                           ),
                         ),
                         SizedBox(height: AppSpacing.md.h),
@@ -334,7 +383,9 @@ class TourListScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         SizedBox(height: AppSpacing.xs.h),
@@ -347,13 +398,19 @@ class TourListScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 11.5.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.softGray,
                           ),
                         ),
                         SizedBox(height: AppSpacing.lg.h),
                         Semantics(
                           button: true,
-                          label: l10nPick(context, en: 'View All Tours', fa: 'مشاهده همه تورها'),
+                          label: l10nPick(
+                            context,
+                            en: 'View All Tours',
+                            fa: 'مشاهده همه تورها',
+                          ),
                           child: OutlinedButton(
                             onPressed: () {
                               HapticFeedback.lightImpact();
@@ -362,13 +419,27 @@ class TourListScreen extends StatelessWidget {
                             },
                             style: OutlinedButton.styleFrom(
                               minimumSize: const Size(44, 44),
-                              side: BorderSide(color: isDark ? AppColors.darkPrimary : TravelTheme.blue),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                              side: BorderSide(
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : TravelTheme.blue,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusMd.r,
+                                ),
+                              ),
                             ),
                             child: Text(
-                              l10nPick(context, en: 'View All Tours', fa: 'مشاهده همه تورها'),
+                              l10nPick(
+                                context,
+                                en: 'View All Tours',
+                                fa: 'مشاهده همه تورها',
+                              ),
                               style: TextStyle(
-                                color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : TravelTheme.blue,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -385,7 +456,8 @@ class TourListScreen extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.tours.length,
-                separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+                separatorBuilder: (_, _) =>
+                    SizedBox(height: AppSpacing.cardGap.h),
                 itemBuilder: (context, index) {
                   final tour = controller.tours[index];
                   return _TourCard(
@@ -408,8 +480,12 @@ class TourListScreen extends StatelessWidget {
   }
 
   Widget _buildTourSkeleton(bool isDark) {
-    final baseColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-    final highlightColor = isDark ? AppColors.darkSurface : AppColors.lightOutlineVariant;
+    final baseColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightSurfaceVariant;
+    final highlightColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightOutlineVariant;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -448,7 +524,11 @@ class _TourYarBanner extends StatelessWidget {
           gradient: const LinearGradient(
             begin: AlignmentDirectional.topStart,
             end: AlignmentDirectional.bottomEnd,
-            colors: [AppColors.deepBlack, AppColors.brandVioletDeep, AppColors.brandViolet],
+            colors: [
+              AppColors.deepBlack,
+              AppColors.brandVioletDeep,
+              AppColors.brandViolet,
+            ],
           ),
           boxShadow: [
             BoxShadow(
@@ -474,7 +554,11 @@ class _TourYarBanner extends StatelessWidget {
                       color: AppColors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.auto_awesome_rounded, color: AppColors.warning, size: 26.r),
+                    child: Icon(
+                      Icons.auto_awesome_rounded,
+                      color: AppColors.warning,
+                      size: 26.r,
+                    ),
                   ),
                   SizedBox(width: AppSpacing.md.w),
                   Expanded(
@@ -484,20 +568,37 @@ class _TourYarBanner extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 2.h,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.warning,
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusXs.r,
+                                ),
                               ),
                               child: Text(
-                                l10nPick(context, en: 'Smart Quiz', fa: 'کوییز هوشمند'),
-                                style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w900, color: AppColors.deepBlack),
+                                l10nPick(
+                                  context,
+                                  en: 'Smart Quiz',
+                                  fa: 'کوییز هوشمند',
+                                ),
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.w900,
+                                  color: AppColors.deepBlack,
+                                ),
                               ),
                             ),
                             SizedBox(width: AppSpacing.xs.w),
                             Flexible(
                               child: Text(
-                                l10nPick(context, en: 'Tour-Yar Advisor', fa: 'تور-یار هوشمند eCardo'),
+                                l10nPick(
+                                  context,
+                                  en: 'Tour-Yar Advisor',
+                                  fa: 'تور-یار هوشمند eCardo',
+                                ),
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.w800,
@@ -516,12 +617,20 @@ class _TourYarBanner extends StatelessWidget {
                             en: 'Answer 8 quick questions to find your personalized travel package',
                             fa: 'با ۸ سوال کوتاه، تور مسافرتی ایده‌آل روحیه و بودجه‌ات را کشف کن',
                           ),
-                          style: TextStyle(fontSize: 11.sp, color: AppColors.white.withValues(alpha: 0.9), height: 1.35),
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: AppColors.white.withValues(alpha: 0.9),
+                            height: 1.35,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Icon(Icons.arrow_forward_ios_rounded, color: AppColors.white, size: AppSpacing.iconXs.r),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    color: AppColors.white,
+                    size: AppSpacing.iconXs.r,
+                  ),
                 ],
               ),
             ),
@@ -548,7 +657,8 @@ class _TourCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nextDep = tour.departures.isNotEmpty ? tour.departures.first : null;
-    final semanticsLabel = '${tour.title}, ${tour.city}, ${_formatPrice(tour.basePrice)} ${tour.currency}';
+    final semanticsLabel =
+        '${tour.title}, ${tour.city}, ${_formatPrice(tour.basePrice)} ${tour.currency}';
 
     return Semantics(
       button: true,
@@ -580,11 +690,14 @@ class _TourCard extends StatelessWidget {
                   SizedBox(
                     height: 165.h,
                     width: double.infinity,
-                    child: tour.featuredImage != null && tour.featuredImage!.startsWith('http')
+                    child:
+                        tour.featuredImage != null &&
+                            tour.featuredImage!.startsWith('http')
                         ? Image.network(
                             tour.featuredImage!,
                             fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => _ImagePlaceholder(tour: tour, isDark: isDark),
+                            errorBuilder: (_, _, _) =>
+                                _ImagePlaceholder(tour: tour, isDark: isDark),
                           )
                         : _ImagePlaceholder(tour: tour, isDark: isDark),
                   ),
@@ -593,201 +706,265 @@ class _TourCard extends StatelessWidget {
                     top: 10.h,
                     start: 10.w,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.black.withValues(alpha: 0.65),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd.r,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.location_on_rounded, color: AppColors.warning, size: 14),
+                          const Icon(
+                            Icons.location_on_rounded,
+                            color: AppColors.warning,
+                            size: 14,
+                          ),
                           SizedBox(width: AppSpacing.xs.w),
                           Text(
                             '${tour.city} (${tour.countryCode})',
-                            style: TextStyle(color: AppColors.white, fontSize: 11.sp, fontWeight: FontWeight.w700),
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                // Duration Pill
-                PositionedDirectional(
-                  top: 10.h,
-                  end: 10.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: TravelTheme.blue,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                    ),
-                    child: Text(
-                      '${tour.durationDays} ${l10nPick(context, en: 'Days', fa: 'روز')} / ${tour.durationNights} ${l10nPick(context, en: 'Nights', fa: 'شب')}',
-                      style: TextStyle(color: AppColors.white, fontSize: 10.sp, fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ),
-                // Match Percentage Badge if available
-                if (tour.matchPercentage != null)
+                  // Duration Pill
                   PositionedDirectional(
-                    bottom: 10.h,
+                    top: 10.h,
                     end: 10.w,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
-                        color: AppColors.success,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        color: TravelTheme.blue,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd.r,
+                        ),
                       ),
                       child: Text(
-                        '${tour.matchPercentage}% ${l10nPick(context, en: 'Match', fa: 'تطابق')}',
-                        style: TextStyle(color: AppColors.white, fontSize: 11.sp, fontWeight: FontWeight.w800),
+                        '${tour.durationDays} ${l10nPick(context, en: 'Days', fa: 'روز')} / ${tour.durationNights} ${l10nPick(context, en: 'Nights', fa: 'شب')}',
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                     ),
                   ),
-              ],
-            ),
-
-            // Tour Info & Package Highlights
-            Padding(
-              padding: EdgeInsets.all(AppSpacing.md.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    tour.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14.5.sp,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    tour.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                      height: 1.35,
-                    ),
-                  ),
-                  SizedBox(height: AppSpacing.sm.h),
-
-                  // Highlights row
-                  Wrap(
-                    spacing: 6.w,
-                    runSpacing: 4.h,
-                    children: [
-                      // Rating Pill
-                      _buildHighlightPill(
-                        isDark: isDark,
-                        icon: Icons.star_rounded,
-                        iconColor: AppColors.warning,
-                        text: '${tour.ratingAvg.toStringAsFixed(1)} (${tour.ratingCount})',
+                  // Match Percentage Badge if available
+                  if (tour.matchPercentage != null)
+                    PositionedDirectional(
+                      bottom: 10.h,
+                      end: 10.w,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.success,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
+                        ),
+                        child: Text(
+                          '${tour.matchPercentage}% ${l10nPick(context, en: 'Match', fa: 'تطابق')}',
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
-                      // Hotel tier pill
-                      if (tour.hotelTiers.contains('LUX'))
-                        _buildHighlightPill(
-                          isDark: isDark,
-                          icon: Icons.hotel_rounded,
-                          iconColor: TravelTheme.blue,
-                          text: l10nPick(context, en: '5-Star Luxury', fa: 'اقامت ۵ ستاره'),
-                        )
-                      else
-                        _buildHighlightPill(
-                          isDark: isDark,
-                          icon: Icons.hotel_rounded,
-                          iconColor: TravelTheme.blue,
-                          text: l10nPick(context, en: 'Standard Hotel', fa: 'هتل استاندارد'),
-                        ),
-                      // Deposit allowed pill
-                      if (tour.depositAllowed)
-                        _buildHighlightPill(
-                          isDark: isDark,
-                          icon: Icons.offline_bolt_rounded,
-                          iconColor: AppColors.success,
-                          text: '${tour.depositPercent.toInt()}% ${l10nPick(context, en: 'Deposit', fa: 'پیش‌پرداخت')}',
-                        ),
-                    ],
-                  ),
+                    ),
+                ],
+              ),
 
-                  SizedBox(height: AppSpacing.sm.h),
-                  Divider(
-                    height: 1,
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-                  ),
-                  SizedBox(height: AppSpacing.sm.h),
+              // Tour Info & Package Highlights
+              Padding(
+                padding: EdgeInsets.all(AppSpacing.md.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tour.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14.5.sp,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      tour.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                        height: 1.35,
+                      ),
+                    ),
+                    SizedBox(height: AppSpacing.sm.h),
 
-                  // Price and Next Departure
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10nPick(context, en: 'Starts from:', fa: 'شروع قیمت از:'),
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    // Highlights row
+                    Wrap(
+                      spacing: 6.w,
+                      runSpacing: 4.h,
+                      children: [
+                        // Rating Pill
+                        _buildHighlightPill(
+                          isDark: isDark,
+                          icon: Icons.star_rounded,
+                          iconColor: AppColors.warning,
+                          text:
+                              '${tour.ratingAvg.toStringAsFixed(1)} (${tour.ratingCount})',
+                        ),
+                        // Hotel tier pill
+                        if (tour.hotelTiers.contains('LUX'))
+                          _buildHighlightPill(
+                            isDark: isDark,
+                            icon: Icons.hotel_rounded,
+                            iconColor: TravelTheme.blue,
+                            text: l10nPick(
+                              context,
+                              en: '5-Star Luxury',
+                              fa: 'اقامت ۵ ستاره',
+                            ),
+                          )
+                        else
+                          _buildHighlightPill(
+                            isDark: isDark,
+                            icon: Icons.hotel_rounded,
+                            iconColor: TravelTheme.blue,
+                            text: l10nPick(
+                              context,
+                              en: 'Standard Hotel',
+                              fa: 'هتل استاندارد',
                             ),
                           ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            '${_formatPrice(tour.basePrice)} ${tour.currency}',
-                            style: TextStyle(
-                              fontSize: 14.5.sp,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.success,
-                            ),
+                        // Deposit allowed pill
+                        if (tour.depositAllowed)
+                          _buildHighlightPill(
+                            isDark: isDark,
+                            icon: Icons.offline_bolt_rounded,
+                            iconColor: AppColors.success,
+                            text:
+                                '${tour.depositPercent.toInt()}% ${l10nPick(context, en: 'Deposit', fa: 'پیش‌پرداخت')}',
                           ),
-                        ],
-                      ),
-                      if (nextDep != null)
+                      ],
+                    ),
+
+                    SizedBox(height: AppSpacing.sm.h),
+                    Divider(
+                      height: 1,
+                      color: isDark
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider,
+                    ),
+                    SizedBox(height: AppSpacing.sm.h),
+
+                    // Price and Next Departure
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10nPick(context, en: 'Next Departure:', fa: 'حرکت بعدی:'),
+                              l10nPick(
+                                context,
+                                en: 'Starts from:',
+                                fa: 'شروع قیمت از:',
+                              ),
                               style: TextStyle(
                                 fontSize: 10.sp,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                             SizedBox(height: 2.h),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.calendar_month_outlined,
-                                  size: 13.r,
-                                  color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
-                                ),
-                                SizedBox(width: 4.w),
-                                Text(
-                                  nextDep.departDate,
-                                  style: TextStyle(
-                                    fontSize: 11.5.sp,
-                                    fontWeight: FontWeight.w700,
-                                    color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              '${_formatPrice(tour.basePrice)} ${tour.currency}',
+                              style: TextStyle(
+                                fontSize: 14.5.sp,
+                                fontWeight: FontWeight.w900,
+                                color: AppColors.success,
+                              ),
                             ),
                           ],
                         ),
-                    ],
-                  ),
-                ],
+                        if (nextDep != null)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                l10nPick(
+                                  context,
+                                  en: 'Next Departure:',
+                                  fa: 'حرکت بعدی:',
+                                ),
+                                style: TextStyle(
+                                  fontSize: 10.sp,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.calendar_month_outlined,
+                                    size: 13.r,
+                                    color: isDark
+                                        ? AppColors.darkPrimary
+                                        : TravelTheme.blue,
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    nextDep.departDate,
+                                    style: TextStyle(
+                                      fontSize: 11.5.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark
+                                          ? AppColors.darkPrimary
+                                          : TravelTheme.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),);
+    );
   }
 
   Widget _buildHighlightPill({
@@ -799,7 +976,9 @@ class _TourCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+        color: isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightBackground,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
       ),
       child: Row(
@@ -812,7 +991,9 @@ class _TourCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
         ],
@@ -822,9 +1003,9 @@ class _TourCard extends StatelessWidget {
 
   String _formatPrice(double price) {
     return price.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 }
 
@@ -837,7 +1018,9 @@ class _ImagePlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+      color: isDark
+          ? AppColors.darkSurfaceVariant
+          : AppColors.lightSurfaceVariant,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -853,7 +1036,9 @@ class _ImagePlaceholder extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ],

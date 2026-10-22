@@ -57,8 +57,9 @@ class _TestHomeController extends HomeController {
     ];
   }
 
+  // ignore: must_call_super
   @override
-  void onInit() {  // ignore: must_call_super
+  void onInit() {
     // Intentionally empty — prevents all network calls in test.
     // super.onInit() is deliberately NOT called (see screenshot_harness.dart).
   }

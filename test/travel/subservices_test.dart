@@ -46,7 +46,9 @@ void main() {
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: isDark ? ThemeData.dark(useMaterial3: true) : ThemeData.light(useMaterial3: true),
+      theme: isDark
+          ? ThemeData.dark(useMaterial3: true)
+          : ThemeData.light(useMaterial3: true),
       home: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
@@ -68,64 +70,73 @@ void main() {
   // Group 1: Unified Experience Contracts & Policy Logic
   // -------------------------------------------------------------
   group('Experience Contracts & Business Logic', () {
-    test('Cancellation policy calculates 100% refund when > free hours prior', () {
-      const policy = ExperienceCancellationPolicy(
-        freeCancellationHours: 24,
-        lateCancelPenaltyPercent: 30.0,
-      );
+    test(
+      'Cancellation policy calculates 100% refund when > free hours prior',
+      () {
+        const policy = ExperienceCancellationPolicy(
+          freeCancellationHours: 24,
+          lateCancelPenaltyPercent: 30.0,
+        );
 
-      final scheduled = DateTime.now().add(const Duration(hours: 48));
-      final refund = policy.calculateRefund(
-        scheduledAt: scheduled,
-        totalAmount: 200.0,
-        currency: 'USD',
-      );
+        final scheduled = DateTime.now().add(const Duration(hours: 48));
+        final refund = policy.calculateRefund(
+          scheduledAt: scheduled,
+          totalAmount: 200.0,
+          currency: 'USD',
+        );
 
-      expect(refund.isFreeCancellation, isTrue);
-      expect(refund.refundableAmount, equals(200.0));
-      expect(refund.penaltyAmount, equals(0.0));
-      expect(refund.refundDestinationWalletCurrency, equals('USD'));
-    });
+        expect(refund.isFreeCancellation, isTrue);
+        expect(refund.refundableAmount, equals(200.0));
+        expect(refund.penaltyAmount, equals(0.0));
+        expect(refund.refundDestinationWalletCurrency, equals('USD'));
+      },
+    );
 
-    test('Cancellation policy applies penalty when within late cancellation window', () {
-      const policy = ExperienceCancellationPolicy(
-        freeCancellationHours: 24,
-        lateCancelPenaltyPercent: 30.0,
-      );
+    test(
+      'Cancellation policy applies penalty when within late cancellation window',
+      () {
+        const policy = ExperienceCancellationPolicy(
+          freeCancellationHours: 24,
+          lateCancelPenaltyPercent: 30.0,
+        );
 
-      final scheduled = DateTime.now().add(const Duration(hours: 6));
-      final refund = policy.calculateRefund(
-        scheduledAt: scheduled,
-        totalAmount: 200.0,
-        currency: 'USD',
-      );
+        final scheduled = DateTime.now().add(const Duration(hours: 6));
+        final refund = policy.calculateRefund(
+          scheduledAt: scheduled,
+          totalAmount: 200.0,
+          currency: 'USD',
+        );
 
-      expect(refund.isFreeCancellation, isFalse);
-      expect(refund.penaltyAmount, equals(60.0)); // 30% of 200
-      expect(refund.refundableAmount, equals(140.0));
-      expect(refund.refundDestinationWalletCurrency, equals('USD'));
-    });
+        expect(refund.isFreeCancellation, isFalse);
+        expect(refund.penaltyAmount, equals(60.0)); // 30% of 200
+        expect(refund.refundableAmount, equals(140.0));
+        expect(refund.refundDestinationWalletCurrency, equals('USD'));
+      },
+    );
 
-    test('Search query serialization and deserialization adheres to schema_version 1.0', () {
-      const query = ExperienceSearchQuery(
-        domain: ExperienceDomain.boat,
-        keyword: 'yacht',
-        city: 'کیش',
-        adults: 4,
-        children: 2,
-        currency: 'USD',
-      );
+    test(
+      'Search query serialization and deserialization adheres to schema_version 1.0',
+      () {
+        const query = ExperienceSearchQuery(
+          domain: ExperienceDomain.boat,
+          keyword: 'yacht',
+          city: 'کیش',
+          adults: 4,
+          children: 2,
+          currency: 'USD',
+        );
 
-      final json = query.toJson();
-      expect(json['schema_version'], equals('1.0'));
-      expect(json['domain'], equals('boat'));
-      expect(json['adults'], equals(4));
+        final json = query.toJson();
+        expect(json['schema_version'], equals('1.0'));
+        expect(json['domain'], equals('boat'));
+        expect(json['adults'], equals(4));
 
-      final restored = ExperienceSearchQuery.fromJson(json);
-      expect(restored.domain, equals(ExperienceDomain.boat));
-      expect(restored.city, equals('کیش'));
-      expect(restored.children, equals(2));
-    });
+        final restored = ExperienceSearchQuery.fromJson(json);
+        expect(restored.domain, equals(ExperienceDomain.boat));
+        expect(restored.city, equals('کیش'));
+        expect(restored.children, equals(2));
+      },
+    );
   });
 
   // -------------------------------------------------------------
@@ -162,62 +173,71 @@ void main() {
       description: 'گشت لوکس دریایی',
     );
 
-    test('Calculates total price correctly with hours, passengers, and add-ons', () {
-      final total = boat.calculateTotal(
-        hours: 3,
-        adults: 2,
-        children: 1,
-        selectedAddonIds: ['snork'],
-      );
+    test(
+      'Calculates total price correctly with hours, passengers, and add-ons',
+      () {
+        final total = boat.calculateTotal(
+          hours: 3,
+          adults: 2,
+          children: 1,
+          selectedAddonIds: ['snork'],
+        );
 
-      // base: 100 * 3 = 300
-      // addon: 20 * (2 adults + 1 child) = 60
-      // total: 360
-      expect(total, equals(360.0));
-    });
+        // base: 100 * 3 = 300
+        // addon: 20 * (2 adults + 1 child) = 60
+        // total: 360
+        expect(total, equals(360.0));
+      },
+    );
 
-    test('BoatExperienceModel JSON serialization and deserialization roundtrip', () {
-      final json = boat.toJson();
-      expect(json['schema_version'], equals('1.0'));
-      expect(json['hourly_rate'], equals(100.0));
+    test(
+      'BoatExperienceModel JSON serialization and deserialization roundtrip',
+      () {
+        final json = boat.toJson();
+        expect(json['schema_version'], equals('1.0'));
+        expect(json['hourly_rate'], equals(100.0));
 
-      final restored = BoatExperienceModel.fromJson(json);
-      expect(restored.id, equals('test-boat-01'));
-      expect(restored.category, equals(BoatCategory.yacht));
-      expect(restored.addons.first.title, equals('اسنورکلینگ'));
-    });
+        final restored = BoatExperienceModel.fromJson(json);
+        expect(restored.id, equals('test-boat-01'));
+        expect(restored.category, equals(BoatCategory.yacht));
+        expect(restored.addons.first.title, equals('اسنورکلینگ'));
+      },
+    );
 
-    test('BoatBookingModel cancellation creates copy with refund information', () {
-      final booking = BoatBookingModel(
-        schemaVersion: '1.0',
-        bookingId: 'SEA-100',
-        boatId: 'test-boat-01',
-        boatTitle: 'یات سان‌سیکر',
-        marinaName: 'اسکله کیش',
-        date: DateTime.now().add(const Duration(days: 2)),
-        timeSlot: '10:00 - 12:00',
-        durationHours: 2,
-        passengersCount: 2,
-        selectedAddonIds: const [],
-        totalAmount: 200.0,
-        currency: 'USD',
-        captainPhone: '+98 912 000 0000',
-        pierDockNumber: 'Dock 1',
-        status: 'confirmed',
-        bookedAt: DateTime.now(),
-      );
+    test(
+      'BoatBookingModel cancellation creates copy with refund information',
+      () {
+        final booking = BoatBookingModel(
+          schemaVersion: '1.0',
+          bookingId: 'SEA-100',
+          boatId: 'test-boat-01',
+          boatTitle: 'یات سان‌سیکر',
+          marinaName: 'اسکله کیش',
+          date: DateTime.now().add(const Duration(days: 2)),
+          timeSlot: '10:00 - 12:00',
+          durationHours: 2,
+          passengersCount: 2,
+          selectedAddonIds: const [],
+          totalAmount: 200.0,
+          currency: 'USD',
+          captainPhone: '+98 912 000 0000',
+          pierDockNumber: 'Dock 1',
+          status: 'confirmed',
+          bookedAt: DateTime.now(),
+        );
 
-      expect(booking.canCancel, isTrue);
-      final cancelled = booking.copyWithCancelled(
-        penalty: 0.0,
-        refund: 200.0,
-        reason: 'Change of plans',
-      );
+        expect(booking.canCancel, isTrue);
+        final cancelled = booking.copyWithCancelled(
+          penalty: 0.0,
+          refund: 200.0,
+          reason: 'Change of plans',
+        );
 
-      expect(cancelled.isCancelled, isTrue);
-      expect(cancelled.status, equals('cancelled'));
-      expect(cancelled.refundedAmount, equals(200.0));
-    });
+        expect(cancelled.isCancelled, isTrue);
+        expect(cancelled.status, equals('cancelled'));
+        expect(cancelled.refundedAmount, equals(200.0));
+      },
+    );
   });
 
   // -------------------------------------------------------------
@@ -250,15 +270,18 @@ void main() {
       ],
     );
 
-    test('RestaurantModel and MenuItemModel serialize properly under schema_version 1.0', () {
-      final json = restaurant.toJson();
-      expect(json['schema_version'], equals('1.0'));
-      expect(json['menu'].first['title'], equals('کباب کوبیده'));
+    test(
+      'RestaurantModel and MenuItemModel serialize properly under schema_version 1.0',
+      () {
+        final json = restaurant.toJson();
+        expect(json['schema_version'], equals('1.0'));
+        expect(json['menu'].first['title'], equals('کباب کوبیده'));
 
-      final restored = RestaurantModel.fromJson(json);
-      expect(restored.name, equals('پرشین لانژ IKA'));
-      expect(restored.menu.first.price, equals(15.0));
-    });
+        final restored = RestaurantModel.fromJson(json);
+        expect(restored.name, equals('پرشین لانژ IKA'));
+        expect(restored.menu.first.price, equals(15.0));
+      },
+    );
 
     test('DiningOrderModel reflects cancellation fee calculation', () {
       final order = DiningOrderModel(
@@ -351,285 +374,363 @@ void main() {
   // Group 5: Screen Rendering & Responsiveness (Light, Dark, RTL)
   // -------------------------------------------------------------
   group('Screens Rendering (Light, Dark, RTL, 375x812)', () {
-    testWidgets('BoatCatalogScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      final controller = Get.put(BoatController());
-      controller.loadCatalog();
+    testWidgets(
+      'BoatCatalogScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        final controller = Get.put(BoatController());
+        controller.loadCatalog();
 
-      // RTL Light
-      await tester.pumpWidget(
-        wrapWithTheme(const BoatCatalogScreen(), isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BoatCatalogScreen), findsOneWidget);
+        // RTL Light
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const BoatCatalogScreen(),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(BoatCatalogScreen), findsOneWidget);
 
-      // RTL Dark
-      await tester.pumpWidget(
-        wrapWithTheme(const BoatCatalogScreen(), isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BoatCatalogScreen), findsOneWidget);
-    });
+        // RTL Dark
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const BoatCatalogScreen(),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(BoatCatalogScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('BoatDetailScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      Get.put(BoatController());
-      const sampleBoat = BoatExperienceModel(
-        schemaVersion: '1.0',
-        id: 'boat-test',
-        title: 'شناور تفریحی کیش',
-        marinaName: 'اسکله کیش',
-        city: 'کیش',
-        category: BoatCategory.yacht,
-        hourlyRate: 100.0,
-        currency: 'USD',
-        maxPassengers: 8,
-        lengthMeters: 14.0,
-        rating: 4.8,
-        reviewsCount: 15,
-        captainName: 'کاپیتان علی',
-        images: [],
-        features: ['تهویه مطبوع'],
-        availableSlots: ['10:00 - 12:00'],
-        addons: [],
-        description: 'گشت خاطره‌انگیز',
-      );
+    testWidgets(
+      'BoatDetailScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        Get.put(BoatController());
+        const sampleBoat = BoatExperienceModel(
+          schemaVersion: '1.0',
+          id: 'boat-test',
+          title: 'شناور تفریحی کیش',
+          marinaName: 'اسکله کیش',
+          city: 'کیش',
+          category: BoatCategory.yacht,
+          hourlyRate: 100.0,
+          currency: 'USD',
+          maxPassengers: 8,
+          lengthMeters: 14.0,
+          rating: 4.8,
+          reviewsCount: 15,
+          captainName: 'کاپیتان علی',
+          images: [],
+          features: ['تهویه مطبوع'],
+          availableSlots: ['10:00 - 12:00'],
+          addons: [],
+          description: 'گشت خاطره‌انگیز',
+        );
 
-      // RTL Light
-      await tester.pumpWidget(
-        wrapWithTheme(const BoatDetailScreen(boat: sampleBoat),
-            isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BoatDetailScreen), findsOneWidget);
+        // RTL Light
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const BoatDetailScreen(boat: sampleBoat),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(BoatDetailScreen), findsOneWidget);
 
-      // RTL Dark
-      await tester.pumpWidget(
-        wrapWithTheme(const BoatDetailScreen(boat: sampleBoat),
-            isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BoatDetailScreen), findsOneWidget);
-    });
+        // RTL Dark
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const BoatDetailScreen(boat: sampleBoat),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(BoatDetailScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('BoatVoucherScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      Get.put(BoatController());
-      final sampleBooking = BoatBookingModel(
-        schemaVersion: '1.0',
-        bookingId: 'SEA-999',
-        boatId: 'boat-test',
-        boatTitle: 'یات لوکس سان‌سیکر',
-        marinaName: 'اسکله کیش',
-        date: DateTime.now().add(const Duration(days: 1)),
-        timeSlot: '16:00 - 18:00',
-        durationHours: 2,
-        passengersCount: 2,
-        selectedAddonIds: const [],
-        totalAmount: 200.0,
-        currency: 'USD',
-        captainPhone: '+98 912 111 2233',
-        pierDockNumber: 'Dock A',
-        status: 'confirmed',
-        bookedAt: DateTime.now(),
-      );
+    testWidgets(
+      'BoatVoucherScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        Get.put(BoatController());
+        final sampleBooking = BoatBookingModel(
+          schemaVersion: '1.0',
+          bookingId: 'SEA-999',
+          boatId: 'boat-test',
+          boatTitle: 'یات لوکس سان‌سیکر',
+          marinaName: 'اسکله کیش',
+          date: DateTime.now().add(const Duration(days: 1)),
+          timeSlot: '16:00 - 18:00',
+          durationHours: 2,
+          passengersCount: 2,
+          selectedAddonIds: const [],
+          totalAmount: 200.0,
+          currency: 'USD',
+          captainPhone: '+98 912 111 2233',
+          pierDockNumber: 'Dock A',
+          status: 'confirmed',
+          bookedAt: DateTime.now(),
+        );
 
-      await tester.pumpWidget(
-        wrapWithTheme(BoatVoucherScreen(booking: sampleBooking),
-            isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BoatVoucherScreen), findsOneWidget);
+        await tester.pumpWidget(
+          wrapWithTheme(
+            BoatVoucherScreen(booking: sampleBooking),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(BoatVoucherScreen), findsOneWidget);
 
-      await tester.pumpWidget(
-        wrapWithTheme(BoatVoucherScreen(booking: sampleBooking),
-            isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BoatVoucherScreen), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          wrapWithTheme(
+            BoatVoucherScreen(booking: sampleBooking),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(BoatVoucherScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('DiningCatalogScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      final controller = Get.put(DiningController());
-      controller.loadCatalog();
+    testWidgets(
+      'DiningCatalogScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        final controller = Get.put(DiningController());
+        controller.loadCatalog();
 
-      await tester.pumpWidget(
-        wrapWithTheme(const DiningCatalogScreen(), isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(DiningCatalogScreen), findsOneWidget);
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const DiningCatalogScreen(),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(DiningCatalogScreen), findsOneWidget);
 
-      await tester.pumpWidget(
-        wrapWithTheme(const DiningCatalogScreen(), isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(DiningCatalogScreen), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const DiningCatalogScreen(),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(DiningCatalogScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('RestaurantDetailScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      Get.put(DiningController());
-      const sampleRestaurant = RestaurantModel(
-        schemaVersion: '1.0',
-        id: 'rest-test',
-        name: 'کافه پرشین',
-        terminalLocation: 'فرودگاه امام',
-        city: 'تهران',
-        cuisineType: 'ایرانی',
-        rating: 4.8,
-        reviewsCount: 25,
-        openingHours: '۲۴ ساعته',
-        availableModes: [DiningServiceMode.airportGatePickup],
-        menu: [],
-      );
+    testWidgets(
+      'RestaurantDetailScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        Get.put(DiningController());
+        const sampleRestaurant = RestaurantModel(
+          schemaVersion: '1.0',
+          id: 'rest-test',
+          name: 'کافه پرشین',
+          terminalLocation: 'فرودگاه امام',
+          city: 'تهران',
+          cuisineType: 'ایرانی',
+          rating: 4.8,
+          reviewsCount: 25,
+          openingHours: '۲۴ ساعته',
+          availableModes: [DiningServiceMode.airportGatePickup],
+          menu: [],
+        );
 
-      await tester.pumpWidget(
-        wrapWithTheme(const RestaurantDetailScreen(restaurant: sampleRestaurant),
-            isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(RestaurantDetailScreen), findsOneWidget);
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const RestaurantDetailScreen(restaurant: sampleRestaurant),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(RestaurantDetailScreen), findsOneWidget);
 
-      await tester.pumpWidget(
-        wrapWithTheme(const RestaurantDetailScreen(restaurant: sampleRestaurant),
-            isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(RestaurantDetailScreen), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const RestaurantDetailScreen(restaurant: sampleRestaurant),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(RestaurantDetailScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('DiningOrderPassScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      Get.put(DiningController());
-      final sampleOrder = DiningOrderModel(
-        schemaVersion: '1.0',
-        orderId: 'MEAL-777',
-        restaurantId: 'rest-test',
-        restaurantName: 'رستوران پرشین',
-        terminalLocation: 'گیت ۱۲',
-        mode: DiningServiceMode.airportGatePickup,
-        pickupTime: '13:00',
-        items: const [],
-        totalAmount: 25.0,
-        currency: 'USD',
-        status: 'preparing',
-        orderedAt: DateTime.now(),
-      );
+    testWidgets(
+      'DiningOrderPassScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        Get.put(DiningController());
+        final sampleOrder = DiningOrderModel(
+          schemaVersion: '1.0',
+          orderId: 'MEAL-777',
+          restaurantId: 'rest-test',
+          restaurantName: 'رستوران پرشین',
+          terminalLocation: 'گیت ۱۲',
+          mode: DiningServiceMode.airportGatePickup,
+          pickupTime: '13:00',
+          items: const [],
+          totalAmount: 25.0,
+          currency: 'USD',
+          status: 'preparing',
+          orderedAt: DateTime.now(),
+        );
 
-      await tester.pumpWidget(
-        wrapWithTheme(DiningOrderPassScreen(order: sampleOrder),
-            isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(DiningOrderPassScreen), findsOneWidget);
+        await tester.pumpWidget(
+          wrapWithTheme(
+            DiningOrderPassScreen(order: sampleOrder),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(DiningOrderPassScreen), findsOneWidget);
 
-      await tester.pumpWidget(
-        wrapWithTheme(DiningOrderPassScreen(order: sampleOrder),
-            isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(DiningOrderPassScreen), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          wrapWithTheme(
+            DiningOrderPassScreen(order: sampleOrder),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(DiningOrderPassScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('LocalCatalogScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      final controller = Get.put(LocalExperienceController());
-      controller.loadCatalog();
+    testWidgets(
+      'LocalCatalogScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        final controller = Get.put(LocalExperienceController());
+        controller.loadCatalog();
 
-      await tester.pumpWidget(
-        wrapWithTheme(const LocalCatalogScreen(), isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(LocalCatalogScreen), findsOneWidget);
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const LocalCatalogScreen(),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(LocalCatalogScreen), findsOneWidget);
 
-      await tester.pumpWidget(
-        wrapWithTheme(const LocalCatalogScreen(), isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(LocalCatalogScreen), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const LocalCatalogScreen(),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(LocalCatalogScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('LocalDetailScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      Get.put(LocalExperienceController());
-      const sampleExp = LocalExperienceItemModel(
-        schemaVersion: '1.0',
-        id: 'local-test',
-        title: 'راهنمای سفر استانبول',
-        subtitle: 'گشت شهری',
-        providerName: 'استاد امین',
-        city: 'استانبول',
-        type: LocalServiceType.tourGuide,
-        price: 40.0,
-        currency: 'USD',
-        durationLabel: '۳ ساعت',
-        languages: ['فارسی'],
-        rating: 4.9,
-        reviewsCount: 12,
-        highlights: ['دیدار ایاصوفیه'],
-        meetingPoint: 'میدان تکسیم',
-        description: 'توضیحات کامل',
-      );
+    testWidgets(
+      'LocalDetailScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        Get.put(LocalExperienceController());
+        const sampleExp = LocalExperienceItemModel(
+          schemaVersion: '1.0',
+          id: 'local-test',
+          title: 'راهنمای سفر استانبول',
+          subtitle: 'گشت شهری',
+          providerName: 'استاد امین',
+          city: 'استانبول',
+          type: LocalServiceType.tourGuide,
+          price: 40.0,
+          currency: 'USD',
+          durationLabel: '۳ ساعت',
+          languages: ['فارسی'],
+          rating: 4.9,
+          reviewsCount: 12,
+          highlights: ['دیدار ایاصوفیه'],
+          meetingPoint: 'میدان تکسیم',
+          description: 'توضیحات کامل',
+        );
 
-      await tester.pumpWidget(
-        wrapWithTheme(const LocalDetailScreen(experience: sampleExp),
-            isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(LocalDetailScreen), findsOneWidget);
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const LocalDetailScreen(experience: sampleExp),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(LocalDetailScreen), findsOneWidget);
 
-      await tester.pumpWidget(
-        wrapWithTheme(const LocalDetailScreen(experience: sampleExp),
-            isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(LocalDetailScreen), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const LocalDetailScreen(experience: sampleExp),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(LocalDetailScreen), findsOneWidget);
+      },
+    );
 
-    testWidgets('LocalVoucherScreen renders without overflow in RTL light & dark',
-        (tester) async {
-      phoneSurface(tester);
-      Get.put(LocalExperienceController());
-      final sampleBooking = LocalBookingModel(
-        schemaVersion: '1.0',
-        bookingId: 'EXP-888',
-        serviceId: 'local-test',
-        serviceTitle: 'راهنمای تور استانبول',
-        providerName: 'استاد امین',
-        city: 'استانبول',
-        serviceDate: DateTime.now().add(const Duration(days: 2)),
-        serviceTime: '10:00',
-        guestsCount: 2,
-        totalAmount: 80.0,
-        currency: 'USD',
-        meetingPoint: 'میدان تکسیم',
-        providerPhone: '+90 555 123 4567',
-        status: 'confirmed',
-        bookedAt: DateTime.now(),
-      );
+    testWidgets(
+      'LocalVoucherScreen renders without overflow in RTL light & dark',
+      (tester) async {
+        phoneSurface(tester);
+        Get.put(LocalExperienceController());
+        final sampleBooking = LocalBookingModel(
+          schemaVersion: '1.0',
+          bookingId: 'EXP-888',
+          serviceId: 'local-test',
+          serviceTitle: 'راهنمای تور استانبول',
+          providerName: 'استاد امین',
+          city: 'استانبول',
+          serviceDate: DateTime.now().add(const Duration(days: 2)),
+          serviceTime: '10:00',
+          guestsCount: 2,
+          totalAmount: 80.0,
+          currency: 'USD',
+          meetingPoint: 'میدان تکسیم',
+          providerPhone: '+90 555 123 4567',
+          status: 'confirmed',
+          bookedAt: DateTime.now(),
+        );
 
-      await tester.pumpWidget(
-        wrapWithTheme(LocalVoucherScreen(booking: sampleBooking),
-            isDark: false, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(LocalVoucherScreen), findsOneWidget);
+        await tester.pumpWidget(
+          wrapWithTheme(
+            LocalVoucherScreen(booking: sampleBooking),
+            isDark: false,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(LocalVoucherScreen), findsOneWidget);
 
-      await tester.pumpWidget(
-        wrapWithTheme(LocalVoucherScreen(booking: sampleBooking),
-            isDark: true, locale: const Locale('fa')),
-      );
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(LocalVoucherScreen), findsOneWidget);
-    });
+        await tester.pumpWidget(
+          wrapWithTheme(
+            LocalVoucherScreen(booking: sampleBooking),
+            isDark: true,
+            locale: const Locale('fa'),
+          ),
+        );
+        await tester.pump(const Duration(seconds: 1));
+        expect(find.byType(LocalVoucherScreen), findsOneWidget);
+      },
+    );
   });
 }

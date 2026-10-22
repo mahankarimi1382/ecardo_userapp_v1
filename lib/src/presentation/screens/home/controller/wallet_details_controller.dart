@@ -58,9 +58,11 @@ class WalletDetailsController extends GetxController {
           );
           wallet.value = selectedWallet;
           walletName.value = selectedWallet.name ?? "";
-          walletIcon.value = (selectedWallet.isDefault == true
-              ? selectedWallet.symbol
-              : selectedWallet.icon) ?? "";
+          walletIcon.value =
+              (selectedWallet.isDefault == true
+                  ? selectedWallet.symbol
+                  : selectedWallet.icon) ??
+              "";
           walletId.value = selectedWallet.id.toString();
         }
       }
@@ -114,7 +116,10 @@ class WalletDetailsController extends GetxController {
       debugPrint('❌ fetchTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        ((Get.context != null && Get.context!.mounted) ? AppLocalizations.of(Get.context!)?.allControllerLoadError : null) ?? 'Failed to load transactions',
+        ((Get.context != null && Get.context!.mounted)
+                ? AppLocalizations.of(Get.context!)?.allControllerLoadError
+                : null) ??
+            'Failed to load transactions',
       );
     } finally {
       isLoading.value = false;

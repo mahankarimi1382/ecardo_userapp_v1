@@ -87,23 +87,15 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
 
   // Get current status - server boarding_steps is primary source of truth
   bool getEmailVerificationStatus() {
-    final serverVal = controller
-        .userModel
-        .value
-        .data
-        ?.boardingSteps
-        ?.emailVerification;
+    final serverVal =
+        controller.userModel.value.data?.boardingSteps?.emailVerification;
     if (serverVal != null) return serverVal;
     return emailVerified.value;
   }
 
   bool getPasswordSetupStatus() {
-    final serverVal = controller
-        .userModel
-        .value
-        .data
-        ?.boardingSteps
-        ?.passwordSetup;
+    final serverVal =
+        controller.userModel.value.data?.boardingSteps?.passwordSetup;
     if (serverVal != null) return serverVal;
     return setUpPassword.value;
   }
@@ -319,21 +311,31 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
                       padding: EdgeInsetsDirectional.symmetric(horizontal: 30),
                       child: Text(
                         (controller.rejectedKycData.value?.message != null &&
-                                controller.rejectedKycData.value!.message!.trim().isNotEmpty)
+                                controller.rejectedKycData.value!.message!
+                                    .trim()
+                                    .isNotEmpty)
                             ? controller.rejectedKycData.value!.message!
-                            : (controller.userModel.value.data?.rejectionReason !=
-                                        null &&
-                                    controller.userModel.value.data?.rejectionReason
-                                            ?.trim()
-                                            .isNotEmpty ==
-                                        true)
-                                ? controller
+                            : (controller
                                           .userModel
                                           .value
-                                          .data!
-                                          .rejectionReason ??
-                                      ""
-                                : localizations.signUpStatusNoReason,
+                                          .data
+                                          ?.rejectionReason !=
+                                      null &&
+                                  controller
+                                          .userModel
+                                          .value
+                                          .data
+                                          ?.rejectionReason
+                                          ?.trim()
+                                          .isNotEmpty ==
+                                      true)
+                            ? controller
+                                      .userModel
+                                      .value
+                                      .data!
+                                      .rejectionReason ??
+                                  ""
+                            : localizations.signUpStatusNoReason,
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           letterSpacing: 0,
@@ -392,7 +394,8 @@ class _SignUpStatusScreenState extends State<SignUpStatusScreen> {
               ),
             ],
 
-            if (isPersonalInfo && !(isReview || isRejected || isCompleted || isApproved)) ...[
+            if (isPersonalInfo &&
+                !(isReview || isRejected || isCompleted || isApproved)) ...[
               SizedBox(height: 15.h),
               CommonIconButton(
                 backgroundColor: AppColors.lightPrimary.withValues(alpha: 0.04),

@@ -48,8 +48,9 @@ class SplashController extends GetxController {
 
     String? loginState;
     try {
-      loginState = await SettingsService.getLoginCurrentState()
-          .timeout(const Duration(seconds: 2));
+      loginState = await SettingsService.getLoginCurrentState().timeout(
+        const Duration(seconds: 2),
+      );
     } catch (e) {
       debugPrint('⚠️ Splash: getLoginCurrentState error or timeout: $e');
       loginState = null;
@@ -61,8 +62,9 @@ class SplashController extends GetxController {
     // automatically (no touch) and navigation WAITS for its result.
     String bioOutcome = _bioNotStarted;
     try {
-      bioOutcome = await _tryAutoBiometricLogin()
-          .timeout(const Duration(seconds: 4));
+      bioOutcome = await _tryAutoBiometricLogin().timeout(
+        const Duration(seconds: 4),
+      );
     } catch (e) {
       debugPrint('⚠️ Splash: _tryAutoBiometricLogin error: $e');
       bioOutcome = _bioNotStarted;
@@ -108,7 +110,9 @@ class SplashController extends GetxController {
           }
         } else if (isLoggedIn) {
           // Phantom session: SharedPreferences has logged_in flag, but TokenService has no token!
-          debugPrint('⚠️ Splash: logged_in flag present but token missing. Wiping phantom session.');
+          debugPrint(
+            '⚠️ Splash: logged_in flag present but token missing. Wiping phantom session.',
+          );
           if (Get.isRegistered<SettingsService>()) {
             await Get.find<SettingsService>().wipeSession();
           }
@@ -150,7 +154,9 @@ class SplashController extends GetxController {
     Future.delayed(const Duration(milliseconds: 1200), () {
       if (Get.isRegistered<PermissionFlowService>()) {
         try {
-          Get.find<PermissionFlowService>().requestLaunchEssentials(Get.context);
+          Get.find<PermissionFlowService>().requestLaunchEssentials(
+            Get.context,
+          );
         } catch (e) {
           debugPrint('NOTIF-FIX: launch permission prompt failed: $e');
         }
@@ -206,23 +212,30 @@ class SplashController extends GetxController {
 
       final biometricAuth = BiometricAuthService();
       if (!await biometricAuth.isBiometricAvailable()) {
-        debugPrint('AUTH-BIO: biometrics unavailable — falling back to sign-in');
+        debugPrint(
+          'AUTH-BIO: biometrics unavailable — falling back to sign-in',
+        );
         return _bioNotStarted;
       }
 
-      final success = await biometricAuth
-          .authenticateWithBiometrics()
-          .timeout(_biometricPromptTimeout, onTimeout: () => false);
+      final success = await biometricAuth.authenticateWithBiometrics().timeout(
+        _biometricPromptTimeout,
+        onTimeout: () => false,
+      );
       if (!success) {
         // WAVE-REVIEW: لغو/شکست پرامپت = جلسه قفل می‌ماند (نه ورود با توکن).
-        debugPrint('AUTH-BIO: biometric auth failed/cancelled — session locked');
+        debugPrint(
+          'AUTH-BIO: biometric auth failed/cancelled — session locked',
+        );
         return _bioFailed;
       }
 
       if (hasToken) {
         // Token path: refresh profile and enter the app (no password re-login).
         try {
-          unawaited(FirebaseMessagingService.instance().registerTokenWithBackend());
+          unawaited(
+            FirebaseMessagingService.instance().registerTokenWithBackend(),
+          );
         } catch (_) {}
         try {
           final response = await Get.find<NetworkService>().get(

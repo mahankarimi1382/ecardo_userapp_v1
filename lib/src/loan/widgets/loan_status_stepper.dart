@@ -72,23 +72,71 @@ class LoanStatusStepper extends StatelessWidget {
       activeStep = currentStep!.clamp(0, 3);
       steps = [
         {
-          'title': l10nPick(context, fa: 'احراز صلاحیت', en: 'Eligibility', ar: 'الأهلية', zh: '资质审核'),
-          'subtitle': l10nPick(context, fa: 'اعتبارسنجی', en: 'Scoring', ar: 'التقييم', zh: '信用评估'),
+          'title': l10nPick(
+            context,
+            fa: 'احراز صلاحیت',
+            en: 'Eligibility',
+            ar: 'الأهلية',
+            zh: '资质审核',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'اعتبارسنجی',
+            en: 'Scoring',
+            ar: 'التقييم',
+            zh: '信用评估',
+          ),
           'icon': Icons.verified_user_outlined,
         },
         {
-          'title': l10nPick(context, fa: 'درخواست و وثیقه', en: 'Application & Collateral', ar: 'الطلب والضمان', zh: '申请与质押'),
-          'subtitle': l10nPick(context, fa: 'انتخاب طرح', en: 'Terms & Collateral', ar: 'تحديد الضمان', zh: '确定额度'),
+          'title': l10nPick(
+            context,
+            fa: 'درخواست و وثیقه',
+            en: 'Application & Collateral',
+            ar: 'الطلب والضمان',
+            zh: '申请与质押',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'انتخاب طرح',
+            en: 'Terms & Collateral',
+            ar: 'تحديد الضمان',
+            zh: '确定额度',
+          ),
           'icon': Icons.account_balance_wallet_outlined,
         },
         {
-          'title': l10nPick(context, fa: 'بررسی و امضا', en: 'Review', ar: 'المراجعة والتوقيع', zh: '审核与签约'),
-          'subtitle': l10nPick(context, fa: 'امضای قرارداد', en: 'Contract sign', ar: 'العقد الإلكتروني', zh: '电子签署'),
+          'title': l10nPick(
+            context,
+            fa: 'بررسی و امضا',
+            en: 'Review',
+            ar: 'المراجعة والتوقيع',
+            zh: '审核与签约',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'امضای قرارداد',
+            en: 'Contract sign',
+            ar: 'العقد الإلكتروني',
+            zh: '电子签署',
+          ),
           'icon': Icons.draw_outlined,
         },
         {
-          'title': l10nPick(context, fa: 'واریز به حساب', en: 'Disbursed', ar: 'الصرف إلى الحساب', zh: '放款入账'),
-          'subtitle': l10nPick(context, fa: 'دریافت وجه', en: 'Fund released', ar: 'تحويل الأموال', zh: '资金到账'),
+          'title': l10nPick(
+            context,
+            fa: 'واریز به حساب',
+            en: 'Disbursed',
+            ar: 'الصرف إلى الحساب',
+            zh: '放款入账',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'دریافت وجه',
+            en: 'Fund released',
+            ar: 'تحويل الأموال',
+            zh: '资金到账',
+          ),
           'icon': Icons.payments_outlined,
         },
       ];
@@ -96,45 +144,117 @@ class LoanStatusStepper extends StatelessWidget {
       activeStep = _stepFromStatus();
       steps = [
         {
-          'title': l10nPick(context, fa: 'ثبت درخواست', en: 'Apply', ar: 'تقديم الطلب', zh: '提交申请'),
-          'subtitle': l10nPick(context, fa: 'تکمیل فرم', en: 'Application form', ar: 'تعبئة النموذج', zh: '填写资料'),
+          'title': l10nPick(
+            context,
+            fa: 'ثبت درخواست',
+            en: 'Apply',
+            ar: 'تقديم الطلب',
+            zh: '提交申请',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'تکمیل فرم',
+            en: 'Application form',
+            ar: 'تعبئة النموذج',
+            zh: '填写资料',
+          ),
           'icon': Icons.post_add_rounded,
         },
         {
-          'title': l10nPick(context, fa: 'سنجش اعتبار', en: 'Credit Scoring', ar: 'التقييم الائتماني', zh: '信用评估'),
-          'subtitle': l10nPick(context, fa: 'اعتبارسنجی', en: 'Scoring', ar: 'التقييم', zh: '额度测算'),
+          'title': l10nPick(
+            context,
+            fa: 'سنجش اعتبار',
+            en: 'Credit Scoring',
+            ar: 'التقييم الائتماني',
+            zh: '信用评估',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'اعتبارسنجی',
+            en: 'Scoring',
+            ar: 'التقييم',
+            zh: '额度测算',
+          ),
           'icon': Icons.fact_check_outlined,
         },
         {
-          'title': l10nPick(context, fa: 'پیشنهاد و وثیقه', en: 'Offer & Collateral', ar: 'العرض والضمان', zh: '方案与质押'),
-          'subtitle': l10nPick(context, fa: 'انتخاب طرح', en: 'Terms & Collateral', ar: 'تحديد الضمان', zh: '确认抵押'),
+          'title': l10nPick(
+            context,
+            fa: 'پیشنهاد و وثیقه',
+            en: 'Offer & Collateral',
+            ar: 'العرض والضمان',
+            zh: '方案与质押',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'انتخاب طرح',
+            en: 'Terms & Collateral',
+            ar: 'تحديد الضمان',
+            zh: '确认抵押',
+          ),
           'icon': Icons.lock_clock_outlined,
         },
         {
-          'title': l10nPick(context, fa: 'امضای قرارداد', en: 'Signing', ar: 'توقيع العقد', zh: '签署合同'),
-          'subtitle': l10nPick(context, fa: 'امضای الکترونیک', en: 'Contract sign', ar: 'التوقيع الإلكتروني', zh: '电子签约'),
+          'title': l10nPick(
+            context,
+            fa: 'امضای قرارداد',
+            en: 'Signing',
+            ar: 'توقيع العقد',
+            zh: '签署合同',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'امضای الکترونیک',
+            en: 'Contract sign',
+            ar: 'التوقيع الإلكتروني',
+            zh: '电子签约',
+          ),
           'icon': Icons.draw_outlined,
         },
         {
-          'title': l10nPick(context, fa: 'واریز و اقساط', en: 'Disbursed', ar: 'الصرف والأقساط', zh: '放款与还款'),
-          'subtitle': l10nPick(context, fa: 'دریافت وجه', en: 'Fund released', ar: 'تحويل الأموال', zh: '到账还款'),
+          'title': l10nPick(
+            context,
+            fa: 'واریز و اقساط',
+            en: 'Disbursed',
+            ar: 'الصرف والأقساط',
+            zh: '放款与还款',
+          ),
+          'subtitle': l10nPick(
+            context,
+            fa: 'دریافت وجه',
+            en: 'Fund released',
+            ar: 'تحويل الأموال',
+            zh: '到账还款',
+          ),
           'icon': Icons.payments_outlined,
         },
       ];
     }
 
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final inactiveBorder = isDark ? AppColors.darkOutline : AppColors.lightOutlineVariant;
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+    final inactiveBorder = isDark
+        ? AppColors.darkOutline
+        : AppColors.lightOutlineVariant;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     final circleSize = (steps.length > 4 || isCompact) ? 28.w : 32.w;
     final iconSize = (steps.length > 4 || isCompact) ? 13.sp : 15.sp;
 
     return Container(
-      padding: EdgeInsetsDirectional.all(isCompact ? AppSpacing.sm.r : AppSpacing.md.r),
+      padding: EdgeInsetsDirectional.all(
+        isCompact ? AppSpacing.sm.r : AppSpacing.md.r,
+      ),
       decoration: BoxDecoration(
         color: surfaceColor,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
@@ -174,7 +294,10 @@ class LoanStatusStepper extends StatelessWidget {
               ),
               SizedBox(width: 8.w),
               Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 8.w,
+                  vertical: 3.h,
+                ),
                 decoration: BoxDecoration(
                   color: primaryAccent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -227,7 +350,9 @@ class LoanStatusStepper extends StatelessWidget {
                 circleBorder = primaryAccent;
                 iconColor = primaryAccent;
               } else {
-                circleBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+                circleBg = isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightBackground;
                 circleBorder = inactiveBorder;
                 iconColor = textSecondary.withValues(alpha: 0.7);
               }
@@ -286,7 +411,9 @@ class LoanStatusStepper extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: isCompact ? 9.5.sp : 10.5.sp,
-                          fontWeight: (isCurrent || isCompleted) ? FontWeight.w800 : FontWeight.w500,
+                          fontWeight: (isCurrent || isCompleted)
+                              ? FontWeight.w800
+                              : FontWeight.w500,
                           color: isCurrent
                               ? primaryAccent
                               : (isCompleted ? textPrimary : textSecondary),
@@ -339,23 +466,77 @@ class LoanStatusTrackingCard extends StatelessWidget {
   String _statusLabel(BuildContext context, String status) {
     switch (status) {
       case 'DRAFT':
-        return l10nPick(context, fa: 'پیش‌نویس پرونده', en: 'Draft', ar: 'مسودة', zh: '草稿');
+        return l10nPick(
+          context,
+          fa: 'پیش‌نویس پرونده',
+          en: 'Draft',
+          ar: 'مسودة',
+          zh: '草稿',
+        );
       case 'UNDER_ASSESSMENT':
-        return l10nPick(context, fa: 'در حال ارزیابی اعتباری', en: 'Under Review', ar: 'قيد التقييم', zh: '审核中');
+        return l10nPick(
+          context,
+          fa: 'در حال ارزیابی اعتباری',
+          en: 'Under Review',
+          ar: 'قيد التقييم',
+          zh: '审核中',
+        );
       case 'OFFERED':
-        return l10nPick(context, fa: 'پیشنهاد صادر شد', en: 'Offer Issued', ar: 'عرض متاح', zh: '方案已出');
+        return l10nPick(
+          context,
+          fa: 'پیشنهاد صادر شد',
+          en: 'Offer Issued',
+          ar: 'عرض متاح',
+          zh: '方案已出',
+        );
       case 'AWAITING_COLLATERAL':
-        return l10nPick(context, fa: 'در انتظار وثیقه‌گذاری', en: 'Awaiting Collateral', ar: 'بانتظار الضمان', zh: '待交抵押');
+        return l10nPick(
+          context,
+          fa: 'در انتظار وثیقه‌گذاری',
+          en: 'Awaiting Collateral',
+          ar: 'بانتظار الضمان',
+          zh: '待交抵押',
+        );
       case 'AWAITING_SIGNING':
-        return l10nPick(context, fa: 'در انتظار امضا', en: 'Awaiting Signing', ar: 'بانتظار التوقيع', zh: '待签约');
+        return l10nPick(
+          context,
+          fa: 'در انتظار امضا',
+          en: 'Awaiting Signing',
+          ar: 'بانتظار التوقيع',
+          zh: '待签约',
+        );
       case 'DISBURSED':
-        return l10nPick(context, fa: 'واریز شده به حساب', en: 'Disbursed', ar: 'تم الصرف', zh: '已放款');
+        return l10nPick(
+          context,
+          fa: 'واریز شده به حساب',
+          en: 'Disbursed',
+          ar: 'تم الصرف',
+          zh: '已放款',
+        );
       case 'ACTIVE':
-        return l10nPick(context, fa: 'در حال بازپرداخت', en: 'Active Repayment', ar: 'سداد جاري', zh: '还款中');
+        return l10nPick(
+          context,
+          fa: 'در حال بازپرداخت',
+          en: 'Active Repayment',
+          ar: 'سداد جاري',
+          zh: '还款中',
+        );
       case 'COMPLETED':
-        return l10nPick(context, fa: 'تسویه کامل', en: 'Completed', ar: 'تم السداد', zh: '已结清');
+        return l10nPick(
+          context,
+          fa: 'تسویه کامل',
+          en: 'Completed',
+          ar: 'تم السداد',
+          zh: '已结清',
+        );
       case 'OVERDUE':
-        return l10nPick(context, fa: 'دارای قسط معوق', en: 'Overdue', ar: 'متأخر', zh: '已逾期');
+        return l10nPick(
+          context,
+          fa: 'دارای قسط معوق',
+          en: 'Overdue',
+          ar: 'متأخر',
+          zh: '已逾期',
+        );
       default:
         return status;
     }
@@ -391,25 +572,39 @@ class LoanStatusTrackingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final sunkenColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
+    final sunkenColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
 
     final c = loanCase;
     final isWarning = c.isCollateralWarning;
     final isDanger = c.isCollateralDanger;
     final status = c.status;
-    final statusColor = (isWarning || isDanger) ? AppColors.error : _statusColor(status);
+    final statusColor = (isWarning || isDanger)
+        ? AppColors.error
+        : _statusColor(status);
     final statusText = _statusLabel(context, status);
 
     final nextInst = c.nextInstallment;
     final nextAmount = nextInst?.amount ?? 1140.0;
     final totalInstallments = c.totalInstallmentsCount;
     final paidCount = c.paidInstallmentsCount;
-    final progressPct = totalInstallments > 0 ? (paidCount / totalInstallments) : 0.0;
+    final progressPct = totalInstallments > 0
+        ? (paidCount / totalInstallments)
+        : 0.0;
 
     return InkWell(
       borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
@@ -450,10 +645,15 @@ class LoanStatusTrackingCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
+                        padding: EdgeInsetsDirectional.symmetric(
+                          horizontal: 7.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
                           color: sunkenColor,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
                           border: Border.all(color: borderColor),
                         ),
                         child: Text(
@@ -493,11 +693,18 @@ class LoanStatusTrackingCard extends StatelessWidget {
                 Flexible(
                   flex: 2,
                   child: Container(
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 7.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
                       color: statusColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                      border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusFull,
+                      ),
+                      border: Border.all(
+                        color: statusColor.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -533,10 +740,7 @@ class LoanStatusTrackingCard extends StatelessWidget {
             SizedBox(height: AppSpacing.md.h),
 
             // Embedded 4-Step Progress Stepper
-            LoanStatusStepper(
-              currentStatus: c.status,
-              isCompact: true,
-            ),
+            LoanStatusStepper(currentStatus: c.status, isCompact: true),
 
             SizedBox(height: AppSpacing.md.h),
 
@@ -551,7 +755,13 @@ class LoanStatusTrackingCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'مانده بدهی اصل تسهیلات', en: 'Outstanding Balance', ar: 'المبلغ المتبقي', zh: '未还本金'),
+                        l10nPick(
+                          context,
+                          fa: 'مانده بدهی اصل تسهیلات',
+                          en: 'Outstanding Balance',
+                          ar: 'المبلغ المتبقي',
+                          zh: '未还本金',
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 11.sp, color: textSecondary),
@@ -579,7 +789,13 @@ class LoanStatusTrackingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      l10nPick(context, fa: 'مبلغ قسط بعدی', en: 'Next Payment', ar: 'القسط التالي', zh: '下期供款'),
+                      l10nPick(
+                        context,
+                        fa: 'مبلغ قسط بعدی',
+                        en: 'Next Payment',
+                        ar: 'القسط التالي',
+                        zh: '下期供款',
+                      ),
                       style: TextStyle(fontSize: 11.sp, color: textSecondary),
                     ),
                     SizedBox(height: 2.h),
@@ -611,7 +827,11 @@ class LoanStatusTrackingCard extends StatelessWidget {
                         '${l10nPick(context, fa: 'پیشرفت بازپرداخت اقساط', en: 'Repayment Progress', ar: 'تقدم السداد', zh: '还款进度')}: $paidCount / $totalInstallments',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w700, color: textSecondary),
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          fontWeight: FontWeight.w700,
+                          color: textSecondary,
+                        ),
                       ),
                     ),
                     SizedBox(width: 6.w),
@@ -633,7 +853,9 @@ class LoanStatusTrackingCard extends StatelessWidget {
                     value: progressPct,
                     backgroundColor: sunkenColor,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      paidCount == totalInstallments ? AppColors.success : primaryAccent,
+                      paidCount == totalInstallments
+                          ? AppColors.success
+                          : primaryAccent,
                     ),
                     minHeight: 5.h,
                   ),
@@ -645,7 +867,10 @@ class LoanStatusTrackingCard extends StatelessWidget {
             if (c.lockedCollateralUsdt > 0) ...[
               SizedBox(height: AppSpacing.sm.h),
               Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 6.h),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 10.w,
+                  vertical: 6.h,
+                ),
                 decoration: BoxDecoration(
                   color: (isWarning || isDanger)
                       ? AppColors.errorContainer
@@ -659,7 +884,9 @@ class LoanStatusTrackingCard extends StatelessWidget {
                           ? Icons.warning_amber_rounded
                           : Icons.shield_outlined,
                       size: 15.sp,
-                      color: (isWarning || isDanger) ? AppColors.error : AppColors.success,
+                      color: (isWarning || isDanger)
+                          ? AppColors.error
+                          : AppColors.success,
                     ),
                     SizedBox(width: 6.w),
                     Expanded(
@@ -668,7 +895,9 @@ class LoanStatusTrackingCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w800,
-                          color: (isWarning || isDanger) ? AppColors.error : AppColors.success,
+                          color: (isWarning || isDanger)
+                              ? AppColors.error
+                              : AppColors.success,
                         ),
                       ),
                     ),
@@ -679,13 +908,22 @@ class LoanStatusTrackingCard extends StatelessWidget {
                           onTopUpCollateral?.call();
                         },
                         child: Container(
-                          padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.error,
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
-                            l10nPick(context, fa: 'شارژ وثیقه', en: 'Top Up', ar: 'تعزيز', zh: '补仓'),
+                            l10nPick(
+                              context,
+                              fa: 'شارژ وثیقه',
+                              en: 'Top Up',
+                              ar: 'تعزيز',
+                              zh: '补仓',
+                            ),
                             style: TextStyle(
                               fontSize: 10.sp,
                               fontWeight: FontWeight.w800,
@@ -708,11 +946,15 @@ class LoanStatusTrackingCard extends StatelessWidget {
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryAccent,
-                      foregroundColor: isDark ? AppColors.deepBlack : Colors.white,
+                      foregroundColor: isDark
+                          ? AppColors.deepBlack
+                          : Colors.white,
                       elevation: 0,
                       minimumSize: Size(0, 40.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd.r,
+                        ),
                       ),
                     ),
                     icon: Icon(Icons.payment_rounded, size: 15.sp),
@@ -724,7 +966,10 @@ class LoanStatusTrackingCard extends StatelessWidget {
                         ar: 'سداد القسط القادم',
                         zh: '支付本期账单',
                       ),
-                      style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w800),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                     onPressed: () {
                       HapticFeedback.lightImpact();
@@ -739,7 +984,9 @@ class LoanStatusTrackingCard extends StatelessWidget {
                     side: BorderSide(color: borderColor),
                     minimumSize: Size(0, 40.h),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                     ),
                   ),
                   onPressed: () {
@@ -747,8 +994,17 @@ class LoanStatusTrackingCard extends StatelessWidget {
                     onTap?.call();
                   },
                   child: Text(
-                    l10nPick(context, fa: 'جزئیات', en: 'Details', ar: 'التفاصيل', zh: '详情'),
-                    style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700),
+                    l10nPick(
+                      context,
+                      fa: 'جزئیات',
+                      en: 'Details',
+                      ar: 'التفاصيل',
+                      zh: '详情',
+                    ),
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ],
@@ -764,16 +1020,17 @@ class LoanStatusTrackingCard extends StatelessWidget {
 class LoanSkeletonLoader extends StatelessWidget {
   final int itemCount;
 
-  const LoanSkeletonLoader({
-    super.key,
-    this.itemCount = 3,
-  });
+  const LoanSkeletonLoader({super.key, this.itemCount = 3});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor = isDark ? const Color(0xFF2B2B29) : const Color(0xFFE2E8F0);
-    final highlightColor = isDark ? const Color(0xFF383835) : const Color(0xFFF1F5F9);
+    final baseColor = isDark
+        ? const Color(0xFF2B2B29)
+        : const Color(0xFFE2E8F0);
+    final highlightColor = isDark
+        ? const Color(0xFF383835)
+        : const Color(0xFFF1F5F9);
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -800,7 +1057,9 @@ class LoanSkeletonLoader extends StatelessWidget {
                     height: 40.r,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                     ),
                   ),
                   SizedBox(width: AppSpacing.md.w),
@@ -813,7 +1072,9 @@ class LoanSkeletonLoader extends StatelessWidget {
                           height: 16.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                         SizedBox(height: AppSpacing.xs.h),
@@ -822,7 +1083,9 @@ class LoanSkeletonLoader extends StatelessWidget {
                           height: 12.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                       ],
@@ -833,7 +1096,9 @@ class LoanSkeletonLoader extends StatelessWidget {
                     height: 28.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                 ],

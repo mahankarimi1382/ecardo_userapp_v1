@@ -78,12 +78,14 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(
@@ -271,26 +273,29 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
                     s['label']!,
                     style: TextStyle(
                       fontSize: 11.sp,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w600,
                       color: isSelected
                           ? AppColors.white
                           : (isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary),
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
                     ),
                   ),
                   selected: isSelected,
                   selectedColor: primaryAccent,
-                  backgroundColor:
-                      isDark ? AppColors.darkCard : AppColors.lightSurface,
+                  backgroundColor: isDark
+                      ? AppColors.darkCard
+                      : AppColors.lightSurface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                     side: BorderSide(
                       color: isSelected
                           ? primaryAccent
                           : (isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder),
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                     ),
                   ),
                   onSelected: (_) {
@@ -353,12 +358,15 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
                       return InkWell(
                         onTap: () {
                           HapticFeedback.lightImpact();
-                          Get.to(() => EquityProjectDetailScreen(
-                                projectId: project.id,
-                              ));
+                          Get.to(
+                            () => EquityProjectDetailScreen(
+                              projectId: project.id,
+                            ),
+                          );
                         },
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radius.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radius.r,
+                        ),
                         child: EquityProjectCard(
                           project: project,
                           onInvestTap: () {
@@ -518,69 +526,73 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
             ),
           ),
           SizedBox(height: AppSpacing.lg.h),
-          ...holdings.map((h) => Container(
-                margin: EdgeInsets.only(bottom: AppSpacing.md.h),
-                padding: EdgeInsets.all(AppSpacing.md.r),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkCard : AppColors.white,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                  border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  ),
+          ...holdings.map(
+            (h) => Container(
+              margin: EdgeInsets.only(bottom: AppSpacing.md.h),
+              padding: EdgeInsets.all(AppSpacing.md.r),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkCard : AppColors.white,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          h.projectTitle,
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w800,
-                            color: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                          ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        h.projectTitle,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w800,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 6.w, vertical: 2.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.success.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                          child: Text(
-                            l10nPick(
-                              context,
-                              fa: 'فعال',
-                              en: 'Active',
-                              ar: 'نشط',
-                              zh: '活跃',
-                            ),
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.success,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 6.h),
-                    Text(
-                      '${l10nPick(context, fa: 'سرمایه', en: 'Principal', ar: 'رأس المال', zh: '投资额')}: ${h.amountInvested.toStringAsFixed(0)} ${h.currency} • ${l10nPick(context, fa: 'سود سالانه', en: 'Annual Yield', ar: 'العائد السنوي', zh: '年化收益')}: ${h.expectedYieldPercent}%',
-                      style: TextStyle(
-                        fontSize: 11.sp,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary,
                       ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.success.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                        child: Text(
+                          l10nPick(
+                            context,
+                            fa: 'فعال',
+                            en: 'Active',
+                            ar: 'نشط',
+                            zh: '活跃',
+                          ),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.success,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  Text(
+                    '${l10nPick(context, fa: 'سرمایه', en: 'Principal', ar: 'رأس المال', zh: '投资额')}: ${h.amountInvested.toStringAsFixed(0)} ${h.currency} • ${l10nPick(context, fa: 'سود سالانه', en: 'Annual Yield', ar: 'العائد السنوي', zh: '年化收益')}: ${h.expectedYieldPercent}%',
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       );
     });
@@ -601,7 +613,10 @@ class _EquityNotAvailableNotice extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.warning.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-        border: Border.all(color: AppColors.warning.withValues(alpha: 0.6), width: 1.2),
+        border: Border.all(
+          color: AppColors.warning.withValues(alpha: 0.6),
+          width: 1.2,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -642,7 +657,9 @@ class _EquityNotAvailableNotice extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -660,7 +677,9 @@ class _EquityNotAvailableNotice extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.sp,
               height: 1.6,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ],

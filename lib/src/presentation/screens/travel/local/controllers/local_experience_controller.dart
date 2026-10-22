@@ -9,15 +9,18 @@ import '../models/local_experience_models.dart';
 
 class LocalExperienceController extends GetxController {
   // UI State Machine (mandatory 12 states)
-  final Rx<ExperienceServiceState> uiState = ExperienceServiceState.defaultState.obs;
+  final Rx<ExperienceServiceState> uiState =
+      ExperienceServiceState.defaultState.obs;
   final RxString errorMessage = ''.obs;
   final RxString validationError = ''.obs;
   final RxBool isOffline = false.obs;
   final RxString searchQuery = ''.obs;
 
   // Catalog & Bookings
-  final RxList<LocalExperienceItemModel> allExperiences = <LocalExperienceItemModel>[].obs;
-  final RxList<LocalExperienceItemModel> filteredExperiences = <LocalExperienceItemModel>[].obs;
+  final RxList<LocalExperienceItemModel> allExperiences =
+      <LocalExperienceItemModel>[].obs;
+  final RxList<LocalExperienceItemModel> filteredExperiences =
+      <LocalExperienceItemModel>[].obs;
   final RxList<LocalBookingModel> myBookings = <LocalBookingModel>[].obs;
 
   // Filters
@@ -25,7 +28,9 @@ class LocalExperienceController extends GetxController {
   final RxString selectedCity = 'ALL'.obs;
 
   // Booking Form State
-  final Rx<DateTime> selectedDate = DateTime.now().add(const Duration(days: 2)).obs;
+  final Rx<DateTime> selectedDate = DateTime.now()
+      .add(const Duration(days: 2))
+      .obs;
   final RxString selectedTime = '09:00'.obs;
   final RxInt guestsCount = 2.obs;
   final RxInt childrenCount = 0.obs;
@@ -51,15 +56,20 @@ class LocalExperienceController extends GetxController {
 
   void _initConnectivity() {
     // DATA: REAL connectivity check
-    Connectivity().checkConnectivity().then((result) {
-      final offline = result.contains(ConnectivityResult.none);
-      isOffline.value = offline;
-      if (offline && uiState.value == ExperienceServiceState.defaultState) {
-        uiState.value = ExperienceServiceState.offline;
-      }
-    }).catchError((_) {});
+    Connectivity()
+        .checkConnectivity()
+        .then((result) {
+          final offline = result.contains(ConnectivityResult.none);
+          isOffline.value = offline;
+          if (offline && uiState.value == ExperienceServiceState.defaultState) {
+            uiState.value = ExperienceServiceState.offline;
+          }
+        })
+        .catchError((_) {});
 
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) {
       final offline = results.contains(ConnectivityResult.none);
       isOffline.value = offline;
       if (offline) {
@@ -122,7 +132,8 @@ class LocalExperienceController extends GetxController {
         const LocalExperienceItemModel(
           schemaVersion: '1.0',
           id: 'local-02',
-          title: 'عکاس حرفه‌ای سفر در دبی (Dubai Professional Travel Photographer)',
+          title:
+              'عکاس حرفه‌ای سفر در دبی (Dubai Professional Travel Photographer)',
           subtitle: 'دو ساعت عکاسی لوکس + ۳۵ شات ادیت‌شده',
           providerName: 'سارا پرتو (عکاس و ادیتور فشن و توریسم دبی)',
           city: 'دبی',
@@ -141,7 +152,8 @@ class LocalExperienceController extends GetxController {
             'تحویل فایل‌های ادیت‌شده با کیفیت چاپی ظرف ۴۸ ساعت',
             'همراهی دستیار نورپردازی و هدایت ژست‌ها',
           ],
-          meetingPoint: 'پل سوق‌البحار (Souk Al Bahar Bridge)، روبروی برج خلیفه',
+          meetingPoint:
+              'پل سوق‌البحار (Souk Al Bahar Bridge)، روبروی برج خلیفه',
           description:
               'ثبت به یادماندنی‌ترین خاطرات شما از سفر به دبی با دوربین‌های حرفه‌ای سونی Alpha و لنزهای پرایم. ایده‌آل برای زوج‌ها، خانواده‌ها و تولید محتوای شبکه‌های اجتماعی.',
           minGuests: 1,
@@ -193,7 +205,8 @@ class LocalExperienceController extends GetxController {
         const LocalExperienceItemModel(
           schemaVersion: '1.0',
           id: 'local-04',
-          title: 'همراه فرودگاهی و مترجم همزمان تجاری در دبی (Airport VIP Assistant)',
+          title:
+              'همراه فرودگاهی و مترجم همزمان تجاری در دبی (Airport VIP Assistant)',
           subtitle: 'پذیرش و همراهی از پای پرواز تا ترانسفر هتل',
           providerName: 'تیم خدمات فرودگاهی اکسلنت دبی',
           city: 'دبی',
@@ -212,7 +225,8 @@ class LocalExperienceController extends GetxController {
             'کمک در دریافت بار و هدایت از گیت‌های کنترل پاسپورت',
             'کمک در تبدیل ارز، تهیه سیم‌کارت و سوار شدن به خودرو',
           ],
-          meetingPoint: 'سالن خروجی پروازهای بین‌المللی فرودگاه دبی (DXB Terminal 1/3)',
+          meetingPoint:
+              'سالن خروجی پروازهای بین‌المللی فرودگاه دبی (DXB Terminal 1/3)',
           description:
               'خدمت اختصاصی برای مسافرانی که برای اولین بار به دبی سفر می‌کنند یا به زبان‌های خارجی مسلط نیستند. میزبان حرفه‌ای ما تمام مراحل فرودگاهی را با احترام و سرعت برای شما تسهیل خواهد کرد.',
           minGuests: 1,
@@ -229,8 +243,9 @@ class LocalExperienceController extends GetxController {
 
       allExperiences.assignAll(mockData);
       applyFilters();
-      uiState.value =
-          filteredExperiences.isEmpty ? ExperienceServiceState.empty : ExperienceServiceState.success;
+      uiState.value = filteredExperiences.isEmpty
+          ? ExperienceServiceState.empty
+          : ExperienceServiceState.success;
     } catch (e) {
       errorMessage.value = 'خطا در بارگذاری تجربه‌های محلی: $e';
       uiState.value = ExperienceServiceState.error;
@@ -240,15 +255,21 @@ class LocalExperienceController extends GetxController {
   void onSearchChanged(String query) {
     searchQuery.value = query;
     _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(milliseconds: 300), () => applyFilters());
+    _debounceTimer = Timer(
+      const Duration(milliseconds: 300),
+      () => applyFilters(),
+    );
   }
 
   void applyFilters() {
     final query = searchQuery.value.trim().toLowerCase();
     final results = allExperiences.where((exp) {
-      final matchesType = selectedType.value == null || exp.type == selectedType.value;
-      final matchesCity = selectedCity.value == 'ALL' || exp.city.contains(selectedCity.value);
-      final matchesQuery = query.isEmpty ||
+      final matchesType =
+          selectedType.value == null || exp.type == selectedType.value;
+      final matchesCity =
+          selectedCity.value == 'ALL' || exp.city.contains(selectedCity.value);
+      final matchesQuery =
+          query.isEmpty ||
           exp.title.toLowerCase().contains(query) ||
           exp.description.toLowerCase().contains(query) ||
           exp.providerName.toLowerCase().contains(query);
@@ -256,7 +277,9 @@ class LocalExperienceController extends GetxController {
     }).toList();
 
     filteredExperiences.assignAll(results);
-    uiState.value = results.isEmpty ? ExperienceServiceState.empty : ExperienceServiceState.success;
+    uiState.value = results.isEmpty
+        ? ExperienceServiceState.empty
+        : ExperienceServiceState.success;
   }
 
   void resetFilters() {
@@ -283,7 +306,8 @@ class LocalExperienceController extends GetxController {
     if (guestsCount.value + childrenCount.value < item.minGuests) {
       return 'حداقل تعداد نفرات لازم: ${item.minGuests}.';
     }
-    if (selectedDate.value.isBefore(DateTime.now()) || selectedDate.value.isAtSameMomentAs(DateTime.now())) {
+    if (selectedDate.value.isBefore(DateTime.now()) ||
+        selectedDate.value.isAtSameMomentAs(DateTime.now())) {
       final now = DateTime.now();
       if (selectedDate.value.year == now.year &&
           selectedDate.value.month == now.month &&
@@ -299,11 +323,16 @@ class LocalExperienceController extends GetxController {
   }
 
   double calculateTotal(LocalExperienceItemModel item) {
-    return item.calculateTotal(adults: guestsCount.value, children: childrenCount.value);
+    return item.calculateTotal(
+      adults: guestsCount.value,
+      children: childrenCount.value,
+    );
   }
 
   /// Submits local service booking. Tagged MOCK — no `local` travel_service_domain registered at trip.ecardo.ir.
-  Future<LocalBookingModel?> bookExperience({required LocalExperienceItemModel item}) async {
+  Future<LocalBookingModel?> bookExperience({
+    required LocalExperienceItemModel item,
+  }) async {
     validationError.value = '';
     final vErr = validateBooking(item);
     if (vErr != null) {
@@ -318,8 +347,12 @@ class LocalExperienceController extends GetxController {
       // Network simulation
       await Future.delayed(const Duration(milliseconds: 1100));
 
-      final total = item.calculateTotal(adults: guestsCount.value, children: childrenCount.value);
-      final bookingId = 'EXP-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+      final total = item.calculateTotal(
+        adults: guestsCount.value,
+        children: childrenCount.value,
+      );
+      final bookingId =
+          'EXP-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
       final booking = LocalBookingModel(
         schemaVersion: '1.0',
         bookingId: bookingId,
@@ -343,7 +376,9 @@ class LocalExperienceController extends GetxController {
 
       myBookings.insert(0, booking);
       uiState.value = ExperienceServiceState.completed;
-      ToastHelper().showSuccessToast('رزرو خدمت محلی با موفقیت ثبت و واچر صادر گردید');
+      ToastHelper().showSuccessToast(
+        'رزرو خدمت محلی با موفقیت ثبت و واچر صادر گردید',
+      );
       return booking;
     } catch (e) {
       errorMessage.value = 'خطا در رزرو خدمت: $e';

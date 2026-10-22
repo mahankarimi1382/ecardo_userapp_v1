@@ -37,7 +37,9 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
         SizedBox(height: 14.h),
 
         // 2. Real-time Countdown Timer & Status Header
-        controller.isBuy ? _buildBuyStatusTitle(context, isDark) : _buildSellStatusTitle(context, isDark),
+        controller.isBuy
+            ? _buildBuyStatusTitle(context, isDark)
+            : _buildSellStatusTitle(context, isDark),
       ],
     );
   }
@@ -45,10 +47,14 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
   /// Escrow Security Shield Header ("Escrow Protected / تحت پوشش امانی")
   Widget _buildEscrowSecurityBanner(BuildContext context, bool isDark) {
     final emeraldGreen = AppColors.success;
-    final cardBg = isDark ? AppColors.darkSecondaryContainer : AppColors.successContainer;
+    final cardBg = isDark
+        ? AppColors.darkSecondaryContainer
+        : AppColors.successContainer;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final textHeading = isDark ? AppColors.white : AppColors.deepBlack;
-    final textSub = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textSub = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       width: double.infinity,
@@ -79,11 +85,7 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                 color: emeraldGreen.withValues(alpha: isDark ? 0.5 : 0.3),
               ),
             ),
-            child: Icon(
-              Icons.shield_rounded,
-              size: 20.r,
-              color: emeraldGreen,
-            ),
+            child: Icon(Icons.shield_rounded, size: 20.r, color: emeraldGreen),
           ),
           SizedBox(width: 12.w),
 
@@ -95,7 +97,11 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      l10nPick(context, en: 'Escrow Protected', fa: 'تحت پوشش امانی'),
+                      l10nPick(
+                        context,
+                        en: 'Escrow Protected',
+                        fa: 'تحت پوشش امانی',
+                      ),
                       style: TextStyle(
                         letterSpacing: 0,
                         fontWeight: FontWeight.w800,
@@ -105,10 +111,15 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 6.w),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 1.5.h,
+                      ),
                       decoration: BoxDecoration(
                         color: emeraldGreen,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXs.r,
+                        ),
                       ),
                       child: Text(
                         '100% SAFE',
@@ -151,8 +162,12 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
     final status = (data.status ?? '').toLowerCase();
     final orderNumber = data.orderNumber ?? '--';
 
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     switch (status) {
       case 'pending_payment':
@@ -216,7 +231,12 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
           orderNumber: orderNumber,
         );
       default:
-        return _buildOrderNumberRow(context, orderNumber, textPrimary, textSecondary);
+        return _buildOrderNumberRow(
+          context,
+          orderNumber,
+          textPrimary,
+          textSecondary,
+        );
     }
   }
 
@@ -226,8 +246,12 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
     final status = (data.status ?? '').toLowerCase();
     final orderNumber = data.orderNumber ?? '--';
 
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     switch (status) {
       case 'pending_payment':
@@ -291,7 +315,12 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
           orderNumber: orderNumber,
         );
       default:
-        return _buildOrderNumberRow(context, orderNumber, textPrimary, textSecondary);
+        return _buildOrderNumberRow(
+          context,
+          orderNumber,
+          textPrimary,
+          textSecondary,
+        );
     }
   }
 
@@ -302,8 +331,12 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
     required String title,
     required String orderNumber,
   }) {
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       width: double.infinity,
@@ -334,8 +367,8 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
             final timerColor = isUrgent
                 ? const Color(0xFFEF4444)
                 : isWarning
-                    ? const Color(0xFFF59E0B)
-                    : const Color(0xFF10B981);
+                ? const Color(0xFFF59E0B)
+                : const Color(0xFF10B981);
 
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -353,7 +386,10 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 8.w),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 5.h,
+                  ),
                   decoration: BoxDecoration(
                     color: timerColor.withValues(alpha: isDark ? 0.20 : 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
@@ -364,11 +400,7 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.timer_rounded,
-                        size: 15.r,
-                        color: timerColor,
-                      ),
+                      Icon(Icons.timer_rounded, size: 15.r, color: timerColor),
                       SizedBox(width: 5.w),
                       Text(
                         controller.countdownText,
@@ -393,7 +425,12 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
           SizedBox(height: 10.h),
 
           // Order Number Row with One-Tap Copy Button
-          _buildOrderNumberRow(context, orderNumber, textPrimary, textSecondary),
+          _buildOrderNumberRow(
+            context,
+            orderNumber,
+            textPrimary,
+            textSecondary,
+          ),
         ],
       ),
     );
@@ -436,7 +473,11 @@ class OrderDetailsTitleBlockWidget extends StatelessWidget {
             HapticFeedback.lightImpact();
             Clipboard.setData(ClipboardData(text: orderNumber));
             ToastHelper().showSuccessToast(
-              l10nPick(context, en: 'Order number copied', fa: 'شماره سفارش کپی شد'),
+              l10nPick(
+                context,
+                en: 'Order number copied',
+                fa: 'شماره سفارش کپی شد',
+              ),
             );
           },
           child: Container(
@@ -478,8 +519,12 @@ class _OrderStatusBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       width: double.infinity,
@@ -578,7 +623,11 @@ class _OrderStatusBlock extends StatelessWidget {
                   HapticFeedback.lightImpact();
                   Clipboard.setData(ClipboardData(text: orderNumber));
                   ToastHelper().showSuccessToast(
-                    l10nPick(context, en: 'Order number copied', fa: 'شماره سفارش کپی شد'),
+                    l10nPick(
+                      context,
+                      en: 'Order number copied',
+                      fa: 'شماره سفارش کپی شد',
+                    ),
                   );
                 },
                 child: Icon(

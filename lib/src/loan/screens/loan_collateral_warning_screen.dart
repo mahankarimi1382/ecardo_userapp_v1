@@ -15,10 +15,7 @@ import '../models/loan_models.dart';
 class LoanCollateralWarningScreen extends StatelessWidget {
   final LoanCaseModel loanCase;
 
-  const LoanCollateralWarningScreen({
-    super.key,
-    required this.loanCase,
-  });
+  const LoanCollateralWarningScreen({super.key, required this.loanCase});
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +149,11 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                 children: [
                   _buildMetricRow(
                     context,
-                    label: l10nPick(context, fa: 'نسبت پوشش فعلی', en: 'Coverage now'),
+                    label: l10nPick(
+                      context,
+                      fa: 'نسبت پوشش فعلی',
+                      en: 'Coverage now',
+                    ),
                     value: '${coverageNow.toStringAsFixed(0)}%',
                     valueColor: ECardoTokens.danger(context),
                     isBold: true,
@@ -160,21 +161,33 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildMetricRow(
                     context,
-                    label: l10nPick(context, fa: 'حد آستانه اجباری', en: 'Required'),
+                    label: l10nPick(
+                      context,
+                      fa: 'حد آستانه اجباری',
+                      en: 'Required',
+                    ),
                     value: '120%',
                     valueColor: ECardoTokens.inkMuted(context),
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildMetricRow(
                     context,
-                    label: l10nPick(context, fa: 'مانده بدهی وام', en: 'Outstanding loan'),
+                    label: l10nPick(
+                      context,
+                      fa: 'مانده بدهی وام',
+                      en: 'Outstanding loan',
+                    ),
                     value: '${outstanding.toStringAsFixed(2)} USD',
                     valueColor: ECardoTokens.ink(context),
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildMetricRow(
                     context,
-                    label: l10nPick(context, fa: 'ارزش فعلی وثیقه', en: 'Collateral value now'),
+                    label: l10nPick(
+                      context,
+                      fa: 'ارزش فعلی وثیقه',
+                      en: 'Collateral value now',
+                    ),
                     value: '${collateralVal.toStringAsFixed(2)} USD',
                     valueColor: ECardoTokens.ink(context),
                   ),
@@ -220,7 +233,11 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'افزایش وثیقه', en: 'Add collateral'),
+                        l10nPick(
+                          context,
+                          fa: 'افزایش وثیقه',
+                          en: 'Add collateral',
+                        ),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
@@ -228,10 +245,15 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.successBg(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusSm.r,
+                          ),
                         ),
                         child: Text(
                           '+${shortfallUsdt.toStringAsFixed(0)} USDT',
@@ -268,29 +290,55 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                         foregroundColor: ECardoTokens.inkOnBrand,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusLg.r,
+                          ),
                         ),
                       ),
                       onPressed: () {
                         HapticFeedback.mediumImpact();
-                        final sTitle = l10nPick(context, fa: 'موفقیت', en: 'Success');
-                        final sMsg = l10nPick(context, fa: 'وثیقه با موفقیت شارژ شد و نسبت پوشش به ۱۵۰٪ بازگشت.', en: 'Collateral topped up successfully.');
+                        final sTitle = l10nPick(
+                          context,
+                          fa: 'موفقیت',
+                          en: 'Success',
+                        );
+                        final sMsg = l10nPick(
+                          context,
+                          fa: 'وثیقه با موفقیت شارژ شد و نسبت پوشش به ۱۵۰٪ بازگشت.',
+                          en: 'Collateral topped up successfully.',
+                        );
                         final sBg = ECardoTokens.successBg(context);
                         final sColor = ECardoTokens.success(context);
                         Get.defaultDialog(
-                          title: l10nPick(context, fa: 'تأیید شارژ وثیقه', en: 'Confirm collateral top up'),
+                          title: l10nPick(
+                            context,
+                            fa: 'تأیید شارژ وثیقه',
+                            en: 'Confirm collateral top up',
+                          ),
                           middleText: l10nPick(
                             context,
                             fa: 'آیا مایل به قفل کردن ${shortfallUsdt.toStringAsFixed(0)} USDT از کیف پول هستید؟',
                             en: 'Lock ${shortfallUsdt.toStringAsFixed(0)} USDT from your wallet?',
                           ),
-                          textConfirm: l10nPick(context, fa: 'قفل وثیقه', en: 'Confirm'),
-                          textCancel: l10nPick(context, fa: 'انصراف', en: 'Cancel'),
+                          textConfirm: l10nPick(
+                            context,
+                            fa: 'قفل وثیقه',
+                            en: 'Confirm',
+                          ),
+                          textCancel: l10nPick(
+                            context,
+                            fa: 'انصراف',
+                            en: 'Cancel',
+                          ),
                           confirmTextColor: Colors.white,
                           buttonColor: ECardoTokens.brand900(context),
                           onConfirm: () async {
                             Get.back();
-                            await controller.postCryptoCollateral(loanCase.id, shortfallUsdt, 'USDT');
+                            await controller.postCryptoCollateral(
+                              loanCase.id,
+                              shortfallUsdt,
+                              'USDT',
+                            );
                             Get.snackbar(
                               sTitle,
                               sMsg,
@@ -337,7 +385,11 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'بازپرداخت بخشی از وام', en: 'Repay part of the loan'),
+                        l10nPick(
+                          context,
+                          fa: 'بازپرداخت بخشی از وام',
+                          en: 'Repay part of the loan',
+                        ),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
@@ -345,10 +397,15 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.sand100(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusSm.r,
+                          ),
                         ),
                         child: Text(
                           '${debtReductionUsd.toStringAsFixed(2)} USD',
@@ -382,29 +439,49 @@ class LoanCollateralWarningScreen extends StatelessWidget {
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: ECardoTokens.ink(context),
-                        side: BorderSide(color: ECardoTokens.borderStrong(context)),
+                        side: BorderSide(
+                          color: ECardoTokens.borderStrong(context),
+                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusLg.r,
+                          ),
                         ),
                       ),
                       onPressed: () {
                         HapticFeedback.lightImpact();
                         Get.defaultDialog(
-                          title: l10nPick(context, fa: 'پرداخت بخشی از بدهی', en: 'Repay partial debt'),
+                          title: l10nPick(
+                            context,
+                            fa: 'پرداخت بخشی از بدهی',
+                            en: 'Repay partial debt',
+                          ),
                           middleText: l10nPick(
                             context,
                             fa: 'آیا مایل به پرداخت ${debtReductionUsd.toStringAsFixed(2)} دلار از کیف پول هستید؟',
                             en: 'Pay ${debtReductionUsd.toStringAsFixed(2)} USD to reduce debt?',
                           ),
-                          textConfirm: l10nPick(context, fa: 'پرداخت', en: 'Pay'),
-                          textCancel: l10nPick(context, fa: 'انصراف', en: 'Cancel'),
+                          textConfirm: l10nPick(
+                            context,
+                            fa: 'پرداخت',
+                            en: 'Pay',
+                          ),
+                          textCancel: l10nPick(
+                            context,
+                            fa: 'انصراف',
+                            en: 'Cancel',
+                          ),
                           buttonColor: ECardoTokens.brand900(context),
                           confirmTextColor: Colors.white,
                           onConfirm: () async {
                             Get.back();
                             Get.snackbar(
                               l10nPick(context, fa: 'موفقیت', en: 'Success'),
-                              l10nPick(context, fa: 'پرداخت انجام شد و بدهی کاهش یافت.', en: 'Payment completed successfully.'),
+                              l10nPick(
+                                context,
+                                fa: 'پرداخت انجام شد و بدهی کاهش یافت.',
+                                en: 'Payment completed successfully.',
+                              ),
                               backgroundColor: ECardoTokens.successBg(context),
                               colorText: ECardoTokens.success(context),
                             );

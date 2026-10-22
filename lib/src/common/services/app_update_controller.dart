@@ -254,7 +254,8 @@ class AppUpdateController extends GetxController {
       if (apiData['direct_download'] != null) {
         directDownloadUrl.value = apiData['direct_download'].toString().trim();
       }
-      forceUpdate.value = apiData['force_update'] == true ||
+      forceUpdate.value =
+          apiData['force_update'] == true ||
           apiData['force_update'] == 1 ||
           apiData['force_update'] == '1';
       if (apiData['sha256'] != null) {
@@ -327,9 +328,12 @@ class AppUpdateController extends GetxController {
           mirrorUrl.value = apiData['mirror_url'].toString().trim();
         }
         if (apiData['direct_download'] != null) {
-          directDownloadUrl.value = apiData['direct_download'].toString().trim();
+          directDownloadUrl.value = apiData['direct_download']
+              .toString()
+              .trim();
         }
-        force = apiData['force_update'] == true ||
+        force =
+            apiData['force_update'] == true ||
             apiData['force_update'] == 1 ||
             apiData['force_update'] == '1';
         expectedSha = (apiData['sha256'] ?? '').toString().trim();
@@ -342,7 +346,8 @@ class AppUpdateController extends GetxController {
         server = (settings.getSetting(config.settingKeyVersion) ?? '').trim();
         link = (settings.getSetting(config.settingKeyUpdateLink) ?? '').trim();
         force = settings.getSetting(config.settingKeyForceUpdate) == '1';
-        expectedSha = (settings.getSetting(config.settingKeySha256) ?? '').trim();
+        expectedSha = (settings.getSetting(config.settingKeySha256) ?? '')
+            .trim();
       }
 
       serverVersion.value = server;
@@ -459,7 +464,9 @@ class AppUpdateController extends GetxController {
         );
       } catch (primaryError) {
         if (url != fallbackMirror && _cancelToken?.isCancelled != true) {
-          debugPrint('Primary download failed ($primaryError), falling back to mirror: $fallbackMirror');
+          debugPrint(
+            'Primary download failed ($primaryError), falling back to mirror: $fallbackMirror',
+          );
           progressPercent.value = 0;
           await dio.download(
             fallbackMirror,
@@ -480,11 +487,15 @@ class AppUpdateController extends GetxController {
       }
 
       // ----- Integrity check -----
-      final expectedSha = (serverSha256.value.isNotEmpty
-              ? serverSha256.value
-              : (Get.find<SettingsService>().getSetting(config.settingKeySha256) ?? ''))
-          .trim()
-          .toLowerCase();
+      final expectedSha =
+          (serverSha256.value.isNotEmpty
+                  ? serverSha256.value
+                  : (Get.find<SettingsService>().getSetting(
+                          config.settingKeySha256,
+                        ) ??
+                        ''))
+              .trim()
+              .toLowerCase();
 
       final file = File(filePath);
       if (!await file.exists()) {
@@ -496,7 +507,9 @@ class AppUpdateController extends GetxController {
         final digest = await sha256.bind(file.openRead()).first;
         final actual = digest.toString().toLowerCase();
         if (actual != expectedSha) {
-          debugPrint('⚠️ Warning: APK checksum ($actual) differs from expected ($expectedSha)');
+          debugPrint(
+            '⚠️ Warning: APK checksum ($actual) differs from expected ($expectedSha)',
+          );
         }
       }
 
@@ -631,10 +644,7 @@ class AppUpdateController extends GetxController {
 
     if (Platform.isAndroid) {
       try {
-        final intent = AndroidIntent(
-          action: 'action_view',
-          data: directUrl,
-        );
+        final intent = AndroidIntent(action: 'action_view', data: directUrl);
         await intent.launch();
         return;
       } catch (e) {
@@ -646,14 +656,17 @@ class AppUpdateController extends GetxController {
   /// Returns true if [server] is strictly newer than [current] using
   /// semver-style numeric comparison.
   bool _isVersionNewer(String server, String current) {
-    final serverParts =
-        server.split('.').map((e) => int.tryParse(e) ?? 0).toList();
-    final currentParts =
-        current.split('.').map((e) => int.tryParse(e) ?? 0).toList();
-    final maxLen =
-        serverParts.length > currentParts.length
-            ? serverParts.length
-            : currentParts.length;
+    final serverParts = server
+        .split('.')
+        .map((e) => int.tryParse(e) ?? 0)
+        .toList();
+    final currentParts = current
+        .split('.')
+        .map((e) => int.tryParse(e) ?? 0)
+        .toList();
+    final maxLen = serverParts.length > currentParts.length
+        ? serverParts.length
+        : currentParts.length;
     for (var i = 0; i < maxLen; i++) {
       final s = i < serverParts.length ? serverParts[i] : 0;
       final c = i < currentParts.length ? currentParts[i] : 0;

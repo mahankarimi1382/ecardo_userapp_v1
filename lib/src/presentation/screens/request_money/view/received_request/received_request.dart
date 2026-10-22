@@ -139,8 +139,7 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
                         )
                       : requests.isEmpty
                       ? LayoutBuilder(
-                          builder: (context, constraints) =>
-                              SingleChildScrollView(
+                          builder: (context, constraints) => SingleChildScrollView(
                             physics: const AlwaysScrollableScrollPhysics(),
                             child: ConstrainedBox(
                               constraints: BoxConstraints(
@@ -157,8 +156,9 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
                                   onPrimaryAction: () {
                                     HapticFeedback.lightImpact();
                                     Get.find<RequestMoneyController>()
-                                        .selectedScreen
-                                        .value = 0;
+                                            .selectedScreen
+                                            .value =
+                                        0;
                                   },
                                 ),
                               ),
@@ -177,8 +177,7 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
                           itemBuilder: (context, index) {
                             final Requests request = requests[index];
                             final requesterName = _getRequesterName(request);
-                            final statusColor =
-                                _getStatusColor(request.status);
+                            final statusColor = _getStatusColor(request.status);
 
                             return InkWell(
                               borderRadius: BorderRadius.circular(
@@ -269,8 +268,10 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 12,
                                                 color: isDark
-                                                    ? AppColors.darkTextSecondary
-                                                    : AppColors.lightTextTertiary,
+                                                    ? AppColors
+                                                          .darkTextSecondary
+                                                    : AppColors
+                                                          .lightTextTertiary,
                                               ),
                                             ),
                                             const SizedBox(height: 2),
@@ -289,7 +290,8 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
                                                 fontSize: 12,
                                                 color: isDark
                                                     ? AppColors.darkTextPrimary
-                                                    : AppColors.lightTextPrimary,
+                                                    : AppColors
+                                                          .lightTextPrimary,
                                               ),
                                             ),
                                           ],

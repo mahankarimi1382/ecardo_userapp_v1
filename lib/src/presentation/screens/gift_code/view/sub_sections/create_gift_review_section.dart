@@ -37,7 +37,9 @@ class CreateGiftReviewSection extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
-                color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                color: isDark
+                    ? AppColors.darkBackground
+                    : AppColors.lightBackground,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -48,7 +50,9 @@ class CreateGiftReviewSection extends StatelessWidget {
                         letterSpacing: 0,
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -58,7 +62,9 @@ class CreateGiftReviewSection extends StatelessWidget {
                         color: isDark ? AppColors.darkCard : AppColors.white,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                           width: 1,
                         ),
                       ),
@@ -77,7 +83,9 @@ class CreateGiftReviewSection extends StatelessWidget {
                           const SizedBox(height: 20),
                           Divider(
                             height: 0,
-                            color: isDark ? AppColors.darkDivider : AppColors.black.withValues(alpha: 0.10),
+                            color: isDark
+                                ? AppColors.darkDivider
+                                : AppColors.black.withValues(alpha: 0.10),
                           ),
                           const SizedBox(height: 20),
                           Obx(
@@ -86,13 +94,17 @@ class CreateGiftReviewSection extends StatelessWidget {
                               isDark: isDark,
                               title: localizations.createGiftReviewWalletName,
                               content: controller.wallet.value!.name!,
-                              contentColor: isDark ? AppColors.darkTextPrimary : AppColors.black,
+                              contentColor: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.black,
                             ),
                           ),
                           const SizedBox(height: 20),
                           Divider(
                             height: 0,
-                            color: isDark ? AppColors.darkDivider : AppColors.black.withValues(alpha: 0.10),
+                            color: isDark
+                                ? AppColors.darkDivider
+                                : AppColors.black.withValues(alpha: 0.10),
                           ),
                           const SizedBox(height: 20),
                           _buildReviewDynamicContent(
@@ -106,7 +118,9 @@ class CreateGiftReviewSection extends StatelessWidget {
                           const SizedBox(height: 20),
                           Divider(
                             height: 0,
-                            color: isDark ? AppColors.darkDivider : AppColors.black.withValues(alpha: 0.10),
+                            color: isDark
+                                ? AppColors.darkDivider
+                                : AppColors.black.withValues(alpha: 0.10),
                           ),
                           const SizedBox(height: 20),
                           _buildReviewDynamicContent(
@@ -144,8 +158,12 @@ class CreateGiftReviewSection extends StatelessWidget {
                             iconWidth: 18,
                             iconHeight: 18,
                             iconAndTextSpace: 8,
-                            iconColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                            textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            iconColor: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
+                            textColor: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                             onPressed: () {
                               controller.currentStep.value = 0;
                               controller.amountController.clear();
@@ -161,7 +179,13 @@ class CreateGiftReviewSection extends StatelessWidget {
                               // fire.
                               isLoading: controller.isCreateGiftLoading.value,
                               onPressed: () async {
-                                if ((controller.userModel.value.data?.passcode ?? "0") == "0") {
+                                if ((controller
+                                            .userModel
+                                            .value
+                                            .data
+                                            ?.passcode ??
+                                        "0") ==
+                                    "0") {
                                   controller.createGift();
                                   return;
                                 }
@@ -177,11 +201,15 @@ class CreateGiftReviewSection extends StatelessWidget {
                                       await Get.bottomSheet<dynamic>(
                                         const VerifyPasscodeBottomSheet(),
                                       );
-                                  final isVerified = verified != null &&
+                                  final isVerified =
+                                      verified != null &&
                                       verified != false &&
-                                      (verified is! String || verified.isNotEmpty);
+                                      (verified is! String ||
+                                          verified.isNotEmpty);
                                   if (!isVerified) return;
-                                  final passcode = verified is String ? verified : null;
+                                  final passcode = verified is String
+                                      ? verified
+                                      : null;
                                   controller.createGift(passcode: passcode);
                                 } else {
                                   controller.createGift();
@@ -227,8 +255,11 @@ class CreateGiftReviewSection extends StatelessWidget {
               letterSpacing: 0,
               fontWeight: FontWeight.w700,
               fontSize: 15,
-              color: (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
-                  .withValues(alpha: 0.60),
+              color:
+                  (isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary)
+                      .withValues(alpha: 0.60),
             ),
           ),
           Expanded(

@@ -44,9 +44,11 @@ class ExchangeStepIndicator extends StatelessWidget {
     ];
 
     final isDark = ExchangeDesignTokens.isDark(context);
-    final active = activeColor ??
+    final active =
+        activeColor ??
         (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary);
-    final inactive = inactiveColor ??
+    final inactive =
+        inactiveColor ??
         (isDark
             ? AppColors.darkDivider
             : AppColors.lightTextPrimary.withValues(alpha: 0.16));
@@ -173,11 +175,7 @@ class _ConnectorLine extends StatelessWidget {
       curve: Curves.easeOutQuart,
       width: length,
       height: 2.5,
-      margin: const EdgeInsetsDirectional.only(
-        start: 4,
-        end: 4,
-        bottom: 18,
-      ),
+      margin: const EdgeInsetsDirectional.only(start: 4, end: 4, bottom: 18),
       decoration: BoxDecoration(
         color: isFilled ? activeColor : inactiveColor,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXs),

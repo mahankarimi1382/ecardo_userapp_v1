@@ -44,8 +44,9 @@ class DeleteWalletBottomSheet extends StatelessWidget {
               width: 40,
               height: 6,
               decoration: BoxDecoration(
-                color: (isDark ? AppColors.warmWhite : AppColors.lightTextPrimary)
-                    .withValues(alpha: 0.2),
+                color:
+                    (isDark ? AppColors.warmWhite : AppColors.lightTextPrimary)
+                        .withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(30),
               ),
             ),

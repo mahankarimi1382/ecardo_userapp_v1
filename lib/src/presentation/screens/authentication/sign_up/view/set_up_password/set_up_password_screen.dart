@@ -61,7 +61,9 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
   @override
   void dispose() {
     controller.passwordController.removeListener(_onPasswordChanged);
-    controller.confirmPasswordController.removeListener(_onConfirmPasswordChanged);
+    controller.confirmPasswordController.removeListener(
+      _onConfirmPasswordChanged,
+    );
     super.dispose();
   }
 
@@ -71,10 +73,12 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     final cardBg = isDark
         ? const Color(0xFF131A2B).withValues(alpha: 0.94)
@@ -84,8 +88,9 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
         : AppColors.lightBorder.withValues(alpha: 0.7);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? const Color(0xFF090D1A) : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? const Color(0xFF090D1A)
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: AmbientAuthBackground(
         child: Stack(
@@ -121,10 +126,13 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                               borderRadius: BorderRadius.circular(16.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: (isDark
-                                          ? const Color(0xFF38BDF8)
-                                          : AppColors.mainSoftBlue)
-                                      .withValues(alpha: isDark ? 0.16 : 0.25),
+                                  color:
+                                      (isDark
+                                              ? const Color(0xFF38BDF8)
+                                              : AppColors.mainSoftBlue)
+                                          .withValues(
+                                            alpha: isDark ? 0.16 : 0.25,
+                                          ),
                                   blurRadius: 18,
                                 ),
                               ],
@@ -217,11 +225,11 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                   size: 20.sp,
                                   color: controller.isPasswordFocused.value
                                       ? (isDark
-                                          ? const Color(0xFF38BDF8)
-                                          : AppColors.deepBlack)
+                                            ? const Color(0xFF38BDF8)
+                                            : AppColors.deepBlack)
                                       : (isDark
-                                          ? AppColors.darkTextSecondary
-                                          : AppColors.lightTextTertiary),
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextTertiary),
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -253,7 +261,8 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                             // Floating Label Confirm Password Field
                             Obx(
                               () => CreativeFloatingTextField(
-                                label: localizations.setupPasswordConfirmPassword,
+                                label:
+                                    localizations.setupPasswordConfirmPassword,
                                 isRequired: true,
                                 controller:
                                     controller.confirmPasswordController,
@@ -267,14 +276,14 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                 prefixIcon: Icon(
                                   Icons.shield_outlined,
                                   size: 20.sp,
-                                  color: controller
-                                          .isConfirmPasswordFocused.value
+                                  color:
+                                      controller.isConfirmPasswordFocused.value
                                       ? (isDark
-                                          ? const Color(0xFF38BDF8)
-                                          : AppColors.deepBlack)
+                                            ? const Color(0xFF38BDF8)
+                                            : AppColors.deepBlack)
                                       : (isDark
-                                          ? AppColors.darkTextSecondary
-                                          : AppColors.lightTextTertiary),
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextTertiary),
                                 ),
                                 suffixIcon: IconButton(
                                   onPressed: () {
@@ -310,8 +319,9 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                 border: Border.all(
                                   color: isDark
                                       ? Colors.white.withValues(alpha: 0.08)
-                                      : AppColors.lightBorder
-                                          .withValues(alpha: 0.5),
+                                      : AppColors.lightBorder.withValues(
+                                          alpha: 0.5,
+                                        ),
                                 ),
                               ),
                               child: Row(
@@ -322,14 +332,16 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                       checkColor: Colors.white,
                                       side: BorderSide(
                                         color: isDark
-                                            ? Colors.white
-                                                .withValues(alpha: 0.4)
+                                            ? Colors.white.withValues(
+                                                alpha: 0.4,
+                                              )
                                             : AppColors.lightTextTertiary,
                                         width: 1.5,
                                       ),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(6.r),
+                                        borderRadius: BorderRadius.circular(
+                                          6.r,
+                                        ),
                                       ),
                                       activeColor: isDark
                                           ? const Color(0xFF38BDF8)
@@ -338,10 +350,13 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                           MaterialTapTargetSize.shrinkWrap,
                                       visualDensity: VisualDensity.compact,
                                       value: controller
-                                          .isTermsAndConditionChecked.value,
+                                          .isTermsAndConditionChecked
+                                          .value,
                                       onChanged: (bool? value) {
-                                        controller.isTermsAndConditionChecked
-                                            .value = value ?? false;
+                                        controller
+                                                .isTermsAndConditionChecked
+                                                .value =
+                                            value ?? false;
                                       },
                                     ),
                                   ),
@@ -353,7 +368,8 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                       children: [
                                         GestureDetector(
                                           onTap: () {
-                                            controller.isTermsAndConditionChecked
+                                            controller
+                                                .isTermsAndConditionChecked
                                                 .toggle();
                                           },
                                           child: Text(
@@ -374,8 +390,9 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                               context,
                                               onAccept: () {
                                                 controller
-                                                    .isTermsAndConditionChecked
-                                                    .value = true;
+                                                        .isTermsAndConditionChecked
+                                                        .value =
+                                                    true;
                                               },
                                             );
                                           },
@@ -410,8 +427,9 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                                         context,
                                         onAccept: () {
                                           controller
-                                              .isTermsAndConditionChecked
-                                              .value = true;
+                                                  .isTermsAndConditionChecked
+                                                  .value =
+                                              true;
                                         },
                                       );
                                     },
@@ -428,33 +446,39 @@ class _SetUpPasswordScreenState extends State<SetUpPasswordScreen> {
                               borderRadius: 16.r,
                               onPressed: () async {
                                 if (controller
-                                    .passwordController.text.isEmpty) {
+                                    .passwordController
+                                    .text
+                                    .isEmpty) {
                                   ToastHelper().showErrorToast(
                                     localizations
                                         .setupPasswordValidationRequired,
                                   );
                                 } else if (controller
-                                        .passwordController.text.length <
+                                        .passwordController
+                                        .text
+                                        .length <
                                     8) {
                                   ToastHelper().showErrorToast(
                                     localizations
                                         .setupPasswordValidationMinLength,
                                   );
                                 } else if (controller
-                                    .confirmPasswordController.text.isEmpty) {
+                                    .confirmPasswordController
+                                    .text
+                                    .isEmpty) {
                                   ToastHelper().showErrorToast(
                                     localizations
                                         .setupPasswordValidationConfirmRequired,
                                   );
                                 } else if (controller.passwordController.text !=
-                                    controller
-                                        .confirmPasswordController.text) {
+                                    controller.confirmPasswordController.text) {
                                   ToastHelper().showErrorToast(
                                     localizations
                                         .setupPasswordValidationMismatch,
                                   );
                                 } else if (!controller
-                                    .isTermsAndConditionChecked.value) {
+                                    .isTermsAndConditionChecked
+                                    .value) {
                                   ToastHelper().showErrorToast(
                                     localizations
                                         .setupPasswordValidationTermsRequired,

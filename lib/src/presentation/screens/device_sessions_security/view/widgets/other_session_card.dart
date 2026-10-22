@@ -28,7 +28,9 @@ class OtherSessionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final osColor = session.os.brandColor;
 
     return Container(
@@ -71,7 +73,9 @@ class OtherSessionCard extends StatelessWidget {
                       height: 44.w,
                       decoration: BoxDecoration(
                         color: osColor.withValues(alpha: isDark ? 0.22 : 0.12),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                         border: Border.all(
                           color: osColor.withValues(alpha: 0.3),
                           width: 0.8,
@@ -80,7 +84,11 @@ class OtherSessionCard extends StatelessWidget {
                       child: Center(
                         child: Icon(
                           session.icon,
-                          color: isDark ? osColor : (session.os == DeviceOs.ios ? AppColors.deepBlack : osColor),
+                          color: isDark
+                              ? osColor
+                              : (session.os == DeviceOs.ios
+                                    ? AppColors.deepBlack
+                                    : osColor),
                           size: 24.sp,
                         ),
                       ),
@@ -120,9 +128,14 @@ class OtherSessionCard extends StatelessWidget {
                           width: 1.0,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 6.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.md,
+                          vertical: 6.h,
+                        ),
                         visualDensity: VisualDensity.compact,
                       ),
                       icon: Icon(Icons.logout_rounded, size: 14.sp),
@@ -148,7 +161,12 @@ class OtherSessionCard extends StatelessWidget {
                 ),
 
                 SizedBox(height: AppSpacing.md),
-                Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+                Divider(
+                  height: 1,
+                  color: isDark
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
+                ),
                 SizedBox(height: AppSpacing.sm),
 
                 // Metadata row: IP, Location, Last active relative time
@@ -157,10 +175,18 @@ class OtherSessionCard extends StatelessWidget {
                     // Monospaced IP address with tap-to-copy
                     InkWell(
                       onTap: () {
-                        Clipboard.setData(ClipboardData(text: session.ipAddress));
+                        Clipboard.setData(
+                          ClipboardData(text: session.ipAddress),
+                        );
                         HapticFeedback.selectionClick();
                         ToastHelper().showSuccessToast(
-                          l10nPick(context, en: 'IP copied', fa: 'IP کپی شد', ar: 'تم النسخ', zh: '已复制'),
+                          l10nPick(
+                            context,
+                            en: 'IP copied',
+                            fa: 'IP کپی شد',
+                            ar: 'تم النسخ',
+                            zh: '已复制',
+                          ),
                         );
                       },
                       borderRadius: BorderRadius.circular(AppSpacing.radiusSm),

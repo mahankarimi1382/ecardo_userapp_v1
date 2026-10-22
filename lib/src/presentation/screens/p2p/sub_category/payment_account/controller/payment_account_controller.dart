@@ -20,7 +20,8 @@ class PaymentAccountController extends GetxController {
   final RxnInt selectedCurrencyIdFilter = RxnInt();
   final RxString selectedCurrencyLabel = ''.obs;
   final RxBool isFiatCurrenciesLoading = false.obs;
-  final TextEditingController currencyFilterController = TextEditingController();
+  final TextEditingController currencyFilterController =
+      TextEditingController();
 
   @override
   void onInit() {

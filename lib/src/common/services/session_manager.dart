@@ -69,7 +69,8 @@ class SessionManager extends GetxService {
 
       // 2. UI only for foreground
       if (isForeground) {
-        final msg = message ??
+        final msg =
+            message ??
             _l10n?.unauthorizedDialogTitle ??
             'Your session has expired. Please sign in again.';
 

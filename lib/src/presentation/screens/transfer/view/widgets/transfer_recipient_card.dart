@@ -53,7 +53,9 @@ class RecipientMonogramAvatar extends StatelessWidget {
       if (parts.length >= 2 && parts[0].isNotEmpty && parts[1].isNotEmpty) {
         return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
       }
-      return cleanName.substring(0, cleanName.length >= 2 ? 2 : 1).toUpperCase();
+      return cleanName
+          .substring(0, cleanName.length >= 2 ? 2 : 1)
+          .toUpperCase();
     }
     final cleanId = (identifier ?? '').trim();
     if (cleanId.isNotEmpty) {
@@ -66,7 +68,9 @@ class RecipientMonogramAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final keyString = (name != null && name!.isNotEmpty) ? name! : (identifier ?? '');
+    final keyString = (name != null && name!.isNotEmpty)
+        ? name!
+        : (identifier ?? '');
     final gradientColors = MonogramGradients.forString(keyString);
     final initials = _getInitials();
     final badgeSize = (size * 0.32).clamp(14.0, 20.0);
@@ -118,7 +122,9 @@ class RecipientMonogramAvatar extends StatelessWidget {
                   color: AppColors.success,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.lightSurface,
                     width: 2,
                   ),
                   boxShadow: [
@@ -180,7 +186,8 @@ class TransferRecipientCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final colorScheme = theme.colorScheme;
 
-    final displayName = beneficiary?.nickname ?? beneficiary?.receiver?.name ?? 'Recipient';
+    final displayName =
+        beneficiary?.nickname ?? beneficiary?.receiver?.name ?? 'Recipient';
     final displayUid = beneficiary?.accountNumber ?? fallbackUid;
     final hasVerifiedUser = beneficiary?.receiver != null;
 
@@ -229,7 +236,9 @@ class TransferRecipientCard extends StatelessWidget {
                           color: isDark
                               ? AppColors.darkSurface
                               : AppColors.successContainer,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusXs,
+                          ),
                           border: Border.all(
                             color: isDark
                                 ? AppColors.success.withValues(alpha: 0.40)
@@ -359,7 +368,9 @@ class BeneficiariesQuickPickRow extends StatelessWidget {
                           ? colorScheme.surfaceContainerHigh
                           : colorScheme.surfaceContainerLow,
                       border: Border.all(
-                        color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+                        color: colorScheme.outlineVariant.withValues(
+                          alpha: 0.6,
+                        ),
                         style: BorderStyle.solid,
                         width: 1.5,
                       ),
@@ -387,7 +398,8 @@ class BeneficiariesQuickPickRow extends StatelessWidget {
           }
 
           final item = beneficiaries[index - 1];
-          final isSelected = selectedUid != null &&
+          final isSelected =
+              selectedUid != null &&
               selectedUid!.isNotEmpty &&
               item.accountNumber == selectedUid;
 
@@ -431,7 +443,9 @@ class BeneficiariesQuickPickRow extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                       color: isSelected
                           ? colorScheme.primary
                           : colorScheme.onSurface.withValues(alpha: 0.8),

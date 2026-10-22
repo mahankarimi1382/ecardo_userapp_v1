@@ -22,7 +22,8 @@ class GiftCardHistorySection extends StatefulWidget {
 
 class _GiftCardHistorySectionState extends State<GiftCardHistorySection>
     with WidgetsBindingObserver {
-  final GiftCardHistoryController controller = Get.find<GiftCardHistoryController>();
+  final GiftCardHistoryController controller =
+      Get.find<GiftCardHistoryController>();
   late ScrollController _scrollController;
 
   @override
@@ -123,10 +124,14 @@ class _GiftCardHistorySectionState extends State<GiftCardHistorySection>
                 ),
                 itemBuilder: (context, index) {
                   final GiftCards giftCard = giftCardList[index];
-                  DateTime? parsedDate = DateTime.tryParse(giftCard.createdAt ?? '');
+                  DateTime? parsedDate = DateTime.tryParse(
+                    giftCard.createdAt ?? '',
+                  );
                   if (parsedDate == null && giftCard.createdAt != null) {
                     try {
-                      parsedDate = DateFormat('dd MMM yyyy hh:mm a').parse(giftCard.createdAt!);
+                      parsedDate = DateFormat(
+                        'dd MMM yyyy hh:mm a',
+                      ).parse(giftCard.createdAt!);
                     } catch (_) {}
                   }
                   final formattedDate = parsedDate != null
@@ -143,7 +148,9 @@ class _GiftCardHistorySectionState extends State<GiftCardHistorySection>
                       padding: EdgeInsets.all(AppSpacing.md.r),
                       decoration: BoxDecoration(
                         color: isDark ? AppColors.darkCard : AppColors.white,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                         border: Border.all(
                           color: isDark
                               ? AppColors.darkBorder
@@ -162,7 +169,9 @@ class _GiftCardHistorySectionState extends State<GiftCardHistorySection>
                       child: Row(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm,
+                            ),
                             child: CachedNetworkImage(
                               width: 48.w,
                               height: 48.w,
@@ -176,7 +185,9 @@ class _GiftCardHistorySectionState extends State<GiftCardHistorySection>
                                   child: SizedBox(
                                     width: 18,
                                     height: 18,
-                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -236,12 +247,17 @@ class _GiftCardHistorySectionState extends State<GiftCardHistorySection>
                               ),
                               SizedBox(height: 4.h),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
                                 decoration: BoxDecoration(
                                   color: isDark
                                       ? AppColors.darkSurfaceVariant
                                       : AppColors.lightSecondaryContainer,
-                                  borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusXs,
+                                  ),
                                 ),
                                 child: Text(
                                   localization.giftCardHistoryQtyLabel(
@@ -270,7 +286,8 @@ class _GiftCardHistorySectionState extends State<GiftCardHistorySection>
             ),
             Obx(
               () => Visibility(
-                visible: controller.isGiftCardHistoryLoading.value ||
+                visible:
+                    controller.isGiftCardHistoryLoading.value ||
                     controller.isPageLoading.value,
                 child: const Positioned(
                   bottom: 12,

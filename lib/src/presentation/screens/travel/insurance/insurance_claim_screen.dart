@@ -20,10 +20,7 @@ import 'insurance_service.dart';
 class InsuranceClaimScreen extends StatefulWidget {
   final String? initialPolicyNumber;
 
-  const InsuranceClaimScreen({
-    super.key,
-    this.initialPolicyNumber,
-  });
+  const InsuranceClaimScreen({super.key, this.initialPolicyNumber});
 
   @override
   State<InsuranceClaimScreen> createState() => _InsuranceClaimScreenState();
@@ -100,7 +97,11 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
       });
     }
     _showAttachedMessage(
-      title: l10nPickAuto(en: 'Document Attached', fa: 'مدرک ضمیمه شد', ar: 'تم إرفاق المستند'),
+      title: l10nPickAuto(
+        en: 'Document Attached',
+        fa: 'مدرک ضمیمه شد',
+        ar: 'تم إرفاق المستند',
+      ),
       message: name,
     );
   }
@@ -110,11 +111,7 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
     try {
       final ctx = Get.context;
       if (ctx != null) {
-        showTravelMessage(
-          ctx,
-          title: title,
-          message: message,
-        );
+        showTravelMessage(ctx, title: title, message: message);
       }
     } catch (_) {
       // Silently fail if no context available
@@ -137,7 +134,8 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
       incidentDate: _incidentDate,
       incidentLocation: _locationController.text.trim(),
       description: _descriptionController.text.trim(),
-      estimatedAmount: int.tryParse(_amountController.text.replaceAll(',', '')) ?? 0,
+      estimatedAmount:
+          int.tryParse(_amountController.text.replaceAll(',', '')) ?? 0,
       currency: _currency,
       contactPhone: _phoneController.text.trim(),
       submittedAt: DateTime.now(),
@@ -166,7 +164,11 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
       if (mounted && Get.context != null) {
         showTravelMessage(
           Get.context!,
-          title: l10nPickAuto(en: 'Claim Registered', fa: 'پرونده خسارت ثبت شد', ar: 'تم تسجيل المطالبة بنجاح'),
+          title: l10nPickAuto(
+            en: 'Claim Registered',
+            fa: 'پرونده خسارت ثبت شد',
+            ar: 'تم تسجيل المطالبة بنجاح',
+          ),
           message: '${localization.travelStatus}: $ref',
         );
       }
@@ -341,7 +343,9 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                     l10nPick(context, en: type.labelEn, fa: type.labelFa),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w600,
                       color: isSelected
                           ? ECardoTokens.inkOnBrand
                           : ECardoTokens.ink(context),
@@ -368,7 +372,10 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                 // Policy Number
                 TextFormField(
                   controller: _policyNumberController,
-                  style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+                  style: TextStyle(
+                    color: ECardoTokens.ink(context),
+                    fontSize: 13.sp,
+                  ),
                   decoration: InputDecoration(
                     labelText: l10nPick(
                       context,
@@ -376,21 +383,40 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                       fa: 'شماره بیمه‌نامه یا گواهی (مثال: EC-SNG-...)',
                       ar: 'رقم وثيقة التأمين',
                     ),
-                    labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-                    prefixIcon: Icon(Icons.verified_outlined, color: ECardoTokens.brand500(context)),
+                    labelStyle: TextStyle(
+                      color: ECardoTokens.inkMuted(context),
+                      fontSize: 12.sp,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.verified_outlined,
+                      color: ECardoTokens.brand500(context),
+                    ),
                     filled: true,
                     fillColor: ECardoTokens.surfaceSunken(context),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.focusRing(context),
+                        width: 1.5,
+                      ),
                     ),
                   ),
                   validator: (val) {
@@ -405,7 +431,10 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                 // Insured Name
                 TextFormField(
                   controller: _insuredNameController,
-                  style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+                  style: TextStyle(
+                    color: ECardoTokens.ink(context),
+                    fontSize: 13.sp,
+                  ),
                   decoration: InputDecoration(
                     labelText: l10nPick(
                       context,
@@ -413,21 +442,40 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                       fa: 'نام کامل مسافر آسیب‌دیده (مطابق پاسپورت)',
                       ar: 'اسم المؤمن عليه بالكامل',
                     ),
-                    labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-                    prefixIcon: Icon(Icons.person_outline_rounded, color: ECardoTokens.brand500(context)),
+                    labelStyle: TextStyle(
+                      color: ECardoTokens.inkMuted(context),
+                      fontSize: 12.sp,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.person_outline_rounded,
+                      color: ECardoTokens.brand500(context),
+                    ),
                     filled: true,
                     fillColor: ECardoTokens.surfaceSunken(context),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.focusRing(context),
+                        width: 1.5,
+                      ),
                     ),
                   ),
                   validator: (val) {
@@ -445,7 +493,9 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                     Expanded(
                       child: InkWell(
                         onTap: () => _pickIncidentDate(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                         child: Container(
                           padding: EdgeInsetsDirectional.symmetric(
                             horizontal: 12.w,
@@ -456,15 +506,23 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                             border: Border.all(
                               color: ECardoTokens.border(context),
                             ),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.event_rounded, size: 20, color: ECardoTokens.brand500(context)),
+                              Icon(
+                                Icons.event_rounded,
+                                size: 20,
+                                color: ECardoTokens.brand500(context),
+                              ),
                               SizedBox(width: 8.w),
                               Expanded(
                                 child: Text(
-                                  DateFormat('yyyy-MM-dd').format(_incidentDate),
+                                  DateFormat(
+                                    'yyyy-MM-dd',
+                                  ).format(_incidentDate),
                                   style: TextStyle(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w700,
@@ -481,7 +539,10 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                     Expanded(
                       child: TextFormField(
                         controller: _locationController,
-                        style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+                        style: TextStyle(
+                          color: ECardoTokens.ink(context),
+                          fontSize: 13.sp,
+                        ),
                         decoration: InputDecoration(
                           labelText: l10nPick(
                             context,
@@ -489,21 +550,40 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                             fa: 'شهر و کشور محل حادثه',
                             ar: 'المدينة والدولة',
                           ),
-                          labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-                          prefixIcon: Icon(Icons.location_on_outlined, color: ECardoTokens.brand500(context)),
+                          labelStyle: TextStyle(
+                            color: ECardoTokens.inkMuted(context),
+                            fontSize: 12.sp,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.location_on_outlined,
+                            color: ECardoTokens.brand500(context),
+                          ),
                           filled: true,
                           fillColor: ECardoTokens.surfaceSunken(context),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.border(context)),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.border(context),
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.border(context)),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.border(context),
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.focusRing(context),
+                              width: 1.5,
+                            ),
                           ),
                         ),
                         validator: (val) {
@@ -526,7 +606,10 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                       child: TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
-                        style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+                        style: TextStyle(
+                          color: ECardoTokens.ink(context),
+                          fontSize: 13.sp,
+                        ),
                         decoration: InputDecoration(
                           labelText: l10nPick(
                             context,
@@ -534,21 +617,40 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                             fa: 'مبلغ تقریبی خسارت',
                             ar: 'المبلغ التقريبي للمطالبة',
                           ),
-                          labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-                          prefixIcon: Icon(Icons.payments_outlined, color: ECardoTokens.brand500(context)),
+                          labelStyle: TextStyle(
+                            color: ECardoTokens.inkMuted(context),
+                            fontSize: 12.sp,
+                          ),
+                          prefixIcon: Icon(
+                            Icons.payments_outlined,
+                            color: ECardoTokens.brand500(context),
+                          ),
                           filled: true,
                           fillColor: ECardoTokens.surfaceSunken(context),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.border(context)),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.border(context),
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.border(context)),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.border(context),
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.focusRing(context),
+                              width: 1.5,
+                            ),
                           ),
                         ),
                         validator: (val) {
@@ -564,22 +666,35 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                       flex: 1,
                       child: DropdownButtonFormField<String>(
                         initialValue: _currency,
-                        style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+                        style: TextStyle(
+                          color: ECardoTokens.ink(context),
+                          fontSize: 13.sp,
+                        ),
                         dropdownColor: ECardoTokens.surfaceCard(context),
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: ECardoTokens.surfaceSunken(context),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.border(context)),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.border(context),
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                            borderSide: BorderSide(color: ECardoTokens.border(context)),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
+                            borderSide: BorderSide(
+                              color: ECardoTokens.border(context),
+                            ),
                           ),
                         ),
                         items: ['EUR', 'USD', 'IRR', 'TRY', 'AED']
-                            .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                            .map(
+                              (c) => DropdownMenuItem(value: c, child: Text(c)),
+                            )
                             .toList(),
                         onChanged: (val) {
                           if (val != null) {
@@ -596,7 +711,10 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+                  style: TextStyle(
+                    color: ECardoTokens.ink(context),
+                    fontSize: 13.sp,
+                  ),
                   decoration: InputDecoration(
                     labelText: l10nPick(
                       context,
@@ -604,21 +722,40 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                       fa: 'شماره تلفن مستقیم جهت تماس کارشناس',
                       ar: 'رقم الهاتف للتواصل',
                     ),
-                    labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-                    prefixIcon: Icon(Icons.phone_rounded, color: ECardoTokens.brand500(context)),
+                    labelStyle: TextStyle(
+                      color: ECardoTokens.inkMuted(context),
+                      fontSize: 12.sp,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.phone_rounded,
+                      color: ECardoTokens.brand500(context),
+                    ),
                     filled: true,
                     fillColor: ECardoTokens.surfaceSunken(context),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.focusRing(context),
+                        width: 1.5,
+                      ),
                     ),
                   ),
                   validator: (val) {
@@ -634,7 +771,10 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                 TextFormField(
                   controller: _descriptionController,
                   maxLines: 3,
-                  style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+                  style: TextStyle(
+                    color: ECardoTokens.ink(context),
+                    fontSize: 13.sp,
+                  ),
                   decoration: InputDecoration(
                     labelText: l10nPick(
                       context,
@@ -642,20 +782,36 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                       fa: 'شرح مختصر واقعه و اقدامات درمانی / صورت گرفته',
                       ar: 'وصف موجز للحادث',
                     ),
-                    labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
+                    labelStyle: TextStyle(
+                      color: ECardoTokens.inkMuted(context),
+                      fontSize: 12.sp,
+                    ),
                     filled: true,
                     fillColor: ECardoTokens.surfaceSunken(context),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.border(context),
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                      borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
+                      borderSide: BorderSide(
+                        color: ECardoTokens.focusRing(context),
+                        width: 1.5,
+                      ),
                     ),
                   ),
                   validator: (val) {
@@ -743,7 +899,9 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                           color: isDark
                               ? ECardoTokens.surfaceSunken(context)
                               : ECardoTokens.surfaceSunken(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                         ),
                         child: Row(
                           children: [
@@ -872,8 +1030,12 @@ class _InsuranceClaimScreenState extends State<InsuranceClaimScreen>
                         vertical: 3.h,
                       ),
                       decoration: BoxDecoration(
-                        color: claim.status.themeBgColor(context).withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                        color: claim.status
+                            .themeBgColor(context)
+                            .withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
                       ),
                       child: Text(
                         l10nPick(
@@ -970,7 +1132,10 @@ class _DocChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
       child: Container(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 6.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 10.w,
+          vertical: 6.h,
+        ),
         decoration: BoxDecoration(
           color: ECardoTokens.surfaceSunken(context),
           borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),

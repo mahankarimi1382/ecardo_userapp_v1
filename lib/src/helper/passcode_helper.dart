@@ -1,4 +1,5 @@
 import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
+
 /// Transaction PIN (رمز انتقال وجه / پس‌کد) — system B.
 ///
 /// Distinct from:
@@ -51,7 +52,8 @@ class PasscodeHelper {
   static bool userHasPasscode(String? stored, [bool? hasPasscodeField]) {
     if (hasPasscodeFromStatus == true) return true;
     if (hasPasscodeField == true) return true;
-    if (stored != null && stored.trim().isNotEmpty && stored.trim() != '0') return true;
+    if (stored != null && stored.trim().isNotEmpty && stored.trim() != '0')
+      return true;
     if (hasPasscodeFromStatus == false) return false;
     if (hasPasscodeField == false) return false;
     return false;
@@ -65,7 +67,8 @@ class PasscodeHelper {
     return RegExp(r'^\d+$').hasMatch(v);
   }
 
-  static String normalize(String value) => DigitNormalizationFormatter.normalize(value);
+  static String normalize(String value) =>
+      DigitNormalizationFormatter.normalize(value);
 
   /// Input formatters for PIN fields (digits + max length from server).
   static List<dynamic> digitFormatters() {
@@ -118,7 +121,8 @@ class PasscodeHelper {
       return false;
     }
 
-    final hasPasscodeTerm = text.contains('passcode') ||
+    final hasPasscodeTerm =
+        text.contains('passcode') ||
         text.contains('پس‌کد') ||
         text.contains('رمز معامله') ||
         text.contains('رمز عبور معامله') ||
@@ -136,7 +140,8 @@ class PasscodeHelper {
     }
 
     // Fallback: If 422 specifically mentions passcode and no invalid keyword was matched
-    if (text.contains('passcode') && (text.contains('422') || text.contains('error'))) {
+    if (text.contains('passcode') &&
+        (text.contains('422') || text.contains('error'))) {
       return true;
     }
 
@@ -146,7 +151,8 @@ class PasscodeHelper {
   /// Returns true if the error indicates the entered passcode was invalid/wrong.
   static bool isPasscodeInvalid(dynamic errorOrResponse) {
     final text = errorOrResponse?.toString().toLowerCase() ?? '';
-    final hasPasscodeTerm = text.contains('passcode') ||
+    final hasPasscodeTerm =
+        text.contains('passcode') ||
         text.contains('پس‌کد') ||
         text.contains('رمز معامله') ||
         text.contains('رمز عبور معامله') ||
@@ -165,7 +171,8 @@ class PasscodeHelper {
   /// Returns true if the passcode is temporarily or permanently locked.
   static bool isPasscodeLocked(dynamic errorOrResponse) {
     final text = errorOrResponse?.toString().toLowerCase() ?? '';
-    final hasPasscodeTerm = text.contains('passcode') ||
+    final hasPasscodeTerm =
+        text.contains('passcode') ||
         text.contains('پس‌کد') ||
         text.contains('رمز معامله') ||
         text.contains('رمز عبور معامله') ||
@@ -174,6 +181,8 @@ class PasscodeHelper {
     return text.contains('passcode_locked') ||
         text.contains('passcode_blocked') ||
         (hasPasscodeTerm &&
-            (text.contains('lock') || text.contains('مسدود') || text.contains('قفل')));
+            (text.contains('lock') ||
+                text.contains('مسدود') ||
+                text.contains('قفل')));
   }
 }

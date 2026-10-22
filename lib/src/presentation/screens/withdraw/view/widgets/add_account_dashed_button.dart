@@ -59,7 +59,8 @@ class _AddNewAccountDashedButtonState extends State<AddNewAccountDashedButton>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accentColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
-    final resolvedTitle = widget.title ??
+    final resolvedTitle =
+        widget.title ??
         l10nPick(
           context,
           en: 'Add New Payout Destination',
@@ -69,7 +70,8 @@ class _AddNewAccountDashedButtonState extends State<AddNewAccountDashedButton>
           ru: 'Добавить счет для вывода',
         );
 
-    final resolvedSubtitle = widget.subtitle ??
+    final resolvedSubtitle =
+        widget.subtitle ??
         l10nPick(
           context,
           en: 'Sheba, Card, IBAN or Crypto wallet',
@@ -80,8 +82,8 @@ class _AddNewAccountDashedButtonState extends State<AddNewAccountDashedButton>
         );
 
     return Container(
-      margin: widget.margin ??
-          const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+      margin:
+          widget.margin ?? const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: GestureDetector(
         onTapDown: (_) => _pressController.forward(),
         onTapUp: (_) {
@@ -92,10 +94,8 @@ class _AddNewAccountDashedButtonState extends State<AddNewAccountDashedButton>
         onTapCancel: () => _pressController.reverse(),
         child: AnimatedBuilder(
           animation: _scaleAnimation,
-          builder: (context, child) => Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          ),
+          builder: (context, child) =>
+              Transform.scale(scale: _scaleAnimation.value, child: child),
           child: Container(
             decoration: BoxDecoration(
               color: isDark
@@ -261,7 +261,10 @@ class _DashedRRectPainter extends CustomPainter {
       double distance = 0.0;
       while (distance < metric.length) {
         final currentDash = math.min(dash, metric.length - distance);
-        final extractPath = metric.extractPath(distance, distance + currentDash);
+        final extractPath = metric.extractPath(
+          distance,
+          distance + currentDash,
+        );
         canvas.drawPath(extractPath, paint);
         distance += dash + gap;
       }

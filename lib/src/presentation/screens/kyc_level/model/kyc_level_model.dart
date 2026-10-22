@@ -41,13 +41,15 @@ class KycLevel {
       description: json['description'] as String? ?? '',
       color: json['color'] as String? ?? 'gray',
       icon: json['icon'] as String? ?? 'user',
-      requiredDocs: (json['required_docs'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      requiredDocs:
+          (json['required_docs'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
-      features: (json['features'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      features:
+          (json['features'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
       limits: json['limits'] as Map<String, dynamic>? ?? {},
       status: json['status'] as String? ?? 'locked',
@@ -86,14 +88,27 @@ class KycLevel {
   bool hasFeature(String feature) {
     if (features.contains(feature)) return true;
     final norm = feature.replaceAll('-', '_').toLowerCase();
-    if (features.map((f) => f.replaceAll('-', '_').toLowerCase()).contains(norm)) {
+    if (features
+        .map((f) => f.replaceAll('-', '_').toLowerCase())
+        .contains(norm)) {
       return true;
     }
     // Cross-layer aliases
-    if (norm == 'request_money' && (features.contains('request_money') || features.contains('request-money'))) return true;
-    if ((norm == 'payment_links' || norm == 'pay_bill') && features.contains('payment')) return true;
-    if ((norm == 'gift_send' || norm == 'gift_redeem' || norm == 'gift_cards') && features.contains('gift')) return true;
-    if ((norm == 'virtual_card' || norm == 'virtual_cards') && features.contains('paycardo')) return true;
+    if (norm == 'request_money' &&
+        (features.contains('request_money') ||
+            features.contains('request-money')))
+      return true;
+    if ((norm == 'payment_links' || norm == 'pay_bill') &&
+        features.contains('payment'))
+      return true;
+    if ((norm == 'gift_send' ||
+            norm == 'gift_redeem' ||
+            norm == 'gift_cards') &&
+        features.contains('gift'))
+      return true;
+    if ((norm == 'virtual_card' || norm == 'virtual_cards') &&
+        features.contains('paycardo'))
+      return true;
     return false;
   }
 }
@@ -131,14 +146,16 @@ class KycBadge {
       color: json['color'] as String? ?? 'gray',
       icon: json['icon'] as String? ?? 'user',
       description: json['description'] as String? ?? '',
-      requiredDocs: (json['required_docs'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      requiredDocs:
+          (json['required_docs'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
       kycStatus: json['kyc_status'] as String? ?? 'not_submitted',
-      features: (json['features'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      features:
+          (json['features'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
       nextLevel: json['next_level'] != null
           ? KycNextLevel.fromJson(json['next_level'] as Map<String, dynamic>)
@@ -170,14 +187,27 @@ class KycBadge {
   bool hasFeature(String feature) {
     if (features.contains(feature)) return true;
     final norm = feature.replaceAll('-', '_').toLowerCase();
-    if (features.map((f) => f.replaceAll('-', '_').toLowerCase()).contains(norm)) {
+    if (features
+        .map((f) => f.replaceAll('-', '_').toLowerCase())
+        .contains(norm)) {
       return true;
     }
     // Cross-layer aliases
-    if (norm == 'request_money' && (features.contains('request_money') || features.contains('request-money'))) return true;
-    if ((norm == 'payment_links' || norm == 'pay_bill') && features.contains('payment')) return true;
-    if ((norm == 'gift_send' || norm == 'gift_redeem' || norm == 'gift_cards') && features.contains('gift')) return true;
-    if ((norm == 'virtual_card' || norm == 'virtual_cards') && features.contains('paycardo')) return true;
+    if (norm == 'request_money' &&
+        (features.contains('request_money') ||
+            features.contains('request-money')))
+      return true;
+    if ((norm == 'payment_links' || norm == 'pay_bill') &&
+        features.contains('payment'))
+      return true;
+    if ((norm == 'gift_send' ||
+            norm == 'gift_redeem' ||
+            norm == 'gift_cards') &&
+        features.contains('gift'))
+      return true;
+    if ((norm == 'virtual_card' || norm == 'virtual_cards') &&
+        features.contains('paycardo'))
+      return true;
     return false;
   }
 }
@@ -200,9 +230,10 @@ class KycNextLevel {
     return KycNextLevel(
       level: _kycAsInt(json['level']) ?? 1,
       name: json['name'] as String? ?? '',
-      requiredDocs: (json['required_docs'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      requiredDocs:
+          (json['required_docs'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
       description: json['description'] as String? ?? '',
     );
@@ -238,16 +269,18 @@ class KycStatus {
       kycStatus: json['kyc_status'] as String? ?? 'not_submitted',
       latestSubmission: json['latest_submission'] != null
           ? KycSubmission.fromJson(
-              json['latest_submission'] as Map<String, dynamic>)
+              json['latest_submission'] as Map<String, dynamic>,
+            )
           : null,
       isRejected: json['is_rejected'] as bool? ?? false,
       rejectionReason: json['rejection_reason'] as String?,
       nextLevel: json['next_level'] != null
           ? KycNextLevel.fromJson(json['next_level'] as Map<String, dynamic>)
           : null,
-      availableFeatures: (json['available_features'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      availableFeatures:
+          (json['available_features'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
     );
   }

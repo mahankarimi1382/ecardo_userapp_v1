@@ -73,8 +73,10 @@ class Order {
   RecipientPaymentMethod? recipientPaymentMethod;
   bool? chatEnabled;
   DateTime? createdAt;
+
   /// نوع بازار: iran یا china
   String? marketType;
+
   /// آیا آگهی/سفارش مربوط به دلار نقد (مبادله حضوری) است
   bool? isCashDollar;
   DateTime? updatedAt;

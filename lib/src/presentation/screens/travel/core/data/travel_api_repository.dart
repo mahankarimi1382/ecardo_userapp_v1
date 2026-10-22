@@ -67,14 +67,20 @@ class TravelApiRepository implements TravelRepository {
           iconKey: 'hotel',
           accentColor: '#1E88E5',
           dataMode: 'live',
-          capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+          capabilities: [
+            'catalog_checkout',
+            'purchase',
+            'book',
+            'booking',
+            'checkout',
+          ],
           searchFields: [],
           presentation: {
             'home_hero': [
               {
                 'title': 'هتل‌ها و اقامتگاه‌های لوکس سراسر جهان',
                 'subtitle': 'تضمین بهترین قیمت و صدور آنی ووچر',
-              }
+              },
             ],
           },
         ),
@@ -85,7 +91,13 @@ class TravelApiRepository implements TravelRepository {
           iconKey: 'flight',
           accentColor: '#4338CA',
           dataMode: 'live',
-          capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+          capabilities: [
+            'catalog_checkout',
+            'purchase',
+            'book',
+            'booking',
+            'checkout',
+          ],
           searchFields: [],
           presentation: {},
         ),
@@ -96,7 +108,13 @@ class TravelApiRepository implements TravelRepository {
           iconKey: 'sim',
           accentColor: '#059669',
           dataMode: 'live',
-          capabilities: ['catalog_checkout', 'purchase', 'book', 'booking', 'checkout'],
+          capabilities: [
+            'catalog_checkout',
+            'purchase',
+            'book',
+            'booking',
+            'checkout',
+          ],
           searchFields: [],
           presentation: {},
         ),
@@ -112,9 +130,27 @@ class TravelApiRepository implements TravelRepository {
   }) async {
     if (DemoAccountService.isDemoInterceptionAllowedNow) {
       return const [
-        TravelSuggestion(id: '1', value: 'IKA', title: 'فرودگاه بین‌المللی امام خمینی تهران', subtitle: 'IKA, Tehran, Iran', kind: 'airport'),
-        TravelSuggestion(id: '2', value: 'IST', title: 'فرودگاه استانبول', subtitle: 'IST, Istanbul, Turkey', kind: 'airport'),
-        TravelSuggestion(id: '3', value: 'DXB', title: 'فرودگاه بین‌المللی دبی', subtitle: 'DXB, Dubai, UAE', kind: 'airport'),
+        TravelSuggestion(
+          id: '1',
+          value: 'IKA',
+          title: 'فرودگاه بین‌المللی امام خمینی تهران',
+          subtitle: 'IKA, Tehran, Iran',
+          kind: 'airport',
+        ),
+        TravelSuggestion(
+          id: '2',
+          value: 'IST',
+          title: 'فرودگاه استانبول',
+          subtitle: 'IST, Istanbul, Turkey',
+          kind: 'airport',
+        ),
+        TravelSuggestion(
+          id: '3',
+          value: 'DXB',
+          title: 'فرودگاه بین‌المللی دبی',
+          subtitle: 'DXB, Dubai, UAE',
+          kind: 'airport',
+        ),
       ];
     }
     // No special case for eSIM any more. It used to short-circuit to an empty
@@ -482,8 +518,6 @@ class TravelApiRepository implements TravelRepository {
     }
   }
 
-  
-
   @override
   Future<TravelOrderTimeline> getOrderEvents(TravelOrder order) async {
     final response = await _authorizedGet(
@@ -517,20 +551,17 @@ class TravelApiRepository implements TravelRepository {
     final data = _map(response.data?['data']);
     final penalty = _map(data['penalty']);
     final refundable = _map(data['refundable']);
-    double parseAmt(dynamic v) =>
-        double.tryParse(v?.toString() ?? '') ?? 0;
+    double parseAmt(dynamic v) => double.tryParse(v?.toString() ?? '') ?? 0;
     return TravelCancellationEligibility(
       eligible: data['eligible'] == true,
       expiresAt: DateTime.tryParse(data['expires_at']?.toString() ?? ''),
       penalty: TravelMoney(
         amount: parseAmt(penalty['amount']),
-        currency: penalty['currency']?.toString() ??
-            order.total.currency,
+        currency: penalty['currency']?.toString() ?? order.total.currency,
       ),
       refundable: TravelMoney(
         amount: parseAmt(refundable['amount']),
-        currency: refundable['currency']?.toString() ??
-            order.total.currency,
+        currency: refundable['currency']?.toString() ?? order.total.currency,
       ),
       refundDestination:
           data['refund_destination']?.toString() ?? 'original_wallet',
@@ -545,7 +576,7 @@ class TravelApiRepository implements TravelRepository {
     );
   }
 
-@override
+  @override
   Future<TravelOrder> requestRefund({
     required TravelOrder order,
     required String reasonCode,
@@ -611,8 +642,9 @@ class TravelApiRepository implements TravelRepository {
   Future<String> _ensureTravelAccessToken() async {
     if (DemoAccountService.isDemoInterceptionAllowedNow) {
       _travelAccessToken = 'demo_travel_token_2026';
-      _travelAccessTokenExpiresAt =
-          DateTime.now().add(const Duration(days: 30));
+      _travelAccessTokenExpiresAt = DateTime.now().add(
+        const Duration(days: 30),
+      );
       return _travelAccessToken!;
     }
     if (_travelAccessToken?.isNotEmpty == true &&
@@ -647,15 +679,16 @@ class TravelApiRepository implements TravelRepository {
 
   TravelOrder _mapOrder(Map<String, dynamic> json) {
     final activationMap = _map(json['activation']);
-    final esimIccid = activationMap['iccid']?.toString() ??
-        json['iccid']?.toString() ??
-        '';
-    final esimCode = activationMap['activation_code']?.toString() ??
+    final esimIccid =
+        activationMap['iccid']?.toString() ?? json['iccid']?.toString() ?? '';
+    final esimCode =
+        activationMap['activation_code']?.toString() ??
         activationMap['qr_payload']?.toString() ??
         '';
     final esimSmDp = activationMap['sm_dp_address']?.toString() ?? '';
     final esimMatching = activationMap['matching_id']?.toString() ?? '';
-    final esimQrPayload = activationMap['qr_payload']?.toString() ??
+    final esimQrPayload =
+        activationMap['qr_payload']?.toString() ??
         activationMap['activation_code']?.toString() ??
         '';
 
@@ -818,7 +851,9 @@ class TravelApiRepository implements TravelRepository {
     if (DemoAccountService.isDemoInterceptionAllowedNow) {
       if (type == TravelProductType.hotel) {
         final hotels = TravelCatalog.getHotels();
-        final h = hotels.firstWhereOrNull((item) => item['id'] == offerId) ?? hotels.first;
+        final h =
+            hotels.firstWhereOrNull((item) => item['id'] == offerId) ??
+            hotels.first;
         return TravelOffer(
           id: h['id'].toString(),
           type: TravelProductType.hotel,
@@ -841,7 +876,9 @@ class TravelApiRepository implements TravelRepository {
         );
       } else if (type == TravelProductType.flight) {
         final flights = TravelCatalog.getFlights();
-        final f = flights.firstWhereOrNull((item) => item['id'] == offerId) ?? flights.first;
+        final f =
+            flights.firstWhereOrNull((item) => item['id'] == offerId) ??
+            flights.first;
         return TravelOffer(
           id: f['id'].toString(),
           type: TravelProductType.flight,
@@ -922,9 +959,9 @@ class TravelApiRepository implements TravelRepository {
     if (profile == null) return const <TravelTraveler>[];
 
     final traveler = _travelerFromProfile(profile);
-    return traveler == null ? const <TravelTraveler>[] : <TravelTraveler>[
-      traveler,
-    ];
+    return traveler == null
+        ? const <TravelTraveler>[]
+        : <TravelTraveler>[traveler];
   }
 
   @override
@@ -948,7 +985,9 @@ class TravelApiRepository implements TravelRepository {
       '/me/traveler-profile',
       data: payload,
       options: Options(
-        headers: {'Authorization': 'Bearer ${await _ensureTravelAccessToken()}'},
+        headers: {
+          'Authorization': 'Bearer ${await _ensureTravelAccessToken()}',
+        },
       ),
     );
 
@@ -965,7 +1004,9 @@ class TravelApiRepository implements TravelRepository {
     final response = await _client.get<Map<String, dynamic>>(
       '/me/traveler-profile',
       options: Options(
-        headers: {'Authorization': 'Bearer ${await _ensureTravelAccessToken()}'},
+        headers: {
+          'Authorization': 'Bearer ${await _ensureTravelAccessToken()}',
+        },
       ),
     );
     return _map(response.data?['data']);

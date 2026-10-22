@@ -17,12 +17,15 @@ class StockOrderConfirmScreen extends StatefulWidget {
   const StockOrderConfirmScreen({super.key});
 
   @override
-  State<StockOrderConfirmScreen> createState() => _StockOrderConfirmScreenState();
+  State<StockOrderConfirmScreen> createState() =>
+      _StockOrderConfirmScreenState();
 }
 
 class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
   late final StockController controller;
-  final TextEditingController _twoFactorController = TextEditingController(text: '7492');
+  final TextEditingController _twoFactorController = TextEditingController(
+    text: '7492',
+  );
 
   @override
   void initState() {
@@ -43,7 +46,11 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
 
     if (!controller.riskAcknowledged.value) {
       Get.snackbar(
-        l10nPick(context, fa: 'خطای بیانیه ریسک', en: 'Risk Disclosure Required'),
+        l10nPick(
+          context,
+          fa: 'خطای بیانیه ریسک',
+          en: 'Risk Disclosure Required',
+        ),
         l10nPick(
           context,
           fa: 'لطفاً ابتدا بیانیه پذیرش ریسک نوسانات بازار و نرخ ارز را تأیید فرمایید.',
@@ -60,7 +67,11 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
 
     if (_twoFactorController.text.trim().length < 4) {
       Get.snackbar(
-        l10nPick(context, fa: 'کد تایید دوعاملی', en: 'Two-Factor Verification'),
+        l10nPick(
+          context,
+          fa: 'کد تایید دوعاملی',
+          en: 'Two-Factor Verification',
+        ),
         l10nPick(
           context,
           fa: 'لطفاً کد ۴ رقمی تایید دوعاملی امنیتی را وارد فرمایید.',
@@ -83,10 +94,16 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
           backgroundColor: ECardoTokens.surfaceCard(context),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusXl)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+          ),
           title: Row(
             children: [
-              Icon(Icons.info_rounded, color: ECardoTokens.warning(context), size: 22.sp),
+              Icon(
+                Icons.info_rounded,
+                color: ECardoTokens.warning(context),
+                size: 22.sp,
+              ),
               SizedBox(width: ECardoTokens.space2.w),
               Expanded(
                 child: Text(
@@ -125,7 +142,9 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: ECardoTokens.brand700(context),
                 foregroundColor: ECardoTokens.inkOnBrand,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                ),
               ),
               onPressed: () {
                 Navigator.pop(ctx);
@@ -163,7 +182,8 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
     final commission = controller.calculatedCommission.value;
     final settlementDays = mkt?.settlementDays ?? 2;
     final estDate = DateTime.now().add(Duration(days: settlementDays));
-    final dateStr = '${estDate.year}-${estDate.month.toString().padLeft(2, '0')}-${estDate.day.toString().padLeft(2, '0')}';
+    final dateStr =
+        '${estDate.year}-${estDate.month.toString().padLeft(2, '0')}-${estDate.day.toString().padLeft(2, '0')}';
 
     return Scaffold(
       backgroundColor: ECardoTokens.surfaceCanvas(context),
@@ -189,9 +209,23 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
               width: double.infinity,
               isLoading: controller.isOrderLoading.value,
               text: isBuy
-                  ? l10nPick(context, fa: 'تأیید و ارسال سفارش خرید', en: 'Confirm Buy Order', ar: 'تأكيد الشراء', zh: '确认买入委托')
-                  : l10nPick(context, fa: 'تأیید و ارسال سفارش فروش', en: 'Confirm Sell Order', ar: 'تأكيد البيع', zh: '确认卖出委托'),
-              backgroundColor: isBuy ? ECardoTokens.success(context) : ECardoTokens.danger(context),
+                  ? l10nPick(
+                      context,
+                      fa: 'تأیید و ارسال سفارش خرید',
+                      en: 'Confirm Buy Order',
+                      ar: 'تأكيد الشراء',
+                      zh: '确认买入委托',
+                    )
+                  : l10nPick(
+                      context,
+                      fa: 'تأیید و ارسال سفارش فروش',
+                      en: 'Confirm Sell Order',
+                      ar: 'تأكيد البيع',
+                      zh: '确认卖出委托',
+                    ),
+              backgroundColor: isBuy
+                  ? ECardoTokens.success(context)
+                  : ECardoTokens.danger(context),
               textColor: Colors.white,
               onPressed: _handleConfirm,
             ),
@@ -229,8 +263,11 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                     context,
                     labelFa: 'نوع و جهت معامله',
                     labelEn: 'Side & Order Type',
-                    value: '${isBuy ? 'خرید (BUY)' : 'فروش (SELL)'} · $orderType',
-                    valueColor: isBuy ? ECardoTokens.success(context) : ECardoTokens.danger(context),
+                    value:
+                        '${isBuy ? 'خرید (BUY)' : 'فروش (SELL)'} · $orderType',
+                    valueColor: isBuy
+                        ? ECardoTokens.success(context)
+                        : ECardoTokens.danger(context),
                     isBold: true,
                   ),
                   Divider(height: 18.h, color: ECardoTokens.border(context)),
@@ -238,7 +275,8 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                     context,
                     labelFa: 'حجم معامله (تعداد سهام)',
                     labelEn: 'Quantity (Shares)',
-                    value: '${qty.toInt()} ${l10nPick(context, en: 'Shares', fa: 'سهم', ar: 'أسهم', zh: '股')}',
+                    value:
+                        '${qty.toInt()} ${l10nPick(context, en: 'Shares', fa: 'سهم', ar: 'أسهم', zh: '股')}',
                   ),
                   Divider(height: 18.h, color: ECardoTokens.border(context)),
                   _buildRow(
@@ -247,7 +285,8 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                     labelEn: 'Base Share Price',
                     value: '\$${sym?.lastPrice.toStringAsFixed(2) ?? '180.00'}',
                   ),
-                  if (orderType == 'LIMIT' && controller.limitPriceInput.value.isNotEmpty) ...[
+                  if (orderType == 'LIMIT' &&
+                      controller.limitPriceInput.value.isNotEmpty) ...[
                     Divider(height: 18.h, color: ECardoTokens.border(context)),
                     _buildRow(
                       context,
@@ -258,7 +297,8 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                       valueColor: ECardoTokens.brand500(context),
                     ),
                   ],
-                  if (orderType == 'STOP_LOSS' && controller.stopPriceInput.value.isNotEmpty) ...[
+                  if (orderType == 'STOP_LOSS' &&
+                      controller.stopPriceInput.value.isNotEmpty) ...[
                     Divider(height: 18.h, color: ECardoTokens.border(context)),
                     _buildRow(
                       context,
@@ -274,12 +314,14 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                     context,
                     labelFa: 'بازار بورس و چرخه تسویه',
                     labelEn: 'Exchange & Settlement',
-                    value: '${mkt?.name ?? 'NASDAQ'} · T+$settlementDays ($dateStr)',
+                    value:
+                        '${mkt?.name ?? 'NASDAQ'} · T+$settlementDays ($dateStr)',
                   ),
                   Divider(height: 18.h, color: ECardoTokens.border(context)),
                   _buildRow(
                     context,
-                    labelFa: 'کارمزد کارگزاری و پلتفرم (${mkt?.commissionPct ?? 0.15}%)',
+                    labelFa:
+                        'کارمزد کارگزاری و پلتفرم (${mkt?.commissionPct ?? 0.15}%)',
                     labelEn: 'Brokerage & Platform Fee',
                     value: '\$${commission.toStringAsFixed(2)}',
                   ),
@@ -289,7 +331,8 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                       context,
                       labelFa: 'نرخ تبدیل ارز (FX Rate)',
                       labelEn: 'Exchange Rate Snapshot',
-                      value: '1 USD ≈ ${fxRate.toStringAsFixed(payCurrency == 'IRR' ? 0 : 4)} $payCurrency',
+                      value:
+                          '1 USD ≈ ${fxRate.toStringAsFixed(payCurrency == 'IRR' ? 0 : 4)} $payCurrency',
                     ),
                   ],
                   Divider(height: 18.h, color: ECardoTokens.border(context)),
@@ -297,7 +340,8 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                     context,
                     labelFa: 'مبلغ کل تسویه حساب',
                     labelEn: 'Total Settlement Amount',
-                    value: '${totalPay.toStringAsFixed(payCurrency == 'IRR' ? 0 : 2)} $payCurrency',
+                    value:
+                        '${totalPay.toStringAsFixed(payCurrency == 'IRR' ? 0 : 2)} $payCurrency',
                     valueColor: ECardoTokens.brand700(context),
                     isBold: true,
                   ),
@@ -326,7 +370,11 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                           color: ECardoTokens.brand100(context),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.security_rounded, color: ECardoTokens.brand500(context), size: 18.sp),
+                        child: Icon(
+                          Icons.security_rounded,
+                          color: ECardoTokens.brand500(context),
+                          size: 18.sp,
+                        ),
                       ),
                       SizedBox(width: ECardoTokens.space2.w),
                       Expanded(
@@ -356,7 +404,10 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                       ar: 'أدخل رمز الأمان للموافقة على العملية.',
                       zh: '请输入4位交易安全密码以授权此次跨境证券委托。',
                     ),
-                    style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context)),
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      color: ECardoTokens.inkMuted(context),
+                    ),
                   ),
                   SizedBox(height: ECardoTokens.space3.h),
                   Row(
@@ -378,30 +429,57 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                             filled: true,
                             fillColor: ECardoTokens.surfaceSunken(context),
                             hintText: '••••',
-                            hintStyle: TextStyle(letterSpacing: 8, color: ECardoTokens.inkMuted(context)),
+                            hintStyle: TextStyle(
+                              letterSpacing: 8,
+                              color: ECardoTokens.inkMuted(context),
+                            ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                              borderSide: BorderSide(color: ECardoTokens.border(context)),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusMd,
+                              ),
+                              borderSide: BorderSide(
+                                color: ECardoTokens.border(context),
+                              ),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                              borderSide: BorderSide(color: ECardoTokens.border(context)),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusMd,
+                              ),
+                              borderSide: BorderSide(
+                                color: ECardoTokens.border(context),
+                              ),
                             ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 10.h,
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(width: ECardoTokens.space3.w),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 8.h,
+                        ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.successBg(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                          border: Border.all(color: ECardoTokens.success(context).withValues(alpha: 0.3)),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
+                          border: Border.all(
+                            color: ECardoTokens.success(
+                              context,
+                            ).withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.check_circle_rounded, color: ECardoTokens.success(context), size: 16.sp),
+                            Icon(
+                              Icons.check_circle_rounded,
+                              color: ECardoTokens.success(context),
+                              size: 16.sp,
+                            ),
                             SizedBox(width: 4.w),
                             Text(
                               l10nPick(context, fa: 'معتبر', en: 'Verified'),
@@ -449,7 +527,8 @@ class _StockOrderConfirmScreenState extends State<StockOrderConfirmScreen> {
                       child: GestureDetector(
                         onTap: () {
                           HapticFeedback.selectionClick();
-                          controller.riskAcknowledged.value = !controller.riskAcknowledged.value;
+                          controller.riskAcknowledged.value =
+                              !controller.riskAcknowledged.value;
                         },
                         child: Padding(
                           padding: EdgeInsets.only(top: 8.h),

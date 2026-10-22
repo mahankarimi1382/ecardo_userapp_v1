@@ -11,11 +11,7 @@ class EscrowStatusBadge extends StatelessWidget {
   final String status;
   final String? label;
 
-  const EscrowStatusBadge({
-    super.key,
-    required this.status,
-    this.label,
-  });
+  const EscrowStatusBadge({super.key, required this.status, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -27,69 +23,101 @@ class EscrowStatusBadge extends StatelessWidget {
 
     switch (status) {
       case 'DRAFT':
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-        text = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
+        text = isDark
+            ? AppColors.darkTextSecondary
+            : AppColors.lightTextSecondary;
         icon = Icons.edit_note_rounded;
         display = l10nPick(context, fa: 'پیش‌نویس', en: 'Draft');
         break;
       case 'AWAITING_AGREEMENT':
       case 'AWAITING_PAYMENT':
-        bg = isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer;
+        bg = isDark
+            ? AppColors.warning.withValues(alpha: 0.18)
+            : AppColors.warningContainer;
         text = isDark ? AppColors.warning : AppColors.warning;
-        icon = status == 'AWAITING_AGREEMENT' ? Icons.handshake_outlined : Icons.payment_rounded;
+        icon = status == 'AWAITING_AGREEMENT'
+            ? Icons.handshake_outlined
+            : Icons.payment_rounded;
         display = status == 'AWAITING_AGREEMENT'
             ? l10nPick(context, fa: 'در انتظار تأیید', en: 'Awaiting Agreement')
             : l10nPick(context, fa: 'در انتظار پرداخت', en: 'Awaiting Payment');
         break;
       case 'FUNDS_HELD':
-        bg = isDark ? AppColors.info.withValues(alpha: 0.18) : AppColors.infoContainer;
+        bg = isDark
+            ? AppColors.info.withValues(alpha: 0.18)
+            : AppColors.infoContainer;
         text = isDark ? AppColors.info : AppColors.info;
         icon = Icons.lock_clock_rounded;
-        display = l10nPick(context, fa: 'امان نزد پلتفرم', en: 'Funds in Escrow');
+        display = l10nPick(
+          context,
+          fa: 'امان نزد پلتفرم',
+          en: 'Funds in Escrow',
+        );
         break;
       case 'IN_DELIVERY':
-        bg = isDark ? AppColors.brandViolet.withValues(alpha: 0.18) : AppColors.brandVioletContainer;
+        bg = isDark
+            ? AppColors.brandViolet.withValues(alpha: 0.18)
+            : AppColors.brandVioletContainer;
         text = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
         icon = Icons.local_shipping_outlined;
         display = l10nPick(context, fa: 'در حال ارسال', en: 'In Delivery');
         break;
       case 'DELIVERED':
-        bg = isDark ? AppColors.mutedBlue.withValues(alpha: 0.18) : AppColors.lightSecondaryContainer;
+        bg = isDark
+            ? AppColors.mutedBlue.withValues(alpha: 0.18)
+            : AppColors.lightSecondaryContainer;
         text = isDark ? AppColors.mutedBlue : AppColors.mutedBlue;
         icon = Icons.inventory_2_outlined;
         display = l10nPick(context, fa: 'دوره بازرسی', en: 'Inspection Period');
         break;
       case 'RELEASED':
       case 'COMPLETED':
-        bg = isDark ? AppColors.success.withValues(alpha: 0.18) : AppColors.successContainer;
+        bg = isDark
+            ? AppColors.success.withValues(alpha: 0.18)
+            : AppColors.successContainer;
         text = isDark ? AppColors.success : AppColors.success;
         icon = Icons.check_circle_rounded;
         display = l10nPick(context, fa: 'تکمیل و تسویه', en: 'Completed');
         break;
       case 'DISPUTED':
-        bg = isDark ? AppColors.error.withValues(alpha: 0.18) : AppColors.errorContainer;
+        bg = isDark
+            ? AppColors.error.withValues(alpha: 0.18)
+            : AppColors.errorContainer;
         text = isDark ? AppColors.error : AppColors.error;
         icon = Icons.gavel_rounded;
         display = l10nPick(context, fa: 'پرونده اختلاف', en: 'Disputed');
         break;
       case 'REFUNDED':
-        bg = isDark ? AppColors.error.withValues(alpha: 0.18) : AppColors.errorContainer;
+        bg = isDark
+            ? AppColors.error.withValues(alpha: 0.18)
+            : AppColors.errorContainer;
         text = isDark ? AppColors.error : AppColors.error;
         icon = Icons.replay_rounded;
         display = l10nPick(context, fa: 'عودت وجه', en: 'Refunded');
         break;
       case 'CANCELLED':
       case 'EXPIRED':
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-        text = isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
+        text = isDark
+            ? AppColors.darkTextTertiary
+            : AppColors.lightTextTertiary;
         icon = Icons.cancel_outlined;
         display = status == 'EXPIRED'
             ? l10nPick(context, fa: 'منقضی شده', en: 'Expired')
             : l10nPick(context, fa: 'لغو شده', en: 'Cancelled');
         break;
       default:
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-        text = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
+        text = isDark
+            ? AppColors.darkTextSecondary
+            : AppColors.lightTextSecondary;
         icon = Icons.info_outline_rounded;
     }
 
@@ -98,10 +126,7 @@ class EscrowStatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(
-          color: text.withValues(alpha: 0.25),
-          width: 0.8,
-        ),
+        border: Border.all(color: text.withValues(alpha: 0.25), width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -125,10 +150,7 @@ class EscrowStatusBadge extends StatelessWidget {
 class EscrowMilestoneStepper extends StatelessWidget {
   final String currentStatus;
 
-  const EscrowMilestoneStepper({
-    super.key,
-    required this.currentStatus,
-  });
+  const EscrowMilestoneStepper({super.key, required this.currentStatus});
 
   int _currentStepIndex() {
     switch (currentStatus) {
@@ -163,16 +185,38 @@ class EscrowMilestoneStepper extends StatelessWidget {
     final activeStep = _currentStepIndex();
 
     final steps = [
-      {'title': l10nPick(context, fa: 'پیش‌نویس', en: 'Draft'), 'icon': Icons.description_outlined},
-      {'title': l10nPick(context, fa: 'توافق طرفین', en: 'Agreement'), 'icon': Icons.handshake_outlined},
-      {'title': l10nPick(context, fa: 'قفل امانی وجه', en: 'Funded'), 'icon': Icons.lock_clock_outlined},
-      {'title': l10nPick(context, fa: 'ارسال کالا', en: 'Shipped'), 'icon': Icons.local_shipping_outlined},
-      {'title': l10nPick(context, fa: 'بازرسی کالا', en: 'Inspection'), 'icon': Icons.fact_check_outlined},
-      {'title': l10nPick(context, fa: 'تسویه نهایی', en: 'Settled'), 'icon': Icons.verified_rounded},
+      {
+        'title': l10nPick(context, fa: 'پیش‌نویس', en: 'Draft'),
+        'icon': Icons.description_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'توافق طرفین', en: 'Agreement'),
+        'icon': Icons.handshake_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'قفل امانی وجه', en: 'Funded'),
+        'icon': Icons.lock_clock_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'ارسال کالا', en: 'Shipped'),
+        'icon': Icons.local_shipping_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'بازرسی کالا', en: 'Inspection'),
+        'icon': Icons.fact_check_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'تسویه نهایی', en: 'Settled'),
+        'icon': Icons.verified_rounded,
+      },
     ];
 
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final inactiveColor = isDark ? AppColors.darkOutline : AppColors.lightOutlineVariant;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+    final inactiveColor = isDark
+        ? AppColors.darkOutline
+        : AppColors.lightOutlineVariant;
 
     return Container(
       padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
@@ -192,18 +236,27 @@ class EscrowMilestoneStepper extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  l10nPick(context, fa: 'مراحل انجام معامله امانی', en: 'Escrow Deal Progress'),
+                  l10nPick(
+                    context,
+                    fa: 'مراحل انجام معامله امانی',
+                    en: 'Escrow Deal Progress',
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.titleSmall.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
               SizedBox(width: 8.w),
               Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 8.w,
+                  vertical: 3.h,
+                ),
                 decoration: BoxDecoration(
                   color: primaryAccent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -249,9 +302,13 @@ class EscrowMilestoneStepper extends StatelessWidget {
                 circleBorder = primaryAccent;
                 iconColor = primaryAccent;
               } else {
-                circleBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8FAFC);
+                circleBg = isDark
+                    ? AppColors.darkSurfaceVariant
+                    : const Color(0xFFF8FAFC);
                 circleBorder = inactiveColor;
-                iconColor = isDark ? AppColors.darkTextTertiary : const Color(0xFF94A3B8);
+                iconColor = isDark
+                    ? AppColors.darkTextTertiary
+                    : const Color(0xFF94A3B8);
               }
 
               return Container(
@@ -260,7 +317,10 @@ class EscrowMilestoneStepper extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: circleBg,
                   shape: BoxShape.circle,
-                  border: Border.all(color: circleBorder, width: isCurrent ? 2 : 1),
+                  border: Border.all(
+                    color: circleBorder,
+                    width: isCurrent ? 2 : 1,
+                  ),
                 ),
                 child: Center(
                   child: Icon(
@@ -296,7 +356,9 @@ class EscrowMilestoneStepper extends StatelessWidget {
                     textAlign: TextAlign.end,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.labelSmall.copyWith(
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ),
@@ -367,7 +429,9 @@ class EscrowCounterpartyAvatar extends StatelessWidget {
               Text(
                 role,
                 style: AppTextStyles.labelSmall.copyWith(
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextSecondary,
                   fontSize: 10.sp,
                 ),
               ),
@@ -377,7 +441,9 @@ class EscrowCounterpartyAvatar extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.bodySmall.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ],
@@ -392,10 +458,7 @@ class EscrowCounterpartyAvatar extends StatelessWidget {
 class EscrowTimelineWidget extends StatelessWidget {
   final List<EscrowEventModel> events;
 
-  const EscrowTimelineWidget({
-    super.key,
-    required this.events,
-  });
+  const EscrowTimelineWidget({super.key, required this.events});
 
   @override
   Widget build(BuildContext context) {
@@ -406,9 +469,15 @@ class EscrowTimelineWidget extends StatelessWidget {
         child: Padding(
           padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
           child: Text(
-            l10nPick(context, fa: 'تاریخچه رویدادی ثبت نشده است.', en: 'No events logged yet.'),
+            l10nPick(
+              context,
+              fa: 'تاریخچه رویدادی ثبت نشده است.',
+              en: 'No events logged yet.',
+            ),
             style: AppTextStyles.bodySmall.copyWith(
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextTertiary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ),
@@ -416,7 +485,9 @@ class EscrowTimelineWidget extends StatelessWidget {
     }
 
     final activeColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final inactiveLine = isDark ? AppColors.darkOutline : AppColors.lightOutlineVariant;
+    final inactiveLine = isDark
+        ? AppColors.darkOutline
+        : AppColors.lightOutlineVariant;
 
     return ListView.separated(
       shrinkWrap: true,
@@ -445,11 +516,7 @@ class EscrowTimelineWidget extends StatelessWidget {
                   ),
                 ),
                 if (!isLast)
-                  Container(
-                    width: 2.w,
-                    height: 38.h,
-                    color: inactiveLine,
-                  ),
+                  Container(width: 2.w, height: 38.h, color: inactiveLine),
               ],
             ),
             SizedBox(width: AppSpacing.md.w),
@@ -463,15 +530,23 @@ class EscrowTimelineWidget extends StatelessWidget {
                       Text(
                         ev.action.isNotEmpty ? ev.action : ev.toStatus,
                         style: AppTextStyles.bodyMedium.copyWith(
-                          fontWeight: isLast ? FontWeight.w900 : FontWeight.w700,
-                          color: isLast ? activeColor : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                          fontWeight: isLast
+                              ? FontWeight.w900
+                              : FontWeight.w700,
+                          color: isLast
+                              ? activeColor
+                              : (isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary),
                         ),
                       ),
                       if (ev.createdAt != null)
                         Text(
                           '${ev.createdAt!.hour.toString().padLeft(2, "0")}:${ev.createdAt!.minute.toString().padLeft(2, "0")}',
                           style: AppTextStyles.labelSmall.copyWith(
-                            color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextTertiary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                     ],
@@ -482,14 +557,18 @@ class EscrowTimelineWidget extends StatelessWidget {
                       child: Text(
                         ev.reason!,
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
                   Text(
                     '${l10nPick(context, fa: 'توسط: ', en: 'By: ')}${ev.actorRole}',
                     style: AppTextStyles.labelSmall.copyWith(
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextTertiary,
                     ),
                   ),
                 ],
@@ -506,16 +585,17 @@ class EscrowTimelineWidget extends StatelessWidget {
 class EscrowSkeletonLoader extends StatelessWidget {
   final int itemCount;
 
-  const EscrowSkeletonLoader({
-    super.key,
-    this.itemCount = 3,
-  });
+  const EscrowSkeletonLoader({super.key, this.itemCount = 3});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor = isDark ? const Color(0xFF2B2B29) : const Color(0xFFE2E8F0);
-    final highlightColor = isDark ? const Color(0xFF383835) : const Color(0xFFF1F5F9);
+    final baseColor = isDark
+        ? const Color(0xFF2B2B29)
+        : const Color(0xFFE2E8F0);
+    final highlightColor = isDark
+        ? const Color(0xFF383835)
+        : const Color(0xFFF1F5F9);
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -543,7 +623,9 @@ class EscrowSkeletonLoader extends StatelessWidget {
                     height: 16.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                   Container(
@@ -551,7 +633,9 @@ class EscrowSkeletonLoader extends StatelessWidget {
                     height: 22.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                 ],
@@ -583,7 +667,9 @@ class EscrowSkeletonLoader extends StatelessWidget {
                     height: 22.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                   Container(
@@ -591,7 +677,9 @@ class EscrowSkeletonLoader extends StatelessWidget {
                     height: 16.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                 ],

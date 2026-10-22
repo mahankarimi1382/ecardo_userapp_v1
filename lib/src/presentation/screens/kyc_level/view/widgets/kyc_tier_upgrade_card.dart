@@ -157,14 +157,17 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
 
     // Daily limit calculations
     final maxLimit = widget.totalDailyLimit ?? currentTierDef.dailyLimit;
-    final consumed = widget.consumedDailyLimit ??
+    final consumed =
+        widget.consumedDailyLimit ??
         (currentTier <= 0
             ? 0.0
             : (currentTier == 1
-                ? 250.0
-                : (currentTier == 2 ? 1850.0 : 8200.0)));
+                  ? 250.0
+                  : (currentTier == 2 ? 1850.0 : 8200.0)));
     final remaining = (maxLimit - consumed).clamp(0.0, maxLimit);
-    final progressFraction = maxLimit > 0 ? (consumed / maxLimit).clamp(0.0, 1.0) : 0.0;
+    final progressFraction = maxLimit > 0
+        ? (consumed / maxLimit).clamp(0.0, 1.0)
+        : 0.0;
 
     return AnimatedBuilder(
       animation: _glowAnimation,
@@ -239,11 +242,7 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
             SizedBox(height: 14.h),
 
             // Tier Details & Comparison Card
-            _buildTierDetailCard(
-              context,
-              currentTier,
-              selectedTierDef,
-            ),
+            _buildTierDetailCard(context, currentTier, selectedTierDef),
 
             SizedBox(height: 16.h),
 
@@ -277,34 +276,34 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
             zh: '审核中',
           )
         : isRejected
-            ? l10nPick(
-                context,
-                en: 'Resubmission Required',
-                fa: 'نیازمند ارسال مجدد',
-                ar: 'مطلوب إعادة الإرسال',
-                zh: '需重新提交',
-              )
-            : (currentTier <= 0
-                ? l10nPick(
-                    context,
-                    en: 'Unverified',
-                    fa: 'احراز نشده',
-                    ar: 'غير موثق',
-                    zh: '未验证',
-                  )
-                : l10nPick(
-                    context,
-                    en: 'Active Tier',
-                    fa: 'سطح فعال',
-                    ar: 'المستوى النشط',
-                    zh: '当前生效',
-                  ));
+        ? l10nPick(
+            context,
+            en: 'Resubmission Required',
+            fa: 'نیازمند ارسال مجدد',
+            ar: 'مطلوب إعادة الإرسال',
+            zh: '需重新提交',
+          )
+        : (currentTier <= 0
+              ? l10nPick(
+                  context,
+                  en: 'Unverified',
+                  fa: 'احراز نشده',
+                  ar: 'غير موثق',
+                  zh: '未验证',
+                )
+              : l10nPick(
+                  context,
+                  en: 'Active Tier',
+                  fa: 'سطح فعال',
+                  ar: 'المستوى النشط',
+                  zh: '当前生效',
+                ));
 
     final statusColor = isPending
         ? AppColors.warning
         : isRejected
-            ? AppColors.error
-            : (currentTier <= 0 ? AppColors.lightTextSecondary : AppColors.success);
+        ? AppColors.error
+        : (currentTier <= 0 ? AppColors.lightTextSecondary : AppColors.success);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
@@ -392,10 +391,10 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                             isPending
                                 ? Icons.hourglass_top_rounded
                                 : isRejected
-                                    ? Icons.error_outline_rounded
-                                    : (currentTier <= 0
-                                        ? Icons.lock_outline_rounded
-                                        : Icons.check_circle_rounded),
+                                ? Icons.error_outline_rounded
+                                : (currentTier <= 0
+                                      ? Icons.lock_outline_rounded
+                                      : Icons.check_circle_rounded),
                             color: statusColor,
                             size: 11.sp,
                           ),
@@ -447,8 +446,8 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
     final barColor = progressFraction > 0.90
         ? AppColors.error
         : (progressFraction > 0.75
-            ? AppColors.warning
-            : currentTierDef.primaryColor);
+              ? AppColors.warning
+              : currentTierDef.primaryColor);
 
     return Container(
       padding: EdgeInsets.all(14.w),
@@ -535,15 +534,14 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                 ),
                 // Fill
                 FractionallySizedBox(
-                  widthFactor: currentTierDef.isUnlimited ? 0.08 : progressFraction,
+                  widthFactor: currentTierDef.isUnlimited
+                      ? 0.08
+                      : progressFraction,
                   child: Container(
                     height: 9.h,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          barColor.withValues(alpha: 0.8),
-                          barColor,
-                        ],
+                        colors: [barColor.withValues(alpha: 0.8), barColor],
                       ),
                       borderRadius: BorderRadius.circular(6.r),
                       boxShadow: [
@@ -708,8 +706,8 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
             color: isSelected
                 ? def.primaryColor
                 : (isCurrent
-                    ? AppColors.success.withValues(alpha: 0.5)
-                    : AppColors.lightBorder),
+                      ? AppColors.success.withValues(alpha: 0.5)
+                      : AppColors.lightBorder),
             width: isSelected ? 1.8.w : 1.w,
           ),
           boxShadow: isSelected
@@ -730,7 +728,9 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                 Icon(
                   def.icon,
                   size: 14.sp,
-                  color: isSelected ? def.primaryColor : AppColors.lightTextSecondary,
+                  color: isSelected
+                      ? def.primaryColor
+                      : AppColors.lightTextSecondary,
                 ),
                 SizedBox(width: 4.w),
                 Flexible(
@@ -738,7 +738,9 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                     def.tabLabel(context),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w600,
                       color: isSelected
                           ? AppColors.lightTextPrimary
                           : AppColors.lightTextSecondary,
@@ -829,44 +831,44 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
             zh: '您当前生效的等级',
           )
         : isCompleted
-            ? l10nPick(
-                context,
-                en: 'Unlocked & Verified',
-                fa: 'تکمیل و احراز شده',
-                ar: 'تم الفتح والتوثيق',
-                zh: '已解锁并验证',
-              )
-            : isNext
-                ? l10nPick(
-                    context,
-                    en: 'Recommended Next Upgrade',
-                    fa: 'پیشنهاد ارتقای بعدی شما',
-                    ar: 'الترقية التالية الموصى بها',
-                    zh: '推荐的下一升级阶段',
-                  )
-                : l10nPick(
-                    context,
-                    en: 'Locked — Complete Tier ${def.level - 1} First',
-                    fa: 'قفل شده — ابتدا سطح ${def.level - 1} را تکمیل کنید',
-                    ar: 'مقفل — أكمل المستوى ${def.level - 1} أولاً',
-                    zh: '锁定 — 请先完成第 ${def.level - 1} 级',
-                  );
+        ? l10nPick(
+            context,
+            en: 'Unlocked & Verified',
+            fa: 'تکمیل و احراز شده',
+            ar: 'تم الفتح والتوثيق',
+            zh: '已解锁并验证',
+          )
+        : isNext
+        ? l10nPick(
+            context,
+            en: 'Recommended Next Upgrade',
+            fa: 'پیشنهاد ارتقای بعدی شما',
+            ar: 'الترقية التالية الموصى بها',
+            zh: '推荐的下一升级阶段',
+          )
+        : l10nPick(
+            context,
+            en: 'Locked — Complete Tier ${def.level - 1} First',
+            fa: 'قفل شده — ابتدا سطح ${def.level - 1} را تکمیل کنید',
+            ar: 'مقفل — أكمل المستوى ${def.level - 1} أولاً',
+            zh: '锁定 — 请先完成第 ${def.level - 1} 级',
+          );
 
     final statusBgColor = isCurrent
         ? AppColors.success.withValues(alpha: 0.12)
         : isCompleted
-            ? AppColors.info.withValues(alpha: 0.12)
-            : isNext
-                ? def.primaryColor.withValues(alpha: 0.14)
-                : AppColors.lightWarmGray.withValues(alpha: 0.35);
+        ? AppColors.info.withValues(alpha: 0.12)
+        : isNext
+        ? def.primaryColor.withValues(alpha: 0.14)
+        : AppColors.lightWarmGray.withValues(alpha: 0.35);
 
     final statusTextColor = isCurrent
         ? AppColors.success
         : isCompleted
-            ? AppColors.info
-            : isNext
-                ? def.primaryColor
-                : AppColors.lightTextSecondary;
+        ? AppColors.info
+        : isNext
+        ? def.primaryColor
+        : AppColors.lightTextSecondary;
 
     return Container(
       decoration: BoxDecoration(
@@ -894,10 +896,10 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                   isCurrent
                       ? Icons.check_circle_rounded
                       : isCompleted
-                          ? Icons.done_all_rounded
-                          : isNext
-                              ? Icons.star_rounded
-                              : Icons.lock_outline_rounded,
+                      ? Icons.done_all_rounded
+                      : isNext
+                      ? Icons.star_rounded
+                      : Icons.lock_outline_rounded,
                   size: 15.sp,
                   color: statusTextColor,
                 ),
@@ -963,7 +965,10 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                 // Verification requirements card
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 8.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.lightSurface,
                     borderRadius: BorderRadius.circular(10.r),
@@ -1030,41 +1035,43 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
                 SizedBox(height: 8.h),
 
                 // Benefits checklist
-                ...def.benefits(context).map(
-                  (benefit) => Padding(
-                    padding: EdgeInsets.only(bottom: 6.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 2.h),
-                          width: 16.w,
-                          height: 16.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: def.primaryColor.withValues(alpha: 0.15),
-                          ),
-                          child: Icon(
-                            Icons.check_rounded,
-                            size: 11.sp,
-                            color: def.primaryColor,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Text(
-                            benefit,
-                            style: TextStyle(
-                              fontSize: 11.5.sp,
-                              color: AppColors.lightTextPrimary,
-                              height: 1.35,
+                ...def
+                    .benefits(context)
+                    .map(
+                      (benefit) => Padding(
+                        padding: EdgeInsets.only(bottom: 6.h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 2.h),
+                              width: 16.w,
+                              height: 16.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: def.primaryColor.withValues(alpha: 0.15),
+                              ),
+                              child: Icon(
+                                Icons.check_rounded,
+                                size: 11.sp,
+                                color: def.primaryColor,
+                              ),
                             ),
-                          ),
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: Text(
+                                benefit,
+                                style: TextStyle(
+                                  fontSize: 11.5.sp,
+                                  color: AppColors.lightTextPrimary,
+                                  height: 1.35,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -1183,7 +1190,11 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.hourglass_top_rounded, color: AppColors.warning, size: 18.sp),
+            Icon(
+              Icons.hourglass_top_rounded,
+              color: AppColors.warning,
+              size: 18.sp,
+            ),
             SizedBox(width: 8.w),
             Text(
               l10nPick(
@@ -1230,7 +1241,11 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.arrow_upward_rounded, size: 18.sp, color: AppColors.white),
+            Icon(
+              Icons.arrow_upward_rounded,
+              size: 18.sp,
+              color: AppColors.white,
+            ),
             SizedBox(width: 8.w),
             Flexible(
               child: Text(
@@ -1245,7 +1260,11 @@ class _KycTierUpgradeCardState extends State<KycTierUpgradeCard>
               ),
             ),
             SizedBox(width: 6.w),
-            Icon(Icons.arrow_forward_rounded, size: 16.sp, color: AppColors.white),
+            Icon(
+              Icons.arrow_forward_rounded,
+              size: 16.sp,
+              color: AppColors.white,
+            ),
           ],
         ),
       ),

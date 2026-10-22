@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart' as getx;
 import 'package:ecardo_user/src/network/response/status.dart';
 import 'package:ecardo_user/src/network/service/network_service.dart';
@@ -19,7 +18,9 @@ class TourService extends getx.GetxService {
     if (country != null && country.isNotEmpty) params['country'] = country;
     if (category != null && category.isNotEmpty) params['category'] = category;
 
-    final queryStr = Uri(queryParameters: params.map((k, v) => MapEntry(k, v.toString()))).query;
+    final queryStr = Uri(
+      queryParameters: params.map((k, v) => MapEntry(k, v.toString())),
+    ).query;
     final path = '/user/tours${queryStr.isNotEmpty ? '?$queryStr' : ''}';
 
     final response = await _network.get(endpoint: path);
@@ -27,7 +28,9 @@ class TourService extends getx.GetxService {
       final data = response.data!['data'];
       final toursRaw = data is Map ? data['tours'] : null;
       if (toursRaw is List) {
-        return toursRaw.map((e) => TourModel.fromJson(e as Map<String, dynamic>)).toList();
+        return toursRaw
+            .map((e) => TourModel.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
     }
     return [];
@@ -53,9 +56,13 @@ class TourService extends getx.GetxService {
     );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
-      final toursRaw = data is Map ? data['tours'] : (data is List ? data : null);
+      final toursRaw = data is Map
+          ? data['tours']
+          : (data is List ? data : null);
       if (toursRaw is List) {
-        return toursRaw.map((e) => TourModel.fromJson(e as Map<String, dynamic>)).toList();
+        return toursRaw
+            .map((e) => TourModel.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
     }
     return [];
@@ -77,7 +84,10 @@ class TourService extends getx.GetxService {
   }
 
   /// Step 3: Customize booking (hotel & activities)
-  Future<TourBookingModel?> customizeBooking(int bookingId, Map<String, dynamic> payload) async {
+  Future<TourBookingModel?> customizeBooking(
+    int bookingId,
+    Map<String, dynamic> payload,
+  ) async {
     final response = await _network.post(
       endpoint: '/user/tours/bookings/$bookingId/customize',
       data: payload,
@@ -134,9 +144,7 @@ class TourService extends getx.GetxService {
 
   /// Step 5-B: Pay remaining balance
   Future<TourBookingModel?> payRemainder(int bookingId, {int? walletId}) async {
-    final payload = <String, dynamic>{
-      'wallet_id': ?walletId,
-    };
+    final payload = <String, dynamic>{'wallet_id': ?walletId};
     final response = await _network.post(
       endpoint: '/user/tours/bookings/$bookingId/pay-remainder',
       data: payload,
@@ -151,18 +159,28 @@ class TourService extends getx.GetxService {
   }
 
   /// Get my tour bookings list
-  Future<List<TourBookingModel>> getMyBookings({String? status, int page = 1}) async {
+  Future<List<TourBookingModel>> getMyBookings({
+    String? status,
+    int page = 1,
+  }) async {
     final params = <String, dynamic>{'page': page};
     if (status != null && status.isNotEmpty) params['status'] = status;
-    final queryStr = Uri(queryParameters: params.map((k, v) => MapEntry(k, v.toString()))).query;
-    final path = '/user/tours/my-bookings${queryStr.isNotEmpty ? '?$queryStr' : ''}';
+    final queryStr = Uri(
+      queryParameters: params.map((k, v) => MapEntry(k, v.toString())),
+    ).query;
+    final path =
+        '/user/tours/my-bookings${queryStr.isNotEmpty ? '?$queryStr' : ''}';
 
     final response = await _network.get(endpoint: path);
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
-      final rawList = data is Map ? data['bookings'] : (data is List ? data : null);
+      final rawList = data is Map
+          ? data['bookings']
+          : (data is List ? data : null);
       if (rawList is List) {
-        return rawList.map((e) => TourBookingModel.fromJson(e as Map<String, dynamic>)).toList();
+        return rawList
+            .map((e) => TourBookingModel.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
     }
     return [];
@@ -189,4 +207,3 @@ class TourService extends getx.GetxService {
     return response.status == Status.completed;
   }
 }
-

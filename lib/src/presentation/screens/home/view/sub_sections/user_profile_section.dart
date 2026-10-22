@@ -42,7 +42,10 @@ class UserProfileSection extends StatelessWidget {
             PositionedDirectional(
               bottom: -70,
               start: 60,
-              child: _decorCircle(170, AppColors.lightPrimaryDark.withValues(alpha: 0.35)),
+              child: _decorCircle(
+                170,
+                AppColors.lightPrimaryDark.withValues(alpha: 0.35),
+              ),
             ),
             Padding(
               padding: const EdgeInsetsDirectional.symmetric(vertical: 10),
@@ -78,7 +81,9 @@ class UserProfileSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: _UidPill(accountNumber: user?.accountNumber ?? ""),
+                        child: _UidPill(
+                          accountNumber: user?.accountNumber ?? "",
+                        ),
                       ),
                       // DEMO-FIX: this Obx threw in release builds — with
                       // DemoAccountService unregistered (debug-only), the
@@ -93,47 +98,48 @@ class UserProfileSection extends StatelessWidget {
                         Obx(() {
                           if (DemoAccountService.to.isDemoMode.value) {
                             return InkWell(
-                            onTap: () => DemoAccountService.to
-                                .showTesterControlBottomSheet(context),
-                            borderRadius: BorderRadius.circular(16.r),
-                            child: Container(
-                              margin: EdgeInsetsDirectional.only(start: 10.w),
-                              padding: EdgeInsetsDirectional.symmetric(
-                                horizontal: 10.w,
-                                vertical: 8.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.shade300,
-                                borderRadius: BorderRadius.circular(16.r),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color:
-                                        Colors.black.withValues(alpha: 0.15),
-                                    blurRadius: 6,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.biotech_rounded,
-                                    size: 15,
-                                    color: Colors.black87,
-                                  ),
-                                  SizedBox(width: 4.w),
-                                  Text(
-                                    'DEMO MODE',
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.w900,
+                              onTap: () => DemoAccountService.to
+                                  .showTesterControlBottomSheet(context),
+                              borderRadius: BorderRadius.circular(16.r),
+                              child: Container(
+                                margin: EdgeInsetsDirectional.only(start: 10.w),
+                                padding: EdgeInsetsDirectional.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 8.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber.shade300,
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.15,
+                                      ),
+                                      blurRadius: 6,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.biotech_rounded,
+                                      size: 15,
                                       color: Colors.black87,
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      'DEMO MODE',
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
+                            );
                           }
                           return const SizedBox.shrink();
                         }),
@@ -176,139 +182,140 @@ class _UidPill extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          Clipboard.setData(ClipboardData(text: accountNumber));
-          ToastHelper().showSuccessToast(localization.userProfileCopied);
-          final messenger = ScaffoldMessenger.maybeOf(context);
-          messenger?.clearSnackBars();
-          messenger?.showSnackBar(
-            SnackBar(
-              content: Text(localization.userProfileCopied),
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(milliseconds: 1400),
-              backgroundColor: AppColors.lightPrimary,
-            ),
-          );
-        },
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.white.withValues(alpha: 0.18),
-                AppColors.white.withValues(alpha: 0.08),
-              ],
-            ),
-            border: Border.all(
-              color: AppColors.white.withValues(alpha: 0.22),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.black.withValues(alpha: 0.12),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: accountNumber));
+            ToastHelper().showSuccessToast(localization.userProfileCopied);
+            final messenger = ScaffoldMessenger.maybeOf(context);
+            messenger?.clearSnackBars();
+            messenger?.showSnackBar(
+              SnackBar(
+                content: Text(localization.userProfileCopied),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(milliseconds: 1400),
+                backgroundColor: AppColors.lightPrimary,
               ),
-            ],
-          ),
-          child: Padding(
-            padding: EdgeInsetsDirectional.symmetric(
-              horizontal: 14.w,
-              vertical: 12.h,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(11),
-                    color: AppColors.white.withValues(alpha: 0.16),
-                  ),
-                  child: Icon(
-                    Icons.fingerprint_rounded,
-                    size: 20,
-                    color: AppColors.white.withValues(alpha: 0.92),
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        localization.userProfileUid.toUpperCase(),
-                        style: TextStyle(
-                          letterSpacing: 1.2,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.white.withValues(alpha: 0.55),
-                        ),
-                      ),
-                      SizedBox(height: 3.h),
-                      // FittedBox keeps the full UID visible when grouping
-                      // spaces + tabular figures would otherwise overflow /
-                      // ellipsize mid-number (reported layout break).
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final style = TextStyle(
-                            letterSpacing: display.length > 14 ? 0.4 : 1.0,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 16.sp,
-                            fontFeatures: const [
-                              FontFeature.tabularFigures(),
-                            ],
-                            color: AppColors.white,
-                          );
-                          final safeWidth = (constraints.hasBoundedWidth &&
-                                  constraints.maxWidth.isFinite &&
-                                  constraints.maxWidth < 5000)
-                              ? constraints.maxWidth
-                              : null;
-                          return SizedBox(
-                            width: safeWidth,
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Text(
-                                display,
-                                maxLines: 1,
-                                softWrap: false,
-                                textDirection: TextDirection.ltr,
-                                textAlign: TextAlign.start,
-                                style: style,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.14),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.copy_rounded,
-                    size: 16,
-                    color: AppColors.white.withValues(alpha: 0.92),
-                  ),
+            );
+          },
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.white.withValues(alpha: 0.18),
+                  AppColors.white.withValues(alpha: 0.08),
+                ],
+              ),
+              border: Border.all(
+                color: AppColors.white.withValues(alpha: 0.22),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.black.withValues(alpha: 0.12),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
+            ),
+            child: Padding(
+              padding: EdgeInsetsDirectional.symmetric(
+                horizontal: 14.w,
+                vertical: 12.h,
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(11),
+                      color: AppColors.white.withValues(alpha: 0.16),
+                    ),
+                    child: Icon(
+                      Icons.fingerprint_rounded,
+                      size: 20,
+                      color: AppColors.white.withValues(alpha: 0.92),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          localization.userProfileUid.toUpperCase(),
+                          style: TextStyle(
+                            letterSpacing: 1.2,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.white.withValues(alpha: 0.55),
+                          ),
+                        ),
+                        SizedBox(height: 3.h),
+                        // FittedBox keeps the full UID visible when grouping
+                        // spaces + tabular figures would otherwise overflow /
+                        // ellipsize mid-number (reported layout break).
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            final style = TextStyle(
+                              letterSpacing: display.length > 14 ? 0.4 : 1.0,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16.sp,
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                              color: AppColors.white,
+                            );
+                            final safeWidth =
+                                (constraints.hasBoundedWidth &&
+                                    constraints.maxWidth.isFinite &&
+                                    constraints.maxWidth < 5000)
+                                ? constraints.maxWidth
+                                : null;
+                            return SizedBox(
+                              width: safeWidth,
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  display,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  textDirection: TextDirection.ltr,
+                                  textAlign: TextAlign.start,
+                                  style: style,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.14),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.copy_rounded,
+                      size: 16,
+                      color: AppColors.white.withValues(alpha: 0.92),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 
@@ -361,32 +368,36 @@ class _KycStatusBadge extends StatelessWidget {
             ),
           ),
           child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(_icon(level, data?.kyc ?? 0), color: Colors.white, size: 14.sp),
-            if (level != null) ...[
-              SizedBox(width: 5.w),
-              Text(
-                localization?.kycUpgradeLevelChip(level) ?? 'Level $level',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.white,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                _icon(level, data?.kyc ?? 0),
+                color: Colors.white,
+                size: 14.sp,
+              ),
+              if (level != null) ...[
+                SizedBox(width: 5.w),
+                Text(
+                  localization?.kycUpgradeLevelChip(level) ?? 'Level $level',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.white,
+                  ),
                 ),
+              ],
+              SizedBox(width: 4.w),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: AppColors.white.withValues(alpha: 0.6),
+                size: 16.sp,
               ),
             ],
-            SizedBox(width: 4.w),
-            Icon(
-              Icons.chevron_right_rounded,
-              color: AppColors.white.withValues(alpha: 0.6),
-              size: 16.sp,
-            ),
-          ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   IconData _icon(int? level, int legacyKyc) {
     if (level != null) {

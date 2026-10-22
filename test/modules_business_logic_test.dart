@@ -63,25 +63,28 @@ void main() {
   });
 
   group('2. Guarantee & LC — Margin & Liability Rules', () {
-    test('Standard guarantee instruments reflect official margins and fees', () {
-      final instruments = GuaranteeController.defaultInstruments;
-      expect(instruments.length, 6);
+    test(
+      'Standard guarantee instruments reflect official margins and fees',
+      () {
+        final instruments = GuaranteeController.defaultInstruments;
+        expect(instruments.length, 6);
 
-      final bid = instruments[0];
-      expect(bid.code, 'BID_BOND');
-      expect(bid.marginPct, 10.0);
-      expect(bid.feePct, 1.0);
+        final bid = instruments[0];
+        expect(bid.code, 'BID_BOND');
+        expect(bid.marginPct, 10.0);
+        expect(bid.feePct, 1.0);
 
-      final performance = instruments[1];
-      expect(performance.code, 'PERFORMANCE_BOND');
-      expect(performance.marginPct, 10.0);
-      expect(performance.feePct, 1.0);
+        final performance = instruments[1];
+        expect(performance.code, 'PERFORMANCE_BOND');
+        expect(performance.marginPct, 10.0);
+        expect(performance.feePct, 1.0);
 
-      final advance = instruments[2];
-      expect(advance.code, 'ADVANCE_PAYMENT');
-      expect(advance.marginPct, 20.0);
-      expect(advance.feePct, 1.0);
-    });
+        final advance = instruments[2];
+        expect(advance.code, 'ADVANCE_PAYMENT');
+        expect(advance.marginPct, 20.0);
+        expect(advance.feePct, 1.0);
+      },
+    );
 
     test('Guarantee Called claim liability net calculation', () {
       final cases = GuaranteeController.sampleCases;
@@ -94,7 +97,9 @@ void main() {
       expect(calledCase.claimReason, 'Goods not delivered');
 
       // Net liability owed: Claim ($10,000) - Margin covered ($2,000) = $8,000
-      final netPayable = (calledCase.claimAmount ?? calledCase.amount) - calledCase.marginAmount;
+      final netPayable =
+          (calledCase.claimAmount ?? calledCase.amount) -
+          calledCase.marginAmount;
       expect(netPayable, 8000.0);
     });
   });
@@ -151,7 +156,9 @@ void main() {
     });
 
     test('Dispute decision resolution financial split 60/40 is accurate', () {
-      final disputeOrder = EscrowController.defaultOrders.firstWhere((o) => o.isDisputed);
+      final disputeOrder = EscrowController.defaultOrders.firstWhere(
+        (o) => o.isDisputed,
+      );
       final decision = disputeOrder.dispute?.decision;
       expect(decision, isNotNull);
 
@@ -162,7 +169,10 @@ void main() {
       expect(decision.feeAmount, 8.60);
 
       // Verify mathematical balance: $516 + $344 + $8.60 = $868.60
-      final total = decision.buyerRefundAmount + decision.sellerPayoutAmount + decision.feeAmount;
+      final total =
+          decision.buyerRefundAmount +
+          decision.sellerPayoutAmount +
+          decision.feeAmount;
       expect(total, 868.60);
     });
   });

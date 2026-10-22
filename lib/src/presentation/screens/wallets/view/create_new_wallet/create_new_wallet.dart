@@ -27,7 +27,9 @@ class CreateNewWallet extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Stack(
         children: [
@@ -37,75 +39,25 @@ class CreateNewWallet extends StatelessWidget {
               CommonAppBar(title: localization.createNewWalletScreenTitle),
               SizedBox(height: 24.h),
               Expanded(
-                child: Obx(
-                  () {
-                    if (controller.isLoading.value) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 18.w),
-                        decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkCard : AppColors.white,
-                          borderRadius: BorderRadiusDirectional.only(
-                            topStart: Radius.circular(30.r),
-                            topEnd: Radius.circular(30.r),
-                          ),
+                child: Obx(() {
+                  if (controller.isLoading.value) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(horizontal: 18.w),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkCard : AppColors.white,
+                        borderRadius: BorderRadiusDirectional.only(
+                          topStart: Radius.circular(30.r),
+                          topEnd: Radius.circular(30.r),
                         ),
-                        child: const Center(
-                          child: CommonLoading(isColorShow: false),
-                        ),
-                      );
-                    }
+                      ),
+                      child: const Center(
+                        child: CommonLoading(isColorShow: false),
+                      ),
+                    );
+                  }
 
-                    // Display EcardoEmptyState if all currencies are already created
-                    if (controller.currenciesList.isEmpty) {
-                      return Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.symmetric(horizontal: 18.w),
-                        decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkCard : AppColors.white,
-                          borderRadius: BorderRadiusDirectional.only(
-                            topStart: Radius.circular(30.r),
-                            topEnd: Radius.circular(30.r),
-                          ),
-                        ),
-                        child: Center(
-                          child: SingleChildScrollView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            child: EcardoEmptyState(
-                              iconData: Icons.account_balance_wallet_outlined,
-                              title: l10nPick(
-                                context,
-                                en: 'All Wallets Created',
-                                fa: 'همه کیف‌پول‌ها ایجاد شده‌اند',
-                                ar: 'تم إنشاء جميع المحافظ',
-                                tr: 'Tüm Cüzdanlar Oluşturuldu',
-                                ru: 'Все кошельки уже созданы',
-                                zh: '所有钱包均已创建',
-                              ),
-                              description: l10nPick(
-                                context,
-                                en: 'You already have active wallets for all supported currencies.',
-                                fa: 'شما در حال حاضر برای تمام ارزهای پشتیبانی‌شده در سامانه کیف‌پول فعال دارید.',
-                                ar: 'لديك بالفعل محافظ نشطة لجميع العملات المدعومة.',
-                                tr: 'Desteklenen tüm para birimleri için zaten aktif cüzdanlarınız bulunmaktadır.',
-                                ru: 'У вас уже есть активные кошельки для всех поддерживаемых валют.',
-                                zh: '您已拥有所有支持币种的活动钱包。',
-                              ),
-                              primaryActionLabel: l10nPick(
-                                context,
-                                en: 'Back to Wallets',
-                                fa: 'بازگشت به کیف‌پول‌ها',
-                                ar: 'العودة إلى المحافظ',
-                                tr: 'Cüzdanlara Dön',
-                                ru: 'Назад к кошелькам',
-                                zh: '返回钱包',
-                              ),
-                              onPrimaryAction: () => Get.back(),
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-
+                  // Display EcardoEmptyState if all currencies are already created
+                  if (controller.currenciesList.isEmpty) {
                     return Container(
                       width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 18.w),
@@ -116,83 +68,147 @@ class CreateNewWallet extends StatelessWidget {
                           topEnd: Radius.circular(30.r),
                         ),
                       ),
-                      child: SingleChildScrollView(
-                        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-                        padding: EdgeInsets.symmetric(horizontal: 18.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 24.h),
-                            CommonRequiredLabelAndDynamicField(
-                              labelText: localization.createNewWalletCurrency,
-                              isLabelRequired: true,
-                              dynamicField: CommonTextInputField(
-                                suffixIcon: Image.asset(
-                                  PngAssets.arrowDownCommonIcon,
-                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
-                                ),
-                                suffixIconColor: isDark
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextTertiary,
-                                focusNode: controller.currencyFocusNode,
-                                isFocused: controller.isCurrencyFocused.value,
-                                backgroundColor: AppColors.transparent,
-                                controller: controller.currencyController,
-                                onTap: () => _openCurrencyDropdown(context, controller, localization),
-                                readOnly: true,
-                                hintText: localization.createNewWalletSelectCurrency,
-                              ),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: EcardoEmptyState(
+                            iconData: Icons.account_balance_wallet_outlined,
+                            title: l10nPick(
+                              context,
+                              en: 'All Wallets Created',
+                              fa: 'همه کیف‌پول‌ها ایجاد شده‌اند',
+                              ar: 'تم إنشاء جميع المحافظ',
+                              tr: 'Tüm Cüzdanlar Oluşturuldu',
+                              ru: 'Все кошельки уже созданы',
+                              zh: '所有钱包均已创建',
                             ),
-                            SizedBox(height: 20.h),
-                            Text(
-                              l10nPick(
-                                context,
-                                en: 'Available Currencies',
-                                fa: 'ارزهای موجود',
-                                ar: 'العملات المتاحة',
-                                tr: 'Mevcut Para Birimleri',
-                                ru: 'Доступные валюты',
-                                zh: '可用币种',
-                              ),
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                              ),
+                            description: l10nPick(
+                              context,
+                              en: 'You already have active wallets for all supported currencies.',
+                              fa: 'شما در حال حاضر برای تمام ارزهای پشتیبانی‌شده در سامانه کیف‌پول فعال دارید.',
+                              ar: 'لديك بالفعل محافظ نشطة لجميع العملات المدعومة.',
+                              tr: 'Desteklenen tüm para birimleri için zaten aktif cüzdanlarınız bulunmaktadır.',
+                              ru: 'У вас уже есть активные кошельки для всех поддерживаемых валют.',
+                              zh: '您已拥有所有支持币种的活动钱包。',
                             ),
-                            SizedBox(height: 12.h),
-                            // Modernized Currency Selection Tiles with Active Border Highlights
-                            ...controller.currenciesList.map((currencyItem) {
-                              return Obx(() {
-                                final isSelected = controller.currency.value?.id == currencyItem.id;
-                                return _CurrencySelectionTile(
-                                  currency: currencyItem,
-                                  isSelected: isSelected,
-                                  isDark: isDark,
-                                  onTap: () {
-                                    controller.currency.value = currencyItem;
-                                    controller.currencyController.text = currencyItem.fullName ?? currencyItem.name ?? currencyItem.code ?? '';
-                                  },
-                                );
-                              });
-                            }),
-                            SizedBox(height: 30.h),
-                            Obx(
-                              () => CommonButton(
-                                onPressed: controller.currency.value == null
-                                    ? null
-                                    : () => controller.createWallet(),
-                                width: double.infinity,
-                                text: localization.createNewWalletCreateButton,
-                              ),
+                            primaryActionLabel: l10nPick(
+                              context,
+                              en: 'Back to Wallets',
+                              fa: 'بازگشت به کیف‌پول‌ها',
+                              ar: 'العودة إلى المحافظ',
+                              tr: 'Cüzdanlara Dön',
+                              ru: 'Назад к кошелькам',
+                              zh: '返回钱包',
                             ),
-                            SizedBox(height: 30.h),
-                          ],
+                            onPrimaryAction: () => Get.back(),
+                          ),
                         ),
                       ),
                     );
-                  },
-                ),
+                  }
+
+                  return Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.symmetric(horizontal: 18.w),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.darkCard : AppColors.white,
+                      borderRadius: BorderRadiusDirectional.only(
+                        topStart: Radius.circular(30.r),
+                        topEnd: Radius.circular(30.r),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      keyboardDismissBehavior:
+                          ScrollViewKeyboardDismissBehavior.onDrag,
+                      padding: EdgeInsets.symmetric(horizontal: 18.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 24.h),
+                          CommonRequiredLabelAndDynamicField(
+                            labelText: localization.createNewWalletCurrency,
+                            isLabelRequired: true,
+                            dynamicField: CommonTextInputField(
+                              suffixIcon: Image.asset(
+                                PngAssets.arrowDownCommonIcon,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextTertiary,
+                              ),
+                              suffixIconColor: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextTertiary,
+                              focusNode: controller.currencyFocusNode,
+                              isFocused: controller.isCurrencyFocused.value,
+                              backgroundColor: AppColors.transparent,
+                              controller: controller.currencyController,
+                              onTap: () => _openCurrencyDropdown(
+                                context,
+                                controller,
+                                localization,
+                              ),
+                              readOnly: true,
+                              hintText:
+                                  localization.createNewWalletSelectCurrency,
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'Available Currencies',
+                              fa: 'ارزهای موجود',
+                              ar: 'العملات المتاحة',
+                              tr: 'Mevcut Para Birimleri',
+                              ru: 'Доступные валюты',
+                              zh: '可用币种',
+                            ),
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              fontWeight: FontWeight.w700,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                          SizedBox(height: 12.h),
+                          // Modernized Currency Selection Tiles with Active Border Highlights
+                          ...controller.currenciesList.map((currencyItem) {
+                            return Obx(() {
+                              final isSelected =
+                                  controller.currency.value?.id ==
+                                  currencyItem.id;
+                              return _CurrencySelectionTile(
+                                currency: currencyItem,
+                                isSelected: isSelected,
+                                isDark: isDark,
+                                onTap: () {
+                                  controller.currency.value = currencyItem;
+                                  controller.currencyController.text =
+                                      currencyItem.fullName ??
+                                      currencyItem.name ??
+                                      currencyItem.code ??
+                                      '';
+                                },
+                              );
+                            });
+                          }),
+                          SizedBox(height: 30.h),
+                          Obx(
+                            () => CommonButton(
+                              onPressed: controller.currency.value == null
+                                  ? null
+                                  : () => controller.createWallet(),
+                              width: double.infinity,
+                              text: localization.createNewWalletCreateButton,
+                            ),
+                          ),
+                          SizedBox(height: 30.h),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
               ),
             ],
           ),
@@ -224,11 +240,16 @@ class CreateNewWallet extends StatelessWidget {
           if (index != -1) {
             final selectedCurrency = controller.currenciesList[index];
             controller.currency.value = selectedCurrency;
-            controller.currencyController.text = selectedCurrency.fullName ?? '';
+            controller.currencyController.text =
+                selectedCurrency.fullName ?? '';
           }
         },
-        selectedValue: controller.currenciesList.map((item) => item.fullName ?? '').toList(),
-        dropdownItems: controller.currenciesList.map((item) => item.fullName ?? '').toList(),
+        selectedValue: controller.currenciesList
+            .map((item) => item.fullName ?? '')
+            .toList(),
+        dropdownItems: controller.currenciesList
+            .map((item) => item.fullName ?? '')
+            .toList(),
         selectedItem: controller.currencyController.text,
         textController: controller.currencyController,
         currentlySelectedValue: controller.currencyController.text,
@@ -254,7 +275,9 @@ class _CurrencySelectionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primaryAccent = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
+    final primaryAccent = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.brandViolet;
     final code = currency.code?.toUpperCase() ?? '';
 
     return Padding(
@@ -270,11 +293,15 @@ class _CurrencySelectionTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: isSelected
                   ? (isDark
-                      ? AppColors.darkPrimaryContainer.withValues(alpha: 0.40)
-                      : AppColors.brandVioletContainer.withValues(alpha: 0.50))
+                        ? AppColors.darkPrimaryContainer.withValues(alpha: 0.40)
+                        : AppColors.brandVioletContainer.withValues(
+                            alpha: 0.50,
+                          ))
                   : (isDark
-                      ? AppColors.darkSurfaceVariant.withValues(alpha: 0.35)
-                      : AppColors.lightSurfaceVariant.withValues(alpha: 0.60)),
+                        ? AppColors.darkSurfaceVariant.withValues(alpha: 0.35)
+                        : AppColors.lightSurfaceVariant.withValues(
+                            alpha: 0.60,
+                          )),
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               border: Border.all(
                 color: isSelected
@@ -285,7 +312,9 @@ class _CurrencySelectionTile extends StatelessWidget {
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: primaryAccent.withValues(alpha: isDark ? 0.25 : 0.12),
+                        color: primaryAccent.withValues(
+                          alpha: isDark ? 0.25 : 0.12,
+                        ),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -306,7 +335,9 @@ class _CurrencySelectionTile extends StatelessWidget {
                     border: Border.all(
                       color: isSelected
                           ? primaryAccent
-                          : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          : (isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                       width: 1.0,
                     ),
                   ),
@@ -315,14 +346,16 @@ class _CurrencySelectionTile extends StatelessWidget {
                       currency.symbol?.isNotEmpty == true
                           ? currency.symbol!
                           : code.isNotEmpty
-                              ? (code.length > 3 ? code.substring(0, 3) : code)
-                              : '\$',
+                          ? (code.length > 3 ? code.substring(0, 3) : code)
+                          : '\$',
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,
                         color: isSelected
                             ? primaryAccent
-                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                            : (isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary),
                       ),
                     ),
                   ),
@@ -337,10 +370,16 @@ class _CurrencySelectionTile extends StatelessWidget {
                         currency.fullName ?? currency.name ?? code,
                         style: TextStyle(
                           fontSize: 14.sp,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                          fontWeight: isSelected
+                              ? FontWeight.w700
+                              : FontWeight.w600,
                           color: isSelected
-                              ? (isDark ? AppColors.darkTextPrimary : AppColors.brandViolet)
-                              : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                              ? (isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.brandViolet)
+                              : (isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary),
                         ),
                       ),
                       if (code.isNotEmpty) ...[
@@ -350,7 +389,9 @@ class _CurrencySelectionTile extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextTertiary,
                           ),
                         ),
                       ],
@@ -367,7 +408,9 @@ class _CurrencySelectionTile extends StatelessWidget {
                     border: Border.all(
                       color: isSelected
                           ? primaryAccent
-                          : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          : (isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                       width: 1.5,
                     ),
                   ),

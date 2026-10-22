@@ -13,7 +13,9 @@ class EscrowPartyModel {
 
   factory EscrowPartyModel.fromJson(Map<String, dynamic> json) {
     return EscrowPartyModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       name: json['name']?.toString() ?? 'کاربر ای‌کاردو',
       email: json['email']?.toString(),
       accountNumber: json['account_number']?.toString(),
@@ -42,13 +44,17 @@ class EscrowEventModel {
 
   factory EscrowEventModel.fromJson(Map<String, dynamic> json) {
     return EscrowEventModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       actorRole: json['actor_role']?.toString() ?? 'SYSTEM',
       fromStatus: json['from_status']?.toString(),
       toStatus: json['to_status']?.toString() ?? '',
       action: json['action']?.toString() ?? '',
       reason: json['reason']?.toString(),
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
+          : null,
     );
   }
 }
@@ -76,15 +82,24 @@ class EscrowDisputeDecisionModel {
 
   factory EscrowDisputeDecisionModel.fromJson(Map<String, dynamic> json) {
     return EscrowDisputeDecisionModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
-      splitPercentBuyer: (json['split_percent_buyer'] as num?)?.toDouble() ?? 60.0,
-      splitPercentSeller: (json['split_percent_seller'] as num?)?.toDouble() ?? 40.0,
-      buyerRefundAmount: (json['buyer_refund_amount'] as num?)?.toDouble() ?? 516.0,
-      sellerPayoutAmount: (json['seller_payout_amount'] as num?)?.toDouble() ?? 344.0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      splitPercentBuyer:
+          (json['split_percent_buyer'] as num?)?.toDouble() ?? 60.0,
+      splitPercentSeller:
+          (json['split_percent_seller'] as num?)?.toDouble() ?? 40.0,
+      buyerRefundAmount:
+          (json['buyer_refund_amount'] as num?)?.toDouble() ?? 516.0,
+      sellerPayoutAmount:
+          (json['seller_payout_amount'] as num?)?.toDouble() ?? 344.0,
       feeAmount: (json['fee_amount'] as num?)?.toDouble() ?? 8.60,
-      reviewerNotes: json['reviewer_notes']?.toString() ??
+      reviewerNotes:
+          json['reviewer_notes']?.toString() ??
           'Evidence reviewed: 3 files from both sides. Goods showed specification mismatch warranting 60% refund to the buyer.',
-      decidedAt: json['decided_at'] != null ? DateTime.tryParse(json['decided_at'].toString()) : null,
+      decidedAt: json['decided_at'] != null
+          ? DateTime.tryParse(json['decided_at'].toString())
+          : null,
     );
   }
 }
@@ -120,24 +135,32 @@ class EscrowDisputeModel {
 
   factory EscrowDisputeModel.fromJson(Map<String, dynamic> json) {
     return EscrowDisputeModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       caseNumber: json['case_number']?.toString() ?? 'DSP-${json['id']}',
       type: json['type']?.toString() ?? 'Goods do not match description',
       description: json['description']?.toString() ?? '',
       status: json['status']?.toString() ?? 'OPEN',
       resolution: json['resolution']?.toString(),
-      evidenceFiles: ((json['evidence_files'] as List?) ?? ['Received-roll-1.jpg'])
-          .map((e) => e.toString())
-          .toList(),
+      evidenceFiles:
+          ((json['evidence_files'] as List?) ?? ['Received-roll-1.jpg'])
+              .map((e) => e.toString())
+              .toList(),
       requestedOutcome: json['requested_outcome']?.toString() ?? 'Full refund',
       sellerResponse: json['seller_response']?.toString(),
-      sellerEvidenceFiles: ((json['seller_evidence_files'] as List?) ?? ['Mill-certificate.pdf'])
-          .map((e) => e.toString())
-          .toList(),
+      sellerEvidenceFiles:
+          ((json['seller_evidence_files'] as List?) ?? ['Mill-certificate.pdf'])
+              .map((e) => e.toString())
+              .toList(),
       decision: json['decision'] is Map
-          ? EscrowDisputeDecisionModel.fromJson(Map<String, dynamic>.from(json['decision']))
+          ? EscrowDisputeDecisionModel.fromJson(
+              Map<String, dynamic>.from(json['decision']),
+            )
           : null,
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
+          : null,
     );
   }
 }
@@ -159,7 +182,8 @@ class EscrowOrderModel {
   final double shippingCost;
   final String shippingPayer;
   final double totalEscrowAmount;
-  final String status; // DRAFT, AWAITING_AGREEMENT, AWAITING_PAYMENT, FUNDS_HELD, IN_DELIVERY, DELIVERED, RELEASED, COMPLETED, DISPUTED, REFUNDED, CANCELLED, EXPIRED
+  final String
+  status; // DRAFT, AWAITING_AGREEMENT, AWAITING_PAYMENT, FUNDS_HELD, IN_DELIVERY, DELIVERED, RELEASED, COMPLETED, DISPUTED, REFUNDED, CANCELLED, EXPIRED
   final String statusLabel;
   final int revisionCount;
   final DateTime? shipDeadline;
@@ -225,14 +249,11 @@ class EscrowOrderModel {
     this.createdAt,
   });
 
-  bool get isFundsHeld =>
-      status == 'FUNDS_HELD' || status == 'HELD';
-  bool get isInspection =>
-      status == 'DELIVERED' || status == 'INSPECTION';
+  bool get isFundsHeld => status == 'FUNDS_HELD' || status == 'HELD';
+  bool get isInspection => status == 'DELIVERED' || status == 'INSPECTION';
   bool get isPendingAgreement =>
       status == 'AWAITING_AGREEMENT' || status == 'PENDING';
-  bool get isDisputed =>
-      status == 'DISPUTED';
+  bool get isDisputed => status == 'DISPUTED';
 
   String get counterpartyLabel {
     if (creatorRole.toUpperCase() == 'SELLER') {
@@ -253,49 +274,98 @@ class EscrowOrderModel {
 
   factory EscrowOrderModel.fromJson(Map<String, dynamic> json) {
     return EscrowOrderModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       contractNo: json['contract_no']?.toString() ?? 'ESC-${json['id']}',
       creatorRole: json['creator_role']?.toString() ?? 'BUYER',
-      buyer: json['buyer'] is Map ? EscrowPartyModel.fromJson(Map<String, dynamic>.from(json['buyer'])) : null,
-      seller: json['seller'] is Map ? EscrowPartyModel.fromJson(Map<String, dynamic>.from(json['seller'])) : null,
+      buyer: json['buyer'] is Map
+          ? EscrowPartyModel.fromJson(Map<String, dynamic>.from(json['buyer']))
+          : null,
+      seller: json['seller'] is Map
+          ? EscrowPartyModel.fromJson(Map<String, dynamic>.from(json['seller']))
+          : null,
       title: json['title']?.toString() ?? '',
       description: json['description']?.toString() ?? '',
-      quantity: (json['quantity'] is num) ? (json['quantity'] as num).toDouble() : double.tryParse(json['quantity']?.toString() ?? '') ?? 1.0,
+      quantity: (json['quantity'] is num)
+          ? (json['quantity'] as num).toDouble()
+          : double.tryParse(json['quantity']?.toString() ?? '') ?? 1.0,
       unit: json['unit']?.toString() ?? 'عدد',
-      amount: (json['amount'] is num) ? (json['amount'] as num).toDouble() : double.tryParse(json['amount']?.toString() ?? '') ?? 0.0,
+      amount: (json['amount'] is num)
+          ? (json['amount'] as num).toDouble()
+          : double.tryParse(json['amount']?.toString() ?? '') ?? 0.0,
       currency: json['currency']?.toString() ?? 'USD',
-      feeAmount: (json['fee_amount'] is num) ? (json['fee_amount'] as num).toDouble() : double.tryParse(json['fee_amount']?.toString() ?? '') ?? 0.0,
+      feeAmount: (json['fee_amount'] is num)
+          ? (json['fee_amount'] as num).toDouble()
+          : double.tryParse(json['fee_amount']?.toString() ?? '') ?? 0.0,
       feePayer: json['fee_payer']?.toString() ?? 'BUYER',
-      shippingCost: (json['shipping_cost'] is num) ? (json['shipping_cost'] as num).toDouble() : double.tryParse(json['shipping_cost']?.toString() ?? '') ?? 0.0,
+      shippingCost: (json['shipping_cost'] is num)
+          ? (json['shipping_cost'] as num).toDouble()
+          : double.tryParse(json['shipping_cost']?.toString() ?? '') ?? 0.0,
       shippingPayer: json['shipping_payer']?.toString() ?? 'BUYER',
-      totalEscrowAmount: (json['total_escrow_amount'] is num) ? (json['total_escrow_amount'] as num).toDouble() : double.tryParse(json['total_escrow_amount']?.toString() ?? '') ?? 0.0,
+      totalEscrowAmount: (json['total_escrow_amount'] is num)
+          ? (json['total_escrow_amount'] as num).toDouble()
+          : double.tryParse(json['total_escrow_amount']?.toString() ?? '') ??
+                0.0,
       status: json['status']?.toString() ?? 'DRAFT',
       statusLabel: json['status_label']?.toString() ?? 'پیش‌نویس',
-      revisionCount: (json['revision_count'] is num) ? (json['revision_count'] as num).toInt() : 0,
-      shipDeadline: json['ship_deadline'] != null ? DateTime.tryParse(json['ship_deadline'].toString()) : null,
-      inspectionHours: (json['inspection_hours'] is num) ? (json['inspection_hours'] as num).toInt() : 72,
-      inspectionDeadline: json['inspection_deadline'] != null ? DateTime.tryParse(json['inspection_deadline'].toString()) : null,
+      revisionCount: (json['revision_count'] is num)
+          ? (json['revision_count'] as num).toInt()
+          : 0,
+      shipDeadline: json['ship_deadline'] != null
+          ? DateTime.tryParse(json['ship_deadline'].toString())
+          : null,
+      inspectionHours: (json['inspection_hours'] is num)
+          ? (json['inspection_hours'] as num).toInt()
+          : 72,
+      inspectionDeadline: json['inspection_deadline'] != null
+          ? DateTime.tryParse(json['inspection_deadline'].toString())
+          : null,
       shippingCompany: json['shipping_company']?.toString(),
       trackingNumber: json['tracking_number']?.toString(),
-      shippedAt: json['shipped_at'] != null ? DateTime.tryParse(json['shipped_at'].toString()) : null,
-      deliveredAt: json['delivered_at'] != null ? DateTime.tryParse(json['delivered_at'].toString()) : null,
-      releasedAt: json['released_at'] != null ? DateTime.tryParse(json['released_at'].toString()) : null,
-      completedAt: json['completed_at'] != null ? DateTime.tryParse(json['completed_at'].toString()) : null,
-      cancelledAt: json['cancelled_at'] != null ? DateTime.tryParse(json['cancelled_at'].toString()) : null,
-      dispute: json['dispute'] is Map ? EscrowDisputeModel.fromJson(Map<String, dynamic>.from(json['dispute'])) : null,
+      shippedAt: json['shipped_at'] != null
+          ? DateTime.tryParse(json['shipped_at'].toString())
+          : null,
+      deliveredAt: json['delivered_at'] != null
+          ? DateTime.tryParse(json['delivered_at'].toString())
+          : null,
+      releasedAt: json['released_at'] != null
+          ? DateTime.tryParse(json['released_at'].toString())
+          : null,
+      completedAt: json['completed_at'] != null
+          ? DateTime.tryParse(json['completed_at'].toString())
+          : null,
+      cancelledAt: json['cancelled_at'] != null
+          ? DateTime.tryParse(json['cancelled_at'].toString())
+          : null,
+      dispute: json['dispute'] is Map
+          ? EscrowDisputeModel.fromJson(
+              Map<String, dynamic>.from(json['dispute']),
+            )
+          : null,
       events: (json['events'] is List)
-          ? (json['events'] as List).map((e) => EscrowEventModel.fromJson(Map<String, dynamic>.from(e))).toList()
+          ? (json['events'] as List)
+                .map(
+                  (e) =>
+                      EscrowEventModel.fromJson(Map<String, dynamic>.from(e)),
+                )
+                .toList()
           : const [],
       buyerRating: json['buyer_rating'] is int ? json['buyer_rating'] : null,
       buyerComment: json['buyer_comment']?.toString(),
       sellerRating: json['seller_rating'] is int ? json['seller_rating'] : null,
       sellerComment: json['seller_comment']?.toString(),
-      sellerDeliveryWaybill: json['seller_delivery_waybill']?.toString() ?? 'Waybill-4471.pdf',
-      sellerDeliveryPhotos: ((json['seller_delivery_photos'] as List?) ?? ['Batch photo 1', 'Batch photo 2'])
-          .map((e) => e.toString())
-          .toList(),
+      sellerDeliveryWaybill:
+          json['seller_delivery_waybill']?.toString() ?? 'Waybill-4471.pdf',
+      sellerDeliveryPhotos:
+          ((json['seller_delivery_photos'] as List?) ??
+                  ['Batch photo 1', 'Batch photo 2'])
+              .map((e) => e.toString())
+              .toList(),
       customSubtext: json['custom_subtext']?.toString(),
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
+          : null,
     );
   }
 }

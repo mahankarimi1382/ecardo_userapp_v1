@@ -25,8 +25,8 @@ class EditPaymentAccount extends StatefulWidget {
 class _EditPaymentAccountState extends State<EditPaymentAccount> {
   EditPaymentAccountController get controller =>
       Get.isRegistered<EditPaymentAccountController>()
-          ? Get.find<EditPaymentAccountController>()
-          : Get.put(EditPaymentAccountController());
+      ? Get.find<EditPaymentAccountController>()
+      : Get.put(EditPaymentAccountController());
   final PaymentAccountController paymentAccountController = Get.find();
 
   @override

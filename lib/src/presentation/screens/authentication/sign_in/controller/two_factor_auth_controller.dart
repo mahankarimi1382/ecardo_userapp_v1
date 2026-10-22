@@ -48,7 +48,9 @@ class TwoFactorAuthController extends GetxController {
       if (response.status == Status.completed) {
         final maybeToken = response.data?["data"]?["token"];
         if (maybeToken is String && maybeToken.isNotEmpty) {
-          final saveOk = await Get.find<TokenService>().saveAccessToken(maybeToken);
+          final saveOk = await Get.find<TokenService>().saveAccessToken(
+            maybeToken,
+          );
           if (!saveOk) {
             debugPrint('❌ TwoFa: Secure storage unavailable saving token');
             if (Get.isRegistered<SettingsService>()) {
@@ -72,7 +74,9 @@ class TwoFactorAuthController extends GetxController {
             ? Get.find<TokenService>().accessToken.value
             : null;
         if (currentToken == null || currentToken.isEmpty) {
-          debugPrint('❌ TwoFa: Missing token in TokenService. Refusing to persist login.');
+          debugPrint(
+            '❌ TwoFa: Missing token in TokenService. Refusing to persist login.',
+          );
           if (Get.isRegistered<SettingsService>()) {
             await Get.find<SettingsService>().wipeSession();
           }
@@ -102,8 +106,9 @@ class TwoFactorAuthController extends GetxController {
         // stages an email with NO password (staged password is dropped right
         // below anyway; biometrics have been token-only since 1.0.51).
         if (signIn != null && signIn.pendingTwoFaEmail.value.isNotEmpty) {
-          await Get.find<SettingsService>()
-              .saveLoggedInUserEmail(signIn.pendingTwoFaEmail.value);
+          await Get.find<SettingsService>().saveLoggedInUserEmail(
+            signIn.pendingTwoFaEmail.value,
+          );
           // 1.0.51: token-only biometric — drop any staged password.
           await Get.find<SettingsService>().clearLoggedInUserPassword();
           signIn.pendingTwoFaEmail.value = "";
@@ -113,12 +118,12 @@ class TwoFactorAuthController extends GetxController {
         // must be routed to the sign-up status flow, not straight home.
         final bool onboardingCompleted = Get.isRegistered<SignInController>()
             ? (Get.find<SignInController>()
-                    .userModel
-                    .value
-                    .data
-                    ?.boardingSteps
-                    ?.completed ==
-                true)
+                      .userModel
+                      .value
+                      .data
+                      ?.boardingSteps
+                      ?.completed ==
+                  true)
             : false;
         if (onboardingCompleted) {
           Get.offAllNamed(BaseRoute.navigation);

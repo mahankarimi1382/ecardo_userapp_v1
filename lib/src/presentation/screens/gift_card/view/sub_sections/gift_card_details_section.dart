@@ -83,7 +83,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Column(
         children: [
@@ -115,11 +117,14 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                       onPressed: () {
                         HapticFeedback.lightImpact();
                         if (!controller.validateAmountStep(
-                          denominationType: cardDetails.denominationType.toString(),
-                          minRecipientDenomination:
-                              cardDetails.minRecipientDenomination.toString(),
-                          maxRecipientDenomination:
-                              cardDetails.maxRecipientDenomination.toString(),
+                          denominationType: cardDetails.denominationType
+                              .toString(),
+                          minRecipientDenomination: cardDetails
+                              .minRecipientDenomination
+                              .toString(),
+                          maxRecipientDenomination: cardDetails
+                              .maxRecipientDenomination
+                              .toString(),
                         )) {
                           return;
                         }
@@ -193,15 +198,24 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
-                                  isDark ? AppColors.mutedBlue : AppColors.darkGray,
+                                  isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.deepBlack,
+                                  isDark
+                                      ? AppColors.mutedBlue
+                                      : AppColors.darkGray,
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusFull,
+                              ),
                             ),
                             child: Text(
                               'SELECT VALUE',
@@ -209,7 +223,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                 fontSize: 9.sp,
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: 0.8,
-                                color: isDark ? AppColors.deepBlack : Colors.white,
+                                color: isDark
+                                    ? AppColors.deepBlack
+                                    : Colors.white,
                               ),
                             ),
                           ),
@@ -220,7 +236,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                         () => Wrap(
                           spacing: AppSpacing.sm.w,
                           runSpacing: AppSpacing.sm.h,
-                          children: fixedRecipientDenominationsAmounts.map((amount) {
+                          children: fixedRecipientDenominationsAmounts.map((
+                            amount,
+                          ) {
                             final isSelected =
                                 controller.selectedAmount.value == amount;
                             return GestureDetector(
@@ -236,26 +254,33 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                 ),
                                 decoration: BoxDecoration(
                                   color: isSelected
-                                      ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
+                                      ? (isDark
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.deepBlack)
                                       : (isDark
-                                          ? AppColors.darkSurfaceVariant
-                                          : AppColors.lightSurfaceVariant),
-                                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                                            ? AppColors.darkSurfaceVariant
+                                            : AppColors.lightSurfaceVariant),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusMd,
+                                  ),
                                   border: Border.all(
                                     color: isSelected
-                                        ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
+                                        ? (isDark
+                                              ? AppColors.mainSoftBlue
+                                              : AppColors.deepBlack)
                                         : (isDark
-                                            ? AppColors.darkBorder
-                                            : AppColors.lightOutlineVariant),
+                                              ? AppColors.darkBorder
+                                              : AppColors.lightOutlineVariant),
                                     width: isSelected ? 1.8 : 1.0,
                                   ),
                                   boxShadow: isSelected
                                       ? [
                                           BoxShadow(
-                                            color: (isDark
-                                                    ? AppColors.mainSoftBlue
-                                                    : AppColors.deepBlack)
-                                                .withValues(alpha: 0.3),
+                                            color:
+                                                (isDark
+                                                        ? AppColors.mainSoftBlue
+                                                        : AppColors.deepBlack)
+                                                    .withValues(alpha: 0.3),
                                             blurRadius: 10,
                                             offset: const Offset(0, 3),
                                           ),
@@ -269,7 +294,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                       Icon(
                                         Icons.check_circle_rounded,
                                         size: 14.sp,
-                                        color: isDark ? AppColors.deepBlack : Colors.white,
+                                        color: isDark
+                                            ? AppColors.deepBlack
+                                            : Colors.white,
                                       ),
                                       SizedBox(width: 4.w),
                                     ],
@@ -279,10 +306,12 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                         fontFamily: 'monospace',
                                         fontWeight: FontWeight.w800,
                                         color: isSelected
-                                            ? (isDark ? AppColors.deepBlack : Colors.white)
+                                            ? (isDark
+                                                  ? AppColors.deepBlack
+                                                  : Colors.white)
                                             : (isDark
-                                                ? AppColors.darkTextPrimary
-                                                : AppColors.lightTextPrimary),
+                                                  ? AppColors.darkTextPrimary
+                                                  : AppColors.lightTextPrimary),
                                       ),
                                     ),
                                   ],
@@ -352,7 +381,8 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                             if (index != -1) {
                               final selectedCountry =
                                   countryController.countryList[index];
-                              controller.selectedCountry.value = selectedCountry;
+                              controller.selectedCountry.value =
+                                  selectedCountry;
                               controller.countryController.text =
                                   selectedCountry.name ?? '';
                             }
@@ -442,9 +472,13 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                         width: double.infinity,
                         height: 48.h,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd,
+                          ),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                           ),
                         ),
                         child: Obx(() {
@@ -459,7 +493,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                     controller.count.value--;
                                   }
                                 },
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusSm,
+                                ),
                                 child: Container(
                                   margin: EdgeInsetsDirectional.only(
                                     start: 6.w,
@@ -472,7 +508,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                     color: isDark
                                         ? AppColors.darkSurfaceVariant
                                         : AppColors.lightSurfaceVariant,
-                                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusSm,
+                                    ),
                                   ),
                                   alignment: Alignment.center,
                                   child: Icon(
@@ -498,7 +536,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                   HapticFeedback.selectionClick();
                                   controller.count.value++;
                                 },
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusSm,
+                                ),
                                 child: Container(
                                   margin: EdgeInsetsDirectional.only(
                                     end: 6.w,
@@ -508,13 +548,19 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                                   width: 36.w,
                                   height: 36.w,
                                   decoration: BoxDecoration(
-                                    color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
-                                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                    color: isDark
+                                        ? AppColors.mainSoftBlue
+                                        : AppColors.deepBlack,
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusSm,
+                                    ),
                                   ),
                                   child: Icon(
                                     Icons.add,
                                     size: 16.sp,
-                                    color: isDark ? AppColors.deepBlack : Colors.white,
+                                    color: isDark
+                                        ? AppColors.deepBlack
+                                        : Colors.white,
                                   ),
                                 ),
                               ),
@@ -559,11 +605,7 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsetsDirectional.only(
-              top: 4.h,
-              start: 4.w,
-              end: 4.w,
-            ),
+            padding: EdgeInsetsDirectional.only(top: 4.h, start: 4.w, end: 4.w),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               child: Image.asset(
@@ -572,9 +614,15 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                 fit: BoxFit.cover,
                 errorBuilder: (_, _, _) => Container(
                   height: 160.h,
-                  color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightSurfaceVariant,
                   child: const Center(
-                    child: Icon(Icons.card_giftcard_rounded, size: 48, color: AppColors.softGray),
+                    child: Icon(
+                      Icons.card_giftcard_rounded,
+                      size: 48,
+                      color: AppColors.softGray,
+                    ),
                   ),
                 ),
               ),
@@ -594,7 +642,9 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                   controller.giftCardProductDetails.value.productName ?? '',
                   style: AppTextStyles.titleMedium.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: AppSpacing.lg.h),
@@ -602,14 +652,18 @@ class _GiftCardDetailsState extends State<GiftCardDetailsSection> {
                   localizations.giftCardRedeemInstructionTitle,
                   style: AppTextStyles.labelLarge.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: AppSpacing.sm.h),
                 Text(
                   cardDetails.redeemInstruction?.verbose ?? '',
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextTertiary,
                     height: 1.4,
                   ),
                 ),

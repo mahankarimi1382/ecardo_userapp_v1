@@ -25,7 +25,7 @@ class MyOrderCard extends StatelessWidget {
     final typeColor = isBuy ? AppColors.error : AppColors.success;
     final typeText =
         '${isBuy ? localization.p2pSell : localization.p2pBuy} ${order.adsAssetCurrency ?? ''}'
-        .trim();
+            .trim();
 
     final status = _statusLabel(order.status);
     final statusColor = AppColors.white;
@@ -324,6 +324,8 @@ class MyOrderCard extends StatelessWidget {
     final orderNumber = order.orderNumber?.trim() ?? '';
     if (orderNumber.isEmpty) return;
     await Clipboard.setData(ClipboardData(text: orderNumber));
-    ToastHelper().showSuccessToast(AppLocalizations.of(Get.context!)!.p2pOrderNumberCopied);
+    ToastHelper().showSuccessToast(
+      AppLocalizations.of(Get.context!)!.p2pOrderNumberCopied,
+    );
   }
 }

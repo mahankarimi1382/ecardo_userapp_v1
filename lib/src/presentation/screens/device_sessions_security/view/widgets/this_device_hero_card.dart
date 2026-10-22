@@ -28,7 +28,9 @@ class ThisDeviceHeroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final osColor = device.os.brandColor;
 
     return Container(
@@ -56,7 +58,10 @@ class ThisDeviceHeroCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 5.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: 5.h,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.success.withValues(alpha: 0.14),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -68,10 +73,7 @@ class ThisDeviceHeroCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const PulsingIndicator(
-                      color: AppColors.success,
-                      size: 8.5,
-                    ),
+                    const PulsingIndicator(color: AppColors.success, size: 8.5),
                     SizedBox(width: AppSpacing.sm),
                     Text(
                       l10nPick(
@@ -123,7 +125,11 @@ class ThisDeviceHeroCard extends StatelessWidget {
                 child: Center(
                   child: Icon(
                     device.icon,
-                    color: isDark ? osColor : (device.os == DeviceOs.ios ? AppColors.deepBlack : osColor),
+                    color: isDark
+                        ? osColor
+                        : (device.os == DeviceOs.ios
+                              ? AppColors.deepBlack
+                              : osColor),
                     size: 28.sp,
                   ),
                 ),
@@ -146,24 +152,35 @@ class ThisDeviceHeroCard extends StatelessWidget {
                         Flexible(
                           child: Text(
                             '${device.operatingSystem} • ${device.localizedType(context)}',
-                            style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: secondaryTextColor,
+                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         if (device.appVersion != null) ...[
                           SizedBox(width: 6.w),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 1.h,
+                            ),
                             decoration: BoxDecoration(
-                              color: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.7),
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                              color: isDark
+                                  ? AppColors.darkCard
+                                  : AppColors.greyLight.withValues(alpha: 0.7),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm,
+                              ),
                             ),
                             child: Text(
                               device.appVersion!,
                               style: AppTextStyles.labelSmall.copyWith(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w600,
-                                color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.softGray
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ),
@@ -177,7 +194,10 @@ class ThisDeviceHeroCard extends StatelessWidget {
           ),
 
           SizedBox(height: AppSpacing.md),
-          Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+          Divider(
+            height: 1,
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
           SizedBox(height: AppSpacing.md),
 
           // Row 3: IP Address & Approximate Geolocation
@@ -282,14 +302,19 @@ class ThisDeviceHeroCard extends StatelessWidget {
           // Security check assurance banner
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 8.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: 8.h,
+            ),
             decoration: BoxDecoration(
               color: isDark
                   ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
                   : AppColors.lightPrimary.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               border: Border.all(
-                color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary).withValues(alpha: 0.2),
+                color:
+                    (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        .withValues(alpha: 0.2),
                 width: 0.8,
               ),
             ),
@@ -298,7 +323,9 @@ class ThisDeviceHeroCard extends StatelessWidget {
                 Icon(
                   Icons.shield_outlined,
                   size: 16.sp,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.lightPrimary,
                 ),
                 SizedBox(width: 8.w),
                 Expanded(
@@ -311,7 +338,9 @@ class ThisDeviceHeroCard extends StatelessWidget {
                       zh: '基于硬件级设备数字指纹认证的高可信会话。',
                     ),
                     style: AppTextStyles.bodySmall.copyWith(
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w500,
                     ),

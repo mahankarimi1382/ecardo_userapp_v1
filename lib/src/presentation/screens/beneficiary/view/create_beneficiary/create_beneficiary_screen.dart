@@ -54,12 +54,14 @@ class _CreateBeneficiaryScreenState extends State<CreateBeneficiaryScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final String previewName = controller.nickNameController.text.trim().isEmpty
-        ? (accountUser.isNotEmpty ? accountUser : localizations.createBeneficiaryTitle)
+        ? (accountUser.isNotEmpty
+              ? accountUser
+              : localizations.createBeneficiaryTitle)
         : controller.nickNameController.text.trim();
     final String previewAccount =
         controller.accountNumberController.text.trim().isEmpty
-            ? "•••• •••• ••••"
-            : controller.accountNumberController.text.trim();
+        ? "•••• •••• ••••"
+        : controller.accountNumberController.text.trim();
 
     final String titleSuffix = accountUser == "Merchant"
         ? localizations.accountUserMerchant
@@ -93,7 +95,9 @@ class _CreateBeneficiaryScreenState extends State<CreateBeneficiaryScreen> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                        color: isDark
+                            ? AppColors.darkShadow
+                            : AppColors.lightShadow,
                         blurRadius: AppSpacing.lg,
                         offset: const Offset(0, -2),
                       ),
@@ -145,8 +149,7 @@ class _CreateBeneficiaryScreenState extends State<CreateBeneficiaryScreen> {
                               const SizedBox(width: AppSpacing.md),
                               Expanded(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       previewName,

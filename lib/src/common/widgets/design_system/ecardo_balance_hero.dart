@@ -159,7 +159,9 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightDivider,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightDivider,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -175,7 +177,8 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 ...widget.availableCurrencies.map((code) {
-                  final isSelected = code.toUpperCase() == widget.currencyCode.toUpperCase();
+                  final isSelected =
+                      code.toUpperCase() == widget.currencyCode.toUpperCase();
                   return InkWell(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     onTap: () {
@@ -195,10 +198,14 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                         color: isSelected
                             ? AppColors.mainSoftBlue.withValues(alpha: 0.25)
                             : Colors.white.withValues(alpha: 0.06),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                         border: isSelected
                             ? Border.all(
-                                color: AppColors.mainSoftBlue.withValues(alpha: 0.6),
+                                color: AppColors.mainSoftBlue.withValues(
+                                  alpha: 0.6,
+                                ),
                                 width: 1.2,
                               )
                             : Border.all(
@@ -215,7 +222,9 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: isSelected
-                                  ? AppColors.mainSoftBlue.withValues(alpha: 0.3)
+                                  ? AppColors.mainSoftBlue.withValues(
+                                      alpha: 0.3,
+                                    )
                                   : Colors.white.withValues(alpha: 0.14),
                             ),
                             child: Text(
@@ -317,7 +326,10 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                 return FadeTransition(
                   opacity: animation,
                   child: ScaleTransition(
-                    scale: Tween<double>(begin: 0.96, end: 1.0).animate(animation),
+                    scale: Tween<double>(
+                      begin: 0.96,
+                      end: 1.0,
+                    ).animate(animation),
                     child: child,
                   ),
                 );
@@ -465,9 +477,7 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
                 _resolvedSymbol,
                 style: AppTextStyles.headlineSmall.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? AppColors.mainSoftBlue
-                      : AppColors.mutedBlue,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
                 ),
               ),
               const SizedBox(width: 4),
@@ -546,11 +556,7 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            arrowIcon,
-            size: 15,
-            color: pnlColor,
-          ),
+          Icon(arrowIcon, size: 15, color: pnlColor),
           const SizedBox(width: 4),
           Text(
             '$sign$formattedPnl%',
@@ -590,10 +596,7 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: actionsList.map((action) {
-        return _QuickActionButton(
-          action: action,
-          isDark: isDark,
-        );
+        return _QuickActionButton(action: action, isDark: isDark);
       }).toList(),
     );
   }
@@ -628,10 +631,7 @@ class _QuickActionButton extends StatefulWidget {
   final EcardoHeroAction action;
   final bool isDark;
 
-  const _QuickActionButton({
-    required this.action,
-    required this.isDark,
-  });
+  const _QuickActionButton({required this.action, required this.isDark});
 
   @override
   State<_QuickActionButton> createState() => _QuickActionButtonState();
@@ -650,9 +650,10 @@ class _QuickActionButtonState extends State<_QuickActionButton>
       duration: const Duration(milliseconds: 100),
       reverseDuration: const Duration(milliseconds: 200),
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.92).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.92,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -663,7 +664,8 @@ class _QuickActionButtonState extends State<_QuickActionButton>
 
   @override
   Widget build(BuildContext context) {
-    final accent = widget.action.accentColor ??
+    final accent =
+        widget.action.accentColor ??
         (widget.isDark ? AppColors.mainSoftBlue : AppColors.deepBlack);
 
     return GestureDetector(
@@ -684,9 +686,7 @@ class _QuickActionButtonState extends State<_QuickActionButton>
               height: 52,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: widget.isDark
-                    ? AppColors.darkCard
-                    : AppColors.white,
+                color: widget.isDark ? AppColors.darkCard : AppColors.white,
                 border: Border.all(
                   color: widget.isDark
                       ? AppColors.darkBorder
@@ -695,17 +695,15 @@ class _QuickActionButtonState extends State<_QuickActionButton>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: widget.isDark ? 0.25 : 0.06),
+                    color: Colors.black.withValues(
+                      alpha: widget.isDark ? 0.25 : 0.06,
+                    ),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              child: Icon(
-                widget.action.icon,
-                size: 22,
-                color: accent,
-              ),
+              child: Icon(widget.action.icon, size: 22, color: accent),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(

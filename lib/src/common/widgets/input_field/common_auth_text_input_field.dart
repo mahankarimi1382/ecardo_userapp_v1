@@ -112,19 +112,13 @@ class CommonAuthTextInputField extends StatelessWidget {
           ),
           prefixIcon: prefixIcon != null
               ? Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    start: 12.w,
-                    end: 8.w,
-                  ),
+                  padding: EdgeInsetsDirectional.only(start: 12.w, end: 8.w),
                   child: prefixIcon,
                 )
               : null,
           suffixIcon: suffixIcon != null
               ? Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    start: 8.w,
-                    end: 12.w,
-                  ),
+                  padding: EdgeInsetsDirectional.only(start: 8.w, end: 12.w),
                   child: suffixIcon,
                 )
               : null,

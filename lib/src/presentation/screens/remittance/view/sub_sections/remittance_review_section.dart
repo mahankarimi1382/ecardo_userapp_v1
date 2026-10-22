@@ -25,14 +25,32 @@ class RemittanceReviewSection extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l.remittanceReviewConfirm, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+          Text(
+            l.remittanceReviewConfirm,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+            ),
+          ),
           SizedBox(height: 8.h),
-          Text(l.remittanceReviewHint, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+          Text(
+            l.remittanceReviewHint,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+            ),
+          ),
           SizedBox(height: 16.h),
 
           // Rate hold countdown banner (matches review_transfer.html)
           Semantics(
-            label: 'Rate held for $mins minutes and $remSecs seconds. After that you need a new quote.',
+            label:
+                'Rate held for $mins minutes and $remSecs seconds. After that you need a new quote.',
             child: Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
@@ -41,14 +59,18 @@ class RemittanceReviewSection extends StatelessWidget {
                     : AppColors.brandVioletContainer,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: AppColors.brandViolet.withValues(alpha: isDark ? 0.40 : 0.25),
+                  color: AppColors.brandViolet.withValues(
+                    alpha: isDark ? 0.40 : 0.25,
+                  ),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.timer_outlined,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -61,7 +83,9 @@ class RemittanceReviewSection extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.brandVioletDeep,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.brandVioletDeep,
                           ),
                         ),
                         SizedBox(height: 2.h),
@@ -69,7 +93,9 @@ class RemittanceReviewSection extends StatelessWidget {
                           'After that you need a new quote.',
                           style: TextStyle(
                             fontSize: 11.5.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
@@ -85,43 +111,91 @@ class RemittanceReviewSection extends StatelessWidget {
             _Row(l.remittanceSelectPayoutMethod, m?.name ?? '-'),
             // M-7 — decimals now come from DynamicDecimalsHelper via the
             // controller (API-driven); falls back to 2 like before.
-            _Row(l.remittanceSendAmount, q == null ? '-' : c.formatAmount(q.sendAmount, currencyId: q.sendCurrencyId)),
+            _Row(
+              l.remittanceSendAmount,
+              q == null
+                  ? '-'
+                  : c.formatAmount(q.sendAmount, currencyId: q.sendCurrencyId),
+            ),
             // T14 FIX — tiny rates (IRT→CNY) no longer collapse to 0.0000:
             // dynamic precision with trailing-zero trim.
-            _Row(l.remittanceExchangeRate, q == null ? '-' : '1 = ${c.formatRate(q.exchangeRate)}'),
-            _Row(l.remittanceReceiveAmount, q == null ? '-' : c.formatReceiveAmount(q.receiveAmount, q.receiveCurrencyId)),
-            _Row(l.remittanceSystemFee, q == null ? '-' : c.formatAmount(q.systemFee, currencyId: q.sendCurrencyId)),
-            _Row(l.remittanceTotalPayable, q == null ? '-' : c.formatAmount(q.totalPayable, currencyId: q.sendCurrencyId), bold: true),
+            _Row(
+              l.remittanceExchangeRate,
+              q == null ? '-' : '1 = ${c.formatRate(q.exchangeRate)}',
+            ),
+            _Row(
+              l.remittanceReceiveAmount,
+              q == null
+                  ? '-'
+                  : c.formatReceiveAmount(q.receiveAmount, q.receiveCurrencyId),
+            ),
+            _Row(
+              l.remittanceSystemFee,
+              q == null
+                  ? '-'
+                  : c.formatAmount(q.systemFee, currencyId: q.sendCurrencyId),
+            ),
+            _Row(
+              l.remittanceTotalPayable,
+              q == null
+                  ? '-'
+                  : c.formatAmount(
+                      q.totalPayable,
+                      currencyId: q.sendCurrencyId,
+                    ),
+              bold: true,
+            ),
           ]),
           SizedBox(height: 16.h),
           _Card(l.remittanceReviewSender, [
             _Row(l.remittanceSenderName, c.senderNameController.text),
-            _Row(l.remittanceSelectCountry, c.selectedSenderCountry.value.toUpperCase()),
+            _Row(
+              l.remittanceSelectCountry,
+              c.selectedSenderCountry.value.toUpperCase(),
+            ),
             _Row(l.remittanceSenderPhone, c.senderPhoneController.text),
             _Row(l.remittanceSenderIdNumber, c.senderIdNumberController.text),
-            _Row(l.remittanceSenderTypeIndividual, c.selectedSenderType.value == 'individual' ? l.remittanceSenderTypeIndividual : l.remittanceSenderTypeBusiness),
+            _Row(
+              l.remittanceSenderTypeIndividual,
+              c.selectedSenderType.value == 'individual'
+                  ? l.remittanceSenderTypeIndividual
+                  : l.remittanceSenderTypeBusiness,
+            ),
           ]),
           SizedBox(height: 16.h),
           _Card(l.remittanceReviewReceiver, [
             _Row(l.remittanceReceiverName, c.receiverNameController.text),
-            _Row(l.remittanceSelectCountry, c.selectedReceiverCountry.value.toUpperCase()),
+            _Row(
+              l.remittanceSelectCountry,
+              c.selectedReceiverCountry.value.toUpperCase(),
+            ),
             _Row(l.remittanceReceiverPhone, c.receiverPhoneController.text),
-            if (c.receiverBankNameController.text.isNotEmpty) _Row(l.remittanceBankName, c.receiverBankNameController.text),
-            if (c.receiverAccountNumberController.text.isNotEmpty) _Row(l.remittanceAccountNumber, c.receiverAccountNumberController.text),
-            if (c.receiverIbanController.text.isNotEmpty) _Row(l.remittanceIban, c.receiverIbanController.text),
-            if (c.receiverAlipayController.text.isNotEmpty) _Row(l.remittanceAlipayAccount, c.receiverAlipayController.text),
-            if (c.receiverWechatController.text.isNotEmpty) _Row(l.remittanceWechatAccount, c.receiverWechatController.text),
+            if (c.receiverBankNameController.text.isNotEmpty)
+              _Row(l.remittanceBankName, c.receiverBankNameController.text),
+            if (c.receiverAccountNumberController.text.isNotEmpty)
+              _Row(
+                l.remittanceAccountNumber,
+                c.receiverAccountNumberController.text,
+              ),
+            if (c.receiverIbanController.text.isNotEmpty)
+              _Row(l.remittanceIban, c.receiverIbanController.text),
+            if (c.receiverAlipayController.text.isNotEmpty)
+              _Row(l.remittanceAlipayAccount, c.receiverAlipayController.text),
+            if (c.receiverWechatController.text.isNotEmpty)
+              _Row(l.remittanceWechatAccount, c.receiverWechatController.text),
             // Task-12 — dynamic payout-method fields (swift / shaba_number /
             // usdt_address / card_number and any future mapped fields) are
             // now shown on the review step so the user can verify the
             // payout details before submitting.
             for (final field in c.selectedMethodFields) ...[
-              Builder(builder: (_) {
-                final ctl = c.methodFieldController(field.name);
-                final value = ctl?.text.trim() ?? '';
-                if (value.isEmpty) return const SizedBox.shrink();
-                return _Row(c.localizedFieldLabel(field), value);
-              }),
+              Builder(
+                builder: (_) {
+                  final ctl = c.methodFieldController(field.name);
+                  final value = ctl?.text.trim() ?? '';
+                  if (value.isEmpty) return const SizedBox.shrink();
+                  return _Row(c.localizedFieldLabel(field), value);
+                },
+              ),
             ],
           ]),
           SizedBox(height: 20.h),
@@ -130,15 +204,38 @@ class RemittanceReviewSection extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
+                color: isDark
+                    ? AppColors.warning.withValues(alpha: 0.15)
+                    : AppColors.warningContainer,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.warning.withValues(alpha: isDark ? 0.45 : 0.3)),
+                border: Border.all(
+                  color: AppColors.warning.withValues(
+                    alpha: isDark ? 0.45 : 0.3,
+                  ),
+                ),
               ),
-              child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Icon(Icons.info_outline, color: AppColors.warning, size: 18.sp),
-                SizedBox(width: 8.w),
-                Expanded(child: Text(l.remittanceTermsNotice, style: TextStyle(fontSize: 11.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary))),
-              ]),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: AppColors.warning,
+                    size: 18.sp,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      l.remittanceTermsNotice,
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -163,13 +260,27 @@ class _Card extends StatelessWidget {
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
         ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-          SizedBox(height: 12.h),
-          ...children,
-        ]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            ...children,
+          ],
+        ),
       ),
     );
   }
@@ -187,11 +298,35 @@ class _Row extends StatelessWidget {
       label: '$label: $value',
       child: Padding(
         padding: EdgeInsets.only(bottom: 6.h),
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
-          SizedBox(width: 12.w),
-          Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
-        ]),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Text(
+                value,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                  fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

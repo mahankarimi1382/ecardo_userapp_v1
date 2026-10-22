@@ -25,14 +25,14 @@ class NotificationHistoryItem {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'body': body,
-        'type': type,
-        'at': at.toIso8601String(),
-        'read': read,
-        'payload': payload,
-      };
+    'id': id,
+    'title': title,
+    'body': body,
+    'type': type,
+    'at': at.toIso8601String(),
+    'read': read,
+    'payload': payload,
+  };
 
   factory NotificationHistoryItem.fromJson(Map<String, dynamic> j) {
     return NotificationHistoryItem(
@@ -47,14 +47,14 @@ class NotificationHistoryItem {
   }
 
   NotificationHistoryItem copyWith({bool? read}) => NotificationHistoryItem(
-        id: id,
-        title: title,
-        body: body,
-        type: type,
-        at: at,
-        read: read ?? this.read,
-        payload: payload,
-      );
+    id: id,
+    title: title,
+    body: body,
+    type: type,
+    at: at,
+    read: read ?? this.read,
+    payload: payload,
+  );
 }
 
 class NotificationHistoryService extends GetxService {
@@ -110,10 +110,7 @@ class NotificationHistoryService extends GetxService {
     await _syncBadge();
   }
 
-  List<NotificationHistoryItem> filtered({
-    bool? unreadOnly,
-    String? type,
-  }) {
+  List<NotificationHistoryItem> filtered({bool? unreadOnly, String? type}) {
     return items.where((e) {
       if (unreadOnly == true && e.read) return false;
       if (type != null && type.isNotEmpty && e.type != type) return false;
@@ -128,11 +125,9 @@ class NotificationHistoryService extends GetxService {
     try {
       final list = jsonDecode(raw) as List<dynamic>;
       items.assignAll(
-        list
-            .whereType<Map>()
-            .map((e) => NotificationHistoryItem.fromJson(
-                  Map<String, dynamic>.from(e),
-                )),
+        list.whereType<Map>().map(
+          (e) => NotificationHistoryItem.fromJson(Map<String, dynamic>.from(e)),
+        ),
       );
     } catch (_) {}
   }

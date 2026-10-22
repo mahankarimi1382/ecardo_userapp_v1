@@ -28,7 +28,8 @@ class GiftCodeScreen extends StatefulWidget {
 
 class _GiftCodeScreenState extends State<GiftCodeScreen> {
   final GiftCodeController controller = Get.find<GiftCodeController>();
-  final GiftRedeemController redeemController = Get.find<GiftRedeemController>();
+  final GiftRedeemController redeemController =
+      Get.find<GiftRedeemController>();
   final GiftHistoryController giftHistoryController =
       Get.find<GiftHistoryController>();
   final CreateGiftController createGiftController =
@@ -68,9 +69,12 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
       },
       child: Obx(
         () => Scaffold(
-          backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+          backgroundColor: isDark
+              ? AppColors.darkBackground
+              : AppColors.lightBackground,
           resizeToAvoidBottomInset: false,
-          appBar: createGiftController.currentStep.value == 1 ||
+          appBar:
+              createGiftController.currentStep.value == 1 ||
                   createGiftController.currentStep.value == 2
               ? CommonDefaultAppBar()
               : null,
@@ -82,7 +86,10 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
                     : BoxDecoration(
                         gradient: LinearGradient(
                           colors: isDark
-                              ? [AppColors.darkSurface, AppColors.darkBackground]
+                              ? [
+                                  AppColors.darkSurface,
+                                  AppColors.darkBackground,
+                                ]
                               : [AppColors.white, AppColors.lightBackground],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -103,7 +110,8 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
                                   title: localizations.giftCodeTitle,
                                   isBackLogicApply: true,
                                   backLogicFunction: () {
-                                    if (homeController.selectedIndex.value == 2) {
+                                    if (homeController.selectedIndex.value ==
+                                        2) {
                                       Get.delete<GiftCodeController>();
                                       Get.delete<GiftRedeemController>();
                                       Get.delete<GiftHistoryController>();
@@ -136,7 +144,8 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
                 ),
               ),
               Visibility(
-                visible: redeemController.isGiftRedeemLoading.value ||
+                visible:
+                    redeemController.isGiftRedeemLoading.value ||
                     createGiftController.isCreateGiftLoading.value,
                 child: Padding(
                   padding: EdgeInsets.only(
@@ -149,7 +158,9 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
           ),
           floatingActionButton: controller.selectedScreen.value == 1
               ? Padding(
-                  padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.xxl),
+                  padding: const EdgeInsetsDirectional.only(
+                    bottom: AppSpacing.xxl,
+                  ),
                   child: SizedBox(
                     height: 48,
                     child: FloatingActionButton.extended(
@@ -161,10 +172,16 @@ class _GiftCodeScreenState extends State<GiftCodeScreen> {
                         await createGiftController.fetchWallets();
                         await createGiftController.fetchUser();
                       },
-                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
-                      foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                      backgroundColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.deepBlack,
+                      foregroundColor: isDark
+                          ? AppColors.deepBlack
+                          : AppColors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                       icon: Image.asset(
                         PngAssets.addCommonIcon,

@@ -27,14 +27,10 @@ class WalletFilterChips extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            color: isDark
-                ? const Color(0xFF1E1E1C)
-                : const Color(0xFFECEAE8),
+            color: isDark ? const Color(0xFF1E1E1C) : const Color(0xFFECEAE8),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isDark
-                  ? const Color(0x2BD5CBC8)
-                  : const Color(0x1F000000),
+              color: isDark ? const Color(0x2BD5CBC8) : const Color(0x1F000000),
               width: 0.8,
             ),
           ),
@@ -156,11 +152,11 @@ class WalletFilterChips extends StatelessWidget {
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                   color: isSelected
                       ? (isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary)
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary)
                       : (isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary),
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
                 ),
               ),
             ),
@@ -170,11 +166,11 @@ class WalletFilterChips extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isSelected
                     ? (isDark
-                        ? AppColors.mainSoftBlue.withValues(alpha: 0.22)
-                        : AppColors.deepBlack.withValues(alpha: 0.08))
+                          ? AppColors.mainSoftBlue.withValues(alpha: 0.22)
+                          : AppColors.deepBlack.withValues(alpha: 0.08))
                     : (isDark
-                        ? Colors.white.withValues(alpha: 0.06)
-                        : Colors.black.withValues(alpha: 0.05)),
+                          ? Colors.white.withValues(alpha: 0.06)
+                          : Colors.black.withValues(alpha: 0.05)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -183,12 +179,10 @@ class WalletFilterChips extends StatelessWidget {
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
                   color: isSelected
-                      ? (isDark
-                          ? AppColors.mainSoftBlue
-                          : AppColors.deepBlack)
+                      ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
                       : (isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary),
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
                 ),
               ),
             ),

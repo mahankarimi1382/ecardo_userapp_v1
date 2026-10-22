@@ -20,8 +20,16 @@ class TravelCatalog {
         'price_per_night': 140.0,
         'price_irr_per_night': 264000000.0,
         'currency': 'USD',
-        'image': 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
-        'amenities': ['استخر سرپوشیده و سونا', 'صبحانه بوفه سلف‌سرویس', 'پارکینگ اختصاصی رایگان', 'اینترنت پرسرعت Wi-Fi', 'سالن بدنسازی مجهز', 'رستوران سنتی و بین‌المللی'],
+        'image':
+            'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        'amenities': [
+          'استخر سرپوشیده و سونا',
+          'صبحانه بوفه سلف‌سرویس',
+          'پارکینگ اختصاصی رایگان',
+          'اینترنت پرسرعت Wi-Fi',
+          'سالن بدنسازی مجهز',
+          'رستوران سنتی و بین‌المللی',
+        ],
         'rooms': [
           {
             'room_id': 'rm-esp-std',
@@ -52,8 +60,14 @@ class TravelCatalog {
         'review_count': 2100,
         'price_per_night': 380.0,
         'currency': 'USD',
-        'image': 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
-        'amenities': ['دید مستقیم به تنگه بسفر', 'استخر اینفینیتی روباز گرم', 'اسپای عثمانی و حمام ترکی', 'ترانسفر لیموزین فرودگاهی'],
+        'image':
+            'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
+        'amenities': [
+          'دید مستقیم به تنگه بسفر',
+          'استخر اینفینیتی روباز گرم',
+          'اسپای عثمانی و حمام ترکی',
+          'ترانسفر لیموزین فرودگاهی',
+        ],
         'rooms': [
           {
             'room_id': 'rm-cir-bosphorus',
@@ -76,8 +90,14 @@ class TravelCatalog {
         'review_count': 3400,
         'price_per_night': 260.0,
         'currency': 'USD',
-        'image': 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
-        'amenities': ['ساحل اختصاصی JBR', 'کلاب ساحلی Azure', '۹ رستوران و کافه برنده جایزه', 'دسترسی پیاده به دبی مارینا'],
+        'image':
+            'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=800',
+        'amenities': [
+          'ساحل اختصاصی JBR',
+          'کلاب ساحلی Azure',
+          '۹ رستوران و کافه برنده جایزه',
+          'دسترسی پیاده به دبی مارینا',
+        ],
         'rooms': [
           {
             'room_id': 'rm-rix-deluxe',
@@ -100,8 +120,14 @@ class TravelCatalog {
         'review_count': 980,
         'price_per_night': 95.0,
         'currency': 'USD',
-        'image': 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800',
-        'amenities': ['الهام‌گرفته از تخت جمشید', 'دریاچه اختصاصی قایق‌سواری', 'غواصی اختصاصی و دوچرخه‌سواری', 'صبحانه بوفه کامل'],
+        'image':
+            'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800',
+        'amenities': [
+          'الهام‌گرفته از تخت جمشید',
+          'دریاچه اختصاصی قایق‌سواری',
+          'غواصی اختصاصی و دوچرخه‌سواری',
+          'صبحانه بوفه کامل',
+        ],
         'rooms': [
           {
             'room_id': 'rm-dar-garden',
@@ -217,9 +243,15 @@ class TravelCatalog {
         'duration_days': 5,
         'price': 480.0,
         'currency': 'USD',
-        'image': 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800',
+        'image':
+            'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=800',
         'rating': 4.9,
-        'itinerary_highlights': ['گشت کشتی خصوصی در تنگه بسفر', 'بازدید از کاخ توپکاپی و مسجد ایاصوفیه', 'خرید اختصاصی از مال ایستینیه پارک', 'صبحانه و شام هتل ۵ ستاره تکسیم'],
+        'itinerary_highlights': [
+          'گشت کشتی خصوصی در تنگه بسفر',
+          'بازدید از کاخ توپکاپی و مسجد ایاصوفیه',
+          'خرید اختصاصی از مال ایستینیه پارک',
+          'صبحانه و شام هتل ۵ ستاره تکسیم',
+        ],
         'capacity': 15,
         'available_slots': 6,
       },
@@ -231,9 +263,14 @@ class TravelCatalog {
         'duration_days': 5,
         'price': 690.0,
         'currency': 'USD',
-        'image': 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800',
+        'image':
+            'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800',
         'rating': 4.95,
-        'itinerary_highlights': ['سافاری VIP کویر با شام باربیکیو', 'بلیت طبقه ۱۲۴ برج خلیفه', 'ترانسفر لیموزین اختصاصی'],
+        'itinerary_highlights': [
+          'سافاری VIP کویر با شام باربیکیو',
+          'بلیت طبقه ۱۲۴ برج خلیفه',
+          'ترانسفر لیموزین اختصاصی',
+        ],
         'capacity': 20,
         'available_slots': 8,
       },
@@ -245,9 +282,14 @@ class TravelCatalog {
         'duration_days': 4,
         'price': 180.0,
         'currency': 'USD',
-        'image': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
+        'image':
+            'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800',
         'rating': 4.82,
-        'itinerary_highlights': ['سوئیت کف‌شیشه‌ای روی آب', 'پارک آبی اوشن', 'غواصی در کلوپ مارینا'],
+        'itinerary_highlights': [
+          'سوئیت کف‌شیشه‌ای روی آب',
+          'پارک آبی اوشن',
+          'غواصی در کلوپ مارینا',
+        ],
         'capacity': 10,
         'available_slots': 3,
       },
@@ -268,7 +310,12 @@ class TravelCatalog {
         'processing_time': '۱۵ تا ۲۱ روز کاری',
         'price': 220.0,
         'currency': 'EUR',
-        'requirements': ['پاسپورت با حداقل ۶ ماه اعتبار', 'تمکن مالی و پرینت ۳ ماهه بانکی', 'دو قطعه عکس پرسنلی بیومتریک', 'بیمه مسافرتی معتبر شنگن'],
+        'requirements': [
+          'پاسپورت با حداقل ۶ ماه اعتبار',
+          'تمکن مالی و پرینت ۳ ماهه بانکی',
+          'دو قطعه عکس پرسنلی بیومتریک',
+          'بیمه مسافرتی معتبر شنگن',
+        ],
       },
       {
         'id': 2,
@@ -279,7 +326,10 @@ class TravelCatalog {
         'processing_time': '۲۴ تا ۴۸ ساعت کاری',
         'price': 95.0,
         'currency': 'USD',
-        'requirements': ['اسکن باکیفیت صفحه اول پاسپورت', 'عکس پرسنلی رنگی جدید'],
+        'requirements': [
+          'اسکن باکیفیت صفحه اول پاسپورت',
+          'عکس پرسنلی رنگی جدید',
+        ],
       },
       {
         'id': 3,
@@ -290,7 +340,11 @@ class TravelCatalog {
         'processing_time': '۳۰ تا ۴۵ روز کاری',
         'price': 380.0,
         'currency': 'CAD',
-        'requirements': ['سابقه سفر معتبر (تراول هیستوری)', 'اسناد ملکی و مدارک شغلی رسمی', 'انگشت‌نگاری در دفاتر استانبول یا دبی'],
+        'requirements': [
+          'سابقه سفر معتبر (تراول هیستوری)',
+          'اسناد ملکی و مدارک شغلی رسمی',
+          'انگشت‌نگاری در دفاتر استانبول یا دبی',
+        ],
       },
     ];
   }
@@ -311,8 +365,13 @@ class TravelCatalog {
         'transmission': 'اتوماتیک دابل کلاچ PDK',
         'seats': 5,
         'fuel': 'بنزین سوپر',
-        'image': 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800',
-        'features': ['تحویل در فرودگاه یا هتل', 'کیلومتر روزانه ۲۰۰ کیلومتر', 'بیمه بدنه طلایی CDW بدون فرانشیز'],
+        'image':
+            'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800',
+        'features': [
+          'تحویل در فرودگاه یا هتل',
+          'کیلومتر روزانه ۲۰۰ کیلومتر',
+          'بیمه بدنه طلایی CDW بدون فرانشیز',
+        ],
       },
       {
         'id': 2,
@@ -325,8 +384,12 @@ class TravelCatalog {
         'transmission': 'اتوماتیک ۹ سرعته G-Tronic',
         'seats': 5,
         'fuel': 'بنزین',
-        'image': 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800',
-        'features': ['سیستم رانندگی خودکار کروز تطبیقی', 'گرم‌کن صندلی و هدآپ دیسپلی'],
+        'image':
+            'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800',
+        'features': [
+          'سیستم رانندگی خودکار کروز تطبیقی',
+          'گرم‌کن صندلی و هدآپ دیسپلی',
+        ],
       },
       {
         'id': 3,
@@ -339,8 +402,12 @@ class TravelCatalog {
         'transmission': 'اتوماتیک تیپ‌ترونیک',
         'seats': 7,
         'fuel': 'بنزین',
-        'image': 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800',
-        'features': ['۷ نفره جادار مناسب سفر خانوادگی', 'صندوق عقب بزرگ و دو دیفرانسیل'],
+        'image':
+            'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=800',
+        'features': [
+          '۷ نفره جادار مناسب سفر خانوادگی',
+          'صندوق عقب بزرگ و دو دیفرانسیل',
+        ],
       },
     ];
   }

@@ -40,7 +40,9 @@ class LanguageController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchLanguages() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? 'Failed to load languages');
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Failed to load languages',
+      );
     } finally {}
   }
 
@@ -53,7 +55,9 @@ class LanguageController extends GetxController {
       final normalized = selectedLocale.trim().toLowerCase();
       if (LocaleThemeService.supported.contains(normalized)) {
         Get.updateLocale(Locale(normalized));
-        await Get.find<SettingsService>().saveLanguageLocaleCurrentState(normalized);
+        await Get.find<SettingsService>().saveLanguageLocaleCurrentState(
+          normalized,
+        );
       }
     }
   }

@@ -117,274 +117,300 @@ void main() {
 
   group('ReplayTicket Screen Widget Tests', () {
     testWidgets(
-        'Critical crash fix: null ticket data renders fallback ticketUid in CommonAppBar without throwing',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
+      'Critical crash fix: null ticket data renders fallback ticketUid in CommonAppBar without throwing',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
 
-      final mockController = _MockReplyTicketController();
-      Get.put<ReplyTicketController>(mockController);
-      // Model data is null
-      mockController.ticketMessageModel.value = TicketMessageModel();
+        final mockController = _MockReplyTicketController();
+        Get.put<ReplyTicketController>(mockController);
+        // Model data is null
+        mockController.ticketMessageModel.value = TicketMessageModel();
 
-      await tester.pumpWidget(_wrapWithApp(const ReplayTicket(ticketUid: 'FALLBACK-UID-123')));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          _wrapWithApp(const ReplayTicket(ticketUid: 'FALLBACK-UID-123')),
+        );
+        await tester.pumpAndSettle();
 
-      final appBarFinder = find.byType(CommonAppBar);
-      expect(appBarFinder, findsOneWidget);
-      final CommonAppBar appBar = tester.widget(appBarFinder);
-      expect(appBar.title, '#FALLBACK-UID-123');
-    });
-
-    testWidgets(
-        'Ticket uuid from server takes precedence in CommonAppBar title',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
-
-      final mockController = _MockReplyTicketController();
-      Get.put<ReplyTicketController>(mockController);
-      mockController.predefinedModel = TicketMessageModel(
-        data: TicketMessageData(
-          ticket: Ticket(
-            uuid: 'SERVER-UUID-999',
-            title: 'Help needed',
-            status: 'open',
-            canReply: true,
-          ),
-          messages: [],
-        ),
-      );
-
-      await tester.pumpWidget(_wrapWithApp(const ReplayTicket(ticketUid: 'FALLBACK-UID-123')));
-      await tester.pumpAndSettle();
-
-      final appBarFinder = find.byType(CommonAppBar);
-      expect(appBarFinder, findsOneWidget);
-      final CommonAppBar appBar = tester.widget(appBarFinder);
-      expect(appBar.title, '#SERVER-UUID-999');
-    });
+        final appBarFinder = find.byType(CommonAppBar);
+        expect(appBarFinder, findsOneWidget);
+        final CommonAppBar appBar = tester.widget(appBarFinder);
+        expect(appBar.title, '#FALLBACK-UID-123');
+      },
+    );
 
     testWidgets(
-        'Message bubble sender logic and alignments: user messages align right/trailing with primary color, support messages align left/leading with neutral background',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 2000);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
+      'Ticket uuid from server takes precedence in CommonAppBar title',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
 
-      final mockController = _MockReplyTicketController();
-      Get.put<ReplyTicketController>(mockController);
-      mockController.predefinedModel = TicketMessageModel(
-        data: TicketMessageData(
-          ticket: Ticket(
-            uuid: 'TKT-001',
-            status: 'open',
-            message: 'Initial user ticket description',
-            canReply: true,
-            createdAt: '2026-03-01 10:00:00',
-            user: TicketUser(
-              name: 'John Doe',
-              email: 'john@example.com',
+        final mockController = _MockReplyTicketController();
+        Get.put<ReplyTicketController>(mockController);
+        mockController.predefinedModel = TicketMessageModel(
+          data: TicketMessageData(
+            ticket: Ticket(
+              uuid: 'SERVER-UUID-999',
+              title: 'Help needed',
+              status: 'open',
+              canReply: true,
             ),
+            messages: [],
           ),
-          messages: [
-            Messages(
-              id: 1,
-              message: 'Support agent response',
-              isAdmin: true,
-              user: User(
-                name: 'Support Agent Jane',
-                email: 'jane@support.ecardo.com',
+        );
+
+        await tester.pumpWidget(
+          _wrapWithApp(const ReplayTicket(ticketUid: 'FALLBACK-UID-123')),
+        );
+        await tester.pumpAndSettle();
+
+        final appBarFinder = find.byType(CommonAppBar);
+        expect(appBarFinder, findsOneWidget);
+        final CommonAppBar appBar = tester.widget(appBarFinder);
+        expect(appBar.title, '#SERVER-UUID-999');
+      },
+    );
+
+    testWidgets(
+      'Message bubble sender logic and alignments: user messages align right/trailing with primary color, support messages align left/leading with neutral background',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 2000);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+
+        final mockController = _MockReplyTicketController();
+        Get.put<ReplyTicketController>(mockController);
+        mockController.predefinedModel = TicketMessageModel(
+          data: TicketMessageData(
+            ticket: Ticket(
+              uuid: 'TKT-001',
+              status: 'open',
+              message: 'Initial user ticket description',
+              canReply: true,
+              createdAt: '2026-03-01 10:00:00',
+              user: TicketUser(name: 'John Doe', email: 'john@example.com'),
+            ),
+            messages: [
+              Messages(
+                id: 1,
+                message: 'Support agent response',
+                isAdmin: true,
+                user: User(
+                  name: 'Support Agent Jane',
+                  email: 'jane@support.ecardo.com',
+                ),
+                createdAtFormatted: '01 Mar, 2026 10:15 AM',
               ),
-              createdAtFormatted: '01 Mar, 2026 10:15 AM',
-            ),
-            Messages(
-              id: 2,
-              message: 'User follow-up question',
-              isAdmin: false,
-              user: User(
-                name: 'John Doe',
-                email: 'john@example.com',
+              Messages(
+                id: 2,
+                message: 'User follow-up question',
+                isAdmin: false,
+                user: User(name: 'John Doe', email: 'john@example.com'),
+                createdAtFormatted: '01 Mar, 2026 10:20 AM',
               ),
-              createdAtFormatted: '01 Mar, 2026 10:20 AM',
-            ),
-          ],
-        ),
-      );
+            ],
+          ),
+        );
 
-      await tester.pumpWidget(_wrapWithApp(const ReplayTicket(ticketUid: 'TKT-001')));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          _wrapWithApp(const ReplayTicket(ticketUid: 'TKT-001')),
+        );
+        await tester.pumpAndSettle();
 
-      // Verify all 3 messages rendered
-      expect(find.text('Initial user ticket description'), findsOneWidget);
-      expect(find.text('Support agent response'), findsOneWidget);
-      expect(find.text('User follow-up question'), findsOneWidget);
+        // Verify all 3 messages rendered
+        expect(find.text('Initial user ticket description'), findsOneWidget);
+        expect(find.text('Support agent response'), findsOneWidget);
+        expect(find.text('User follow-up question'), findsOneWidget);
 
-      // Verify Support Agent details ARE shown for admin message
-      expect(find.text('Support Agent Jane'), findsOneWidget);
-      expect(find.text('jane@support.ecardo.com'), findsOneWidget);
+        // Verify Support Agent details ARE shown for admin message
+        expect(find.text('Support Agent Jane'), findsOneWidget);
+        expect(find.text('jane@support.ecardo.com'), findsOneWidget);
 
-      // Find the containers for each message
-      // 1. Initial user ticket bubble:
-      final userTicketText = tester.widget<Text>(find.text('Initial user ticket description'));
-      expect(userTicketText.style?.color, AppColors.white);
+        // Find the containers for each message
+        // 1. Initial user ticket bubble:
+        final userTicketText = tester.widget<Text>(
+          find.text('Initial user ticket description'),
+        );
+        expect(userTicketText.style?.color, AppColors.white);
 
-      // 2. Admin bubble:
-      final adminText = tester.widget<Text>(find.text('Support agent response'));
-      expect(adminText.style?.color, AppColors.lightTextPrimary.withValues(alpha: 0.80));
+        // 2. Admin bubble:
+        final adminText = tester.widget<Text>(
+          find.text('Support agent response'),
+        );
+        expect(
+          adminText.style?.color,
+          AppColors.lightTextPrimary.withValues(alpha: 0.80),
+        );
 
-      // 3. User follow up bubble:
-      final userFollowUpText = tester.widget<Text>(find.text('User follow-up question'));
-      expect(userFollowUpText.style?.color, AppColors.white);
+        // 3. User follow up bubble:
+        final userFollowUpText = tester.widget<Text>(
+          find.text('User follow-up question'),
+        );
+        expect(userFollowUpText.style?.color, AppColors.white);
 
-      // Verify Row alignments
-      // The initial user ticket bubble and follow-up bubble use MainAxisAlignment.end
-      // The admin bubble uses MainAxisAlignment.start
-      final rowWidgets = tester.widgetList<Row>(find.byType(Row)).toList();
+        // Verify Row alignments
+        // The initial user ticket bubble and follow-up bubble use MainAxisAlignment.end
+        // The admin bubble uses MainAxisAlignment.start
+        final rowWidgets = tester.widgetList<Row>(find.byType(Row)).toList();
 
-      final bubbleRows = rowWidgets.where((row) =>
-          row.crossAxisAlignment == CrossAxisAlignment.start &&
-          (row.mainAxisAlignment == MainAxisAlignment.start ||
-           row.mainAxisAlignment == MainAxisAlignment.end) &&
-          row.children.any((c) => c is Flexible)).toList();
+        final bubbleRows = rowWidgets
+            .where(
+              (row) =>
+                  row.crossAxisAlignment == CrossAxisAlignment.start &&
+                  (row.mainAxisAlignment == MainAxisAlignment.start ||
+                      row.mainAxisAlignment == MainAxisAlignment.end) &&
+                  row.children.any((c) => c is Flexible),
+            )
+            .toList();
 
-      expect(bubbleRows.length, 3);
-      // First is initial user ticket (isMe: true -> MainAxisAlignment.end)
-      expect(bubbleRows[0].mainAxisAlignment, MainAxisAlignment.end);
-      // Second is admin message (isAdmin: true -> isMe: false -> MainAxisAlignment.start)
-      expect(bubbleRows[1].mainAxisAlignment, MainAxisAlignment.start);
-      // Third is user message (isAdmin: false -> isMe: true -> MainAxisAlignment.end)
-      expect(bubbleRows[2].mainAxisAlignment, MainAxisAlignment.end);
-    });
+        expect(bubbleRows.length, 3);
+        // First is initial user ticket (isMe: true -> MainAxisAlignment.end)
+        expect(bubbleRows[0].mainAxisAlignment, MainAxisAlignment.end);
+        // Second is admin message (isAdmin: true -> isMe: false -> MainAxisAlignment.start)
+        expect(bubbleRows[1].mainAxisAlignment, MainAxisAlignment.start);
+        // Third is user message (isAdmin: false -> isMe: true -> MainAxisAlignment.end)
+        expect(bubbleRows[2].mainAxisAlignment, MainAxisAlignment.end);
+      },
+    );
 
     testWidgets(
-        'Sending message clears text, clears attached images via clearImages(), and refetches conversation',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
+      'Sending message clears text, clears attached images via clearImages(), and refetches conversation',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
 
-      final mockController = _MockReplyTicketController();
-      Get.put<ReplyTicketController>(mockController);
-      mockController.predefinedModel = TicketMessageModel(
-        data: TicketMessageData(
-          ticket: Ticket(
-            uuid: 'TKT-002',
-            status: 'open',
-            canReply: true,
+        final mockController = _MockReplyTicketController();
+        Get.put<ReplyTicketController>(mockController);
+        mockController.predefinedModel = TicketMessageModel(
+          data: TicketMessageData(
+            ticket: Ticket(uuid: 'TKT-002', status: 'open', canReply: true),
+            messages: [],
           ),
-          messages: [],
-        ),
-      );
+        );
 
-      await tester.pumpWidget(_wrapWithApp(const ReplayTicket(ticketUid: 'TKT-002')));
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          _wrapWithApp(const ReplayTicket(ticketUid: 'TKT-002')),
+        );
+        await tester.pumpAndSettle();
 
-      final initialFetchCount = mockController.fetchCallCount;
+        final initialFetchCount = mockController.fetchCallCount;
 
-      // Type a message
-      mockController.messageController.text = 'This is a test message to support';
-      // Attach a mock image to the image picker controller
-      mockController.controller.attachedImages[99] = File('path/to/img.png');
-      expect(mockController.controller.attachedImages.isNotEmpty, isTrue);
+        // Type a message
+        mockController.messageController.text =
+            'This is a test message to support';
+        // Attach a mock image to the image picker controller
+        mockController.controller.attachedImages[99] = File('path/to/img.png');
+        expect(mockController.controller.attachedImages.isNotEmpty, isTrue);
 
-      // Find send button (CommonSolidSendIcon image or its InkWell parent)
-      final sendButtonFinder = find.byWidgetPredicate(
-        (widget) => widget is InkWell && widget.onTap != null,
-      );
-      expect(sendButtonFinder, findsWidgets);
+        // Find send button (CommonSolidSendIcon image or its InkWell parent)
+        final sendButtonFinder = find.byWidgetPredicate(
+          (widget) => widget is InkWell && widget.onTap != null,
+        );
+        expect(sendButtonFinder, findsWidgets);
 
-      // Tap send button
-      await tester.tap(sendButtonFinder.last);
-      await tester.pumpAndSettle();
+        // Tap send button
+        await tester.tap(sendButtonFinder.last);
+        await tester.pumpAndSettle();
 
-      // Verification:
-      // 1. Submit was called
-      expect(mockController.submitCallCount, 1);
-      // 2. Message controller cleared
-      expect(mockController.messageController.text, isEmpty);
-      // 3. Images cleared via controller.controller.clearImages()
-      expect(mockController.controller.attachedImages.isEmpty, isTrue);
-      // 4. Conversation refetched
-      expect(mockController.fetchCallCount, greaterThan(initialFetchCount));
-    });
+        // Verification:
+        // 1. Submit was called
+        expect(mockController.submitCallCount, 1);
+        // 2. Message controller cleared
+        expect(mockController.messageController.text, isEmpty);
+        // 3. Images cleared via controller.controller.clearImages()
+        expect(mockController.controller.attachedImages.isEmpty, isTrue);
+        // 4. Conversation refetched
+        expect(mockController.fetchCallCount, greaterThan(initialFetchCount));
+      },
+    );
 
-    test('TicketMessageModel and Attachments helper getters operate properly', () {
-      final msg = Messages(
-        message: 'Hello<br />world &amp; welcome &lt;support&gt;',
-      );
-      expect(msg.cleanMessage, 'Hello\nworld & welcome <support>');
+    test(
+      'TicketMessageModel and Attachments helper getters operate properly',
+      () {
+        final msg = Messages(
+          message: 'Hello<br />world &amp; welcome &lt;support&gt;',
+        );
+        expect(msg.cleanMessage, 'Hello\nworld & welcome <support>');
 
-      final imgAttachment = Attachments(
-        url: 'https://ecardo.ir/storage/ticket_1.png',
-        size: 2048 * 1024,
-        type: 'png',
-      );
-      expect(imgAttachment.isImage, isTrue);
-      expect(imgAttachment.formattedSize, '2.0 MB');
-      expect(imgAttachment.cleanUrl, 'https://ecardo.ir/storage/ticket_1.png');
+        final imgAttachment = Attachments(
+          url: 'https://ecardo.ir/storage/ticket_1.png',
+          size: 2048 * 1024,
+          type: 'png',
+        );
+        expect(imgAttachment.isImage, isTrue);
+        expect(imgAttachment.formattedSize, '2.0 MB');
+        expect(
+          imgAttachment.cleanUrl,
+          'https://ecardo.ir/storage/ticket_1.png',
+        );
 
-      final relativeDoc = Attachments(
-        url: '/storage/guide.pdf',
-        size: 512 * 1024,
-        type: 'pdf',
-      );
-      expect(relativeDoc.isImage, isFalse);
-      expect(relativeDoc.formattedSize, '512.0 KB');
-      expect(relativeDoc.cleanUrl, 'https://ecardo.ir/storage/guide.pdf');
-    });
+        final relativeDoc = Attachments(
+          url: '/storage/guide.pdf',
+          size: 512 * 1024,
+          type: 'pdf',
+        );
+        expect(relativeDoc.isImage, isFalse);
+        expect(relativeDoc.formattedSize, '512.0 KB');
+        expect(relativeDoc.cleanUrl, 'https://ecardo.ir/storage/guide.pdf');
+      },
+    );
 
     testWidgets(
-        'Closed ticket displays resolved banner and Reopen button calls controller',
-        (tester) async {
-      tester.view.physicalSize = const Size(800, 1200);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
+      'Closed ticket displays resolved banner and Reopen button calls controller',
+      (tester) async {
+        tester.view.physicalSize = const Size(800, 1200);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
 
-      final mockController = _MockReplyTicketController();
-      Get.put<ReplyTicketController>(mockController);
-      mockController.predefinedModel = TicketMessageModel(
-        data: TicketMessageData(
-          ticket: Ticket(
-            uuid: 'TKT-CLOSED-01',
-            title: 'Billing inquiry resolved',
-            status: 'closed',
-            isClosed: true,
-            canReply: false,
-            priority: 'high',
-          ),
-          messages: [
-            Messages(
-              id: 1,
-              message: 'Your billing question is settled.',
-              isAdmin: true,
-              user: User(name: 'Finance Admin', email: 'billing@ecardo.ir'),
-              createdAtFormatted: '01 Mar, 2026 12:00 PM',
+        final mockController = _MockReplyTicketController();
+        Get.put<ReplyTicketController>(mockController);
+        mockController.predefinedModel = TicketMessageModel(
+          data: TicketMessageData(
+            ticket: Ticket(
+              uuid: 'TKT-CLOSED-01',
+              title: 'Billing inquiry resolved',
+              status: 'closed',
+              isClosed: true,
+              canReply: false,
+              priority: 'high',
             ),
-          ],
-        ),
-      );
+            messages: [
+              Messages(
+                id: 1,
+                message: 'Your billing question is settled.',
+                isAdmin: true,
+                user: User(name: 'Finance Admin', email: 'billing@ecardo.ir'),
+                createdAtFormatted: '01 Mar, 2026 12:00 PM',
+              ),
+            ],
+          ),
+        );
 
-      await tester.pumpWidget(
-        _wrapWithApp(const ReplayTicket(ticketUid: 'TKT-CLOSED-01')),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          _wrapWithApp(const ReplayTicket(ticketUid: 'TKT-CLOSED-01')),
+        );
+        await tester.pumpAndSettle();
 
-      // Subject context card is rendered
-      expect(find.text('Billing inquiry resolved'), findsOneWidget);
+        // Subject context card is rendered
+        expect(find.text('Billing inquiry resolved'), findsOneWidget);
 
-      // Reopen button is present in resolved banner
-      final reopenButtonFinder = find.widgetWithText(OutlinedButton, 'Reopen');
-      expect(reopenButtonFinder, findsOneWidget);
+        // Reopen button is present in resolved banner
+        final reopenButtonFinder = find.widgetWithText(
+          OutlinedButton,
+          'Reopen',
+        );
+        expect(reopenButtonFinder, findsOneWidget);
 
-      // Tap Reopen button
-      await tester.tap(reopenButtonFinder);
-      await tester.pumpAndSettle();
+        // Tap Reopen button
+        await tester.tap(reopenButtonFinder);
+        await tester.pumpAndSettle();
 
-      // submitReopenTicket was triggered
-      expect(mockController.reopenCallCount, 1);
-    });
+        // submitReopenTicket was triggered
+        expect(mockController.reopenCallCount, 1);
+      },
+    );
   });
 }

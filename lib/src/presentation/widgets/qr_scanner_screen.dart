@@ -157,10 +157,7 @@ class _QrScannerScreenState extends State<QrScannerScreen>
                 ar: 'إغلاق الماسح',
               ),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 44,
-                ),
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                 child: Material(
                   color: AppColors.transparent,
                   child: InkWell(
@@ -209,10 +206,7 @@ class _QrScannerScreenState extends State<QrScannerScreen>
                 decoration: BoxDecoration(
                   color: AppColors.darkSurface.withValues(alpha: 0.75),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                  border: Border.all(
-                    color: AppColors.darkBorder,
-                    width: 0.8,
-                  ),
+                  border: Border.all(color: AppColors.darkBorder, width: 0.8),
                 ),
                 child: Text(
                   localization.qrScannerScreenInstruction,
@@ -380,8 +374,9 @@ class _QrScannerScreenState extends State<QrScannerScreen>
                           foregroundColor: AppColors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMd,
+                            ),
                           ),
                           padding: const EdgeInsets.symmetric(
                             horizontal: AppSpacing.xl,
@@ -431,7 +426,9 @@ class _QrScannerScreenState extends State<QrScannerScreen>
                     ),
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        foregroundColor: AppColors.warmWhite.withValues(alpha: 0.7),
+                        foregroundColor: AppColors.warmWhite.withValues(
+                          alpha: 0.7,
+                        ),
                         minimumSize: const Size(double.infinity, 44),
                       ),
                       onPressed: () {

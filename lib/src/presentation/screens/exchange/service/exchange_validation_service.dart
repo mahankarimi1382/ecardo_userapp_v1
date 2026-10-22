@@ -17,11 +17,11 @@ enum ExchangeValidationErrorType {
 /// Structured outcome of validating the exchange amount input and wallet selection.
 class ExchangeValidationResult {
   const ExchangeValidationResult.valid()
-      : isValid = true,
-        errorType = ExchangeValidationErrorType.none,
-        errorMessage = null,
-        limitValue = null,
-        currencyCode = null;
+    : isValid = true,
+      errorType = ExchangeValidationErrorType.none,
+      errorMessage = null,
+      limitValue = null,
+      currencyCode = null;
 
   const ExchangeValidationResult.invalid({
     required this.errorType,
@@ -78,7 +78,8 @@ class ExchangeValidationService {
     if (fromWallet == null || fromWallet.name?.isEmpty == true) {
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.selectFromWallet,
-        errorMessage: localizations?.exchangeValidationSelectFromWallet ??
+        errorMessage:
+            localizations?.exchangeValidationSelectFromWallet ??
             'Please select a wallet to exchange from.',
       );
     }
@@ -86,7 +87,8 @@ class ExchangeValidationService {
     if (toWallet == null || toWallet.name?.isEmpty == true) {
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.selectToWallet,
-        errorMessage: localizations?.exchangeValidationSelectToWallet ??
+        errorMessage:
+            localizations?.exchangeValidationSelectToWallet ??
             'Please select a wallet to exchange to.',
       );
     }
@@ -97,7 +99,8 @@ class ExchangeValidationService {
     if (fromCode != null && fromCode == toCode) {
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.sameWallet,
-        errorMessage: localizations?.exchangeValidationSameWallet ??
+        errorMessage:
+            localizations?.exchangeValidationSameWallet ??
             'From and to currencies must be different.',
       );
     }
@@ -106,7 +109,8 @@ class ExchangeValidationService {
     if (trimmed.isEmpty) {
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.enterAmount,
-        errorMessage: localizations?.exchangeValidationEnterAmount ??
+        errorMessage:
+            localizations?.exchangeValidationEnterAmount ??
             'Please enter an amount.',
       );
     }
@@ -115,7 +119,8 @@ class ExchangeValidationService {
     if (enteredAmount <= 0.0) {
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.enterAmount,
-        errorMessage: localizations?.exchangeValidationEnterAmount ??
+        errorMessage:
+            localizations?.exchangeValidationEnterAmount ??
             'Please enter an amount.',
       );
     }
@@ -124,15 +129,15 @@ class ExchangeValidationService {
     final double min =
         double.tryParse(fromWallet.exchangeLimit?.min ?? '') ?? 0.0;
     final double maxRaw =
-        double.tryParse(fromWallet.exchangeLimit?.max ?? '') ??
-            double.infinity;
+        double.tryParse(fromWallet.exchangeLimit?.max ?? '') ?? double.infinity;
     final double max = maxRaw <= 0 ? double.infinity : maxRaw;
 
     if (min > 0 && enteredAmount < min) {
       final formattedMin = min.toStringAsFixed(decimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.amountBelowMinimum,
-        errorMessage: localizations?.exchangeValidationAmountMinimum(
+        errorMessage:
+            localizations?.exchangeValidationAmountMinimum(
               formattedMin,
               currency,
             ) ??
@@ -146,7 +151,8 @@ class ExchangeValidationService {
       final formattedMax = max.toStringAsFixed(decimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.amountAboveMaximum,
-        errorMessage: localizations?.exchangeValidationAmountMaximum(
+        errorMessage:
+            localizations?.exchangeValidationAmountMaximum(
               formattedMax,
               currency,
             ) ??
@@ -162,7 +168,8 @@ class ExchangeValidationService {
       final formattedBalance = availableBalance.toStringAsFixed(decimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.insufficientBalance,
-        errorMessage: localizations?.exchangeValidationInsufficientBalance(
+        errorMessage:
+            localizations?.exchangeValidationInsufficientBalance(
               formattedBalance,
               currency,
             ) ??
@@ -193,7 +200,8 @@ class ExchangeValidationService {
     if (balance > 0 && amount > balance) return false;
 
     final min = double.tryParse(fromWallet.exchangeLimit?.min ?? '') ?? 0.0;
-    final maxRaw = double.tryParse(fromWallet.exchangeLimit?.max ?? '') ?? double.infinity;
+    final maxRaw =
+        double.tryParse(fromWallet.exchangeLimit?.max ?? '') ?? double.infinity;
     final max = maxRaw <= 0 ? double.infinity : maxRaw;
 
     return (min <= 0 || amount >= min) && amount <= max;

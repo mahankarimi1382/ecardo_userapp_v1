@@ -22,16 +22,15 @@ class ContactItem {
 }
 
 class ContactPickerBottomSheet extends StatefulWidget {
-  final Function(String name, String phone, String operatorId) onContactSelected;
+  final Function(String name, String phone, String operatorId)
+  onContactSelected;
 
-  const ContactPickerBottomSheet({
-    super.key,
-    required this.onContactSelected,
-  });
+  const ContactPickerBottomSheet({super.key, required this.onContactSelected});
 
   static Future<void> show(
     BuildContext context, {
-    required Function(String name, String phone, String operatorId) onContactSelected,
+    required Function(String name, String phone, String operatorId)
+    onContactSelected,
   }) async {
     await Get.bottomSheet(
       ContactPickerBottomSheet(onContactSelected: onContactSelected),
@@ -41,7 +40,8 @@ class ContactPickerBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<ContactPickerBottomSheet> createState() => _ContactPickerBottomSheetState();
+  State<ContactPickerBottomSheet> createState() =>
+      _ContactPickerBottomSheetState();
 }
 
 class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
@@ -210,14 +210,19 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
                     Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                            .withValues(alpha: 0.12),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.deepBlack)
+                                .withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.contacts_rounded,
                         size: 20.w,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.deepBlack,
                       ),
                     ),
                     SizedBox(width: 10.w),
@@ -229,7 +234,9 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.warmWhite
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         Text(
@@ -249,7 +256,9 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
                   onPressed: () => Get.back(),
                   icon: Icon(
                     Icons.close_rounded,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -262,7 +271,9 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
             child: Container(
               height: 46.h,
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                color: isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightBackground,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                 border: Border.all(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -272,25 +283,33 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
                 controller: _searchController,
                 style: TextStyle(
                   fontSize: 13.sp,
-                  color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.warmWhite
+                      : AppColors.lightTextPrimary,
                 ),
                 decoration: InputDecoration(
                   hintText: 'جستجوی نام یا شماره تلفن...',
                   hintStyle: TextStyle(
                     fontSize: 12.sp,
-                    color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                    color: isDark
+                        ? AppColors.darkTextTertiary
+                        : AppColors.lightTextTertiary,
                   ),
                   prefixIcon: Icon(
                     Icons.search_rounded,
                     size: 20.w,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
                           icon: Icon(
                             Icons.clear_rounded,
                             size: 16.w,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                           onPressed: () => _searchController.clear(),
                         )
@@ -319,14 +338,20 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline_rounded, size: 18.w, color: AppColors.info),
+                    Icon(
+                      Icons.info_outline_rounded,
+                      size: 18.w,
+                      color: AppColors.info,
+                    ),
                     SizedBox(width: 8.w),
                     Expanded(
                       child: Text(
                         'برای همگام‌سازی کامل مخاطبین گوشی، دسترسی را فعال کنید.',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.warmWhite
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
@@ -339,12 +364,17 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
                         }
                       },
                       style: TextButton.styleFrom(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
                         minimumSize: Size.zero,
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: Text(
-                        _permissionStatus!.isPermanentlyDenied ? 'تنظیمات' : 'اجازه دسترسی',
+                        _permissionStatus!.isPermanentlyDenied
+                            ? 'تنظیمات'
+                            : 'اجازه دسترسی',
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w700,
@@ -366,25 +396,34 @@ class _ContactPickerBottomSheetState extends State<ContactPickerBottomSheet> {
                         Icon(
                           Icons.person_search_rounded,
                           size: 40.w,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
                         ),
                         SizedBox(height: 8.h),
                         Text(
                           'مخاطبی با این مشخصات یافت نشد',
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
                     ),
                   )
                 : ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 18.w,
+                      vertical: 8.h,
+                    ),
                     itemCount: _filteredContacts.length,
                     separatorBuilder: (_, _) => Divider(
                       height: 1,
-                      color: isDark ? AppColors.darkBorder : AppColors.lightDivider,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightDivider,
                     ),
                     itemBuilder: (context, index) {
                       final contact = _filteredContacts[index];
@@ -422,7 +461,9 @@ class _ContactTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firstChar = contact.name.isNotEmpty ? contact.name.characters.first : '?';
+    final firstChar = contact.name.isNotEmpty
+        ? contact.name.characters.first
+        : '?';
 
     return ListTile(
       onTap: onTap,
@@ -461,7 +502,9 @@ class _ContactTile extends StatelessWidget {
         _formatPhone(contact.phone),
         style: TextStyle(
           fontSize: 11.sp,
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
           letterSpacing: 0.5,
         ),
       ),

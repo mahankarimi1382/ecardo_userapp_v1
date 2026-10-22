@@ -15,51 +15,144 @@ class RemittanceSuccessSection extends StatelessWidget {
     final c = Get.find<RemittanceController>();
     final l = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
     return Obx(() {
       final r = c.createdRemittance.value;
-      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Center(child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: Column(children: [
-            Container(width: 72.w, height: 72.w, decoration: BoxDecoration(color: isDark ? AppColors.success.withValues(alpha: 0.2) : AppColors.successContainer, shape: BoxShape.circle),
-              child: Icon(Icons.check_circle, color: AppColors.success, size: 48.sp)),
-            SizedBox(height: 12.h),
-            Text(l.remittanceRequestSubmitted, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-            SizedBox(height: 4.h),
-            Text(l.remittanceRequestCreated, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
-          ]),
-        )),
-        SizedBox(height: 16.h),
-        if (r != null) Container(
-          padding: EdgeInsets.all(14.w),
-          decoration: BoxDecoration(
-            color: isDark ? AppColors.darkPrimaryContainer : AppColors.lightPrimaryContainer,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.2)),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: Column(
+                children: [
+                  Container(
+                    width: 72.w,
+                    height: 72.w,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.success.withValues(alpha: 0.2)
+                          : AppColors.successContainer,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.check_circle,
+                      color: AppColors.success,
+                      size: 48.sp,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Text(
+                    l.remittanceRequestSubmitted,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w700,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    l.remittanceRequestCreated,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            _Info('Tracking UUID', r.uuid),
-            SizedBox(height: 8.h),
-            _Info('Reference', r.trx),
-            SizedBox(height: 8.h),
-            _Info(l.remittanceDocumentType, c.localizedStatusLabel(r.status)),
-            SizedBox(height: 8.h),
-            _Info(l.remittanceSendAmount, c.formatAmount(r.sendAmount, currencyId: r.sendCurrencyId)),
-            SizedBox(height: 8.h),
-            _Info(l.remittanceReceiveAmount, c.formatAmount(r.receiveAmount, currencyId: r.receiveCurrencyId)),
-          ]),
-        ),
-        SizedBox(height: 24.h),
-        Text(l.remittanceUploadDocuments, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-        SizedBox(height: 4.h),
-        Text(l.remittanceUploadHint, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
-        SizedBox(height: 16.h),
-        Obx(() => c.pendingAttachments.isEmpty ? const SizedBox.shrink() : Column(children: c.pendingAttachments.asMap().entries.map((e) => _AttachmentItem(path: e.value['path'] ?? '', type: e.value['type'] ?? 'other', onRemove: () => c.removeAttachmentAt(e.key), l: l)).toList())),
-        SizedBox(height: 12.h),
-        _AddDocumentButton(controller: c, l: l),
-      ]);
+          SizedBox(height: 16.h),
+          if (r != null)
+            Container(
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? AppColors.darkPrimaryContainer
+                    : AppColors.lightPrimaryContainer,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: primaryColor.withValues(alpha: isDark ? 0.35 : 0.2),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Info('Tracking UUID', r.uuid),
+                  SizedBox(height: 8.h),
+                  _Info('Reference', r.trx),
+                  SizedBox(height: 8.h),
+                  _Info(
+                    l.remittanceDocumentType,
+                    c.localizedStatusLabel(r.status),
+                  ),
+                  SizedBox(height: 8.h),
+                  _Info(
+                    l.remittanceSendAmount,
+                    c.formatAmount(r.sendAmount, currencyId: r.sendCurrencyId),
+                  ),
+                  SizedBox(height: 8.h),
+                  _Info(
+                    l.remittanceReceiveAmount,
+                    c.formatAmount(
+                      r.receiveAmount,
+                      currencyId: r.receiveCurrencyId,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          SizedBox(height: 24.h),
+          Text(
+            l.remittanceUploadDocuments,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+            ),
+          ),
+          SizedBox(height: 4.h),
+          Text(
+            l.remittanceUploadHint,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Obx(
+            () => c.pendingAttachments.isEmpty
+                ? const SizedBox.shrink()
+                : Column(
+                    children: c.pendingAttachments
+                        .asMap()
+                        .entries
+                        .map(
+                          (e) => _AttachmentItem(
+                            path: e.value['path'] ?? '',
+                            type: e.value['type'] ?? 'other',
+                            onRemove: () => c.removeAttachmentAt(e.key),
+                            l: l,
+                          ),
+                        )
+                        .toList(),
+                  ),
+          ),
+          SizedBox(height: 12.h),
+          _AddDocumentButton(controller: c, l: l),
+        ],
+      );
     });
   }
 }
@@ -70,11 +163,34 @@ class _Info extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(label, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
-      SizedBox(width: 12.w),
-      Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary, fontWeight: FontWeight.w600))),
-    ]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+          ),
+        ),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -82,12 +198,19 @@ class _AttachmentItem extends StatelessWidget {
   final String path, type;
   final VoidCallback onRemove;
   final AppLocalizations l;
-  const _AttachmentItem({required this.path, required this.type, required this.onRemove, required this.l});
+  const _AttachmentItem({
+    required this.path,
+    required this.type,
+    required this.onRemove,
+    required this.l,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
     return Container(
       margin: EdgeInsets.only(bottom: 8.h),
@@ -95,27 +218,65 @@ class _AttachmentItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
-      child: Row(children: [
-        Icon(_icon(type), color: primaryColor, size: 20.sp),
-        SizedBox(width: 10.w),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(_label(type), style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-          Text(path.split('/').last, style: TextStyle(fontSize: 10.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary), maxLines: 1, overflow: TextOverflow.ellipsis),
-        ])),
-        IconButton(icon: Icon(Icons.close, color: AppColors.error, size: 18.sp), onPressed: onRemove, padding: EdgeInsets.zero, constraints: const BoxConstraints()),
-      ]),
+      child: Row(
+        children: [
+          Icon(_icon(type), color: primaryColor, size: 20.sp),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _label(type),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                  ),
+                ),
+                Text(
+                  path.split('/').last,
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.close, color: AppColors.error, size: 18.sp),
+            onPressed: onRemove,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        ],
+      ),
     );
   }
 
   String _label(String t) => switch (t) {
-    'kyc'              => l.remittanceDocTypeKyc,
-    'payment_receipt'  => l.remittanceDocTypePaymentReceipt,
-    'payout_receipt'   => l.remittanceDocTypePayoutReceipt,
-    _                  => l.remittanceDocTypeOther,
+    'kyc' => l.remittanceDocTypeKyc,
+    'payment_receipt' => l.remittanceDocTypePaymentReceipt,
+    'payout_receipt' => l.remittanceDocTypePayoutReceipt,
+    _ => l.remittanceDocTypeOther,
   };
-  IconData _icon(String t) => switch (t) { 'kyc' => Icons.badge, 'payment_receipt' => Icons.receipt, 'payout_receipt' => Icons.payment, _ => Icons.insert_drive_file };
+  IconData _icon(String t) => switch (t) {
+    'kyc' => Icons.badge,
+    'payment_receipt' => Icons.receipt,
+    'payout_receipt' => Icons.payment,
+    _ => Icons.insert_drive_file,
+  };
 }
 
 class _AddDocumentButton extends StatelessWidget {
@@ -126,74 +287,123 @@ class _AddDocumentButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
-    return Obx(() => InkWell(
-          onTap: controller.isUploadLoading.value ? null : () => _showAddDialog(context),
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 14.h),
-            decoration: BoxDecoration(border: Border.all(color: primaryColor, width: 1.5), borderRadius: BorderRadius.circular(8)),
-            child: Center(child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(Icons.add, color: primaryColor, size: 18.sp),
-              SizedBox(width: 6.w),
-              Text(l.remittanceAddDocument, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: primaryColor)),
-            ])),
+    return Obx(
+      () => InkWell(
+        onTap: controller.isUploadLoading.value
+            ? null
+            : () => _showAddDialog(context),
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 14.h),
+          decoration: BoxDecoration(
+            border: Border.all(color: primaryColor, width: 1.5),
+            borderRadius: BorderRadius.circular(8),
           ),
-        ));
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, color: primaryColor, size: 18.sp),
+                SizedBox(width: 6.w),
+                Text(
+                  l.remittanceAddDocument,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                    color: primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   void _showAddDialog(BuildContext context) {
     String selectedType = 'kyc';
-    showDialog(context: context, builder: (ctx) => StatefulBuilder(builder: (ctx, setState) => AlertDialog(
-      title: Text(l.remittanceAddDocument),
-      content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(l.remittanceDocumentType),
-        SizedBox(height: 8.h),
-        DropdownButton<String>(value: selectedType, isExpanded: true,
-          items: [
-            DropdownMenuItem(value: 'kyc', child: Text(l.remittanceDocTypeKyc)),
-            DropdownMenuItem(value: 'payment_receipt', child: Text(l.remittanceDocTypePaymentReceipt)),
-            DropdownMenuItem(value: 'payout_receipt', child: Text(l.remittanceDocTypePayoutReceipt)),
-            DropdownMenuItem(value: 'other', child: Text(l.remittanceDocTypeOther)),
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setState) => AlertDialog(
+          title: Text(l.remittanceAddDocument),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l.remittanceDocumentType),
+              SizedBox(height: 8.h),
+              DropdownButton<String>(
+                value: selectedType,
+                isExpanded: true,
+                items: [
+                  DropdownMenuItem(
+                    value: 'kyc',
+                    child: Text(l.remittanceDocTypeKyc),
+                  ),
+                  DropdownMenuItem(
+                    value: 'payment_receipt',
+                    child: Text(l.remittanceDocTypePaymentReceipt),
+                  ),
+                  DropdownMenuItem(
+                    value: 'payout_receipt',
+                    child: Text(l.remittanceDocTypePayoutReceipt),
+                  ),
+                  DropdownMenuItem(
+                    value: 'other',
+                    child: Text(l.remittanceDocTypeOther),
+                  ),
+                ],
+                onChanged: (v) {
+                  if (v != null) setState(() => selectedType = v);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: Text(l.remittanceCancel),
+            ),
+            // v1.0.23+23 (R-2) — Three real pickers instead of the previous
+            // single fake "Add" button that just inserted a hardcoded path.
+            // Each picker calls the controller with the chosen `selectedType`
+            // so the type is preserved across all three pickers.
+            TextButton(
+              onPressed: () async {
+                Get.back();
+                await controller.pickAttachmentFile(
+                  type: selectedType,
+                  imageSource: ImageSource.camera,
+                );
+              },
+              child: Text(l.remittanceTakePhoto),
+            ),
+            TextButton(
+              onPressed: () async {
+                Get.back();
+                await controller.pickAttachmentFile(
+                  type: selectedType,
+                  imageSource: ImageSource.gallery,
+                );
+              },
+              child: Text(l.remittanceChooseFromGallery),
+            ),
+            TextButton(
+              onPressed: () async {
+                Get.back();
+                await controller.pickAttachmentAnyFile(type: selectedType);
+              },
+              child: Text(l.remittanceChooseFile),
+            ),
           ],
-          onChanged: (v) { if (v != null) setState(() => selectedType = v); },
         ),
-      ]),
-      actions: [
-        TextButton(onPressed: () => Get.back(), child: Text(l.remittanceCancel)),
-        // v1.0.23+23 (R-2) — Three real pickers instead of the previous
-        // single fake "Add" button that just inserted a hardcoded path.
-        // Each picker calls the controller with the chosen `selectedType`
-        // so the type is preserved across all three pickers.
-        TextButton(
-          onPressed: () async {
-            Get.back();
-            await controller.pickAttachmentFile(
-              type: selectedType,
-              imageSource: ImageSource.camera,
-            );
-          },
-          child: Text(l.remittanceTakePhoto),
-        ),
-        TextButton(
-          onPressed: () async {
-            Get.back();
-            await controller.pickAttachmentFile(
-              type: selectedType,
-              imageSource: ImageSource.gallery,
-            );
-          },
-          child: Text(l.remittanceChooseFromGallery),
-        ),
-        TextButton(
-          onPressed: () async {
-            Get.back();
-            await controller.pickAttachmentAnyFile(type: selectedType);
-          },
-          child: Text(l.remittanceChooseFile),
-        ),
-      ],
-    )));
+      ),
+    );
   }
 }

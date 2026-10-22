@@ -94,9 +94,11 @@ class _PaymentLinksAmountStepSectionState
                         isFocused: controller.isAmountFocused.value,
                         isSuffixIconCompact: false,
                         suffixIcon: Obx(() {
-                          final code = controller.currency.value?.code ??
-                              Get.find<SettingsService>()
-                                  .getSetting("site_currency") ??
+                          final code =
+                              controller.currency.value?.code ??
+                              Get.find<SettingsService>().getSetting(
+                                "site_currency",
+                              ) ??
                               "USD";
                           return Container(
                             margin: const EdgeInsetsDirectional.only(
@@ -108,10 +110,12 @@ class _PaymentLinksAmountStepSectionState
                             ),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? AppColors.darkPrimary
-                                      .withValues(alpha: 0.15)
-                                  : AppColors.lightPrimary
-                                      .withValues(alpha: 0.08),
+                                  ? AppColors.darkPrimary.withValues(
+                                      alpha: 0.15,
+                                    )
+                                  : AppColors.lightPrimary.withValues(
+                                      alpha: 0.08,
+                                    ),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusSm,
                               ),

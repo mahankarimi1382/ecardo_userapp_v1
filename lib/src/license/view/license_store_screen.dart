@@ -39,7 +39,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -69,14 +71,30 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                     Get.to(() => const LicenseMyLicensesScreen());
                   },
                   child: Container(
-                    constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                    constraints: BoxConstraints(
+                      minWidth: 44.w,
+                      minHeight: 44.h,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 6.h,
+                    ),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      color:
+                          (isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
+                              .withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                       border: Border.all(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.3),
+                        color:
+                            (isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(
@@ -85,7 +103,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                         Icon(
                           Icons.vpn_key_rounded,
                           size: AppSpacing.iconXs.sp,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
                         ),
                         SizedBox(width: 4.w),
                         Text(
@@ -99,7 +119,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary,
                           ),
                         ),
                       ],
@@ -114,40 +136,63 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
       body: Column(
         children: [
           Obx(() {
-            if (controller.hasBackendError.value || controller.products.isEmpty) {
+            if (controller.hasBackendError.value ||
+                controller.products.isEmpty) {
               return FinancialServiceUnavailableBanner(
                 serviceNameFa: 'فروشگاه لایسنس‌های نرم‌افزار',
                 serviceNameEn: 'Software License Store',
                 serviceNameAr: 'متجر التراخيص الرقمية',
                 serviceNameZh: '数字软件授权商城',
                 isCompact: true,
-                onRetry: () => controller.fetchCatalog(category: controller.selectedCategory.value),
+                onRetry: () => controller.fetchCatalog(
+                  category: controller.selectedCategory.value,
+                ),
               );
             }
             return const SizedBox.shrink();
           }),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.xs.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg.w,
+              vertical: AppSpacing.xs.h,
+            ),
             child: Row(
               children: [
                 Expanded(
                   child: Semantics(
                     button: true,
-                    label: l10nPick(context, fa: 'راهنمای لایسنس‌ها', en: 'Licenses Guide', ar: 'دليل التراخيص', zh: '授权指南'),
+                    label: l10nPick(
+                      context,
+                      fa: 'راهنمای لایسنس‌ها',
+                      en: 'Licenses Guide',
+                      ar: 'دليل التراخيص',
+                      zh: '授权指南',
+                    ),
                     child: InkWell(
                       onTap: () {
                         HapticFeedback.lightImpact();
                         Get.to(() => const LicenseIntroScreen());
                       },
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                       child: Container(
                         constraints: BoxConstraints(minHeight: 44.h),
-                        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.h,
+                          horizontal: 8.w,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          color: isDark
+                              ? AppColors.darkCard
+                              : AppColors.lightCard,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                           ),
                         ),
                         child: Row(
@@ -156,15 +201,25 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                             Icon(
                               Icons.info_outline_rounded,
                               size: AppSpacing.iconXs.sp,
-                              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                              color: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary,
                             ),
                             SizedBox(width: 6.w),
                             Text(
-                              l10nPick(context, fa: 'راهنمای لایسنس‌ها', en: 'Licenses Guide', ar: 'دليل التراخيص', zh: '授权指南'),
+                              l10nPick(
+                                context,
+                                fa: 'راهنمای لایسنس‌ها',
+                                en: 'Licenses Guide',
+                                ar: 'دليل التراخيص',
+                                zh: '授权指南',
+                              ),
                               style: TextStyle(
                                 fontSize: 11.5.sp,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                           ],
@@ -177,34 +232,63 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                 Expanded(
                   child: Semantics(
                     button: true,
-                    label: l10nPick(context, fa: 'صندوق لایسنس‌های من', en: 'Key Vault', ar: 'خزينة تراخيصي', zh: '我的授权库'),
+                    label: l10nPick(
+                      context,
+                      fa: 'صندوق لایسنس‌های من',
+                      en: 'Key Vault',
+                      ar: 'خزينة تراخيصي',
+                      zh: '我的授权库',
+                    ),
                     child: InkWell(
                       onTap: () {
                         HapticFeedback.lightImpact();
                         Get.to(() => const LicenseMyLicensesScreen());
                       },
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                       child: Container(
                         constraints: BoxConstraints(minHeight: 44.h),
-                        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 8.w),
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.h,
+                          horizontal: 8.w,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          color: isDark
+                              ? AppColors.darkCard
+                              : AppColors.lightCard,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                           ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.shield_outlined, size: AppSpacing.iconXs.sp, color: AppColors.success),
+                            Icon(
+                              Icons.shield_outlined,
+                              size: AppSpacing.iconXs.sp,
+                              color: AppColors.success,
+                            ),
                             SizedBox(width: 6.w),
                             Text(
-                              l10nPick(context, fa: 'صندوق لایسنس‌های من', en: 'Key Vault', ar: 'خزينة تراخيصي', zh: '我的授权库'),
+                              l10nPick(
+                                context,
+                                fa: 'صندوق لایسنس‌های من',
+                                en: 'Key Vault',
+                                ar: 'خزينة تراخيصي',
+                                zh: '我的授权库',
+                              ),
                               style: TextStyle(
                                 fontSize: 11.5.sp,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                           ],
@@ -219,7 +303,8 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
           _buildCategoryChips(isDark),
           Expanded(
             child: Obx(() {
-              if (controller.isLoadingCatalog.value && controller.products.isEmpty) {
+              if (controller.isLoadingCatalog.value &&
+                  controller.products.isEmpty) {
                 return _buildCatalogSkeleton(isDark);
               }
 
@@ -228,7 +313,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: EcardoEmptyState(
                     iconData: Icons.inventory_2_outlined,
-                    glowColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    glowColor: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                     title: l10nPick(
                       context,
                       en: 'No Licenses Found',
@@ -243,7 +330,13 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                       ar: 'حاول اختيار تصنيف آخر أو استكشف جميع التراخيص البرمجية المعتمدة.',
                       zh: '请尝试选择其他分类或浏览全部官方正版软件许可证。',
                     ),
-                    primaryActionLabel: l10nPick(context, en: 'View All', fa: 'مشاهده همه', ar: 'عرض الكل', zh: '查看全部'),
+                    primaryActionLabel: l10nPick(
+                      context,
+                      en: 'View All',
+                      fa: 'مشاهده همه',
+                      ar: 'عرض الكل',
+                      zh: '查看全部',
+                    ),
                     onPrimaryAction: () {
                       HapticFeedback.selectionClick();
                       controller.selectedCategory.value = 'all';
@@ -254,12 +347,18 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
               }
 
               return RefreshIndicator(
-                onRefresh: () => controller.fetchCatalog(category: controller.selectedCategory.value),
+                onRefresh: () => controller.fetchCatalog(
+                  category: controller.selectedCategory.value,
+                ),
                 child: ListView.separated(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg.w,
+                    vertical: AppSpacing.md.h,
+                  ),
                   itemCount: controller.products.length,
-                  separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+                  separatorBuilder: (_, _) =>
+                      SizedBox(height: AppSpacing.cardGap.h),
                   itemBuilder: (context, index) {
                     final product = controller.products[index];
                     return _buildProductCard(context, product, isDark: isDark);
@@ -297,7 +396,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                   width: 44.w,
                   height: 44.w,
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightSurfaceVariant,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   ),
                 ),
@@ -305,7 +406,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                 Expanded(
                   child: Container(
                     height: 18.h,
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightSurfaceVariant,
                   ),
                 ),
               ],
@@ -314,7 +417,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
             Container(
               height: 14.h,
               width: 180.w,
-              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+              color: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightSurfaceVariant,
             ),
           ],
         ),
@@ -325,10 +430,34 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
   Widget _buildCategoryChips(bool isDark) {
     final categories = [
       {'key': 'all', 'en': 'All', 'fa': 'همه', 'ar': 'الكل', 'zh': '全部'},
-      {'key': 'software', 'en': 'Software', 'fa': 'نرم‌افزار', 'ar': 'البرمجيات', 'zh': '软件'},
-      {'key': 'developer', 'en': 'Developer', 'fa': 'توسعه‌دهندگان', 'ar': 'المطورين', 'zh': '开发者'},
-      {'key': 'ai', 'en': 'AI Services', 'fa': 'هوش مصنوعی', 'ar': 'الذكاء الاصطناعي', 'zh': '人工智能'},
-      {'key': 'security', 'en': 'Security', 'fa': 'امنیت و آنتی‌ویروس', 'ar': 'الأمان', 'zh': '安全'},
+      {
+        'key': 'software',
+        'en': 'Software',
+        'fa': 'نرم‌افزار',
+        'ar': 'البرمجيات',
+        'zh': '软件',
+      },
+      {
+        'key': 'developer',
+        'en': 'Developer',
+        'fa': 'توسعه‌دهندگان',
+        'ar': 'المطورين',
+        'zh': '开发者',
+      },
+      {
+        'key': 'ai',
+        'en': 'AI Services',
+        'fa': 'هوش مصنوعی',
+        'ar': 'الذكاء الاصطناعي',
+        'zh': '人工智能',
+      },
+      {
+        'key': 'security',
+        'en': 'Security',
+        'fa': 'امنیت و آنتی‌ویروس',
+        'ar': 'الأمان',
+        'zh': '安全',
+      },
     ];
 
     return Container(
@@ -362,12 +491,18 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                     fontWeight: active ? FontWeight.bold : FontWeight.normal,
                     color: active
                         ? (isDark ? AppColors.deepBlack : AppColors.white)
-                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                        : (isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary),
                   ),
                 ),
                 selected: active,
-                selectedColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                backgroundColor: isDark ? AppColors.darkCard : AppColors.lightCard,
+                selectedColor: isDark
+                    ? AppColors.darkPrimary
+                    : AppColors.lightPrimary,
+                backgroundColor: isDark
+                    ? AppColors.darkCard
+                    : AppColors.lightCard,
                 onSelected: (val) {
                   if (val) {
                     HapticFeedback.selectionClick();
@@ -383,7 +518,11 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, LicenseProductItem product, {required bool isDark}) {
+  Widget _buildProductCard(
+    BuildContext context,
+    LicenseProductItem product, {
+    required bool isDark,
+  }) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg.r),
       decoration: BoxDecoration(
@@ -410,12 +549,16 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                 width: 44.w,
                 height: 44.w,
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
+                  color:
+                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                          .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                 ),
                 child: Icon(
                   Icons.apps_rounded,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                   size: AppSpacing.iconMd.sp,
                 ),
               ),
@@ -429,7 +572,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     if (product.vendor != null) ...[
@@ -438,7 +583,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                         product.vendor!,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
@@ -447,8 +594,20 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
               ),
               Semantics(
                 label: product.isInStock
-                    ? l10nPick(context, en: 'In Stock, ${product.stockCount} available', fa: 'موجود در انبار، ${product.stockCount} عدد', ar: 'متوفر', zh: '现货')
-                    : l10nPick(context, en: 'Out of Stock', fa: 'ناموجود در انبار', ar: 'نفد', zh: '缺货'),
+                    ? l10nPick(
+                        context,
+                        en: 'In Stock, ${product.stockCount} available',
+                        fa: 'موجود در انبار، ${product.stockCount} عدد',
+                        ar: 'متوفر',
+                        zh: '现货',
+                      )
+                    : l10nPick(
+                        context,
+                        en: 'Out of Stock',
+                        fa: 'ناموجود در انبار',
+                        ar: 'نفد',
+                        zh: '缺货',
+                      ),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
@@ -459,12 +618,26 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                   ),
                   child: Text(
                     product.isInStock
-                        ? l10nPick(context, en: 'In Stock (${product.stockCount})', fa: 'موجود (${product.stockCount})', ar: 'متوفر', zh: '现货')
-                        : l10nPick(context, en: 'Out of Stock', fa: 'ناموجود', ar: 'نفد', zh: '缺货'),
+                        ? l10nPick(
+                            context,
+                            en: 'In Stock (${product.stockCount})',
+                            fa: 'موجود (${product.stockCount})',
+                            ar: 'متوفر',
+                            zh: '现货',
+                          )
+                        : l10nPick(
+                            context,
+                            en: 'Out of Stock',
+                            fa: 'ناموجود',
+                            ar: 'نفد',
+                            zh: '缺货',
+                          ),
                     style: TextStyle(
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w600,
-                      color: product.isInStock ? AppColors.success : AppColors.error,
+                      color: product.isInStock
+                          ? AppColors.success
+                          : AppColors.error,
                     ),
                   ),
                 ),
@@ -479,7 +652,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
                 height: 1.3,
               ),
             ),
@@ -492,10 +667,18 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10nPick(context, en: 'Starting from', fa: 'شروع قیمت از', ar: 'يبدأ من', zh: '起售价'),
+                    l10nPick(
+                      context,
+                      en: 'Starting from',
+                      fa: 'شروع قیمت از',
+                      ar: 'يبدأ من',
+                      zh: '起售价',
+                    ),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextTertiary,
                     ),
                   ),
                   Text(
@@ -503,7 +686,9 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w900,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
                     ),
                   ),
                 ],
@@ -547,8 +732,12 @@ class _LicenseStoreScreenState extends State<LicenseStoreScreen> {
                       child: CommonButton(
                         width: 120,
                         height: 44,
-                        backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
-                        textColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        backgroundColor: isDark
+                            ? AppColors.darkSurfaceVariant
+                            : AppColors.lightSurfaceVariant,
+                        textColor: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                         text: l10nPick(
                           context,
                           en: 'Notify Me',

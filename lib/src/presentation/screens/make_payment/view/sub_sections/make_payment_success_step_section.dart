@@ -68,9 +68,8 @@ class _MakePaymentSuccessStepSectionState
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: walletCode,
       siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      ) ?? '2',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
       isCrypto: currentWallet?.isCrypto ?? false,
     );
 
@@ -78,7 +77,9 @@ class _MakePaymentSuccessStepSectionState
     final rawAmount = txData?["amount"] ?? controller.amountController.text;
     final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
     final rawCharge = txData?["charge"];
-    final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? controller.charge.value;
+    final chargeVal =
+        double.tryParse(rawCharge?.toString() ?? '0') ??
+        controller.charge.value;
 
     final tnxId = _nonEmpty(txData?["tnx"]?.toString());
     final createdAt = txData?["created_at"]?.toString() ?? '';
@@ -124,7 +125,9 @@ class _MakePaymentSuccessStepSectionState
                         zh: '商户付款凭证',
                       ),
                       transactionReference: tnxId,
-                      formattedTimestamp: createdAt.isNotEmpty ? createdAt : null,
+                      formattedTimestamp: createdAt.isNotEmpty
+                          ? createdAt
+                          : null,
                       primaryAmount: amount,
                       primaryCurrency: walletCode,
                       primaryDecimals: calculateDecimals,
@@ -145,26 +148,35 @@ class _MakePaymentSuccessStepSectionState
                           copyText: merchantMid,
                         ),
                         EcardoReceiptItem(
-                          label: localization.makePaymentSuccessStepSectionWalletName,
+                          label: localization
+                              .makePaymentSuccessStepSectionWalletName,
                           value: currentWallet?.name ?? 'Wallet',
                         ),
                         EcardoReceiptItem(
-                          label: localization.makePaymentSuccessStepSectionPaymentMethod,
-                          value: '$walletCode (${currentWallet?.name ?? "Wallet"})',
+                          label: localization
+                              .makePaymentSuccessStepSectionPaymentMethod,
+                          value:
+                              '$walletCode (${currentWallet?.name ?? "Wallet"})',
                         ),
                         EcardoReceiptItem(
-                          label: localization.makePaymentSuccessStepSectionCharge,
+                          label:
+                              localization.makePaymentSuccessStepSectionCharge,
                           amount: chargeVal,
                           currency: walletCode,
                           decimals: calculateDecimals,
                         ),
                         EcardoReceiptItem(
-                          label: localization.makePaymentSuccessStepSectionFinalAmount,
-                          amount: totalAmount > 0 ? totalAmount : amount + chargeVal,
+                          label: localization
+                              .makePaymentSuccessStepSectionFinalAmount,
+                          amount: totalAmount > 0
+                              ? totalAmount
+                              : amount + chargeVal,
                           currency: walletCode,
                           decimals: calculateDecimals,
                           isHighlighted: true,
-                          valueColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                          valueColor: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.deepBlack,
                         ),
                       ],
                       note: l10nPick(
@@ -184,7 +196,8 @@ class _MakePaymentSuccessStepSectionState
 
                     // 3. Action Buttons
                     CommonButton(
-                      text: localization.makePaymentSuccessStepSectionBackHomeButton,
+                      text: localization
+                          .makePaymentSuccessStepSectionBackHomeButton,
                       onPressed: () {
                         HapticFeedback.lightImpact();
                         controller.clearFields();

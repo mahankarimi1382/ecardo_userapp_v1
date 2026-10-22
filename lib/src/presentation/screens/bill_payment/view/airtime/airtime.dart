@@ -66,7 +66,7 @@ class _AirtimeState extends State<Airtime> {
                     : controller.currentStep.value == 1
                     ? AirtimeReviewStepSection()
                     : // PAYMENT-FIX (P-2): backend-driven pending/success step.
-                    controller.currentStep.value == 2
+                      controller.currentStep.value == 2
                     ? _buildResultStep(context)
                     : SizedBox(),
               ),

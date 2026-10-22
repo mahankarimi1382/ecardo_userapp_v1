@@ -5,9 +5,8 @@ class VerificationStatusResponseModel {
 
   VerificationStatusResponseModel({this.status, this.message, this.data});
 
-  factory VerificationStatusResponseModel.fromJson(
-    Map<String, dynamic> json,
-  ) => VerificationStatusResponseModel(
+  factory VerificationStatusResponseModel.fromJson(Map<String, dynamic> json) =>
+      VerificationStatusResponseModel(
         status: json["status"],
         message: json["message"],
         data: json["data"] == null ? null : Data.fromJson(json["data"]),

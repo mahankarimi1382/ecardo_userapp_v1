@@ -116,44 +116,50 @@ void main() {
   });
 
   group('DigitalReceiptTicket Account Number Masking Tests', () {
-    testWidgets('masks fromAccount and toAccount on receipt and hides raw values',
-        (tester) async {
-      tester.view.physicalSize = const Size(1080, 2400);
-      tester.view.devicePixelRatio = 2.0;
-      addTearDown(() => tester.view.resetPhysicalSize());
+    testWidgets(
+      'masks fromAccount and toAccount on receipt and hides raw values',
+      (tester) async {
+        tester.view.physicalSize = const Size(1080, 2400);
+        tester.view.devicePixelRatio = 2.0;
+        addTearDown(() => tester.view.resetPhysicalSize());
 
-      const rawFromAccount = 'IR820170000000123456789012';
-      const rawToAccount = '6037997123456789';
+        const rawFromAccount = 'IR820170000000123456789012';
+        const rawToAccount = '6037997123456789';
 
-      final maskedFrom = WithdrawDestinationCard.maskAccountNumber(rawFromAccount);
-      final maskedTo = WithdrawDestinationCard.maskAccountNumber(rawToAccount);
+        final maskedFrom = WithdrawDestinationCard.maskAccountNumber(
+          rawFromAccount,
+        );
+        final maskedTo = WithdrawDestinationCard.maskAccountNumber(
+          rawToAccount,
+        );
 
-      expect(maskedFrom, 'IR82 •••• •••• •••• 9012');
-      expect(maskedTo, '•••• •••• •••• 6789');
+        expect(maskedFrom, 'IR82 •••• •••• •••• 9012');
+        expect(maskedTo, '•••• •••• •••• 6789');
 
-      await tester.pumpWidget(
-        _wrapTestWidget(
-          const DigitalReceiptTicket(
-            title: 'Transfer Receipt',
-            transactionId: 'TX-123456',
-            status: ReceiptStatus.success,
-            primaryAmount: 500.0,
-            primaryCurrency: 'USD',
-            fromAccount: rawFromAccount,
-            toAccount: rawToAccount,
+        await tester.pumpWidget(
+          _wrapTestWidget(
+            const DigitalReceiptTicket(
+              title: 'Transfer Receipt',
+              transactionId: 'TX-123456',
+              status: ReceiptStatus.success,
+              primaryAmount: 500.0,
+              primaryCurrency: 'USD',
+              fromAccount: rawFromAccount,
+              toAccount: rawToAccount,
+            ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      // Masked values should be displayed in the UI
-      expect(find.text(maskedFrom), findsOneWidget);
-      expect(find.text(maskedTo), findsOneWidget);
+        // Masked values should be displayed in the UI
+        expect(find.text(maskedFrom), findsOneWidget);
+        expect(find.text(maskedTo), findsOneWidget);
 
-      // Raw unmasked account numbers should NEVER be displayed
-      expect(find.text(rawFromAccount), findsNothing);
-      expect(find.text(rawToAccount), findsNothing);
-    });
+        // Raw unmasked account numbers should NEVER be displayed
+        expect(find.text(rawFromAccount), findsNothing);
+        expect(find.text(rawToAccount), findsNothing);
+      },
+    );
   });
 
   group('NetworkErrorHelper Timeout Detection Tests', () {
@@ -190,19 +196,23 @@ void main() {
       expect(NetworkErrorHelper.isTimeout('Insufficient funds'), isFalse);
     });
 
-    test('NetworkErrorHelper.from returns timeout kind for timeout exceptions', () {
-      final err = DioException(
-        requestOptions: RequestOptions(path: '/test'),
-        type: DioExceptionType.receiveTimeout,
-      );
-      final info = NetworkErrorHelper.from(err);
-      expect(info.kind, NetworkErrorKind.timeout);
-    });
+    test(
+      'NetworkErrorHelper.from returns timeout kind for timeout exceptions',
+      () {
+        final err = DioException(
+          requestOptions: RequestOptions(path: '/test'),
+          type: DioExceptionType.receiveTimeout,
+        );
+        final info = NetworkErrorHelper.from(err);
+        expect(info.kind, NetworkErrorKind.timeout);
+      },
+    );
   });
 
   group('P2P Controller Lifecycle Lazy-Binding Tests (ARC-02)', () {
-    testWidgets('MyAdsScreen reuses pre-registered controller without leak',
-        (tester) async {
+    testWidgets('MyAdsScreen reuses pre-registered controller without leak', (
+      tester,
+    ) async {
       final customController = Get.put<MyAdsController>(_TestMyAdsController());
       await tester.pumpWidget(_wrapTestWidget(const MyAdsScreen()));
       await tester.pump();
@@ -211,82 +221,99 @@ void main() {
       expect(identical(Get.find<MyAdsController>(), customController), isTrue);
     });
 
-    testWidgets('CreateAdScreen reuses pre-registered controller without leak',
-        (tester) async {
-      final customController =
-          Get.put<CreateAdController>(_TestCreateAdController());
-      await tester.pumpWidget(_wrapTestWidget(const CreateAdScreen()));
-      await tester.pump();
+    testWidgets(
+      'CreateAdScreen reuses pre-registered controller without leak',
+      (tester) async {
+        final customController = Get.put<CreateAdController>(
+          _TestCreateAdController(),
+        );
+        await tester.pumpWidget(_wrapTestWidget(const CreateAdScreen()));
+        await tester.pump();
 
-      expect(Get.isRegistered<CreateAdController>(), isTrue);
-      expect(identical(Get.find<CreateAdController>(), customController), isTrue);
-    });
+        expect(Get.isRegistered<CreateAdController>(), isTrue);
+        expect(
+          identical(Get.find<CreateAdController>(), customController),
+          isTrue,
+        );
+      },
+    );
 
     testWidgets(
-        'ApplyVerificationScreen reuses pre-registered controller without leak',
-        (tester) async {
-      final customController = Get.put<ApplyVerificationController>(
-        _TestApplyVerificationController(),
-      );
-      await tester.pumpWidget(_wrapTestWidget(const ApplyVerificationScreen()));
-      await tester.pump();
+      'ApplyVerificationScreen reuses pre-registered controller without leak',
+      (tester) async {
+        final customController = Get.put<ApplyVerificationController>(
+          _TestApplyVerificationController(),
+        );
+        await tester.pumpWidget(
+          _wrapTestWidget(const ApplyVerificationScreen()),
+        );
+        await tester.pump();
 
-      expect(Get.isRegistered<ApplyVerificationController>(), isTrue);
-      expect(
-        identical(Get.find<ApplyVerificationController>(), customController),
-        isTrue,
-      );
-    });
+        expect(Get.isRegistered<ApplyVerificationController>(), isTrue);
+        expect(
+          identical(Get.find<ApplyVerificationController>(), customController),
+          isTrue,
+        );
+      },
+    );
 
-    testWidgets('MyOrderScreen reuses pre-registered controller without leak',
-        (tester) async {
-      final customController =
-          Get.put<MyOrderController>(_TestMyOrderController());
+    testWidgets('MyOrderScreen reuses pre-registered controller without leak', (
+      tester,
+    ) async {
+      final customController = Get.put<MyOrderController>(
+        _TestMyOrderController(),
+      );
       await tester.pumpWidget(_wrapTestWidget(const MyOrderScreen()));
       await tester.pump();
 
       expect(Get.isRegistered<MyOrderController>(), isTrue);
-      expect(identical(Get.find<MyOrderController>(), customController), isTrue);
-    });
-
-    testWidgets('AddPaymentMethod reuses pre-registered controller without leak',
-        (tester) async {
-      Get.put<PaymentAccountController>(_TestPaymentAccountController());
-      final customController = Get.put<AddPaymentMethodController>(
-        _TestAddPaymentMethodController(),
-      );
-      await tester.pumpWidget(_wrapTestWidget(const AddPaymentMethod()));
-      await tester.pump();
-
-      expect(Get.isRegistered<AddPaymentMethodController>(), isTrue);
       expect(
-        identical(Get.find<AddPaymentMethodController>(), customController),
+        identical(Get.find<MyOrderController>(), customController),
         isTrue,
       );
     });
 
     testWidgets(
-        'EditPaymentAccount reuses pre-registered controller without leak',
-        (tester) async {
-      Get.put<PaymentAccountController>(_TestPaymentAccountController());
-      final customController = Get.put<EditPaymentAccountController>(
-        _TestEditPaymentAccountController(),
-      );
-      final account = PaymentAccount(
-        id: 1,
-        paymentMethod: PaymentMethod(name: 'Test'),
-      );
+      'AddPaymentMethod reuses pre-registered controller without leak',
+      (tester) async {
+        Get.put<PaymentAccountController>(_TestPaymentAccountController());
+        final customController = Get.put<AddPaymentMethodController>(
+          _TestAddPaymentMethodController(),
+        );
+        await tester.pumpWidget(_wrapTestWidget(const AddPaymentMethod()));
+        await tester.pump();
 
-      await tester.pumpWidget(
-        _wrapTestWidget(EditPaymentAccount(account: account)),
-      );
-      await tester.pump();
+        expect(Get.isRegistered<AddPaymentMethodController>(), isTrue);
+        expect(
+          identical(Get.find<AddPaymentMethodController>(), customController),
+          isTrue,
+        );
+      },
+    );
 
-      expect(Get.isRegistered<EditPaymentAccountController>(), isTrue);
-      expect(
-        identical(Get.find<EditPaymentAccountController>(), customController),
-        isTrue,
-      );
-    });
+    testWidgets(
+      'EditPaymentAccount reuses pre-registered controller without leak',
+      (tester) async {
+        Get.put<PaymentAccountController>(_TestPaymentAccountController());
+        final customController = Get.put<EditPaymentAccountController>(
+          _TestEditPaymentAccountController(),
+        );
+        final account = PaymentAccount(
+          id: 1,
+          paymentMethod: PaymentMethod(name: 'Test'),
+        );
+
+        await tester.pumpWidget(
+          _wrapTestWidget(EditPaymentAccount(account: account)),
+        );
+        await tester.pump();
+
+        expect(Get.isRegistered<EditPaymentAccountController>(), isTrue);
+        expect(
+          identical(Get.find<EditPaymentAccountController>(), customController),
+          isTrue,
+        );
+      },
+    );
   });
 }

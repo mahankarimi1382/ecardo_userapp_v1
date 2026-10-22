@@ -153,9 +153,9 @@ class TravelBottomNavigation extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: TravelTheme.shadowFor(context).first.color.withValues(
-                alpha: .06,
-              ),
+              color: TravelTheme.shadowFor(
+                context,
+              ).first.color.withValues(alpha: .06),
               blurRadius: 22,
               offset: const Offset(0, -6),
             ),
@@ -698,9 +698,7 @@ class TravelJourneyGuide extends StatelessWidget {
                   Container(
                     width: 18.w,
                     height: 2,
-                    color: index < currentStep
-                        ? primaryColor
-                        : borderColor,
+                    color: index < currentStep ? primaryColor : borderColor,
                   ),
               ],
             ],
@@ -756,7 +754,10 @@ String formatTravelDuration(String rawDuration, String lang) {
   if (trimmed.isEmpty) return '';
   if (lang != 'fa' && lang != 'ar') return trimmed;
 
-  final match = RegExp(r'(\d+)\s*h(?:ours?)?\s*(?:(\d+)\s*m(?:in(?:utes?)?)?)?', caseSensitive: false).firstMatch(trimmed);
+  final match = RegExp(
+    r'(\d+)\s*h(?:ours?)?\s*(?:(\d+)\s*m(?:in(?:utes?)?)?)?',
+    caseSensitive: false,
+  ).firstMatch(trimmed);
   if (match != null) {
     final h = match.group(1);
     final m = match.group(2);
@@ -914,7 +915,9 @@ class TravelErrorState extends StatelessWidget {
               width: 68.r,
               height: 68.r,
               decoration: BoxDecoration(
-                color: AppColors.errorContainer.withValues(alpha: isDark ? 0.2 : 0.7),
+                color: AppColors.errorContainer.withValues(
+                  alpha: isDark ? 0.2 : 0.7,
+                ),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: AppColors.error.withValues(alpha: 0.3),
@@ -928,7 +931,9 @@ class TravelErrorState extends StatelessWidget {
             ),
             SizedBox(height: AppSpacing.lg.h),
             TravelBidiText(
-              title ?? localization?.allControllerLoadError ?? 'Connection Error',
+              title ??
+                  localization?.allControllerLoadError ??
+                  'Connection Error',
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: TravelTheme.textPrimaryFor(context),
@@ -951,7 +956,10 @@ class TravelErrorState extends StatelessWidget {
               CommonButton(
                 width: 180.w,
                 height: 44.h,
-                text: retryText ?? localization?.noInternetConnectionRetryButton ?? 'Retry',
+                text:
+                    retryText ??
+                    localization?.noInternetConnectionRetryButton ??
+                    'Retry',
                 onPressed: () {
                   AppHaptics.light();
                   onRetry!();
@@ -982,8 +990,12 @@ class TravelShimmerLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = TravelTheme.isDark(context);
-    final baseColor = isDark ? const Color(0xFF262625) : const Color(0xFFE5E7EB);
-    final highlightColor = isDark ? const Color(0xFF383836) : const Color(0xFFF3F4F6);
+    final baseColor = isDark
+        ? const Color(0xFF262625)
+        : const Color(0xFFE5E7EB);
+    final highlightColor = isDark
+        ? const Color(0xFF383836)
+        : const Color(0xFFF3F4F6);
     final blockColor = isDark ? const Color(0xFF2E2E2D) : AppColors.white;
 
     return Shimmer.fromColors(
@@ -992,7 +1004,10 @@ class TravelShimmerLoading extends StatelessWidget {
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.md.w,
+          vertical: AppSpacing.sm.h,
+        ),
         itemCount: count,
         separatorBuilder: (_, _) => SizedBox(height: AppSpacing.md.h),
         itemBuilder: (_, index) => _buildShimmerItem(context, blockColor),
@@ -1019,7 +1034,9 @@ class TravelShimmerLoading extends StatelessWidget {
                     height: 44.r,
                     decoration: BoxDecoration(
                       color: blockColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                     ),
                   ),
                   SizedBox(width: AppSpacing.md.w),
@@ -1027,7 +1044,11 @@ class TravelShimmerLoading extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(width: 120.w, height: 14.h, color: blockColor),
+                        Container(
+                          width: 120.w,
+                          height: 14.h,
+                          color: blockColor,
+                        ),
                         SizedBox(height: 6.h),
                         Container(width: 80.w, height: 10.h, color: blockColor),
                       ],
@@ -1094,7 +1115,10 @@ class TravelShimmerLoading extends StatelessWidget {
       case TravelShimmerType.tile:
       case TravelShimmerType.list:
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.md.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.md.w,
+            vertical: AppSpacing.md.h,
+          ),
           decoration: BoxDecoration(
             color: blockColor,
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),

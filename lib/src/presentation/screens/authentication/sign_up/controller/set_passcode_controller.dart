@@ -75,17 +75,20 @@ class SetPasscodeController extends GetxController {
 
     if (!PasscodeHelper.isValidFormat(code)) {
       ToastHelper().showErrorToast(
-          loc?.twoFactorValidationEnterPasscode ?? fallback);
+        loc?.twoFactorValidationEnterPasscode ?? fallback,
+      );
       return;
     }
     if (!PasscodeHelper.isValidFormat(confirm)) {
       ToastHelper().showErrorToast(
-          loc?.twoFactorValidationEnterConfirmPasscode ?? fallback);
+        loc?.twoFactorValidationEnterConfirmPasscode ?? fallback,
+      );
       return;
     }
     if (code != confirm) {
       ToastHelper().showErrorToast(
-          loc?.twoFactorValidationPasscodesDoNotMatch ?? fallback);
+        loc?.twoFactorValidationPasscodesDoNotMatch ?? fallback,
+      );
       return;
     }
 
@@ -93,10 +96,7 @@ class SetPasscodeController extends GetxController {
     try {
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.passcodeActiveEndpoint,
-        data: {
-          'passcode': code,
-          'passcode_confirmation': confirm,
-        },
+        data: {'passcode': code, 'passcode_confirmation': confirm},
       );
       if (response.status == Status.completed) {
         PasscodeHelper.hasPasscodeFromStatus = true;

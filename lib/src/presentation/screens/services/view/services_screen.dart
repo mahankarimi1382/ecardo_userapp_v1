@@ -33,13 +33,7 @@ import 'package:ecardo_user/src/tour/screens/tour_list_screen.dart';
 import 'package:ecardo_user/src/visa/screens/visa_catalog_screen.dart';
 
 /// Categories supported by the Services Hub
-enum ServiceCategory {
-  all,
-  financial,
-  travel,
-  business,
-  transactions,
-}
+enum ServiceCategory { all, financial, travel, business, transactions }
 
 /// Metadata model encapsulating service categorization, visual design, and search synonyms
 class _HubItem {
@@ -69,10 +63,7 @@ class _SlideFadeTransition extends StatelessWidget {
   final Animation<double> animation;
   final Widget child;
 
-  const _SlideFadeTransition({
-    required this.animation,
-    required this.child,
-  });
+  const _SlideFadeTransition({required this.animation, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -117,10 +108,9 @@ class _QuickAccessTileState extends State<_QuickAccessTile> {
     final tile = widget.resolved.tile;
     final disabled = widget.resolved.state != TileState.available;
     final accentColor = widget.item.accentColor ?? AppColors.brandViolet;
-    final gradientColors = widget.item.gradientColors ?? [
-      accentColor,
-      accentColor.withValues(alpha: 0.8),
-    ];
+    final gradientColors =
+        widget.item.gradientColors ??
+        [accentColor, accentColor.withValues(alpha: 0.8)];
     final semanticLabel = disabled
         ? '${tile.title}, ${widget.resolved.state == TileState.kycLocked ? "KYC verification required" : "unavailable"}'
         : tile.title;
@@ -190,7 +180,9 @@ class _QuickAccessTileState extends State<_QuickAccessTile> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: gradientColors.first.withValues(alpha: 0.35),
+                              color: gradientColors.first.withValues(
+                                alpha: 0.35,
+                              ),
                               blurRadius: 8,
                               offset: const Offset(0, 3),
                             ),
@@ -223,7 +215,9 @@ class _QuickAccessTileState extends State<_QuickAccessTile> {
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: widget.isDark
-                                    ? AppColors.warmWhite.withValues(alpha: 0.15)
+                                    ? AppColors.warmWhite.withValues(
+                                        alpha: 0.15,
+                                      )
                                     : AppColors.black.withValues(alpha: 0.08),
                               ),
                             ),
@@ -292,9 +286,11 @@ class _InteractiveServiceCardState extends State<_InteractiveServiceCard> {
 
     final semanticLabel = StringBuffer(tile.title)
       ..write(badgeText != null ? ', $badgeText' : '')
-      ..write(disabled
-          ? ', ${widget.resolved.state == TileState.kycLocked ? "KYC verification required" : "unavailable"}'
-          : '');
+      ..write(
+        disabled
+            ? ', ${widget.resolved.state == TileState.kycLocked ? "KYC verification required" : "unavailable"}'
+            : '',
+      );
 
     return Semantics(
       label: semanticLabel.toString(),
@@ -387,9 +383,15 @@ class _InteractiveServiceCardState extends State<_InteractiveServiceCard> {
                                   height: 24,
                                   color: disabled
                                       ? (widget.isDark
-                                          ? AppColors.white.withValues(alpha: 0.30)
-                                          : AppColors.black.withValues(alpha: 0.30))
-                                      : (widget.isDark ? AppColors.white : null),
+                                            ? AppColors.white.withValues(
+                                                alpha: 0.30,
+                                              )
+                                            : AppColors.black.withValues(
+                                                alpha: 0.30,
+                                              ))
+                                      : (widget.isDark
+                                            ? AppColors.white
+                                            : null),
                                 ),
                         ),
 
@@ -442,7 +444,9 @@ class _InteractiveServiceCardState extends State<_InteractiveServiceCard> {
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: widget.isDark
-                                      ? AppColors.warmWhite.withValues(alpha: 0.15)
+                                      ? AppColors.warmWhite.withValues(
+                                          alpha: 0.15,
+                                        )
                                       : AppColors.black.withValues(alpha: 0.08),
                                 ),
                               ),
@@ -468,12 +472,15 @@ class _InteractiveServiceCardState extends State<_InteractiveServiceCard> {
                         style: TextStyle(
                           fontSize: 11,
                           height: 1.25,
-                          color: (widget.isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary)
-                              .withValues(
-                            alpha: disabled ? 0.40 : (widget.isDark ? 0.92 : 0.88),
-                          ),
+                          color:
+                              (widget.isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary)
+                                  .withValues(
+                                    alpha: disabled
+                                        ? 0.40
+                                        : (widget.isDark ? 0.92 : 0.88),
+                                  ),
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -598,7 +605,10 @@ class _ServicesScreenState extends State<ServicesScreen>
         category: ServiceCategory.financial,
         isQuickAccess: true,
         accentColor: AppColors.brandViolet,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         badgeText: (c) => l10nPick(
           c,
           en: 'Instant',
@@ -661,7 +671,10 @@ class _ServicesScreenState extends State<ServicesScreen>
         category: ServiceCategory.financial,
         isQuickAccess: true,
         accentColor: AppColors.mutedBlue,
-        gradientColors: const [AppColors.mutedBlue, AppColors.darkSecondaryContainer],
+        gradientColors: const [
+          AppColors.mutedBlue,
+          AppColors.darkSecondaryContainer,
+        ],
         searchKeywords: const [
           'واریز',
           'شارژ کیف پول',
@@ -732,7 +745,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: AppColors.brandViolet,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'کیف پول',
           'موجودی',
@@ -750,7 +766,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: AppColors.mainSoftBlue,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'تراکنش',
           'تاریخچه',
@@ -789,7 +808,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: AppColors.brandViolet,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         badgeText: (c) => l10nPick(
           c,
           en: 'Instant',
@@ -880,7 +902,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: AppColors.brandVioletDeep,
-        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.brandViolet,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'پرداخت',
           'خرید',
@@ -900,12 +925,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         category: ServiceCategory.financial,
         accentColor: AppColors.error,
         gradientColors: const [AppColors.error, AppColors.brandVioletDeep],
-        searchKeywords: const [
-          'نقد کردن',
-          'دریافت وجه',
-          'cash out',
-          'نقد',
-        ],
+        searchKeywords: const ['نقد کردن', 'دریافت وجه', 'cash out', 'نقد'],
         tile: ServiceTile(
           title: localization.otherServicesCashOut,
           icon: PngAssets.cashOutService,
@@ -917,7 +937,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: AppColors.brandViolet,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'هدیه',
           'کد هدیه',
@@ -937,7 +960,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.financial,
         accentColor: AppColors.mainSoftBlue,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'کارت هدیه',
           'گیفت کارت',
@@ -1087,7 +1113,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: AppColors.mainSoftBlue,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'قطار',
           'بلیط قطار',
@@ -1192,7 +1221,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: AppColors.brandViolet,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         badgeText: (c) => l10nPick(
           c,
           en: 'VIP',
@@ -1229,7 +1261,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: AppColors.brandViolet,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'مکان دیدنی',
           'گردشگری محلی',
@@ -1314,14 +1349,11 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: AppColors.brandVioletDeep,
-        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
-        searchKeywords: const [
-          'فروشگاه',
-          'خرید کالا',
-          'store',
-          'shop',
-          'متجر',
+        gradientColors: const [
+          AppColors.brandViolet,
+          AppColors.brandVioletDeep,
         ],
+        searchKeywords: const ['فروشگاه', 'خرید کالا', 'store', 'shop', 'متجر'],
         tile: ServiceTile(
           title: localization.travelServiceStore,
           iconData: Icons.shopping_bag_rounded,
@@ -1335,7 +1367,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: AppColors.mainSoftBlue,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'مترجم',
           'ترجمه',
@@ -1389,13 +1424,7 @@ class _ServicesScreenState extends State<ServicesScreen>
           tr: 'CNY',
         ),
         badgeColor: AppColors.info,
-        searchKeywords: const [
-          'علی پی',
-          'چین',
-          'یوان',
-          'alipay',
-          'china',
-        ],
+        searchKeywords: const ['علی پی', 'چین', 'یوان', 'alipay', 'china'],
         tile: ServiceTile(
           title: localization.travelServiceAliPay,
           iconData: Icons.account_balance_wallet_rounded,
@@ -1413,7 +1442,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.travel,
         accentColor: AppColors.success,
-        gradientColors: const [AppColors.success, AppColors.darkSecondaryContainer],
+        gradientColors: const [
+          AppColors.success,
+          AppColors.darkSecondaryContainer,
+        ],
         badgeText: (c) => l10nPick(
           c,
           en: 'RUB',
@@ -1500,7 +1532,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.business,
         accentColor: AppColors.brandVioletDeep,
-        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.brandViolet,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'حواله',
           'حواله ارزی',
@@ -1536,7 +1571,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.business,
         accentColor: AppColors.mainSoftBlue,
-        gradientColors: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.mainSoftBlue,
+          AppColors.brandVioletDeep,
+        ],
         badgeText: (c) => l10nPick(
           c,
           en: 'P2P',
@@ -1653,7 +1691,10 @@ class _ServicesScreenState extends State<ServicesScreen>
       _HubItem(
         category: ServiceCategory.business,
         accentColor: AppColors.brandVioletDeep,
-        gradientColors: const [AppColors.brandViolet, AppColors.brandVioletDeep],
+        gradientColors: const [
+          AppColors.brandViolet,
+          AppColors.brandVioletDeep,
+        ],
         searchKeywords: const [
           'سرمایه گذاری',
           'پروژه تجاری',
@@ -1809,13 +1850,15 @@ class _ServicesScreenState extends State<ServicesScreen>
           return item.category == _selectedCategory;
         }).toList();
 
-        final quickAccessItems =
-            allHubItems.where((i) => i.isQuickAccess).toList();
+        final quickAccessItems = allHubItems
+            .where((i) => i.isQuickAccess)
+            .toList();
 
         return RefreshIndicator(
           color: theme.colorScheme.primary,
-          backgroundColor:
-              isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          backgroundColor: isDark
+              ? AppColors.darkSurface
+              : AppColors.lightSurface,
           onRefresh: () => _homeController.loadData(),
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -1825,8 +1868,10 @@ class _ServicesScreenState extends State<ServicesScreen>
                 child: _SlideFadeTransition(
                   animation: _searchAnim,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 8,
+                    ),
                     child: _buildSearchBar(context, isDark),
                   ),
                 ),
@@ -1857,19 +1902,12 @@ class _ServicesScreenState extends State<ServicesScreen>
                     ),
                   ),
                 ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 12),
-                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 12)),
               ],
 
               // 4. Main Services Content / Search Results
               if (isSearching)
-                _buildSearchResultsSliver(
-                  context,
-                  filteredItems,
-                  badge,
-                  isDark,
-                )
+                _buildSearchResultsSliver(context, filteredItems, badge, isDark)
               else if (_selectedCategory == ServiceCategory.transactions)
                 SliverToBoxAdapter(
                   child: _SlideFadeTransition(
@@ -2069,8 +2107,10 @@ class _ServicesScreenState extends State<ServicesScreen>
                   },
                 )
               : null,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: InputBorder.none,
         ),
       ),
@@ -2127,8 +2167,9 @@ class _ServicesScreenState extends State<ServicesScreen>
           ru: 'Путешествия',
           tr: 'Seyahat',
         ),
-        count:
-            allItems.where((i) => i.category == ServiceCategory.travel).length,
+        count: allItems
+            .where((i) => i.category == ServiceCategory.travel)
+            .length,
         icon: Icons.flight_rounded,
       ),
       (
@@ -2188,7 +2229,10 @@ class _ServicesScreenState extends State<ServicesScreen>
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 220),
                 curve: Curves.easeOutCubic,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   gradient: isSelected
                       ? LinearGradient(
@@ -2212,18 +2256,19 @@ class _ServicesScreenState extends State<ServicesScreen>
                   border: Border.all(
                     color: isSelected
                         ? (isDark
-                            ? AppColors.mainSoftBlue
-                            : AppColors.brandViolet)
+                              ? AppColors.mainSoftBlue
+                              : AppColors.brandViolet)
                         : (isDark
-                            ? AppColors.darkBorder
-                            : AppColors.lightOutlineVariant),
+                              ? AppColors.darkBorder
+                              : AppColors.lightOutlineVariant),
                     width: 1.2,
                   ),
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: AppColors.brandViolet
-                                .withValues(alpha: isDark ? 0.35 : 0.30),
+                            color: AppColors.brandViolet.withValues(
+                              alpha: isDark ? 0.35 : 0.30,
+                            ),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
@@ -2245,23 +2290,26 @@ class _ServicesScreenState extends State<ServicesScreen>
                       chip.icon,
                       size: 16,
                       color: isSelected
-                          ? (isDark ? AppColors.brandVioletContainer : AppColors.white)
+                          ? (isDark
+                                ? AppColors.brandVioletContainer
+                                : AppColors.white)
                           : (isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary),
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       chip.label,
                       style: TextStyle(
                         fontSize: 12.5,
-                        fontWeight:
-                            isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
                         color: isSelected
                             ? (isDark ? AppColors.warmWhite : AppColors.white)
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary),
                       ),
                     ),
                     if (chip.count > 0) ...[
@@ -2273,32 +2321,33 @@ class _ServicesScreenState extends State<ServicesScreen>
                         ),
                         decoration: BoxDecoration(
                           color: isSelected
-                              ? AppColors.white
-                                  .withValues(alpha: isDark ? 0.20 : 0.25)
+                              ? AppColors.white.withValues(
+                                  alpha: isDark ? 0.20 : 0.25,
+                                )
                               : (isDark
-                                  ? AppColors.darkSurfaceVariant
-                                  : AppColors.brandVioletContainer),
+                                    ? AppColors.darkSurfaceVariant
+                                    : AppColors.brandVioletContainer),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                      child: Text(
-                        '${chip.count}',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          color: isSelected
-                              ? AppColors.white
-                              : (isDark
-                                  ? AppColors.darkAccent
-                                  : AppColors.brandViolet),
+                        child: Text(
+                          '${chip.count}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: isSelected
+                                ? AppColors.white
+                                : (isDark
+                                      ? AppColors.darkAccent
+                                      : AppColors.brandViolet),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
+                ),
               ),
             ),
-          ),
-        );
+          );
         },
       ),
     );
@@ -2336,8 +2385,9 @@ class _ServicesScreenState extends State<ServicesScreen>
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.brandViolet
-                .withValues(alpha: isDark ? 0.22 : 0.08),
+            color: AppColors.brandViolet.withValues(
+              alpha: isDark ? 0.22 : 0.08,
+            ),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -2358,8 +2408,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppColors.brandViolet
-                          .withValues(alpha: isDark ? 0.35 : 0.16),
+                      AppColors.brandViolet.withValues(
+                        alpha: isDark ? 0.35 : 0.16,
+                      ),
                       AppColors.transparent,
                     ],
                   ),
@@ -2376,8 +2427,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppColors.mutedBlue
-                          .withValues(alpha: isDark ? 0.25 : 0.12),
+                      AppColors.mutedBlue.withValues(
+                        alpha: isDark ? 0.25 : 0.12,
+                      ),
                       AppColors.transparent,
                     ],
                   ),
@@ -2408,8 +2460,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.brandViolet
-                                  .withValues(alpha: 0.35),
+                              color: AppColors.brandViolet.withValues(
+                                alpha: 0.35,
+                              ),
                               blurRadius: 8,
                               offset: const Offset(0, 3),
                             ),
@@ -2440,8 +2493,8 @@ class _ServicesScreenState extends State<ServicesScreen>
                                 fontSize: 15,
                                 fontWeight: FontWeight.w900,
                                 color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                             const SizedBox(height: 1),
@@ -2472,14 +2525,16 @@ class _ServicesScreenState extends State<ServicesScreen>
                           vertical: 3.5,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.brandViolet
-                              .withValues(alpha: isDark ? 0.22 : 0.12),
+                          color: AppColors.brandViolet.withValues(
+                            alpha: isDark ? 0.22 : 0.12,
+                          ),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: (isDark
-                                    ? AppColors.mainSoftBlue
-                                    : AppColors.brandViolet)
-                                .withValues(alpha: 0.25),
+                            color:
+                                (isDark
+                                        ? AppColors.mainSoftBlue
+                                        : AppColors.brandViolet)
+                                    .withValues(alpha: 0.25),
                             width: 1,
                           ),
                         ),
@@ -2521,11 +2576,11 @@ class _ServicesScreenState extends State<ServicesScreen>
                         padding: EdgeInsets.zero,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          mainAxisExtent: 86,
-                        ),
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              mainAxisExtent: 86,
+                            ),
                         itemBuilder: (context, index) {
                           final item = items[index];
                           final resolved = resolveTile(item.tile, badge);
@@ -2577,8 +2632,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                       color: iconColor.withValues(alpha: isDark ? 0.22 : 0.12),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color:
-                            iconColor.withValues(alpha: isDark ? 0.35 : 0.20),
+                        color: iconColor.withValues(
+                          alpha: isDark ? 0.35 : 0.20,
+                        ),
                         width: 1,
                       ),
                     ),
@@ -2615,7 +2671,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 2.5),
+                      horizontal: 8,
+                      vertical: 2.5,
+                    ),
                     decoration: BoxDecoration(
                       color: iconColor.withValues(alpha: isDark ? 0.20 : 0.10),
                       borderRadius: BorderRadius.circular(10),
@@ -2647,8 +2705,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color:
-                        AppColors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                    color: AppColors.black.withValues(
+                      alpha: isDark ? 0.25 : 0.035,
+                    ),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
@@ -2741,8 +2800,9 @@ class _ServicesScreenState extends State<ServicesScreen>
                       : AppColors.brandVioletContainer,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.brandViolet
-                          .withValues(alpha: isDark ? 0.3 : 0.15),
+                      color: AppColors.brandViolet.withValues(
+                        alpha: isDark ? 0.3 : 0.15,
+                      ),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
@@ -2813,8 +2873,10 @@ class _ServicesScreenState extends State<ServicesScreen>
                 ),
                 style: TextButton.styleFrom(
                   foregroundColor: AppColors.brandViolet,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                 ),
               ),
             ],
@@ -2862,7 +2924,9 @@ class _ServicesScreenState extends State<ServicesScreen>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: isDark ? 0.25 : 0.035),
+                  color: AppColors.black.withValues(
+                    alpha: isDark ? 0.25 : 0.035,
+                  ),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),

@@ -202,7 +202,10 @@ class MakePaymentController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
+        if (PasscodeHelper.isPasscodeRequired(
+          response.message,
+          wasPasscodeProvided: wasPasscodeProvided,
+        )) {
           isMakePaymentLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -230,7 +233,8 @@ class MakePaymentController extends GetxController {
       debugPrint('❌ makePayment() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       final errStr = e.toString().toLowerCase();
-      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+      final isTimeout =
+          NetworkErrorHelper.isTimeout(e) ||
           errStr.contains('timed out') ||
           errStr.contains('timeout') ||
           errStr.contains('connectiontimeout') ||
@@ -250,7 +254,10 @@ class MakePaymentController extends GetxController {
         );
         return;
       }
-      if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
+      if (PasscodeHelper.isPasscodeRequired(
+        e,
+        wasPasscodeProvided: wasPasscodeProvided,
+      )) {
         isMakePaymentLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),
@@ -305,13 +312,10 @@ class MakePaymentController extends GetxController {
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: wallet.value!.code!,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting(
-            "site_currency",
-          ) ??
-          'USD',
-      siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-            "site_currency_decimals",
-          ) ??
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
           '2',
       isCrypto: wallet.value?.isCrypto ?? false,
     );
@@ -325,9 +329,11 @@ class MakePaymentController extends GetxController {
     final walletCode = currentWallet.code ?? '';
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
-    final double min = double.tryParse(currentWallet.paymentLimit?.min ?? '') ?? 0.0;
+    final double min =
+        double.tryParse(currentWallet.paymentLimit?.min ?? '') ?? 0.0;
     final double max =
-        double.tryParse(currentWallet.paymentLimit?.max ?? '') ?? double.infinity;
+        double.tryParse(currentWallet.paymentLimit?.max ?? '') ??
+        double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(

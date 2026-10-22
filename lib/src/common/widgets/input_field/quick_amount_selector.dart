@@ -188,10 +188,7 @@ class _QuickAmountSelectorState extends State<QuickAmountSelector> {
     );
   }
 
-  Widget _buildChip({
-    required double percent,
-    required bool isInteractable,
-  }) {
+  Widget _buildChip({required double percent, required bool isInteractable}) {
     final bool isSelected = _isChipSelected(percent);
     final String label = _getChipLabel(percent);
 

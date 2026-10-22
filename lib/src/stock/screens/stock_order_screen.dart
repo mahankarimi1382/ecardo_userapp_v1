@@ -34,9 +34,15 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
   @override
   void initState() {
     super.initState();
-    _qtyController = TextEditingController(text: controller.quantity.value.toStringAsFixed(0));
-    _limitPriceController = TextEditingController(text: controller.limitPriceInput.value);
-    _stopPriceController = TextEditingController(text: controller.stopPriceInput.value);
+    _qtyController = TextEditingController(
+      text: controller.quantity.value.toStringAsFixed(0),
+    );
+    _limitPriceController = TextEditingController(
+      text: controller.limitPriceInput.value,
+    );
+    _stopPriceController = TextEditingController(
+      text: controller.stopPriceInput.value,
+    );
 
     if (controller.selectedSymbol.value == null &&
         controller.selectedMarket.value?.symbols.isNotEmpty == true) {
@@ -244,7 +250,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10.h),
                   decoration: BoxDecoration(
-                    color: isBuy ? ECardoTokens.success(context) : Colors.transparent,
+                    color: isBuy
+                        ? ECardoTokens.success(context)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                   ),
                   child: Row(
@@ -253,15 +261,25 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                       Icon(
                         Icons.arrow_upward_rounded,
                         size: 16.sp,
-                        color: isBuy ? Colors.white : ECardoTokens.inkMuted(context),
+                        color: isBuy
+                            ? Colors.white
+                            : ECardoTokens.inkMuted(context),
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        l10nPick(context, fa: 'خرید (BUY)', en: 'BUY', ar: 'شراء', zh: '买入'),
+                        l10nPick(
+                          context,
+                          fa: 'خرید (BUY)',
+                          en: 'BUY',
+                          ar: 'شراء',
+                          zh: '买入',
+                        ),
                         style: TextStyle(
                           fontSize: 12.5.sp,
                           fontWeight: FontWeight.w800,
-                          color: isBuy ? Colors.white : ECardoTokens.ink(context),
+                          color: isBuy
+                              ? Colors.white
+                              : ECardoTokens.ink(context),
                         ),
                       ),
                     ],
@@ -279,7 +297,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 10.h),
                   decoration: BoxDecoration(
-                    color: !isBuy ? ECardoTokens.danger(context) : Colors.transparent,
+                    color: !isBuy
+                        ? ECardoTokens.danger(context)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                   ),
                   child: Row(
@@ -288,15 +308,25 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                       Icon(
                         Icons.arrow_downward_rounded,
                         size: 16.sp,
-                        color: !isBuy ? Colors.white : ECardoTokens.inkMuted(context),
+                        color: !isBuy
+                            ? Colors.white
+                            : ECardoTokens.inkMuted(context),
                       ),
                       SizedBox(width: 4.w),
                       Text(
-                        l10nPick(context, fa: 'فروش (SELL)', en: 'SELL', ar: 'بيع', zh: '卖出'),
+                        l10nPick(
+                          context,
+                          fa: 'فروش (SELL)',
+                          en: 'SELL',
+                          ar: 'بيع',
+                          zh: '卖出',
+                        ),
                         style: TextStyle(
                           fontSize: 12.5.sp,
                           fontWeight: FontWeight.w800,
-                          color: !isBuy ? Colors.white : ECardoTokens.ink(context),
+                          color: !isBuy
+                              ? Colors.white
+                              : ECardoTokens.ink(context),
                         ),
                       ),
                     ],
@@ -333,17 +363,25 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             value: safeValue,
             isExpanded: true,
             dropdownColor: ECardoTokens.surfaceCard(context),
-            icon: Icon(Icons.arrow_drop_down_rounded, color: ECardoTokens.inkMuted(context)),
+            icon: Icon(
+              Icons.arrow_drop_down_rounded,
+              color: ECardoTokens.inkMuted(context),
+            ),
             items: mkts.map((m) {
               return DropdownMenuItem<StockMarketModel>(
                 value: m,
                 child: Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: ECardoTokens.brand100(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
                       ),
                       child: Text(
                         m.code,
@@ -385,10 +423,13 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
     return Obx(() {
       final syms = (controller.selectedMarket.value?.symbols ?? []).toList();
       final currentSelected = controller.selectedSymbol.value;
-      if (currentSelected != null && !syms.any((s) => s.ticker == currentSelected.ticker)) {
+      if (currentSelected != null &&
+          !syms.any((s) => s.ticker == currentSelected.ticker)) {
         syms.insert(0, currentSelected);
       }
-      final selectedTicker = currentSelected?.ticker ?? (syms.isNotEmpty ? syms.first.ticker : null);
+      final selectedTicker =
+          currentSelected?.ticker ??
+          (syms.isNotEmpty ? syms.first.ticker : null);
 
       return Container(
         decoration: BoxDecoration(
@@ -402,10 +443,15 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             value: selectedTicker,
             isExpanded: true,
             dropdownColor: ECardoTokens.surfaceCard(context),
-            icon: Icon(Icons.arrow_drop_down_rounded, color: ECardoTokens.inkMuted(context)),
+            icon: Icon(
+              Icons.arrow_drop_down_rounded,
+              color: ECardoTokens.inkMuted(context),
+            ),
             items: syms.map((s) {
               final isPos = s.dailyChangePct >= 0;
-              final changeCol = isPos ? ECardoTokens.success(context) : ECardoTokens.danger(context);
+              final changeCol = isPos
+                  ? ECardoTokens.success(context)
+                  : ECardoTokens.danger(context);
               return DropdownMenuItem<String>(
                 value: s.ticker,
                 child: Row(
@@ -470,9 +516,18 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
     return Obx(() {
       final currentType = controller.orderType.value;
       final types = [
-        {'id': 'MARKET', 'label': l10nPick(context, fa: 'قیمت بازار (Market)', en: 'Market')},
-        {'id': 'LIMIT', 'label': l10nPick(context, fa: 'سفارش معین (Limit)', en: 'Limit')},
-        {'id': 'STOP_LOSS', 'label': l10nPick(context, fa: 'حد ضرر (Stop-Loss)', en: 'Stop-Loss')},
+        {
+          'id': 'MARKET',
+          'label': l10nPick(context, fa: 'قیمت بازار (Market)', en: 'Market'),
+        },
+        {
+          'id': 'LIMIT',
+          'label': l10nPick(context, fa: 'سفارش معین (Limit)', en: 'Limit'),
+        },
+        {
+          'id': 'STOP_LOSS',
+          'label': l10nPick(context, fa: 'حد ضرر (Stop-Loss)', en: 'Stop-Loss'),
+        },
       ];
 
       return Row(
@@ -488,7 +543,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                   style: TextStyle(
                     fontSize: 10.5.sp,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                    color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                    color: isSelected
+                        ? ECardoTokens.inkOnBrand
+                        : ECardoTokens.ink(context),
                   ),
                 ),
                 selected: isSelected,
@@ -497,7 +554,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   side: BorderSide(
-                    color: isSelected ? ECardoTokens.brand700(context) : ECardoTokens.border(context),
+                    color: isSelected
+                        ? ECardoTokens.brand700(context)
+                        : ECardoTokens.border(context),
                   ),
                 ),
                 padding: EdgeInsets.symmetric(vertical: 4.h),
@@ -535,7 +594,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             SizedBox(height: ECardoTokens.space2.h),
             TextFormField(
               controller: _limitPriceController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w700,
@@ -544,10 +605,18 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: ECardoTokens.surfaceCard(context),
-                hintText: controller.selectedSymbol.value?.lastPrice.toStringAsFixed(2) ?? '180.00',
+                hintText:
+                    controller.selectedSymbol.value?.lastPrice.toStringAsFixed(
+                      2,
+                    ) ??
+                    '180.00',
                 hintStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
-                suffixText: controller.selectedMarket.value?.baseCurrency ?? 'USD',
-                suffixStyle: TextStyle(fontWeight: FontWeight.w700, color: ECardoTokens.brand500(context)),
+                suffixText:
+                    controller.selectedMarket.value?.baseCurrency ?? 'USD',
+                suffixStyle: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: ECardoTokens.brand500(context),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   borderSide: BorderSide(color: ECardoTokens.border(context)),
@@ -558,9 +627,15 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                  borderSide: BorderSide(color: ECardoTokens.brand500(context), width: 1.5),
+                  borderSide: BorderSide(
+                    color: ECardoTokens.brand500(context),
+                    width: 1.5,
+                  ),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 12.h,
+                ),
               ),
               onChanged: (val) {
                 controller.limitPriceInput.value = val;
@@ -569,11 +644,19 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               validator: (val) {
                 if (controller.orderType.value == 'LIMIT') {
                   if (val == null || val.trim().isEmpty) {
-                    return l10nPick(context, fa: 'قیمت حد معین الزامی است', en: 'Limit price is required');
+                    return l10nPick(
+                      context,
+                      fa: 'قیمت حد معین الزامی است',
+                      en: 'Limit price is required',
+                    );
                   }
                   final numVal = double.tryParse(val.trim());
                   if (numVal == null || numVal <= 0) {
-                    return l10nPick(context, fa: 'قیمت حد باید بزرگتر از صفر باشد', en: 'Must be > 0');
+                    return l10nPick(
+                      context,
+                      fa: 'قیمت حد باید بزرگتر از صفر باشد',
+                      en: 'Must be > 0',
+                    );
                   }
                 }
                 return null;
@@ -590,7 +673,9 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             SizedBox(height: ECardoTokens.space2.h),
             TextFormField(
               controller: _stopPriceController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               style: TextStyle(
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w700,
@@ -600,11 +685,16 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 filled: true,
                 fillColor: ECardoTokens.surfaceCard(context),
                 hintText: controller.selectedSymbol.value != null
-                    ? (controller.selectedSymbol.value!.lastPrice * 0.95).toStringAsFixed(2)
+                    ? (controller.selectedSymbol.value!.lastPrice * 0.95)
+                          .toStringAsFixed(2)
                     : '170.00',
                 hintStyle: TextStyle(color: ECardoTokens.inkMuted(context)),
-                suffixText: controller.selectedMarket.value?.baseCurrency ?? 'USD',
-                suffixStyle: TextStyle(fontWeight: FontWeight.w700, color: ECardoTokens.danger(context)),
+                suffixText:
+                    controller.selectedMarket.value?.baseCurrency ?? 'USD',
+                suffixStyle: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: ECardoTokens.danger(context),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   borderSide: BorderSide(color: ECardoTokens.border(context)),
@@ -615,9 +705,15 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                  borderSide: BorderSide(color: ECardoTokens.brand500(context), width: 1.5),
+                  borderSide: BorderSide(
+                    color: ECardoTokens.brand500(context),
+                    width: 1.5,
+                  ),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12.w,
+                  vertical: 12.h,
+                ),
               ),
               onChanged: (val) {
                 controller.stopPriceInput.value = val;
@@ -626,11 +722,19 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               validator: (val) {
                 if (controller.orderType.value == 'STOP_LOSS') {
                   if (val == null || val.trim().isEmpty) {
-                    return l10nPick(context, fa: 'قیمت حد ضرر الزامی است', en: 'Stop price is required');
+                    return l10nPick(
+                      context,
+                      fa: 'قیمت حد ضرر الزامی است',
+                      en: 'Stop price is required',
+                    );
                   }
                   final numVal = double.tryParse(val.trim());
                   if (numVal == null || numVal <= 0) {
-                    return l10nPick(context, fa: 'قیمت حد ضرر باید بزرگتر از صفر باشد', en: 'Must be > 0');
+                    return l10nPick(
+                      context,
+                      fa: 'قیمت حد ضرر باید بزرگتر از صفر باشد',
+                      en: 'Must be > 0',
+                    );
                   }
                 }
                 return null;
@@ -651,16 +755,24 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               onPressed: () => _adjustQty(-1.0),
               style: IconButton.styleFrom(
                 backgroundColor: ECardoTokens.surfaceSunken(context),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                ),
               ),
-              icon: Icon(Icons.remove, color: ECardoTokens.ink(context), size: 18.sp),
+              icon: Icon(
+                Icons.remove,
+                color: ECardoTokens.ink(context),
+                size: 18.sp,
+              ),
             ),
             SizedBox(width: ECardoTokens.space2.w),
             Expanded(
               child: TextFormField(
                 controller: _qtyController,
                 textAlign: TextAlign.center,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w900,
@@ -671,7 +783,10 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                   fillColor: ECardoTokens.surfaceCard(context),
                   hintText: '1',
                   suffixText: l10nPick(context, fa: 'سهم', en: 'shares'),
-                  suffixStyle: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+                  suffixStyle: TextStyle(
+                    fontSize: 11.sp,
+                    color: ECardoTokens.inkMuted(context),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                     borderSide: BorderSide(color: ECardoTokens.border(context)),
@@ -682,9 +797,15 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                    borderSide: BorderSide(color: ECardoTokens.brand500(context), width: 1.5),
+                    borderSide: BorderSide(
+                      color: ECardoTokens.brand500(context),
+                      width: 1.5,
+                    ),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 10.h,
+                  ),
                 ),
                 onChanged: (val) {
                   final d = double.tryParse(val) ?? 1.0;
@@ -693,11 +814,19 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 },
                 validator: (val) {
                   if (val == null || val.trim().isEmpty) {
-                    return l10nPick(context, fa: 'تعداد سهم الزامی است', en: 'Quantity is required');
+                    return l10nPick(
+                      context,
+                      fa: 'تعداد سهم الزامی است',
+                      en: 'Quantity is required',
+                    );
                   }
                   final numVal = double.tryParse(val.trim());
                   if (numVal == null || numVal <= 0) {
-                    return l10nPick(context, fa: 'تعداد باید بزرگتر از صفر باشد', en: 'Must be > 0');
+                    return l10nPick(
+                      context,
+                      fa: 'تعداد باید بزرگتر از صفر باشد',
+                      en: 'Must be > 0',
+                    );
                   }
                   return null;
                 },
@@ -708,9 +837,15 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
               onPressed: () => _adjustQty(1.0),
               style: IconButton.styleFrom(
                 backgroundColor: ECardoTokens.surfaceSunken(context),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                ),
               ),
-              icon: Icon(Icons.add, color: ECardoTokens.ink(context), size: 18.sp),
+              icon: Icon(
+                Icons.add,
+                color: ECardoTokens.ink(context),
+                size: 18.sp,
+              ),
             ),
           ],
         ),
@@ -763,27 +898,54 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             value: controller.payCurrency.value,
             isExpanded: true,
             dropdownColor: ECardoTokens.surfaceCard(context),
-            icon: Icon(Icons.arrow_drop_down_rounded, color: ECardoTokens.inkMuted(context)),
+            icon: Icon(
+              Icons.arrow_drop_down_rounded,
+              color: ECardoTokens.inkMuted(context),
+            ),
             items: [
               DropdownMenuItem(
                 value: 'IRR',
                 child: Text(
-                  l10nPick(context, fa: 'ریال ایران (IRR) - تسویه شتابی', en: 'Iranian Rial (IRR)'),
-                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: ECardoTokens.ink(context)),
+                  l10nPick(
+                    context,
+                    fa: 'ریال ایران (IRR) - تسویه شتابی',
+                    en: 'Iranian Rial (IRR)',
+                  ),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
               ),
               DropdownMenuItem(
                 value: 'USDT',
                 child: Text(
-                  l10nPick(context, fa: 'تتر ولت (USDT) - تسویه آنی', en: 'Tether Wallet (USDT)'),
-                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: ECardoTokens.ink(context)),
+                  l10nPick(
+                    context,
+                    fa: 'تتر ولت (USDT) - تسویه آنی',
+                    en: 'Tether Wallet (USDT)',
+                  ),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
               ),
               DropdownMenuItem(
                 value: 'USD',
                 child: Text(
-                  l10nPick(context, fa: 'دلار بانکی (USD) - حساب ارزی', en: 'US Dollar (USD)'),
-                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: ECardoTokens.ink(context)),
+                  l10nPick(
+                    context,
+                    fa: 'دلار بانکی (USD) - حساب ارزی',
+                    en: 'US Dollar (USD)',
+                  ),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w600,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
               ),
             ],
@@ -808,14 +970,17 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
       final mkt = controller.selectedMarket.value;
       final settlementDays = mkt?.settlementDays ?? 2;
       final estDate = DateTime.now().add(Duration(days: settlementDays));
-      final dateStr = '${estDate.year}-${estDate.month.toString().padLeft(2, '0')}-${estDate.day.toString().padLeft(2, '0')}';
+      final dateStr =
+          '${estDate.year}-${estDate.month.toString().padLeft(2, '0')}-${estDate.day.toString().padLeft(2, '0')}';
 
       return Container(
         padding: EdgeInsets.all(ECardoTokens.space4.r),
         decoration: BoxDecoration(
           color: ECardoTokens.surfaceCard(context),
           borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-          border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.3)),
+          border: Border.all(
+            color: ECardoTokens.brand500(context).withValues(alpha: 0.3),
+          ),
           boxShadow: ECardoTokens.shadowCard(context),
         ),
         child: Column(
@@ -826,11 +991,19 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(Icons.receipt_long_rounded, color: ECardoTokens.brand500(context), size: 18.sp),
+                      Icon(
+                        Icons.receipt_long_rounded,
+                        color: ECardoTokens.brand500(context),
+                        size: 18.sp,
+                      ),
                       SizedBox(width: ECardoTokens.space2.w),
                       Expanded(
                         child: Text(
-                          l10nPick(context, fa: 'پیش‌نمایش تسویه و کارمزد:', en: 'Settlement & Execution:'),
+                          l10nPick(
+                            context,
+                            fa: 'پیش‌نمایش تسویه و کارمزد:',
+                            en: 'Settlement & Execution:',
+                          ),
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12.sp,
@@ -873,7 +1046,8 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 context,
                 labelFa: 'نرخ تبدیل ارز برخط:',
                 labelEn: 'Live FX Rate:',
-                value: '1 USD ≈ ${rate.toStringAsFixed(curr == 'IRR' ? 0 : 4)} $curr',
+                value:
+                    '1 USD ≈ ${rate.toStringAsFixed(curr == 'IRR' ? 0 : 4)} $curr',
               ),
             ],
             SizedBox(height: 8.h),
@@ -888,7 +1062,11 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      l10nPick(context, fa: 'مبلغ کل قابل پرداخت:', en: 'Total Settlement Amount:'),
+                      l10nPick(
+                        context,
+                        fa: 'مبلغ کل قابل پرداخت:',
+                        en: 'Total Settlement Amount:',
+                      ),
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w800,
@@ -928,13 +1106,20 @@ class _StockOrderScreenState extends State<StockOrderScreen> {
             l10nPick(context, fa: labelFa, en: labelEn),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: ECardoTokens.inkMuted(context),
+            ),
           ),
         ),
         SizedBox(width: 4.w),
         Text(
           value,
-          style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+          style: TextStyle(
+            fontSize: 11.5.sp,
+            fontWeight: FontWeight.w700,
+            color: ECardoTokens.ink(context),
+          ),
         ),
       ],
     );

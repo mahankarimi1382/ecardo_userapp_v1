@@ -23,7 +23,8 @@ class AirtimeController extends GetxController {
   final RxString selectedOperatorId = "mci".obs;
   final RxString selectedOperatorName = "همراه اول".obs;
   final RxString targetPhoneNumber = "".obs;
-  final TextEditingController targetPhoneNumberController = TextEditingController();
+  final TextEditingController targetPhoneNumberController =
+      TextEditingController();
   // PAYMENT-FIX (P-2): raw backend response body of the last successful
   // pay-bill call (pass-through, no client model). Surfaced by the result
   // step so a backend "pending" payment no longer looks like a success.
@@ -108,7 +109,8 @@ class AirtimeController extends GetxController {
 
         final countries = billCountriesModel.value.data ?? [];
         if (countryController.text.isEmpty && countries.isNotEmpty) {
-          final defaultCountry = countries.firstWhereOrNull(
+          final defaultCountry =
+              countries.firstWhereOrNull(
                 (c) => c.toLowerCase() == 'iran' || c.toUpperCase() == 'IR',
               ) ??
               countries.first;
@@ -120,7 +122,8 @@ class AirtimeController extends GetxController {
       debugPrint('❌ fetchBillCountries() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isLoading.value = false;
@@ -145,11 +148,13 @@ class AirtimeController extends GetxController {
 
         if (payBillServiceList.isNotEmpty) {
           final opId = selectedOperatorId.value;
-          final match = payBillServiceList.firstWhereOrNull((s) {
-            final name = (s.name ?? '').toLowerCase();
-            return name.contains(opId) ||
-                name.contains(selectedOperatorName.value);
-          }) ?? payBillServiceList.first;
+          final match =
+              payBillServiceList.firstWhereOrNull((s) {
+                final name = (s.name ?? '').toLowerCase();
+                return name.contains(opId) ||
+                    name.contains(selectedOperatorName.value);
+              }) ??
+              payBillServiceList.first;
           serviceData.value = match;
           serviceController.text = match.name ?? '';
           setupDynamicFields(match.fields);
@@ -159,7 +164,8 @@ class AirtimeController extends GetxController {
       debugPrint('❌ fetchPayBillServices() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isPayBillServiceLoading.value = false;
@@ -209,7 +215,8 @@ class AirtimeController extends GetxController {
       debugPrint('❌ submitPayBill() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isSubmitLoading.value = false;
@@ -328,8 +335,9 @@ class AirtimeController extends GetxController {
     final int rateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: serviceCurrency,
       siteCurrencyCode: currency,
-      siteCurrencyDecimals:
-          settings.getSetting("site_currency_decimals")?.toString(),
+      siteCurrencyDecimals: settings
+          .getSetting("site_currency_decimals")
+          ?.toString(),
       isCrypto: false,
     );
     rateText.value = serviceRate == serviceRate.roundToDouble()

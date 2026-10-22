@@ -17,10 +17,7 @@ import 'local_voucher_screen.dart';
 class LocalDetailScreen extends StatefulWidget {
   final LocalExperienceItemModel experience;
 
-  const LocalDetailScreen({
-    super.key,
-    required this.experience,
-  });
+  const LocalDetailScreen({super.key, required this.experience});
 
   @override
   State<LocalDetailScreen> createState() => _LocalDetailScreenState();
@@ -57,7 +54,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
     const tealColor = Color(0xFF0F766E);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
@@ -65,7 +64,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -77,7 +78,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -119,16 +122,25 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
           Obx(() {
             final total = controller.calculateTotal(widget.experience);
             final vErr = controller.validationError.value.isNotEmpty;
-            final isSubmitting = controller.uiState.value == ExperienceServiceState.processing;
+            final isSubmitting =
+                controller.uiState.value == ExperienceServiceState.processing;
 
             return Container(
               padding: EdgeInsets.all(AppSpacing.lg.r),
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.white,
-                border: Border(top: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder)),
+                border: Border(
+                  top: BorderSide(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 10,
                     offset: const Offset(0, -3),
                   ),
@@ -147,11 +159,17 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.error.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                          border: Border.all(
+                            color: AppColors.error.withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Text(
                           controller.validationError.value,
-                          style: TextStyle(fontSize: 11.5.sp, color: AppColors.error, height: 1.4),
+                          style: TextStyle(
+                            fontSize: 11.5.sp,
+                            color: AppColors.error,
+                            height: 1.4,
+                          ),
                         ),
                       ),
                     ),
@@ -165,7 +183,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                             'مبلغ نهایی (${widget.experience.durationLabel})',
                             style: TextStyle(
                               fontSize: 10.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary,
                             ),
                           ),
                           SizedBox(height: 2.h),
@@ -187,7 +207,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                             minimumSize: Size(double.infinity, 44.h),
                             padding: EdgeInsets.symmetric(vertical: 14.h),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm.r,
+                              ),
                             ),
                             elevation: 0,
                           ),
@@ -195,16 +217,23 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                               ? null
                               : () async {
                                   HapticFeedback.heavyImpact();
-                                  final booking = await controller.bookExperience(item: widget.experience);
+                                  final booking = await controller
+                                      .bookExperience(item: widget.experience);
                                   if (booking != null) {
-                                    Get.off(() => LocalVoucherScreen(booking: booking));
+                                    Get.off(
+                                      () =>
+                                          LocalVoucherScreen(booking: booking),
+                                    );
                                   }
                                 },
                           child: isSubmitting
                               ? SizedBox(
                                   width: 20.w,
                                   height: 20.h,
-                                  child: const CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : Text(
                                   'پرداخت و صدور واچر',
@@ -234,7 +263,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
         boxShadow: [
           BoxShadow(
             color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -265,7 +296,10 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                   children: [
                     Flexible(
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
                           color: tealColor.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6.r),
@@ -285,14 +319,20 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
+                        const Icon(
+                          Icons.star_rounded,
+                          color: AppColors.warning,
+                          size: 16,
+                        ),
                         SizedBox(width: 4.w),
                         Text(
                           '${widget.experience.rating} (${widget.experience.reviewsCount} نظر)',
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       ],
@@ -305,7 +345,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w900,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     height: 1.3,
                   ),
                 ),
@@ -314,13 +356,19 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                   widget.experience.subtitle,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
                 SizedBox(height: 10.h),
                 Row(
                   children: [
-                    Icon(Icons.person_pin_rounded, size: 16.sp, color: tealColor),
+                    Icon(
+                      Icons.person_pin_rounded,
+                      size: 16.sp,
+                      color: tealColor,
+                    ),
                     SizedBox(width: 6.w),
                     Expanded(
                       child: Text(
@@ -328,7 +376,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
@@ -339,16 +389,23 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                   spacing: 6.w,
                   children: widget.experience.languages.map((l) {
                     return Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                        color: isDark
+                            ? AppColors.darkSurface
+                            : AppColors.lightSurface,
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
                         l,
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
                         ),
                       ),
                     );
@@ -362,23 +419,35 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
     );
   }
 
-  Widget _buildDateAndTimeCard(BuildContext context, bool isDark, Color tealColor) {
+  Widget _buildDateAndTimeCard(
+    BuildContext context,
+    bool isDark,
+    Color tealColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, fa: 'زمان‌بندی و تعداد نفرات', en: 'Date & Guests'),
+            l10nPick(
+              context,
+              fa: 'زمان‌بندی و تعداد نفرات',
+              en: 'Date & Guests',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 12.h),
@@ -390,15 +459,25 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('بزرگسالان',
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
-                    Text('${widget.experience.price.toStringAsFixed(0)} ${widget.experience.currency} / نفر',
-                        style: TextStyle(
-                            fontSize: 10.5.sp,
-                            color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                    Text(
+                      'بزرگسالان',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    Text(
+                      '${widget.experience.price.toStringAsFixed(0)} ${widget.experience.currency} / نفر',
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -423,7 +502,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     IconButton(
@@ -450,18 +531,27 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('کودکان (۲ تا ۱۲ سال)',
-                        style: TextStyle(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
                     Text(
-                        widget.experience.childPrice > 0
-                            ? '${widget.experience.childPrice.toStringAsFixed(0)} ${widget.experience.currency} / نفر'
-                            : 'تعرفه نیم‌بها',
-                        style: TextStyle(
-                            fontSize: 10.5.sp,
-                            color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+                      'کودکان (۲ تا ۱۲ سال)',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    Text(
+                      widget.experience.childPrice > 0
+                          ? '${widget.experience.childPrice.toStringAsFixed(0)} ${widget.experience.currency} / نفر'
+                          : 'تعرفه نیم‌بها',
+                      style: TextStyle(
+                        fontSize: 10.5.sp,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -485,7 +575,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     IconButton(
@@ -512,27 +604,46 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                   onTap: _pickDate,
                   borderRadius: BorderRadius.circular(8.r),
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                      color: isDark
+                          ? AppColors.darkSurface
+                          : AppColors.lightSurface,
                       borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                      border: Border.all(
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
+                      ),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today_rounded, size: 16.sp, color: tealColor),
+                        Icon(
+                          Icons.calendar_today_rounded,
+                          size: 16.sp,
+                          color: tealColor,
+                        ),
                         SizedBox(width: 6.w),
                         Expanded(
-                          child: Obx(() => Text(
-                                DateFormat('yyyy/MM/dd').format(controller.selectedDate.value),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                                ),
-                              )),
+                          child: Obx(
+                            () => Text(
+                              DateFormat(
+                                'yyyy/MM/dd',
+                              ).format(controller.selectedDate.value),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w700,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -542,11 +653,20 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
               SizedBox(width: 10.w),
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 8.h,
+                  ),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.lightSurface,
                     borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -555,22 +675,28 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                         'همراهان:',
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
                         ),
                       ),
                       SizedBox(width: 4.w),
                       Expanded(
-                        child: Obx(() => Text(
-                              '${controller.guestsCount.value}ب + ${controller.childrenCount.value}ک',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                              ),
-                            )),
+                        child: Obx(
+                          () => Text(
+                            '${controller.guestsCount.value}ب + ${controller.childrenCount.value}ک',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w800,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -583,23 +709,35 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
     );
   }
 
-  Widget _buildHighlightsCard(BuildContext context, bool isDark, Color tealColor) {
+  Widget _buildHighlightsCard(
+    BuildContext context,
+    bool isDark,
+    Color tealColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, fa: 'مزایا و ویژگی‌های این خدمت', en: 'Service Highlights'),
+            l10nPick(
+              context,
+              fa: 'مزایا و ویژگی‌های این خدمت',
+              en: 'Service Highlights',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 10.h),
@@ -609,14 +747,20 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.check_circle_rounded, color: AppColors.success, size: 16.sp),
+                  Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.success,
+                    size: 16.sp,
+                  ),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
                       h,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                         height: 1.4,
                       ),
                     ),
@@ -630,13 +774,19 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
     );
   }
 
-  Widget _buildMeetingPointCard(BuildContext context, bool isDark, Color tealColor) {
+  Widget _buildMeetingPointCard(
+    BuildContext context,
+    bool isDark,
+    Color tealColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -652,7 +802,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -660,7 +812,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
                   widget.experience.meetingPoint,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -672,7 +826,11 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
     );
   }
 
-  Widget _buildCancellationPolicyCard(BuildContext context, bool isDark, Color tealColor) {
+  Widget _buildCancellationPolicyCard(
+    BuildContext context,
+    bool isDark,
+    Color tealColor,
+  ) {
     final policy = widget.experience.cancellationPolicy;
 
     return Container(
@@ -680,21 +838,29 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(Icons.shield_outlined, color: AppColors.success, size: 18.sp),
+              Icon(
+                Icons.shield_outlined,
+                color: AppColors.success,
+                size: 18.sp,
+              ),
               SizedBox(width: 6.w),
               Text(
                 'شرایط لغو و استرداد وجه',
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ],
@@ -704,7 +870,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
             '• لغو رایگان تا ${policy.freeCancellationHours} ساعت قبل از سرویس با استرداد ۱۰۰٪ به کیف پول',
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               height: 1.4,
             ),
           ),
@@ -713,7 +881,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
             '• لغو کمتر از ${policy.freeCancellationHours} ساعت: ${policy.lateCancelPenaltyPercent.toStringAsFixed(0)}٪ جریمه کنسلی',
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               height: 1.4,
             ),
           ),
@@ -728,7 +898,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -738,7 +910,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -747,7 +921,9 @@ class _LocalDetailScreenState extends State<LocalDetailScreen> {
             style: TextStyle(
               fontSize: 12.sp,
               height: 1.6,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ],

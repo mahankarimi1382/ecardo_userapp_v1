@@ -36,16 +36,19 @@ class ReplyTicketController extends GetxController {
         endpoint: "${ApiPath.supportTicketsEndpoint}/$ticketUid",
       );
       if (response.status == Status.completed) {
-        final parsed =
-            TicketMessageModel.fromJson(_unwrapTicketPayload(response.data!));
+        final parsed = TicketMessageModel.fromJson(
+          _unwrapTicketPayload(response.data!),
+        );
         // TICKET-FIX: only replace the model when the payload actually
         // contains a ticket — a malformed/empty response must not blank
         // out a conversation the user is reading.
-        if (parsed.data?.ticket != null || (parsed.data?.messages?.isNotEmpty ?? false)) {
+        if (parsed.data?.ticket != null ||
+            (parsed.data?.messages?.isNotEmpty ?? false)) {
           ticketMessageModel.value = parsed;
         } else if (kDebugMode) {
           debugPrint(
-              '⚠️ fetchTicketMessage: empty payload for $ticketUid — keeping current model');
+            '⚠️ fetchTicketMessage: empty payload for $ticketUid — keeping current model',
+          );
         }
       }
     } catch (e, stackTrace) {
@@ -149,19 +152,21 @@ class ReplyTicketController extends GetxController {
       );
       if (response.status == Status.completed) {
         final msg = response.data?['message'];
-        ToastHelper().showSuccessToast(msg is String && msg.isNotEmpty
-            ? msg
-            : (Get.context != null
-                ? l10nPick(
-                    Get.context!,
-                    en: 'Ticket closed',
-                    fa: 'تیکت بسته شد',
-                    ar: 'تم إغلاق التذكرة',
-                    tr: 'Talep kapatıldı',
-                    ru: 'Тикет закрыт',
-                    zh: '工单已关闭',
-                  )
-                : 'Ticket closed'));
+        ToastHelper().showSuccessToast(
+          msg is String && msg.isNotEmpty
+              ? msg
+              : (Get.context != null
+                    ? l10nPick(
+                        Get.context!,
+                        en: 'Ticket closed',
+                        fa: 'تیکت بسته شد',
+                        ar: 'تم إغلاق التذكرة',
+                        tr: 'Talep kapatıldı',
+                        ru: 'Тикет закрыт',
+                        zh: '工单已关闭',
+                      )
+                    : 'Ticket closed'),
+        );
         await fetchTicketMessage(ticketUid: ticketUid);
       }
     } catch (e, stackTrace) {
@@ -185,19 +190,21 @@ class ReplyTicketController extends GetxController {
       );
       if (response.status == Status.completed) {
         final msg = response.data?['message'];
-        ToastHelper().showSuccessToast(msg is String && msg.isNotEmpty
-            ? msg
-            : (Get.context != null
-                ? l10nPick(
-                    Get.context!,
-                    en: 'Ticket reopened',
-                    fa: 'تیکت مجدداً باز شد',
-                    ar: 'تمت إعادة فتح التذكرة',
-                    tr: 'Talep yeniden açıldı',
-                    ru: 'Тикет повторно открыт',
-                    zh: '工单已重新开启',
-                  )
-                : 'Ticket reopened'));
+        ToastHelper().showSuccessToast(
+          msg is String && msg.isNotEmpty
+              ? msg
+              : (Get.context != null
+                    ? l10nPick(
+                        Get.context!,
+                        en: 'Ticket reopened',
+                        fa: 'تیکت مجدداً باز شد',
+                        ar: 'تمت إعادة فتح التذكرة',
+                        tr: 'Talep yeniden açıldı',
+                        ru: 'Тикет повторно открыт',
+                        zh: '工单已重新开启',
+                      )
+                    : 'Ticket reopened'),
+        );
         await fetchTicketMessage(ticketUid: ticketUid);
       }
     } catch (e, stackTrace) {

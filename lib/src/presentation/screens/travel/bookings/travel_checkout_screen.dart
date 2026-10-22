@@ -328,8 +328,12 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                             if (!_hasValidHotelDetails) {
                               showTravelMessage(
                                 context,
-                                title: AppLocalizations.of(context)!.hotel_reservator_information,
-                                message: AppLocalizations.of(context)!.hotel_complete_the_reservator_and_room_caretaker_i,
+                                title: AppLocalizations.of(
+                                  context,
+                                )!.hotel_reservator_information,
+                                message: AppLocalizations.of(
+                                  context,
+                                )!.hotel_complete_the_reservator_and_room_caretaker_i,
                               );
                               return;
                             }
@@ -607,7 +611,9 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               TravelCard(
                 color: TravelTheme.purple.withValues(alpha: .07),
                 child: Text(
-                  AppLocalizations.of(context)!.hotel_reservation_details_and_every_order_update_w,
+                  AppLocalizations.of(
+                    context,
+                  )!.hotel_reservation_details_and_every_order_update_w,
                   style: TextStyle(
                     color: TravelTheme.muted,
                     fontSize: 11.sp,
@@ -671,7 +677,9 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               ),
               SizedBox(height: 8.h),
               Text(
-                AppLocalizations.of(context)!.hotel_only_one_responsible_guest_is_needed_for_eac,
+                AppLocalizations.of(
+                  context,
+                )!.hotel_only_one_responsible_guest_is_needed_for_eac,
                 style: TextStyle(
                   color: TravelTheme.muted,
                   fontSize: 11.sp,
@@ -690,9 +698,13 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 maxLines: 8,
                 maxLength: 1000,
                 decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.hotel_special_requests_optional,
+                  labelText: AppLocalizations.of(
+                    context,
+                  )!.hotel_special_requests_optional,
                   alignLabelWithHint: true,
-                  hintText: AppLocalizations.of(context)!.hotel_for_example_non_smoking_room_or_estimated_ar,
+                  hintText: AppLocalizations.of(
+                    context,
+                  )!.hotel_for_example_non_smoking_room_or_estimated_ar,
                 ),
               ),
             ] else
@@ -854,14 +866,18 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                 alignment: WrapAlignment.center,
                 children: [
                   Text(
-                    AppLocalizations.of(context)!.hotel_by_continuing_you_accept_the,
+                    AppLocalizations.of(
+                      context,
+                    )!.hotel_by_continuing_you_accept_the,
                   ),
                   TextButton(
                     onPressed: () => showDialog<void>(
                       context: context,
                       builder: (context) => AlertDialog(
                         title: Text(
-                          AppLocalizations.of(context)!.hotel_terms_and_privacy_policy,
+                          AppLocalizations.of(
+                            context,
+                          )!.hotel_terms_and_privacy_policy,
                         ),
                         content: SingleChildScrollView(
                           child: Text(
@@ -869,7 +885,9 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                                     .serviceFor(widget.type)
                                     ?.presentation['terms_text']
                                     ?.toString() ??
-                                AppLocalizations.of(context)!.hotel_the_terms_for_this_service_are_admin_control,
+                                AppLocalizations.of(
+                                  context,
+                                )!.hotel_the_terms_for_this_service_are_admin_control,
                           ),
                         ),
                         actions: [
@@ -883,7 +901,9 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
                       ),
                     ),
                     child: Text(
-                      AppLocalizations.of(context)!.hotel_terms_and_privacy_policy_2,
+                      AppLocalizations.of(
+                        context,
+                      )!.hotel_terms_and_privacy_policy_2,
                     ),
                   ),
                 ],

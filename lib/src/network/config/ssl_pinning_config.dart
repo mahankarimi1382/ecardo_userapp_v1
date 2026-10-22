@@ -30,10 +30,7 @@ class SslPinningConfig {
   static const String tripApexHost = 'trip.ecardo.ir';
 
   /// Allowed hostnames for certificate pinning.
-  static const List<String> pinnedHosts = [
-    tripApexHost,
-    ecardoApexHost,
-  ];
+  static const List<String> pinnedHosts = [tripApexHost, ecardoApexHost];
 
   /// Verified live fallback certificate pin for ecardo.ir leaf certificate.
   /// Rotated 2026-10-09 by Google Trust Services / Cloudflare.
@@ -69,8 +66,7 @@ class SslPinningConfig {
         defaultEcardoCertPin,
         previousEcardoCertPin,
       ],
-      if (ecardoBackup.trim().isNotEmpty)
-        ecardoBackup.trim(),
+      if (ecardoBackup.trim().isNotEmpty) ecardoBackup.trim(),
     ];
 
     const tripCurrent = String.fromEnvironment('TRIP_CERT_PIN');
@@ -80,8 +76,7 @@ class SslPinningConfig {
         tripCurrent.trim()
       else
         defaultTripCertPin,
-      if (tripBackup.trim().isNotEmpty)
-        tripBackup.trim(),
+      if (tripBackup.trim().isNotEmpty) tripBackup.trim(),
     ];
 
     return {
@@ -164,7 +159,8 @@ class SslPinningConfig {
       return false;
     }
 
-    final pins = expectedCertificateHashes[matchedApex] ??
+    final pins =
+        expectedCertificateHashes[matchedApex] ??
         expectedCertificateHashes[host.trim().toLowerCase()] ??
         const <String>[];
     if (pins.isEmpty) {
@@ -186,7 +182,9 @@ class SslPinningConfig {
     final isMatched = pins.any((pin) => _constantTimeEquals(pin, actual));
 
     if (!isMatched) {
-      debugPrint('🚨 [SECURITY WARNING] Certificate pin mismatch for host: $host');
+      debugPrint(
+        '🚨 [SECURITY WARNING] Certificate pin mismatch for host: $host',
+      );
       return false;
     }
 

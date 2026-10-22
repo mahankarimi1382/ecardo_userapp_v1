@@ -120,7 +120,11 @@ class FinancialCatalog {
             'max_load': '10000.00',
             'daily_limit': '5000.00',
             'status': 'active',
-            'features': ['پشتیبانی از اپل پی و پی‌پال', 'صدور آنی بدون کارمزد ماهانه', 'قابلیت شارژ مجدد نامحدود'],
+            'features': [
+              'پشتیبانی از اپل پی و پی‌پال',
+              'صدور آنی بدون کارمزد ماهانه',
+              'قابلیت شارژ مجدد نامحدود',
+            ],
           },
           {
             'id': 2,
@@ -132,7 +136,11 @@ class FinancialCatalog {
             'max_load': '15000.00',
             'daily_limit': '7500.00',
             'status': 'active',
-            'features': ['پوشش کامل خریدهای اروپایی', '3D Secure پویا با پیامک', 'پشتیبانی از گوگل والت'],
+            'features': [
+              'پوشش کامل خریدهای اروپایی',
+              '3D Secure پویا با پیامک',
+              'پشتیبانی از گوگل والت',
+            ],
           },
           {
             'id': 3,
@@ -144,7 +152,10 @@ class FinancialCatalog {
             'max_load': '50000.00',
             'daily_limit': '20000.00',
             'status': 'active',
-            'features': ['شارژ مستقیم از تتر TRC20 و ERC20', 'تسویه بدون کارمزد تبدیل ارزی'],
+            'features': [
+              'شارژ مستقیم از تتر TRC20 و ERC20',
+              'تسویه بدون کارمزد تبدیل ارزی',
+            ],
           },
         ],
         'cardholders': [
@@ -154,7 +165,7 @@ class FinancialCatalog {
             'email': 'demo@ecardo.ir',
             'phone': '+989123456789',
             'status': 'verified',
-          }
+          },
         ],
         'providers': [
           {'id': 1, 'name': 'MasterCard International', 'code': 'mastercard'},
@@ -284,7 +295,8 @@ class FinancialCatalog {
             'max_limit': '5000.0',
             'available_amount': '12400.0',
             'payment_methods': ['انتقال ساتنا / پایا', 'کارت به کارت'],
-            'terms': 'واریز آنی در کمتر از ۵ دقیقه. فقط از حساب به نام خود خریدار.',
+            'terms':
+                'واریز آنی در کمتر از ۵ دقیقه. فقط از حساب به نام خود خریدار.',
           },
           {
             'id': 102,
@@ -334,9 +346,24 @@ class FinancialCatalog {
           },
         ],
         'payment_methods': [
-          {'id': 1, 'name': 'کارت به کارت شتابی', 'type': 'card', 'currency': 'IRR'},
-          {'id': 2, 'name': 'شماره شبا ساتنا/پایا', 'type': 'iban', 'currency': 'IRR'},
-          {'id': 3, 'name': 'حساب بانکی امارات (IBAN AED)', 'type': 'bank', 'currency': 'AED'},
+          {
+            'id': 1,
+            'name': 'کارت به کارت شتابی',
+            'type': 'card',
+            'currency': 'IRR',
+          },
+          {
+            'id': 2,
+            'name': 'شماره شبا ساتنا/پایا',
+            'type': 'iban',
+            'currency': 'IRR',
+          },
+          {
+            'id': 3,
+            'name': 'حساب بانکی امارات (IBAN AED)',
+            'type': 'bank',
+            'currency': 'AED',
+          },
         ],
       },
     };

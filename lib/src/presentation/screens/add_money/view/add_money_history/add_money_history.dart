@@ -160,10 +160,7 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory>
     );
   }
 
-  Widget _buildTransactionsList(
-    AppLocalizations localizations,
-    bool isDark,
-  ) {
+  Widget _buildTransactionsList(AppLocalizations localizations, bool isDark) {
     final transactions =
         controller.transactionsModel.value.data?.transactions ?? [];
 
@@ -307,10 +304,11 @@ class _AddMoneyHistoryState extends State<AddMoneyHistory>
                             vertical: 1,
                           ),
                           decoration: BoxDecoration(
-                            color: (transaction.isSuccess
-                                    ? AppColors.success
-                                    : AppColors.warning)
-                                .withValues(alpha: 0.12),
+                            color:
+                                (transaction.isSuccess
+                                        ? AppColors.success
+                                        : AppColors.warning)
+                                    .withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(
                               AppSpacing.radiusXs,
                             ),

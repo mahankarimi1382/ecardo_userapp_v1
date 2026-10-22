@@ -24,12 +24,23 @@ class CurrencyCardTheme {
     required this.flagEmoji,
   });
 
-  static CurrencyCardTheme forCode(String code, {bool isCrypto = false, bool isDefault = false}) {
+  static CurrencyCardTheme forCode(
+    String code, {
+    bool isCrypto = false,
+    bool isDefault = false,
+  }) {
     final normalized = code.toUpperCase().trim();
 
-    if (isCrypto || normalized == 'USDT' || normalized == 'BTC' || normalized == 'ETH') {
+    if (isCrypto ||
+        normalized == 'USDT' ||
+        normalized == 'BTC' ||
+        normalized == 'ETH') {
       return const CurrencyCardTheme(
-        gradientColors: [Color(0xFF0D322B), Color(0xFF164E43), Color(0xFF092520)],
+        gradientColors: [
+          Color(0xFF0D322B),
+          Color(0xFF164E43),
+          Color(0xFF092520),
+        ],
         accentColor: Color(0xFF26A69A),
         currencyName: 'Tether USD',
         flagEmoji: '₮',
@@ -39,35 +50,55 @@ class CurrencyCardTheme {
     switch (normalized) {
       case 'USD':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
+          gradientColors: [
+            Color(0xFF0F2027),
+            Color(0xFF203A43),
+            Color(0xFF2C5364),
+          ],
           accentColor: Color(0xFF4CA1AF),
           currencyName: 'US Dollar',
           flagEmoji: '🇺🇸',
         );
       case 'EUR':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF0B192C), Color(0xFF1E3E62), Color(0xFF000000)],
+          gradientColors: [
+            Color(0xFF0B192C),
+            Color(0xFF1E3E62),
+            Color(0xFF000000),
+          ],
           accentColor: Color(0xFFFFD700),
           currencyName: 'Euro',
           flagEmoji: '🇪🇺',
         );
       case 'GBP':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF1E1B4B), Color(0xFF312E81), Color(0xFF0F172A)],
+          gradientColors: [
+            Color(0xFF1E1B4B),
+            Color(0xFF312E81),
+            Color(0xFF0F172A),
+          ],
           accentColor: Color(0xFF818CF8),
           currencyName: 'British Pound',
           flagEmoji: '🇬🇧',
         );
       case 'TRY':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF3F0B13), Color(0xFF6A1B29), Color(0xFF2B070D)],
+          gradientColors: [
+            Color(0xFF3F0B13),
+            Color(0xFF6A1B29),
+            Color(0xFF2B070D),
+          ],
           accentColor: Color(0xFFE53935),
           currencyName: 'Turkish Lira',
           flagEmoji: '🇹🇷',
         );
       case 'AED':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF282116), Color(0xFF4A3E2A), Color(0xFF1B160E)],
+          gradientColors: [
+            Color(0xFF282116),
+            Color(0xFF4A3E2A),
+            Color(0xFF1B160E),
+          ],
           accentColor: Color(0xFFD4AF37),
           currencyName: 'UAE Dirham',
           flagEmoji: '🇦🇪',
@@ -75,7 +106,11 @@ class CurrencyCardTheme {
       case 'CNY':
       case 'RMB':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF2B1015), Color(0xFF4A1822), Color(0xFF1F0B10)],
+          gradientColors: [
+            Color(0xFF2B1015),
+            Color(0xFF4A1822),
+            Color(0xFF1F0B10),
+          ],
           accentColor: Color(0xFFFF4D4F),
           currencyName: 'Chinese Yuan',
           flagEmoji: '🇨🇳',
@@ -83,14 +118,22 @@ class CurrencyCardTheme {
       case 'IRT':
       case 'TOMAN':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF0F382C), Color(0xFF1B5E4A), Color(0xFF0B2920)],
+          gradientColors: [
+            Color(0xFF0F382C),
+            Color(0xFF1B5E4A),
+            Color(0xFF0B2920),
+          ],
           accentColor: Color(0xFF38D39F),
           currencyName: 'تومان (Toman)',
           flagEmoji: '🇮🇷',
         );
       case 'IRR':
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF132A24), Color(0xFF1F463D), Color(0xFF0C1B17)],
+          gradientColors: [
+            Color(0xFF132A24),
+            Color(0xFF1F463D),
+            Color(0xFF0C1B17),
+          ],
           accentColor: Color(0xFF48BB78),
           currencyName: 'ریال (Rial)',
           flagEmoji: '🇮🇷',
@@ -98,14 +141,22 @@ class CurrencyCardTheme {
       default:
         if (isDefault) {
           return const CurrencyCardTheme(
-            gradientColors: [Color(0xFF1A1A24), Color(0xFF2D2D3D), Color(0xFF14141E)],
+            gradientColors: [
+              Color(0xFF1A1A24),
+              Color(0xFF2D2D3D),
+              Color(0xFF14141E),
+            ],
             accentColor: Color(0xFF90CAF9),
             currencyName: 'کیف پول اصلی',
             flagEmoji: '💳',
           );
         }
         return const CurrencyCardTheme(
-          gradientColors: [Color(0xFF1A2A44), Color(0xFF2C3E50), Color(0xFF141E30)],
+          gradientColors: [
+            Color(0xFF1A2A44),
+            Color(0xFF2C3E50),
+            Color(0xFF141E30),
+          ],
           accentColor: AppColors.mainSoftBlue,
           currencyName: 'کیف پول چندارزی',
           flagEmoji: '💳',
@@ -294,16 +345,11 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
             offset: const Offset(0, 1.5),
           ),
         ],
-        border: Border.all(
-          color: const Color(0xFFFFF2AC),
-          width: 0.6,
-        ),
+        border: Border.all(color: const Color(0xFFFFF2AC), width: 0.6),
       ),
       child: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2.5),
-        child: CustomPaint(
-          painter: _EmvChipPainter(),
-        ),
+        child: CustomPaint(painter: _EmvChipPainter()),
       ),
     );
   }
@@ -313,9 +359,9 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
   /// glyphs only — passing an already-symmetric icon through this is a no-op
   /// in LTR but would wrongly flip it in RTL, so it is opt-in per call site.
   Widget _mirrorInRtl(IconData icon) => Transform.flip(
-        flipX: Directionality.of(context) == TextDirection.rtl,
-        child: Icon(icon, color: Colors.white, size: 13),
-      );
+    flipX: Directionality.of(context) == TextDirection.rtl,
+    child: Icon(icon, color: Colors.white, size: 13),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -332,8 +378,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
       animation: _animation,
       builder: (context, child) {
         final angle = _animation.value * pi;
-        final shineOpacity =
-            (sin(_animation.value * pi) * 0.20).clamp(0.0, 0.20);
+        final shineOpacity = (sin(_animation.value * pi) * 0.20).clamp(
+          0.0,
+          0.20,
+        );
         return Transform(
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.0012)
@@ -355,7 +403,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         gradient: LinearGradient(
-                          begin: Alignment(-1.0 + (_animation.value * 2.0), -1.0),
+                          begin: Alignment(
+                            -1.0 + (_animation.value * 2.0),
+                            -1.0,
+                          ),
                           end: Alignment(1.0 + (_animation.value * 2.0), 1.0),
                           colors: [
                             Colors.white.withValues(alpha: 0.0),
@@ -381,12 +432,14 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
     final accountNo = widget.wallet.accountNo ?? '•••• •••• •••• ••••';
 
     return GestureDetector(
-      onTap: widget.onTap ?? () {
-        Get.toNamed(
-          BaseRoute.walletsDetails,
-          arguments: {"wallet_id": widget.wallet.id},
-        );
-      },
+      onTap:
+          widget.onTap ??
+          () {
+            Get.toNamed(
+              BaseRoute.walletsDetails,
+              arguments: {"wallet_id": widget.wallet.id},
+            );
+          },
       child: Container(
         width: widget.width,
         height: widget.height,
@@ -470,7 +523,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(8),
@@ -482,7 +538,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(theme.flagEmoji, style: const TextStyle(fontSize: 12)),
+                              Text(
+                                theme.flagEmoji,
+                                style: const TextStyle(fontSize: 12),
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 code,
@@ -515,7 +574,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                           borderRadius: BorderRadius.circular(22),
                           onTap: _flipCard,
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                            constraints: const BoxConstraints(
+                              minWidth: 44,
+                              minHeight: 44,
+                            ),
                             child: Center(
                               child: Container(
                                 padding: const EdgeInsets.all(6),
@@ -637,7 +699,9 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                                     softWrap: false,
                                     textDirection: TextDirection.ltr,
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.82),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.82,
+                                      ),
                                       fontSize: 12,
                                       fontFamily: 'monospace',
                                       letterSpacing: 1.5,
@@ -661,11 +725,17 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       const SizedBox(width: 8),
                     if (widget.wallet.isDefault == true)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 7,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: theme.accentColor.withValues(alpha: 0.22),
                           borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: theme.accentColor.withValues(alpha: 0.4), width: 0.6),
+                          border: Border.all(
+                            color: theme.accentColor.withValues(alpha: 0.4),
+                            width: 0.6,
+                          ),
                         ),
                         child: Text(
                           l10nPick(
@@ -731,10 +801,7 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
           children: [
             const SizedBox(height: 14),
             // Magnetic Stripe
-            Container(
-              height: 32,
-              color: Colors.black87,
-            ),
+            Container(height: 32, color: Colors.black87),
             const SizedBox(height: 12),
             // Signature and Account Details
             Padding(
@@ -744,7 +811,12 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                   Expanded(
                     child: Container(
                       height: 28,
-                      padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                        10,
+                        0,
+                        10,
+                        0,
+                      ),
                       alignment: AlignmentDirectional.centerStart.resolve(
                         Directionality.of(context),
                       ),
@@ -775,7 +847,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                   // Copy Account Number button
                   IconButton(
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                    constraints: const BoxConstraints(
+                      minWidth: 44,
+                      minHeight: 44,
+                    ),
                     tooltip: l10nPick(
                       context,
                       en: 'Copy account number',
@@ -785,15 +860,26 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       tr: 'Hesap numarasını kopyala',
                       ru: 'Скопировать номер счёта',
                     ),
-                    icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 16),
+                    icon: const Icon(
+                      Icons.copy_rounded,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                     onPressed: () => _copyAccountNo(accountNo),
                   ),
                   const SizedBox(width: 4),
                   // Flip back icon button
                   IconButton(
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-                    icon: const Icon(Icons.flip_to_front_rounded, color: Colors.white, size: 20),
+                    constraints: const BoxConstraints(
+                      minWidth: 44,
+                      minHeight: 44,
+                    ),
+                    icon: const Icon(
+                      Icons.flip_to_front_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                     onPressed: _flipCard,
                     tooltip: l10nPick(
                       context,
@@ -887,13 +973,27 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                         tr: 'Yatır',
                         ru: 'Пополнить',
                       ),
-                      icon: const Icon(Icons.add_circle_outline_rounded, color: Colors.white, size: 13),
+                      icon: const Icon(
+                        Icons.add_circle_outline_rounded,
+                        color: Colors.white,
+                        size: 13,
+                      ),
                       onTap: () {
-                        final isUsdt = (widget.wallet.code ?? '').toUpperCase().trim() == 'USDT';
+                        final isUsdt =
+                            (widget.wallet.code ?? '').toUpperCase().trim() ==
+                            'USDT';
                         if (isUsdt) {
-                          CryptoDepositBottomSheet.show(context, wallet: widget.wallet);
+                          CryptoDepositBottomSheet.show(
+                            context,
+                            wallet: widget.wallet,
+                          );
                         } else {
-                          Get.toNamed(BaseRoute.addMoney, arguments: {'wallet_id': widget.wallet.id?.toString() ?? ''});
+                          Get.toNamed(
+                            BaseRoute.addMoney,
+                            arguments: {
+                              'wallet_id': widget.wallet.id?.toString() ?? '',
+                            },
+                          );
                         }
                       },
                     ),
@@ -910,9 +1010,18 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                         tr: 'Çekim',
                         ru: 'Вывод',
                       ),
-                      icon: const Icon(Icons.arrow_circle_up_rounded, color: Colors.white, size: 13),
+                      icon: const Icon(
+                        Icons.arrow_circle_up_rounded,
+                        color: Colors.white,
+                        size: 13,
+                      ),
                       onTap: () {
-                        Get.toNamed(BaseRoute.withdraw, arguments: {'wallet_id': widget.wallet.id?.toString() ?? ''});
+                        Get.toNamed(
+                          BaseRoute.withdraw,
+                          arguments: {
+                            'wallet_id': widget.wallet.id?.toString() ?? '',
+                          },
+                        );
                       },
                     ),
                   ),
@@ -930,7 +1039,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                       ),
                       icon: _mirrorInRtl(Icons.send_rounded),
                       onTap: () {
-                        Get.toNamed(BaseRoute.transfer, arguments: {'wallet_id': widget.wallet.id});
+                        Get.toNamed(
+                          BaseRoute.transfer,
+                          arguments: {'wallet_id': widget.wallet.id},
+                        );
                       },
                     ),
                   ),
@@ -946,9 +1058,18 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
                         tr: 'Takas',
                         ru: 'Обмен',
                       ),
-                      icon: const Icon(Icons.swap_horiz_rounded, color: Colors.white, size: 13),
+                      icon: const Icon(
+                        Icons.swap_horiz_rounded,
+                        color: Colors.white,
+                        size: 13,
+                      ),
                       onTap: () {
-                        Get.toNamed(BaseRoute.exchange, arguments: {'from_wallet': widget.wallet.id?.toString() ?? ''});
+                        Get.toNamed(
+                          BaseRoute.exchange,
+                          arguments: {
+                            'from_wallet': widget.wallet.id?.toString() ?? '',
+                          },
+                        );
                       },
                     ),
                   ),
@@ -981,7 +1102,10 @@ class _MultiCurrencyFlipCardState extends State<MultiCurrencyFlipCard>
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.20), width: 0.8),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.20),
+              width: 0.8,
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

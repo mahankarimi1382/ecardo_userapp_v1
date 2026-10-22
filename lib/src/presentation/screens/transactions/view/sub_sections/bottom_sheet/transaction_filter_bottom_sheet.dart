@@ -255,10 +255,40 @@ class _TransactionFilterBottomSheetState
 
   Widget _buildDirectionChips(BuildContext context, bool isDark) {
     final items = [
-      {'label': l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل'), 'val': 0, 'icon': Icons.swap_vert_rounded, 'color': AppColors.mainSoftBlue},
-      {'label': l10nPick(context, en: 'Income (+)', fa: 'ورودی (+)', ar: 'وارد (+)'), 'val': 1, 'icon': Icons.arrow_downward_rounded, 'color': AppColors.success},
-      {'label': l10nPick(context, en: 'Expense (-)', fa: 'خروجی (-)', ar: 'صادر (-)'), 'val': 2, 'icon': Icons.arrow_upward_rounded, 'color': AppColors.error},
-      {'label': l10nPick(context, en: 'Transfer', fa: 'انتقال', ar: 'تحويل'), 'val': 3, 'icon': Icons.sync_alt_rounded, 'color': AppColors.mutedBlue},
+      {
+        'label': l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل'),
+        'val': 0,
+        'icon': Icons.swap_vert_rounded,
+        'color': AppColors.mainSoftBlue,
+      },
+      {
+        'label': l10nPick(
+          context,
+          en: 'Income (+)',
+          fa: 'ورودی (+)',
+          ar: 'وارد (+)',
+        ),
+        'val': 1,
+        'icon': Icons.arrow_downward_rounded,
+        'color': AppColors.success,
+      },
+      {
+        'label': l10nPick(
+          context,
+          en: 'Expense (-)',
+          fa: 'خروجی (-)',
+          ar: 'صادر (-)',
+        ),
+        'val': 2,
+        'icon': Icons.arrow_upward_rounded,
+        'color': AppColors.error,
+      },
+      {
+        'label': l10nPick(context, en: 'Transfer', fa: 'انتقال', ar: 'تحويل'),
+        'val': 3,
+        'icon': Icons.sync_alt_rounded,
+        'color': AppColors.mutedBlue,
+      },
     ];
 
     return Wrap(
@@ -286,7 +316,9 @@ class _TransactionFilterBottomSheetState
             decoration: BoxDecoration(
               color: isSelected
                   ? color.withValues(alpha: isDark ? 0.28 : 0.15)
-                  : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
+                  : (isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightBackground),
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               border: Border.all(
                 color: isSelected
@@ -301,7 +333,11 @@ class _TransactionFilterBottomSheetState
                 Icon(
                   item['icon'] as IconData,
                   size: AppSpacing.iconXs,
-                  color: isSelected ? color : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                  color: isSelected
+                      ? color
+                      : (isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
@@ -310,7 +346,9 @@ class _TransactionFilterBottomSheetState
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: isSelected
                         ? (isDark ? AppColors.darkTextPrimary : color)
-                        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                        : (isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary),
                   ),
                 ),
               ],
@@ -331,7 +369,12 @@ class _TransactionFilterBottomSheetState
         children: [
           // All Statuses Chip
           _buildChip(
-            label: l10nPick(context, en: 'All Statuses', fa: 'همه وضعیت‌ها', ar: 'جميع الحالات'),
+            label: l10nPick(
+              context,
+              en: 'All Statuses',
+              fa: 'همه وضعیت‌ها',
+              ar: 'جميع الحالات',
+            ),
             isSelected: selectedIndex == -1,
             color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
             isDark: isDark,
@@ -388,9 +431,13 @@ class _TransactionFilterBottomSheetState
         spacing: AppSpacing.sm,
         runSpacing: AppSpacing.sm,
         children: _popularTypes.map((type) {
-          final isSelected = (type == 'All' && selectedType.isEmpty) ||
+          final isSelected =
+              (type == 'All' && selectedType.isEmpty) ||
               selectedType.toLowerCase() == type.toLowerCase();
-          final localizedLabel = TransactionTypeList.localizeType(context, type);
+          final localizedLabel = TransactionTypeList.localizeType(
+            context,
+            type,
+          );
 
           return _buildChip(
             label: localizedLabel,
@@ -434,7 +481,9 @@ class _TransactionFilterBottomSheetState
         decoration: BoxDecoration(
           color: isSelected
               ? color.withValues(alpha: isDark ? 0.28 : 0.15)
-              : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
+              : (isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightBackground),
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           border: Border.all(
             color: isSelected
@@ -449,7 +498,9 @@ class _TransactionFilterBottomSheetState
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
             color: isSelected
                 ? (isDark ? AppColors.darkTextPrimary : color)
-                : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                : (isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary),
           ),
         ),
       ),

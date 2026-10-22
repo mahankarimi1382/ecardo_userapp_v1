@@ -16,9 +16,7 @@ void main() {
   Widget wrapWithScreenUtil(Widget child) {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
-      builder: (context, _) => MaterialApp(
-        home: Scaffold(body: child),
-      ),
+      builder: (context, _) => MaterialApp(home: Scaffold(body: child)),
     );
   }
 
@@ -69,49 +67,52 @@ void main() {
       expect(DeviceOs.windows.brandColor, isNotNull);
     });
 
-    test('DeviceSessionItem.icon resolves specific icons for phone, iphone, and desktop', () {
-      final androidPhone = DeviceSessionItem(
-        id: '1',
-        deviceName: 'Pixel 8',
-        deviceType: DeviceFormFactor.phone,
-        os: DeviceOs.android,
-        operatingSystem: 'Android 14',
-        browser: 'App',
-        ipAddress: '1.1.1.1',
-        location: 'Tehran',
-        loginTimestamp: DateTime.now(),
-        lastActive: DateTime.now(),
-      );
-      expect(androidPhone.icon, Icons.phone_android_rounded);
+    test(
+      'DeviceSessionItem.icon resolves specific icons for phone, iphone, and desktop',
+      () {
+        final androidPhone = DeviceSessionItem(
+          id: '1',
+          deviceName: 'Pixel 8',
+          deviceType: DeviceFormFactor.phone,
+          os: DeviceOs.android,
+          operatingSystem: 'Android 14',
+          browser: 'App',
+          ipAddress: '1.1.1.1',
+          location: 'Tehran',
+          loginTimestamp: DateTime.now(),
+          lastActive: DateTime.now(),
+        );
+        expect(androidPhone.icon, Icons.phone_android_rounded);
 
-      final iphone = DeviceSessionItem(
-        id: '2',
-        deviceName: 'iPhone 15 Pro',
-        deviceType: DeviceFormFactor.phone,
-        os: DeviceOs.ios,
-        operatingSystem: 'iOS 17',
-        browser: 'App',
-        ipAddress: '1.1.1.1',
-        location: 'Tehran',
-        loginTimestamp: DateTime.now(),
-        lastActive: DateTime.now(),
-      );
-      expect(iphone.icon, Icons.phone_iphone_rounded);
+        final iphone = DeviceSessionItem(
+          id: '2',
+          deviceName: 'iPhone 15 Pro',
+          deviceType: DeviceFormFactor.phone,
+          os: DeviceOs.ios,
+          operatingSystem: 'iOS 17',
+          browser: 'App',
+          ipAddress: '1.1.1.1',
+          location: 'Tehran',
+          loginTimestamp: DateTime.now(),
+          lastActive: DateTime.now(),
+        );
+        expect(iphone.icon, Icons.phone_iphone_rounded);
 
-      final desktop = DeviceSessionItem(
-        id: '3',
-        deviceName: 'MacBook Pro',
-        deviceType: DeviceFormFactor.desktop,
-        os: DeviceOs.macos,
-        operatingSystem: 'macOS 14',
-        browser: 'Chrome',
-        ipAddress: '1.1.1.1',
-        location: 'Tehran',
-        loginTimestamp: DateTime.now(),
-        lastActive: DateTime.now(),
-      );
-      expect(desktop.icon, Icons.laptop_mac_rounded);
-    });
+        final desktop = DeviceSessionItem(
+          id: '3',
+          deviceName: 'MacBook Pro',
+          deviceType: DeviceFormFactor.desktop,
+          os: DeviceOs.macos,
+          operatingSystem: 'macOS 14',
+          browser: 'Chrome',
+          ipAddress: '1.1.1.1',
+          location: 'Tehran',
+          loginTimestamp: DateTime.now(),
+          lastActive: DateTime.now(),
+        );
+        expect(desktop.icon, Icons.laptop_mac_rounded);
+      },
+    );
   });
 
   group('VisualPinDotsIndicator Widget Tests', () {
@@ -132,18 +133,16 @@ void main() {
     testWidgets('renders 6 dots correctly', (tester) async {
       await tester.pumpWidget(
         wrapWithScreenUtil(
-          const VisualPinDotsIndicator(
-            length: 6,
-            filledCount: 4,
-            isDark: true,
-          ),
+          const VisualPinDotsIndicator(length: 6, filledCount: 4, isDark: true),
         ),
       );
 
       expect(find.byType(VisualPinDotsIndicator), findsOneWidget);
     });
 
-    testWidgets('compact mode renders configured and unconfigured dots', (tester) async {
+    testWidgets('compact mode renders configured and unconfigured dots', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         wrapWithScreenUtil(
           Row(
@@ -171,10 +170,7 @@ void main() {
     testWidgets('renders pulsing beacon without exceptions', (tester) async {
       await tester.pumpWidget(
         wrapWithScreenUtil(
-          const PulsingIndicator(
-            color: Colors.green,
-            size: 10,
-          ),
+          const PulsingIndicator(color: Colors.green, size: 10),
         ),
       );
 
@@ -202,12 +198,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        wrapWithScreenUtil(
-          ThisDeviceHeroCard(
-            device: device,
-            isDark: false,
-          ),
-        ),
+        wrapWithScreenUtil(ThisDeviceHeroCard(device: device, isDark: false)),
       );
 
       expect(find.text('Samsung Galaxy S24 Ultra'), findsOneWidget);
@@ -218,7 +209,9 @@ void main() {
   });
 
   group('OtherSessionCard Widget Tests', () {
-    testWidgets('renders active session card and fires onRevoke', (tester) async {
+    testWidgets('renders active session card and fires onRevoke', (
+      tester,
+    ) async {
       bool revoked = false;
       final session = DeviceSessionItem(
         id: 'sess_other',
@@ -287,7 +280,9 @@ void main() {
         ),
       );
 
-      final emergencyBtn = tester.widget<ElevatedButton>(find.byType(ElevatedButton));
+      final emergencyBtn = tester.widget<ElevatedButton>(
+        find.byType(ElevatedButton),
+      );
       expect(emergencyBtn.onPressed, isNull);
     });
   });

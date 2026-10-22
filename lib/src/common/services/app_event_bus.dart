@@ -12,14 +12,11 @@ class BalanceChangedEvent extends AppEvent {
   final String? currencyCode;
   final double? amount;
 
-  BalanceChangedEvent({
-    this.sourceModule,
-    this.currencyCode,
-    this.amount,
-  });
+  BalanceChangedEvent({this.sourceModule, this.currencyCode, this.amount});
 
   @override
-  String toString() => 'BalanceChangedEvent(source: $sourceModule, currency: $currencyCode, amount: $amount)';
+  String toString() =>
+      'BalanceChangedEvent(source: $sourceModule, currency: $currencyCode, amount: $amount)';
 }
 
 /// Emitted when KYC tier is upgraded or documents are submitted/reviewed.
@@ -30,7 +27,8 @@ class KycStatusChangedEvent extends AppEvent {
   KycStatusChangedEvent({this.newLevel, this.status});
 
   @override
-  String toString() => 'KycStatusChangedEvent(level: $newLevel, status: $status)';
+  String toString() =>
+      'KycStatusChangedEvent(level: $newLevel, status: $status)';
 }
 
 /// Emitted when the user creates, deletes, or modifies a wallet.
@@ -41,7 +39,8 @@ class WalletListChangedEvent extends AppEvent {
   WalletListChangedEvent({this.action, this.currencyCode});
 
   @override
-  String toString() => 'WalletListChangedEvent(action: $action, currency: $currencyCode)';
+  String toString() =>
+      'WalletListChangedEvent(action: $action, currency: $currencyCode)';
 }
 
 /// Emitted when user personal profile or settings change.
@@ -60,7 +59,8 @@ class AppEventBus {
   static final AppEventBus _instance = AppEventBus._internal();
   static AppEventBus get instance => _instance;
 
-  final StreamController<AppEvent> _controller = StreamController<AppEvent>.broadcast();
+  final StreamController<AppEvent> _controller =
+      StreamController<AppEvent>.broadcast();
 
   /// Emits an event to all active subscribers.
   static void emit(AppEvent event) {

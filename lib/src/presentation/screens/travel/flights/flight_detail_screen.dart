@@ -27,10 +27,7 @@ import 'flight_models.dart';
 class FlightDetailScreen extends StatefulWidget {
   final TravelOffer offer;
 
-  const FlightDetailScreen({
-    super.key,
-    required this.offer,
-  });
+  const FlightDetailScreen({super.key, required this.offer});
 
   @override
   State<FlightDetailScreen> createState() => _FlightDetailScreenState();
@@ -65,12 +62,18 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         backgroundColor: ECardoTokens.surfaceCard(context),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, color: ECardoTokens.ink(context)),
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: ECardoTokens.ink(context),
+          ),
           onPressed: () => Get.back(),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.info_outline_rounded, color: ECardoTokens.ink(context)),
+            icon: Icon(
+              Icons.info_outline_rounded,
+              color: ECardoTokens.ink(context),
+            ),
             onPressed: () => _showInfoDialog(context),
           ),
         ],
@@ -98,11 +101,17 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             _buildPriceSummary(context, bookingDetails),
             SizedBox(height: 18.h),
             CommonButton(
-              text: l10nPick(context, en: 'Continue to Checkout', fa: 'ادامه به پرداخت', ar: 'الانتقال إلى الدفع'),
+              text: l10nPick(
+                context,
+                en: 'Continue to Checkout',
+                fa: 'ادامه به پرداخت',
+                ar: 'الانتقال إلى الدفع',
+              ),
               height: 52.h,
               fontSize: 14,
               backgroundColor: ECardoTokens.brand700(context),
-              onPressed: () => _goToCheckout(context, controller, bookingDetails),
+              onPressed: () =>
+                  _goToCheckout(context, controller, bookingDetails),
             ),
             SizedBox(height: 24.h),
           ],
@@ -112,16 +121,20 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   }
 
   Widget _buildRouteTimeline(BuildContext context) {
-    final originCode = widget.offer.attributes['origin']?.toString() ??
+    final originCode =
+        widget.offer.attributes['origin']?.toString() ??
         widget.offer.metadata['origin']?.toString() ??
         'DXB';
-    final destCode = widget.offer.attributes['destination']?.toString() ??
+    final destCode =
+        widget.offer.attributes['destination']?.toString() ??
         widget.offer.metadata['destination']?.toString() ??
         'LHR';
     final depTime = _extractTime(widget.offer.attributes['departure']);
     final arrTime = _extractTime(widget.offer.attributes['arrival']);
-    final isRoundTrip = widget.offer.metadata['is_return_flight'] == null ||
-        widget.offer.metadata['is_return_flight'].toString().toLowerCase() != 'true';
+    final isRoundTrip =
+        widget.offer.metadata['is_return_flight'] == null ||
+        widget.offer.metadata['is_return_flight'].toString().toLowerCase() !=
+            'true';
 
     return Container(
       padding: EdgeInsets.all(14.r),
@@ -151,7 +164,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                       ),
                     ),
                     SizedBox(height: 2.h),
-                    Text(originCode,
+                    Text(
+                      originCode,
                       style: TextStyle(
                         color: ECardoTokens.ink(context),
                         fontSize: 13.sp,
@@ -190,7 +204,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      l10nPick(context, en: 'Direct', fa: 'مستقیم', ar: 'مباشر'),
+                      l10nPick(
+                        context,
+                        en: 'Direct',
+                        fa: 'مستقیم',
+                        ar: 'مباشر',
+                      ),
                       style: TextStyle(
                         color: ECardoTokens.brand500(context),
                         fontSize: 9.sp,
@@ -218,7 +237,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                       ),
                     ),
                     SizedBox(height: 2.h),
-                    Text(destCode,
+                    Text(
+                      destCode,
                       style: TextStyle(
                         color: ECardoTokens.ink(context),
                         fontSize: 13.sp,
@@ -237,22 +257,51 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildSegmentChip(context,
-                  originCode: widget.offer.metadata['outbound_origin']?.toString() ?? 'DXB',
-                  destCode: widget.offer.metadata['outbound_dest']?.toString() ?? 'IST',
-                  time: widget.offer.metadata['outbound_time']?.toString().split(' ').first ?? '10:30',
-                  label: l10nPick(context, en: 'Outbound', fa: 'رفت', ar: 'ذهاب'),
+                _buildSegmentChip(
+                  context,
+                  originCode:
+                      widget.offer.metadata['outbound_origin']?.toString() ??
+                      'DXB',
+                  destCode:
+                      widget.offer.metadata['outbound_dest']?.toString() ??
+                      'IST',
+                  time:
+                      widget.offer.metadata['outbound_time']
+                          ?.toString()
+                          .split(' ')
+                          .first ??
+                      '10:30',
+                  label: l10nPick(
+                    context,
+                    en: 'Outbound',
+                    fa: 'رفت',
+                    ar: 'ذهاب',
+                  ),
                 ),
                 Container(
                   width: 1,
                   height: 20.r,
                   color: ECardoTokens.borderStrong(context),
                 ),
-                _buildSegmentChip(context,
-                  originCode: widget.offer.metadata['return_origin']?.toString() ?? 'IST',
-                  destCode: widget.offer.metadata['return_dest']?.toString() ?? 'DXB',
-                  time: widget.offer.metadata['return_time']?.toString().split(' ').first ?? '14:45',
-                  label: l10nPick(context, en: 'Return', fa: 'برگشت', ar: 'عودة'),
+                _buildSegmentChip(
+                  context,
+                  originCode:
+                      widget.offer.metadata['return_origin']?.toString() ??
+                      'IST',
+                  destCode:
+                      widget.offer.metadata['return_dest']?.toString() ?? 'DXB',
+                  time:
+                      widget.offer.metadata['return_time']
+                          ?.toString()
+                          .split(' ')
+                          .first ??
+                      '14:45',
+                  label: l10nPick(
+                    context,
+                    en: 'Return',
+                    fa: 'برگشت',
+                    ar: 'عودة',
+                  ),
                 ),
               ],
             ),
@@ -262,7 +311,13 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     );
   }
 
-  Widget _buildSegmentChip(BuildContext context, {required String originCode, required String destCode, required String time, required String label}) {
+  Widget _buildSegmentChip(
+    BuildContext context, {
+    required String originCode,
+    required String destCode,
+    required String time,
+    required String label,
+  }) {
     return Column(
       children: [
         Container(
@@ -286,7 +341,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 ),
               ),
               SizedBox(height: 2.h),
-              Text('$originCode → $destCode',
+              Text(
+                '$originCode → $destCode',
                 style: TextStyle(
                   color: ECardoTokens.inkMuted(context),
                   fontSize: 9.5.sp,
@@ -296,7 +352,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
           ),
         ),
         SizedBox(height: 6.h),
-        Text(label,
+        Text(
+          label,
           style: TextStyle(
             color: ECardoTokens.brand500(context),
             fontWeight: FontWeight.w800,
@@ -308,13 +365,17 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   }
 
   Widget _buildOfferHeader(BuildContext context, String lang) {
-    final airlineName = widget.offer.attributes['airline_name']?.toString() ??
+    final airlineName =
+        widget.offer.attributes['airline_name']?.toString() ??
         widget.offer.metadata['carrier_name']?.toString() ??
         'Emirates';
-    final flightNumber = widget.offer.attributes['flight_number']?.toString() ??
+    final flightNumber =
+        widget.offer.attributes['flight_number']?.toString() ??
         widget.offer.metadata['flight_number']?.toString() ??
         'EK 972';
-    final aircraftType = widget.offer.metadata['aircraft_type']?.toString() ?? 'Boeing 777-300ER';
+    final aircraftType =
+        widget.offer.metadata['aircraft_type']?.toString() ??
+        'Boeing 777-300ER';
 
     return Container(
       padding: EdgeInsets.all(14.r),
@@ -377,7 +438,10 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                 ),
                 child: Text(
-                  FlightCabinClass.fromString(widget.offer.attributes['cabin_class']?.toString() ?? 'economy').localizedLabel(lang),
+                  FlightCabinClass.fromString(
+                    widget.offer.attributes['cabin_class']?.toString() ??
+                        'economy',
+                  ).localizedLabel(lang),
                   style: TextStyle(
                     color: ECardoTokens.success(context),
                     fontWeight: FontWeight.w800,
@@ -392,15 +456,32 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildInfoRow(context,
+              _buildInfoRow(
+                context,
                 icon: Icons.view_in_ar_rounded,
-                label: l10nPick(context, en: 'Aircraft', fa: 'نوع هواپیما', ar: 'نوع الطائرة'),
+                label: l10nPick(
+                  context,
+                  en: 'Aircraft',
+                  fa: 'نوع هواپیما',
+                  ar: 'نوع الطائرة',
+                ),
                 value: aircraftType,
               ),
-              _buildInfoRow(context,
+              _buildInfoRow(
+                context,
                 icon: Icons.wifi_rounded,
-                label: l10nPick(context, en: 'In-flight Wifi', fa: 'اینترنت پرواز', ar: 'إنترنت الطائرة'),
-                value: l10nPick(context, en: 'Available', fa: 'فعال', ar: 'متوفر'),
+                label: l10nPick(
+                  context,
+                  en: 'In-flight Wifi',
+                  fa: 'اینترنت پرواز',
+                  ar: 'إنترنت الطائرة',
+                ),
+                value: l10nPick(
+                  context,
+                  en: 'Available',
+                  fa: 'فعال',
+                  ar: 'متوفر',
+                ),
               ),
             ],
           ),
@@ -408,15 +489,37 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildInfoRow(context,
+              _buildInfoRow(
+                context,
                 icon: Icons.power_input_rounded,
-                label: l10nPick(context, en: 'USB Power', fa: 'پورت USB', ar: 'منفذ يو إس بي'),
-                value: l10nPick(context, en: 'At seat', fa: 'کنار صندلی', ar: 'بجانب المقعد'),
+                label: l10nPick(
+                  context,
+                  en: 'USB Power',
+                  fa: 'پورت USB',
+                  ar: 'منفذ يو إس بي',
+                ),
+                value: l10nPick(
+                  context,
+                  en: 'At seat',
+                  fa: 'کنار صندلی',
+                  ar: 'بجانب المقعد',
+                ),
               ),
-              _buildInfoRow(context,
+              _buildInfoRow(
+                context,
                 icon: Icons.tv_rounded,
-                label: l10nPick(context, en: 'Entertainment', fa: 'سرگرمی', ar: 'تسلية'),
-                value: l10nPick(context, en: 'Live TV & Movies', fa: 'فیلم و سرگرمی', ar: 'أفلام وترفيه'),
+                label: l10nPick(
+                  context,
+                  en: 'Entertainment',
+                  fa: 'سرگرمی',
+                  ar: 'تسلية',
+                ),
+                value: l10nPick(
+                  context,
+                  en: 'Live TV & Movies',
+                  fa: 'فیلم و سرگرمی',
+                  ar: 'أفلام وترفيه',
+                ),
               ),
             ],
           ),
@@ -425,7 +528,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, {required IconData icon, required String label, required String value}) {
+  Widget _buildInfoRow(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -477,10 +585,19 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.policy_rounded, size: 16.r, color: ECardoTokens.brand500(context)),
+              Icon(
+                Icons.policy_rounded,
+                size: 16.r,
+                color: ECardoTokens.brand500(context),
+              ),
               SizedBox(width: 6.w),
               Text(
-                l10nPick(context, en: 'Fare Family', fa: 'خانواده کرایه', ar: 'أسرة الأجرة'),
+                l10nPick(
+                  context,
+                  en: 'Fare Family',
+                  fa: 'خانواده کرایه',
+                  ar: 'أسرة الأجرة',
+                ),
                 style: TextStyle(
                   color: ECardoTokens.ink(context),
                   fontWeight: FontWeight.w800,
@@ -508,7 +625,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                 ),
                 child: Text(
-                  l10nPick(context, en: 'Best Value', fa: 'بهترین ارزش', ar: 'أفضل قيمة'),
+                  l10nPick(
+                    context,
+                    en: 'Best Value',
+                    fa: 'بهترین ارزش',
+                    ar: 'أفضل قيمة',
+                  ),
                   style: TextStyle(
                     color: ECardoTokens.brand500(context),
                     fontWeight: FontWeight.w800,
@@ -538,10 +660,19 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.luggage_rounded, size: 16.r, color: ECardoTokens.brand500(context)),
+              Icon(
+                Icons.luggage_rounded,
+                size: 16.r,
+                color: ECardoTokens.brand500(context),
+              ),
               SizedBox(width: 6.w),
               Text(
-                l10nPick(context, en: 'Baggage Allowance', fa: 'بار مجاز', ar: 'سعة الحقائب'),
+                l10nPick(
+                  context,
+                  en: 'Baggage Allowance',
+                  fa: 'بار مجاز',
+                  ar: 'سعة الحقائب',
+                ),
                 style: TextStyle(
                   color: ECardoTokens.ink(context),
                   fontWeight: FontWeight.w800,
@@ -563,10 +694,19 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.cloud_rounded, size: 22.r, color: ECardoTokens.brand500(context)),
+                      Icon(
+                        Icons.cloud_rounded,
+                        size: 22.r,
+                        color: ECardoTokens.brand500(context),
+                      ),
                       SizedBox(height: 6.h),
                       Text(
-                        l10nPick(context, en: 'Cabin Bag', fa: 'کابین', ar: 'الحقيبة الشخصية'),
+                        l10nPick(
+                          context,
+                          en: 'Cabin Bag',
+                          fa: 'کابین',
+                          ar: 'الحقيبة الشخصية',
+                        ),
                         style: TextStyle(
                           color: ECardoTokens.inkMuted(context),
                           fontSize: 10.sp,
@@ -596,10 +736,19 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.luggage_rounded, size: 22.r, color: ECardoTokens.brand500(context)),
+                      Icon(
+                        Icons.luggage_rounded,
+                        size: 22.r,
+                        color: ECardoTokens.brand500(context),
+                      ),
                       SizedBox(height: 6.h),
                       Text(
-                        l10nPick(context, en: 'Checked Bag', fa: 'چمدان', ar: 'الحقيبة المسجلة'),
+                        l10nPick(
+                          context,
+                          en: 'Checked Bag',
+                          fa: 'چمدان',
+                          ar: 'الحقيبة المسجلة',
+                        ),
                         style: TextStyle(
                           color: ECardoTokens.inkMuted(context),
                           fontSize: 10.sp,
@@ -626,31 +775,63 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   }
 
   Widget _buildAircraftAndAmenities(BuildContext context, String lang) {
-    final aircraft = widget.offer.metadata['aircraft_type']?.toString() ?? 'Boeing 777-300ER';
+    final aircraft =
+        widget.offer.metadata['aircraft_type']?.toString() ??
+        'Boeing 777-300ER';
     final amenities = [
       {
         'icon': Icons.wifi_rounded,
-        'label': l10nPick(context, en: 'Wi-Fi', fa: 'اینترنت وای‌فای', ar: 'واي فاي'),
+        'label': l10nPick(
+          context,
+          en: 'Wi-Fi',
+          fa: 'اینترنت وای‌فای',
+          ar: 'واي فاي',
+        ),
       },
       {
         'icon': Icons.power_input_rounded,
-        'label': l10nPick(context, en: 'USB Power', fa: 'شارژر USB', ar: 'شاحن USB'),
+        'label': l10nPick(
+          context,
+          en: 'USB Power',
+          fa: 'شارژر USB',
+          ar: 'شاحن USB',
+        ),
       },
       {
         'icon': Icons.tv_rounded,
-        'label': l10nPick(context, en: 'Entertainment', fa: 'سیستم سرگرمی', ar: 'نظام ترفيه'),
+        'label': l10nPick(
+          context,
+          en: 'Entertainment',
+          fa: 'سیستم سرگرمی',
+          ar: 'نظام ترفيه',
+        ),
       },
       {
         'icon': Icons.food_bank_rounded,
-        'label': l10nPick(context, en: 'Meal Service', fa: 'پذیرایی و غذا', ar: 'وجبات طعام'),
+        'label': l10nPick(
+          context,
+          en: 'Meal Service',
+          fa: 'پذیرایی و غذا',
+          ar: 'وجبات طعام',
+        ),
       },
       {
         'icon': Icons.headphones_rounded,
-        'label': l10nPick(context, en: 'Headphones Provided', fa: 'ارائه هدفون', ar: 'سماعات رأس'),
+        'label': l10nPick(
+          context,
+          en: 'Headphones Provided',
+          fa: 'ارائه هدفون',
+          ar: 'سماعات رأس',
+        ),
       },
       {
         'icon': Icons.ac_unit_rounded,
-        'label': l10nPick(context, en: 'Individual AC', fa: 'تهویه مطبوع اختصاصی', ar: 'تكييف مخصص'),
+        'label': l10nPick(
+          context,
+          en: 'Individual AC',
+          fa: 'تهویه مطبوع اختصاصی',
+          ar: 'تكييف مخصص',
+        ),
       },
     ];
 
@@ -666,10 +847,19 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.stairs_rounded, size: 16.r, color: ECardoTokens.brand500(context)),
+              Icon(
+                Icons.stairs_rounded,
+                size: 16.r,
+                color: ECardoTokens.brand500(context),
+              ),
               SizedBox(width: 6.w),
               Text(
-                l10nPick(context, en: 'Aircraft & Amenities', fa: 'هواپیما و امکانات', ar: 'الطائرة والمرافق'),
+                l10nPick(
+                  context,
+                  en: 'Aircraft & Amenities',
+                  fa: 'هواپیما و امکانات',
+                  ar: 'الطائرة والمرافق',
+                ),
                 style: TextStyle(
                   color: ECardoTokens.ink(context),
                   fontWeight: FontWeight.w800,
@@ -697,7 +887,11 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 decoration: BoxDecoration(
                   color: ECardoTokens.brand100(context),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                  border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.2)),
+                  border: Border.all(
+                    color: ECardoTokens.brand500(
+                      context,
+                    ).withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -727,13 +921,18 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
   }
 
   Widget _buildCancellationPolicy(BuildContext context, String lang) {
-    final refundable = widget.offer.metadata['refundable']?.toString().toLowerCase() == 'true';
-    final changeAllowed = widget.offer.metadata['change_allowed']?.toString().toLowerCase() != 'false';
+    final refundable =
+        widget.offer.metadata['refundable']?.toString().toLowerCase() == 'true';
+    final changeAllowed =
+        widget.offer.metadata['change_allowed']?.toString().toLowerCase() !=
+        'false';
 
     return Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: refundable ? ECardoTokens.successBg(context) : ECardoTokens.warningBg(context),
+        color: refundable
+            ? ECardoTokens.successBg(context)
+            : ECardoTokens.warningBg(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
         border: Border.all(
           color: refundable
@@ -747,21 +946,31 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
           Row(
             children: [
               Icon(
-                refundable ? Icons.check_circle_rounded : Icons.error_outline_rounded,
+                refundable
+                    ? Icons.check_circle_rounded
+                    : Icons.error_outline_rounded,
                 size: 16.r,
-                color: refundable ? ECardoTokens.success(context) : ECardoTokens.warning(context),
+                color: refundable
+                    ? ECardoTokens.success(context)
+                    : ECardoTokens.warning(context),
               ),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
                   l10nPick(
                     context,
-                    en: refundable ? 'Fully Refundable Fare' : 'Non-Refundable Fare',
-                    fa: refundable ? 'کرایه بازگشت‌پذیر کامل' : 'کرایه غیرقابل بازگشت',
+                    en: refundable
+                        ? 'Fully Refundable Fare'
+                        : 'Non-Refundable Fare',
+                    fa: refundable
+                        ? 'کرایه بازگشت‌پذیر کامل'
+                        : 'کرایه غیرقابل بازگشت',
                     ar: refundable ? 'عائد غير قابل للاسترداد' : 'غير مسترد',
                   ),
                   style: TextStyle(
-                    color: refundable ? ECardoTokens.success(context) : ECardoTokens.warning(context),
+                    color: refundable
+                        ? ECardoTokens.success(context)
+                        : ECardoTokens.warning(context),
                     fontWeight: FontWeight.w800,
                     fontSize: 12.5.sp,
                   ),
@@ -773,15 +982,27 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildRuleChip(context,
+              _buildRuleChip(
+                context,
                 icon: Icons.undo_rounded,
                 enabled: changeAllowed,
-                label: l10nPick(context, en: 'Changes Allowed', fa: 'تغییر مجاز', ar: 'التغييرات المسموحة'),
+                label: l10nPick(
+                  context,
+                  en: 'Changes Allowed',
+                  fa: 'تغییر مجاز',
+                  ar: 'التغييرات المسموحة',
+                ),
               ),
-              _buildRuleChip(context,
+              _buildRuleChip(
+                context,
                 icon: Icons.replay_rounded,
                 enabled: refundable,
-                label: l10nPick(context, en: 'Full Refund', fa: 'بازگشت کامل وجه', ar: 'استرجاع كامل'),
+                label: l10nPick(
+                  context,
+                  en: 'Full Refund',
+                  fa: 'بازگشت کامل وجه',
+                  ar: 'استرجاع كامل',
+                ),
               ),
             ],
           ),
@@ -803,7 +1024,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     );
   }
 
-  Widget _buildRuleChip(BuildContext context, {required IconData icon, required bool enabled, required String label}) {
+  Widget _buildRuleChip(
+    BuildContext context, {
+    required IconData icon,
+    required bool enabled,
+    required String label,
+  }) {
     return Column(
       children: [
         Container(
@@ -815,7 +1041,9 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
             border: Border.all(
               color: enabled
-                  ? (icon == Icons.undo_rounded ? ECardoTokens.info(context) : ECardoTokens.success(context))
+                  ? (icon == Icons.undo_rounded
+                        ? ECardoTokens.info(context)
+                        : ECardoTokens.success(context))
                   : ECardoTokens.border(context),
             ),
           ),
@@ -826,7 +1054,9 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 icon,
                 size: 13.r,
                 color: enabled
-                    ? (icon == Icons.undo_rounded ? ECardoTokens.info(context) : ECardoTokens.success(context))
+                    ? (icon == Icons.undo_rounded
+                          ? ECardoTokens.info(context)
+                          : ECardoTokens.success(context))
                     : ECardoTokens.inkMuted(context),
               ),
               SizedBox(width: 4.w),
@@ -847,10 +1077,16 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     );
   }
 
-  Widget _buildFareBreakdown(BuildContext context, TravelBookingDetails bookingDetails) {
+  Widget _buildFareBreakdown(
+    BuildContext context,
+    TravelBookingDetails bookingDetails,
+  ) {
     final components = <(String, double)>[];
-    final adultCount = bookingDetails.adultCount > 0 ? bookingDetails.adultCount : 1;
-    final totalPrice = (widget.offer.attributes['basePrice'] as num?)?.toDouble() ?? 0;
+    final adultCount = bookingDetails.adultCount > 0
+        ? bookingDetails.adultCount
+        : 1;
+    final totalPrice =
+        (widget.offer.attributes['basePrice'] as num?)?.toDouble() ?? 0;
 
     components.add(('Base Fare × $adultCount', totalPrice));
     components.add(('Taxes & Fees', totalPrice * 0.12));
@@ -868,7 +1104,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, en: 'Fare Breakdown', fa: 'جزئیات قیمت', ar: 'تحليل السعر'),
+            l10nPick(
+              context,
+              en: 'Fare Breakdown',
+              fa: 'جزئیات قیمت',
+              ar: 'تحليل السعر',
+            ),
             style: TextStyle(
               color: ECardoTokens.ink(context),
               fontWeight: FontWeight.w800,
@@ -933,8 +1174,13 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     );
   }
 
-  Widget _buildSeatSelectionCard(BuildContext context, TravelBookingDetails bookingDetails, String lang) {
-    final passengerCount = (bookingDetails.adultCount + bookingDetails.childCount) > 0
+  Widget _buildSeatSelectionCard(
+    BuildContext context,
+    TravelBookingDetails bookingDetails,
+    String lang,
+  ) {
+    final passengerCount =
+        (bookingDetails.adultCount + bookingDetails.childCount) > 0
         ? (bookingDetails.adultCount + bookingDetails.childCount)
         : 1;
 
@@ -953,7 +1199,11 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
             children: [
               Row(
                 children: [
-                  Icon(Icons.airline_seat_recline_extra_rounded, size: 16.r, color: ECardoTokens.brand500(context)),
+                  Icon(
+                    Icons.airline_seat_recline_extra_rounded,
+                    size: 16.r,
+                    color: ECardoTokens.brand500(context),
+                  ),
                   SizedBox(width: 8.w),
                   Text(
                     l10nPick(
@@ -998,10 +1248,14 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                     height: 100.r,
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceSunken(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg,
+                      ),
                     ),
                     child: CustomPaint(
-                      painter: _AirplaneLayoutPainter(backgroundColor: ECardoTokens.inkMuted(context)),
+                      painter: _AirplaneLayoutPainter(
+                        backgroundColor: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                   ),
                 ),
@@ -1011,7 +1265,8 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                   child: IconButton(
                     icon: const Icon(Icons.edit_outlined),
                     color: ECardoTokens.brand500(context),
-                    onPressed: () => _openSeatMap(context, bookingDetails, lang),
+                    onPressed: () =>
+                        _openSeatMap(context, bookingDetails, lang),
                   ),
                 ),
               ],
@@ -1022,8 +1277,14 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     );
   }
 
-  void _openSeatMap(BuildContext context, TravelBookingDetails bookingDetails, String lang) async {
-    final cabin = (widget.offer.attributes['cabin_class']?.toString().toLowerCase()) == 'business'
+  void _openSeatMap(
+    BuildContext context,
+    TravelBookingDetails bookingDetails,
+    String lang,
+  ) async {
+    final cabin =
+        (widget.offer.attributes['cabin_class']?.toString().toLowerCase()) ==
+            'business'
         ? SeatCabinClass.business
         : SeatCabinClass.economy;
 
@@ -1034,17 +1295,24 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
       maxSelectedSeats: 4,
       initiallySelectedSeatIds: [],
       title: widget.offer.attributes['airline_name']?.toString() ?? 'Airline',
-      subtitle: '${widget.offer.attributes['origin'] ?? 'DXB'} → ${widget.offer.attributes['destination'] ?? 'LHR'}',
+      subtitle:
+          '${widget.offer.attributes['origin'] ?? 'DXB'} → ${widget.offer.attributes['destination'] ?? 'LHR'}',
       currency: totalCurrency,
     );
 
     if (result != null && mounted) {
-      setState(() => _selectedSeats = result.map((s) => s.toCabinSeatModel()).toList());
+      setState(
+        () => _selectedSeats = result.map((s) => s.toCabinSeatModel()).toList(),
+      );
     }
   }
 
-  Widget _buildPriceSummary(BuildContext context, TravelBookingDetails bookingDetails) {
-    final passengerCount = (bookingDetails.adultCount + bookingDetails.childCount) > 0
+  Widget _buildPriceSummary(
+    BuildContext context,
+    TravelBookingDetails bookingDetails,
+  ) {
+    final passengerCount =
+        (bookingDetails.adultCount + bookingDetails.childCount) > 0
         ? (bookingDetails.adultCount + bookingDetails.childCount)
         : 1;
 
@@ -1078,7 +1346,9 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                 formatTravelPrice(
                   context,
                   amount: (totalAmount * passengerCount),
-                  currency: widget.offer.total.currency.isEmpty ? 'USD' : widget.offer.total.currency,
+                  currency: widget.offer.total.currency.isEmpty
+                      ? 'USD'
+                      : widget.offer.total.currency,
                 ),
                 style: TextStyle(
                   color: ECardoTokens.inkOnBrand,
@@ -1104,22 +1374,33 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
       ? widget.offer.total.currency
       : 'USD';
 
-  void _goToCheckout(BuildContext context, dynamic controller, TravelBookingDetails bookingDetails) {
+  void _goToCheckout(
+    BuildContext context,
+    dynamic controller,
+    TravelBookingDetails bookingDetails,
+  ) {
     AppHaptics.medium();
-    Get.to(() => TravelCheckoutScreen(
-      type: TravelProductType.flight,
-      productId: widget.offer.id,
-      title: travelLocalizedKey(AppLocalizations.of(context)!, widget.offer.titleKey),
-      total: TravelMoney(
-        amount: totalAmount * (bookingDetails.adultCount > 0 ? bookingDetails.adultCount : 1),
-        currency: totalCurrency,
+    Get.to(
+      () => TravelCheckoutScreen(
+        type: TravelProductType.flight,
+        productId: widget.offer.id,
+        title: travelLocalizedKey(
+          AppLocalizations.of(context)!,
+          widget.offer.titleKey,
+        ),
+        total: TravelMoney(
+          amount:
+              totalAmount *
+              (bookingDetails.adultCount > 0 ? bookingDetails.adultCount : 1),
+          currency: totalCurrency,
+        ),
+        bookingDetails: bookingDetails.copyWith(
+          specialRequests: _selectedSeats.isNotEmpty
+              ? 'Selected seats: ${_selectedSeats.map((s) => s.id).join(', ')}'
+              : '',
+        ),
       ),
-      bookingDetails: bookingDetails.copyWith(
-        specialRequests: _selectedSeats.isNotEmpty
-            ? 'Selected seats: ${_selectedSeats.map((s) => s.id).join(', ')}'
-            : '',
-      ),
-    ));
+    );
   }
 
   String _extractTime(String? raw) {
@@ -1136,7 +1417,9 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
         padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 24.h),
         decoration: BoxDecoration(
           color: ECardoTokens.surfaceCard(context),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(ECardoTokens.radius2xl)),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(ECardoTokens.radius2xl),
+          ),
           boxShadow: ECardoTokens.shadowSheet(context),
         ),
         child: SafeArea(
@@ -1154,7 +1437,12 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
               ),
               SizedBox(height: 16.h),
               Text(
-                l10nPick(context, en: 'Flight Information', fa: 'اطلاعات پرواز', ar: 'معلومات الرحلة'),
+                l10nPick(
+                  context,
+                  en: 'Flight Information',
+                  fa: 'اطلاعات پرواز',
+                  ar: 'معلومات الرحلة',
+                ),
                 style: TextStyle(
                   color: ECardoTokens.ink(context),
                   fontSize: 16.sp,
@@ -1221,7 +1509,9 @@ class _AirplaneLayoutPainter extends CustomPainter {
 
 extension on SeatItem {
   CabinSeatModel toCabinSeatModel() {
-    final feature = extraPrice > 0 ? CabinSeatFeature.exitRow : CabinSeatFeature.standard;
+    final feature = extraPrice > 0
+        ? CabinSeatFeature.exitRow
+        : CabinSeatFeature.standard;
     final position = switch (type) {
       SeatType.window => CabinSeatPosition.window,
       SeatType.middle => CabinSeatPosition.middle,
@@ -1235,7 +1525,9 @@ extension on SeatItem {
       position: position,
       feature: feature,
       cabinClass: FlightCabinClass.economy,
-      state: status == SeatStatus.selected ? CabinSeatState.selected : CabinSeatState.available,
+      state: status == SeatStatus.selected
+          ? CabinSeatState.selected
+          : CabinSeatState.available,
       extraPrice: extraPrice,
     );
   }

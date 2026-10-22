@@ -88,10 +88,12 @@ class _HomeScreenState extends State<HomeScreen> {
           statusBarColor: Colors.transparent,
           statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
           statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-          systemNavigationBarColor:
-              isDark ? AppColors.darkBackground : AppColors.lightBackground,
-          systemNavigationBarIconBrightness:
-              isDark ? Brightness.light : Brightness.dark,
+          systemNavigationBarColor: isDark
+              ? AppColors.darkBackground
+              : AppColors.lightBackground,
+          systemNavigationBarIconBrightness: isDark
+              ? Brightness.light
+              : Brightness.dark,
         ),
         child: Scaffold(
           backgroundColor: theme.scaffoldBackgroundColor,
@@ -153,8 +155,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
                 return RefreshIndicator(
                   color: theme.colorScheme.primary,
-                  backgroundColor:
-                      isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  backgroundColor: isDark
+                      ? AppColors.darkSurface
+                      : AppColors.lightSurface,
                   onRefresh: () => homeController.loadData(),
                   child: CustomScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
@@ -178,18 +181,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }),
                       ),
-                      const SliverToBoxAdapter(
-                        child: SizedBox(height: 8),
-                      ),
+                      const SliverToBoxAdapter(child: SizedBox(height: 8)),
                       // --- Balance Hero (replaces old action buttons) ---
                       const SliverToBoxAdapter(child: BalanceHeroSection()),
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),
                       // SERVICES HUB ENTRY: prominent access to all services
-                      const SliverToBoxAdapter(
-                        child: ServicesEntrySection(),
-                      ),
+                      const SliverToBoxAdapter(child: ServicesEntrySection()),
                       const SliverToBoxAdapter(
                         child: SizedBox(height: AppSpacing.sectionGap),
                       ),

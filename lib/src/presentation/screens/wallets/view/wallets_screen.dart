@@ -124,8 +124,9 @@ class WalletsScreen extends StatelessWidget {
 
                 return RefreshIndicator(
                   color: Theme.of(context).colorScheme.primary,
-                  backgroundColor:
-                      isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  backgroundColor: isDark
+                      ? AppColors.darkSurface
+                      : AppColors.lightSurface,
                   onRefresh: () => walletsController.fetchWallets(),
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(
@@ -161,8 +162,9 @@ class _WalletsShimmerLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final baseColor = isDark ? const Color(0xFF262625) : Colors.grey.shade300;
-    final highlightColor =
-        isDark ? const Color(0xFF383836) : Colors.grey.shade100;
+    final highlightColor = isDark
+        ? const Color(0xFF383836)
+        : Colors.grey.shade100;
     final blockColor = isDark ? const Color(0xFF262625) : AppColors.white;
 
     return Shimmer.fromColors(
@@ -241,8 +243,9 @@ class _WalletsErrorState extends StatelessWidget {
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: Center(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.page,
+                  ),
                   child: EcardoErrorView(
                     // Left off deliberately: the radar pulse repeats forever, so
                     // the tree never goes idle and `pumpAndSettle` times out.
@@ -253,8 +256,7 @@ class _WalletsErrorState extends StatelessWidget {
                     iconData: Icons.cloud_off_rounded,
                     title: localization.allControllerLoadError,
                     message: localization.noInternetConnectionMessage,
-                    retryLabel:
-                        localization.noInternetConnectionRetryButton,
+                    retryLabel: localization.noInternetConnectionRetryButton,
                     onRetry: () {
                       HapticFeedback.lightImpact();
                       onRetry();
@@ -294,17 +296,20 @@ class _WalletsEmptyState extends StatelessWidget {
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: Center(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.page,
+                  ),
                   child: EcardoEmptyState(
                     // Left off deliberately: the breathing glow repeats forever, so
                     // the tree never goes idle and `pumpAndSettle` times out.
                     animateGlow: false,
                     iconData: Icons.account_balance_wallet_outlined,
-                    iconColor:
-                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                    glowColor:
-                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    iconColor: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
+                    glowColor: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                     title: localization.walletListEmptyTitle,
                     description: localization.walletListEmptySubtitle,
                     // The component renders the primary CTA above the secondary,

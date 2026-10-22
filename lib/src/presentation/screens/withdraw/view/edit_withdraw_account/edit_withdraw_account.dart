@@ -135,8 +135,7 @@ class _EditWithdrawAccountState extends State<EditWithdrawAccount> {
                                               isDark: isDark,
                                             )
                                           : CommonTextInputField(
-                                              borderRadius:
-                                                  AppSpacing.radiusLg,
+                                              borderRadius: AppSpacing.radiusLg,
                                               backgroundColor:
                                                   AppColors.transparent,
                                               hintText: isTextArea

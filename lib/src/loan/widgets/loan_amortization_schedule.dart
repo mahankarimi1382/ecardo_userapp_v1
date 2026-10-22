@@ -32,7 +32,8 @@ class InstallmentItem {
     this.id,
   });
 
-  bool get isPaid => status.toLowerCase() == 'paid' || status.toUpperCase() == 'WAIVED';
+  bool get isPaid =>
+      status.toLowerCase() == 'paid' || status.toUpperCase() == 'WAIVED';
   bool get isOverdue => status.toLowerCase() == 'overdue';
   bool get isPending => !isPaid && !isOverdue;
 
@@ -41,7 +42,8 @@ class InstallmentItem {
     List<LoanInstallmentModel> list, {
     double? totalLoanPrincipal,
   }) {
-    double currentBalance = totalLoanPrincipal ??
+    double currentBalance =
+        totalLoanPrincipal ??
         list.fold<double>(0.0, (sum, item) => sum + item.principalPart);
 
     final result = <InstallmentItem>[];
@@ -56,7 +58,9 @@ class InstallmentItem {
           totalPayment: inst.amount,
           remainingBalance: currentBalance,
           isGracePeriod: inst.principalPart == 0 && inst.interestPart > 0,
-          status: inst.isPaid ? 'paid' : (inst.isOverdue ? 'overdue' : 'pending'),
+          status: inst.isPaid
+              ? 'paid'
+              : (inst.isOverdue ? 'overdue' : 'pending'),
           id: inst.id,
         ),
       );
@@ -84,7 +88,9 @@ class InstallmentItem {
 
     final baseDate = startDate ?? DateTime.now().add(const Duration(days: 30));
     final monthlyRate = (annualInterestRatePct / 100.0) / 12.0;
-    final graceMonths = gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1)).toInt();
+    final graceMonths = gracePeriodMonths
+        .clamp(0, math.max(0, tenureMonths - 1))
+        .toInt();
     final amortizingMonths = math.max(1, tenureMonths - graceMonths);
 
     // Standard EMI for amortizing period
@@ -93,7 +99,9 @@ class InstallmentItem {
       emi = principal / amortizingMonths;
     } else {
       final factor = math.pow(1.0 + monthlyRate, amortizingMonths).toDouble();
-      emi = factor <= 1.0 ? principal / amortizingMonths : (principal * monthlyRate * factor) / (factor - 1.0);
+      emi = factor <= 1.0
+          ? principal / amortizingMonths
+          : (principal * monthlyRate * factor) / (factor - 1.0);
     }
 
     final schedule = <InstallmentItem>[];
@@ -203,7 +211,8 @@ class LoanAmortizationSchedule extends StatefulWidget {
   }
 
   @override
-  State<LoanAmortizationSchedule> createState() => _LoanAmortizationScheduleState();
+  State<LoanAmortizationSchedule> createState() =>
+      _LoanAmortizationScheduleState();
 }
 
 class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
@@ -221,7 +230,10 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     if (widget.installments != null && widget.installments!.isNotEmpty) {
       return widget.installments!;
     }
-    if (widget.principal != null && widget.principal! > 0 && widget.tenureMonths != null && widget.tenureMonths! > 0) {
+    if (widget.principal != null &&
+        widget.principal! > 0 &&
+        widget.tenureMonths != null &&
+        widget.tenureMonths! > 0) {
       return InstallmentItem.generateSchedule(
         principal: widget.principal!,
         annualInterestRatePct: widget.annualInterestRatePct ?? 14.0,
@@ -235,7 +247,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
   String _formatAmount(double val) {
     if (widget.currency.toUpperCase() == 'USD') {
       final isWhole = (val - val.truncateToDouble()).abs() < 0.001;
-      final fixedStr = isWhole ? val.toStringAsFixed(0) : val.toStringAsFixed(2);
+      final fixedStr = isWhole
+          ? val.toStringAsFixed(0)
+          : val.toStringAsFixed(2);
       final parts = fixedStr.split('.');
       final intPart = parts[0].replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -287,10 +301,12 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     return items.fold<double>(0.0, (sum, i) => sum + i.interestAmount);
   }
 
-  double get _computedTotalRepayment => _computedTotalPrincipal + _computedTotalInterest;
+  double get _computedTotalRepayment =>
+      _computedTotalPrincipal + _computedTotalInterest;
 
   int get _paidCount => _resolvedInstallments.where((i) => i.isPaid).length;
-  int get _overdueCount => _resolvedInstallments.where((i) => i.isOverdue).length;
+  int get _overdueCount =>
+      _resolvedInstallments.where((i) => i.isOverdue).length;
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +319,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
         ),
         child: Center(
           child: Text(
@@ -316,7 +334,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
             ),
             style: TextStyle(
               fontSize: 12.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ),
@@ -352,11 +372,18 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
           Center(
             child: TextButton.icon(
               style: TextButton.styleFrom(
-                foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w, vertical: 8.h),
+                foregroundColor: isDark
+                    ? AppColors.darkPrimary
+                    : AppColors.lightPrimary,
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 16.w,
+                  vertical: 8.h,
+                ),
               ),
               icon: Icon(
-                _showAllItems ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                _showAllItems
+                    ? Icons.keyboard_arrow_up_rounded
+                    : Icons.keyboard_arrow_down_rounded,
                 size: 20.sp,
               ),
               label: Text(
@@ -369,7 +396,10 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                         zh: '收起',
                       )
                     : '${l10nPick(context, fa: 'مشاهده تمام', en: 'View All', ar: 'عرض جميع', zh: '查看全部')} ${items.length} ${l10nPick(context, fa: 'قسط', en: 'Installments', ar: 'أقساط', zh: '期')}',
-                style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700),
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               onPressed: () {
                 setState(() {
@@ -383,7 +413,11 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     );
   }
 
-  Widget _buildSummaryHeader(BuildContext context, bool isDark, int totalCount) {
+  Widget _buildSummaryHeader(
+    BuildContext context,
+    bool isDark,
+    int totalCount,
+  ) {
     final principal = _computedTotalPrincipal;
     final interest = _computedTotalInterest;
     final total = _computedTotalRepayment;
@@ -391,11 +425,19 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     final principalPct = total > 0 ? (principal / total * 100).round() : 100;
     final interestPct = total > 0 ? (100 - principalPct) : 0;
 
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
@@ -420,7 +462,11 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               Expanded(
                 child: Row(
                   children: [
-                    Icon(Icons.pie_chart_outline_rounded, size: 16.sp, color: primaryAccent),
+                    Icon(
+                      Icons.pie_chart_outline_rounded,
+                      size: 16.sp,
+                      color: primaryAccent,
+                    ),
                     SizedBox(width: 6.w),
                     Expanded(
                       child: Text(
@@ -446,7 +492,10 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               if (_paidCount > 0) ...[
                 SizedBox(width: 6.w),
                 Container(
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: 8.w,
+                    vertical: 3.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.successContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
@@ -472,30 +521,56 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               Expanded(
                 child: _buildHeaderMetric(
                   context,
-                  label: l10nPick(context, fa: 'اصل وام', en: 'Principal', ar: 'الأصل', zh: '本金'),
+                  label: l10nPick(
+                    context,
+                    fa: 'اصل وام',
+                    en: 'Principal',
+                    ar: 'الأصل',
+                    zh: '本金',
+                  ),
                   value: _formatAmount(principal),
                   color: textPrimary,
                   textSecondary: textSecondary,
                 ),
               ),
-              Container(width: 1, height: 35.h, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+              Container(
+                width: 1,
+                height: 35.h,
+                color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+              ),
               Expanded(
                 child: Padding(
                   padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w),
                   child: _buildHeaderMetric(
                     context,
-                    label: l10nPick(context, fa: 'کل سود', en: 'Total Interest', ar: 'إجمالي الفائدة', zh: '总利息'),
+                    label: l10nPick(
+                      context,
+                      fa: 'کل سود',
+                      en: 'Total Interest',
+                      ar: 'إجمالي الفائدة',
+                      zh: '总利息',
+                    ),
                     value: _formatAmount(interest),
                     color: const Color(0xFFD97706),
                     textSecondary: textSecondary,
                   ),
                 ),
               ),
-              Container(width: 1, height: 35.h, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+              Container(
+                width: 1,
+                height: 35.h,
+                color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+              ),
               Expanded(
                 child: _buildHeaderMetric(
                   context,
-                  label: l10nPick(context, fa: 'مجموع بازپرداخت', en: 'Total Due', ar: 'الإجمالي', zh: '总还款'),
+                  label: l10nPick(
+                    context,
+                    fa: 'مجموع بازپرداخت',
+                    en: 'Total Due',
+                    ar: 'الإجمالي',
+                    zh: '总还款',
+                  ),
                   value: _formatAmount(total),
                   color: primaryAccent,
                   textSecondary: textSecondary,
@@ -587,25 +662,28 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
           if (_overdueCount > 0) ...[
             SizedBox(height: AppSpacing.sm.h),
             Container(
-              padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 6.h),
+              padding: EdgeInsetsDirectional.symmetric(
+                horizontal: 10.w,
+                vertical: 6.h,
+              ),
               decoration: BoxDecoration(
                 color: AppColors.errorContainer,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: AppColors.error.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.warning_amber_rounded, size: 16.sp, color: AppColors.error),
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 16.sp,
+                    color: AppColors.error,
+                  ),
                   SizedBox(width: 6.w),
                   Expanded(
                     child: Text(
-                      '$_overdueCount ${l10nPick(
-                            context,
-                            fa: 'قسط معوق سررسید گذشته دارید. لطفاً تسویه فرمایید.',
-                            en: 'overdue installment(s). Please settle to prevent late fees.',
-                            ar: 'قسط متأخر. يرجى السداد لتجنب الغرامات.',
-                            zh: '笔分期已逾期。请及时还款。',
-                          )}',
+                      '$_overdueCount ${l10nPick(context, fa: 'قسط معوق سررسید گذشته دارید. لطفاً تسویه فرمایید.', en: 'overdue installment(s). Please settle to prevent late fees.', ar: 'قسط متأخر. يرجى السداد لتجنب الغرامات.', zh: '笔分期已逾期。请及时还款。')}',
                       style: TextStyle(
                         fontSize: 10.5.sp,
                         fontWeight: FontWeight.w700,
@@ -658,10 +736,16 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
   }
 
   Widget _buildViewToggleBar(BuildContext context, bool isDark, int count) {
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -671,7 +755,11 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
             '${l10nPick(context, fa: 'جدول استهلاک اقساط', en: 'Amortization Table', ar: 'جدول الاستهلاك', zh: '还款计划表')} ($count)',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: textPrimary),
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w800,
+              color: textPrimary,
+            ),
           ),
         ),
         SizedBox(width: 8.w),
@@ -687,7 +775,13 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               _buildViewToggleButton(
                 context,
                 icon: Icons.table_chart_outlined,
-                label: l10nPick(context, fa: 'جدول', en: 'Table', ar: 'جدول', zh: '表格'),
+                label: l10nPick(
+                  context,
+                  fa: 'جدول',
+                  en: 'Table',
+                  ar: 'جدول',
+                  zh: '表格',
+                ),
                 isSelected: !_isCompactView,
                 primaryAccent: primaryAccent,
                 isDark: isDark,
@@ -697,7 +791,13 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               _buildViewToggleButton(
                 context,
                 icon: Icons.view_agenda_outlined,
-                label: l10nPick(context, fa: 'کارت‌ها', en: 'Cards', ar: 'بطاقات', zh: '卡片'),
+                label: l10nPick(
+                  context,
+                  fa: 'کارت‌ها',
+                  en: 'Cards',
+                  ar: 'بطاقات',
+                  zh: '卡片',
+                ),
                 isSelected: _isCompactView,
                 primaryAccent: primaryAccent,
                 isDark: isDark,
@@ -724,7 +824,10 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
       onTap: onTap,
       child: AnimatedContainer(
         duration: AppSpacing.fast,
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 4.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 7.w,
+          vertical: 4.h,
+        ),
         decoration: BoxDecoration(
           color: isSelected ? primaryAccent : Colors.transparent,
           borderRadius: BorderRadius.circular(6.r),
@@ -736,7 +839,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               size: 13.sp,
               color: isSelected
                   ? (isDark ? AppColors.deepBlack : Colors.white)
-                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                  : (isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary),
             ),
             SizedBox(width: 3.w),
             Text(
@@ -746,7 +851,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                 color: isSelected
                     ? (isDark ? AppColors.deepBlack : Colors.white)
-                    : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                    : (isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary),
               ),
             ),
           ],
@@ -757,11 +864,21 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
 
   /// Clean Amortization Schedule Table showing:
   /// Month #, Principal, Interest, and Remaining Balance
-  Widget _buildFullAmortizationTable(BuildContext context, List<InstallmentItem> items, bool isDark) {
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+  Widget _buildFullAmortizationTable(
+    BuildContext context,
+    List<InstallmentItem> items,
+    bool isDark,
+  ) {
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final headerBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final headerBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
     final zebraColor = isDark
         ? AppColors.darkSurfaceVariant.withValues(alpha: 0.4)
         : AppColors.lightBackground.withValues(alpha: 0.6);
@@ -793,38 +910,106 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
             columnSpacing: 14.w,
             columns: [
               DataColumn(
-                label: Text(l10nPick(context, fa: 'ماه #', en: 'Month #', ar: 'الشهر', zh: '期数')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    fa: 'ماه #',
+                    en: 'Month #',
+                    ar: 'الشهر',
+                    zh: '期数',
+                  ),
+                ),
               ),
               DataColumn(
-                label: Text(l10nPick(context, fa: 'اصل وام', en: 'Principal', ar: 'الأصل', zh: '本金')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    fa: 'اصل وام',
+                    en: 'Principal',
+                    ar: 'الأصل',
+                    zh: '本金',
+                  ),
+                ),
               ),
               DataColumn(
-                label: Text(l10nPick(context, fa: 'سود', en: 'Interest', ar: 'الفائدة', zh: '利息')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    fa: 'سود',
+                    en: 'Interest',
+                    ar: 'الفائدة',
+                    zh: '利息',
+                  ),
+                ),
               ),
               DataColumn(
-                label: Text(l10nPick(context, fa: 'مبلغ قسط', en: 'Payment', ar: 'القسط', zh: '总额')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    fa: 'مبلغ قسط',
+                    en: 'Payment',
+                    ar: 'القسط',
+                    zh: '总额',
+                  ),
+                ),
               ),
               DataColumn(
-                label: Text(l10nPick(context, fa: 'مانده اصل', en: 'Remaining Balance', ar: 'المتبقي', zh: '剩余本金')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    fa: 'مانده اصل',
+                    en: 'Remaining Balance',
+                    ar: 'المتبقي',
+                    zh: '剩余本金',
+                  ),
+                ),
               ),
               DataColumn(
-                label: Text(l10nPick(context, fa: 'سررسید', en: 'Due Date', ar: 'الاستحقاق', zh: '到期日')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    fa: 'سررسید',
+                    en: 'Due Date',
+                    ar: 'الاستحقاق',
+                    zh: '到期日',
+                  ),
+                ),
               ),
               DataColumn(
-                label: Text(l10nPick(context, fa: 'وضعیت', en: 'Status', ar: 'الحالة', zh: '状态')),
+                label: Text(
+                  l10nPick(
+                    context,
+                    fa: 'وضعیت',
+                    en: 'Status',
+                    ar: 'الحالة',
+                    zh: '状态',
+                  ),
+                ),
               ),
               if (widget.onPayInstallment != null)
                 DataColumn(
-                  label: Text(l10nPick(context, fa: 'عملیات', en: 'Action', ar: 'إجراء', zh: '操作')),
+                  label: Text(
+                    l10nPick(
+                      context,
+                      fa: 'عملیات',
+                      en: 'Action',
+                      ar: 'إجراء',
+                      zh: '操作',
+                    ),
+                  ),
                 ),
             ],
             rows: items.map((item) {
               final isEven = item.installmentNumber % 2 == 0;
               Color rowColor;
               if (item.isOverdue) {
-                rowColor = AppColors.errorContainer.withValues(alpha: isDark ? 0.2 : 0.4);
+                rowColor = AppColors.errorContainer.withValues(
+                  alpha: isDark ? 0.2 : 0.4,
+                );
               } else if (item.isGracePeriod) {
-                rowColor = const Color(0xFFFEF3C7).withValues(alpha: isDark ? 0.15 : 0.35);
+                rowColor = const Color(
+                  0xFFFEF3C7,
+                ).withValues(alpha: isDark ? 0.15 : 0.35);
               } else if (isEven) {
                 rowColor = zebraColor;
               } else {
@@ -847,7 +1032,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                       _formatAmount(item.principalAmount),
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        color: item.principalAmount > 0 ? textPrimary : AppColors.softGray,
+                        color: item.principalAmount > 0
+                            ? textPrimary
+                            : AppColors.softGray,
                       ),
                     ),
                   ),
@@ -867,7 +1054,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                       _formatAmount(item.totalPayment),
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     ),
                   ),
@@ -891,13 +1080,26 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                       !item.isPaid
                           ? TextButton(
                               style: TextButton.styleFrom(
-                                foregroundColor: item.isOverdue ? AppColors.error : AppColors.lightPrimary,
-                                padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
+                                foregroundColor: item.isOverdue
+                                    ? AppColors.error
+                                    : AppColors.lightPrimary,
+                                padding: EdgeInsetsDirectional.symmetric(
+                                  horizontal: 6.w,
+                                  vertical: 2.h,
+                                ),
                               ),
                               onPressed: () => widget.onPayInstallment!(item),
                               child: Text(
-                                l10nPick(context, fa: 'پرداخت', en: 'Pay', ar: 'سداد', zh: '支付'),
-                                style: const TextStyle(fontWeight: FontWeight.w800),
+                                l10nPick(
+                                  context,
+                                  fa: 'پرداخت',
+                                  en: 'Pay',
+                                  ar: 'سداد',
+                                  zh: '支付',
+                                ),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                ),
                               ),
                             )
                           : const SizedBox.shrink(),
@@ -911,7 +1113,11 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     );
   }
 
-  Widget _buildCompactCardsList(BuildContext context, List<InstallmentItem> items, bool isDark) {
+  Widget _buildCompactCardsList(
+    BuildContext context,
+    List<InstallmentItem> items,
+    bool isDark,
+  ) {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -924,15 +1130,31 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     );
   }
 
-  Widget _buildInstallmentCard(BuildContext context, InstallmentItem item, bool isDark) {
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+  Widget _buildInstallmentCard(
+    BuildContext context,
+    InstallmentItem item,
+    bool isDark,
+  ) {
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
-    final principalRatio = item.totalPayment > 0 ? (item.principalAmount / item.totalPayment).clamp(0.0, 1.0) : 0.0;
-    final interestRatio = item.totalPayment > 0 ? (item.interestAmount / item.totalPayment).clamp(0.0, 1.0) : 0.0;
+    final principalRatio = item.totalPayment > 0
+        ? (item.principalAmount / item.totalPayment).clamp(0.0, 1.0)
+        : 0.0;
+    final interestRatio = item.totalPayment > 0
+        ? (item.interestAmount / item.totalPayment).clamp(0.0, 1.0)
+        : 0.0;
 
     return Container(
       padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
@@ -940,7 +1162,9 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
         color: surfaceColor,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
         border: Border.all(
-          color: item.isOverdue ? AppColors.error.withValues(alpha: 0.6) : borderColor,
+          color: item.isOverdue
+              ? AppColors.error.withValues(alpha: 0.6)
+              : borderColor,
           width: item.isOverdue ? 1.4 : 1.0,
         ),
         boxShadow: [
@@ -961,10 +1185,17 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      color: isDark
+                          ? AppColors.darkSurfaceVariant
+                          : AppColors.lightBackground,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                       border: Border.all(color: borderColor),
                     ),
                     child: Text(
@@ -979,13 +1210,24 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
                   if (item.isGracePeriod) ...[
                     SizedBox(width: 6.w),
                     Container(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFEF3C7),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm.r,
+                        ),
                       ),
                       child: Text(
-                        l10nPick(context, fa: 'تنفس (فقط سود)', en: 'Grace', ar: 'سماح', zh: '宽限'),
+                        l10nPick(
+                          context,
+                          fa: 'تنفس (فقط سود)',
+                          en: 'Grace',
+                          ar: 'سماح',
+                          zh: '宽限',
+                        ),
                         style: TextStyle(
                           fontSize: 9.5.sp,
                           fontWeight: FontWeight.w800,
@@ -1095,19 +1337,40 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
               if (!item.isPaid && widget.onPayInstallment != null)
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: item.isOverdue ? AppColors.error : primaryAccent,
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
+                    backgroundColor: item.isOverdue
+                        ? AppColors.error
+                        : primaryAccent,
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.h,
+                    ),
                     minimumSize: Size(0, 28.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
+                    ),
                   ),
                   icon: Icon(
-                    item.isOverdue ? Icons.priority_high_rounded : Icons.payment_rounded,
+                    item.isOverdue
+                        ? Icons.priority_high_rounded
+                        : Icons.payment_rounded,
                     size: 13.sp,
                     color: Colors.white,
                   ),
                   label: Text(
-                    l10nPick(context, fa: 'پرداخت قسط', en: 'Pay', ar: 'سداد', zh: '支付'),
-                    style: TextStyle(fontSize: 10.5.sp, color: Colors.white, fontWeight: FontWeight.w700),
+                    l10nPick(
+                      context,
+                      fa: 'پرداخت قسط',
+                      en: 'Pay',
+                      ar: 'سداد',
+                      zh: '支付',
+                    ),
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   onPressed: () => widget.onPayInstallment!(item),
                 ),
@@ -1118,10 +1381,17 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     );
   }
 
-  Widget _buildStatusBadge(BuildContext context, InstallmentItem item, bool isDark) {
+  Widget _buildStatusBadge(
+    BuildContext context,
+    InstallmentItem item,
+    bool isDark,
+  ) {
     if (item.isPaid) {
       return Container(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 7.w,
+          vertical: 3.h,
+        ),
         decoration: BoxDecoration(
           color: AppColors.successContainer,
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
@@ -1130,10 +1400,20 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle_rounded, size: 12.sp, color: AppColors.success),
+            Icon(
+              Icons.check_circle_rounded,
+              size: 12.sp,
+              color: AppColors.success,
+            ),
             SizedBox(width: 4.w),
             Text(
-              l10nPick(context, fa: 'پرداخت‌شده', en: 'Paid', ar: 'مسدد', zh: '已支付'),
+              l10nPick(
+                context,
+                fa: 'پرداخت‌شده',
+                en: 'Paid',
+                ar: 'مسدد',
+                zh: '已支付',
+              ),
               style: TextStyle(
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w800,
@@ -1147,7 +1427,10 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
 
     if (item.isOverdue) {
       return Container(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 7.w,
+          vertical: 3.h,
+        ),
         decoration: BoxDecoration(
           color: AppColors.errorContainer,
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
@@ -1156,10 +1439,20 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.error_outline_rounded, size: 12.sp, color: AppColors.error),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 12.sp,
+              color: AppColors.error,
+            ),
             SizedBox(width: 4.w),
             Text(
-              l10nPick(context, fa: 'معوق', en: 'Overdue', ar: 'متأخر', zh: '已逾期'),
+              l10nPick(
+                context,
+                fa: 'معوق',
+                en: 'Overdue',
+                ar: 'متأخر',
+                zh: '已逾期',
+              ),
               style: TextStyle(
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w800,
@@ -1175,9 +1468,13 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
     return Container(
       padding: EdgeInsetsDirectional.symmetric(horizontal: 7.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+        color: isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightBackground,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -1185,15 +1482,25 @@ class _LoanAmortizationScheduleState extends State<LoanAmortizationSchedule> {
           Icon(
             Icons.schedule_rounded,
             size: 12.sp,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
           SizedBox(width: 4.w),
           Text(
-            l10nPick(context, fa: 'در انتظار', en: 'Pending', ar: 'معلق', zh: '待付'),
+            l10nPick(
+              context,
+              fa: 'در انتظار',
+              en: 'Pending',
+              ar: 'معلق',
+              zh: '待付',
+            ),
             style: TextStyle(
               fontSize: 10.sp,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ],

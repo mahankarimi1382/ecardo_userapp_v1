@@ -63,7 +63,9 @@ class ServicesEntrySection extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -90,9 +92,15 @@ class ServicesEntrySection extends StatelessWidget {
                   },
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(minWidth: 44.0, minHeight: 44.0),
+                    constraints: const BoxConstraints(
+                      minWidth: 44.0,
+                      minHeight: 44.0,
+                    ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 4.h,
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -109,14 +117,20 @@ class ServicesEntrySection extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                              color: isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet,
                             ),
                           ),
                           SizedBox(width: 2.w),
                           Icon(
-                            isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+                            isRtl
+                                ? Icons.chevron_left_rounded
+                                : Icons.chevron_right_rounded,
                             size: 18.r,
-                            color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet,
                           ),
                         ],
                       ),
@@ -166,9 +180,17 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Lisanslar',
                         ru: 'Лицензии',
                       ),
-                      gradient: const [AppColors.brandViolet, AppColors.brandVioletDeep],
+                      gradient: const [
+                        AppColors.brandViolet,
+                        AppColors.brandVioletDeep,
+                      ],
                       isDark: isDark,
-                      badge: l10nPick(context, en: 'VIP', fa: 'ویژه', ar: 'مميز'),
+                      badge: l10nPick(
+                        context,
+                        en: 'VIP',
+                        fa: 'ویژه',
+                        ar: 'مميز',
+                      ),
                       onTap: () {
                         HapticFeedback.lightImpact();
                         Get.toNamed(BaseRoute.services);
@@ -201,7 +223,10 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Hediye Kartı',
                         ru: 'Подарки',
                       ),
-                      gradient: const [AppColors.error, AppColors.brandVioletDeep],
+                      gradient: const [
+                        AppColors.error,
+                        AppColors.brandVioletDeep,
+                      ],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -277,7 +302,10 @@ class ServicesEntrySection extends StatelessWidget {
                         tr: 'Kartlar',
                         ru: 'Карты',
                       ),
-                      gradient: const [AppColors.mainSoftBlue, AppColors.brandVioletDeep],
+                      gradient: const [
+                        AppColors.mainSoftBlue,
+                        AppColors.brandVioletDeep,
+                      ],
                       isDark: isDark,
                       onTap: () {
                         HapticFeedback.lightImpact();
@@ -363,29 +391,32 @@ class _ServiceTileItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16.r),
                         boxShadow: [
                           BoxShadow(
-                            color: gradient.first.withValues(alpha: isDark ? 0.35 : 0.25),
+                            color: gradient.first.withValues(
+                              alpha: isDark ? 0.35 : 0.25,
+                            ),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
                         ],
                       ),
-                      child: Icon(
-                        icon,
-                        color: AppColors.white,
-                        size: 24.r,
-                      ),
+                      child: Icon(icon, color: AppColors.white, size: 24.r),
                     ),
                     if (badge != null)
                       Positioned(
                         top: -4.h,
                         right: -4.w,
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5.w,
+                            vertical: 1.5.h,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.error,
                             borderRadius: BorderRadius.circular(6.r),
                             border: Border.all(
-                              color: isDark ? AppColors.darkCard : AppColors.white,
+                              color: isDark
+                                  ? AppColors.darkCard
+                                  : AppColors.white,
                               width: 1.2,
                             ),
                           ),
@@ -410,7 +441,9 @@ class _ServiceTileItem extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ],

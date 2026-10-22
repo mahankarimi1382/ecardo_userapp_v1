@@ -41,9 +41,7 @@ class GiftRedeemController extends GetxController {
     if (code.isEmpty) return;
     isGiftRedeemLoading.value = true;
     try {
-      final Map<String, dynamic> requestBody = {
-        "code": code,
-      };
+      final Map<String, dynamic> requestBody = {"code": code};
 
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.giftRedeemEndpoint,

@@ -35,8 +35,9 @@ void main() {
     );
   }
 
-  testWidgets('renders Tier 1 as current tier with correct limits & cards',
-      (WidgetTester tester) async {
+  testWidgets('renders Tier 1 as current tier with correct limits & cards', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(buildTestWidget(currentTier: 1));
     await tester.pump();
 
@@ -46,8 +47,9 @@ void main() {
     expect(find.textContaining('Daily Transaction Limit'), findsOneWidget);
   });
 
-  testWidgets('renders Tier 2 with \$10,000 limit and 3 Virtual Cards',
-      (WidgetTester tester) async {
+  testWidgets('renders Tier 2 with \$10,000 limit and 3 Virtual Cards', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       buildTestWidget(currentTier: 1, initialSelectedTier: 2),
     );
@@ -57,25 +59,34 @@ void main() {
     expect(find.textContaining('Tier 2'), findsWidgets);
     expect(find.textContaining('\$10,000'), findsWidgets);
     expect(find.textContaining('3 Virtual Cards'), findsWidgets);
-    expect(find.textContaining('National ID / Passport verified'), findsWidgets);
-  });
-
-  testWidgets('renders Tier 3 VIP with \$100,000 / Unlimited and Unlimited Cards',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      buildTestWidget(currentTier: 2, initialSelectedTier: 3),
+    expect(
+      find.textContaining('National ID / Passport verified'),
+      findsWidgets,
     );
-    await tester.pump();
-
-    // Check for Tier 3 VIP details
-    expect(find.textContaining('Tier 3'), findsWidgets);
-    expect(find.textContaining('VIP'), findsWidgets);
-    expect(find.textContaining('Unlimited Cards'), findsWidgets);
-    expect(find.textContaining('Proof of Address & Video Liveness'), findsWidgets);
   });
 
-  testWidgets('tapping upgrade button calls onUpgradeTap with target tier',
-      (WidgetTester tester) async {
+  testWidgets(
+    'renders Tier 3 VIP with \$100,000 / Unlimited and Unlimited Cards',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        buildTestWidget(currentTier: 2, initialSelectedTier: 3),
+      );
+      await tester.pump();
+
+      // Check for Tier 3 VIP details
+      expect(find.textContaining('Tier 3'), findsWidgets);
+      expect(find.textContaining('VIP'), findsWidgets);
+      expect(find.textContaining('Unlimited Cards'), findsWidgets);
+      expect(
+        find.textContaining('Proof of Address & Video Liveness'),
+        findsWidgets,
+      );
+    },
+  );
+
+  testWidgets('tapping upgrade button calls onUpgradeTap with target tier', (
+    WidgetTester tester,
+  ) async {
     int? tappedTier;
 
     await tester.pumpWidget(

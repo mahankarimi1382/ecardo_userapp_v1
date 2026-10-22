@@ -48,8 +48,8 @@ class _WithdrawSuccessStepSectionState
     final selectedAccount = controller.withdrawAccount.value;
     final currency =
         controller.successWithdrawData.value?["transaction"]?["pay_currency"] ??
-            selectedAccount?.currency ??
-            "USD";
+        selectedAccount?.currency ??
+        "USD";
     final isCrypto = selectedAccount?.method?.isCrypto ?? false;
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
@@ -65,25 +65,33 @@ class _WithdrawSuccessStepSectionState
 
     final rawAmount =
         controller.successWithdrawData.value?["transaction"]?["final_amount"] ??
-            controller.amountController.text;
+        controller.amountController.text;
     final amount = double.tryParse(rawAmount.toString()) ?? 0.0;
 
     final tnxId = _nonEmpty(
-        controller.successWithdrawData.value?["transaction"]?["tnx"]?.toString());
-    final createdAt = controller.successWithdrawData.value?["transaction"]
-            ?["created_at"]
+      controller.successWithdrawData.value?["transaction"]?["tnx"]?.toString(),
+    );
+    final createdAt =
+        controller.successWithdrawData.value?["transaction"]?["created_at"]
             ?.toString() ??
         '';
-    final charge = (double.tryParse(controller
-                    .successWithdrawData.value?["transaction"]?["charge"]
-                    ?.toString() ??
-                "0") ??
-            0.0)
-        .toStringAsFixed(calculateDecimals);
+    final charge =
+        (double.tryParse(
+                  controller
+                          .successWithdrawData
+                          .value?["transaction"]?["charge"]
+                          ?.toString() ??
+                      "0",
+                ) ??
+                0.0)
+            .toStringAsFixed(calculateDecimals);
 
     final destinationName = selectedAccount?.methodName ?? "Bank Account";
-    final maskedDestination = WithdrawDestinationCard.maskAccountNumber(selectedAccount);
-    final settlementTime = selectedAccount?.method?.time ??
+    final maskedDestination = WithdrawDestinationCard.maskAccountNumber(
+      selectedAccount,
+    );
+    final settlementTime =
+        selectedAccount?.method?.time ??
         l10nPick(
           context,
           en: 'Instant ⚡ (Paya next cycle)',
@@ -94,12 +102,15 @@ class _WithdrawSuccessStepSectionState
           zh: '即时 ⚡ / 下个结算周期',
         );
 
-    final rawStatus = controller.successWithdrawData.value?["transaction"]
-            ?["status"]
+    final rawStatus =
+        controller.successWithdrawData.value?["transaction"]?["status"]
             ?.toString()
             .toLowerCase() ??
         '';
-    final receiptStatus = (rawStatus == '1' || rawStatus.contains('success') || rawStatus.contains('confirm'))
+    final receiptStatus =
+        (rawStatus == '1' ||
+            rawStatus.contains('success') ||
+            rawStatus.contains('confirm'))
         ? EcardoReceiptStatus.success
         : EcardoReceiptStatus.pending;
 
@@ -156,8 +167,9 @@ class _WithdrawSuccessStepSectionState
                         zh: '提现电子凭证',
                       ),
                       transactionReference: tnxId,
-                      formattedTimestamp:
-                          createdAt.isNotEmpty ? createdAt : null,
+                      formattedTimestamp: createdAt.isNotEmpty
+                          ? createdAt
+                          : null,
                       primaryAmount: amount,
                       primaryCurrency: currency,
                       primaryDecimals: calculateDecimals,
@@ -205,7 +217,8 @@ class _WithdrawSuccessStepSectionState
                             tr: 'Net Alınacak Tutar',
                             ru: 'Чистая сумма к зачислению',
                           ),
-                          value: '${amount.toStringAsFixed(calculateDecimals)} $currency',
+                          value:
+                              '${amount.toStringAsFixed(calculateDecimals)} $currency',
                           isHighlighted: true,
                           valueColor: AppColors.success,
                         ),

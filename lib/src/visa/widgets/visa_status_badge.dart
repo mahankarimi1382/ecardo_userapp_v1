@@ -28,7 +28,9 @@ class VisaStatusBadge extends StatelessWidget {
 
     switch (status.toUpperCase()) {
       case 'APPROVED':
-        bg = isDark ? AppColors.success.withValues(alpha: 0.18) : AppColors.successContainer;
+        bg = isDark
+            ? AppColors.success.withValues(alpha: 0.18)
+            : AppColors.successContainer;
         fg = AppColors.success;
         icon = Icons.check_circle_rounded;
         if (display.isEmpty) {
@@ -36,7 +38,9 @@ class VisaStatusBadge extends StatelessWidget {
         }
         break;
       case 'DELIVERED':
-        bg = isDark ? AppColors.success.withValues(alpha: 0.18) : AppColors.successContainer;
+        bg = isDark
+            ? AppColors.success.withValues(alpha: 0.18)
+            : AppColors.successContainer;
         fg = AppColors.success;
         icon = Icons.task_alt_rounded;
         if (display.isEmpty) {
@@ -45,7 +49,9 @@ class VisaStatusBadge extends StatelessWidget {
         break;
       case 'UNDER_REVIEW':
       case 'IN_PROCESS':
-        bg = isDark ? AppColors.info.withValues(alpha: 0.18) : AppColors.infoContainer;
+        bg = isDark
+            ? AppColors.info.withValues(alpha: 0.18)
+            : AppColors.infoContainer;
         fg = isDark ? AppColors.mainSoftBlue : AppColors.info;
         icon = Icons.hourglass_top_rounded;
         if (display.isEmpty) {
@@ -53,16 +59,24 @@ class VisaStatusBadge extends StatelessWidget {
         }
         break;
       case 'SUBMITTED_TO_AUTHORITY':
-        bg = isDark ? AppColors.info.withValues(alpha: 0.18) : AppColors.infoContainer;
+        bg = isDark
+            ? AppColors.info.withValues(alpha: 0.18)
+            : AppColors.infoContainer;
         fg = isDark ? AppColors.mainSoftBlue : AppColors.info;
         icon = Icons.account_balance_rounded;
         if (display.isEmpty) {
-          display = l10nPick(context, en: 'At Authority', fa: 'نزد سفارت / مرجع');
+          display = l10nPick(
+            context,
+            en: 'At Authority',
+            fa: 'نزد سفارت / مرجع',
+          );
         }
         break;
       case 'AWAITING_DOCUMENTS':
       case 'COMPLEMENT_REQUIRED':
-        bg = isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer;
+        bg = isDark
+            ? AppColors.warning.withValues(alpha: 0.18)
+            : AppColors.warningContainer;
         fg = AppColors.warning;
         icon = Icons.pending_actions_rounded;
         if (display.isEmpty) {
@@ -70,16 +84,24 @@ class VisaStatusBadge extends StatelessWidget {
         }
         break;
       case 'AWAITING_PAYMENT':
-        bg = isDark ? AppColors.warning.withValues(alpha: 0.18) : AppColors.warningContainer;
+        bg = isDark
+            ? AppColors.warning.withValues(alpha: 0.18)
+            : AppColors.warningContainer;
         fg = AppColors.warning;
         icon = Icons.payment_rounded;
         if (display.isEmpty) {
-          display = l10nPick(context, en: 'Awaiting Payment', fa: 'در انتظار پرداخت');
+          display = l10nPick(
+            context,
+            en: 'Awaiting Payment',
+            fa: 'در انتظار پرداخت',
+          );
         }
         break;
       case 'REJECTED':
       case 'DECLINED':
-        bg = isDark ? AppColors.error.withValues(alpha: 0.18) : AppColors.errorContainer;
+        bg = isDark
+            ? AppColors.error.withValues(alpha: 0.18)
+            : AppColors.errorContainer;
         fg = AppColors.error;
         icon = Icons.cancel_rounded;
         if (display.isEmpty) {
@@ -87,7 +109,9 @@ class VisaStatusBadge extends StatelessWidget {
         }
         break;
       case 'CANCELLED':
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
         fg = isDark ? AppColors.darkTextTertiary : AppColors.softGray;
         icon = Icons.block_rounded;
         if (display.isEmpty) {
@@ -95,8 +119,12 @@ class VisaStatusBadge extends StatelessWidget {
         }
         break;
       default:
-        bg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-        fg = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+        bg = isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightSurfaceVariant;
+        fg = isDark
+            ? AppColors.darkTextSecondary
+            : AppColors.lightTextSecondary;
         icon = Icons.info_outline_rounded;
         if (display.isEmpty) {
           display = status;
@@ -114,10 +142,7 @@ class VisaStatusBadge extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-          border: Border.all(
-            color: fg.withValues(alpha: 0.25),
-            width: 0.8,
-          ),
+          border: Border.all(color: fg.withValues(alpha: 0.25), width: 0.8),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,

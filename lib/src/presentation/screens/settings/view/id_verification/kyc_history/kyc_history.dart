@@ -42,9 +42,13 @@ class _KycHistoryState extends State<KycHistory> {
     final localization = AppLocalizations.of(context)!;
     final canPop = Navigator.canPop(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return PopScope(
       canPop: canPop,
@@ -95,16 +99,24 @@ class _KycHistoryState extends State<KycHistory> {
                       return Container(
                         padding: EdgeInsets.all(AppSpacing.md),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurface : AppColors.white,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                          color: isDark
+                              ? AppColors.darkSurface
+                              : AppColors.white,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusLg,
+                          ),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                             width: 0.8,
                           ),
                           boxShadow: !isDark
                               ? [
                                   BoxShadow(
-                                    color: AppColors.black.withValues(alpha: 0.03),
+                                    color: AppColors.black.withValues(
+                                      alpha: 0.03,
+                                    ),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
@@ -118,8 +130,9 @@ class _KycHistoryState extends State<KycHistory> {
                               width: 44,
                               height: 44,
                               decoration: BoxDecoration(
-                                color: _statusColor(history.status)
-                                    .withValues(alpha: isDark ? 0.22 : 0.12),
+                                color: _statusColor(
+                                  history.status,
+                                ).withValues(alpha: isDark ? 0.22 : 0.12),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
@@ -143,9 +156,15 @@ class _KycHistoryState extends State<KycHistory> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    history.createdAt != null && history.createdAt!.isNotEmpty
-                                        ? DateFormat("dd MMM yyyy · hh:mm a").format(
-                                            DateTime.tryParse(history.createdAt!) ?? DateTime.now(),
+                                    history.createdAt != null &&
+                                            history.createdAt!.isNotEmpty
+                                        ? DateFormat(
+                                            "dd MMM yyyy · hh:mm a",
+                                          ).format(
+                                            DateTime.tryParse(
+                                                  history.createdAt!,
+                                                ) ??
+                                                DateTime.now(),
                                           )
                                         : "",
                                     style: AppTextStyles.labelSmall.copyWith(
@@ -160,9 +179,12 @@ class _KycHistoryState extends State<KycHistory> {
                                       vertical: 3,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: _statusColor(history.status)
-                                          .withValues(alpha: isDark ? 0.20 : 0.10),
-                                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                      color: _statusColor(
+                                        history.status,
+                                      ).withValues(alpha: isDark ? 0.20 : 0.10),
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusFull,
+                                      ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -177,11 +199,18 @@ class _KycHistoryState extends State<KycHistory> {
                                         ),
                                         const SizedBox(width: 5),
                                         Text(
-                                          _statusLabel(history.status, localization, context),
-                                          style: AppTextStyles.labelSmall.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            color: _statusColor(history.status),
+                                          _statusLabel(
+                                            history.status,
+                                            localization,
+                                            context,
                                           ),
+                                          style: AppTextStyles.labelSmall
+                                              .copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: _statusColor(
+                                                  history.status,
+                                                ),
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -339,7 +368,11 @@ class _KycHistoryState extends State<KycHistory> {
     }
   }
 
-  String _statusLabel(String? status, AppLocalizations localization, BuildContext context) {
+  String _statusLabel(
+    String? status,
+    AppLocalizations localization,
+    BuildContext context,
+  ) {
     switch ((status ?? '').trim().toLowerCase()) {
       case 'approved':
       case 'verified':
@@ -355,41 +388,96 @@ class _KycHistoryState extends State<KycHistory> {
       case 'declined':
         return localization.kycHistoryStatusRejected;
       case 'draft':
-        return l10nPick(context, en: 'Draft', fa: 'پیش‌نویس', ar: 'مسودة', zh: '草稿');
+        return l10nPick(
+          context,
+          en: 'Draft',
+          fa: 'پیش‌نویس',
+          ar: 'مسودة',
+          zh: '草稿',
+        );
       default:
         return status ?? '';
     }
   }
 
-  String _typeLabel(KycHistoryData history, AppLocalizations localization, BuildContext context) {
+  String _typeLabel(
+    KycHistoryData history,
+    AppLocalizations localization,
+    BuildContext context,
+  ) {
     final raw = (history.type ?? '').trim();
-    final match =
-        RegExp(r'level[_\s-]*(\d+)').firstMatch(raw.toLowerCase());
+    final match = RegExp(r'level[_\s-]*(\d+)').firstMatch(raw.toLowerCase());
     if (match != null) {
       final level = int.tryParse(match.group(1)!);
       if (level != null) return localization.kycUpgradeLevelChip(level);
     }
     final lower = raw.toLowerCase().replaceAll(RegExp(r'[\s_-]+'), '_');
     if (lower.contains('passport') || lower.contains('pass')) {
-      return l10nPick(context, en: 'Passport', fa: 'گذرنامه', ar: 'جواز السفر', zh: '护照');
+      return l10nPick(
+        context,
+        en: 'Passport',
+        fa: 'گذرنامه',
+        ar: 'جواز السفر',
+        zh: '护照',
+      );
     }
-    if (lower.contains('nid') || lower.contains('national') || lower.contains('melli')) {
-      return l10nPick(context, en: 'National ID', fa: 'کارت ملی', ar: 'الهوية الوطنية', zh: '国民身份证');
+    if (lower.contains('nid') ||
+        lower.contains('national') ||
+        lower.contains('melli')) {
+      return l10nPick(
+        context,
+        en: 'National ID',
+        fa: 'کارت ملی',
+        ar: 'الهوية الوطنية',
+        zh: '国民身份证',
+      );
     }
     if (lower.contains('license') || lower.contains('driving')) {
-      return l10nPick(context, en: 'Driving License', fa: 'گواهینامه رانندگی', ar: 'رخصة القيادة', zh: '驾驶执照');
+      return l10nPick(
+        context,
+        en: 'Driving License',
+        fa: 'گواهینامه رانندگی',
+        ar: 'رخصة القيادة',
+        zh: '驾驶执照',
+      );
     }
     if (lower.contains('identity') || lower.contains('id_card')) {
-      return l10nPick(context, en: 'Identity Card', fa: 'کارت شناسایی', ar: 'بطاقة الهوية', zh: '身份证');
+      return l10nPick(
+        context,
+        en: 'Identity Card',
+        fa: 'کارت شناسایی',
+        ar: 'بطاقة الهوية',
+        zh: '身份证',
+      );
     }
-    if (lower.contains('address') || lower.contains('utility') || lower.contains('bill')) {
-      return l10nPick(context, en: 'Proof of Address', fa: 'تأییدیه نشانی', ar: 'إثبات العنوان', zh: '地址证明');
+    if (lower.contains('address') ||
+        lower.contains('utility') ||
+        lower.contains('bill')) {
+      return l10nPick(
+        context,
+        en: 'Proof of Address',
+        fa: 'تأییدیه نشانی',
+        ar: 'إثبات العنوان',
+        zh: '地址证明',
+      );
     }
     if (lower.contains('selfie')) {
-      return l10nPick(context, en: 'Selfie Photo', fa: 'تصویر سلفی', ar: 'صورة شخصية', zh: '自拍照');
+      return l10nPick(
+        context,
+        en: 'Selfie Photo',
+        fa: 'تصویر سلفی',
+        ar: 'صورة شخصية',
+        zh: '自拍照',
+      );
     }
     if (raw.isEmpty) {
-      return l10nPick(context, en: 'Identity Verification', fa: 'احراز هویت', ar: 'التحقق من الهوية', zh: '身份验证');
+      return l10nPick(
+        context,
+        en: 'Identity Verification',
+        fa: 'احراز هویت',
+        ar: 'التحقق من الهوية',
+        zh: '身份验证',
+      );
     }
     final spaced = raw.replaceAll('_', ' ').replaceAll('-', ' ');
     return spaced[0].toUpperCase() + spaced.substring(1);

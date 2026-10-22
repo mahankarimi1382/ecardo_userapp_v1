@@ -42,21 +42,22 @@ void main() {
   // 1. ECARDO GLASS CARD
   // =========================================================================
   group('EcardoGlassCard Creative Tests', () {
-    testWidgets('renders child and custom decoration across light and dark modes', (tester) async {
-      for (final brightness in [Brightness.light, Brightness.dark]) {
-        await tester.pumpWidget(
-          wrapWithTheme(
-            brightness: brightness,
-            child: const EcardoGlassCard(
-              child: Text('Glass Content'),
+    testWidgets(
+      'renders child and custom decoration across light and dark modes',
+      (tester) async {
+        for (final brightness in [Brightness.light, Brightness.dark]) {
+          await tester.pumpWidget(
+            wrapWithTheme(
+              brightness: brightness,
+              child: const EcardoGlassCard(child: Text('Glass Content')),
             ),
-          ),
-        );
+          );
 
-        expect(find.text('Glass Content'), findsOneWidget);
-        expect(find.byType(BackdropFilter), findsOneWidget);
-      }
-    });
+          expect(find.text('Glass Content'), findsOneWidget);
+          expect(find.byType(BackdropFilter), findsOneWidget);
+        }
+      },
+    );
 
     testWidgets('renders all neo-fintech variants correctly', (tester) async {
       for (final variant in EcardoGlassVariant.values) {
@@ -97,25 +98,30 @@ void main() {
   // 2. ECARDO BALANCE HERO
   // =========================================================================
   group('EcardoBalanceHero Creative Tests', () {
-    testWidgets('renders balance amount, currency symbol, and secondary subtitle', (tester) async {
-      await tester.pumpWidget(
-        wrapWithTheme(
-          child: const EcardoBalanceHero(
-            amount: 14520.85,
-            currencyCode: 'USD',
-            currencySymbol: r'$',
-            secondaryEquivalent: '≈ 85,000,000 IRT',
+    testWidgets(
+      'renders balance amount, currency symbol, and secondary subtitle',
+      (tester) async {
+        await tester.pumpWidget(
+          wrapWithTheme(
+            child: const EcardoBalanceHero(
+              amount: 14520.85,
+              currencyCode: 'USD',
+              currencySymbol: r'$',
+              secondaryEquivalent: '≈ 85,000,000 IRT',
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('14,520'), findsOneWidget);
-      expect(find.text('.85'), findsOneWidget);
-      expect(find.text(r'$'), findsOneWidget);
-      expect(find.text('≈ 85,000,000 IRT'), findsOneWidget);
-    });
+        expect(find.text('14,520'), findsOneWidget);
+        expect(find.text('.85'), findsOneWidget);
+        expect(find.text(r'$'), findsOneWidget);
+        expect(find.text('≈ 85,000,000 IRT'), findsOneWidget);
+      },
+    );
 
-    testWidgets('toggles privacy mode and displays obscured dot indicators', (tester) async {
+    testWidgets('toggles privacy mode and displays obscured dot indicators', (
+      tester,
+    ) async {
       bool? privacyState;
 
       await tester.pumpWidget(
@@ -155,7 +161,9 @@ void main() {
       expect(find.byKey(const ValueKey('visible_balance')), findsOneWidget);
     });
 
-    testWidgets('renders 24h PnL badge with positive and negative indicators', (tester) async {
+    testWidgets('renders 24h PnL badge with positive and negative indicators', (
+      tester,
+    ) async {
       // Positive PnL
       await tester.pumpWidget(
         wrapWithTheme(
@@ -174,10 +182,7 @@ void main() {
       await tester.pumpWidget(
         wrapWithTheme(
           brightness: Brightness.dark,
-          child: const EcardoBalanceHero(
-            amount: 5000.0,
-            pnlPercentage: -2.10,
-          ),
+          child: const EcardoBalanceHero(amount: 5000.0, pnlPercentage: -2.10),
         ),
       );
 
@@ -185,7 +190,9 @@ void main() {
       expect(find.byIcon(Icons.trending_down_rounded), findsOneWidget);
     });
 
-    testWidgets('opens currency picker modal and triggers onCurrencyChanged', (tester) async {
+    testWidgets('opens currency picker modal and triggers onCurrencyChanged', (
+      tester,
+    ) async {
       String selected = 'USD';
 
       await tester.pumpWidget(
@@ -221,7 +228,9 @@ void main() {
       expect(selected, equals('EUR'));
     });
 
-    testWidgets('renders quick action buttons and handles taps', (tester) async {
+    testWidgets('renders quick action buttons and handles taps', (
+      tester,
+    ) async {
       bool sendTapped = false;
 
       await tester.pumpWidget(
@@ -252,7 +261,9 @@ void main() {
   // 3. ECARDO SWIPE BUTTON
   // =========================================================================
   group('EcardoSwipeButton Creative Tests', () {
-    testWidgets('renders swipe track, label, and draggable thumb', (tester) async {
+    testWidgets('renders swipe track, label, and draggable thumb', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         wrapWithTheme(
           child: EcardoSwipeButton(
@@ -267,7 +278,9 @@ void main() {
       expect(find.byIcon(Icons.arrow_forward_rounded), findsOneWidget);
     });
 
-    testWidgets('swiping past threshold triggers onSwipeComplete', (tester) async {
+    testWidgets('swiping past threshold triggers onSwipeComplete', (
+      tester,
+    ) async {
       bool completed = false;
 
       await tester.pumpWidget(
@@ -292,31 +305,36 @@ void main() {
       expect(completed, isTrue);
     });
 
-    testWidgets('swiping below threshold snaps back without triggering complete', (tester) async {
-      bool completed = false;
+    testWidgets(
+      'swiping below threshold snaps back without triggering complete',
+      (tester) async {
+        bool completed = false;
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          surfaceSize: const Size(360, 100),
-          child: EcardoSwipeButton(
-            text: 'Swipe to Confirm',
-            threshold: 0.85,
-            animateShimmer: false,
-            onSwipeComplete: () => completed = true,
+        await tester.pumpWidget(
+          wrapWithTheme(
+            surfaceSize: const Size(360, 100),
+            child: EcardoSwipeButton(
+              text: 'Swipe to Confirm',
+              threshold: 0.85,
+              animateShimmer: false,
+              onSwipeComplete: () => completed = true,
+            ),
           ),
-        ),
-      );
+        );
 
-      final thumbFinder = find.byIcon(Icons.arrow_forward_rounded);
+        final thumbFinder = find.byIcon(Icons.arrow_forward_rounded);
 
-      // Drag only 40px (well below threshold) and release
-      await tester.drag(thumbFinder, const Offset(40, 0));
-      await tester.pumpAndSettle();
+        // Drag only 40px (well below threshold) and release
+        await tester.drag(thumbFinder, const Offset(40, 0));
+        await tester.pumpAndSettle();
 
-      expect(completed, isFalse);
-    });
+        expect(completed, isFalse);
+      },
+    );
 
-    testWidgets('displays loading state and success checkmark correctly', (tester) async {
+    testWidgets('displays loading state and success checkmark correctly', (
+      tester,
+    ) async {
       // Loading state
       await tester.pumpWidget(
         wrapWithTheme(
@@ -353,67 +371,82 @@ void main() {
   // 4. ECARDO DIGITAL RECEIPT
   // =========================================================================
   group('EcardoDigitalReceipt Creative Tests', () {
-    testWidgets('renders ticket silhouette, header, amount, breakdown items, and watermark', (tester) async {
-      await tester.pumpWidget(
-        wrapWithTheme(
-          surfaceSize: const Size(380, 800),
-          child: const SingleChildScrollView(
-            child: EcardoDigitalReceipt(
-              title: 'Wire Transfer',
-              transactionReference: 'ECAR-9901-XYZ',
-              primaryAmount: 2500.0,
-              primaryCurrency: 'USD',
-              status: EcardoReceiptStatus.success,
-              items: [
-                EcardoReceiptItem(label: 'Beneficiary', value: 'Alex Mercer'),
-                EcardoReceiptItem(label: 'Bank Fee', amount: 5.0, currency: 'USD'),
-                EcardoReceiptItem(
-                  label: 'Total Debited',
-                  amount: 2505.0,
-                  currency: 'USD',
-                  isHighlighted: true,
-                ),
-              ],
+    testWidgets(
+      'renders ticket silhouette, header, amount, breakdown items, and watermark',
+      (tester) async {
+        await tester.pumpWidget(
+          wrapWithTheme(
+            surfaceSize: const Size(380, 800),
+            child: const SingleChildScrollView(
+              child: EcardoDigitalReceipt(
+                title: 'Wire Transfer',
+                transactionReference: 'ECAR-9901-XYZ',
+                primaryAmount: 2500.0,
+                primaryCurrency: 'USD',
+                status: EcardoReceiptStatus.success,
+                items: [
+                  EcardoReceiptItem(label: 'Beneficiary', value: 'Alex Mercer'),
+                  EcardoReceiptItem(
+                    label: 'Bank Fee',
+                    amount: 5.0,
+                    currency: 'USD',
+                  ),
+                  EcardoReceiptItem(
+                    label: 'Total Debited',
+                    amount: 2505.0,
+                    currency: 'USD',
+                    isHighlighted: true,
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('eCardo Receipt'), findsOneWidget);
-      expect(find.text('Wire Transfer'), findsOneWidget);
-      expect(find.text('ECAR-9901-XYZ'), findsNWidgets(2)); // in ref pill + barcode
-      expect(find.text('2,500.00'), findsOneWidget);
-      expect(find.text('Alex Mercer'), findsOneWidget);
-      expect(find.text('Total Debited'), findsOneWidget);
-      expect(find.text('PAID'), findsOneWidget); // Watermark stamp
-    });
+        expect(find.text('eCardo Receipt'), findsOneWidget);
+        expect(find.text('Wire Transfer'), findsOneWidget);
+        expect(
+          find.text('ECAR-9901-XYZ'),
+          findsNWidgets(2),
+        ); // in ref pill + barcode
+        expect(find.text('2,500.00'), findsOneWidget);
+        expect(find.text('Alex Mercer'), findsOneWidget);
+        expect(find.text('Total Debited'), findsOneWidget);
+        expect(find.text('PAID'), findsOneWidget); // Watermark stamp
+      },
+    );
 
-    testWidgets('tap on transaction reference triggers copy and displays floating feedback chip', (tester) async {
-      await tester.pumpWidget(
-        wrapWithTheme(
-          child: const SingleChildScrollView(
-            child: EcardoDigitalReceipt(
-              title: 'Escrow Deposit',
-              transactionReference: 'ECAR-5544-ABC',
+    testWidgets(
+      'tap on transaction reference triggers copy and displays floating feedback chip',
+      (tester) async {
+        await tester.pumpWidget(
+          wrapWithTheme(
+            child: const SingleChildScrollView(
+              child: EcardoDigitalReceipt(
+                title: 'Escrow Deposit',
+                transactionReference: 'ECAR-5544-ABC',
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('TRANSACTION REFERENCE'), findsOneWidget);
+        expect(find.text('TRANSACTION REFERENCE'), findsOneWidget);
 
-      // Tap reference code pill
-      await tester.tap(find.text('TRANSACTION REFERENCE'));
-      await tester.pump();
+        // Tap reference code pill
+        await tester.tap(find.text('TRANSACTION REFERENCE'));
+        await tester.pump();
 
-      // Floating chip appears
-      expect(find.text('Ref ID Copied'), findsOneWidget);
+        // Floating chip appears
+        expect(find.text('Ref ID Copied'), findsOneWidget);
 
-      // Let timer expire cleanly
-      await tester.pump(const Duration(milliseconds: 2000));
-    });
+        // Let timer expire cleanly
+        await tester.pump(const Duration(milliseconds: 2000));
+      },
+    );
 
-    testWidgets('share and download action buttons execute callbacks', (tester) async {
+    testWidgets('share and download action buttons execute callbacks', (
+      tester,
+    ) async {
       bool shared = false;
       bool downloaded = false;
 
@@ -447,7 +480,9 @@ void main() {
   // 5. ECARDO EMPTY STATE & ERROR VIEW
   // =========================================================================
   group('EcardoEmptyState Creative Tests', () {
-    testWidgets('renders orbital glowing icon, headline, and CTA actions', (tester) async {
+    testWidgets('renders orbital glowing icon, headline, and CTA actions', (
+      tester,
+    ) async {
       bool primaryTapped = false;
       bool secondaryTapped = false;
 
@@ -455,7 +490,8 @@ void main() {
         wrapWithTheme(
           child: EcardoEmptyState(
             title: 'No Invoices Found',
-            description: 'Generate your first digital invoice to request instant settlement.',
+            description:
+                'Generate your first digital invoice to request instant settlement.',
             primaryActionLabel: 'Create Invoice',
             onPrimaryAction: () => primaryTapped = true,
             secondaryActionLabel: 'View Guide',
@@ -467,7 +503,9 @@ void main() {
 
       expect(find.text('No Invoices Found'), findsOneWidget);
       expect(
-        find.text('Generate your first digital invoice to request instant settlement.'),
+        find.text(
+          'Generate your first digital invoice to request instant settlement.',
+        ),
         findsOneWidget,
       );
       expect(find.text('Create Invoice'), findsOneWidget);
@@ -484,41 +522,47 @@ void main() {
   });
 
   group('EcardoErrorView Creative Tests', () {
-    testWidgets('renders pulsing radar glyph, error code badge, and triggers retry', (tester) async {
-      bool retried = false;
+    testWidgets(
+      'renders pulsing radar glyph, error code badge, and triggers retry',
+      (tester) async {
+        bool retried = false;
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          child: EcardoErrorView(
-            title: 'Gateway Connection Failed',
-            message: 'Unable to reach the payment server. Please check your network.',
-            errorCode: 'ERR_GATEWAY_TIMEOUT',
-            onRetry: () => retried = true,
-            retryLabel: 'Try Again',
-            animatePulse: false,
+        await tester.pumpWidget(
+          wrapWithTheme(
+            child: EcardoErrorView(
+              title: 'Gateway Connection Failed',
+              message:
+                  'Unable to reach the payment server. Please check your network.',
+              errorCode: 'ERR_GATEWAY_TIMEOUT',
+              onRetry: () => retried = true,
+              retryLabel: 'Try Again',
+              animatePulse: false,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Gateway Connection Failed'), findsOneWidget);
-      expect(find.text('ERR_GATEWAY_TIMEOUT'), findsOneWidget);
-      expect(find.text('Try Again'), findsOneWidget);
+        expect(find.text('Gateway Connection Failed'), findsOneWidget);
+        expect(find.text('ERR_GATEWAY_TIMEOUT'), findsOneWidget);
+        expect(find.text('Try Again'), findsOneWidget);
 
-      // Tap error code badge to copy
-      await tester.tap(find.text('ERR_GATEWAY_TIMEOUT'));
-      await tester.pump();
-      expect(find.text('Code Copied'), findsOneWidget);
+        // Tap error code badge to copy
+        await tester.tap(find.text('ERR_GATEWAY_TIMEOUT'));
+        await tester.pump();
+        expect(find.text('Code Copied'), findsOneWidget);
 
-      // Wait for copy timer
-      await tester.pump(const Duration(milliseconds: 1800));
+        // Wait for copy timer
+        await tester.pump(const Duration(milliseconds: 1800));
 
-      // Tap retry button
-      await tester.tap(find.text('Try Again'));
-      await tester.pump();
-      expect(retried, isTrue);
-    });
+        // Tap retry button
+        await tester.tap(find.text('Try Again'));
+        await tester.pump();
+        expect(retried, isTrue);
+      },
+    );
 
-    testWidgets('expands and collapses technical diagnostic accordion', (tester) async {
+    testWidgets('expands and collapses technical diagnostic accordion', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         wrapWithTheme(
           child: const EcardoErrorView(
@@ -531,14 +575,20 @@ void main() {
       );
 
       expect(find.text('View Diagnostics'), findsOneWidget);
-      expect(find.text('POST /v1/transfers: internal database dead-lock'), findsNothing);
+      expect(
+        find.text('POST /v1/transfers: internal database dead-lock'),
+        findsNothing,
+      );
 
       // Expand diagnostics
       await tester.tap(find.text('View Diagnostics'));
       await tester.pumpAndSettle();
 
       expect(find.text('Hide Technical Details'), findsOneWidget);
-      expect(find.text('POST /v1/transfers: internal database dead-lock'), findsOneWidget);
+      expect(
+        find.text('POST /v1/transfers: internal database dead-lock'),
+        findsOneWidget,
+      );
     });
   });
 }

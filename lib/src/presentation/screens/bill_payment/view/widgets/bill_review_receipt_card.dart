@@ -54,7 +54,9 @@ class BillReviewReceiptCard extends StatelessWidget {
       }
     }
 
-    final accentColor = opInfo?.primaryColor ?? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack);
+    final accentColor =
+        opInfo?.primaryColor ??
+        (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack);
 
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -90,7 +92,8 @@ class BillReviewReceiptCard extends StatelessWidget {
                       gradient: LinearGradient(
                         colors: [
                           accentColor,
-                          opInfo?.accentColor ?? accentColor.withValues(alpha: 0.6),
+                          opInfo?.accentColor ??
+                              accentColor.withValues(alpha: 0.6),
                         ],
                       ),
                     ),
@@ -112,7 +115,10 @@ class BillReviewReceiptCard extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       gradient: LinearGradient(
-                                        colors: [opInfo.primaryColor, opInfo.accentColor],
+                                        colors: [
+                                          opInfo.primaryColor,
+                                          opInfo.accentColor,
+                                        ],
                                       ),
                                     ),
                                     child: Center(
@@ -132,7 +138,9 @@ class BillReviewReceiptCard extends StatelessWidget {
                                     height: 38.w,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: accentColor.withValues(alpha: 0.15),
+                                      color: accentColor.withValues(
+                                        alpha: 0.15,
+                                      ),
                                     ),
                                     child: Icon(
                                       Icons.receipt_long_rounded,
@@ -149,11 +157,15 @@ class BillReviewReceiptCard extends StatelessWidget {
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         fontWeight: FontWeight.w800,
-                                        color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                                        color: isDark
+                                            ? AppColors.warmWhite
+                                            : AppColors.lightTextPrimary,
                                       ),
                                     ),
                                     Text(
-                                      operatorName ?? opInfo?.nameFa ?? 'eCardo Verified Hub',
+                                      operatorName ??
+                                          opInfo?.nameFa ??
+                                          'eCardo Verified Hub',
                                       style: TextStyle(
                                         fontSize: 11.sp,
                                         fontWeight: FontWeight.w600,
@@ -165,19 +177,32 @@ class BillReviewReceiptCard extends StatelessWidget {
                               ],
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.h,
+                              ),
                               decoration: BoxDecoration(
-                                color: AppColors.success.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                color: AppColors.success.withValues(
+                                  alpha: 0.15,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusFull,
+                                ),
                                 border: Border.all(
-                                  color: AppColors.success.withValues(alpha: 0.35),
+                                  color: AppColors.success.withValues(
+                                    alpha: 0.35,
+                                  ),
                                   width: 0.8,
                                 ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.verified_rounded, size: 12.w, color: AppColors.success),
+                                  Icon(
+                                    Icons.verified_rounded,
+                                    size: 12.w,
+                                    color: AppColors.success,
+                                  ),
                                   SizedBox(width: 4.w),
                                   Text(
                                     'پیش‌فاکتور رسمی',
@@ -199,7 +224,9 @@ class BillReviewReceiptCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                         SizedBox(height: 6.h),
@@ -244,7 +271,8 @@ class BillReviewReceiptCard extends StatelessWidget {
                           value: chargeAmount,
                           valueColor: AppColors.error,
                         ),
-                        if (conversionRate != null && conversionRate!.isNotEmpty) ...[
+                        if (conversionRate != null &&
+                            conversionRate!.isNotEmpty) ...[
                           _buildDivider(isDark),
                           _buildRow(
                             isDark: isDark,
@@ -267,7 +295,10 @@ class BillReviewReceiptCard extends StatelessWidget {
                   // Security Guarantee Strip
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                      horizontal: 16.w,
+                    ),
                     color: isDark
                         ? AppColors.darkSurfaceVariant.withValues(alpha: 0.6)
                         : AppColors.lightBackground,
@@ -277,7 +308,9 @@ class BillReviewReceiptCard extends StatelessWidget {
                         Icon(
                           Icons.security_rounded,
                           size: 14.w,
-                          color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+                          color: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.mutedBlue,
                         ),
                         SizedBox(width: 6.w),
                         Text(
@@ -285,7 +318,9 @@ class BillReviewReceiptCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
@@ -309,9 +344,13 @@ class BillReviewReceiptCard extends StatelessWidget {
                   backgroundColor: isDark
                       ? AppColors.darkSurfaceVariant
                       : AppColors.lightPrimary.withValues(alpha: 0.05),
-                  borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  borderColor: isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightBorder,
                   borderWidth: 1.2,
-                  textColor: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                  textColor: isDark
+                      ? AppColors.warmWhite
+                      : AppColors.lightTextPrimary,
                   height: 52.h,
                 ),
               ),
@@ -352,7 +391,9 @@ class BillReviewReceiptCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           Row(
@@ -368,7 +409,11 @@ class BillReviewReceiptCard extends StatelessWidget {
                   fontSize: 13.sp,
                   fontWeight: highlight ? FontWeight.w800 : FontWeight.w700,
                   letterSpacing: isMonospace ? 0.5 : 0,
-                  color: valueColor ?? (isDark ? AppColors.warmWhite : AppColors.lightTextPrimary),
+                  color:
+                      valueColor ??
+                      (isDark
+                          ? AppColors.warmWhite
+                          : AppColors.lightTextPrimary),
                 ),
               ),
             ],
@@ -382,7 +427,9 @@ class BillReviewReceiptCard extends StatelessWidget {
     return Divider(
       height: 12.h,
       thickness: 0.8,
-      color: isDark ? AppColors.darkBorder : AppColors.lightDivider.withValues(alpha: 0.4),
+      color: isDark
+          ? AppColors.darkBorder
+          : AppColors.lightDivider.withValues(alpha: 0.4),
     );
   }
 }
@@ -454,11 +501,7 @@ class _DashedLinePainter extends CustomPainter {
     final endX = size.width - 18.0;
 
     while (startX < endX) {
-      canvas.drawLine(
-        Offset(startX, 0),
-        Offset(startX + dashWidth, 0),
-        paint,
-      );
+      canvas.drawLine(Offset(startX, 0), Offset(startX + dashWidth, 0), paint);
       startX += dashWidth + dashSpace;
     }
   }

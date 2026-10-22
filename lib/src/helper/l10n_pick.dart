@@ -48,4 +48,3 @@ String l10nPickAuto({
   if (ctx == null) return en;
   return l10nPick(ctx, en: en, fa: fa, ar: ar, tr: tr, ru: ru, zh: zh);
 }
-

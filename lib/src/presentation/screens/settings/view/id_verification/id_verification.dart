@@ -40,7 +40,9 @@ class _IdVerificationState extends State<IdVerification> {
     final localization = AppLocalizations.of(context)!;
     final canPop = Navigator.canPop(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
 
     return PopScope(
       canPop: canPop,
@@ -77,21 +79,27 @@ class _IdVerificationState extends State<IdVerification> {
                 }
 
                 return RefreshIndicator(
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.lightPrimary,
                   onRefresh: () => refreshData(),
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+                          padding: const EdgeInsetsDirectional.symmetric(
+                            horizontal: 18,
+                          ),
                           child: Column(
                             children: [
                               const SizedBox(height: 20),
                               KycLevelRoadmap(
                                 onLevelTap: () {
-                                  final kycController = Get.find<KycLevelController>();
-                                  final nextLevel = kycController.nextLevel?.level ?? 2;
+                                  final kycController =
+                                      Get.find<KycLevelController>();
+                                  final nextLevel =
+                                      kycController.nextLevel?.level ?? 2;
                                   Get.toNamed(
                                     BaseRoute.kycSubmitWizard,
                                     arguments: {'target_level': nextLevel},
@@ -113,5 +121,4 @@ class _IdVerificationState extends State<IdVerification> {
       ),
     );
   }
-
 }

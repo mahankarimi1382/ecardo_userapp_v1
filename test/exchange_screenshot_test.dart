@@ -32,15 +32,10 @@ void main() {
       tester,
       const Scaffold(body: ExchangeAmountStepSection()),
       registrations: [
-        () => registerController<ExchangeRateService>(
-              _TestExchangeRateService(),
-            ),
-        () => registerController<SettingsService>(
-              _TestSettingsService(),
-            ),
-        () => registerController<ExchangeController>(
-              _TestExchangeController(),
-            ),
+        () =>
+            registerController<ExchangeRateService>(_TestExchangeRateService()),
+        () => registerController<SettingsService>(_TestSettingsService()),
+        () => registerController<ExchangeController>(_TestExchangeController()),
       ],
     );
     await capture(tester, 'exchange__amount__light');
@@ -52,15 +47,10 @@ void main() {
       const Scaffold(body: ExchangeAmountStepSection()),
       dark: true,
       registrations: [
-        () => registerController<ExchangeRateService>(
-              _TestExchangeRateService(),
-            ),
-        () => registerController<SettingsService>(
-              _TestSettingsService(),
-            ),
-        () => registerController<ExchangeController>(
-              _TestExchangeController(),
-            ),
+        () =>
+            registerController<ExchangeRateService>(_TestExchangeRateService()),
+        () => registerController<SettingsService>(_TestSettingsService()),
+        () => registerController<ExchangeController>(_TestExchangeController()),
       ],
     );
     await capture(tester, 'exchange__amount__dark');
@@ -73,15 +63,12 @@ void main() {
       tester,
       const Scaffold(body: ExchangeReviewStepSection()),
       registrations: [
-        () => registerController<ExchangeRateService>(
-              _TestExchangeRateService(),
-            ),
-        () => registerController<SettingsService>(
-              _TestSettingsService(),
-            ),
+        () =>
+            registerController<ExchangeRateService>(_TestExchangeRateService()),
+        () => registerController<SettingsService>(_TestSettingsService()),
         () => registerController<ExchangeController>(
-              _TestExchangeControllerReview(),
-            ),
+          _TestExchangeControllerReview(),
+        ),
       ],
     );
     await capture(tester, 'exchange__review__light');
@@ -93,15 +80,12 @@ void main() {
       const Scaffold(body: ExchangeReviewStepSection()),
       dark: true,
       registrations: [
-        () => registerController<ExchangeRateService>(
-              _TestExchangeRateService(),
-            ),
-        () => registerController<SettingsService>(
-              _TestSettingsService(),
-            ),
+        () =>
+            registerController<ExchangeRateService>(_TestExchangeRateService()),
+        () => registerController<SettingsService>(_TestSettingsService()),
         () => registerController<ExchangeController>(
-              _TestExchangeControllerReview(),
-            ),
+          _TestExchangeControllerReview(),
+        ),
       ],
     );
     await capture(tester, 'exchange__review__dark');
@@ -114,12 +98,10 @@ void main() {
       tester,
       const Scaffold(body: ExchangeSuccessStepSection()),
       registrations: [
-        () => registerController<SettingsService>(
-              _TestSettingsService(),
-            ),
+        () => registerController<SettingsService>(_TestSettingsService()),
         () => registerController<ExchangeController>(
-              _TestExchangeControllerSuccess(),
-            ),
+          _TestExchangeControllerSuccess(),
+        ),
       ],
     );
     await capture(tester, 'exchange__success__light');
@@ -131,12 +113,10 @@ void main() {
       const Scaffold(body: ExchangeSuccessStepSection()),
       dark: true,
       registrations: [
-        () => registerController<SettingsService>(
-              _TestSettingsService(),
-            ),
+        () => registerController<SettingsService>(_TestSettingsService()),
         () => registerController<ExchangeController>(
-              _TestExchangeControllerSuccess(),
-            ),
+          _TestExchangeControllerSuccess(),
+        ),
       ],
     );
     await capture(tester, 'exchange__success__dark');

@@ -78,7 +78,10 @@ void main() {
       expect(AppSpacing.cardGap, equals(12.0));
       expect(AppSpacing.sectionGap, equals(20.0));
       expect(AppSpacing.radius, equals(16.0));
-      expect(AppSpacing.pageInsets, equals(const EdgeInsets.symmetric(horizontal: 16.0)));
+      expect(
+        AppSpacing.pageInsets,
+        equals(const EdgeInsets.symmetric(horizontal: 16.0)),
+      );
     });
 
     test('AppTextStyles contains full Material 3 scale and legacy styles', () {
@@ -118,7 +121,9 @@ void main() {
   });
 
   group('LightTheme & DarkTheme Harmonization', () {
-    testWidgets('LightTheme has complete M3 ColorScheme and component themes', (tester) async {
+    testWidgets('LightTheme has complete M3 ColorScheme and component themes', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Builder(
@@ -129,29 +134,58 @@ void main() {
               // ColorScheme roles
               expect(scheme.primary, equals(AppColors.lightPrimary));
               expect(scheme.onPrimary, equals(AppColors.lightTextOnPrimary));
-              expect(scheme.primaryContainer, equals(AppColors.lightPrimaryContainer));
-              expect(scheme.onPrimaryContainer, equals(AppColors.lightPrimaryDark));
+              expect(
+                scheme.primaryContainer,
+                equals(AppColors.lightPrimaryContainer),
+              );
+              expect(
+                scheme.onPrimaryContainer,
+                equals(AppColors.lightPrimaryDark),
+              );
               expect(scheme.secondary, equals(AppColors.lightSecondary));
-              expect(scheme.onSecondary, equals(AppColors.deepBlack)); // WCAG 2.2 AA compliant (9:1 contrast)
+              expect(
+                scheme.onSecondary,
+                equals(AppColors.deepBlack),
+              ); // WCAG 2.2 AA compliant (9:1 contrast)
               expect(scheme.surface, equals(AppColors.lightBackground));
               expect(scheme.onSurface, equals(AppColors.deepBlack));
               expect(scheme.error, equals(AppColors.error));
               expect(scheme.onError, equals(AppColors.warmWhite));
               expect(scheme.outline, equals(AppColors.lightOutline));
-              expect(scheme.outlineVariant, equals(AppColors.lightOutlineVariant));
+              expect(
+                scheme.outlineVariant,
+                equals(AppColors.lightOutlineVariant),
+              );
 
               // CardThemeData
               expect(theme.cardTheme.elevation, equals(0));
               final cardShape = theme.cardTheme.shape as RoundedRectangleBorder;
-              expect(cardShape.borderRadius, equals(BorderRadius.circular(AppSpacing.radiusLg)));
+              expect(
+                cardShape.borderRadius,
+                equals(BorderRadius.circular(AppSpacing.radiusLg)),
+              );
 
               // InputDecorationTheme has 16px radius
-              final inputBorder = theme.inputDecorationTheme.border as OutlineInputBorder;
-              expect(inputBorder.borderRadius, equals(BorderRadius.circular(16)));
-              final enabledBorder = theme.inputDecorationTheme.enabledBorder as OutlineInputBorder;
-              expect(enabledBorder.borderRadius, equals(BorderRadius.circular(16)));
-              final focusedBorder = theme.inputDecorationTheme.focusedBorder as OutlineInputBorder;
-              expect(focusedBorder.borderRadius, equals(BorderRadius.circular(16)));
+              final inputBorder =
+                  theme.inputDecorationTheme.border as OutlineInputBorder;
+              expect(
+                inputBorder.borderRadius,
+                equals(BorderRadius.circular(16)),
+              );
+              final enabledBorder =
+                  theme.inputDecorationTheme.enabledBorder
+                      as OutlineInputBorder;
+              expect(
+                enabledBorder.borderRadius,
+                equals(BorderRadius.circular(16)),
+              );
+              final focusedBorder =
+                  theme.inputDecorationTheme.focusedBorder
+                      as OutlineInputBorder;
+              expect(
+                focusedBorder.borderRadius,
+                equals(BorderRadius.circular(16)),
+              );
 
               // Additional component themes
               expect(theme.navigationBarTheme, isNotNull);
@@ -168,57 +202,86 @@ void main() {
       );
     });
 
-    testWidgets('DarkTheme has complete M3 ColorScheme and 16px input border radius', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Builder(
-            builder: (context) {
-              final theme = DarkTheme().darkTheme(context);
-              final scheme = theme.colorScheme;
+    testWidgets(
+      'DarkTheme has complete M3 ColorScheme and 16px input border radius',
+      (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                final theme = DarkTheme().darkTheme(context);
+                final scheme = theme.colorScheme;
 
-              // ColorScheme roles
-              expect(scheme.primary, equals(AppColors.mainSoftBlue));
-              expect(scheme.onPrimary, equals(AppColors.darkTextOnPrimary));
-              expect(scheme.primaryContainer, equals(AppColors.darkPrimaryContainer));
-              expect(scheme.onPrimaryContainer, equals(AppColors.mainSoftBlue));
-              expect(scheme.secondary, equals(AppColors.mutedBlue));
-              expect(scheme.surface, equals(AppColors.darkSurface));
-              expect(scheme.onSurface, equals(AppColors.darkTextPrimary));
-              expect(scheme.error, equals(AppColors.error));
-              expect(scheme.outline, equals(AppColors.darkOutline));
-              expect(scheme.outlineVariant, equals(AppColors.darkBorder));
+                // ColorScheme roles
+                expect(scheme.primary, equals(AppColors.mainSoftBlue));
+                expect(scheme.onPrimary, equals(AppColors.darkTextOnPrimary));
+                expect(
+                  scheme.primaryContainer,
+                  equals(AppColors.darkPrimaryContainer),
+                );
+                expect(
+                  scheme.onPrimaryContainer,
+                  equals(AppColors.mainSoftBlue),
+                );
+                expect(scheme.secondary, equals(AppColors.mutedBlue));
+                expect(scheme.surface, equals(AppColors.darkSurface));
+                expect(scheme.onSurface, equals(AppColors.darkTextPrimary));
+                expect(scheme.error, equals(AppColors.error));
+                expect(scheme.outline, equals(AppColors.darkOutline));
+                expect(scheme.outlineVariant, equals(AppColors.darkBorder));
 
-              // CardThemeData
-              expect(theme.cardTheme.elevation, equals(0));
-              final cardShape = theme.cardTheme.shape as RoundedRectangleBorder;
-              expect(cardShape.borderRadius, equals(BorderRadius.circular(AppSpacing.radiusLg)));
+                // CardThemeData
+                expect(theme.cardTheme.elevation, equals(0));
+                final cardShape =
+                    theme.cardTheme.shape as RoundedRectangleBorder;
+                expect(
+                  cardShape.borderRadius,
+                  equals(BorderRadius.circular(AppSpacing.radiusLg)),
+                );
 
-              // InputDecorationTheme has 16px radius (fixed 14px mismatch)
-              final inputBorder = theme.inputDecorationTheme.border as OutlineInputBorder;
-              expect(inputBorder.borderRadius, equals(BorderRadius.circular(16)));
-              final enabledBorder = theme.inputDecorationTheme.enabledBorder as OutlineInputBorder;
-              expect(enabledBorder.borderRadius, equals(BorderRadius.circular(16)));
-              final focusedBorder = theme.inputDecorationTheme.focusedBorder as OutlineInputBorder;
-              expect(focusedBorder.borderRadius, equals(BorderRadius.circular(16)));
+                // InputDecorationTheme has 16px radius (fixed 14px mismatch)
+                final inputBorder =
+                    theme.inputDecorationTheme.border as OutlineInputBorder;
+                expect(
+                  inputBorder.borderRadius,
+                  equals(BorderRadius.circular(16)),
+                );
+                final enabledBorder =
+                    theme.inputDecorationTheme.enabledBorder
+                        as OutlineInputBorder;
+                expect(
+                  enabledBorder.borderRadius,
+                  equals(BorderRadius.circular(16)),
+                );
+                final focusedBorder =
+                    theme.inputDecorationTheme.focusedBorder
+                        as OutlineInputBorder;
+                expect(
+                  focusedBorder.borderRadius,
+                  equals(BorderRadius.circular(16)),
+                );
 
-              // Additional component themes
-              expect(theme.navigationBarTheme, isNotNull);
-              expect(theme.textButtonTheme, isNotNull);
-              expect(theme.outlinedButtonTheme, isNotNull);
-              expect(theme.switchTheme, isNotNull);
-              expect(theme.dividerTheme, isNotNull);
-              expect(theme.tabBarTheme, isNotNull);
+                // Additional component themes
+                expect(theme.navigationBarTheme, isNotNull);
+                expect(theme.textButtonTheme, isNotNull);
+                expect(theme.outlinedButtonTheme, isNotNull);
+                expect(theme.switchTheme, isNotNull);
+                expect(theme.dividerTheme, isNotNull);
+                expect(theme.tabBarTheme, isNotNull);
 
-              return const SizedBox();
-            },
+                return const SizedBox();
+              },
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   });
 
   group('CommonButton Tests', () {
-    testWidgets('uses theme primary color when backgroundColor is null', (tester) async {
+    testWidgets('uses theme primary color when backgroundColor is null', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -231,17 +294,17 @@ void main() {
               ),
             ),
             home: Scaffold(
-              body: CommonButton(
-                text: 'Theme Button',
-                onPressed: () {},
-              ),
+              body: CommonButton(text: 'Theme Button', onPressed: () {}),
             ),
           ),
         ),
       );
 
       final container = tester.widget<Container>(
-        find.descendant(of: find.byType(CommonButton), matching: find.byType(Container)),
+        find.descendant(
+          of: find.byType(CommonButton),
+          matching: find.byType(Container),
+        ),
       );
       final decoration = container.decoration as BoxDecoration;
       expect(decoration.color, equals(Colors.indigo));
@@ -289,13 +352,9 @@ void main() {
         MaterialApp(
           theme: ThemeData(
             useMaterial3: true,
-            colorScheme: const ColorScheme.light(
-              primary: Colors.teal,
-            ),
+            colorScheme: const ColorScheme.light(primary: Colors.teal),
           ),
-          home: const Scaffold(
-            body: CommonLoading(),
-          ),
+          home: const Scaffold(body: CommonLoading()),
         ),
       );
 
@@ -306,10 +365,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: const Scaffold(
-            body: CommonLoading(
-              color: Colors.amber,
-              size: 40,
-            ),
+            body: CommonLoading(color: Colors.amber, size: 40),
           ),
         ),
       );

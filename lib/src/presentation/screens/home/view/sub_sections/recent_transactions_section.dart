@@ -15,12 +15,7 @@ import 'package:ecardo_user/src/presentation/screens/transactions/model/transact
 import 'package:ecardo_user/src/presentation/widgets/empty_view.dart';
 
 /// Semantic cluster categories for human-friendly date grouping.
-enum _DateCluster {
-  today,
-  yesterday,
-  thisWeek,
-  past,
-}
+enum _DateCluster { today, yesterday, thisWeek, past }
 
 /// Helper model representing a cluster of transactions sharing a date tier.
 class _GroupedTransactions {
@@ -53,10 +48,7 @@ class RecentTransactionsSection extends StatelessWidget {
   /// If null, reads dynamically from [HomeController.transactionsModel].
   final List<Transactions>? transactions;
 
-  const RecentTransactionsSection({
-    super.key,
-    this.transactions,
-  });
+  const RecentTransactionsSection({super.key, this.transactions});
 
   @override
   Widget build(BuildContext context) {
@@ -347,11 +339,13 @@ class RecentTransactionsSection extends StatelessWidget {
     final List<_GroupedTransactions> result = [];
     for (final c in _DateCluster.values) {
       if (map.containsKey(c) && map[c]!.isNotEmpty) {
-        result.add(_GroupedTransactions(
-          cluster: c,
-          title: _getClusterTitle(context, c),
-          transactions: map[c]!,
-        ));
+        result.add(
+          _GroupedTransactions(
+            cluster: c,
+            title: _getClusterTitle(context, c),
+            transactions: map[c]!,
+          ),
+        );
       }
     }
     return result;
@@ -408,10 +402,7 @@ class _TransactionRowItem extends StatelessWidget {
   final Transactions transaction;
   final VoidCallback onTap;
 
-  const _TransactionRowItem({
-    required this.transaction,
-    required this.onTap,
-  });
+  const _TransactionRowItem({required this.transaction, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -422,10 +413,7 @@ class _TransactionRowItem extends StatelessWidget {
     return _BouncingCard(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 10.0,
-          horizontal: 16.0,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
         child: Row(
           children: [
             // 1. Sleek category icon container with rounded 14px
@@ -500,7 +488,9 @@ class _TransactionRowItem extends StatelessWidget {
     final iconBg = isDark
         ? visual.iconColor.withValues(alpha: 0.20)
         : visual.bgColor;
-    final borderColor = visual.iconColor.withValues(alpha: isDark ? 0.35 : 0.20);
+    final borderColor = visual.iconColor.withValues(
+      alpha: isDark ? 0.35 : 0.20,
+    );
 
     return Stack(
       clipBehavior: Clip.none,
@@ -511,16 +501,9 @@ class _TransactionRowItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: iconBg,
             borderRadius: BorderRadius.circular(14.0),
-            border: Border.all(
-              color: borderColor,
-              width: 0.8,
-            ),
+            border: Border.all(color: borderColor, width: 0.8),
           ),
-          child: Icon(
-            visual.icon,
-            color: visual.iconColor,
-            size: 22.0,
-          ),
+          child: Icon(visual.icon, color: visual.iconColor, size: 22.0),
         ),
         // Mini direction indicator badge
         PositionedDirectional(
@@ -538,7 +521,9 @@ class _TransactionRowItem extends StatelessWidget {
               ),
             ),
             child: Icon(
-              isPlus ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+              isPlus
+                  ? Icons.arrow_downward_rounded
+                  : Icons.arrow_upward_rounded,
               size: 10.0,
               color: AppColors.white,
             ),
@@ -571,10 +556,12 @@ class _TransactionRowItem extends StatelessWidget {
           (m) => '${m[1]},',
         );
       } else {
-        cleanAmount = parsed.toStringAsFixed(decimals).replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (m) => '${m[1]},',
-        );
+        cleanAmount = parsed
+            .toStringAsFixed(decimals)
+            .replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+              (m) => '${m[1]},',
+            );
       }
     }
 
@@ -594,20 +581,14 @@ class _TransactionRowItem extends StatelessWidget {
           letterSpacing: 0.1,
           fontWeight: FontWeight.w900,
           fontSize: 14.5,
-          fontFeatures: const [
-            FontFeature.tabularFigures(),
-          ],
+          fontFeatures: const [FontFeature.tabularFigures()],
           color: amountColor,
         ),
       ),
     );
   }
 
-  Widget _buildStatusBadge(
-    BuildContext context,
-    Transactions tx,
-    bool isDark,
-  ) {
+  Widget _buildStatusBadge(BuildContext context, Transactions tx, bool isDark) {
     if (tx.isPending) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
@@ -661,11 +642,7 @@ class _TransactionRowItem extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.cancel_rounded,
-              size: 10.0,
-              color: AppColors.error,
-            ),
+            Icon(Icons.cancel_rounded, size: 10.0, color: AppColors.error),
             const SizedBox(width: 3.0),
             Text(
               l10nPick(
@@ -704,11 +681,7 @@ class _TransactionRowItem extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.check_rounded,
-            size: 10.0,
-            color: AppColors.success,
-          ),
+          Icon(Icons.check_rounded, size: 10.0, color: AppColors.success),
           const SizedBox(width: 3.0),
           Text(
             l10nPick(
@@ -867,7 +840,8 @@ class _TransactionRowItem extends StatelessWidget {
         );
       default:
         return _TxVisual(
-          title: type ??
+          title:
+              type ??
               l10nPick(
                 context,
                 en: 'Transaction',
@@ -905,10 +879,7 @@ class _BouncingCard extends StatefulWidget {
   final VoidCallback onTap;
   final Widget child;
 
-  const _BouncingCard({
-    required this.onTap,
-    required this.child,
-  });
+  const _BouncingCard({required this.onTap, required this.child});
 
   @override
   State<_BouncingCard> createState() => _BouncingCardState();
@@ -959,16 +930,18 @@ class _PulsingDotState extends State<_PulsingDot>
       vsync: this,
       duration: const Duration(milliseconds: 800),
     );
-    final isTest =
-        WidgetsBinding.instance.runtimeType.toString().contains('Test');
+    final isTest = WidgetsBinding.instance.runtimeType.toString().contains(
+      'Test',
+    );
     if (!isTest) {
       _controller.repeat(reverse: true);
     } else {
       _controller.value = 1.0;
     }
-    _animation = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.3,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -984,10 +957,7 @@ class _PulsingDotState extends State<_PulsingDot>
       child: Container(
         width: 6.0,
         height: 6.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: widget.color,
-        ),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: widget.color),
       ),
     );
   }

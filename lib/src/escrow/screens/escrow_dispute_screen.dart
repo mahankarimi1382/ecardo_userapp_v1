@@ -22,11 +22,7 @@ class EscrowDisputeScreen extends StatefulWidget {
   final int? orderId;
   final EscrowOrderModel? order;
 
-  const EscrowDisputeScreen({
-    super.key,
-    this.orderId,
-    this.order,
-  });
+  const EscrowDisputeScreen({super.key, this.orderId, this.order});
 
   @override
   State<EscrowDisputeScreen> createState() => _EscrowDisputeScreenState();
@@ -36,7 +32,8 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
   late final EscrowController controller;
 
   final TextEditingController _descController = TextEditingController();
-  final TextEditingController _partialAmountController = TextEditingController();
+  final TextEditingController _partialAmountController =
+      TextEditingController();
 
   int _selectedReasonIndex = 0;
   bool _isFullRefund = true;
@@ -81,7 +78,11 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
     if (desc.isEmpty) {
       Get.snackbar(
         l10nPick(context, fa: 'خطا', en: 'Error'),
-        l10nPick(context, fa: 'لطفاً شرح مشکل را بنویسید.', en: 'Please describe the problem.'),
+        l10nPick(
+          context,
+          fa: 'لطفاً شرح مشکل را بنویسید.',
+          en: 'Please describe the problem.',
+        ),
         backgroundColor: ECardoTokens.dangerBg(context),
         colorText: ECardoTokens.danger(context),
       );
@@ -91,7 +92,11 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
     if (_uploadedEvidence == null) {
       Get.snackbar(
         l10nPick(context, fa: 'خطا', en: 'Error'),
-        l10nPick(context, fa: 'بارگذاری حداقل یک فایل مستندات الزامی است.', en: 'At least one evidence file is required.'),
+        l10nPick(
+          context,
+          fa: 'بارگذاری حداقل یک فایل مستندات الزامی است.',
+          en: 'At least one evidence file is required.',
+        ),
         backgroundColor: ECardoTokens.dangerBg(context),
         colorText: ECardoTokens.danger(context),
       );
@@ -116,7 +121,11 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
     }
     Get.snackbar(
       l10nPick(context, fa: 'پرونده ثبت شد', en: 'Dispute opened'),
-      l10nPick(context, fa: 'وجه معامله فریز شد و پرونده به داوری ارسال گردید.', en: 'Funds frozen and case sent to arbitration.'),
+      l10nPick(
+        context,
+        fa: 'وجه معامله فریز شد و پرونده به داوری ارسال گردید.',
+        en: 'Funds frozen and case sent to arbitration.',
+      ),
       backgroundColor: ECardoTokens.successBg(context),
       colorText: ECardoTokens.success(context),
     );
@@ -172,7 +181,11 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.shield_outlined, color: ECardoTokens.danger(context), size: 20.sp),
+                      Icon(
+                        Icons.shield_outlined,
+                        color: ECardoTokens.danger(context),
+                        size: 20.sp,
+                      ),
                       SizedBox(width: ECardoTokens.space2.w),
                       Text(
                         l10nPick(
@@ -242,29 +255,48 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 12.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: isSelected ? ECardoTokens.surfaceSunken(context) : ECardoTokens.surfaceCard(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                      color: isSelected
+                          ? ECardoTokens.surfaceSunken(context)
+                          : ECardoTokens.surfaceCard(context),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
                       border: Border.all(
-                        color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.border(context),
+                        color: isSelected
+                            ? ECardoTokens.brand900(context)
+                            : ECardoTokens.border(context),
                         width: isSelected ? 1.8 : 1.0,
                       ),
                     ),
                     child: Row(
                       children: [
                         Icon(
-                          isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                          isSelected
+                              ? Icons.radio_button_checked_rounded
+                              : Icons.radio_button_off_rounded,
                           size: 18.sp,
-                          color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.inkMuted(context),
+                          color: isSelected
+                              ? ECardoTokens.brand900(context)
+                              : ECardoTokens.inkMuted(context),
                         ),
                         SizedBox(width: 10.w),
                         Expanded(
                           child: Text(
-                            l10nPick(context, fa: _categories[index]['fa']!, en: _categories[index]['en']!),
+                            l10nPick(
+                              context,
+                              fa: _categories[index]['fa']!,
+                              en: _categories[index]['en']!,
+                            ),
                             style: TextStyle(
                               fontSize: 13.sp,
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               color: ECardoTokens.ink(context),
                             ),
                           ),
@@ -280,8 +312,16 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
 
             // ------------------ Problem Description ------------------
             Text(
-              l10nPick(context, fa: 'شرح دقیق مشکل', en: 'Describe the problem'),
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+              l10nPick(
+                context,
+                fa: 'شرح دقیق مشکل',
+                en: 'Describe the problem',
+              ),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: ECardoTokens.ink(context),
+              ),
             ),
             SizedBox(height: 4.h),
             Text(
@@ -290,7 +330,10 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
                 fa: 'دقیق باشید. داور تنها مستنداتی را بررسی می‌کند که هر دو طرف آپلود کرده‌اند.',
                 en: 'Be specific. The reviewer only sees what both sides upload.',
               ),
-              style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkMuted(context)),
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                color: ECardoTokens.inkMuted(context),
+              ),
             ),
             SizedBox(height: ECardoTokens.space2.h),
 
@@ -304,14 +347,22 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
               child: TextField(
                 controller: _descController,
                 maxLines: 4,
-                style: TextStyle(fontSize: 13.sp, color: ECardoTokens.ink(context)),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: ECardoTokens.ink(context),
+                ),
                 decoration: InputDecoration(
                   hintText: l10nPick(
                     context,
                     fa: 'توضیحات و مغایرت‌های مشاهده‌شده...',
                     en: 'Received roll is 50 micron instead of 80 micron requested in contract.',
                   ),
-                  hintStyle: TextStyle(fontSize: 12.sp, color: ECardoTokens.inkMuted(context).withValues(alpha: 0.6)),
+                  hintStyle: TextStyle(
+                    fontSize: 12.sp,
+                    color: ECardoTokens.inkMuted(
+                      context,
+                    ).withValues(alpha: 0.6),
+                  ),
                   border: InputBorder.none,
                 ),
               ),
@@ -325,17 +376,31 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
               children: [
                 Text(
                   l10nPick(context, fa: 'مدارک و شواهد', en: 'Evidence'),
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w700,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
                     color: ECardoTokens.dangerBg(context),
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusSm.r,
+                    ),
                   ),
                   child: Text(
-                    l10nPick(context, fa: 'حداقل ۱ فایل الزامی', en: 'at least one file required'),
-                    style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.danger(context)),
+                    l10nPick(
+                      context,
+                      fa: 'حداقل ۱ فایل الزامی',
+                      en: 'at least one file required',
+                    ),
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      fontWeight: FontWeight.w700,
+                      color: ECardoTokens.danger(context),
+                    ),
                   ),
                 ),
               ],
@@ -351,20 +416,34 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.photo_outlined, color: ECardoTokens.brand500(context), size: 22.sp),
+                  Icon(
+                    Icons.photo_outlined,
+                    color: ECardoTokens.brand500(context),
+                    size: 22.sp,
+                  ),
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
                       _uploadedEvidence ?? 'Received-roll-1.jpg',
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: ECardoTokens.ink(context)),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: ECardoTokens.ink(context),
+                      ),
                     ),
                   ),
                   TextButton(
                     onPressed: () {
                       HapticFeedback.lightImpact();
-                      setState(() => _uploadedEvidence = 'Evidence-photo-${DateTime.now().millisecond}.jpg');
+                      setState(
+                        () => _uploadedEvidence =
+                            'Evidence-photo-${DateTime.now().millisecond}.jpg',
+                      );
                     },
-                    child: Text(l10nPick(context, fa: 'تغییر', en: 'Change'), style: TextStyle(color: ECardoTokens.brand500(context))),
+                    child: Text(
+                      l10nPick(context, fa: 'تغییر', en: 'Change'),
+                      style: TextStyle(color: ECardoTokens.brand500(context)),
+                    ),
                   ),
                 ],
               ),
@@ -374,8 +453,16 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
 
             // ------------------ Requested Outcome ------------------
             Text(
-              l10nPick(context, fa: 'خروجی مورد درخواست شما', en: 'What outcome do you want'),
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+              l10nPick(
+                context,
+                fa: 'خروجی مورد درخواست شما',
+                en: 'What outcome do you want',
+              ),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: ECardoTokens.ink(context),
+              ),
             ),
             SizedBox(height: ECardoTokens.space2.h),
 
@@ -383,18 +470,34 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
               children: [
                 Expanded(
                   child: ChoiceChip(
-                    label: Center(child: Text(l10nPick(context, fa: 'استرداد کامل وجه', en: 'Full refund'))),
+                    label: Center(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          fa: 'استرداد کامل وجه',
+                          en: 'Full refund',
+                        ),
+                      ),
+                    ),
                     selected: _isFullRefund,
                     selectedColor: ECardoTokens.brand900(context),
                     backgroundColor: ECardoTokens.surfaceSunken(context),
                     labelStyle: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w700,
-                      color: _isFullRefund ? Colors.white : ECardoTokens.ink(context),
+                      color: _isFullRefund
+                          ? Colors.white
+                          : ECardoTokens.ink(context),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
-                      side: BorderSide(color: _isFullRefund ? ECardoTokens.brand900(context) : ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
+                      side: BorderSide(
+                        color: _isFullRefund
+                            ? ECardoTokens.brand900(context)
+                            : ECardoTokens.border(context),
+                      ),
                     ),
                     onSelected: (_) => setState(() => _isFullRefund = true),
                   ),
@@ -402,18 +505,34 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
                 SizedBox(width: 8.w),
                 Expanded(
                   child: ChoiceChip(
-                    label: Center(child: Text(l10nPick(context, fa: 'استرداد جزئی وجه', en: 'Partial refund'))),
+                    label: Center(
+                      child: Text(
+                        l10nPick(
+                          context,
+                          fa: 'استرداد جزئی وجه',
+                          en: 'Partial refund',
+                        ),
+                      ),
+                    ),
                     selected: !_isFullRefund,
                     selectedColor: ECardoTokens.brand900(context),
                     backgroundColor: ECardoTokens.surfaceSunken(context),
                     labelStyle: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w700,
-                      color: !_isFullRefund ? Colors.white : ECardoTokens.ink(context),
+                      color: !_isFullRefund
+                          ? Colors.white
+                          : ECardoTokens.ink(context),
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
-                      side: BorderSide(color: !_isFullRefund ? ECardoTokens.brand900(context) : ECardoTokens.border(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
+                      side: BorderSide(
+                        color: !_isFullRefund
+                            ? ECardoTokens.brand900(context)
+                            : ECardoTokens.border(context),
+                      ),
                     ),
                     onSelected: (_) => setState(() => _isFullRefund = false),
                   ),
@@ -436,12 +555,25 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'مبلغ استردادی به شما', en: 'You get back'),
-                        style: TextStyle(fontSize: 13.sp, color: ECardoTokens.inkMuted(context)),
+                        l10nPick(
+                          context,
+                          fa: 'مبلغ استردادی به شما',
+                          en: 'You get back',
+                        ),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
                       ),
                       Text(
-                        _isFullRefund ? '${dealAmount.toStringAsFixed(2)} USD' : '400.00 USD',
-                        style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: ECardoTokens.success(context)),
+                        _isFullRefund
+                            ? '${dealAmount.toStringAsFixed(2)} USD'
+                            : '400.00 USD',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.success(context),
+                        ),
                       ),
                     ],
                   ),
@@ -451,11 +583,22 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
                     children: [
                       Text(
                         l10nPick(context, fa: 'کارمزد داوری', en: 'Escrow fee'),
-                        style: TextStyle(fontSize: 13.sp, color: ECardoTokens.inkMuted(context)),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
                       ),
                       Text(
-                        l10nPick(context, fa: 'از طرف بازنده کسر می‌شود', en: 'Charged to the losing side'),
-                        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+                        l10nPick(
+                          context,
+                          fa: 'از طرف بازنده کسر می‌شود',
+                          en: 'Charged to the losing side',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: ECardoTokens.ink(context),
+                        ),
                       ),
                     ],
                   ),
@@ -487,13 +630,22 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg.r,
+                      ),
                     ),
                   ),
                   onPressed: () => _handleSubmit(totalLocked),
                   child: Text(
-                    l10nPick(context, fa: 'ثبت و ارسال اختلاف (Submit dispute)', en: 'Submit dispute'),
-                    style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
+                    l10nPick(
+                      context,
+                      fa: 'ثبت و ارسال اختلاف (Submit dispute)',
+                      en: 'Submit dispute',
+                    ),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
@@ -501,8 +653,16 @@ class _EscrowDisputeScreenState extends State<EscrowDisputeScreen> {
               TextButton(
                 onPressed: Get.back,
                 child: Text(
-                  l10nPick(context, fa: 'انصراف و بازگشت (Cancel and go back)', en: 'Cancel and go back'),
-                  style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.inkMuted(context)),
+                  l10nPick(
+                    context,
+                    fa: 'انصراف و بازگشت (Cancel and go back)',
+                    en: 'Cancel and go back',
+                  ),
+                  style: TextStyle(
+                    fontSize: 13.5.sp,
+                    fontWeight: FontWeight.w700,
+                    color: ECardoTokens.inkMuted(context),
+                  ),
                 ),
               ),
             ],

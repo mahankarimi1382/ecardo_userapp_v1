@@ -64,8 +64,9 @@ class OfflineRequestQueue extends GetxService {
     'wallet',
   ];
 
-  static final RegExp _changeLanguageRegex =
-      RegExp(r'^/change-language/[a-zA-Z0-9_\-]+$');
+  static final RegExp _changeLanguageRegex = RegExp(
+    r'^/change-language/[a-zA-Z0-9_\-]+$',
+  );
 
   /// Normalizes and validates the endpoint path.
   ///
@@ -194,19 +195,23 @@ class OfflineRequestQueue extends GetxService {
       } else if (token == 'card') {
         if (words.contains('card') ||
             words.contains('cards') ||
-            words.any((w) =>
-                w.endsWith('card') &&
-                w != 'ecardo' &&
-                w != 'wildcard' &&
-                w != 'discard')) {
+            words.any(
+              (w) =>
+                  w.endsWith('card') &&
+                  w != 'ecardo' &&
+                  w != 'wildcard' &&
+                  w != 'discard',
+            )) {
           return true;
         }
       } else if (token == 'token') {
         if (words.contains('token') ||
             words.contains('tokens') ||
-            words.any((w) =>
-                (w.endsWith('token') || w.endsWith('tokens')) &&
-                w != 'fcm_token')) {
+            words.any(
+              (w) =>
+                  (w.endsWith('token') || w.endsWith('tokens')) &&
+                  w != 'fcm_token',
+            )) {
           return true;
         }
       } else {
@@ -461,14 +466,9 @@ class OfflineRequestQueue extends GetxService {
           idempotencyKey: key,
         );
       case 'PUT':
-        return await net.put(
-          endpoint: endpoint,
-          data: data,
-        );
+        return await net.put(endpoint: endpoint, data: data);
       case 'GET':
-        return await net.get(
-          endpoint: endpoint,
-        );
+        return await net.get(endpoint: endpoint);
       default:
         return ApiResponse.error('unsupported_method');
     }

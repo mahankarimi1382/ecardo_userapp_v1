@@ -19,10 +19,7 @@ import 'escrow_dispute_screen.dart';
 class EscrowInspectionScreen extends StatelessWidget {
   final EscrowOrderModel order;
 
-  const EscrowInspectionScreen({
-    super.key,
-    required this.order,
-  });
+  const EscrowInspectionScreen({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -154,13 +151,21 @@ class EscrowInspectionScreen extends StatelessWidget {
                   SizedBox(height: ECardoTokens.space3.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'مبلغ معامله', en: 'Deal amount'),
+                    label: l10nPick(
+                      context,
+                      fa: 'مبلغ معامله',
+                      en: 'Deal amount',
+                    ),
                     value: '${amount.toStringAsFixed(2)} USD',
                   ),
                   SizedBox(height: 8.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'کارمزد ۱٪ اسکرو', en: 'Escrow fee 1% · you pay'),
+                    label: l10nPick(
+                      context,
+                      fa: 'کارمزد ۱٪ اسکرو',
+                      en: 'Escrow fee 1% · you pay',
+                    ),
                     value: '${fee.toStringAsFixed(2)} USD',
                   ),
                   SizedBox(height: 8.h),
@@ -168,7 +173,11 @@ class EscrowInspectionScreen extends StatelessWidget {
                   SizedBox(height: 8.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'کل وجه قفل‌شده فعلی', en: 'Currently locked'),
+                    label: l10nPick(
+                      context,
+                      fa: 'کل وجه قفل‌شده فعلی',
+                      en: 'Currently locked',
+                    ),
                     value: '${totalLocked.toStringAsFixed(2)} USD',
                     isBold: true,
                     valueColor: ECardoTokens.brand900(context),
@@ -208,7 +217,11 @@ class EscrowInspectionScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.picture_as_pdf_rounded, color: ECardoTokens.brand500(context), size: 22.sp),
+                      Icon(
+                        Icons.picture_as_pdf_rounded,
+                        color: ECardoTokens.brand500(context),
+                        size: 22.sp,
+                      ),
                       SizedBox(width: 10.w),
                       Expanded(
                         child: Text(
@@ -220,13 +233,21 @@ class EscrowInspectionScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Icon(Icons.download_rounded, color: ECardoTokens.inkMuted(context), size: 20.sp),
+                      Icon(
+                        Icons.download_rounded,
+                        color: ECardoTokens.inkMuted(context),
+                        size: 20.sp,
+                      ),
                     ],
                   ),
                   Divider(color: ECardoTokens.border(context), height: 18.h),
                   Row(
                     children: [
-                      Icon(Icons.collections_outlined, color: ECardoTokens.sand600(context), size: 22.sp),
+                      Icon(
+                        Icons.collections_outlined,
+                        color: ECardoTokens.sand600(context),
+                        size: 22.sp,
+                      ),
                       SizedBox(width: 10.w),
                       Expanded(
                         child: Text(
@@ -238,7 +259,11 @@ class EscrowInspectionScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Icon(Icons.chevron_right_rounded, color: ECardoTokens.inkMuted(context), size: 20.sp),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        color: ECardoTokens.inkMuted(context),
+                        size: 20.sp,
+                      ),
                     ],
                   ),
                 ],
@@ -269,7 +294,9 @@ class EscrowInspectionScreen extends StatelessWidget {
                     foregroundColor: ECardoTokens.inkOnBrand,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg.r,
+                      ),
                     ),
                   ),
                   onPressed: () {
@@ -317,14 +344,26 @@ class EscrowInspectionScreen extends StatelessWidget {
     );
   }
 
-  void _showReleaseDialog(BuildContext context, EscrowController controller, double amount) {
+  void _showReleaseDialog(
+    BuildContext context,
+    EscrowController controller,
+    double amount,
+  ) {
     final sTitle = l10nPick(context, fa: 'آزادسازی موفق', en: 'Funds released');
-    final sMsg = l10nPick(context, fa: 'وجه معامله به حساب فروشنده واریز شد.', en: 'Funds successfully released to seller.');
+    final sMsg = l10nPick(
+      context,
+      fa: 'وجه معامله به حساب فروشنده واریز شد.',
+      en: 'Funds successfully released to seller.',
+    );
     final sBg = ECardoTokens.successBg(context);
     final sColor = ECardoTokens.success(context);
 
     Get.defaultDialog(
-      title: l10nPick(context, fa: 'تأیید تحویل کالا', en: 'Confirm delivery acceptance'),
+      title: l10nPick(
+        context,
+        fa: 'تأیید تحویل کالا',
+        en: 'Confirm delivery acceptance',
+      ),
       middleText: l10nPick(
         context,
         fa: 'آیا از سلامت کالا و تحویل کامل اطمینان دارید؟ با تأیید شما وجه به صورت برگشت‌ناپذیر به فروشنده پرداخت می‌شود.',
@@ -338,12 +377,7 @@ class EscrowInspectionScreen extends StatelessWidget {
         Get.back();
         await controller.releaseFunds(order.id);
         Get.back();
-        Get.snackbar(
-          sTitle,
-          sMsg,
-          backgroundColor: sBg,
-          colorText: sColor,
-        );
+        Get.snackbar(sTitle, sMsg, backgroundColor: sBg, colorText: sColor);
       },
     );
   }
@@ -362,7 +396,9 @@ class EscrowInspectionScreen extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 13.sp,
-            color: isBold ? ECardoTokens.ink(context) : ECardoTokens.inkMuted(context),
+            color: isBold
+                ? ECardoTokens.ink(context)
+                : ECardoTokens.inkMuted(context),
             fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
           ),
         ),

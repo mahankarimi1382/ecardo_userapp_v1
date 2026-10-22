@@ -27,8 +27,7 @@ class EmailOtpLoginScreen extends StatelessWidget {
       required String fa,
       String? ar,
       String? zh,
-    }) =>
-        l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
+    }) => l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
 
     return Scaffold(
       appBar: CommonDefaultAppBar(),
@@ -63,8 +62,13 @@ class EmailOtpLoginScreen extends StatelessWidget {
     BuildContext context,
     EmailOtpLoginController controller,
     AppLocalizations? localizations,
-    String Function({required String en, required String fa, String? ar, String? zh})
-        pick,
+    String Function({
+      required String en,
+      required String fa,
+      String? ar,
+      String? zh,
+    })
+    pick,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,8 +185,13 @@ class EmailOtpLoginScreen extends StatelessWidget {
     BuildContext context,
     EmailOtpLoginController controller,
     AppLocalizations? localizations,
-    String Function({required String en, required String fa, String? ar, String? zh})
-        pick,
+    String Function({
+      required String en,
+      required String fa,
+      String? ar,
+      String? zh,
+    })
+    pick,
   ) {
     final email = controller.emailController.text.trim();
     return Column(
@@ -205,11 +214,11 @@ class EmailOtpLoginScreen extends StatelessWidget {
         SizedBox(height: 8.h),
         Text(
           pick(
-            en: 'Code sent to ',
-            fa: 'کد به این آدرس ارسال شد: ',
-            ar: 'أُرسل الرمز إلى ',
-            zh: '验证码已发送至 ',
-          ) +
+                en: 'Code sent to ',
+                fa: 'کد به این آدرس ارسال شد: ',
+                ar: 'أُرسل الرمز إلى ',
+                zh: '验证码已发送至 ',
+              ) +
               MaskEmailHelper.maskEmail(email),
           style: TextStyle(
             letterSpacing: 0,
@@ -258,8 +267,7 @@ class EmailOtpLoginScreen extends StatelessWidget {
             // UX-FIX (otp): auto-verify the moment the 6th digit lands —
             // the user no longer needs to hunt for the Verify button.
             onChanged: (value) {
-              if (value.length == 6 &&
-                  !controller.isLoading.value) {
+              if (value.length == 6 && !controller.isLoading.value) {
                 controller.verifyCode();
               }
             },

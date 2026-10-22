@@ -22,6 +22,7 @@ import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/apply_veri
 class ApplyVerificationController extends GetxController {
   /// وضعیت بارگذاری اولیه
   final RxBool isLoading = false.obs;
+
   /// وضعیت ارسال فرم
   final RxBool isSubmitting = false.obs;
 
@@ -33,7 +34,7 @@ class ApplyVerificationController extends GetxController {
 
   /// پاسخ وضعیت تأیید فعلی کاربر
   final Rxn<verification_model.VerificationStatusResponseModel>
-      verificationStatusResponse =
+  verificationStatusResponse =
       Rxn<verification_model.VerificationStatusResponseModel>();
 
   /// نقشه فیلدهای داینامیک فرم (کنترلر متن + اعتبارسنجی + نوع)
@@ -63,7 +64,7 @@ class ApplyVerificationController extends GetxController {
   }
 
   /// دسترسی سریع به داده‌های وضعیت تأیید
-   verification_model.Data? get verificationData =>
+  verification_model.Data? get verificationData =>
       verificationStatusResponse.value?.data;
 
   /// آخرین درخواست تأیید کاربر
@@ -94,10 +95,8 @@ class ApplyVerificationController extends GetxController {
       );
 
       if (response.status == Status.completed && response.data != null) {
-        final model =
-            verification_model.VerificationStatusResponseModel.fromJson(
-          response.data!,
-        );
+        final model = verification_model
+            .VerificationStatusResponseModel.fromJson(response.data!);
         verificationStatusResponse.value = model;
         _initializeDynamicFields();
       }
@@ -126,7 +125,8 @@ class ApplyVerificationController extends GetxController {
 
     /// ایجاد کنترلر جدید برای هر فیلد فرم
     final fields =
-        verificationData?.applicationForm?.fields ?? <verification_model.Field>[];
+        verificationData?.applicationForm?.fields ??
+        <verification_model.Field>[];
     for (final field in fields) {
       final fieldName = (field.name ?? '').trim();
       if (fieldName.isEmpty) continue;
@@ -141,7 +141,7 @@ class ApplyVerificationController extends GetxController {
   }
 
   /// بررسی آیا فیلد اجباری است
-   bool isRequiredField(String validation) =>
+  bool isRequiredField(String validation) =>
       validation.toLowerCase() == 'required';
 
   /// بررسی آیا نوع فیلد فایلی است (فایل، دوربین، دوربین جلو)
@@ -170,6 +170,7 @@ class ApplyVerificationController extends GetxController {
     if (result == null || result.files.isEmpty) return;
 
     final picked = result.files.first;
+
     /// در وب، path ممکن است خالی باشد ولی bytes موجود است
     if (picked.path == null || picked.path!.trim().isEmpty) {
       /// در پلتفرم وب از bytes استفاده می‌کنیم
@@ -180,7 +181,11 @@ class ApplyVerificationController extends GetxController {
     final lower = fileName.toLowerCase();
     selectedFiles[fieldName] = ApplyVerificationFieldFileValue(
       file: XFile(picked.path ?? '', bytes: picked.bytes, name: fileName),
-      isImage: lower.endsWith('.png') || lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.webp'),
+      isImage:
+          lower.endsWith('.png') ||
+          lower.endsWith('.jpg') ||
+          lower.endsWith('.jpeg') ||
+          lower.endsWith('.webp'),
       name: fileName,
     );
     selectedFiles.refresh();
@@ -286,7 +291,8 @@ class ApplyVerificationController extends GetxController {
             formData.fields.add(MapEntry('fields[$fieldName]', 'null'));
           } else {
             ToastHelper().showErrorToast(
-              AppLocalizations.of(Get.context!)?.p2pPleaseUpload ?? 'Please upload $fieldName',
+              AppLocalizations.of(Get.context!)?.p2pPleaseUpload ??
+                  'Please upload $fieldName',
             );
             return;
           }
@@ -298,7 +304,8 @@ class ApplyVerificationController extends GetxController {
             formData.fields.add(MapEntry('fields[$fieldName]', 'null'));
           } else {
             ToastHelper().showErrorToast(
-              AppLocalizations.of(Get.context!)?.p2pPleaseFill ?? 'Please fill $fieldName',
+              AppLocalizations.of(Get.context!)?.p2pPleaseFill ??
+                  'Please fill $fieldName',
             );
             return;
           }
@@ -336,8 +343,11 @@ class ApplyVerificationController extends GetxController {
   /// متن خطای پیش‌فرض با تلاش برای لوکالایزیشن
   String get _defaultErrorText => () {
     final context = Get.context ?? Get.overlayContext ?? Get.key.currentContext;
-    if (context == null) return AppLocalizations.of(Get.context!)?.allControllerLoadError ?? 'Something went wrong';
-    return AppLocalizations.of(context)?.allControllerLoadError ?? 'Something went wrong';
+    if (context == null)
+      return AppLocalizations.of(Get.context!)?.allControllerLoadError ??
+          'Something went wrong';
+    return AppLocalizations.of(context)?.allControllerLoadError ??
+        'Something went wrong';
   }();
 
   /// تشخیص نوع محتوای فایل بر اساس پسوند

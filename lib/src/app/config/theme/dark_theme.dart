@@ -198,7 +198,10 @@ class DarkTheme {
           if (states.contains(WidgetState.selected)) {
             return const IconThemeData(color: brand, size: AppSpacing.iconMd);
           }
-          return const IconThemeData(color: AppColors.softGray, size: AppSpacing.iconMd);
+          return const IconThemeData(
+            color: AppColors.softGray,
+            size: AppSpacing.iconMd,
+          );
         }),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(

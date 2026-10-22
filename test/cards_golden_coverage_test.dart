@@ -76,7 +76,7 @@ class _TestEpayCardController extends EpayCardController {
         'currency_code': 'USD',
         'balance': 450.00,
         'status': 'ACTIVE',
-      }
+      },
     ]);
   }
 
@@ -122,11 +122,10 @@ void main() {
         const VirtualCardScreen(),
         registrations: [
           () => registerController<VirtualCardController>(
-                _TestVirtualCardController(),
-              ),
-          () => registerController<EpayCardController>(
-                _TestEpayCardController(),
-              ),
+            _TestVirtualCardController(),
+          ),
+          () =>
+              registerController<EpayCardController>(_TestEpayCardController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -142,11 +141,10 @@ void main() {
         dark: true,
         registrations: [
           () => registerController<VirtualCardController>(
-                _TestVirtualCardController(),
-              ),
-          () => registerController<EpayCardController>(
-                _TestEpayCardController(),
-              ),
+            _TestVirtualCardController(),
+          ),
+          () =>
+              registerController<EpayCardController>(_TestEpayCardController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );

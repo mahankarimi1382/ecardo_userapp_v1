@@ -31,10 +31,12 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
     // DARK-FIX: the end drawer used to hardcode a light background, light
     // text colors and dark status-bar icons — unreadable in dark mode.
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final drawerTextPrimary =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final drawerTextMuted =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final drawerTextPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final drawerTextMuted = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     return SafeArea(
       bottom: false,
@@ -44,16 +46,18 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
           children: [
             AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle(
-                statusBarIconBrightness:
-                    isDark ? Brightness.light : Brightness.dark,
+                statusBarIconBrightness: isDark
+                    ? Brightness.light
+                    : Brightness.dark,
               ),
               child: Drawer(
                 width: 310,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.zero,
                 ),
-                backgroundColor:
-                    isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                backgroundColor: isDark
+                    ? AppColors.darkBackground
+                    : AppColors.lightBackground,
                 child: Column(
                   children: [
                     Expanded(
@@ -191,7 +195,8 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                           // names — map back to the locale
                                           // code before switching.
                                           final code = HomeController
-                                              .languageNativeNames.entries
+                                              .languageNativeNames
+                                              .entries
                                               .firstWhere(
                                                 (entry) =>
                                                     entry.value ==
@@ -209,16 +214,18 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
                                           // layout rebuild animation executes.
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) {
-                                            homeController.changeLanguage(
-                                              code,
-                                            );
-                                          });
+                                                homeController.changeLanguage(
+                                                  code,
+                                                );
+                                              });
                                         },
                                         selectedValue: HomeController
-                                            .languageNativeNames.values
+                                            .languageNativeNames
+                                            .values
                                             .toList(),
                                         dropdownItems: HomeController
-                                            .languageNativeNames.values
+                                            .languageNativeNames
+                                            .values
                                             .toList(),
                                         selectedItem: homeController
                                             .languageController
@@ -365,12 +372,12 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
     // DARK-FIX: this helper builds outside the main build() scope, so it
     // resolves the theme from the State's own context.
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final navIconColor = (isDark
-            ? AppColors.darkTextPrimary
-            : AppColors.lightTextPrimary)
-        .withValues(alpha: 0.44);
-    final navTextColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final navIconColor =
+        (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+            .withValues(alpha: 0.44);
+    final navTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
     return InkWell(
       borderRadius: BorderRadius.circular(4),
       onTap: onPressed,
@@ -386,10 +393,7 @@ class _EndDrawerSectionState extends State<EndDrawerSection> {
               children: [
                 SvgPicture.asset(
                   icon,
-                  colorFilter: ColorFilter.mode(
-                    navIconColor,
-                    BlendMode.srcIn,
-                  ),
+                  colorFilter: ColorFilter.mode(navIconColor, BlendMode.srcIn),
                   width: 22,
                   fit: BoxFit.contain,
                 ),

@@ -54,7 +54,9 @@ class WithdrawController extends GetxController {
 
   /// Effective available balance for percentage chip calculations
   double get availableBalance {
-    final targetCurrency = (withdrawAccount.value?.currency ?? 'USD').toUpperCase().trim();
+    final targetCurrency = (withdrawAccount.value?.currency ?? 'USD')
+        .toUpperCase()
+        .trim();
     if (userWalletsList.isNotEmpty) {
       final match = userWalletsList.firstWhereOrNull(
         (w) => (w.code ?? '').toUpperCase().trim() == targetCurrency,
@@ -165,7 +167,8 @@ class WithdrawController extends GetxController {
       }
       final charge = double.tryParse(acc.method?.charge ?? '0') ?? 0.0;
       calculatedCharge.value = charge;
-      totalAmount.value = (double.tryParse(amountController.text) ?? 0.0) + charge;
+      totalAmount.value =
+          (double.tryParse(amountController.text) ?? 0.0) + charge;
     } catch (e, stackTrace) {
       chargeLoadFailed.value = true;
       debugPrint('❌ getChargeConverter() error: $e');
@@ -209,24 +212,19 @@ class WithdrawController extends GetxController {
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: currency,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting(
-            "site_currency",
-          ) ??
-          'USD',
-      siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-            "site_currency_decimals",
-          ) ??
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
           '2',
       isCrypto: isCrypto,
     );
 
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
-    final double min =
-        double.tryParse(acc.method?.minWithdraw ?? '') ?? 0.0;
+    final double min = double.tryParse(acc.method?.minWithdraw ?? '') ?? 0.0;
     final double max =
-        double.tryParse(acc.method?.maxWithdraw ?? '') ??
-        double.infinity;
+        double.tryParse(acc.method?.maxWithdraw ?? '') ?? double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
@@ -349,7 +347,10 @@ class WithdrawController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
+        if (PasscodeHelper.isPasscodeRequired(
+          response.message,
+          wasPasscodeProvided: wasPasscodeProvided,
+        )) {
           isWithdrawLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -377,7 +378,8 @@ class WithdrawController extends GetxController {
       debugPrint('❌ submitWithdraw() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       final errStr = e.toString().toLowerCase();
-      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+      final isTimeout =
+          NetworkErrorHelper.isTimeout(e) ||
           errStr.contains('timed out') ||
           errStr.contains('timeout') ||
           errStr.contains('connectiontimeout') ||
@@ -397,7 +399,10 @@ class WithdrawController extends GetxController {
         );
         return;
       }
-      if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
+      if (PasscodeHelper.isPasscodeRequired(
+        e,
+        wasPasscodeProvided: wasPasscodeProvided,
+      )) {
         isWithdrawLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),

@@ -26,14 +26,14 @@ class GenericCardProvider extends StatelessWidget {
 
     controller.syncFreezeState(card);
 
-    final hasGenericContract = card.display != null ||
+    final hasGenericContract =
+        card.display != null ||
         card.capabilities != null ||
         card.funding != null ||
         card.actions != null;
     final canViewTransactions =
         !hasGenericContract || card.capabilities?.canViewTransactions == true;
-    final canTopUp =
-        !hasGenericContract || card.capabilities?.canTopup == true;
+    final canTopUp = !hasGenericContract || card.capabilities?.canTopup == true;
     final cardIdStr = card.cardId ?? card.id.toString();
 
     return Column(
@@ -97,10 +97,7 @@ class _UniversalVirtualCard extends StatelessWidget {
   final VirtualCardDetailsData card;
   final VirtualCardDetailsController controller;
 
-  const _UniversalVirtualCard({
-    required this.card,
-    required this.controller,
-  });
+  const _UniversalVirtualCard({required this.card, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -112,12 +109,15 @@ class _UniversalVirtualCard extends StatelessWidget {
       decimalDigits: decimals,
     ).format(num.tryParse(card.amount ?? '') ?? 0).trim();
     final rawNumber = card.cardNumber ?? '';
-    final maskedNumber = card.displayNumber ??
+    final maskedNumber =
+        card.displayNumber ??
         (rawNumber.isNotEmpty ? _maskNumber(rawNumber) : '');
-    final canReveal = card.display?.showPan == true &&
+    final canReveal =
+        card.display?.showPan == true &&
         card.capabilities?.canRevealPan == true &&
         rawNumber.isNotEmpty;
-    final showExpiry = card.display?.showExpiry == true &&
+    final showExpiry =
+        card.display?.showExpiry == true &&
         card.expirationMonth != null &&
         card.expirationYear != null;
     final showCvc = card.display?.showCvc == true && card.cvc != null;
@@ -128,7 +128,8 @@ class _UniversalVirtualCard extends StatelessWidget {
 
       return CardFreezeOverlay(
         isFrozen: isFrozen,
-        showToggle: false, // The toggle switch lives in the quick action grid below
+        showToggle:
+            false, // The toggle switch lives in the quick action grid below
         onToggleFreeze: (val) {
           controller.toggleCardFreeze(
             cardId: card.cardId ?? card.id.toString(),
@@ -142,8 +143,8 @@ class _UniversalVirtualCard extends StatelessWidget {
           value: maskedNumber.isEmpty
               ? '$balance ${card.currency ?? ''}'
               : controller.showAccountNumber.value && canReveal
-                  ? _formatNumber(rawNumber)
-                  : maskedNumber,
+              ? _formatNumber(rawNumber)
+              : maskedNumber,
           firstLabel: showExpiry
               ? card.display?.expiryLabel ?? 'Expiry'
               : card.display?.balanceLabel ?? 'Balance',
@@ -197,10 +198,7 @@ class _UniversalCardDetails extends StatelessWidget {
   final VirtualCardDetailsData card;
   final VirtualCardDetailsController controller;
 
-  const _UniversalCardDetails({
-    required this.card,
-    required this.controller,
-  });
+  const _UniversalCardDetails({required this.card, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +267,8 @@ class _UniversalCardDetails extends StatelessWidget {
               SizedBox(width: 16.w),
               Expanded(
                 child: _HeadlineValue(
-                  value: '${card.amount ?? '0'} '
+                  value:
+                      '${card.amount ?? '0'} '
                       '${card.currency?.toUpperCase() ?? ''}',
                   label: card.display?.balanceLabel ?? 'Balance',
                   alignEnd: true,
@@ -387,28 +386,26 @@ class _UniversalCardDetails extends StatelessWidget {
           }),
           if (canChangeStatus) ...[
             SizedBox(height: 20.h),
-            Obx(
-              () {
-                final isFrozen = controller.isCardFrozen.value;
-                final currentStatus = isFrozen ? 'frozen' : _status(card);
-                final isActive = currentStatus.toLowerCase() == 'active';
-                return CommonButton(
-                  backgroundColor: isActive
-                      ? AppColors.error
-                      : AppColors.lightPrimary,
-                  text: isActive
-                      ? localization.cardDetailsStatusButtonInactive
-                      : localization.cardDetailsStatusButtonActive,
-                  height: 42,
-                  borderRadius: 12,
-                  fontSize: 13.5,
-                  onPressed: () => controller.toggleCardFreeze(
-                    cardId: card.cardId ?? card.id.toString(),
-                  ),
-                  isLoading: controller.isUpdateCardStatusLoading.value,
-                );
-              },
-            ),
+            Obx(() {
+              final isFrozen = controller.isCardFrozen.value;
+              final currentStatus = isFrozen ? 'frozen' : _status(card);
+              final isActive = currentStatus.toLowerCase() == 'active';
+              return CommonButton(
+                backgroundColor: isActive
+                    ? AppColors.error
+                    : AppColors.lightPrimary,
+                text: isActive
+                    ? localization.cardDetailsStatusButtonInactive
+                    : localization.cardDetailsStatusButtonActive,
+                height: 42,
+                borderRadius: 12,
+                fontSize: 13.5,
+                onPressed: () => controller.toggleCardFreeze(
+                  cardId: card.cardId ?? card.id.toString(),
+                ),
+                isLoading: controller.isUpdateCardStatusLoading.value,
+              );
+            }),
           ],
         ],
       ),
@@ -434,8 +431,9 @@ class _HeadlineValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: alignEnd
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Text(
           value,
@@ -447,7 +445,9 @@ class _HeadlineValue extends StatelessWidget {
             fontSize: 16.sp,
             color: valueColor != AppColors.lightTextPrimary
                 ? valueColor
-                : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                : (isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary),
           ),
         ),
         SizedBox(height: 5.h),

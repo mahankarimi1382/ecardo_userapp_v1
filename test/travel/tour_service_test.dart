@@ -52,7 +52,8 @@ void main() {
         'country_code': 'CN',
         'city': 'Xi\'an',
         'category': 'cultural',
-        'description': 'Experience ancient history and heritage along the Silk Road',
+        'description':
+            'Experience ancient history and heritage along the Silk Road',
         'duration_days': 10,
         'duration_nights': 9,
         'base_price': 1850.0,
@@ -68,14 +69,16 @@ void main() {
           {
             'day_no': 1,
             'title': 'Arrival & Ancient City Wall',
-            'description': 'Welcome reception and cycling on the historic city walls',
+            'description':
+                'Welcome reception and cycling on the historic city walls',
             'meals': ['Dinner'],
             'activities': ['Airport Pickup', 'City Wall Cycling'],
           },
           {
             'day_no': 2,
             'title': 'Terracotta Army Discovery',
-            'description': 'Exclusive tour of the Emperor Qinshihuang Mausoleum',
+            'description':
+                'Exclusive tour of the Emperor Qinshihuang Mausoleum',
             'meals': ['Breakfast', 'Lunch'],
             'activities': ['Museum Guide', 'Pottery Workshop'],
           },
@@ -112,65 +115,63 @@ void main() {
       expect(tour.departures.first.availableSeats, 12);
     });
 
-    test('TourBookingModel deserializes booking milestones and payment status', () {
-      final json = {
-        'id': 5001,
-        'booking_no': 'TR-2026-9871',
-        'tour_title': 'Silk Road Odyssey Tour',
-        'tour_city': 'Xi\'an',
-        'status': 'CONFIRMED',
-        'tier': 'LUX',
-        'model': 'private',
-        'travelers_count': 3,
-        'adults_count': 2,
-        'children_count': 1,
-        'base_price': 3700.0,
-        'total_price': 4200.0,
-        'paid_amount': 4200.0,
-        'remaining_balance': 0.0,
-        'currency': 'USD',
-        'depart_date': '2026-11-01',
-        'return_date': '2026-11-10',
-      };
+    test(
+      'TourBookingModel deserializes booking milestones and payment status',
+      () {
+        final json = {
+          'id': 5001,
+          'booking_no': 'TR-2026-9871',
+          'tour_title': 'Silk Road Odyssey Tour',
+          'tour_city': 'Xi\'an',
+          'status': 'CONFIRMED',
+          'tier': 'LUX',
+          'model': 'private',
+          'travelers_count': 3,
+          'adults_count': 2,
+          'children_count': 1,
+          'base_price': 3700.0,
+          'total_price': 4200.0,
+          'paid_amount': 4200.0,
+          'remaining_balance': 0.0,
+          'currency': 'USD',
+          'depart_date': '2026-11-01',
+          'return_date': '2026-11-10',
+        };
 
-      final booking = TourBookingModel.fromJson(json);
+        final booking = TourBookingModel.fromJson(json);
 
-      expect(booking.id, 5001);
-      expect(booking.bookingNo, 'TR-2026-9871');
-      expect(booking.status, 'CONFIRMED');
-      expect(booking.totalPrice, 4200.0);
-      expect(booking.adultsCount, 2);
-      expect(booking.childrenCount, 1);
-    });
+        expect(booking.id, 5001);
+        expect(booking.bookingNo, 'TR-2026-9871');
+        expect(booking.status, 'CONFIRMED');
+        expect(booking.totalPrice, 4200.0);
+        expect(booking.adultsCount, 2);
+        expect(booking.childrenCount, 1);
+      },
+    );
   });
 
   group('Tour Service - TourListScreen UI Tests', () {
-    testWidgets('renders category chips, headers, and search bar without overflow', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const TourListScreen(),
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+    testWidgets(
+      'renders category chips, headers, and search bar without overflow',
+      (tester) async {
+        await tester.pumpWidget(
+          wrapWithTheme(const TourListScreen(), locale: const Locale('en')),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(TourListScreen), findsOneWidget);
-      expect(find.text('All Tours'), findsOneWidget);
-      expect(find.text('Nature'), findsOneWidget);
-      expect(find.text('Cultural'), findsOneWidget);
-    });
+        expect(find.byType(TourListScreen), findsOneWidget);
+        expect(find.text('All Tours'), findsOneWidget);
+        expect(find.text('Nature'), findsOneWidget);
+        expect(find.text('Cultural'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders properly in Persian locale and RTL direction', (
       tester,
     ) async {
       await tester.pumpWidget(
-        wrapWithTheme(
-          const TourListScreen(),
-          locale: const Locale('fa'),
-        ),
+        wrapWithTheme(const TourListScreen(), locale: const Locale('fa')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));

@@ -218,7 +218,8 @@ class _TicketStatusBadgeState extends State<TicketStatusBadge>
     final iconSize = widget.iconSize ?? 12.0;
 
     return Container(
-      padding: widget.padding ??
+      padding:
+          widget.padding ??
           const EdgeInsets.symmetric(horizontal: 10, vertical: 4.5),
       decoration: BoxDecoration(
         color: statusBg,

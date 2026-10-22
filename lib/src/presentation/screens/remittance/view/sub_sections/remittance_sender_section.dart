@@ -15,8 +15,14 @@ class RemittanceSenderSection extends StatelessWidget {
   const RemittanceSenderSection({super.key});
 
   static const _fallbackCountries = [
-    ('IR', 'Iran'), ('CN', 'China'), ('TR', 'Turkey'), ('AE', 'UAE'),
-    ('RU', 'Russia'), ('PK', 'Pakistan'), ('AF', 'Afghanistan'), ('IQ', 'Iraq'),
+    ('IR', 'Iran'),
+    ('CN', 'China'),
+    ('TR', 'Turkey'),
+    ('AE', 'UAE'),
+    ('RU', 'Russia'),
+    ('PK', 'Pakistan'),
+    ('AF', 'Afghanistan'),
+    ('IQ', 'Iraq'),
   ];
 
   @override
@@ -32,33 +38,61 @@ class RemittanceSenderSection extends StatelessWidget {
         _Field(c.senderNameController, l.remittanceSenderName),
         SizedBox(height: 16.h),
         _Label(l.remittanceSelectCountry),
-        Obx(() => _CountryDropdown(
-              value: c.selectedSenderCountry.value,
-              countries: c.countries.isNotEmpty
-                  ? c.countries.map((x) => (x.code ?? '', x.name ?? '')).toList()
-                  : _fallbackCountries,
-              onChanged: (v) => c.selectedSenderCountry.value = v ?? '',
-              hint: l.remittanceSelectCountry,
-            )),
+        Obx(
+          () => _CountryDropdown(
+            value: c.selectedSenderCountry.value,
+            countries: c.countries.isNotEmpty
+                ? c.countries.map((x) => (x.code ?? '', x.name ?? '')).toList()
+                : _fallbackCountries,
+            onChanged: (v) => c.selectedSenderCountry.value = v ?? '',
+            hint: l.remittanceSelectCountry,
+          ),
+        ),
         SizedBox(height: 16.h),
         _Label(l.remittanceSenderPhone),
-        _Field(c.senderPhoneController, '+98 912 345 6789', keyboardType: TextInputType.phone),
+        _Field(
+          c.senderPhoneController,
+          '+98 912 345 6789',
+          keyboardType: TextInputType.phone,
+        ),
         SizedBox(height: 16.h),
         _Label(l.remittanceSenderIdNumber),
         _Field(c.senderIdNumberController, l.remittanceSenderIdNumber),
         SizedBox(height: 16.h),
-        Obx(() => Row(children: [
-              Expanded(child: _TypeChip(l.remittanceSenderTypeIndividual, 'individual', c.selectedSenderType.value, (v) => c.selectedSenderType.value = v)),
+        Obx(
+          () => Row(
+            children: [
+              Expanded(
+                child: _TypeChip(
+                  l.remittanceSenderTypeIndividual,
+                  'individual',
+                  c.selectedSenderType.value,
+                  (v) => c.selectedSenderType.value = v,
+                ),
+              ),
               SizedBox(width: 8.w),
-              Expanded(child: _TypeChip(l.remittanceSenderTypeBusiness, 'business', c.selectedSenderType.value, (v) => c.selectedSenderType.value = v)),
-            ])),
+              Expanded(
+                child: _TypeChip(
+                  l.remittanceSenderTypeBusiness,
+                  'business',
+                  c.selectedSenderType.value,
+                  (v) => c.selectedSenderType.value = v,
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 
   TextStyle _title(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary);
+    return TextStyle(
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w700,
+      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+    );
   }
 }
 
@@ -70,7 +104,15 @@ class _Label extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.only(bottom: 6.h),
-      child: Text(text, style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 13.sp,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
+        ),
+      ),
     );
   }
 }
@@ -97,7 +139,9 @@ class _Field extends StatelessWidget {
           keyboardType: keyboardType,
           style: TextStyle(
             fontSize: 14.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           decoration: InputDecoration(
             filled: true,
@@ -107,7 +151,10 @@ class _Field extends StatelessWidget {
               fontSize: 14.sp,
               color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.w,
+              vertical: 14.h,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: borderColor),
@@ -165,21 +212,27 @@ class _CountryDropdown extends StatelessWidget {
               hint,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+                color: isDark
+                    ? AppColors.darkTextHint
+                    : AppColors.lightTextHint,
               ),
             ),
             isExpanded: true,
             items: countries
-                .map((c) => DropdownMenuItem(
-                      value: c.$1,
-                      child: Text(
-                        '${c.$1} — ${c.$2}',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
+                .map(
+                  (c) => DropdownMenuItem(
+                    value: c.$1,
+                    child: Text(
+                      '${c.$1} — ${c.$2}',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList(),
             onChanged: (val) {
               HapticFeedback.lightImpact();
@@ -218,11 +271,15 @@ class _TypeChip extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
           decoration: BoxDecoration(
             color: sel
-                ? (isDark ? AppColors.darkPrimaryContainer : AppColors.brandVioletContainer)
+                ? (isDark
+                      ? AppColors.darkPrimaryContainer
+                      : AppColors.brandVioletContainer)
                 : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: sel ? primaryColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              color: sel
+                  ? primaryColor
+                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             ),
           ),
           child: Center(
@@ -233,7 +290,9 @@ class _TypeChip extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 color: sel
                     ? primaryColor
-                    : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                    : (isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary),
               ),
             ),
           ),

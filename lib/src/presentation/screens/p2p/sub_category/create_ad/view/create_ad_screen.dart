@@ -19,24 +19,22 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () {
-        if (controller.isEligibilityLoading.value) {
-          return const CommonLoading();
-        }
+    return Obx(() {
+      if (controller.isEligibilityLoading.value) {
+        return const CommonLoading();
+      }
 
-        return Stack(
-          children: [
-            if (controller.isEligibleToCreateAd.value)
-              CreateAdPlaceholderSection(controller: controller)
-            else
-              CreateAdEligibilityFailedSection(
-                reasons: controller.eligibilityReasons,
-              ),
-            if (controller.isCreateAdLoading.value) const CommonLoading(),
-          ],
-        );
-      },
-    );
+      return Stack(
+        children: [
+          if (controller.isEligibleToCreateAd.value)
+            CreateAdPlaceholderSection(controller: controller)
+          else
+            CreateAdEligibilityFailedSection(
+              reasons: controller.eligibilityReasons,
+            ),
+          if (controller.isCreateAdLoading.value) const CommonLoading(),
+        ],
+      );
+    });
   }
 }

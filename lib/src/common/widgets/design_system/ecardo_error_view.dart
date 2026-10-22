@@ -67,10 +67,7 @@ class _EcardoErrorViewState extends State<EcardoErrorView>
     );
 
     _rippleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _pulseController,
-        curve: Curves.easeOutQuad,
-      ),
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeOutQuad),
     );
 
     if (widget.animatePulse) {
@@ -158,7 +155,8 @@ class _EcardoErrorViewState extends State<EcardoErrorView>
               _buildRetryButton(isDark, accentColor),
             ],
 
-            if (widget.onSecondaryAction != null && widget.secondaryActionLabel != null) ...[
+            if (widget.onSecondaryAction != null &&
+                widget.secondaryActionLabel != null) ...[
               const SizedBox(height: AppSpacing.sm),
               _buildSecondaryButton(isDark),
             ],
@@ -237,11 +235,7 @@ class _EcardoErrorViewState extends State<EcardoErrorView>
                 ],
               ),
               child: Center(
-                child: Icon(
-                  widget.iconData,
-                  size: 30,
-                  color: accent,
-                ),
+                child: Icon(widget.iconData, size: 30, color: accent),
               ),
             ),
           ],
@@ -261,7 +255,9 @@ class _EcardoErrorViewState extends State<EcardoErrorView>
               : AppColors.lightSecondaryContainer.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
           border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.lightOutlineVariant,
             width: 0.8,
           ),
         ),
@@ -283,7 +279,9 @@ class _EcardoErrorViewState extends State<EcardoErrorView>
                 letterSpacing: 0.5,
                 color: _codeCopied
                     ? AppColors.success
-                    : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                    : (isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary),
               ),
             ),
           ],
@@ -306,7 +304,9 @@ class _EcardoErrorViewState extends State<EcardoErrorView>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _detailsExpanded ? 'Hide Technical Details' : 'View Diagnostics',
+                  _detailsExpanded
+                      ? 'Hide Technical Details'
+                      : 'View Diagnostics',
                   style: AppTextStyles.labelSmall.copyWith(
                     color: isDark
                         ? AppColors.mainSoftBlue
@@ -378,9 +378,7 @@ class _EcardoErrorViewState extends State<EcardoErrorView>
       ),
       child: Text(
         widget.secondaryActionLabel!,
-        style: AppTextStyles.labelMedium.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
+        style: AppTextStyles.labelMedium.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -420,9 +418,10 @@ class _AnimatedPressButtonState extends State<_AnimatedPressButton>
       duration: const Duration(milliseconds: 90),
       reverseDuration: const Duration(milliseconds: 180),
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.94).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.94,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

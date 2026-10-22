@@ -256,9 +256,9 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       final addons = homeController.userModel.value.data?.addons;
       final KycBadge? badge = currentKycBadge();
       final localization = AppLocalizations.of(context)!;
-      final tiles = _travelServiceList(addons)
-          .map((tile) => resolveTile(tile, badge))
-          .toList(growable: false);
+      final tiles = _travelServiceList(
+        addons,
+      ).map((tile) => resolveTile(tile, badge)).toList(growable: false);
 
       final isDark = Theme.of(context).brightness == Brightness.dark;
 

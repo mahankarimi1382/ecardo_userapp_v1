@@ -15,9 +15,7 @@ class TransactionShimmerSkeleton extends StatelessWidget {
     final baseColor = isDark
         ? AppColors.darkSurfaceVariant.withValues(alpha: 0.5)
         : AppColors.lightSurfaceVariant;
-    final highlightColor = isDark
-        ? AppColors.darkSurface
-        : AppColors.white;
+    final highlightColor = isDark ? AppColors.darkSurface : AppColors.white;
 
     return Shimmer.fromColors(
       baseColor: baseColor,

@@ -53,40 +53,45 @@ void main() {
   }
 
   group('CommonVirtualCardView 3D Interactive Flip & One-Tap Actions', () {
-    testWidgets('renders front face with brand, chip, contactless, PAN, expiry and name', (tester) async {
-      phoneSurface(tester);
+    testWidgets(
+      'renders front face with brand, chip, contactless, PAN, expiry and name',
+      (tester) async {
+        phoneSurface(tester);
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          child: const CommonVirtualCardView(
-            title: 'Platinum Virtual',
-            cardHolderName: 'ALEXANDER HAMILTON',
-            value: '•••• •••• •••• 9876',
-            rawCardNumber: '4000123456789876',
-            firstLabel: 'EXPIRY',
-            firstValue: '08/30',
-            secondLabel: 'CURRENCY',
-            secondValue: 'USD',
-            status: 'active',
-            canReveal: true,
-            isRevealed: false,
-            network: 'Visa',
+        await tester.pumpWidget(
+          wrapWithTheme(
+            child: const CommonVirtualCardView(
+              title: 'Platinum Virtual',
+              cardHolderName: 'ALEXANDER HAMILTON',
+              value: '•••• •••• •••• 9876',
+              rawCardNumber: '4000123456789876',
+              firstLabel: 'EXPIRY',
+              firstValue: '08/30',
+              secondLabel: 'CURRENCY',
+              secondValue: 'USD',
+              status: 'active',
+              canReveal: true,
+              isRevealed: false,
+              network: 'Visa',
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('ALEXANDER HAMILTON'), findsOneWidget);
-      expect(find.text('•••• •••• •••• 9876'), findsOneWidget);
-      expect(find.text('EXPIRY'), findsOneWidget);
-      expect(find.text('08/30'), findsOneWidget);
-      expect(find.text('CURRENCY'), findsOneWidget);
-      expect(find.text('USD'), findsOneWidget);
-      expect(find.text('Active'), findsOneWidget);
-      expect(find.byIcon(Icons.contactless_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.copy_rounded), findsOneWidget);
-    });
+        expect(find.text('ALEXANDER HAMILTON'), findsOneWidget);
+        expect(find.text('•••• •••• •••• 9876'), findsOneWidget);
+        expect(find.text('EXPIRY'), findsOneWidget);
+        expect(find.text('08/30'), findsOneWidget);
+        expect(find.text('CURRENCY'), findsOneWidget);
+        expect(find.text('USD'), findsOneWidget);
+        expect(find.text('Active'), findsOneWidget);
+        expect(find.byIcon(Icons.contactless_rounded), findsOneWidget);
+        expect(find.byIcon(Icons.copy_rounded), findsOneWidget);
+      },
+    );
 
-    testWidgets('tap to copy triggers copy action and haptic feedback', (tester) async {
+    testWidgets('tap to copy triggers copy action and haptic feedback', (
+      tester,
+    ) async {
       phoneSurface(tester);
       bool copied = false;
 
@@ -117,42 +122,47 @@ void main() {
       await tester.pump(const Duration(seconds: 3));
     });
 
-    testWidgets('interactive flip flips card to back and reveals CVV & magnetic stripe', (tester) async {
-      phoneSurface(tester);
-      bool flipped = false;
+    testWidgets(
+      'interactive flip flips card to back and reveals CVV & magnetic stripe',
+      (tester) async {
+        phoneSurface(tester);
+        bool flipped = false;
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          child: CommonVirtualCardView(
-            title: 'Titanium Card',
-            value: '•••• •••• •••• 5555',
-            cvv: '777',
-            firstLabel: 'EXPIRY',
-            firstValue: '11/31',
-            secondLabel: 'CVC',
-            secondValue: '777',
-            status: 'active',
-            enableFlip: true,
-            onFlip: (val) => flipped = val,
+        await tester.pumpWidget(
+          wrapWithTheme(
+            child: CommonVirtualCardView(
+              title: 'Titanium Card',
+              value: '•••• •••• •••• 5555',
+              cvv: '777',
+              firstLabel: 'EXPIRY',
+              firstValue: '11/31',
+              secondLabel: 'CVC',
+              secondValue: '777',
+              status: 'active',
+              enableFlip: true,
+              onFlip: (val) => flipped = val,
+            ),
           ),
-        ),
-      );
+        );
 
-      // Initially on front face
-      expect(find.text('Titanium Card'), findsOneWidget);
+        // Initially on front face
+        expect(find.text('Titanium Card'), findsOneWidget);
 
-      // Tap on card body to flip
-      final cardFinder = find.byType(CommonVirtualCardView);
-      await tester.tapAt(tester.getTopLeft(cardFinder) + const Offset(50, 25));
-      await tester.pumpAndSettle();
+        // Tap on card body to flip
+        final cardFinder = find.byType(CommonVirtualCardView);
+        await tester.tapAt(
+          tester.getTopLeft(cardFinder) + const Offset(50, 25),
+        );
+        await tester.pumpAndSettle();
 
-      expect(flipped, isTrue);
+        expect(flipped, isTrue);
 
-      // Back face elements are visible
-      expect(find.text('AUTHORIZED SIGNATURE'), findsOneWidget);
-      expect(find.text('CVV2'), findsOneWidget);
-      expect(find.byIcon(Icons.shield_rounded), findsOneWidget);
-    });
+        // Back face elements are visible
+        expect(find.text('AUTHORIZED SIGNATURE'), findsOneWidget);
+        expect(find.text('CVV2'), findsOneWidget);
+        expect(find.byIcon(Icons.shield_rounded), findsOneWidget);
+      },
+    );
 
     testWidgets('renders properly in dark mode and RTL layout', (tester) async {
       phoneSurface(tester);
@@ -180,120 +190,128 @@ void main() {
   });
 
   group('VirtualCardSecurityControls Quick Action Grid', () {
-    testWidgets('renders all 5 security tiles: Freeze, Online, Limits, Transactions, Top-up', (tester) async {
-      phoneSurface(tester);
-      bool freezeToggled = false;
-      bool onlineToggled = false;
-      bool transactionsTapped = false;
-      bool topUpTapped = false;
+    testWidgets(
+      'renders all 5 security tiles: Freeze, Online, Limits, Transactions, Top-up',
+      (tester) async {
+        phoneSurface(tester);
+        bool freezeToggled = false;
+        bool onlineToggled = false;
+        bool transactionsTapped = false;
+        bool topUpTapped = false;
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          child: VirtualCardSecurityControls(
-            isFrozen: false,
-            onToggleFreeze: (val) => freezeToggled = val,
-            isOnlinePaymentsEnabled: true,
-            onToggleOnlinePayments: (val) => onlineToggled = val,
-            dailySpendLimit: 1500.0,
-            monthlySpendLimit: 8000.0,
-            currency: 'USD',
-            canViewTransactions: true,
-            onViewTransactions: () => transactionsTapped = true,
-            canTopUp: true,
-            onTopUp: () => topUpTapped = true,
+        await tester.pumpWidget(
+          wrapWithTheme(
+            child: VirtualCardSecurityControls(
+              isFrozen: false,
+              onToggleFreeze: (val) => freezeToggled = val,
+              isOnlinePaymentsEnabled: true,
+              onToggleOnlinePayments: (val) => onlineToggled = val,
+              dailySpendLimit: 1500.0,
+              monthlySpendLimit: 8000.0,
+              currency: 'USD',
+              canViewTransactions: true,
+              onViewTransactions: () => transactionsTapped = true,
+              canTopUp: true,
+              onTopUp: () => topUpTapped = true,
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(find.text('Card Security & Controls'), findsOneWidget);
-      expect(find.text('Freeze Card'), findsOneWidget);
-      expect(find.text('Online Payments'), findsOneWidget);
-      expect(find.text('Spending Limits'), findsOneWidget);
+        expect(find.text('Card Security & Controls'), findsOneWidget);
+        expect(find.text('Freeze Card'), findsOneWidget);
+        expect(find.text('Online Payments'), findsOneWidget);
+        expect(find.text('Spending Limits'), findsOneWidget);
 
-      final txText = find.text('Card Transactions');
-      await tester.ensureVisible(txText);
-      await tester.pumpAndSettle();
-      expect(txText, findsOneWidget);
+        final txText = find.text('Card Transactions');
+        await tester.ensureVisible(txText);
+        await tester.pumpAndSettle();
+        expect(txText, findsOneWidget);
 
-      // Test transactions tap
-      await tester.tap(txText);
-      await tester.pumpAndSettle();
-      expect(transactionsTapped, isTrue);
+        // Test transactions tap
+        await tester.tap(txText);
+        await tester.pumpAndSettle();
+        expect(transactionsTapped, isTrue);
 
-      final topUpText = find.text('Top-up Card Balance');
-      await tester.ensureVisible(topUpText);
-      await tester.pumpAndSettle();
-      expect(topUpText, findsOneWidget);
+        final topUpText = find.text('Top-up Card Balance');
+        await tester.ensureVisible(topUpText);
+        await tester.pumpAndSettle();
+        expect(topUpText, findsOneWidget);
 
-      // Test top-up tap
-      await tester.tap(topUpText);
-      await tester.pumpAndSettle();
-      expect(topUpTapped, isTrue);
+        // Test top-up tap
+        await tester.tap(topUpText);
+        await tester.pumpAndSettle();
+        expect(topUpTapped, isTrue);
 
-      // Test freeze toggle switch
-      final switches = find.byType(Switch);
-      expect(switches, findsNWidgets(2));
+        // Test freeze toggle switch
+        final switches = find.byType(Switch);
+        expect(switches, findsNWidgets(2));
 
-      await tester.tap(switches.first);
-      await tester.pumpAndSettle();
-      expect(freezeToggled, isTrue);
+        await tester.tap(switches.first);
+        await tester.pumpAndSettle();
+        expect(freezeToggled, isTrue);
 
-      // Test online payments toggle switch
-      await tester.tap(switches.last);
-      await tester.pumpAndSettle();
-      expect(onlineToggled, isFalse);
-    });
+        // Test online payments toggle switch
+        await tester.tap(switches.last);
+        await tester.pumpAndSettle();
+        expect(onlineToggled, isFalse);
+      },
+    );
 
-    testWidgets('tapping Spending Limits opens modal bottom sheet with sliders and presets', (tester) async {
-      phoneSurface(tester);
-      double savedDaily = 0;
-      double savedMonthly = 0;
+    testWidgets(
+      'tapping Spending Limits opens modal bottom sheet with sliders and presets',
+      (tester) async {
+        phoneSurface(tester);
+        double savedDaily = 0;
+        double savedMonthly = 0;
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          child: VirtualCardSecurityControls(
-            isFrozen: false,
-            dailySpendLimit: 1000.0,
-            monthlySpendLimit: 5000.0,
-            currency: 'USD',
-            onUpdateSpendingLimits: (daily, monthly) {
-              savedDaily = daily;
-              savedMonthly = monthly;
-            },
+        await tester.pumpWidget(
+          wrapWithTheme(
+            child: VirtualCardSecurityControls(
+              isFrozen: false,
+              dailySpendLimit: 1000.0,
+              monthlySpendLimit: 5000.0,
+              currency: 'USD',
+              onUpdateSpendingLimits: (daily, monthly) {
+                savedDaily = daily;
+                savedMonthly = monthly;
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      // Tap on Spending Limits tile
-      final limitsTile = find.text('Spending Limits');
-      await tester.ensureVisible(limitsTile);
-      await tester.pumpAndSettle();
-      await tester.tap(limitsTile);
-      await tester.pumpAndSettle();
+        // Tap on Spending Limits tile
+        final limitsTile = find.text('Spending Limits');
+        await tester.ensureVisible(limitsTile);
+        await tester.pumpAndSettle();
+        await tester.tap(limitsTile);
+        await tester.pumpAndSettle();
 
-      // Modal bottom sheet appears
-      expect(find.text('Card Spending Limits'), findsOneWidget);
-      expect(find.text('Daily Spend Limit'), findsOneWidget);
-      expect(find.text('Monthly Spend Limit'), findsOneWidget);
-      expect(find.text('Save Spending Limits'), findsOneWidget);
+        // Modal bottom sheet appears
+        expect(find.text('Card Spending Limits'), findsOneWidget);
+        expect(find.text('Daily Spend Limit'), findsOneWidget);
+        expect(find.text('Monthly Spend Limit'), findsOneWidget);
+        expect(find.text('Save Spending Limits'), findsOneWidget);
 
-      // Tap a preset chip (e.g. 2,500)
-      final presetChip = find.text('2,500');
-      expect(presetChip, findsOneWidget);
-      await tester.tap(presetChip);
-      await tester.pumpAndSettle();
+        // Tap a preset chip (e.g. 2,500)
+        final presetChip = find.text('2,500');
+        expect(presetChip, findsOneWidget);
+        await tester.tap(presetChip);
+        await tester.pumpAndSettle();
 
-      // Tap Save button
-      await tester.tap(find.text('Save Spending Limits'));
-      await tester.pumpAndSettle();
+        // Tap Save button
+        await tester.tap(find.text('Save Spending Limits'));
+        await tester.pumpAndSettle();
 
-      expect(savedDaily, 2500.0);
-      expect(savedMonthly, 5000.0);
-    });
+        expect(savedDaily, 2500.0);
+        expect(savedMonthly, 5000.0);
+      },
+    );
   });
 
   group('VirtualCardDetailsController Logic Tests', () {
-    testWidgets('toggles online payments and updates spending limits', (tester) async {
+    testWidgets('toggles online payments and updates spending limits', (
+      tester,
+    ) async {
       final controller = VirtualCardDetailsController();
 
       expect(controller.isOnlinePaymentsEnabled.value, isTrue);

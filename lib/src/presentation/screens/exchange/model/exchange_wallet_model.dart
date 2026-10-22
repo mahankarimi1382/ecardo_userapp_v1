@@ -8,8 +8,9 @@ class ExchangeWalletModel {
   ExchangeWalletModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? ExchangeWalletData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? ExchangeWalletData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -71,10 +72,9 @@ class Wallets {
     isDefault = json['is_default'];
     isCrypto = json['is_crypto'];
     currencyId = json['currency_id'];
-    exchangeLimit =
-        json['exchange_limit'] != null
-            ? ExchangeLimit.fromJson(json['exchange_limit'])
-            : null;
+    exchangeLimit = json['exchange_limit'] != null
+        ? ExchangeLimit.fromJson(json['exchange_limit'])
+        : null;
     conversionRate = json['conversion_rate'];
   }
 }

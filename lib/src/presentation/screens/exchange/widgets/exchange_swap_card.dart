@@ -85,10 +85,7 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
     );
 
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.88).animate(
-      CurvedAnimation(
-        parent: _swapScaleController,
-        curve: Curves.easeInOut,
-      ),
+      CurvedAnimation(parent: _swapScaleController, curve: Curves.easeInOut),
     );
   }
 
@@ -123,16 +120,13 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
         children: [
           _FromCard(
             wallet: widget.fromWallet,
-            balanceLabel:
-                widget.fromBalanceLabel ?? loc.exchangeWalletBalance,
+            balanceLabel: widget.fromBalanceLabel ?? loc.exchangeWalletBalance,
             amountHintText: widget.amountHintText ?? '',
             amountController: widget.amountController,
             amountFocusNode: widget.amountFocusNode,
             isAmountFocused: widget.isAmountFocused,
-            onTapWallet: () => _openWalletSelector(
-              context: context,
-              isFrom: true,
-            ),
+            onTapWallet: () =>
+                _openWalletSelector(context: context, isFrom: true),
           ),
           // Swap button sits in the seam between the two cards
           Transform.translate(
@@ -152,14 +146,11 @@ class _ExchangeSwapCardState extends State<ExchangeSwapCard>
             offset: const Offset(0, -_kSwapButtonSize / 2),
             child: _ToCard(
               wallet: widget.toWallet,
-              receiveLabel:
-                  widget.receiveLabel ?? loc.exchangeAmountReceive,
+              receiveLabel: widget.receiveLabel ?? loc.exchangeAmountReceive,
               calculatedAmount: widget.calculatedToAmount,
               isCalculating: widget.isCalculating,
-              onTapWallet: () => _openWalletSelector(
-                context: context,
-                isFrom: false,
-              ),
+              onTapWallet: () =>
+                  _openWalletSelector(context: context, isFrom: false),
             ),
           ),
         ],
@@ -440,8 +431,9 @@ class _ToCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.xs),
                       decoration: BoxDecoration(
-                        color: ExchangeDesignTokens.textPrimary(context)
-                            .withValues(alpha: 0.05),
+                        color: ExchangeDesignTokens.textPrimary(
+                          context,
+                        ).withValues(alpha: 0.05),
                         shape: BoxShape.circle,
                       ),
                       child: Image.asset(
@@ -508,8 +500,9 @@ class _CalculatingPlaceholder extends StatelessWidget {
           height: 14,
           child: CircularProgressIndicator(
             strokeWidth: 2,
-            color: ExchangeDesignTokens.textPrimary(context)
-                .withValues(alpha: 0.4),
+            color: ExchangeDesignTokens.textPrimary(
+              context,
+            ).withValues(alpha: 0.4),
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -543,7 +536,9 @@ class _WalletIcon extends StatelessWidget {
         decoration: BoxDecoration(
           color: onLight
               ? Colors.white.withValues(alpha: 0.15)
-              : ExchangeDesignTokens.textPrimary(context).withValues(alpha: 0.08),
+              : ExchangeDesignTokens.textPrimary(
+                  context,
+                ).withValues(alpha: 0.08),
           shape: BoxShape.circle,
         ),
         child: Icon(
@@ -596,7 +591,9 @@ class _WalletIcon extends StatelessWidget {
         decoration: BoxDecoration(
           color: onLight
               ? Colors.white.withValues(alpha: 0.15)
-              : (isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground),
+              : (isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightBackground),
           shape: BoxShape.circle,
         ),
         child: wallet!.icon != null && wallet!.icon!.isNotEmpty
@@ -790,9 +787,7 @@ class _HeroAmountField extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                   fontSize: 28,
                   color: AppColors.white.withValues(alpha: 0.45),
-                  fontFeatures: const [
-                    FontFeature.tabularFigures(),
-                  ],
+                  fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
             ),

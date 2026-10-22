@@ -74,7 +74,9 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Obx(
         () => Column(
@@ -84,9 +86,7 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
               title: localization.virtualCardScreenAppBarTitle,
               selectedIndex: widget.embeddedInTabs ? 0 : null,
             ),
-            Expanded(
-              child: _buildBody(localization, isDark),
-            ),
+            Expanded(child: _buildBody(localization, isDark)),
           ],
         ),
       ),
@@ -166,10 +166,7 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
           _buildCreateCardSection(localization, isDark),
           SizedBox(height: 16.h),
           ...List.generate(controller.virtualCardList.length, (index) {
-            return _cardItem(
-              controller.virtualCardList[index],
-              index,
-            );
+            return _cardItem(controller.virtualCardList[index], index);
           }),
           // WAVE-REVIEW: PayCardo (ePay) section — USDT-funded, USD-spending cards
           SizedBox(height: 12.h),
@@ -212,7 +209,9 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                     Icon(
                       Icons.speed_rounded,
                       size: AppSpacing.iconSm,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.mutedBlue,
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
@@ -224,13 +223,18 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
                       ),
                       style: AppTextStyles.labelMedium.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.success.withValues(alpha: 0.14),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -268,7 +272,8 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
   Widget _cardItem(VirtualCardsData card, int index) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final rawNumber = card.cardNumber ?? '';
-    final maskedNumber = card.displayNumber ??
+    final maskedNumber =
+        card.displayNumber ??
         (rawNumber.isNotEmpty ? _maskNumber(rawNumber) : '');
     final canReveal =
         rawNumber.isNotEmpty &&
@@ -290,14 +295,11 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
 
     final status =
         card.lifecycleStatus ?? card.virtualStatus ?? card.status ?? '';
-    final isCardFrozen = status.toLowerCase() == 'frozen' || status.toLowerCase() == 'inactive';
+    final isCardFrozen =
+        status.toLowerCase() == 'frozen' || status.toLowerCase() == 'inactive';
 
     return Padding(
-      padding: EdgeInsetsDirectional.only(
-        start: 18.w,
-        end: 18.w,
-        bottom: 16.h,
-      ),
+      padding: EdgeInsetsDirectional.only(start: 18.w, end: 18.w, bottom: 16.h),
       child: Column(
         children: [
           GestureDetector(
@@ -375,8 +377,18 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
           _buildQuickActionPill(
             icon: isFrozen ? Icons.lock_open_rounded : Icons.ac_unit_rounded,
             label: isFrozen
-                ? _vcL(context, en: 'Unfreeze', fa: 'فعال‌سازی', ar: 'إلغاء التجميد')
-                : _vcL(context, en: 'Freeze', fa: 'مسدودسازی', ar: 'تجميد البطاقة'),
+                ? _vcL(
+                    context,
+                    en: 'Unfreeze',
+                    fa: 'فعال‌سازی',
+                    ar: 'إلغاء التجميد',
+                  )
+                : _vcL(
+                    context,
+                    en: 'Freeze',
+                    fa: 'مسدودسازی',
+                    ar: 'تجميد البطاقة',
+                  ),
             color: isFrozen ? AppColors.success : const Color(0xFF29B6F6),
             isDark: isDark,
             onTap: () {
@@ -399,7 +411,9 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
               fa: 'تراکنش‌ها',
               ar: 'سجل العمليات',
             ),
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
             isDark: isDark,
             onTap: () {
               HapticFeedback.lightImpact();
@@ -436,7 +450,9 @@ class _VirtualCardScreenState extends State<VirtualCardScreen> {
               : AppColors.lightSecondaryContainer.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.lightOutlineVariant,
             width: 0.8,
           ),
         ),

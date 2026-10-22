@@ -180,9 +180,7 @@ class TrainTrip {
   }
 
   int get minPrice =>
-      classes.map((option) => option.price).reduce(
-        (a, b) => a < b ? a : b,
-      );
+      classes.map((option) => option.price).reduce((a, b) => a < b ? a : b);
 }
 
 List<TrainTrip> generateTrainTrips(
@@ -446,7 +444,11 @@ final List<MockCatalogItem> mockBoatItems = [
     price: 850000,
     rating: '4.5',
     icon: Icons.directions_boat_rounded,
-    extra: {'duration': '۲ ساعت', 'capacity': '۳۲۰ نفر', 'class': 'صندلی معمولی'},
+    extra: {
+      'duration': '۲ ساعت',
+      'capacity': '۳۲۰ نفر',
+      'class': 'صندلی معمولی',
+    },
   ),
   const MockCatalogItem(
     id: 'boat-2',
@@ -455,7 +457,11 @@ final List<MockCatalogItem> mockBoatItems = [
     price: 480000,
     rating: '4.3',
     icon: Icons.directions_boat_rounded,
-    extra: {'duration': '۴۵ دقیقه', 'capacity': '۱۸۰ نفر', 'class': 'صندلی معمولی'},
+    extra: {
+      'duration': '۴۵ دقیقه',
+      'capacity': '۱۸۰ نفر',
+      'class': 'صندلی معمولی',
+    },
   ),
   const MockCatalogItem(
     id: 'boat-3',
@@ -485,7 +491,11 @@ final List<MockCatalogItem> mockRestaurantItems = [
     price: 950000,
     rating: '4.6',
     icon: Icons.restaurant_rounded,
-    extra: {'cuisine': 'ایرانی', 'hours': '۱۲:۰۰ تا ۲۳:۳۰', 'capacity': '۸۰ نفر'},
+    extra: {
+      'cuisine': 'ایرانی',
+      'hours': '۱۲:۰۰ تا ۲۳:۳۰',
+      'capacity': '۸۰ نفر',
+    },
   ),
   const MockCatalogItem(
     id: 'rest-2',
@@ -494,7 +504,11 @@ final List<MockCatalogItem> mockRestaurantItems = [
     price: 780000,
     rating: '4.5',
     icon: Icons.restaurant_rounded,
-    extra: {'cuisine': 'بین‌المللی', 'hours': '۰۹:۰۰ تا ۲۴:۰۰', 'capacity': '۴۵ نفر'},
+    extra: {
+      'cuisine': 'بین‌المللی',
+      'hours': '۰۹:۰۰ تا ۲۴:۰۰',
+      'capacity': '۴۵ نفر',
+    },
   ),
   const MockCatalogItem(
     id: 'rest-3',
@@ -503,7 +517,11 @@ final List<MockCatalogItem> mockRestaurantItems = [
     price: 1100000,
     rating: '4.8',
     icon: Icons.restaurant_rounded,
-    extra: {'cuisine': 'بین‌المللی', 'hours': '۱۲:۰۰ تا ۲۳:۰۰', 'capacity': '۶۰ نفر'},
+    extra: {
+      'cuisine': 'بین‌المللی',
+      'hours': '۱۲:۰۰ تا ۲۳:۰۰',
+      'capacity': '۶۰ نفر',
+    },
   ),
   const MockCatalogItem(
     id: 'rest-4',
@@ -512,7 +530,11 @@ final List<MockCatalogItem> mockRestaurantItems = [
     price: 420000,
     rating: '4.2',
     icon: Icons.fastfood_rounded,
-    extra: {'cuisine': 'فست‌فود', 'hours': '۱۱:۰۰ تا ۲۴:۰۰', 'capacity': '۳۵ نفر'},
+    extra: {
+      'cuisine': 'فست‌فود',
+      'hours': '۱۱:۰۰ تا ۲۴:۰۰',
+      'capacity': '۳۵ نفر',
+    },
   ),
   const MockCatalogItem(
     id: 'rest-5',
@@ -521,7 +543,11 @@ final List<MockCatalogItem> mockRestaurantItems = [
     price: 560000,
     rating: '4.4',
     icon: Icons.restaurant_rounded,
-    extra: {'cuisine': 'گیاهی', 'hours': '۱۰:۰۰ تا ۲۲:۰۰', 'capacity': '۴۰ نفر'},
+    extra: {
+      'cuisine': 'گیاهی',
+      'hours': '۱۰:۰۰ تا ۲۲:۰۰',
+      'capacity': '۴۰ نفر',
+    },
   ),
 ];
 

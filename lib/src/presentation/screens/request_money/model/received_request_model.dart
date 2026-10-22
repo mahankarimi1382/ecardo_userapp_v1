@@ -8,10 +8,9 @@ class ReceivedRequestModel {
   ReceivedRequestModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null
-            ? ReceivedRequestData.fromJson(json['data'])
-            : null;
+    data = json['data'] != null
+        ? ReceivedRequestData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -28,10 +27,9 @@ class ReceivedRequestData {
         requests!.add(Requests.fromJson(v));
       });
     }
-    pagination =
-        json['pagination'] != null
-            ? Pagination.fromJson(json['pagination'])
-            : null;
+    pagination = json['pagination'] != null
+        ? Pagination.fromJson(json['pagination'])
+        : null;
   }
 }
 
@@ -87,14 +85,12 @@ class Requests {
     note = json['note'];
     type = json['type'];
     isCrypto = json['is_crypto'];
-    requester =
-        json['requester'] != null
-            ? Requester.fromJson(json['requester'])
-            : null;
-    recipient =
-        json['recipient'] != null
-            ? Recipient.fromJson(json['recipient'])
-            : null;
+    requester = json['requester'] != null
+        ? Requester.fromJson(json['requester'])
+        : null;
+    recipient = json['recipient'] != null
+        ? Recipient.fromJson(json['recipient'])
+        : null;
     canAction = json['can_action'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];

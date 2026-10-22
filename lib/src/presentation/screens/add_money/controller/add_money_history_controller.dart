@@ -20,6 +20,7 @@ class AddMoneyHistoryController extends GetxController {
   ].obs;
   final RxInt selectedStatusIndex = (-1).obs;
   final Rx<TransactionsModel> transactionsModel = TransactionsModel().obs;
+
   /// v1.0.40 (P-4 pattern): resolve per call — the constructor-time capture
   /// froze the locale at controller creation (language switches left stale
   /// strings) and crashed when no localization context existed yet.

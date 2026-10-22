@@ -91,8 +91,9 @@ class _RequestMoneyAmountStepSectionState
                       ).firstMatch(clean);
 
                       if (uidMatch != null) {
-                        controller.recipientUidController.text =
-                            uidMatch.group(1)!;
+                        controller.recipientUidController.text = uidMatch.group(
+                          1,
+                        )!;
                       } else {
                         ToastHelper().showErrorToast(
                           localization
@@ -109,9 +110,7 @@ class _RequestMoneyAmountStepSectionState
                       color: isDark
                           ? AppColors.darkPrimary
                           : AppColors.lightPrimary,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusLg,
-                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                       boxShadow: [
                         BoxShadow(
                           color: isDark
@@ -191,16 +190,15 @@ class _RequestMoneyAmountStepSectionState
                       hintText: "0.00",
                       controller: controller.requestAmountController,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        AmountInputFormatter(maxDecimals: 8),
-                      ],
+                      inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
                     ),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.sm),
                 Obx(() {
                   final wallet = controller.wallet.value;
-                  final balance = double.tryParse(wallet?.balance ?? '0') ?? 0.0;
+                  final balance =
+                      double.tryParse(wallet?.balance ?? '0') ?? 0.0;
                   return QuickAmountSelector(
                     textController: controller.requestAmountController,
                     availableBalance: balance > 0 ? balance : 1000.0,
@@ -216,7 +214,8 @@ class _RequestMoneyAmountStepSectionState
 
           Obx(
             () => Visibility(
-              visible: controller.requestMoneyWalletsList.isNotEmpty &&
+              visible:
+                  controller.requestMoneyWalletsList.isNotEmpty &&
                   controller.wallet.value?.requestMoneyLimit != null,
               child: Padding(
                 padding: const EdgeInsetsDirectional.only(

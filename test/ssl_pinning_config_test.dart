@@ -22,14 +22,18 @@ void main() {
   group('SslPinningConfig.validateCertificate', () {
     test('rejects a null or empty certificate for pinned hosts', () {
       expect(SslPinningConfig.validateCertificate(null, 'ecardo.ir'), isFalse);
-      expect(SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
-          isFalse);
+      expect(
+        SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
+        isFalse,
+      );
     });
 
     test('ignores a null or empty certificate for unpinned hosts', () {
       expect(SslPinningConfig.validateCertificate(null, 'example.com'), isTrue);
-      expect(SslPinningConfig.validateCertificate(<int>[], 'example.com'),
-          isTrue);
+      expect(
+        SslPinningConfig.validateCertificate(<int>[], 'example.com'),
+        isTrue,
+      );
     });
 
     test('defers to the system trust store for unpinned hosts', () {
@@ -62,7 +66,8 @@ void main() {
       expect(
         SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'ecardo.ir'),
         isFalse,
-        reason: 'a pinned host with mismatched certificate must reject the connection',
+        reason:
+            'a pinned host with mismatched certificate must reject the connection',
       );
       expect(
         SslPinningConfig.validateCertificate(<int>[1, 2, 3], 'trip.ecardo.ir'),
@@ -76,9 +81,11 @@ void main() {
     });
 
     test('rejects a certificate for a pinned host even when one is empty', () {
-      expect(SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
-          isFalse,
-          reason: 'a pinned host with empty certificate bytes must be rejected');
+      expect(
+        SslPinningConfig.validateCertificate(<int>[], 'ecardo.ir'),
+        isFalse,
+        reason: 'a pinned host with empty certificate bytes must be rejected',
+      );
     });
   });
 
@@ -91,22 +98,46 @@ void main() {
       final ecardoPins = hashes['ecardo.ir']!;
       final tripPins = hashes['trip.ecardo.ir']!;
 
-      expect(ecardoPins, contains('nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc='));
-      expect(ecardoPins, contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM='));
-      expect(tripPins, contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ='));
+      expect(
+        ecardoPins,
+        contains('nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc='),
+      );
+      expect(
+        ecardoPins,
+        contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM='),
+      );
+      expect(
+        tripPins,
+        contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ='),
+      );
 
       // Ensure pin lists are isolated and NOT shared across hosts
-      expect(ecardoPins, isNot(contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ=')));
-      expect(tripPins, isNot(contains('nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc=')));
-      expect(tripPins, isNot(contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM=')));
+      expect(
+        ecardoPins,
+        isNot(contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ=')),
+      );
+      expect(
+        tripPins,
+        isNot(contains('nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc=')),
+      );
+      expect(
+        tripPins,
+        isNot(contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM=')),
+      );
     });
 
     test('matchPinnedHost correctly resolves apex and subdomains', () {
       expect(SslPinningConfig.matchPinnedHost('ecardo.ir'), 'ecardo.ir');
       expect(SslPinningConfig.matchPinnedHost('ECARDO.IR'), 'ecardo.ir');
       expect(SslPinningConfig.matchPinnedHost('api.ecardo.ir'), 'ecardo.ir');
-      expect(SslPinningConfig.matchPinnedHost('trip.ecardo.ir'), 'trip.ecardo.ir');
-      expect(SslPinningConfig.matchPinnedHost('flight.trip.ecardo.ir'), 'trip.ecardo.ir');
+      expect(
+        SslPinningConfig.matchPinnedHost('trip.ecardo.ir'),
+        'trip.ecardo.ir',
+      );
+      expect(
+        SslPinningConfig.matchPinnedHost('flight.trip.ecardo.ir'),
+        'trip.ecardo.ir',
+      );
       expect(SslPinningConfig.matchPinnedHost('example.com'), isNull);
       expect(SslPinningConfig.matchPinnedHost('notecardo.ir'), isNull);
     });
@@ -128,8 +159,7 @@ void main() {
       // hashes `cert.der`, so a pin generated any other way silently never
       // matches and takes the app offline.
       final der = <int>[0x30, 0x82, 0x01, 0x02, 0xDE, 0xAD, 0xBE, 0xEF];
-      final expected =
-          base64Encode(sha256.convert(der).bytes);
+      final expected = base64Encode(sha256.convert(der).bytes);
       expect(expected, isNotEmpty);
       expect(base64Decode(expected), hasLength(32));
     });

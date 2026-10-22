@@ -221,10 +221,12 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
             child: Obx(() {
               final isValid = controller.isAmountValid;
               final isDark = ExchangeDesignTokens.isDark(context);
-              final activeBtnBg =
-                  isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
-              final activeBtnText =
-                  isDark ? AppColors.deepBlack : AppColors.white;
+              final activeBtnBg = isDark
+                  ? AppColors.mainSoftBlue
+                  : AppColors.lightPrimary;
+              final activeBtnText = isDark
+                  ? AppColors.deepBlack
+                  : AppColors.white;
 
               return CommonButton(
                 borderRadius: AppSpacing.radius,
@@ -284,20 +286,16 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
         double.tryParse(c.fromWallet.value?.exchangeLimit?.min ?? '0') ?? 0.0;
     final max =
         double.tryParse(c.fromWallet.value?.exchangeLimit?.max ?? '0') ??
-            double.infinity;
+        double.infinity;
     if (amount < min) {
       return loc.exchangeValidationAmountMinimum(
-        min.toStringAsFixed(
-          c.fromWallet.value?.isCrypto == true ? 8 : 2,
-        ),
+        min.toStringAsFixed(c.fromWallet.value?.isCrypto == true ? 8 : 2),
         c.fromWallet.value?.code ?? '',
       );
     }
     if (amount > max) {
       return loc.exchangeValidationAmountMaximum(
-        max.toStringAsFixed(
-          c.fromWallet.value?.isCrypto == true ? 8 : 2,
-        ),
+        max.toStringAsFixed(c.fromWallet.value?.isCrypto == true ? 8 : 2),
         c.fromWallet.value?.code ?? '',
       );
     }
@@ -330,9 +328,7 @@ class _RecentPairChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: ExchangeDesignTokens.cardSurface(context),
             borderRadius: BorderRadius.circular(AppSpacing.radius),
-            border: Border.all(
-              color: ExchangeDesignTokens.cardBorder(context),
-            ),
+            border: Border.all(color: ExchangeDesignTokens.cardBorder(context)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -400,9 +396,7 @@ class _FeeAndLimitsSummary extends StatelessWidget {
         decoration: BoxDecoration(
           color: ExchangeDesignTokens.cardSurface(context),
           borderRadius: BorderRadius.circular(AppSpacing.radius),
-          border: Border.all(
-            color: ExchangeDesignTokens.cardBorder(context),
-          ),
+          border: Border.all(color: ExchangeDesignTokens.cardBorder(context)),
           boxShadow: ExchangeDesignTokens.cardShadow(context),
         ),
         child: Column(
@@ -438,10 +432,7 @@ class _FeeAndLimitsSummary extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.sm + 2),
-            Divider(
-              height: 0,
-              color: ExchangeDesignTokens.divider(context),
-            ),
+            Divider(height: 0, color: ExchangeDesignTokens.divider(context)),
             const SizedBox(height: AppSpacing.sm + 2),
             // Total row
             Row(
@@ -533,8 +524,7 @@ class _WalletLoadErrorCard extends StatelessWidget {
       required String fa,
       String? ar,
       String? zh,
-    }) =>
-        l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
+    }) => l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
 
     return Center(
       child: Padding(

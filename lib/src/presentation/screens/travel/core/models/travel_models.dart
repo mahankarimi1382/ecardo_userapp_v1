@@ -469,8 +469,6 @@ String _travelDate(DateTime value) =>
     '${value.month.toString().padLeft(2, '0')}-'
     '${value.day.toString().padLeft(2, '0')}';
 
-
-
 class TravelOrderEvent {
   final String type;
   final DateTime? timestamp;

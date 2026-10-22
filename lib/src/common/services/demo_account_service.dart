@@ -61,7 +61,8 @@ class DemoAccountService extends GetxService {
   static bool get isDemoInterceptionAllowedNow => isDemoInterceptionPermitted(
     isDebugBuild: isDemoAvailableInThisBuild,
     isServiceRegistered: Get.isRegistered<DemoAccountService>(),
-    isDemoModeActive: Get.isRegistered<DemoAccountService>() &&
+    isDemoModeActive:
+        Get.isRegistered<DemoAccountService>() &&
         Get.find<DemoAccountService>().isDemoMode.value,
   );
 
@@ -88,9 +89,11 @@ class DemoAccountService extends GetxService {
     return path;
   }
 
-  final RxInt demoKycStatus = 1.obs; // 1: Verified, 2: Pending, 3: Rejected, 0: Unverified
+  final RxInt demoKycStatus =
+      1.obs; // 1: Verified, 2: Pending, 3: Rejected, 0: Unverified
   final RxString demoRejectReason =
-      'تصویر کارت ملی ارسالی مخدوش یا ناخوانا می‌باشد. لطفاً تصویر باکیفیت‌تری بارگذاری فرمایید.'.obs;
+      'تصویر کارت ملی ارسالی مخدوش یا ناخوانا می‌باشد. لطفاً تصویر باکیفیت‌تری بارگذاری فرمایید.'
+          .obs;
 
   late final Rx<UserModel> demoUserModel;
   late final RxList<Wallets> demoWallets;
@@ -114,7 +117,9 @@ class DemoAccountService extends GetxService {
   Future<void> checkAdminKillSwitch() async {
     try {
       if (Get.isRegistered<SettingsService>()) {
-        final setting = Get.find<SettingsService>().getSetting('demo_account_enabled');
+        final setting = Get.find<SettingsService>().getSetting(
+          'demo_account_enabled',
+        );
         if (setting == '0' || setting == 'false') {
           isDemoAllowedByAdmin.value = false;
           return;
@@ -281,10 +286,7 @@ class DemoAccountService extends GetxService {
       expirationMonth: 8,
       expirationYear: 2029,
       createdAt: '2026-02-10 14:00:00',
-      cardHolder: CardHolder(
-        name: 'کاربر دمو',
-        email: 'demo@ecardo.ir',
-      ),
+      cardHolder: CardHolder(name: 'کاربر دمو', email: 'demo@ecardo.ir'),
     ).obs;
 
     // 4. Dashboard Model
@@ -594,7 +596,9 @@ class DemoAccountService extends GetxService {
           'kyc_level': 3,
           'kyc_type': 'PASSPORT_AND_FACE',
           'is_rejected': demoKycStatus.value == 3,
-          'rejection_reason': demoKycStatus.value == 3 ? demoRejectReason.value : null,
+          'rejection_reason': demoKycStatus.value == 3
+              ? demoRejectReason.value
+              : null,
           'balance': '1850.00',
           'has_passcode': true,
           'country': 'IR',
@@ -628,19 +632,23 @@ class DemoAccountService extends GetxService {
         'status': 'success',
         'message': 'Success',
         'data': {
-          'wallets': demoWallets.map((w) => {
-            'id': w.id,
-            'name': w.name,
-            'account_no': w.accountNo,
-            'balance': w.balance,
-            'formatted_balance': w.formattedBalance,
-            'code': w.code,
-            'symbol': w.symbol,
-            'is_default': w.isDefault,
-            'is_crypto': w.isCrypto,
-            'currency_id': w.currencyId,
-            'conversion_rate': w.conversionRate,
-          }).toList(),
+          'wallets': demoWallets
+              .map(
+                (w) => {
+                  'id': w.id,
+                  'name': w.name,
+                  'account_no': w.accountNo,
+                  'balance': w.balance,
+                  'formatted_balance': w.formattedBalance,
+                  'code': w.code,
+                  'symbol': w.symbol,
+                  'is_default': w.isDefault,
+                  'is_crypto': w.isCrypto,
+                  'currency_id': w.currencyId,
+                  'conversion_rate': w.conversionRate,
+                },
+              )
+              .toList(),
         },
       };
     }
@@ -651,7 +659,11 @@ class DemoAccountService extends GetxService {
         'status': 'success',
         'message': 'Success',
         'data': {
-          'referral': {'bonus': '50.00', 'count': 5, 'referral_code': 'ECAR-DEMO-VIP'},
+          'referral': {
+            'bonus': '50.00',
+            'count': 5,
+            'referral_code': 'ECAR-DEMO-VIP',
+          },
           'info': {
             'time_wise_wish': 'روز بخیر، کاربر گرامی',
             'last_login': 'امروز، ۱۰:۱۵',
@@ -740,7 +752,8 @@ class DemoAccountService extends GetxService {
     }
 
     // App Settings
-    if (cleanEndpoint == '/get-settings' || cleanEndpoint == '/get-settings-v2') {
+    if (cleanEndpoint == '/get-settings' ||
+        cleanEndpoint == '/get-settings-v2') {
       return {
         'status': true,
         'message': 'Success',
@@ -753,7 +766,10 @@ class DemoAccountService extends GetxService {
           {'name': 'account_creation', 'value': '1'},
           {'name': 'language_switcher', 'value': '1'},
           {'name': 'app_version', 'value': '1.0.0'},
-          {'name': 'app_update_link', 'value': 'https://ecardo.ir/download/app.apk'},
+          {
+            'name': 'app_update_link',
+            'value': 'https://ecardo.ir/download/app.apk',
+          },
           {'name': 'app_force_update', 'value': '0'},
           {'name': 'app_apk_sha256', 'value': ''},
           {'name': 'demo_account_enabled', 'value': '1'},
@@ -858,12 +874,48 @@ class DemoAccountService extends GetxService {
         'status': true,
         'message': 'Success',
         'data': [
-          {'name': 'Iran', 'dial_code': '+98', 'code': 'IR', 'flag': '🇮🇷', 'selected': true},
-          {'name': 'United States', 'dial_code': '+1', 'code': 'US', 'flag': '🇺🇸', 'selected': false},
-          {'name': 'United Arab Emirates', 'dial_code': '+971', 'code': 'AE', 'flag': '🇦🇪', 'selected': false},
-          {'name': 'Germany', 'dial_code': '+49', 'code': 'DE', 'flag': '🇩🇪', 'selected': false},
-          {'name': 'United Kingdom', 'dial_code': '+44', 'code': 'GB', 'flag': '🇬🇧', 'selected': false},
-          {'name': 'Turkey', 'dial_code': '+90', 'code': 'TR', 'flag': '🇹🇷', 'selected': false},
+          {
+            'name': 'Iran',
+            'dial_code': '+98',
+            'code': 'IR',
+            'flag': '🇮🇷',
+            'selected': true,
+          },
+          {
+            'name': 'United States',
+            'dial_code': '+1',
+            'code': 'US',
+            'flag': '🇺🇸',
+            'selected': false,
+          },
+          {
+            'name': 'United Arab Emirates',
+            'dial_code': '+971',
+            'code': 'AE',
+            'flag': '🇦🇪',
+            'selected': false,
+          },
+          {
+            'name': 'Germany',
+            'dial_code': '+49',
+            'code': 'DE',
+            'flag': '🇩🇪',
+            'selected': false,
+          },
+          {
+            'name': 'United Kingdom',
+            'dial_code': '+44',
+            'code': 'GB',
+            'flag': '🇬🇧',
+            'selected': false,
+          },
+          {
+            'name': 'Turkey',
+            'dial_code': '+90',
+            'code': 'TR',
+            'flag': '🇹🇷',
+            'selected': false,
+          },
         ],
       };
     }
@@ -874,12 +926,54 @@ class DemoAccountService extends GetxService {
         'status': true,
         'message': 'Success',
         'data': [
-          {'id': 1, 'name': 'فارسی', 'locale': 'fa', 'is_rtl': true, 'is_default': true, 'status': true},
-          {'id': 2, 'name': 'English', 'locale': 'en', 'is_rtl': false, 'is_default': false, 'status': true},
-          {'id': 3, 'name': 'العربية', 'locale': 'ar', 'is_rtl': true, 'is_default': false, 'status': true},
-          {'id': 4, 'name': 'Русский', 'locale': 'ru', 'is_rtl': false, 'is_default': false, 'status': true},
-          {'id': 5, 'name': 'Türkçe', 'locale': 'tr', 'is_rtl': false, 'is_default': false, 'status': true},
-          {'id': 6, 'name': '中文', 'locale': 'zh', 'is_rtl': false, 'is_default': false, 'status': true},
+          {
+            'id': 1,
+            'name': 'فارسی',
+            'locale': 'fa',
+            'is_rtl': true,
+            'is_default': true,
+            'status': true,
+          },
+          {
+            'id': 2,
+            'name': 'English',
+            'locale': 'en',
+            'is_rtl': false,
+            'is_default': false,
+            'status': true,
+          },
+          {
+            'id': 3,
+            'name': 'العربية',
+            'locale': 'ar',
+            'is_rtl': true,
+            'is_default': false,
+            'status': true,
+          },
+          {
+            'id': 4,
+            'name': 'Русский',
+            'locale': 'ru',
+            'is_rtl': false,
+            'is_default': false,
+            'status': true,
+          },
+          {
+            'id': 5,
+            'name': 'Türkçe',
+            'locale': 'tr',
+            'is_rtl': false,
+            'is_default': false,
+            'status': true,
+          },
+          {
+            'id': 6,
+            'name': '中文',
+            'locale': 'zh',
+            'is_rtl': false,
+            'is_default': false,
+            'status': true,
+          },
         ],
       };
     }
@@ -895,7 +989,8 @@ class DemoAccountService extends GetxService {
             {
               'id': 1,
               'title': 'به ایکاردو خوش آمدید',
-              'message': 'حساب کاربری آزمایشی با موفقیت فعال شد. موجودی و تمامی امکانات در دسترس است.',
+              'message':
+                  'حساب کاربری آزمایشی با موفقیت فعال شد. موجودی و تمامی امکانات در دسترس است.',
               'type': 'system',
               'is_read': false,
               'created_at': '2026-10-01 10:00:00',
@@ -935,14 +1030,12 @@ class DemoAccountService extends GetxService {
     }
 
     // Passcode status
-    if (cleanEndpoint == '/user/passcode/status' || cleanEndpoint == '/user/passcode') {
+    if (cleanEndpoint == '/user/passcode/status' ||
+        cleanEndpoint == '/user/passcode') {
       return {
         'status': 'success',
         'message': 'Success',
-        'data': {
-          'has_passcode': true,
-          'is_active': true,
-        },
+        'data': {'has_passcode': true, 'is_active': true},
       };
     }
 
@@ -989,16 +1082,32 @@ class DemoAccountService extends GetxService {
         'message': 'Success',
         'data': {
           'gateways': [
-            {'id': 1, 'name': 'USDT (TRC-20)', 'currency': 'USDT', 'type': 'crypto'},
-            {'id': 2, 'name': 'درگاه بانکی شتاب', 'currency': 'IRR', 'type': 'fiat'},
-            {'id': 3, 'name': 'Visa / MasterCard Gateway', 'currency': 'USD', 'type': 'fiat'},
+            {
+              'id': 1,
+              'name': 'USDT (TRC-20)',
+              'currency': 'USDT',
+              'type': 'crypto',
+            },
+            {
+              'id': 2,
+              'name': 'درگاه بانکی شتاب',
+              'currency': 'IRR',
+              'type': 'fiat',
+            },
+            {
+              'id': 3,
+              'name': 'Visa / MasterCard Gateway',
+              'currency': 'USD',
+              'type': 'fiat',
+            },
           ],
         },
       };
     }
 
     // Payment Settings & History
-    if (cleanEndpoint == '/user/payment/settings' || cleanEndpoint == '/user/payment/history') {
+    if (cleanEndpoint == '/user/payment/settings' ||
+        cleanEndpoint == '/user/payment/history') {
       return {
         'status': 'success',
         'message': 'Success',
@@ -1011,7 +1120,8 @@ class DemoAccountService extends GetxService {
     }
 
     // Transfer Config & History
-    if (cleanEndpoint == '/user/transfer/config' || cleanEndpoint == '/user/transfer/history') {
+    if (cleanEndpoint == '/user/transfer/config' ||
+        cleanEndpoint == '/user/transfer/history') {
       return {
         'status': 'success',
         'message': 'Success',
@@ -1025,7 +1135,8 @@ class DemoAccountService extends GetxService {
     }
 
     // Exchange Config & History
-    if (cleanEndpoint == '/user/exchange/config' || cleanEndpoint == '/user/exchange/history') {
+    if (cleanEndpoint == '/user/exchange/config' ||
+        cleanEndpoint == '/user/exchange/history') {
       return {
         'status': 'success',
         'message': 'Success',
@@ -1039,7 +1150,8 @@ class DemoAccountService extends GetxService {
     }
 
     // Cash Out Config & History
-    if (cleanEndpoint == '/user/cashout/config' || cleanEndpoint == '/user/cashout/history') {
+    if (cleanEndpoint == '/user/cashout/config' ||
+        cleanEndpoint == '/user/cashout/history') {
       return {
         'status': 'success',
         'message': 'Success',
@@ -1079,7 +1191,11 @@ class DemoAccountService extends GetxService {
           'methods': [
             {'id': 1, 'name': 'USDT TRC20 Wallet', 'currency': 'USDT'},
             {'id': 2, 'name': 'شماره شبا بانکی (IBAN)', 'currency': 'IRR'},
-            {'id': 3, 'name': 'International Bank Wire (SWIFT)', 'currency': 'USD'},
+            {
+              'id': 3,
+              'name': 'International Bank Wire (SWIFT)',
+              'currency': 'USD',
+            },
           ],
         },
       };
@@ -1104,13 +1220,13 @@ class DemoAccountService extends GetxService {
               'min_load': '10.00',
               'max_load': '5000.00',
               'status': 'active',
-            }
+            },
           ],
           'cardholders': [
-            {'id': 1, 'name': 'کاربر دمو', 'email': 'demo@ecardo.ir'}
+            {'id': 1, 'name': 'کاربر دمو', 'email': 'demo@ecardo.ir'},
           ],
           'providers': [
-            {'id': 1, 'name': 'MasterCard / Ecardo Pay', 'code': 'mastercard'}
+            {'id': 1, 'name': 'MasterCard / Ecardo Pay', 'code': 'mastercard'},
           ],
           'card_orders': <dynamic>[],
         },
@@ -1199,7 +1315,11 @@ class DemoAccountService extends GetxService {
           'products': CommerceCatalog.getLicenseProducts(),
           'categories': [
             {'id': 1, 'name': 'گیفت کارت بازی (Gaming)', 'slug': 'gaming'},
-            {'id': 2, 'name': 'اشتراک نرم‌افزار (Software)', 'slug': 'software'},
+            {
+              'id': 2,
+              'name': 'اشتراک نرم‌افزار (Software)',
+              'slug': 'software',
+            },
           ],
           'purchases': <dynamic>[],
         },
@@ -1215,12 +1335,14 @@ class DemoAccountService extends GetxService {
       final amount = double.tryParse(amountStr) ?? 10.0;
       final rate = double.tryParse(rateStr) ?? 1.0;
 
-      Wallets? fromW = demoWallets.firstWhereOrNull((w) =>
-          w.id.toString() == fromWalletId || w.code == fromWalletId);
+      Wallets? fromW = demoWallets.firstWhereOrNull(
+        (w) => w.id.toString() == fromWalletId || w.code == fromWalletId,
+      );
       fromW ??= demoWallets.first;
 
-      Wallets? toW = demoWallets.firstWhereOrNull((w) =>
-          w.id.toString() == toWalletId || w.code == toWalletId);
+      Wallets? toW = demoWallets.firstWhereOrNull(
+        (w) => w.id.toString() == toWalletId || w.code == toWalletId,
+      );
       toW ??= (demoWallets.length > 1 ? demoWallets[1] : demoWallets.first);
 
       final fromBal = double.tryParse(fromW.balance ?? '0') ?? 0.0;
@@ -1272,11 +1394,13 @@ class DemoAccountService extends GetxService {
     // Stateful Transfer Execution (POST /user/transfer)
     if (method == 'POST' && cleanEndpoint == '/user/transfer') {
       final amountStr = data?['amount']?.toString() ?? '10.0';
-      final walletId = data?['wallet_id']?.toString() ?? data?['from_wallet']?.toString();
+      final walletId =
+          data?['wallet_id']?.toString() ?? data?['from_wallet']?.toString();
       final amount = double.tryParse(amountStr) ?? 10.0;
 
-      Wallets? w = demoWallets.firstWhereOrNull((item) =>
-          item.id.toString() == walletId || item.code == walletId);
+      Wallets? w = demoWallets.firstWhereOrNull(
+        (item) => item.id.toString() == walletId || item.code == walletId,
+      );
       w ??= demoWallets.first;
 
       final currentBal = double.tryParse(w.balance ?? '0') ?? 0.0;
@@ -1352,7 +1476,7 @@ class DemoAccountService extends GetxService {
               'last_name': 'تست کیفیت',
               'email': 'demo@ecardo.ir',
             },
-          }
+          },
         ],
       };
     }
@@ -1434,7 +1558,10 @@ class DemoAccountService extends GetxService {
           'data': {'case': _buildDemoLoanCase()},
         };
       }
-      return {'status': 'success', 'message': 'Operation completed in demo mode'};
+      return {
+        'status': 'success',
+        'message': 'Operation completed in demo mode',
+      };
     }
 
     if (cleanEndpoint == '/loan/apply') {
@@ -1462,7 +1589,11 @@ class DemoAccountService extends GetxService {
               'currency': 'EUR',
               'min_amount': 5000.0,
               'max_amount': 200000.0,
-              'issuing_banks': ['بنک آف جورجیا (BOG)', 'امارات ان‌بی‌دی (ENBD)', 'استاندارد چارترد'],
+              'issuing_banks': [
+                'بنک آف جورجیا (BOG)',
+                'امارات ان‌بی‌دی (ENBD)',
+                'استاندارد چارترد',
+              ],
             },
             {
               'id': 2,
@@ -1494,7 +1625,10 @@ class DemoAccountService extends GetxService {
           'data': {'case': _buildDemoGuaranteeCase()},
         };
       }
-      return {'status': 'success', 'message': 'Guarantee processed in demo mode'};
+      return {
+        'status': 'success',
+        'message': 'Guarantee processed in demo mode',
+      };
     }
 
     // ----------------------- LICENSE SERVICE -----------------------
@@ -1508,7 +1642,8 @@ class DemoAccountService extends GetxService {
               'title': 'JetBrains All Products Pack',
               'slug': 'jetbrains-all-products',
               'category': 'developer',
-              'description': 'دسترسی کامل ۱ ساله به کلیه IDEهای جت‌برینز (IntelliJ, WebStorm, PyCharm)',
+              'description':
+                  'دسترسی کامل ۱ ساله به کلیه IDEهای جت‌برینز (IntelliJ, WebStorm, PyCharm)',
               'price': 189.0,
               'tiers': [
                 {'id': 1, 'name': '1 Year Personal License', 'price': 189.0},
@@ -1520,7 +1655,8 @@ class DemoAccountService extends GetxService {
               'title': 'TradingView Premium Pro+',
               'slug': 'tradingview-premium',
               'category': 'financial',
-              'description': 'اکانت پریمیوم تریدینگ‌ویو بدون تبلیغات با دسترسی به داده‌های لحظه‌ای بازارهای جهانی',
+              'description':
+                  'اکانت پریمیوم تریدینگ‌ویو بدون تبلیغات با دسترسی به داده‌های لحظه‌ای بازارهای جهانی',
               'price': 120.0,
               'tiers': [
                 {'id': 3, 'name': '12 Months Pro+', 'price': 120.0},
@@ -1554,19 +1690,21 @@ class DemoAccountService extends GetxService {
             {
               'id': 3001,
               'order_number': 'LIC-2026-JB-9912',
-              'product_title': 'JetBrains All Products Pack (1 Year Subscription)',
+              'product_title':
+                  'JetBrains All Products Pack (1 Year Subscription)',
               'status': 'DELIVERED',
               'license_key': 'ECAR-JB2026-X992-KL49-DEMO-LICENSE-KEY',
               'quantity': 1,
               'total_amount': 189.0,
               'created_at': '2026-09-28 14:30:00',
-            }
+            },
           ],
         },
       };
     }
 
-    if (cleanEndpoint == '/user/licenses/orders' || cleanEndpoint.contains('/user/licenses/orders/')) {
+    if (cleanEndpoint == '/user/licenses/orders' ||
+        cleanEndpoint.contains('/user/licenses/orders/')) {
       return {
         'status': 'success',
         'data': {
@@ -1591,7 +1729,11 @@ class DemoAccountService extends GetxService {
             'price': 120.0,
             'processing_days': 15,
             'validity_days': 90,
-            'requirements': ['گذرنامه با ۶ ماه اعتبار', 'تمکن مالی معتبر', 'رزرو پرواز و هتل'],
+            'requirements': [
+              'گذرنامه با ۶ ماه اعتبار',
+              'تمکن مالی معتبر',
+              'رزرو پرواز و هتل',
+            ],
           },
           {
             'id': 2,
@@ -1621,7 +1763,7 @@ class DemoAccountService extends GetxService {
               'status': 'UNDER_REVIEW',
               'amount': 120.0,
               'created_at': '2026-09-25 10:00:00',
-            }
+            },
           ],
         };
       }
@@ -1650,7 +1792,12 @@ class DemoAccountService extends GetxService {
               'duration_days': 7,
               'starting_price': 1450.0,
               'rating': 4.9,
-              'highlights': ['برج ایفل', 'موزه لوور', 'کولوسئوم رم', 'اقامت در هتل‌های ۵ ستاره'],
+              'highlights': [
+                'برج ایفل',
+                'موزه لوور',
+                'کولوسئوم رم',
+                'اقامت در هتل‌های ۵ ستاره',
+              ],
             },
             {
               'id': 2,
@@ -1678,7 +1825,7 @@ class DemoAccountService extends GetxService {
               'title': 'تور لوکس پاریس و رم (۷ روزه رویایی)',
               'city': 'Paris & Rome',
               'starting_price': 1450.0,
-            }
+            },
           ],
         },
       };
@@ -1741,7 +1888,7 @@ class DemoAccountService extends GetxService {
                 'daily_price': 65.0,
                 'deposit_amount': 300.0,
               },
-            }
+            },
           ],
         },
       };
@@ -1749,10 +1896,7 @@ class DemoAccountService extends GetxService {
 
     // ----------------------- STOCK TRADING -----------------------
     if (cleanEndpoint == '/stock/markets') {
-      return {
-        'status': 'success',
-        'data': CommerceCatalog.getStockMarkets(),
-      };
+      return {'status': 'success', 'data': CommerceCatalog.getStockMarkets()};
     }
 
     if (cleanEndpoint == '/stock/account') {
@@ -1773,7 +1917,8 @@ class DemoAccountService extends GetxService {
         'status': 'success',
         'message': 'سفارش در هسته معاملاتی ثبت شد',
         'data': {
-          'order_id': 'ORD-STK-${DateTime.now().millisecondsSinceEpoch % 100000}',
+          'order_id':
+              'ORD-STK-${DateTime.now().millisecondsSinceEpoch % 100000}',
           'ticker': data?['ticker'] ?? 'AAPL',
           'side': data?['side'] ?? 'BUY',
           'status': 'FILLED',
@@ -1782,22 +1927,24 @@ class DemoAccountService extends GetxService {
     }
 
     // ----------------------- ESCROW DEALS -----------------------
-    if (cleanEndpoint == '/user/escrow' || cleanEndpoint.startsWith('/user/escrow/')) {
+    if (cleanEndpoint == '/user/escrow' ||
+        cleanEndpoint.startsWith('/user/escrow/')) {
       if (method == 'GET') {
-        return {
-          'status': 'success',
-          'data': CommerceCatalog.getEscrowOrders(),
-        };
+        return {'status': 'success', 'data': CommerceCatalog.getEscrowOrders()};
       }
       return {
         'status': 'success',
         'message': 'قرارداد امانی با موفقیت ایجاد شد',
-        'data': {'id': DateTime.now().millisecondsSinceEpoch, 'status': 'funded'},
+        'data': {
+          'id': DateTime.now().millisecondsSinceEpoch,
+          'status': 'funded',
+        },
       };
     }
 
     // ----------------------- SUPPORT TICKETS -----------------------
-    if (cleanEndpoint == '/user/ticket' || cleanEndpoint.startsWith('/user/ticket/')) {
+    if (cleanEndpoint == '/user/ticket' ||
+        cleanEndpoint.startsWith('/user/ticket/')) {
       if (method == 'GET') {
         return {
           'status': 'success',
@@ -1833,18 +1980,25 @@ class DemoAccountService extends GetxService {
         'message': 'تیکت پشتیبانی با موفقیت ثبت شد',
         'data': {
           'id': DateTime.now().millisecondsSinceEpoch % 10000,
-          'ticket_number': 'TCK-2026-${DateTime.now().millisecondsSinceEpoch % 10000}',
+          'ticket_number':
+              'TCK-2026-${DateTime.now().millisecondsSinceEpoch % 10000}',
           'status': 'open',
         },
       };
     }
 
     // Default catch-all for successful demo actions
-    if (method == 'POST' || method == 'PUT' || method == 'PATCH' || method == 'DELETE') {
+    if (method == 'POST' ||
+        method == 'PUT' ||
+        method == 'PATCH' ||
+        method == 'DELETE') {
       return {
         'status': 'success',
         'message': 'Operation completed successfully (Demo Mode)',
-        'data': {'id': DateTime.now().millisecondsSinceEpoch, 'status': 'completed'},
+        'data': {
+          'id': DateTime.now().millisecondsSinceEpoch,
+          'status': 'completed',
+        },
       };
     }
 
@@ -1867,7 +2021,8 @@ class DemoAccountService extends GetxService {
     return {
       'id': 1001,
       'case_number': 'LN-2026-QA-8821',
-      'product_title': 'تسهیلات خرید تجهیزات دیجیتال / Digital Equipment Credit',
+      'product_title':
+          'تسهیلات خرید تجهیزات دیجیتال / Digital Equipment Credit',
       'currency': 'USD',
       'approved_amount': 5000.0,
       'tenure_months': 12,
@@ -1889,7 +2044,10 @@ class DemoAccountService extends GetxService {
         {'title': 'درخواست ثبت شد', 'timestamp': '2026-07-28 14:00'},
         {'title': 'وثیقه تأمین و قفل شد', 'timestamp': '2026-07-29 11:30'},
         {'title': 'امضای دیجیتال تکمیل شد', 'timestamp': '2026-07-30 09:15'},
-        {'title': 'مبلغ وام به کیف پول واریز گردید', 'timestamp': '2026-08-01 10:00'},
+        {
+          'title': 'مبلغ وام به کیف پول واریز گردید',
+          'timestamp': '2026-08-01 10:00',
+        },
       ],
     };
   }
@@ -1901,7 +2059,8 @@ class DemoAccountService extends GetxService {
       'instrument_title': 'ضمانت‌نامه حسن انجام تعهدات (Performance Guarantee)',
       'currency': 'EUR',
       'amount': 25000.0,
-      'beneficiary_name': 'شرکت بازرگانی بین‌المللی پارس / Pars Global Trading Co.',
+      'beneficiary_name':
+          'شرکت بازرگانی بین‌المللی پارس / Pars Global Trading Co.',
       'validity_months': 12,
       'status': 'ISSUED',
       'status_fa': 'صادر شده و معتبر',
@@ -2007,7 +2166,10 @@ class DemoAccountService extends GetxService {
                       ar: 'حالة التحقق من الهوية (KYC)',
                       zh: '一键切换KYC认证状态',
                     ),
-                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   SizedBox(height: 10.h),
                   Obx(() {
@@ -2016,28 +2178,52 @@ class DemoAccountService extends GetxService {
                       runSpacing: 8.h,
                       children: [
                         _KycOptionChip(
-                          title: l10nPick(context, en: 'Approved (Level 3)', fa: 'تأییدشده (سطح ۳)', ar: 'مقبول (مستوى ٣)', zh: '认证通过（3级）'),
+                          title: l10nPick(
+                            context,
+                            en: 'Approved (Level 3)',
+                            fa: 'تأییدشده (سطح ۳)',
+                            ar: 'مقبول (مستوى ٣)',
+                            zh: '认证通过（3级）',
+                          ),
                           icon: Icons.check_circle_rounded,
                           color: Colors.green,
                           selected: demoKycStatus.value == 1,
                           onTap: () => setKycStatus(1),
                         ),
                         _KycOptionChip(
-                          title: l10nPick(context, en: 'Under Review', fa: 'در حال بررسی', ar: 'قيد المراجعة', zh: '审核中'),
+                          title: l10nPick(
+                            context,
+                            en: 'Under Review',
+                            fa: 'در حال بررسی',
+                            ar: 'قيد المراجعة',
+                            zh: '审核中',
+                          ),
                           icon: Icons.hourglass_top_rounded,
                           color: Colors.orange,
                           selected: demoKycStatus.value == 2,
                           onTap: () => setKycStatus(2),
                         ),
                         _KycOptionChip(
-                          title: l10nPick(context, en: 'Rejected (With Reason)', fa: 'رد شده با دلیل', ar: 'مرفوض مع السبب', zh: '已拒绝'),
+                          title: l10nPick(
+                            context,
+                            en: 'Rejected (With Reason)',
+                            fa: 'رد شده با دلیل',
+                            ar: 'مرفوض مع السبب',
+                            zh: '已拒绝',
+                          ),
                           icon: Icons.cancel_rounded,
                           color: Colors.red,
                           selected: demoKycStatus.value == 3,
                           onTap: () => setKycStatus(3),
                         ),
                         _KycOptionChip(
-                          title: l10nPick(context, en: 'Unverified (Level 0)', fa: 'احرازنشده (سطح ۰)', ar: 'غير موثق', zh: '未认证'),
+                          title: l10nPick(
+                            context,
+                            en: 'Unverified (Level 0)',
+                            fa: 'احرازنشده (سطح ۰)',
+                            ar: 'غير موثق',
+                            zh: '未认证',
+                          ),
                           icon: Icons.person_off_rounded,
                           color: Colors.grey,
                           selected: demoKycStatus.value == 0,
@@ -2057,7 +2243,10 @@ class DemoAccountService extends GetxService {
                         color: Colors.green.withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.account_balance_wallet_rounded, color: Colors.green),
+                      child: const Icon(
+                        Icons.account_balance_wallet_rounded,
+                        color: Colors.green,
+                      ),
                     ),
                     title: Text(
                       l10nPick(
@@ -2067,7 +2256,10 @@ class DemoAccountService extends GetxService {
                         ar: 'إعادة شحن المحافظ',
                         zh: '重置多币种钱包资金',
                       ),
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                     subtitle: Text(
                       l10nPick(
@@ -2077,22 +2269,45 @@ class DemoAccountService extends GetxService {
                         ar: 'إعادة الأرصدة إلى القيم الافتراضية التجريبية.',
                         zh: '恢复为 1850 美元、1200 欧元、3400 USDT 等。',
                       ),
-                      style: TextStyle(fontSize: 11.sp, color: Colors.grey.shade600),
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                     trailing: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
                       onPressed: () {
                         rechargeWallets();
                         Get.snackbar(
-                          l10nPick(context, en: 'Wallets Recharged', fa: 'کیف‌پول‌ها شارژ شدند', ar: 'تم شحن المحافظ', zh: '钱包已充值'),
-                          l10nPick(context, en: 'Balances reset to demo baseline.', fa: 'موجودی تمام ارزها با موفقیت به‌روزرسانی شد.', ar: 'تم تحديث الأرصدة.', zh: '余额已成功更新。'),
+                          l10nPick(
+                            context,
+                            en: 'Wallets Recharged',
+                            fa: 'کیف‌پول‌ها شارژ شدند',
+                            ar: 'تم شحن المحافظ',
+                            zh: '钱包已充值',
+                          ),
+                          l10nPick(
+                            context,
+                            en: 'Balances reset to demo baseline.',
+                            fa: 'موجودی تمام ارزها با موفقیت به‌روزرسانی شد.',
+                            ar: 'تم تحديث الأرصدة.',
+                            zh: '余额已成功更新。',
+                          ),
                           snackPosition: SnackPosition.BOTTOM,
                           backgroundColor: Colors.green,
                           colorText: Colors.white,
                         );
                       },
                       child: Text(
-                        l10nPick(context, en: 'Recharge', fa: 'شارژ', ar: 'شحن', zh: '充值'),
+                        l10nPick(
+                          context,
+                          en: 'Recharge',
+                          fa: 'شارژ',
+                          ar: 'شحن',
+                          zh: '充值',
+                        ),
                         style: const TextStyle(color: Colors.white),
                       ),
                     ),
@@ -2108,7 +2323,10 @@ class DemoAccountService extends GetxService {
                         color: Colors.red.withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.exit_to_app_rounded, color: Colors.red),
+                      child: const Icon(
+                        Icons.exit_to_app_rounded,
+                        color: Colors.red,
+                      ),
                     ),
                     title: Text(
                       l10nPick(
@@ -2118,7 +2336,11 @@ class DemoAccountService extends GetxService {
                         ar: 'الخروج من الوضع التجريبي',
                         zh: '退出演示模式',
                       ),
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: Colors.red),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.red,
+                      ),
                     ),
                     subtitle: Text(
                       l10nPick(
@@ -2128,7 +2350,10 @@ class DemoAccountService extends GetxService {
                         ar: 'العودة لتسجيل الدخول القياسي.',
                         zh: '清除演示会话并返回常规登录界面。',
                       ),
-                      style: TextStyle(fontSize: 11.sp, color: Colors.grey.shade600),
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                     onTap: () {
                       Navigator.pop(ctx);
@@ -2166,9 +2391,14 @@ class _KycOptionChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.r),
       child: Container(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 8.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 10.w,
+          vertical: 8.h,
+        ),
         decoration: BoxDecoration(
-          color: selected ? color.withValues(alpha: 0.15) : Colors.grey.shade100,
+          color: selected
+              ? color.withValues(alpha: 0.15)
+              : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: selected ? color : Colors.transparent,

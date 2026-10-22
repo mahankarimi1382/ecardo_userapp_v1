@@ -304,42 +304,43 @@ class _SupportTicketsState extends State<SupportTickets>
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: const CommonDefaultAppBar(),
-      body: Obx(
-        () {
-          final allTickets = controller.supportTicketModel.value.data?.tickets ?? [];
-          final filteredTickets = _applyFilter(allTickets, _selectedFilter);
+      body: Obx(() {
+        final allTickets =
+            controller.supportTicketModel.value.data?.tickets ?? [];
+        final filteredTickets = _applyFilter(allTickets, _selectedFilter);
 
-          return Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(height: AppSpacing.cardGap),
-                  CommonAppBar(title: localization.supportTicketsScreenTitle),
-                  SizedBox(height: AppSpacing.sm),
-                  _buildFilterBar(context, allTickets, isDark),
-                  _buildTicketsBody(
-                    context,
-                    allTickets,
-                    filteredTickets,
-                    localization,
-                    isDark,
-                  ),
-                ],
-              ),
-              Visibility(
-                visible: controller.isPageLoading.value,
-                child: const CommonLoading(),
-              ),
-            ],
-          );
-        },
-      ),
+        return Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: AppSpacing.cardGap),
+                CommonAppBar(title: localization.supportTicketsScreenTitle),
+                SizedBox(height: AppSpacing.sm),
+                _buildFilterBar(context, allTickets, isDark),
+                _buildTicketsBody(
+                  context,
+                  allTickets,
+                  filteredTickets,
+                  localization,
+                  isDark,
+                ),
+              ],
+            ),
+            Visibility(
+              visible: controller.isPageLoading.value,
+              child: const CommonLoading(),
+            ),
+          ],
+        );
+      }),
       floatingActionButton: _buildGlowingFab(context, localization, isDark),
     );
   }
@@ -456,8 +457,8 @@ class _SupportTicketsState extends State<SupportTickets>
             color: isSelected
                 ? Colors.transparent
                 : (isDark
-                    ? AppColors.darkBorder
-                    : AppColors.lightBorder.withValues(alpha: 0.8)),
+                      ? AppColors.darkBorder
+                      : AppColors.lightBorder.withValues(alpha: 0.8)),
             width: 1.0,
           ),
           boxShadow: isSelected
@@ -479,7 +480,9 @@ class _SupportTicketsState extends State<SupportTickets>
               style: AppTextStyles.labelMedium.copyWith(
                 color: isSelected
                     ? AppColors.white
-                    : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+                    : (isDark
+                          ? AppColors.softGray
+                          : AppColors.lightTextSecondary),
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 fontSize: 12.5,
               ),
@@ -491,8 +494,8 @@ class _SupportTicketsState extends State<SupportTickets>
                 color: isSelected
                     ? AppColors.white.withValues(alpha: 0.25)
                     : (isDark
-                        ? AppColors.darkBackground
-                        : AppColors.lightBackground),
+                          ? AppColors.darkBackground
+                          : AppColors.lightBackground),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
@@ -500,7 +503,9 @@ class _SupportTicketsState extends State<SupportTickets>
                 style: AppTextStyles.labelSmall.copyWith(
                   color: isSelected
                       ? AppColors.white
-                      : (isDark ? AppColors.softGray : AppColors.lightTextTertiary),
+                      : (isDark
+                            ? AppColors.softGray
+                            : AppColors.lightTextTertiary),
                   fontWeight: FontWeight.w700,
                   fontSize: 10.5,
                 ),
@@ -596,9 +601,12 @@ class _SupportTicketsState extends State<SupportTickets>
                 child: EcardoEmptyState(
                   animateGlow: true,
                   iconData: Icons.headset_mic_outlined,
-                  iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                  glowColor: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                      .withValues(alpha: 0.35),
+                  iconColor: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
+                  glowColor:
+                      (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                          .withValues(alpha: 0.35),
                   title: localization.supportTicketsScreenTitle,
                   description: l10nPick(
                     context,
@@ -609,7 +617,8 @@ class _SupportTicketsState extends State<SupportTickets>
                     ru: 'Тикеты поддержки не найдены. Нажмите ниже, чтобы создать.',
                     zh: '暂无支持工单，点击下方创建。',
                   ),
-                  primaryActionLabel: localization.supportTicketsCreateTicketButton,
+                  primaryActionLabel:
+                      localization.supportTicketsCreateTicketButton,
                   onPrimaryAction: () {
                     HapticFeedback.lightImpact();
                     Get.toNamed(BaseRoute.addNewTicket);
@@ -635,9 +644,12 @@ class _SupportTicketsState extends State<SupportTickets>
                 child: EcardoEmptyState(
                   animateGlow: true,
                   iconData: Icons.filter_list_off_rounded,
-                  iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                  glowColor: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                      .withValues(alpha: 0.35),
+                  iconColor: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
+                  glowColor:
+                      (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                          .withValues(alpha: 0.35),
                   title: l10nPick(
                     context,
                     en: 'No tickets in this section',
@@ -671,7 +683,8 @@ class _SupportTicketsState extends State<SupportTickets>
                       _selectedFilter = _TicketFilter.all;
                     });
                   },
-                  secondaryActionLabel: localization.supportTicketsCreateTicketButton,
+                  secondaryActionLabel:
+                      localization.supportTicketsCreateTicketButton,
                   onSecondaryAction: () {
                     HapticFeedback.lightImpact();
                     Get.toNamed(BaseRoute.addNewTicket);
@@ -741,8 +754,9 @@ class _SupportTicketsState extends State<SupportTickets>
   ) {
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     final category = _TicketCategory.resolve(ticket);
     final timestampStr = _formatTicketDateTime(
@@ -843,10 +857,12 @@ class _SupportTicketsState extends State<SupportTickets>
                                 fontSize: 11,
                               ),
                             ),
-                            if (ticket.uuid != null && ticket.uuid!.isNotEmpty) ...[
+                            if (ticket.uuid != null &&
+                                ticket.uuid!.isNotEmpty) ...[
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                ),
                                 child: Text(
                                   "•",
                                   style: TextStyle(
@@ -900,11 +916,7 @@ class _SupportTicketsState extends State<SupportTickets>
                 children: [
                   if (ticket.priority != null &&
                       ticket.priority!.isNotEmpty) ...[
-                    _buildPriorityBadge(
-                      ticket.priority!,
-                      localization,
-                      isDark,
-                    ),
+                    _buildPriorityBadge(ticket.priority!, localization, isDark),
                     const SizedBox(width: 8),
                   ],
                   if (timestampStr.isNotEmpty) ...[
@@ -935,10 +947,11 @@ class _SupportTicketsState extends State<SupportTickets>
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: (isDark
-                                ? AppColors.darkBackground
-                                : AppColors.lightBackground)
-                            .withValues(alpha: 0.8),
+                        color:
+                            (isDark
+                                    ? AppColors.darkBackground
+                                    : AppColors.lightBackground)
+                                .withValues(alpha: 0.8),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -994,7 +1007,9 @@ class _SupportTicketsState extends State<SupportTickets>
                                 : Icons.person_outline_rounded,
                             size: 13,
                             color: isSupportReply
-                                ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                                ? (isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.brandViolet)
                                 : secondaryTextColor,
                           ),
                           const SizedBox(width: 4.5),
@@ -1020,7 +1035,9 @@ class _SupportTicketsState extends State<SupportTickets>
                                   ),
                             style: AppTextStyles.labelSmall.copyWith(
                               color: isSupportReply
-                                  ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                                  ? (isDark
+                                        ? AppColors.mainSoftBlue
+                                        : AppColors.brandViolet)
                                   : secondaryTextColor,
                               fontWeight: FontWeight.w700,
                               fontSize: 11,
@@ -1105,8 +1122,9 @@ class _SupportTicketsState extends State<SupportTickets>
                       backgroundColor: isDark
                           ? AppColors.mainSoftBlue
                           : AppColors.lightPrimary,
-                      foregroundColor:
-                          isDark ? AppColors.deepBlack : AppColors.white,
+                      foregroundColor: isDark
+                          ? AppColors.deepBlack
+                          : AppColors.white,
                       elevation: 0,
                       visualDensity: VisualDensity.compact,
                       shape: RoundedRectangleBorder(
@@ -1143,9 +1161,7 @@ class _SupportTicketsState extends State<SupportTickets>
                     onPressed: () {
                       HapticFeedback.lightImpact();
                       Get.to(
-                        () => ReplayTicket(
-                          ticketUid: ticket.uuid.toString(),
-                        ),
+                        () => ReplayTicket(ticketUid: ticket.uuid.toString()),
                       );
                     },
                   ),
@@ -1317,10 +1333,7 @@ class _ScaleTapCard extends StatefulWidget {
   final Widget child;
   final VoidCallback onTap;
 
-  const _ScaleTapCard({
-    required this.child,
-    required this.onTap,
-  });
+  const _ScaleTapCard({required this.child, required this.onTap});
 
   @override
   State<_ScaleTapCard> createState() => _ScaleTapCardState();
@@ -1339,9 +1352,10 @@ class _ScaleTapCardState extends State<_ScaleTapCard>
       duration: const Duration(milliseconds: 100),
       reverseDuration: const Duration(milliseconds: 140),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.982).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.982,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -1362,10 +1376,8 @@ class _ScaleTapCardState extends State<_ScaleTapCard>
       onTapCancel: () => _controller.reverse(),
       child: AnimatedBuilder(
         animation: _scaleAnimation,
-        builder: (context, child) => Transform.scale(
-          scale: _scaleAnimation.value,
-          child: child,
-        ),
+        builder: (context, child) =>
+            Transform.scale(scale: _scaleAnimation.value, child: child),
         child: widget.child,
       ),
     );

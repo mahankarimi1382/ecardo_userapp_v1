@@ -135,29 +135,28 @@ void main() {
     },
   );
 
-  testWidgets(
-    'travel card shows uniform tiles for live and locked services',
-    (tester) async {
-      final home = Get.find<HomeController>();
-      seedData(home);
-      phoneSurface(tester);
+  testWidgets('travel card shows uniform tiles for live and locked services', (
+    tester,
+  ) async {
+    final home = Get.find<HomeController>();
+    seedData(home);
+    phoneSurface(tester);
 
-      await tester.pumpWidget(buildSubject());
-      await tester.pumpAndSettle();
+    await tester.pumpWidget(buildSubject());
+    await tester.pumpAndSettle();
 
-      // v1.0.52: uniform tile grid (no destination chips on dashboard).
-      expect(find.text('Travel Services'), findsOneWidget);
-      expect(find.text('Flights'), findsOneWidget);
-      expect(find.text('Hotels'), findsOneWidget);
-      expect(find.text('eSIM'), findsOneWidget);
-      expect(find.text('Visa'), findsOneWidget);
-      expect(find.text('Train'), findsOneWidget);
-      expect(find.text('Car Rental'), findsOneWidget);
-      expect(find.text('Taxi'), findsOneWidget);
+    // v1.0.52: uniform tile grid (no destination chips on dashboard).
+    expect(find.text('Travel Services'), findsOneWidget);
+    expect(find.text('Flights'), findsOneWidget);
+    expect(find.text('Hotels'), findsOneWidget);
+    expect(find.text('eSIM'), findsOneWidget);
+    expect(find.text('Visa'), findsOneWidget);
+    expect(find.text('Train'), findsOneWidget);
+    expect(find.text('Car Rental'), findsOneWidget);
+    expect(find.text('Taxi'), findsOneWidget);
 
-      expect(tester.takeException(), isNull);
-    },
-  );
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('services hub settles in Persian (RTL) without exceptions', (
     tester,

@@ -150,12 +150,11 @@ class PersonalInfoController extends GetxController {
         final countryModel = CountryModel.fromJson(response.data!);
         countryList.clear();
         countryList.value = countryModel.data ?? [];
-        final findCountry = countryList.firstWhereOrNull(
+        final findCountry =
+            countryList.firstWhereOrNull(
               (item) => item.code == countryCode.value,
             ) ??
-            countryList.firstWhereOrNull(
-              (item) => item.code == 'IR',
-            ) ??
+            countryList.firstWhereOrNull((item) => item.code == 'IR') ??
             countryList.firstOrNull;
 
         if (findCountry != null) {
@@ -198,17 +197,21 @@ class PersonalInfoController extends GetxController {
           final list = countryList.isNotEmpty
               ? countryList
               : (Get.isRegistered<CountryController>()
-                  ? Get.find<CountryController>().countryList
-                  : <CountryData>[]);
+                    ? Get.find<CountryController>().countryList
+                    : <CountryData>[]);
           final matched = list.firstWhereOrNull(
             (item) =>
-                (countryCode.value.isNotEmpty && item.code == countryCode.value) ||
-                (countryController.text.isNotEmpty && item.name == countryController.text) ||
+                (countryCode.value.isNotEmpty &&
+                    item.code == countryCode.value) ||
+                (countryController.text.isNotEmpty &&
+                    item.name == countryController.text) ||
                 (country.value.isNotEmpty && item.name == country.value),
           );
           if (matched != null) {
-            if (countryCode.value.isEmpty) countryCode.value = matched.code ?? "";
-            if (countryDialCode.value.isEmpty) countryDialCode.value = matched.dialCode ?? "";
+            if (countryCode.value.isEmpty)
+              countryCode.value = matched.code ?? "";
+            if (countryDialCode.value.isEmpty)
+              countryDialCode.value = matched.dialCode ?? "";
           }
         }
         requestBody["country"] = "$countryDialCode:${countryCode.value}";

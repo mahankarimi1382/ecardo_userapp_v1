@@ -46,8 +46,12 @@ class _HotelListScreenState extends State<HotelListScreen> {
   void initState() {
     super.initState();
     _filters = HotelFilterState(
-      stars: widget.initialMinStars != null ? {widget.initialMinStars!} : const {},
-      specialOffers: widget.initialFreeCancellation ? {'Free Cancellation'} : const {},
+      stars: widget.initialMinStars != null
+          ? {widget.initialMinStars!}
+          : const {},
+      specialOffers: widget.initialFreeCancellation
+          ? {'Free Cancellation'}
+          : const {},
     );
     _scrollController.addListener(_loadMore);
   }
@@ -115,7 +119,13 @@ class _HotelListScreenState extends State<HotelListScreen> {
                     ),
                     SizedBox(width: 10.w),
                     Text(
-                      l10nPick(context, en: 'Sort', fa: 'مرتب‌سازی', ar: 'فرز', zh: '排序'),
+                      l10nPick(
+                        context,
+                        en: 'Sort',
+                        fa: 'مرتب‌سازی',
+                        ar: 'فرز',
+                        zh: '排序',
+                      ),
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w900,
@@ -276,7 +286,9 @@ class _HotelListScreenState extends State<HotelListScreen> {
                     color: ECardoTokens.brand100(context),
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                     border: Border.all(
-                      color: ECardoTokens.brand700(context).withValues(alpha: 0.3),
+                      color: ECardoTokens.brand700(
+                        context,
+                      ).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -296,7 +308,9 @@ class _HotelListScreenState extends State<HotelListScreen> {
                         onPressed: () => _showHotelComparison(
                           context,
                           offers
-                              .where((offer) => _comparisonIds.contains(offer.id))
+                              .where(
+                                (offer) => _comparisonIds.contains(offer.id),
+                              )
                               .toList(),
                         ),
                         icon: Icon(
@@ -348,7 +362,7 @@ class _HotelListScreenState extends State<HotelListScreen> {
                             ok
                                 ? 'We will notify you when matching hotels are available.'
                                 : (controller.checkoutError.value ??
-                                    'Request failed'),
+                                      'Request failed'),
                           );
                         },
                 )
@@ -727,21 +741,22 @@ class HotelResultCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final starCount = int.tryParse(offer.attributes['stars']?.toString() ?? '');
-    final hasFreeCancellation = offer.attributes['free_cancellation'] == true ||
+    final hasFreeCancellation =
+        offer.attributes['free_cancellation'] == true ||
         offer.attributes['cancellation_free'] == true ||
         offer.attributes['cancellation_policy']
                 ?.toString()
                 .toLowerCase()
                 .contains('free') ==
             true ||
-        offer.product['cancellation_policy']
-                ?.toString()
-                .toLowerCase()
-                .contains('free') ==
+        offer.product['cancellation_policy']?.toString().toLowerCase().contains(
+              'free',
+            ) ==
             true;
 
     return Semantics(
-      label: '${travelLocalizedKey(localization, offer.titleKey)}, hotel details',
+      label:
+          '${travelLocalizedKey(localization, offer.titleKey)}, hotel details',
       button: true,
       child: Container(
         decoration: BoxDecoration(
@@ -789,8 +804,12 @@ class HotelResultCard extends StatelessWidget {
                             vertical: 4.h,
                           ),
                           decoration: BoxDecoration(
-                            color: ECardoTokens.surfaceCard(context).withValues(alpha: 0.92),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                            color: ECardoTokens.surfaceCard(
+                              context,
+                            ).withValues(alpha: 0.92),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusSm,
+                            ),
                             boxShadow: ECardoTokens.shadowCard(context),
                           ),
                           child: Row(
@@ -825,7 +844,9 @@ class HotelResultCard extends StatelessWidget {
                         icon: Container(
                           padding: EdgeInsets.all(6.r),
                           decoration: BoxDecoration(
-                            color: ECardoTokens.surfaceCard(context).withValues(alpha: 0.92),
+                            color: ECardoTokens.surfaceCard(
+                              context,
+                            ).withValues(alpha: 0.92),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -870,8 +891,9 @@ class HotelResultCard extends StatelessWidget {
                               ),
                               decoration: BoxDecoration(
                                 color: ECardoTokens.sand100(context),
-                                borderRadius:
-                                    BorderRadius.circular(ECardoTokens.radiusSm),
+                                borderRadius: BorderRadius.circular(
+                                  ECardoTokens.radiusSm,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -907,11 +929,13 @@ class HotelResultCard extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: ECardoTokens.successBg(context),
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusSm),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusSm,
+                              ),
                               border: Border.all(
-                                color: ECardoTokens.success(context)
-                                    .withValues(alpha: 0.25),
+                                color: ECardoTokens.success(
+                                  context,
+                                ).withValues(alpha: 0.25),
                               ),
                             ),
                             child: Row(
@@ -1040,20 +1064,26 @@ class HotelResultCard extends StatelessWidget {
     if (featuresLower.contains('wifi') || featuresLower.contains('اینترنت')) {
       amenities.add({'icon': Icons.wifi_rounded, 'label': 'Free WiFi'});
     }
-    if (featuresLower.contains('breakfast') || featuresLower.contains('صبحانه')) {
+    if (featuresLower.contains('breakfast') ||
+        featuresLower.contains('صبحانه')) {
       amenities.add({'icon': Icons.restaurant_rounded, 'label': 'Breakfast'});
     }
     if (featuresLower.contains('pool') || featuresLower.contains('استخر')) {
       amenities.add({'icon': Icons.pool_rounded, 'label': 'Pool'});
     }
-    if (featuresLower.contains('parking') || featuresLower.contains('پارکینگ')) {
+    if (featuresLower.contains('parking') ||
+        featuresLower.contains('پارکینگ')) {
       amenities.add({'icon': Icons.local_parking_rounded, 'label': 'Parking'});
     }
     if (featuresLower.contains('gym') || featuresLower.contains('باشگاه')) {
       amenities.add({'icon': Icons.fitness_center_rounded, 'label': 'Gym'});
     }
-    if (featuresLower.contains('shuttle') || featuresLower.contains('ترانسفر')) {
-      amenities.add({'icon': Icons.airport_shuttle_rounded, 'label': 'Shuttle'});
+    if (featuresLower.contains('shuttle') ||
+        featuresLower.contains('ترانسفر')) {
+      amenities.add({
+        'icon': Icons.airport_shuttle_rounded,
+        'label': 'Shuttle',
+      });
     }
 
     if (amenities.isEmpty) {
@@ -1143,14 +1173,12 @@ class _HotelResultsEmptyState extends StatelessWidget {
               ),
             ),
             icon: const Icon(Icons.notifications_active_outlined),
-            label: Text(
-              () {
-                final code = Localizations.localeOf(context).languageCode;
-                if (code == 'fa') return 'موجود شد خبرم کن';
-                if (code == 'ar') return 'أعلمني عند التوفر';
-                return 'Notify me when available';
-              }(),
-            ),
+            label: Text(() {
+              final code = Localizations.localeOf(context).languageCode;
+              if (code == 'fa') return 'موجود شد خبرم کن';
+              if (code == 'ar') return 'أعلمني عند التوفر';
+              return 'Notify me when available';
+            }()),
           ),
         ],
       ],

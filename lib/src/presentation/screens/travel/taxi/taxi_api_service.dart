@@ -19,8 +19,14 @@ enum RideDataSource { network, fallback }
 /// Transport boundary for the `api/ride/*` subsystem. Injected so the unit
 /// tests can replay realistic Laravel envelopes without a live backend.
 abstract class RideTransport {
-  Future<RideTransportResponse> get(String endpoint, {Map<String, dynamic>? query});
-  Future<RideTransportResponse> post(String endpoint, Map<String, dynamic> data);
+  Future<RideTransportResponse> get(
+    String endpoint, {
+    Map<String, dynamic>? query,
+  });
+  Future<RideTransportResponse> post(
+    String endpoint,
+    Map<String, dynamic> data,
+  );
 }
 
 /// Normalized transport outcome — never throws to the caller.
@@ -40,19 +46,21 @@ class RideTransportResponse {
   });
 
   const RideTransportResponse.networkFailed([String? reason])
-      : ok = false,
-        unauthorized = false,
-        message = reason ?? 'network_unreachable',
-        body = null;
+    : ok = false,
+      unauthorized = false,
+      message = reason ?? 'network_unreachable',
+      body = null;
 
   const RideTransportResponse.success(Map<String, dynamic> this.body)
-      : ok = true,
-        unauthorized = false,
-        message = null;
+    : ok = true,
+      unauthorized = false,
+      message = null;
 
-  const RideTransportResponse.rejected({this.unauthorized = false, this.message})
-      : ok = false,
-        body = null;
+  const RideTransportResponse.rejected({
+    this.unauthorized = false,
+    this.message,
+  }) : ok = false,
+       body = null;
 }
 
 /// NetworkService-backed transport against `https://ecardo.ir/api/ride/*`.
@@ -61,7 +69,10 @@ class NetworkRideTransport implements RideTransport {
       Get.isRegistered<NetworkService>() ? Get.find<NetworkService>() : null;
 
   @override
-  Future<RideTransportResponse> get(String endpoint, {Map<String, dynamic>? query}) async {
+  Future<RideTransportResponse> get(
+    String endpoint, {
+    Map<String, dynamic>? query,
+  }) async {
     final net = _network;
     if (net == null) return const RideTransportResponse.networkFailed();
     final full = _withQuery(endpoint, query);
@@ -75,14 +86,18 @@ class NetworkRideTransport implements RideTransport {
   }
 
   @override
-  Future<RideTransportResponse> post(String endpoint, Map<String, dynamic> data) async {
+  Future<RideTransportResponse> post(
+    String endpoint,
+    Map<String, dynamic> data,
+  ) async {
     final net = _network;
     if (net == null) return const RideTransportResponse.networkFailed();
     try {
       final response = await net.post(endpoint: endpoint, data: data);
       return _map(response.data, response.status);
     } catch (e) {
-      if (kDebugMode) debugPrint('NetworkRideTransport POST $endpoint failed: $e');
+      if (kDebugMode)
+        debugPrint('NetworkRideTransport POST $endpoint failed: $e');
       return RideTransportResponse.networkFailed(e.toString());
     }
   }
@@ -91,7 +106,9 @@ class NetworkRideTransport implements RideTransport {
     if (query == null || query.isEmpty) return endpoint;
     final uri = Uri(
       path: endpoint,
-      queryParameters: query.map((key, value) => MapEntry(key, value?.toString() ?? '')),
+      queryParameters: query.map(
+        (key, value) => MapEntry(key, value?.toString() ?? ''),
+      ),
     );
     return uri.toString();
   }
@@ -102,9 +119,12 @@ class NetworkRideTransport implements RideTransport {
   ) {
     final envelope = body ?? const <String, dynamic>{};
     final errors = envelope['errors'];
-    final errorText = errors is List && errors.isNotEmpty ? errors.first.toString() : null;
+    final errorText = errors is List && errors.isNotEmpty
+        ? errors.first.toString()
+        : null;
     final unauthorized =
-        errorText?.contains('Unauthenticated') == true || errorText?.contains('auth') == true;
+        errorText?.contains('Unauthenticated') == true ||
+        errorText?.contains('auth') == true;
     if (status == Status.completed && errorText == null) {
       return RideTransportResponse.success(envelope);
     }
@@ -142,7 +162,7 @@ class TaxiApiService extends GetxService {
   final RideTransport transport;
 
   TaxiApiService({RideTransport? transport})
-      : transport = transport ?? NetworkRideTransport();
+    : transport = transport ?? NetworkRideTransport();
 
   static const Color brandTeal = Color(0xFF0D9488);
 
@@ -184,7 +204,11 @@ class TaxiApiService extends GetxService {
       maxLuggage: 3,
       basePrice: 2400000,
       icon: Icons.stars_rounded,
-      features: ['ناوگان تشریفاتی لوکس', 'تابلو استقبال اختصاصی', 'راننده مسلط به زبان'],
+      features: [
+        'ناوگان تشریفاتی لوکس',
+        'تابلو استقبال اختصاصی',
+        'راننده مسلط به زبان',
+      ],
       isVip: true,
     ),
     TaxiVehicleClass(
@@ -197,7 +221,11 @@ class TaxiApiService extends GetxService {
       maxLuggage: 6,
       basePrice: 1850000,
       icon: Icons.directions_bus_rounded,
-      features: ['فضای جادار چمدان‌ها', 'مناسب سفرهای گروهی', 'صندلی کودک در صورت درخواست'],
+      features: [
+        'فضای جادار چمدان‌ها',
+        'مناسب سفرهای گروهی',
+        'صندلی کودک در صورت درخواست',
+      ],
     ),
   ];
 
@@ -214,7 +242,12 @@ class TaxiApiService extends GetxService {
         ? '/ride/vehicle-types'
         : '/ride/vehicle-types?city=$cityCode';
     final response = await transport.get(endpoint);
-    final list = _extractList(response.body, const ['vehicle_types', 'types', 'items', 'data']);
+    final list = _extractList(response.body, const [
+      'vehicle_types',
+      'types',
+      'items',
+      'data',
+    ]);
     if (response.ok && list != null && list.isNotEmpty) {
       return RideServiceResult(
         data: list.map((e) => TaxiVehicleClass.fromJson(e)).toList(),
@@ -232,7 +265,12 @@ class TaxiApiService extends GetxService {
   /// `GET /ride/places` — the rider's saved addresses.
   Future<RideServiceResult<List<RidePlace>>> getSavedPlaces() async {
     final response = await transport.get('/ride/places');
-    final list = _extractList(response.body, const ['places', 'saved_places', 'items', 'data']);
+    final list = _extractList(response.body, const [
+      'places',
+      'saved_places',
+      'items',
+      'data',
+    ]);
     if (response.ok && list != null) {
       return RideServiceResult(
         data: list.map((e) => RidePlace.fromJson(e)).toList(),
@@ -257,11 +295,13 @@ class TaxiApiService extends GetxService {
         message: 'query_too_short',
       );
     }
-    final response = await transport.get(
-      '/ride/geo',
-      query: {'q': clean},
-    );
-    final list = _extractList(response.body, const ['results', 'places', 'predictions', 'items']);
+    final response = await transport.get('/ride/geo', query: {'q': clean});
+    final list = _extractList(response.body, const [
+      'results',
+      'places',
+      'predictions',
+      'items',
+    ]);
     if (response.ok && list != null) {
       return RideServiceResult(
         data: list.map((e) => RidePlace.fromJson(e)).toList(),
@@ -300,8 +340,9 @@ class TaxiApiService extends GetxService {
     int childSeatCount = 0,
     List<TaxiVehicleClass>? vehicles,
   }) async {
-    final activeVehicles =
-        (vehicles == null || vehicles.isEmpty) ? fallbackVehicles : vehicles;
+    final activeVehicles = (vehicles == null || vehicles.isEmpty)
+        ? fallbackVehicles
+        : vehicles;
     final payload = <String, dynamic>{
       'ride_type': _rideTypeWire(rideType),
       'origin': origin,
@@ -391,7 +432,9 @@ class TaxiApiService extends GetxService {
       'client_booking_id': bookingId,
       'vehicle_type_id': vehicle.id,
       'ride_type': _rideTypeWire(rideType),
-      'direction': direction == AirportTransferDirection.toAirport ? 'to_airport' : 'from_airport',
+      'direction': direction == AirportTransferDirection.toAirport
+          ? 'to_airport'
+          : 'from_airport',
       'origin': origin,
       'destination': destination,
       'pickup_date': pickupDate.toIso8601String(),
@@ -484,13 +527,23 @@ class TaxiApiService extends GetxService {
     List<TaxiVehicleClass>? vehicles,
   }) async {
     final response = await transport.get('/ride/history');
-    final list = _extractList(response.body, const ['rides', 'items', 'data', 'requests']);
-    final catalog = (vehicles == null || vehicles.isEmpty) ? fallbackVehicles : vehicles;
+    final list = _extractList(response.body, const [
+      'rides',
+      'items',
+      'data',
+      'requests',
+    ]);
+    final catalog = (vehicles == null || vehicles.isEmpty)
+        ? fallbackVehicles
+        : vehicles;
     final byId = {for (final v in catalog) v.id: v};
     if (response.ok && list != null) {
       return RideServiceResult(
         data: list.map((e) {
-          final vehicleId = e['vehicle_type_id']?.toString() ?? e['vehicle']?['id']?.toString() ?? '';
+          final vehicleId =
+              e['vehicle_type_id']?.toString() ??
+              e['vehicle']?['id']?.toString() ??
+              '';
           return TaxiBookingInfo.fromJson(e, byId[vehicleId] ?? catalog.first);
         }).toList(),
         source: RideDataSource.network,
@@ -509,10 +562,9 @@ class TaxiApiService extends GetxService {
     required String rideId,
     required String reason,
   }) async {
-    final response = await transport.post(
-      '/ride/requests/$rideId/cancel',
-      {'reason': reason},
-    );
+    final response = await transport.post('/ride/requests/$rideId/cancel', {
+      'reason': reason,
+    });
     return RideServiceResult(
       data: response.ok,
       source: response.ok ? RideDataSource.network : RideDataSource.fallback,
@@ -522,7 +574,9 @@ class TaxiApiService extends GetxService {
   }
 
   /// `POST /ride/requests/{id}/rate` — 1..5 stars + tags + comment.
-  Future<RideServiceResult<bool>> submitRating(RideRatingSubmission rating) async {
+  Future<RideServiceResult<bool>> submitRating(
+    RideRatingSubmission rating,
+  ) async {
     final response = await transport.post(
       '/ride/requests/${rating.rideId}/rate',
       rating.toJson(),
@@ -536,7 +590,9 @@ class TaxiApiService extends GetxService {
   }
 
   /// `POST /ride/support` — open a support case tied to a ride.
-  Future<RideServiceResult<bool>> createSupportTicket(RideSupportTicket ticket) async {
+  Future<RideServiceResult<bool>> createSupportTicket(
+    RideSupportTicket ticket,
+  ) async {
     final response = await transport.post('/ride/support', ticket.toJson());
     return RideServiceResult(
       data: response.ok,
@@ -582,10 +638,10 @@ class TaxiApiService extends GetxService {
   // ----------------------------------------------------------------- helpers
 
   static String _rideTypeWire(TaxiRideType type) => switch (type) {
-        TaxiRideType.airportTransfer => 'airport_transfer',
-        TaxiRideType.cityRide => 'city_ride',
-        TaxiRideType.intercity => 'intercity',
-      };
+    TaxiRideType.airportTransfer => 'airport_transfer',
+    TaxiRideType.cityRide => 'city_ride',
+    TaxiRideType.intercity => 'intercity',
+  };
 
   /// Unwrap `{"data": {...}}` or `{"data": {"ride": {...}}}` defensively.
   Map<String, dynamic>? _extractMap(
@@ -641,29 +697,34 @@ class TaxiApiService extends GetxService {
 
   Future<void> _persistAudit(TaxiBookingInfo booking) async {
     try {
-      await TravelServiceRequestStore.add(TravelServiceRequest(
-        id: booking.id,
-        serviceKey: 'taxi',
-        title: '${booking.origin} ← ${booking.destination}',
-        subtitle: '${booking.vehicle.titleFa} · ${booking.pickupTime}',
-        amountLabel: '${booking.totalFare} ${booking.currency}',
-        reference: booking.reference,
-        createdAt: booking.createdAt,
-        status: TravelServiceRequestStatus.approved,
-        details: {
-          'Origin': booking.origin,
-          'Destination': booking.destination,
-          'Pickup Date': booking.pickupDate.toIso8601String().split('T').first,
-          'Pickup Time': booking.pickupTime,
-          'Vehicle Class': booking.vehicle.titleFa,
-          'Passenger': booking.passengerName,
-          'Phone': booking.passengerPhone,
-          'Flight Number': booking.flightNumber,
-          'Terminal': booking.terminal,
-          'Meet & Greet': booking.meetAndGreet ? 'بله' : 'خیر',
-          'Child Seats': '${booking.childSeatCount}',
-        },
-      ));
+      await TravelServiceRequestStore.add(
+        TravelServiceRequest(
+          id: booking.id,
+          serviceKey: 'taxi',
+          title: '${booking.origin} ← ${booking.destination}',
+          subtitle: '${booking.vehicle.titleFa} · ${booking.pickupTime}',
+          amountLabel: '${booking.totalFare} ${booking.currency}',
+          reference: booking.reference,
+          createdAt: booking.createdAt,
+          status: TravelServiceRequestStatus.approved,
+          details: {
+            'Origin': booking.origin,
+            'Destination': booking.destination,
+            'Pickup Date': booking.pickupDate
+                .toIso8601String()
+                .split('T')
+                .first,
+            'Pickup Time': booking.pickupTime,
+            'Vehicle Class': booking.vehicle.titleFa,
+            'Passenger': booking.passengerName,
+            'Phone': booking.passengerPhone,
+            'Flight Number': booking.flightNumber,
+            'Terminal': booking.terminal,
+            'Meet & Greet': booking.meetAndGreet ? 'بله' : 'خیر',
+            'Child Seats': '${booking.childSeatCount}',
+          },
+        ),
+      );
     } catch (e) {
       if (kDebugMode) debugPrint('TaxiApiService audit persist skipped: $e');
     }

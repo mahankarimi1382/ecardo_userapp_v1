@@ -42,14 +42,20 @@ class TransactionPinController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    passcodeFocus.addListener(() => isPasscodeFocused.value = passcodeFocus.hasFocus);
-    confirmFocus.addListener(() => isConfirmFocused.value = confirmFocus.hasFocus);
+    passcodeFocus.addListener(
+      () => isPasscodeFocused.value = passcodeFocus.hasFocus,
+    );
+    confirmFocus.addListener(
+      () => isConfirmFocused.value = confirmFocus.hasFocus,
+    );
     oldFocus.addListener(() => isOldFocused.value = oldFocus.hasFocus);
     newFocus.addListener(() => isNewFocused.value = newFocus.hasFocus);
     changeConfirmFocus.addListener(
       () => isChangeConfirmFocused.value = changeConfirmFocus.hasFocus,
     );
-    passwordFocus.addListener(() => isPasswordFocused.value = passwordFocus.hasFocus);
+    passwordFocus.addListener(
+      () => isPasswordFocused.value = passwordFocus.hasFocus,
+    );
     fetchStatus();
   }
 

@@ -97,14 +97,14 @@ class AppUpdateHelper {
 
     try {
       final settings = Get.find<SettingsService>();
-      final latest = (body?['latest_version'] ??
-              settings.getSetting('app_version') ??
-              '')
-          .toString().trim();
-      final link = (body?['update_url'] ??
-              settings.getSetting('app_update_link') ??
-              '')
-          .toString().trim();
+      final latest =
+          (body?['latest_version'] ?? settings.getSetting('app_version') ?? '')
+              .toString()
+              .trim();
+      final link =
+          (body?['update_url'] ?? settings.getSetting('app_update_link') ?? '')
+              .toString()
+              .trim();
 
       if (latest.isEmpty && link.isEmpty) return;
 

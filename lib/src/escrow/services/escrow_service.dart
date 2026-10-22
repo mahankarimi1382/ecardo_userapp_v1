@@ -16,21 +16,34 @@ class EscrowService extends getx.GetxService {
   }
 
   /// List user's escrow transactions (with optional status filter & pagination)
-  Future<List<EscrowOrderModel>> getOrders({String? status, int page = 1}) async {
+  Future<List<EscrowOrderModel>> getOrders({
+    String? status,
+    int page = 1,
+  }) async {
     final params = <String, dynamic>{'page': page};
     if (status != null && status.isNotEmpty && status != 'ALL') {
       params['status'] = status;
     }
 
-    final queryStr = Uri(queryParameters: params.map((k, v) => MapEntry(k, v.toString()))).query;
+    final queryStr = Uri(
+      queryParameters: params.map((k, v) => MapEntry(k, v.toString())),
+    ).query;
     final path = '/user/escrow${queryStr.isNotEmpty ? '?$queryStr' : ''}';
 
     final response = await _network.get(endpoint: path);
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
-      final list = data is List ? data : (data is Map ? data['data'] as List? : null);
+      final list = data is List
+          ? data
+          : (data is Map ? data['data'] as List? : null);
       if (list != null) {
-        return list.map((e) => EscrowOrderModel.fromJson(Map<String, dynamic>.from(e as Map))).toList();
+        return list
+            .map(
+              (e) => EscrowOrderModel.fromJson(
+                Map<String, dynamic>.from(e as Map),
+              ),
+            )
+            .toList();
       }
     }
     return [];
@@ -50,7 +63,10 @@ class EscrowService extends getx.GetxService {
 
   /// Step 1: Create new escrow deal (draft)
   Future<EscrowOrderModel?> createOrder(Map<String, dynamic> payload) async {
-    final response = await _network.post(endpoint: '/user/escrow', data: payload);
+    final response = await _network.post(
+      endpoint: '/user/escrow',
+      data: payload,
+    );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -62,7 +78,9 @@ class EscrowService extends getx.GetxService {
 
   /// Step 2: Send for approval
   Future<EscrowOrderModel?> sendApproval(int id) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/send-approval');
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/send-approval',
+    );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -74,7 +92,9 @@ class EscrowService extends getx.GetxService {
 
   /// Step 2: Accept terms (Counterparty)
   Future<EscrowOrderModel?> acceptTerms(int id) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/accept-terms');
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/accept-terms',
+    );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -103,9 +123,7 @@ class EscrowService extends getx.GetxService {
   Future<EscrowOrderModel?> payIntoEscrow(int id, {int? walletId}) async {
     final response = await _network.post(
       endpoint: '/user/escrow/$id/pay',
-      data: {
-        'wallet_id': ?walletId,
-      },
+      data: {'wallet_id': ?walletId},
     );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
@@ -120,9 +138,7 @@ class EscrowService extends getx.GetxService {
   Future<EscrowOrderModel?> cancelDeal(int id, {String? reason}) async {
     final response = await _network.post(
       endpoint: '/user/escrow/$id/cancel',
-      data: {
-        if (reason != null && reason.isNotEmpty) 'reason': reason,
-      },
+      data: {if (reason != null && reason.isNotEmpty) 'reason': reason},
     );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
@@ -134,7 +150,8 @@ class EscrowService extends getx.GetxService {
   }
 
   /// Step 4: Submit shipment details (Seller)
-  Future<EscrowOrderModel?> submitShipment(int id, {
+  Future<EscrowOrderModel?> submitShipment(
+    int id, {
     required String carrier,
     required String trackingNumber,
     String? trackingUrl,
@@ -160,7 +177,9 @@ class EscrowService extends getx.GetxService {
 
   /// Step 5: Confirm delivery (Buyer)
   Future<EscrowOrderModel?> confirmDelivery(int id) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/confirm-delivery');
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/confirm-delivery',
+    );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -172,7 +191,9 @@ class EscrowService extends getx.GetxService {
 
   /// Step 6: Approve & Release funds to seller
   Future<EscrowOrderModel?> approveRelease(int id) async {
-    final response = await _network.post(endpoint: '/user/escrow/$id/approve-release');
+    final response = await _network.post(
+      endpoint: '/user/escrow/$id/approve-release',
+    );
     if (response.status == Status.completed && response.data != null) {
       final data = response.data!['data'];
       if (data is Map<String, dynamic>) {
@@ -198,7 +219,8 @@ class EscrowService extends getx.GetxService {
   }
 
   /// D1: Open dispute
-  Future<EscrowDisputeModel?> openDispute(int id, {
+  Future<EscrowDisputeModel?> openDispute(
+    int id, {
     required String type,
     required String description,
     List<String>? evidenceFiles,
@@ -221,13 +243,14 @@ class EscrowService extends getx.GetxService {
   }
 
   /// Step 7: Submit mutual rating
-  Future<bool> submitRating(int id, {required int rating, String? comment}) async {
+  Future<bool> submitRating(
+    int id, {
+    required int rating,
+    String? comment,
+  }) async {
     final response = await _network.post(
       endpoint: '/user/escrow/$id/rating',
-      data: {
-        'rating': rating,
-        'comment': ?comment,
-      },
+      data: {'rating': rating, 'comment': ?comment},
     );
     return response.status == Status.completed;
   }

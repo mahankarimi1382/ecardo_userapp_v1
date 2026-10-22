@@ -31,12 +31,16 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488);
+    final primaryAccent = isDark
+        ? const Color(0xFF2DD4BF)
+        : const Color(0xFF0D9488);
     final margin = _sampleAmount * (_marginPct / 100.0);
     final fee = _sampleAmount * (_feePct / 100.0);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -73,7 +77,10 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.md.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.page.w,
+          vertical: AppSpacing.md.h,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -99,10 +106,16 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                       Container(
                         padding: EdgeInsetsDirectional.all(AppSpacing.sm.w),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF0D9488).withValues(alpha: 0.25),
+                          color: const Color(
+                            0xFF0D9488,
+                          ).withValues(alpha: 0.25),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.verified_user_rounded, color: const Color(0xFF2DD4BF), size: 26.sp),
+                        child: Icon(
+                          Icons.verified_user_rounded,
+                          color: const Color(0xFF2DD4BF),
+                          size: 26.sp,
+                        ),
                       ),
                       SizedBox(width: AppSpacing.md.w),
                       Expanded(
@@ -153,7 +166,9 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
               ),
               style: AppTextStyles.titleSmall.copyWith(
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -162,32 +177,40 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
               isDark: isDark,
               titleFa: 'ضمانت‌نامه شرکت در مناقصه و مزایده (Bid Bond)',
               titleEn: 'Bid Bond (Tender Guarantee)',
-              descFa: 'حداقل سپرده نقدی ۵٪ تا ۱۰٪. تضمین پیشنهاد قیمت در مناقصات دولتی و خصوصی.',
-              descEn: '5-10% margin. Guarantees quotation validity in corporate & public tenders.',
+              descFa:
+                  'حداقل سپرده نقدی ۵٪ تا ۱۰٪. تضمین پیشنهاد قیمت در مناقصات دولتی و خصوصی.',
+              descEn:
+                  '5-10% margin. Guarantees quotation validity in corporate & public tenders.',
             ),
             _buildInstrumentCard(
               context,
               isDark: isDark,
               titleFa: 'ضمانت‌نامه حسن انجام تعهدات (Performance Bond)',
               titleEn: 'Performance Bond',
-              descFa: 'تضمین اجرای صحیح مفاد قرارداد کاری، پروژه‌های پیمانکاری و ساختمانی.',
-              descEn: 'Guarantees execution of project contracts according to agreed technical specs.',
+              descFa:
+                  'تضمین اجرای صحیح مفاد قرارداد کاری، پروژه‌های پیمانکاری و ساختمانی.',
+              descEn:
+                  'Guarantees execution of project contracts according to agreed technical specs.',
             ),
             _buildInstrumentCard(
               context,
               isDark: isDark,
               titleFa: 'ضمانت‌نامه پیش‌پرداخت (Advance Payment)',
               titleEn: 'Advance Payment Guarantee',
-              descFa: 'تضمین بازپرداخت مبالغ واریز شده کارفرما قبل از تحویل کار.',
-              descEn: 'Secures advance funds disbursed by employer prior to milestone delivery.',
+              descFa:
+                  'تضمین بازپرداخت مبالغ واریز شده کارفرما قبل از تحویل کار.',
+              descEn:
+                  'Secures advance funds disbursed by employer prior to milestone delivery.',
             ),
             _buildInstrumentCard(
               context,
               isDark: isDark,
               titleFa: 'اعتبار اسنادی داخلی و بین‌المللی (LC)',
               titleEn: 'Letter of Credit (LC)',
-              descFa: 'تسهیل تبادلات بازرگانی کالا با تسویه مشروط به ارائه اسناد حمل معتبر.',
-              descEn: 'Facilitates commercial transactions conditioned upon shipping document presentation.',
+              descFa:
+                  'تسهیل تبادلات بازرگانی کالا با تسویه مشروط به ارائه اسناد حمل معتبر.',
+              descEn:
+                  'Facilitates commercial transactions conditioned upon shipping document presentation.',
             ),
 
             SizedBox(height: AppSpacing.xl.h),
@@ -203,7 +226,9 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
               ),
               style: AppTextStyles.titleSmall.copyWith(
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -222,16 +247,26 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'مبلغ اسمی ضمانت‌نامه', en: 'Face Amount', ar: 'المبلغ الاسمي', zh: '保函面额'),
+                        l10nPick(
+                          context,
+                          fa: 'مبلغ اسمی ضمانت‌نامه',
+                          en: 'Face Amount',
+                          ar: 'المبلغ الاسمي',
+                          zh: '保函面额',
+                        ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       Text(
                         '${_sampleAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ${l10nPick(context, fa: 'ریال', en: 'IRR', ar: 'ريال', zh: '里亚尔')}',
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -248,15 +283,25 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                   ),
                   Divider(
                     height: 20,
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'وجه التزام نقدی (۱۰٪):', en: 'Cash Margin (10%):', ar: 'التأمين النقدي (١٠٪):', zh: '现金保证金（10%）：'),
+                        l10nPick(
+                          context,
+                          fa: 'وجه التزام نقدی (۱۰٪):',
+                          en: 'Cash Margin (10%):',
+                          ar: 'التأمين النقدي (١٠٪):',
+                          zh: '现金保证金（10%）：',
+                        ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       Text(
@@ -273,16 +318,26 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'کارمزد صدور سالانه (۱.۵٪):', en: 'Issuance Fee (1.5%):', ar: 'عمولة الإصدار (١.٥٪):', zh: '年化开立费（1.5%）：'),
+                        l10nPick(
+                          context,
+                          fa: 'کارمزد صدور سالانه (۱.۵٪):',
+                          en: 'Issuance Fee (1.5%):',
+                          ar: 'عمولة الإصدار (١.٥٪):',
+                          zh: '年化开立费（1.5%）：',
+                        ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       Text(
                         '${fee.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} ریال',
                         style: AppTextStyles.bodySmall.copyWith(
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ],
@@ -324,7 +379,11 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
               color: const Color(0xFF0D9488).withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.shield_outlined, color: const Color(0xFF0D9488), size: 20.sp),
+            child: Icon(
+              Icons.shield_outlined,
+              color: const Color(0xFF0D9488),
+              size: 20.sp,
+            ),
           ),
           SizedBox(width: AppSpacing.md.w),
           Expanded(
@@ -335,14 +394,18 @@ class _GuaranteeIntroScreenState extends State<GuaranteeIntroScreen> {
                   l10nPick(context, fa: titleFa, en: titleEn),
                   style: AppTextStyles.bodyMedium.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: 3.h),
                 Text(
                   l10nPick(context, fa: descFa, en: descEn),
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     height: 1.4,
                   ),
                 ),

@@ -11,57 +11,48 @@ class NotificationChannels {
   static const String marketingId = 'ecardo_marketing';
   static const String legacyId = 'channel_id';
 
-  static String get primaryName => _pick(
-        en: 'eCardo',
-        fa: 'ای‌کاردو',
-        ar: 'إيكاردو',
-      );
+  static String get primaryName =>
+      _pick(en: 'eCardo', fa: 'ای‌کاردو', ar: 'إيكاردو');
   static String get primaryDescription => _pick(
-        en: 'eCardo account, transaction and update notifications',
-        fa: 'اطلاعیه‌ها، تراکنش‌ها و به‌روزرسانی‌های ای‌کاردو',
-        ar: 'إشعارات الحساب والمعاملات والتحديثات',
-      );
+    en: 'eCardo account, transaction and update notifications',
+    fa: 'اطلاعیه‌ها، تراکنش‌ها و به‌روزرسانی‌های ای‌کاردو',
+    ar: 'إشعارات الحساب والمعاملات والتحديثات',
+  );
 
   static String get financialName => _pick(
-        en: 'Financial Transactions',
-        fa: 'تراکنش‌های مالی',
-        ar: 'المعاملات المالية',
-      );
+    en: 'Financial Transactions',
+    fa: 'تراکنش‌های مالی',
+    ar: 'المعاملات المالية',
+  );
   static String get financialDescription => _pick(
-        en: 'Deposits, withdrawals, transfers, and transaction alerts',
-        fa: 'واریز، برداشت، انتقال و هشدارهای مالی',
-        ar: 'الإيداع، السحب، التحويل والتنبيهات المالية',
-      );
+    en: 'Deposits, withdrawals, transfers, and transaction alerts',
+    fa: 'واریز، برداشت، انتقال و هشدارهای مالی',
+    ar: 'الإيداع، السحب، التحويل والتنبيهات المالية',
+  );
 
-  static String get securityName => _pick(
-        en: 'Security Alerts',
-        fa: 'هشدارهای امنیتی',
-        ar: 'تنبيهات الأمان',
-      );
+  static String get securityName =>
+      _pick(en: 'Security Alerts', fa: 'هشدارهای امنیتی', ar: 'تنبيهات الأمان');
   static String get securityDescription => _pick(
-        en: 'Account security, logins, and authentication alerts',
-        fa: 'امنیت حساب، ورود دستگاه جدید و تغییر رمز عبور',
-        ar: 'أمان الحساب، تسجيل الدخول وتغيير كلمة المرور',
-      );
+    en: 'Account security, logins, and authentication alerts',
+    fa: 'امنیت حساب، ورود دستگاه جدید و تغییر رمز عبور',
+    ar: 'أمان الحساب، تسجيل الدخول وتغيير كلمة المرور',
+  );
 
   static String get marketingName => _pick(
-        en: 'Promotions & Deals',
-        fa: 'پیشنهادها و تخفیف‌ها',
-        ar: 'العروض الترويجية',
-      );
+    en: 'Promotions & Deals',
+    fa: 'پیشنهادها و تخفیف‌ها',
+    ar: 'العروض الترويجية',
+  );
   static String get marketingDescription => _pick(
-        en: 'Promotions, deals, and product updates',
-        fa: 'تخفیف‌ها، جشنواره‌ها و اخبار محصولات',
-        ar: 'العروض الترويجية والصفقات وتحديثات المنتجات',
-      );
+    en: 'Promotions, deals, and product updates',
+    fa: 'تخفیف‌ها، جشنواره‌ها و اخبار محصولات',
+    ar: 'العروض الترويجية والصفقات وتحديثات المنتجات',
+  );
 
-  static String _pick({
-    required String en,
-    required String fa,
-    String? ar,
-  }) {
+  static String _pick({required String en, required String fa, String? ar}) {
     try {
-      final lang = Get.locale?.languageCode ??
+      final lang =
+          Get.locale?.languageCode ??
           PlatformDispatcher.instance.locale.languageCode;
       if (lang == 'fa') return fa;
       if (lang == 'ar' && ar != null) return ar;
@@ -101,16 +92,14 @@ class LocalNotificationsService {
     );
 
     await _plugin.initialize(
-      const InitializationSettings(
-        android: androidSettings,
-        iOS: iosSettings,
-      ),
+      const InitializationSettings(android: androidSettings, iOS: iosSettings),
       onDidReceiveNotificationResponse: _onNotificationResponse,
     );
 
     final androidPlugin = _plugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+          AndroidFlutterLocalNotificationsPlugin
+        >();
 
     await androidPlugin?.createNotificationChannel(
       AndroidNotificationChannel(

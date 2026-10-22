@@ -280,40 +280,40 @@ class _LockScreenState extends State<LockScreen> {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        children: keys.map((row) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: row.map((k) {
-              if (k.isEmpty) return const SizedBox(width: 72, height: 72);
-              return InkWell(
-                onTap: () {
-                  if (k == '⌫') {
-                    _backspace();
-                  } else {
-                    _onDigit(k);
-                  }
-                },
-                borderRadius: BorderRadius.circular(36),
-                child: Container(
-                  width: 72,
-                  height: 72,
-                  alignment: Alignment.center,
-                  child: Text(
-                    k,
-                    style: AppTextStyles.headlineMedium.copyWith(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.w600,
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          children: keys.map((row) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: row.map((k) {
+                if (k.isEmpty) return const SizedBox(width: 72, height: 72);
+                return InkWell(
+                  onTap: () {
+                    if (k == '⌫') {
+                      _backspace();
+                    } else {
+                      _onDigit(k);
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(36),
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    alignment: Alignment.center,
+                    child: Text(
+                      k,
+                      style: AppTextStyles.headlineMedium.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
-          );
-        }).toList(),
+                );
+              }).toList(),
+            );
+          }).toList(),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

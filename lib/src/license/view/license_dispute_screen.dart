@@ -61,7 +61,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -95,7 +97,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                 children: [
                   Icon(
                     Icons.receipt_long_rounded,
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                     size: AppSpacing.iconMd.sp,
                   ),
                   SizedBox(width: AppSpacing.md.w),
@@ -108,14 +112,18 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         Text(
                           '${widget.order.edition} • ${widget.order.durationMonths} ${l10nPick(context, en: 'Months', fa: 'ماهه', ar: 'شهر', zh: '个月')}',
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
@@ -130,7 +138,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
             Container(
               padding: EdgeInsets.all(AppSpacing.md.r),
               decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkPrimaryContainer : AppColors.lightSecondaryContainer),
+                color: (isDark
+                    ? AppColors.darkPrimaryContainer
+                    : AppColors.lightSecondaryContainer),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                 border: Border.all(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -140,7 +150,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                 children: [
                   Icon(
                     Icons.shield_outlined,
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                     size: AppSpacing.iconSm.sp,
                   ),
                   SizedBox(width: AppSpacing.sm.w),
@@ -155,7 +167,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                       ),
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                         height: 1.4,
                       ),
                     ),
@@ -167,11 +181,19 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
 
             // Fixed Reason Selector
             Text(
-              l10nPick(context, en: 'Select Issue Reason', fa: 'علت گزارش مشکل', ar: 'سبب المشكلة', zh: '选择问题原因'),
+              l10nPick(
+                context,
+                en: 'Select Issue Reason',
+                fa: 'علت گزارش مشکل',
+                ar: 'سبب المشكلة',
+                zh: '选择问题原因',
+              ),
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -186,7 +208,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
               child: Column(
                 children: reasons.map((r) {
                   final isSelected = selectedReason == r['code'];
-                  final primaryColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+                  final primaryColor = isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary;
 
                   return Container(
                     margin: EdgeInsets.only(bottom: AppSpacing.sm.h),
@@ -194,11 +218,15 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                       color: isSelected
                           ? primaryColor.withValues(alpha: 0.08)
                           : (isDark ? AppColors.darkCard : AppColors.lightCard),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                       border: Border.all(
                         color: isSelected
                             ? primaryColor
-                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            : (isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                         width: isSelected ? 1.5 : 1,
                       ),
                     ),
@@ -209,10 +237,14 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                         l10nPick(context, en: r['en']!, fa: r['fa']!),
                         style: TextStyle(
                           fontSize: 12.sp,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                           color: isSelected
                               ? primaryColor
-                              : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                              : (isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary),
                         ),
                       ),
                     ),
@@ -224,11 +256,19 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
 
             // Description TextField
             Text(
-              l10nPick(context, en: 'Detailed Description', fa: 'شرح مشکل و متن خطا', ar: 'الوصف التفصيلي', zh: '详细问题描述'),
+              l10nPick(
+                context,
+                en: 'Detailed Description',
+                fa: 'شرح مشکل و متن خطا',
+                ar: 'الوصف التفصيلي',
+                zh: '详细问题描述',
+              ),
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -236,7 +276,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
               controller: descriptionController,
               maxLines: 4,
               style: TextStyle(
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
                 fontSize: 13.sp,
               ),
               decoration: InputDecoration(
@@ -251,24 +293,32 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
                 ),
                 hintStyle: TextStyle(
                   fontSize: 12.sp,
-                  color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+                  color: isDark
+                      ? AppColors.darkTextHint
+                      : AppColors.lightTextHint,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   borderSide: BorderSide(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   borderSide: BorderSide(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   borderSide: BorderSide(
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                   ),
                 ),
               ),
@@ -279,7 +329,9 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
             CommonButton(
               width: double.infinity,
               isLoading: isSubmitting,
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              backgroundColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightPrimary,
               textColor: isDark ? AppColors.deepBlack : AppColors.white,
               text: l10nPick(
                 context,
@@ -291,17 +343,23 @@ class _LicenseDisputeScreenState extends State<LicenseDisputeScreen> {
               onPressed: () async {
                 final desc = descriptionController.text.trim();
                 if (desc.length < 10) {
-                  ToastHelper().showErrorToast(l10nPick(
-                    context,
-                    en: 'Description must be at least 10 characters.',
-                    fa: 'شرح مشکل باید حداقل ۱۰ کاراکتر باشد.',
-                  ));
+                  ToastHelper().showErrorToast(
+                    l10nPick(
+                      context,
+                      en: 'Description must be at least 10 characters.',
+                      fa: 'شرح مشکل باید حداقل ۱۰ کاراکتر باشد.',
+                    ),
+                  );
                   return;
                 }
 
                 HapticFeedback.lightImpact();
                 setState(() => isSubmitting = true);
-                final ok = await controller.submitDispute(widget.order.id, selectedReason, desc);
+                final ok = await controller.submitDispute(
+                  widget.order.id,
+                  selectedReason,
+                  desc,
+                );
                 if (!mounted) return;
                 setState(() => isSubmitting = false);
                 if (ok) {

@@ -116,7 +116,8 @@ class AuthIdVerificationController extends GetxController {
         );
         ToastHelper().showSuccessToast(response.data!["message"]);
       } else if (response.status == Status.error) {
-        final msg = response.message ??
+        final msg =
+            response.message ??
             localizationOrNull?.allControllerLoadError ??
             l10nPickAuto(
               en: 'Something went wrong. Please try again.',
@@ -128,7 +129,11 @@ class AuthIdVerificationController extends GetxController {
       debugPrint('❌ submitIdVerification() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
+        localizationOrNull?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isLoading.value = false;

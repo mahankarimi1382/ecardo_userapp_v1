@@ -28,9 +28,15 @@ class FrontCameraTypeSection extends StatelessWidget {
 
   const FrontCameraTypeSection({super.key, required this.field});
 
-  void _proceedToNext(BuildContext context, AuthIdVerificationController controller) {
-    final currentFieldIndex = controller.fields.indexWhere((f) => f.name == field.name);
-    if (currentFieldIndex != -1 && currentFieldIndex + 1 < controller.fields.length) {
+  void _proceedToNext(
+    BuildContext context,
+    AuthIdVerificationController controller,
+  ) {
+    final currentFieldIndex = controller.fields.indexWhere(
+      (f) => f.name == field.name,
+    );
+    if (currentFieldIndex != -1 &&
+        currentFieldIndex + 1 < controller.fields.length) {
       final nextField = controller.fields[currentFieldIndex + 1];
       controller.currentFieldIndex.value = currentFieldIndex + 1;
       final type = nextField.type?.toLowerCase();
@@ -97,13 +103,16 @@ class FrontCameraTypeSection extends StatelessWidget {
     final AuthIdVerificationController controller = Get.find();
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final borderCol = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -135,11 +144,14 @@ class FrontCameraTypeSection extends StatelessWidget {
 
                     // Title & Instructions
                     Padding(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w),
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 20.w,
+                      ),
                       child: Column(
                         children: [
                           Text(
-                            field.name ?? localizations.frontCameraTypeNotAvailable,
+                            field.name ??
+                                localizations.frontCameraTypeNotAvailable,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.w900,
@@ -149,7 +161,8 @@ class FrontCameraTypeSection extends StatelessWidget {
                           ),
                           SizedBox(height: 6.h),
                           Text(
-                            field.instructions ?? localizations.frontCameraTypeNotAvailable,
+                            field.instructions ??
+                                localizations.frontCameraTypeNotAvailable,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
@@ -176,7 +189,9 @@ class FrontCameraTypeSection extends StatelessWidget {
                     // Main Container
                     Expanded(
                       child: Container(
-                        margin: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
+                        margin: EdgeInsetsDirectional.symmetric(
+                          horizontal: 18.w,
+                        ),
                         padding: EdgeInsetsDirectional.all(18.w),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadiusDirectional.only(
@@ -207,7 +222,10 @@ class FrontCameraTypeSection extends StatelessWidget {
                                 _buildSelfieGuidePlaceholder(
                                   context: context,
                                   isDark: isDark,
-                                  onCaptureTap: () => _captureWithFrontCamera(context, controller),
+                                  onCaptureTap: () => _captureWithFrontCamera(
+                                    context,
+                                    controller,
+                                  ),
                                   primaryText: primaryTextColor,
                                   secondaryText: secondaryTextColor,
                                 )
@@ -216,8 +234,12 @@ class FrontCameraTypeSection extends StatelessWidget {
                                   context: context,
                                   file: file,
                                   isDark: isDark,
-                                  onRetakeTap: () => _captureWithFrontCamera(context, controller),
-                                  onDeleteTap: () => controller.fieldFiles.remove(field.name ?? ""),
+                                  onRetakeTap: () => _captureWithFrontCamera(
+                                    context,
+                                    controller,
+                                  ),
+                                  onDeleteTap: () => controller.fieldFiles
+                                      .remove(field.name ?? ""),
                                   primaryText: primaryTextColor,
                                   secondaryText: secondaryTextColor,
                                 ),
@@ -233,7 +255,10 @@ class FrontCameraTypeSection extends StatelessWidget {
                                   child: CommonButton(
                                     text: localizations.frontCameraTypeButton,
                                     width: double.infinity,
-                                    onPressed: () => _captureWithFrontCamera(context, controller),
+                                    onPressed: () => _captureWithFrontCamera(
+                                      context,
+                                      controller,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(height: 10.h),
@@ -247,7 +272,8 @@ class FrontCameraTypeSection extends StatelessWidget {
                                     zh: '从相册选择',
                                   ),
                                   child: OutlinedButton.icon(
-                                    onPressed: () => _pickFromGallery(context, controller),
+                                    onPressed: () =>
+                                        _pickFromGallery(context, controller),
                                     style: OutlinedButton.styleFrom(
                                       minimumSize: Size(double.infinity, 48.h),
                                       side: BorderSide(
@@ -256,10 +282,15 @@ class FrontCameraTypeSection extends StatelessWidget {
                                             : AppColors.lightBorder,
                                       ),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16.r),
+                                        borderRadius: BorderRadius.circular(
+                                          16.r,
+                                        ),
                                       ),
                                     ),
-                                    icon: const Icon(Icons.photo_library_outlined, size: 18),
+                                    icon: const Icon(
+                                      Icons.photo_library_outlined,
+                                      size: 18,
+                                    ),
                                     label: Text(
                                       l10nPick(
                                         context,
@@ -366,7 +397,9 @@ class FrontCameraTypeSection extends StatelessWidget {
           width: double.infinity,
           height: 220.h,
           decoration: BoxDecoration(
-            color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
+            color: isDark
+                ? AppColors.darkBackground
+                : AppColors.lightSurfaceVariant,
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
               color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -382,10 +415,7 @@ class FrontCameraTypeSection extends StatelessWidget {
                   height: 88.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(36.r),
-                    border: Border.all(
-                      color: guideColor,
-                      width: 2.5,
-                    ),
+                    border: Border.all(color: guideColor, width: 2.5),
                     color: guideColor.withValues(alpha: isDark ? 0.16 : 0.10),
                   ),
                   child: Icon(
@@ -450,12 +480,17 @@ class FrontCameraTypeSection extends StatelessWidget {
     final fileLength = file.lengthSync();
     final sizeInMB = fileLength / (1024 * 1024);
     final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
-    final isValidSize = !UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes);
+    final isValidSize = !UploadHelper.exceedsSize(
+      file,
+      UploadHelper.maxKycDocBytes,
+    );
 
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
+        color: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightSurfaceVariant,
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(
           color: guideColor.withValues(alpha: 0.4),
@@ -483,8 +518,10 @@ class FrontCameraTypeSection extends StatelessWidget {
                       ImageStreamListener((ImageInfo info, bool _) {
                         final imageHeight = info.image.height.toDouble();
                         final imageWidth = info.image.width.toDouble();
-                        final screenWidth = MediaQuery.of(context).size.width - 36;
-                        final scaledHeight = (imageHeight / imageWidth) * screenWidth;
+                        final screenWidth =
+                            MediaQuery.of(context).size.width - 36;
+                        final scaledHeight =
+                            (imageHeight / imageWidth) * screenWidth;
                         Get.bottomSheet(
                           DynamicAttachmentPreview(
                             file: file,
@@ -505,10 +542,7 @@ class FrontCameraTypeSection extends StatelessWidget {
                     SizedBox(
                       height: 180.h,
                       width: double.infinity,
-                      child: Image.file(
-                        file,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.file(file, fit: BoxFit.cover),
                     ),
                     Positioned(
                       top: 8.h,
@@ -559,9 +593,7 @@ class FrontCameraTypeSection extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: (isValidSize
-                            ? AppColors.success
-                            : AppColors.error)
+                    color: (isValidSize ? AppColors.success : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -619,7 +651,9 @@ class FrontCameraTypeSection extends StatelessWidget {
                                 : AppColors.lightBorder,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm,
+                            ),
                           ),
                         ),
                         icon: const Icon(Icons.refresh_rounded, size: 15),

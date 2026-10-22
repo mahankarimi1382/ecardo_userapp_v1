@@ -161,7 +161,9 @@ void main() {
         registrations: [
           () => registerController<NetworkService>(_MockNetworkService()),
           () => registerController<SettingsService>(_TestSettingsService()),
-          () => registerController<RemittanceController>(_TestRemittanceController()),
+          () => registerController<RemittanceController>(
+            _TestRemittanceController(),
+          ),
         ],
       );
       await capture(tester, 'remittance__light');
@@ -176,7 +178,9 @@ void main() {
         registrations: [
           () => registerController<NetworkService>(_MockNetworkService()),
           () => registerController<SettingsService>(_TestSettingsService()),
-          () => registerController<RemittanceController>(_TestRemittanceController()),
+          () => registerController<RemittanceController>(
+            _TestRemittanceController(),
+          ),
         ],
       );
       await capture(tester, 'remittance__dark');

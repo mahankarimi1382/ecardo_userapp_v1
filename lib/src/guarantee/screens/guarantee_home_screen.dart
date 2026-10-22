@@ -64,14 +64,26 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
               padding: EdgeInsetsDirectional.only(end: ECardoTokens.space4.w),
               child: Semantics(
                 button: true,
-                label: l10nPick(context, fa: 'پیگیری پرونده‌ها', en: 'Tracking', ar: 'المتابعة', zh: '追踪'),
+                label: l10nPick(
+                  context,
+                  fa: 'پیگیری پرونده‌ها',
+                  en: 'Tracking',
+                  ar: 'المتابعة',
+                  zh: '追踪',
+                ),
                 child: IconButton(
                   icon: Icon(
                     Icons.history_rounded,
                     color: ECardoTokens.ink(context),
                     size: 22.sp,
                   ),
-                  tooltip: l10nPick(context, fa: 'پیگیری پرونده‌ها', en: 'Tracking', ar: 'المتابعة', zh: '追踪'),
+                  tooltip: l10nPick(
+                    context,
+                    fa: 'پیگیری پرونده‌ها',
+                    en: 'Tracking',
+                    ar: 'المتابعة',
+                    zh: '追踪',
+                  ),
                   onPressed: () {
                     HapticFeedback.lightImpact();
                     Get.to(() => const GuaranteeTrackingScreen());
@@ -138,15 +150,25 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
         }
 
         // Calculate summary metrics
-        final activeAndClaimed = allCases.where((c) => c.isActive || c.isClaimed);
-        final totalMarginBlocked = activeAndClaimed.fold(0.0, (sum, c) => sum + c.marginAmount);
-        final totalCovered = activeAndClaimed.fold(0.0, (sum, c) => sum + c.amount);
+        final activeAndClaimed = allCases.where(
+          (c) => c.isActive || c.isClaimed,
+        );
+        final totalMarginBlocked = activeAndClaimed.fold(
+          0.0,
+          (sum, c) => sum + c.marginAmount,
+        );
+        final totalCovered = activeAndClaimed.fold(
+          0.0,
+          (sum, c) => sum + c.amount,
+        );
 
         // Filter list by selected tab
         List<GuaranteeCaseModel> filteredCases;
         switch (_selectedFilterIndex) {
           case 1: // Active
-            filteredCases = allCases.where((c) => c.isActive || c.isClaimed).toList();
+            filteredCases = allCases
+                .where((c) => c.isActive || c.isClaimed)
+                .toList();
             break;
           case 2: // In review
             filteredCases = allCases.where((c) => c.isInReview).toList();
@@ -184,23 +206,37 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                       selected: isSelected,
                       label: _filterLabel(context, _filters[index]),
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
+                        constraints: BoxConstraints(
+                          minWidth: 44.w,
+                          minHeight: 44.h,
+                        ),
                         child: InkWell(
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusFull.r),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusFull.r,
+                          ),
                           onTap: () {
                             HapticFeedback.lightImpact();
                             setState(() => _selectedFilterIndex = index);
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 10.h,
+                            ),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? (isDark ? AppColors.brandViolet : AppColors.brandVioletDeep)
+                                  ? (isDark
+                                        ? AppColors.brandViolet
+                                        : AppColors.brandVioletDeep)
                                   : ECardoTokens.surfaceCard(context),
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusFull.r),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusFull.r,
+                              ),
                               border: Border.all(
                                 color: isSelected
-                                    ? (isDark ? AppColors.brandViolet : AppColors.brandVioletDeep)
+                                    ? (isDark
+                                          ? AppColors.brandViolet
+                                          : AppColors.brandVioletDeep)
                                     : ECardoTokens.border(context),
                               ),
                             ),
@@ -209,8 +245,12 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                               _filterLabel(context, _filters[index]),
                               style: TextStyle(
                                 fontSize: 12.5.sp,
-                                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                                color: isSelected ? AppColors.white : ECardoTokens.ink(context),
+                                fontWeight: isSelected
+                                    ? FontWeight.w800
+                                    : FontWeight.w600,
+                                color: isSelected
+                                    ? AppColors.white
+                                    : ECardoTokens.ink(context),
                               ),
                             ),
                           ),
@@ -237,7 +277,11 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10nPick(context, fa: 'مارجین بلوکه‌شده در کیف پول', en: 'Blocked as margin'),
+                      l10nPick(
+                        context,
+                        fa: 'مارجین بلوکه‌شده در کیف پول',
+                        en: 'Blocked as margin',
+                      ),
                       style: TextStyle(
                         fontSize: 12.5.sp,
                         fontWeight: FontWeight.w600,
@@ -273,7 +317,9 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.brandViolet,
                           ),
                         ),
                       ],
@@ -287,7 +333,9 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
               // ------------------ Guarantees List or Empty State ------------------
               if (filteredCases.isEmpty)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: ECardoTokens.space4.h),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ECardoTokens.space4.h,
+                  ),
                   child: EcardoEmptyState(
                     iconData: Icons.shield_outlined,
                     title: l10nPick(
@@ -313,8 +361,20 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                       zh: '当前分类下暂无生效或申请中的保函记录。',
                     ),
                     primaryActionLabel: _selectedFilterIndex != 0
-                        ? l10nPick(context, fa: 'مشاهده همه پرونده‌ها', en: 'View All Cases', ar: 'عرض الكل', zh: '查看全部')
-                        : l10nPick(context, fa: 'درخواست صدور ضمانت‌نامه', en: 'Request a guarantee', ar: 'طلب خطاب ضمان', zh: '申请开立保函'),
+                        ? l10nPick(
+                            context,
+                            fa: 'مشاهده همه پرونده‌ها',
+                            en: 'View All Cases',
+                            ar: 'عرض الكل',
+                            zh: '查看全部',
+                          )
+                        : l10nPick(
+                            context,
+                            fa: 'درخواست صدور ضمانت‌نامه',
+                            en: 'Request a guarantee',
+                            ar: 'طلب خطاب ضمان',
+                            zh: '申请开立保函',
+                          ),
                     onPrimaryAction: () {
                       HapticFeedback.lightImpact();
                       if (_selectedFilterIndex != 0) {
@@ -326,10 +386,12 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                   ),
                 )
               else
-                ...filteredCases.map((c) => Padding(
-                      padding: EdgeInsets.only(bottom: ECardoTokens.space3.h),
-                      child: _buildGuaranteeCard(context, c),
-                    )),
+                ...filteredCases.map(
+                  (c) => Padding(
+                    padding: EdgeInsets.only(bottom: ECardoTokens.space3.h),
+                    child: _buildGuaranteeCard(context, c),
+                  ),
+                ),
 
               SizedBox(height: ECardoTokens.space8.h),
             ],
@@ -357,14 +419,17 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
               ),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.dark
                       ? AppColors.brandViolet
                       : AppColors.brandVioletDeep,
                   foregroundColor: AppColors.white,
                   elevation: 0,
                   minimumSize: Size(double.infinity, 48.h),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusLg.r,
+                    ),
                   ),
                 ),
                 onPressed: () {
@@ -400,13 +465,17 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
     final statusText = isClaimed
         ? l10nPick(context, fa: 'مطالبه‌شده', en: 'Claimed')
         : isActive
-            ? l10nPick(context, fa: 'فعال', en: 'Active')
-            : l10nPick(context, fa: 'در بررسی', en: 'In review');
+        ? l10nPick(context, fa: 'فعال', en: 'Active')
+        : l10nPick(context, fa: 'در بررسی', en: 'In review');
 
     return Semantics(
       button: true,
       label: '$title, $statusText, $amountText, ${c.beneficiaryName}',
-      hint: l10nPick(context, fa: 'مشاهده جزئیات پرونده', en: 'View case details'),
+      hint: l10nPick(
+        context,
+        fa: 'مشاهده جزئیات پرونده',
+        en: 'View case details',
+      ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 44),
         child: InkWell(
@@ -450,14 +519,19 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 3.h,
+                      ),
                       decoration: BoxDecoration(
                         color: isClaimed
                             ? AppColors.errorContainer
                             : isActive
-                                ? AppColors.successContainer
-                                : AppColors.brandVioletContainer,
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                            ? AppColors.successContainer
+                            : AppColors.brandVioletContainer,
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm.r,
+                        ),
                       ),
                       child: Text(
                         statusText,
@@ -467,8 +541,8 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                           color: isClaimed
                               ? AppColors.error
                               : isActive
-                                  ? AppColors.success
-                                  : AppColors.brandVioletDeep,
+                              ? AppColors.success
+                              : AppColors.brandVioletDeep,
                         ),
                       ),
                     ),
@@ -502,10 +576,15 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                 if (isClaimed) ...[
                   Container(
                     margin: EdgeInsets.only(top: 4.h),
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.errorContainer,
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm.r,
+                      ),
                     ),
                     child: Row(
                       children: [

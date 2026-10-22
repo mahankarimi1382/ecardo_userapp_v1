@@ -8,8 +8,9 @@ class SupportTicketModel {
   SupportTicketModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? SupportTicketData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? SupportTicketData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -26,10 +27,9 @@ class SupportTicketData {
         tickets!.add(Tickets.fromJson(v));
       });
     }
-    pagination =
-        json['pagination'] != null
-            ? Pagination.fromJson(json['pagination'])
-            : null;
+    pagination = json['pagination'] != null
+        ? Pagination.fromJson(json['pagination'])
+        : null;
   }
 }
 
@@ -77,13 +77,16 @@ class Tickets {
     priority = json['priority'];
     status = json['status'];
     message = json['message'];
-    department = json['department']?.toString() ??
+    department =
+        json['department']?.toString() ??
         json['category']?.toString() ??
         json['topic']?.toString();
-    lastReply = json['last_reply']?.toString() ??
+    lastReply =
+        json['last_reply']?.toString() ??
         json['last_message']?.toString() ??
         json['latest_reply']?.toString();
-    lastReplySender = json['last_reply_by']?.toString() ??
+    lastReplySender =
+        json['last_reply_by']?.toString() ??
         json['last_sender_type']?.toString() ??
         json['last_message_by']?.toString();
     if (json['last_reply_from_user'] is bool) {

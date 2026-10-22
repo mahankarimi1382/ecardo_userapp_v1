@@ -533,9 +533,6 @@ class TravelController extends GetxController {
     _paymentIdempotencyKeys.remove(reservation.id);
   }
 
-
-
-
   Future<bool> subscribeNotifyMe({
     required String serviceType,
     String? origin,
@@ -555,6 +552,7 @@ class TravelController extends GetxController {
       return false;
     }
   }
+
   Future<TravelOrderTimeline?> fetchOrderEvents(TravelOrder order) async {
     try {
       return await repository.getOrderEvents(order);

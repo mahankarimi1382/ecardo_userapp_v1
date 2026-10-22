@@ -45,14 +45,8 @@ class CashOutWalletsSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
             gradient: LinearGradient(
               colors: isDark
-                  ? [
-                      const Color(0xFF1E2836),
-                      const Color(0xFF151C26),
-                    ]
-                  : [
-                      AppColors.deepBlack,
-                      const Color(0xFF2A2A28),
-                    ],
+                  ? [const Color(0xFF1E2836), const Color(0xFF151C26)]
+                  : [AppColors.deepBlack, const Color(0xFF2A2A28)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -88,7 +82,8 @@ class CashOutWalletsSection extends StatelessWidget {
                         width: 1,
                       ),
                     ),
-                    child: currentWallet.isDefault == true ||
+                    child:
+                        currentWallet.isDefault == true ||
                             currentWallet.icon == null ||
                             currentWallet.icon!.isEmpty
                         ? Text(

@@ -43,10 +43,10 @@ class RecentPairsStore {
     final filtered = current.where((p) {
       // Treat A→B and B→A as the same logical pair for de-duplication,
       // but preserve the new direction.
-      final sameForward = p.fromCode == pair.fromCode &&
-          p.toCode == pair.toCode;
-      final sameReverse = p.fromCode == pair.toCode &&
-          p.toCode == pair.fromCode;
+      final sameForward =
+          p.fromCode == pair.fromCode && p.toCode == pair.toCode;
+      final sameReverse =
+          p.fromCode == pair.toCode && p.toCode == pair.fromCode;
       return !(sameForward || sameReverse);
     }).toList();
 

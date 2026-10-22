@@ -43,8 +43,17 @@ class WalletsController extends GetxController {
   bool isWalletCrypto(Wallets wallet) {
     if (wallet.isCrypto == true) return true;
     final code = (wallet.code ?? '').toUpperCase().trim();
-    return const {'BTC', 'ETH', 'USDT', 'USDC', 'BNB', 'SOL', 'TRX', 'XRP', 'LTC'}
-        .contains(code);
+    return const {
+      'BTC',
+      'ETH',
+      'USDT',
+      'USDC',
+      'BNB',
+      'SOL',
+      'TRX',
+      'XRP',
+      'LTC',
+    }.contains(code);
   }
 
   List<Wallets> get filteredWallets {
@@ -104,8 +113,7 @@ class WalletsController extends GetxController {
         if (dynamicBtcRate == null &&
             w.conversionRate != null &&
             w.conversionRate!.isNotEmpty) {
-          final parsed =
-              double.tryParse(w.conversionRate!.replaceAll(',', ''));
+          final parsed = double.tryParse(w.conversionRate!.replaceAll(',', ''));
           if (parsed != null && parsed > 1.0) {
             dynamicBtcRate = parsed;
           }
@@ -177,7 +185,9 @@ class WalletsController extends GetxController {
   void _listenToEvents() {
     _eventSubscription = AppEventBus.on<AppEvent>().listen((event) {
       if (event is BalanceChangedEvent || event is WalletListChangedEvent) {
-        debugPrint('⚡ [WalletsController] auto-refreshing wallets on ${event.runtimeType}');
+        debugPrint(
+          '⚡ [WalletsController] auto-refreshing wallets on ${event.runtimeType}',
+        );
         fetchWallets();
       }
     });

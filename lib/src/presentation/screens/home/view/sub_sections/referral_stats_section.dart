@@ -84,7 +84,9 @@ class ReferralStatsSection extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right_rounded,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextTertiary,
               size: 20,
             ),
           ],
@@ -132,7 +134,9 @@ class _Stat extends StatelessWidget {
             letterSpacing: 0,
             fontSize: 16,
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 2),
@@ -144,7 +148,9 @@ class _Stat extends StatelessWidget {
             letterSpacing: 0,
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextTertiary,
           ),
         ),
       ],

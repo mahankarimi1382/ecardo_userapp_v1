@@ -66,7 +66,7 @@ class _CableState extends State<Cable> {
                     : controller.currentStep.value == 1
                     ? CableReviewStepSection()
                     : // PAYMENT-FIX (P-2): backend-driven pending/success step.
-                    controller.currentStep.value == 2
+                      controller.currentStep.value == 2
                     ? _buildResultStep(context)
                     : SizedBox(),
               ),

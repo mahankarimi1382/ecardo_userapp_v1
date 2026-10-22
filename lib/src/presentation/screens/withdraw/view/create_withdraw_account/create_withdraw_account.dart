@@ -93,17 +93,25 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                           // Security Policy Notice (Own-Account KYC Policy)
                           Container(
                             width: double.infinity,
-                            margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                            margin: const EdgeInsets.only(
+                              bottom: AppSpacing.sm,
+                            ),
                             padding: const EdgeInsets.all(AppSpacing.md),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? const Color(0xFF1E293B)
                                   : const Color(0xFFF1F5F9),
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusLg,
+                              ),
                               border: Border.all(
                                 color: isDark
-                                    ? AppColors.mainSoftBlue.withValues(alpha: 0.3)
-                                    : AppColors.brandViolet.withValues(alpha: 0.2),
+                                    ? AppColors.mainSoftBlue.withValues(
+                                        alpha: 0.3,
+                                      )
+                                    : AppColors.brandViolet.withValues(
+                                        alpha: 0.2,
+                                      ),
                                 width: 1.0,
                               ),
                             ),
@@ -112,13 +120,16 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                               children: [
                                 Icon(
                                   Icons.verified_user_rounded,
-                                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                                  color: isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.brandViolet,
                                   size: 20,
                                 ),
                                 const SizedBox(width: AppSpacing.sm),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         l10nPick(
@@ -132,7 +143,9 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                         style: TextStyle(
                                           fontSize: 12.5,
                                           fontWeight: FontWeight.w800,
-                                          color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                                          color: isDark
+                                              ? AppColors.warmWhite
+                                              : AppColors.deepBlack,
                                         ),
                                       ),
                                       const SizedBox(height: 3),
@@ -148,7 +161,9 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                         style: TextStyle(
                                           fontSize: 11,
                                           height: 1.4,
-                                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                          color: isDark
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextSecondary,
                                         ),
                                       ),
                                     ],
@@ -171,11 +186,11 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                     ),
                                     color: controller.isWalletFocused.value
                                         ? (isDark
-                                            ? AppColors.darkPrimary
-                                            : AppColors.lightPrimary)
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary)
                                         : (isDark
-                                            ? AppColors.darkTextSecondary
-                                            : AppColors.lightTextTertiary),
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextTertiary),
                                   ),
                                 ),
                                 focusNode: controller.walletFocusNode,
@@ -243,11 +258,11 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                     color:
                                         controller.isWithdrawMethodFocused.value
                                         ? (isDark
-                                            ? AppColors.darkPrimary
-                                            : AppColors.lightPrimary)
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary)
                                         : (isDark
-                                            ? AppColors.darkTextSecondary
-                                            : AppColors.lightTextTertiary),
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextTertiary),
                                   ),
                                 ),
                                 onTap: () {

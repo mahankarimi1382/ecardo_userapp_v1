@@ -23,7 +23,9 @@ class TerminateAllButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasOthers = otherCount > 0;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Container(
       decoration: BoxDecoration(
@@ -38,7 +40,9 @@ class TerminateAllButton extends StatelessWidget {
         boxShadow: hasOthers
             ? [
                 BoxShadow(
-                  color: AppColors.error.withValues(alpha: isDark ? 0.08 : 0.04),
+                  color: AppColors.error.withValues(
+                    alpha: isDark ? 0.08 : 0.04,
+                  ),
                   blurRadius: 14,
                   offset: const Offset(0, 3),
                 ),
@@ -54,7 +58,8 @@ class TerminateAllButton extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(AppSpacing.sm),
                 decoration: BoxDecoration(
-                  color: (hasOthers ? AppColors.error : AppColors.softGray).withValues(alpha: 0.12),
+                  color: (hasOthers ? AppColors.error : AppColors.softGray)
+                      .withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -77,7 +82,11 @@ class TerminateAllButton extends StatelessWidget {
                         zh: '终止所有其他活动会话',
                       ),
                       style: AppTextStyles.titleSmall.copyWith(
-                        color: hasOthers ? AppColors.error : (isDark ? AppColors.softGray : AppColors.greyDark),
+                        color: hasOthers
+                            ? AppColors.error
+                            : (isDark
+                                  ? AppColors.softGray
+                                  : AppColors.greyDark),
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -98,7 +107,9 @@ class TerminateAllButton extends StatelessWidget {
                               ar: 'لا توجد أجهزة أخرى نشطة مسجلة الدخول.',
                               zh: '当前无其他在线设备。',
                             ),
-                      style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: secondaryTextColor,
+                      ),
                     ),
                   ],
                 ),
@@ -113,7 +124,9 @@ class TerminateAllButton extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: hasOthers
                     ? AppColors.error
-                    : (isDark ? AppColors.darkSurfaceVariant : AppColors.greyLight.withValues(alpha: 0.7)),
+                    : (isDark
+                          ? AppColors.darkSurfaceVariant
+                          : AppColors.greyLight.withValues(alpha: 0.7)),
                 foregroundColor: hasOthers
                     ? AppColors.white
                     : (isDark ? AppColors.softGray : AppColors.greyDark),

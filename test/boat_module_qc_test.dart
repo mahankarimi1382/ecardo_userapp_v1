@@ -10,9 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/travel/boat/screens/boat_vo
 Widget _host(Widget child) {
   return ScreenUtilInit(
     designSize: const Size(375, 812),
-    builder: (context, _) => GetMaterialApp(
-      home: child,
-    ),
+    builder: (context, _) => GetMaterialApp(home: child),
   );
 }
 
@@ -78,7 +76,9 @@ void main() {
       expect(total, equals(390.0));
     });
 
-    testWidgets('BoatCatalogScreen renders catalog with boats and filters', (tester) async {
+    testWidgets('BoatCatalogScreen renders catalog with boats and filters', (
+      tester,
+    ) async {
       phoneSurface(tester);
       await tester.pumpWidget(_host(const BoatCatalogScreen()));
       await tester.pumpAndSettle();
@@ -89,7 +89,9 @@ void main() {
       expect(find.textContaining('سان‌سیکر ۵۵'), findsOneWidget);
     });
 
-    testWidgets('BoatVoucherScreen renders marine pass with dock and QR', (tester) async {
+    testWidgets('BoatVoucherScreen renders marine pass with dock and QR', (
+      tester,
+    ) async {
       phoneSurface(tester);
       final sampleBooking = BoatBookingModel(
         bookingId: 'SEA-99123',

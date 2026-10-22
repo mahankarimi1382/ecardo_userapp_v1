@@ -53,7 +53,10 @@ class AppSpacing {
   }
 
   /// An EdgeInsets with safe bottom padding.
-  static EdgeInsets bottomSafeInsets(BuildContext context, [double extra = 16]) {
+  static EdgeInsets bottomSafeInsets(
+    BuildContext context, [
+    double extra = 16,
+  ]) {
     return EdgeInsets.only(bottom: bottomSafe(context, extra));
   }
 }

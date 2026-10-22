@@ -70,10 +70,9 @@ class Wallets {
     isDefault = json['is_default'];
     isCrypto = json['is_crypto'];
     currencyId = json['currency_id'];
-    giftLimit =
-        json['gift_limit'] != null
-            ? GiftLimit.fromJson(json['gift_limit'])
-            : null;
+    giftLimit = json['gift_limit'] != null
+        ? GiftLimit.fromJson(json['gift_limit'])
+        : null;
     conversionRate = json['conversion_rate'];
   }
 }

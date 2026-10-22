@@ -151,8 +151,9 @@ class MonogramAvatar extends StatelessWidget {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: (badgeColor ?? AppColors.success)
-                            .withValues(alpha: 0.35),
+                        color: (badgeColor ?? AppColors.success).withValues(
+                          alpha: 0.35,
+                        ),
                         blurRadius: 4,
                         offset: const Offset(0, 1),
                       ),

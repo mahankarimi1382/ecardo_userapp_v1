@@ -28,10 +28,8 @@ class InvestmentCalculatorSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (ctx) => InvestmentCalculatorSheet(
-        project: project,
-        onConfirmed: onConfirmed,
-      ),
+      builder: (ctx) =>
+          InvestmentCalculatorSheet(project: project, onConfirmed: onConfirmed),
     );
   }
 
@@ -66,9 +64,16 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl.r)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXl.r),
+        ),
       ),
-      padding: EdgeInsets.fromLTRB(AppSpacing.xl.w, AppSpacing.lg.h, AppSpacing.xl.w, MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl.h),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.xl.w,
+        AppSpacing.lg.h,
+        AppSpacing.xl.w,
+        MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl.h,
+      ),
       child: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -83,7 +88,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                   width: 36.w,
                   height: 4.h,
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkDivider : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightBorder,
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ),
@@ -108,13 +115,18 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ),
                   SizedBox(width: AppSpacing.sm.w),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.success.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(6.r),
@@ -137,7 +149,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                 widget.project.title,
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                   fontWeight: FontWeight.w500,
                 ),
                 maxLines: 1,
@@ -149,10 +163,14 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
               Container(
                 padding: EdgeInsets.all(AppSpacing.lg.w),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkCard : AppColors.lightBackground.withValues(alpha: 0.5),
+                  color: isDark
+                      ? AppColors.darkCard
+                      : AppColors.lightBackground.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(AppSpacing.radius.r),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Column(
@@ -174,7 +192,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ),
@@ -188,7 +208,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w900,
-                                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary,
                               ),
                             ),
                           ),
@@ -198,9 +220,15 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                     SizedBox(height: AppSpacing.sm.h),
                     SliderTheme(
                       data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                        inactiveTrackColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                        thumbColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        activeTrackColor: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
+                        inactiveTrackColor: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
+                        thumbColor: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                         trackHeight: 4.h,
                       ),
                       child: Slider(
@@ -225,14 +253,18 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             '${l10nPick(context, en: 'Min', fa: 'حداقل', ar: 'الحد الأدنى', zh: '最小')}: $currency ${_formatNumber(minAmount)}',
                             style: TextStyle(
                               fontSize: 10.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary,
                             ),
                           ),
                           Text(
                             '${l10nPick(context, en: 'Max', fa: 'حداکثر', ar: 'الحد الأقصى', zh: '最大')}: $currency ${_formatNumber(maxAmount)}',
                             style: TextStyle(
                               fontSize: 10.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary,
                             ),
                           ),
                         ],
@@ -249,7 +281,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.darkCard : AppColors.white,
                   borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-                  border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppColors.success.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -269,7 +303,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -292,7 +328,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                     Container(
                       width: 1,
                       height: 32.h,
-                      color: isDark ? AppColors.darkDivider : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkDivider
+                          : AppColors.lightBorder,
                     ),
                     SizedBox(width: 14.w),
                     Expanded(
@@ -311,7 +349,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -344,12 +384,18 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                 decoration: BoxDecoration(
                   color: AppColors.warning.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                  border: Border.all(color: AppColors.warning.withValues(alpha: 0.5)),
+                  border: Border.all(
+                    color: AppColors.warning.withValues(alpha: 0.5),
+                  ),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.info_outline_rounded, size: 18.sp, color: AppColors.warning),
+                    Icon(
+                      Icons.info_outline_rounded,
+                      size: 18.sp,
+                      color: AppColors.warning,
+                    ),
                     SizedBox(width: AppSpacing.sm.w),
                     Expanded(
                       child: Text(
@@ -363,7 +409,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                         style: TextStyle(
                           fontSize: 11.sp,
                           height: 1.5,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
@@ -375,7 +423,9 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
               // Interest Button
               CommonButton(
                 width: double.infinity,
-                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                backgroundColor: isDark
+                    ? AppColors.darkPrimary
+                    : AppColors.lightPrimary,
                 textColor: isDark ? AppColors.deepBlack : AppColors.white,
                 text: l10nPick(
                   context,

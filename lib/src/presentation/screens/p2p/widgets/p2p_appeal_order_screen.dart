@@ -69,7 +69,11 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
     if (_uploadedReceiptName == null) {
       Get.snackbar(
         l10nPick(context, fa: 'خطا', en: 'Error'),
-        l10nPick(context, fa: 'بارگذاری تصویر فیش واریزی الزامی است.', en: 'Payment receipt is required.'),
+        l10nPick(
+          context,
+          fa: 'بارگذاری تصویر فیش واریزی الزامی است.',
+          en: 'Payment receipt is required.',
+        ),
         backgroundColor: ECardoTokens.dangerBg(context),
         colorText: ECardoTokens.danger(context),
       );
@@ -81,24 +85,28 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
     final notes = _notesController.text.trim();
     final combinedReason = '$reasonText | Ref: $bankRef | Note: $notes';
 
-    final sTitle = l10nPick(context, fa: 'اعتراض ثبت شد', en: 'Appeal submitted');
-    final sMsg = l10nPick(context, fa: 'پرونده با شماره پیگیری جهت بررسی ۲۴ ساعته ارسال گردید.', en: 'Dispute submitted for 24h review.');
+    final sTitle = l10nPick(
+      context,
+      fa: 'اعتراض ثبت شد',
+      en: 'Appeal submitted',
+    );
+    final sMsg = l10nPick(
+      context,
+      fa: 'پرونده با شماره پیگیری جهت بررسی ۲۴ ساعته ارسال گردید.',
+      en: 'Dispute submitted for 24h review.',
+    );
     final sBg = ECardoTokens.successBg(context);
     final sColor = ECardoTokens.success(context);
 
     Get.back();
     await widget.controller.disputeOrder(reason: combinedReason);
-    Get.snackbar(
-      sTitle,
-      sMsg,
-      backgroundColor: sBg,
-      colorText: sColor,
-    );
+    Get.snackbar(sTitle, sMsg, backgroundColor: sBg, colorText: sColor);
   }
 
   @override
   Widget build(BuildContext context) {
-    final lockedAmount = widget.data.assetAmount ?? widget.data.sellerLockedAsset ?? '200.00';
+    final lockedAmount =
+        widget.data.assetAmount ?? widget.data.sellerLockedAsset ?? '200.00';
     final cryptoSymbol = widget.data.adsAssetCurrency ?? 'USDT';
 
     return Scaffold(
@@ -218,12 +226,17 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 12.h,
+                    ),
                     decoration: BoxDecoration(
                       color: isSelected
                           ? ECardoTokens.surfaceSunken(context)
                           : ECardoTokens.surfaceCard(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
                       border: Border.all(
                         color: isSelected
                             ? ECardoTokens.brand900(context)
@@ -252,7 +265,9 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                             ),
                             style: TextStyle(
                               fontSize: 13.sp,
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               color: ECardoTokens.ink(context),
                             ),
                           ),
@@ -286,7 +301,9 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
                     color: ECardoTokens.dangerBg(context),
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusSm.r,
+                    ),
                   ),
                   child: Text(
                     l10nPick(context, fa: 'الزامی', en: 'required'),
@@ -319,7 +336,12 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
-                      _uploadedReceiptName ?? l10nPick(context, fa: 'انتخاب تصویر فیش...', en: 'Select receipt...'),
+                      _uploadedReceiptName ??
+                          l10nPick(
+                            context,
+                            fa: 'انتخاب تصویر فیش...',
+                            en: 'Select receipt...',
+                          ),
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
@@ -331,7 +353,8 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                     onPressed: () {
                       HapticFeedback.lightImpact();
                       setState(() {
-                        _uploadedReceiptName = 'Receipt-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}.jpg';
+                        _uploadedReceiptName =
+                            'Receipt-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}.jpg';
                       });
                     },
                     child: Text(
@@ -396,10 +419,16 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                   color: ECardoTokens.ink(context),
                 ),
                 decoration: InputDecoration(
-                  hintText: l10nPick(context, fa: 'مثال: ۹۹۲۸۱۴۰۲۸۴۱', en: 'e.g. 99281402841'),
+                  hintText: l10nPick(
+                    context,
+                    fa: 'مثال: ۹۹۲۸۱۴۰۲۸۴۱',
+                    en: 'e.g. 99281402841',
+                  ),
                   hintStyle: TextStyle(
                     fontSize: 13.sp,
-                    color: ECardoTokens.inkMuted(context).withValues(alpha: 0.6),
+                    color: ECardoTokens.inkMuted(
+                      context,
+                    ).withValues(alpha: 0.6),
                   ),
                   border: InputBorder.none,
                 ),
@@ -447,7 +476,9 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                   ),
                   hintStyle: TextStyle(
                     fontSize: 12.sp,
-                    color: ECardoTokens.inkMuted(context).withValues(alpha: 0.6),
+                    color: ECardoTokens.inkMuted(
+                      context,
+                    ).withValues(alpha: 0.6),
                   ),
                   border: InputBorder.none,
                 ),
@@ -486,10 +517,7 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
                   ar: 'إرسال الاعتراض',
                   zh: '提交申诉',
                 ),
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
               ),
             ),
           ),

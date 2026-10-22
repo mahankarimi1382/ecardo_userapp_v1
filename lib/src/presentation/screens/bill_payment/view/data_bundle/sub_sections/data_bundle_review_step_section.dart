@@ -15,11 +15,13 @@ class DataBundleReviewStepSection extends StatelessWidget {
     final DataBundleController controller = Get.find<DataBundleController>();
     final settings = Get.find<SettingsService>();
 
-    final int decimals = int.tryParse(
+    final int decimals =
+        int.tryParse(
           settings.getSetting("site_currency_decimals")?.toString() ?? "2",
         ) ??
         2;
-    final String currency = settings.getSetting("site_currency")?.toString() ?? "تومان";
+    final String currency =
+        settings.getSetting("site_currency")?.toString() ?? "تومان";
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w),
@@ -27,23 +29,33 @@ class DataBundleReviewStepSection extends StatelessWidget {
         final payableText =
             "${controller.payableAmount.value.toStringAsFixed(decimals)} $currency";
 
-        final recipient = controller.dynamicFieldControllers.values.firstOrNull?.text ?? 'شماره سیم‌کارت';
+        final recipient =
+            controller.dynamicFieldControllers.values.firstOrNull?.text ??
+            'شماره سیم‌کارت';
 
         final baseAmountText =
             "${controller.amountText.value.isEmpty ? "0" : controller.amountText.value} ${controller.serviceData.value?.currency ?? currency}";
 
         return BillReviewReceiptCard(
-          serviceTitle: localization?.dataBundleReviewTitle ?? 'بسته اینترنت همراه',
+          serviceTitle:
+              localization?.dataBundleReviewTitle ?? 'بسته اینترنت همراه',
           operatorId: null,
-          operatorName: controller.serviceData.value?.name ?? 'اپراتور تلفن همراه',
+          operatorName:
+              controller.serviceData.value?.name ?? 'اپراتور تلفن همراه',
           recipientValue: recipient,
           recipientLabel: 'شماره تلفن همراه / Mobile',
           baseAmount: baseAmountText,
-          chargeAmount: controller.chargeText.value.isEmpty ? '0 $currency' : controller.chargeText.value,
-          conversionRate: controller.rateText.value.isEmpty ? null : controller.rateText.value,
+          chargeAmount: controller.chargeText.value.isEmpty
+              ? '0 $currency'
+              : controller.chargeText.value,
+          conversionRate: controller.rateText.value.isEmpty
+              ? null
+              : controller.rateText.value,
           payableAmount: payableText,
           isLoading: controller.isSubmitLoading.value,
-          confirmButtonText: localization?.dataBundleReviewConfirmButton ?? 'تأیید و فعال‌سازی بسته',
+          confirmButtonText:
+              localization?.dataBundleReviewConfirmButton ??
+              'تأیید و فعال‌سازی بسته',
           backButtonText: localization?.dataBundleReviewBackButton ?? 'بازگشت',
           onBack: () => controller.currentStep.value = 0,
           onConfirm: () => controller.submitPayBill(),

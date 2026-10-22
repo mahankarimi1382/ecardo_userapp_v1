@@ -35,7 +35,9 @@ class CountryController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchCountries() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? 'Failed to load countries');
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ?? 'Failed to load countries',
+      );
     } finally {}
   }
 }

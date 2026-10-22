@@ -18,7 +18,9 @@ class Generate2FaSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextTertiary;
     final iconStyle = SettingsIconTokens.twoFactor(isDark: isDark);
 
     return Container(

@@ -81,12 +81,14 @@ class EmailOtpLoginController extends GetxController {
       if (response.status == Status.completed) {
         codeSent.value = true;
         _startTimer();
-        ToastHelper().showSuccessToast(_pick(
-          en: 'If the email belongs to an account, a login code has been sent',
-          fa: 'اگر ایمیل متعلق به یک حساب باشد، کد ورود ارسال شد',
-          ar: 'إذا كان البريد يخص حسابًا، فقد أُرسل رمز الدخول',
-          zh: '如邮箱属于某个账户，登录验证码已发送',
-        ));
+        ToastHelper().showSuccessToast(
+          _pick(
+            en: 'If the email belongs to an account, a login code has been sent',
+            fa: 'اگر ایمیل متعلق به یک حساب باشد، کد ورود ارسال شد',
+            ar: 'إذا كان البريد يخص حسابًا، فقد أُرسل رمز الدخول',
+            zh: '如邮箱属于某个账户，登录验证码已发送',
+          ),
+        );
       }
     } catch (e, s) {
       debugPrint('❌ requestCode() error: $e');
@@ -99,12 +101,14 @@ class EmailOtpLoginController extends GetxController {
   Future<void> verifyCode() async {
     final code = pinCodeController.text.trim();
     if (code.length != 6) {
-      ToastHelper().showErrorToast(_pick(
-        en: 'Enter the 6-digit code',
-        fa: 'کد ۶ رقمی را وارد کنید',
-        ar: 'أدخل الرمز المكوّن من ٦ أرقام',
-        zh: '请输入 6 位验证码',
-      ));
+      ToastHelper().showErrorToast(
+        _pick(
+          en: 'Enter the 6-digit code',
+          fa: 'کد ۶ رقمی را وارد کنید',
+          ar: 'أدخل الرمز المكوّن من ٦ أرقام',
+          zh: '请输入 6 位验证码',
+        ),
+      );
       return;
     }
     isLoading.value = true;
@@ -129,19 +133,24 @@ class EmailOtpLoginController extends GetxController {
               ? Get.find<TokenService>().accessToken.value
               : null;
           if (token == null || token.isEmpty) {
-            debugPrint('❌ verifyCode: Missing token in TokenService. Secure storage write failed.');
+            debugPrint(
+              '❌ verifyCode: Missing token in TokenService. Secure storage write failed.',
+            );
             await Get.find<SettingsService>().wipeSession();
-            ToastHelper().showErrorToast(_pick(
-              en: 'Secure storage unavailable. Please check device security settings and try again.',
-              fa: 'فضای ذخیره‌سازی امن در دسترس نیست. لطفاً تنظیمات امنیتی دستگاه را بررسی کرده و مجدداً تلاش کنید.',
-              ar: 'وحدة التخزين الآمنة غير متوفرة. يرجى التحقق من إعدادات أمان الجهاز والمحاولة مرة أخرى.',
-              zh: '安全存储不可用。请检查设备安全设置后重试。',
-            ));
+            ToastHelper().showErrorToast(
+              _pick(
+                en: 'Secure storage unavailable. Please check device security settings and try again.',
+                fa: 'فضای ذخیره‌سازی امن در دسترس نیست. لطفاً تنظیمات امنیتی دستگاه را بررسی کرده و مجدداً تلاش کنید.',
+                ar: 'وحدة التخزين الآمنة غير متوفرة. يرجى التحقق من إعدادات أمان الجهاز والمحاولة مرة أخرى.',
+                zh: '安全存储不可用。请检查设备安全设置后重试。',
+              ),
+            );
             return;
           }
           await Get.find<SettingsService>().saveLoginCurrentState('logged_in');
-          await Get.find<SettingsService>()
-              .saveLoggedInUserEmail(emailController.text.trim());
+          await Get.find<SettingsService>().saveLoggedInUserEmail(
+            emailController.text.trim(),
+          );
           Get.offAllNamed(BaseRoute.navigation);
         }
       }
@@ -151,12 +160,14 @@ class EmailOtpLoginController extends GetxController {
       // UX-FIX (otp): a wrong/expired code must clear the boxes so the
       // user re-types cleanly instead of wondering why Verify is dead.
       pinCodeController.clear();
-      ToastHelper().showErrorToast(_pick(
-        en: 'The code is wrong or expired. Try again.',
-        fa: 'کد اشتباه یا منقضی شده است. دوباره تلاش کنید.',
-        ar: 'الرمز خاطئ أو منتهي. حاول مرة أخرى.',
-        zh: '验证码错误或已过期，请重试。',
-      ));
+      ToastHelper().showErrorToast(
+        _pick(
+          en: 'The code is wrong or expired. Try again.',
+          fa: 'کد اشتباه یا منقضی شده است. دوباره تلاش کنید.',
+          ar: 'الرمز خاطئ أو منتهي. حاول مرة أخرى.',
+          zh: '验证码错误或已过期，请重试。',
+        ),
+      );
     } finally {
       isLoading.value = false;
     }

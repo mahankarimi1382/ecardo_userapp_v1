@@ -27,7 +27,8 @@ class GiftRedeemHistory extends StatefulWidget {
 
 class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
     with WidgetsBindingObserver {
-  final GiftRedeemHistoryController controller = Get.find<GiftRedeemHistoryController>();
+  final GiftRedeemHistoryController controller =
+      Get.find<GiftRedeemHistoryController>();
   late ScrollController _scrollController;
 
   @override
@@ -73,7 +74,9 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Obx(
         () => Stack(
@@ -86,18 +89,26 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                   rightSideWidget: GestureDetector(
                     onTap: () {
                       HapticFeedback.lightImpact();
-                      Get.bottomSheet(const GiftRedeemTransactionFilterBottomSheet());
+                      Get.bottomSheet(
+                        const GiftRedeemTransactionFilterBottomSheet(),
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.all(AppSpacing.sm),
-                      margin: const EdgeInsetsDirectional.only(end: AppSpacing.lg),
+                      margin: const EdgeInsetsDirectional.only(
+                        end: AppSpacing.lg,
+                      ),
                       width: 42,
                       height: 42,
                       decoration: BoxDecoration(
                         color: isDark ? AppColors.darkCard : AppColors.white,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                         border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                       ),
                       child: Image.asset(
@@ -108,13 +119,12 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                Expanded(
-                  child: _buildTransactionsList(localizations, isDark),
-                ),
+                Expanded(child: _buildTransactionsList(localizations, isDark)),
               ],
             ),
             Visibility(
-              visible: controller.isTransactionsLoading.value ||
+              visible:
+                  controller.isTransactionsLoading.value ||
                   controller.isPageLoading.value,
               child: const Positioned(
                 bottom: 12,
@@ -175,9 +185,14 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
 
           final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
             currencyCode: currency,
-            siteCurrencyCode: Get.find<SettingsService>().getSetting('site_currency') ?? 'USD',
+            siteCurrencyCode:
+                Get.find<SettingsService>().getSetting('site_currency') ??
+                'USD',
             siteCurrencyDecimals:
-                Get.find<SettingsService>().getSetting('site_currency_decimals') ?? '2',
+                Get.find<SettingsService>().getSetting(
+                  'site_currency_decimals',
+                ) ??
+                '2',
             isCrypto: isCrypto,
           );
 
@@ -215,7 +230,9 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                   children: [
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
+                        padding: const EdgeInsetsDirectional.only(
+                          end: AppSpacing.sm,
+                        ),
                         child: SelectableText(
                           gift.code ?? '',
                           style: AppTextStyles.titleSmall.copyWith(
@@ -233,9 +250,7 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                       borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                       onTap: () {
                         HapticFeedback.lightImpact();
-                        Clipboard.setData(
-                          ClipboardData(text: gift.code ?? ''),
-                        );
+                        Clipboard.setData(ClipboardData(text: gift.code ?? ''));
                         ToastHelper().showSuccessToast(
                           localization.giftRedeemHistoryCodeCopied,
                         );
@@ -244,9 +259,14 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                         width: 34,
                         height: 34,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                          color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                              .withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
+                          color:
+                              (isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.deepBlack)
+                                  .withValues(alpha: 0.1),
                           border: Border.all(
                             color: isDark
                                 ? AppColors.darkBorder
@@ -288,9 +308,12 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: (isRedeemed ? AppColors.warning : AppColors.success)
-                            .withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                        color:
+                            (isRedeemed ? AppColors.warning : AppColors.success)
+                                .withValues(alpha: 0.14),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -300,7 +323,9 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                                 ? Icons.check_circle_outline_rounded
                                 : Icons.redeem_rounded,
                             size: 13,
-                            color: isRedeemed ? AppColors.warning : AppColors.success,
+                            color: isRedeemed
+                                ? AppColors.warning
+                                : AppColors.success,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -309,7 +334,9 @@ class _GiftRedeemHistoryState extends State<GiftRedeemHistory>
                                 : localization.giftRedeemHistoryClaimable,
                             style: AppTextStyles.labelSmall.copyWith(
                               fontWeight: FontWeight.w700,
-                              color: isRedeemed ? AppColors.warning : AppColors.success,
+                              color: isRedeemed
+                                  ? AppColors.warning
+                                  : AppColors.success,
                             ),
                           ),
                         ],

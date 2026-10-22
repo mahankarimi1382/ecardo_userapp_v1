@@ -75,14 +75,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
       List<BiometricType> availableBios = [];
       try {
-        availableBios = await _bio.auth.getAvailableBiometrics()
-            .timeout(const Duration(milliseconds: 300), onTimeout: () => []);
+        availableBios = await _bio.auth.getAvailableBiometrics().timeout(
+          const Duration(milliseconds: 300),
+          onTimeout: () => [],
+        );
       } catch (_) {}
       final hasFace = availableBios.contains(BiometricType.face);
       final hasFingerprint = availableBios.contains(BiometricType.fingerprint);
 
       final lock = await settings.getAppLockMinutes();
-      final fin = await settings.getNotifPref(SettingsService.notifFinancialKey);
+      final fin = await settings.getNotifPref(
+        SettingsService.notifFinancialKey,
+      );
       final promo = await settings.getNotifPref(
         SettingsService.notifPromoKey,
         def: false,
@@ -93,14 +97,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final unit = await settings.getRateUnit();
       bool notifGranted = false;
       try {
-        final notif = await Permission.notification.status
-            .timeout(const Duration(milliseconds: 150), onTimeout: () => PermissionStatus.denied);
+        final notif = await Permission.notification.status.timeout(
+          const Duration(milliseconds: 150),
+          onTimeout: () => PermissionStatus.denied,
+        );
         notifGranted = notif.isGranted || notif.isLimited;
       } catch (_) {}
       String ver = '';
       try {
-        final info = await PackageInfo.fromPlatform()
-            .timeout(const Duration(milliseconds: 150));
+        final info = await PackageInfo.fromPlatform().timeout(
+          const Duration(milliseconds: 150),
+        );
         ver = '${info.version}+${info.buildNumber}';
       } catch (_) {}
       if (!mounted) return;
@@ -239,8 +246,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     final go = await Get.dialog<bool>(
       AlertDialog(
@@ -466,8 +474,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final loc = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final scaffoldBg =
-        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final scaffoldBg = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
     final dividerColor = isDark
@@ -564,48 +573,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 if (DemoAccountService.isDemoAvailableInThisBuild &&
                     Get.isRegistered<DemoAccountService>())
                   _group(
-                  l10nPick(
-                    context,
-                    en: 'Demo & Testing Lab',
-                    fa: 'آزمایشگاه تست و دمو (QA Lab)',
-                    ar: 'مختبر الحساب التجريبي',
-                    zh: '演示与测试实验室',
-                  ),
-                  [
-                    _navTile(
-                      context: context,
-                      isDark: isDark,
-                      leading: _iconBox(
-                        icon: Icons.biotech_rounded,
-                        style: SettingsIconTokens.demoLab(isDark: isDark),
-                      ),
-                      title: l10nPick(
-                        context,
-                        en: 'Tester Control Panel',
-                        fa: 'تنظیمات اکانت تست (کنترل‌پنل دمو)',
-                        ar: 'لوحة تحكم الحساب التجريبي',
-                        zh: '测试与演示控制台',
-                      ),
-                      subtitle: l10nPick(
-                        context,
-                        en: 'Switch KYC levels, recharge wallets, and test mock flows',
-                        fa: 'تغییر آنی وضعیت KYC، شارژ مجدد کیف پول‌ها و ریست تست',
-                        ar: 'تعديل KYC وشحن المحافظ وتجربة الخدمات',
-                        zh: '切换KYC级别、重置多币种钱包、管理模拟数据',
-                      ),
-                      onTap: () {
-                        if (DemoAccountService.isDemoAvailableInThisBuild &&
-                            Get.isRegistered<DemoAccountService>()) {
-                          DemoAccountService.to
-                              .showTesterControlBottomSheet(context);
-                        }
-                      },
+                    l10nPick(
+                      context,
+                      en: 'Demo & Testing Lab',
+                      fa: 'آزمایشگاه تست و دمو (QA Lab)',
+                      ar: 'مختبر الحساب التجريبي',
+                      zh: '演示与测试实验室',
                     ),
-                  ],
-                  isDark: isDark,
-                  cardBg: cardBg,
-                  dividerColor: dividerColor,
-                ),
+                    [
+                      _navTile(
+                        context: context,
+                        isDark: isDark,
+                        leading: _iconBox(
+                          icon: Icons.biotech_rounded,
+                          style: SettingsIconTokens.demoLab(isDark: isDark),
+                        ),
+                        title: l10nPick(
+                          context,
+                          en: 'Tester Control Panel',
+                          fa: 'تنظیمات اکانت تست (کنترل‌پنل دمو)',
+                          ar: 'لوحة تحكم الحساب التجريبي',
+                          zh: '测试与演示控制台',
+                        ),
+                        subtitle: l10nPick(
+                          context,
+                          en: 'Switch KYC levels, recharge wallets, and test mock flows',
+                          fa: 'تغییر آنی وضعیت KYC، شارژ مجدد کیف پول‌ها و ریست تست',
+                          ar: 'تعديل KYC وشحن المحافظ وتجربة الخدمات',
+                          zh: '切换KYC级别、重置多币种钱包、管理模拟数据',
+                        ),
+                        onTap: () {
+                          if (DemoAccountService.isDemoAvailableInThisBuild &&
+                              Get.isRegistered<DemoAccountService>()) {
+                            DemoAccountService.to.showTesterControlBottomSheet(
+                              context,
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                    isDark: isDark,
+                    cardBg: cardBg,
+                    dividerColor: dividerColor,
+                  ),
                 _group(
                   l10nPick(
                     context,
@@ -620,7 +630,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.lock_rounded,
-                        style: SettingsIconTokens.changePassword(isDark: isDark),
+                        style: SettingsIconTokens.changePassword(
+                          isDark: isDark,
+                        ),
                       ),
                       title: loc.settingsChangePassword,
                       subtitle: l10nPick(
@@ -637,7 +649,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.dialpad_rounded,
-                        style: SettingsIconTokens.transactionPin(isDark: isDark),
+                        style: SettingsIconTokens.transactionPin(
+                          isDark: isDark,
+                        ),
                       ),
                       title: l10nPick(
                         context,
@@ -667,7 +681,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                       onTap: () {
-                        _showVisualChangePinModal(isDark, primaryTextColor, cardBg);
+                        _showVisualChangePinModal(
+                          isDark,
+                          primaryTextColor,
+                          cardBg,
+                        );
                       },
                     ),
                     if (settings.getSetting('fa_verification') == '1')
@@ -729,7 +747,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       isDark: isDark,
                       leading: _iconBox(
                         icon: Icons.devices_rounded,
-                        style: SettingsIconTokens.deviceSessions(isDark: isDark),
+                        style: SettingsIconTokens.deviceSessions(
+                          isDark: isDark,
+                        ),
                       ),
                       title: l10nPick(
                         context,
@@ -805,7 +825,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           HapticFeedback.lightImpact();
                           await settings.setPrivacyMode(v);
                           if (Get.isRegistered<WalletsController>()) {
-                            Get.find<WalletsController>().isPrivacyMode.value = v;
+                            Get.find<WalletsController>().isPrivacyMode.value =
+                                v;
                           }
                         },
                       ),
@@ -815,7 +836,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         isDark: isDark,
                         leading: _iconBox(
                           icon: Icons.shield_outlined,
-                          style: SettingsIconTokens.hideBackground(isDark: isDark),
+                          style: SettingsIconTokens.hideBackground(
+                            isDark: isDark,
+                          ),
                         ),
                         title: l10nPick(
                           context,
@@ -887,11 +910,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 en: '15 minutes',
                                 fa: '۱۵ دقیقه',
                               ),
-                              0: l10nPick(
-                                context,
-                                en: 'Never',
-                                fa: 'هرگز',
-                              ),
+                              0: l10nPick(context, en: 'Never', fa: 'هرگز'),
                             }.entries)
                               _BottomSheetItem(
                                 title: e.value,
@@ -1202,8 +1221,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Localizations.localeOf(context).languageCode,
                       ),
                       onTap: () async {
-                        final currentLang =
-                            Localizations.localeOf(context).languageCode;
+                        final currentLang = Localizations.localeOf(
+                          context,
+                        ).languageCode;
                         final code = await _showStyledBottomSheet<String>(
                           context: context,
                           isDark: isDark,
@@ -1227,8 +1247,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (code != null &&
                             Get.isRegistered<LocaleThemeService>()) {
                           if (!mounted) return;
-                          await Get.find<LocaleThemeService>()
-                              .setLanguage(code);
+                          await Get.find<LocaleThemeService>().setLanguage(
+                            code,
+                          );
                         }
                       },
                     ),
@@ -1315,9 +1336,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ar: 'وحدة عرض السعر',
                         zh: '汇率显示单位',
                       ),
-                      subtitle: _rateUnit == 'toman'
-                          ? _tomanLabel
-                          : _rialLabel,
+                      subtitle: _rateUnit == 'toman' ? _tomanLabel : _rialLabel,
                       onTap: () async {
                         final v = await _showStyledBottomSheet<String>(
                           context: context,
@@ -1478,33 +1497,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                           subtitle: switch (demo.demoKycStatus.value) {
                             1 => l10nPick(
-                                context,
-                                en: 'Level 1: Verified (Active)',
-                                fa: 'سطح ۱: تأییدشده (کامل)',
-                                ar: 'مستوى 1: موثق',
-                                zh: '已认证',
-                              ),
+                              context,
+                              en: 'Level 1: Verified (Active)',
+                              fa: 'سطح ۱: تأییدشده (کامل)',
+                              ar: 'مستوى 1: موثق',
+                              zh: '已认证',
+                            ),
                             2 => l10nPick(
-                                context,
-                                en: 'Level 2: In Review (Pending)',
-                                fa: 'در حال بررسی مدارک',
-                                ar: 'قيد المراجعة',
-                                zh: '审核中',
-                              ),
+                              context,
+                              en: 'Level 2: In Review (Pending)',
+                              fa: 'در حال بررسی مدارک',
+                              ar: 'قيد المراجعة',
+                              zh: '审核中',
+                            ),
                             3 => l10nPick(
-                                context,
-                                en: 'Level 3: Rejected with reason',
-                                fa: 'رد شده با دلیل نقص مدارک',
-                                ar: 'مرفوض مع السبب',
-                                zh: '已拒绝',
-                              ),
+                              context,
+                              en: 'Level 3: Rejected with reason',
+                              fa: 'رد شده با دلیل نقص مدارک',
+                              ar: 'مرفوض مع السبب',
+                              zh: '已拒绝',
+                            ),
                             _ => l10nPick(
-                                context,
-                                en: 'Unverified (Guest)',
-                                fa: 'احرازنشده',
-                                ar: 'غير موثق',
-                                zh: '未认证',
-                              ),
+                              context,
+                              en: 'Unverified (Guest)',
+                              fa: 'احرازنشده',
+                              ar: 'غير موثق',
+                              zh: '未认证',
+                            ),
                           },
                           trailing: const Icon(Icons.swap_horiz_rounded),
                           onTap: () {
@@ -1538,7 +1557,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: AppSpacing.cardGap),
                 OutlinedButton.icon(
                   onPressed: _confirmLogout,
-                  icon: const Icon(Icons.logout_rounded, color: AppColors.error),
+                  icon: const Icon(
+                    Icons.logout_rounded,
+                    color: AppColors.error,
+                  ),
                   label: Text(
                     loc.settingsSignOut,
                     style: const TextStyle(
@@ -1566,20 +1588,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String get _rialLabel => l10nPick(
-        context,
-        en: 'IRR (Rial)',
-        fa: 'ریال (IRR)',
-        ar: 'ريال (IRR)',
-        zh: 'IRR (里亚尔)',
-      );
+    context,
+    en: 'IRR (Rial)',
+    fa: 'ریال (IRR)',
+    ar: 'ريال (IRR)',
+    zh: 'IRR (里亚尔)',
+  );
 
-  String get _tomanLabel => l10nPick(
-        context,
-        en: 'Toman',
-        fa: 'تومان',
-        ar: 'تومان',
-        zh: '托曼',
-      );
+  String get _tomanLabel =>
+      l10nPick(context, en: 'Toman', fa: 'تومان', ar: 'تومان', zh: '托曼');
 
   String _versionLabel() {
     if (_version.isEmpty) return 'eCardo';
@@ -1640,39 +1657,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   String _themeLabel(String m) => switch (m) {
-        'light' => l10nPick(
-            context,
-            en: 'Light',
-            fa: 'روشن',
-            ar: 'فاتح',
-            tr: 'Açık',
-            ru: 'Светлая',
-            zh: '浅色',
-          ),
-        'dark' => l10nPick(
-            context,
-            en: 'Dark',
-            fa: 'تیره',
-            ar: 'داكن',
-            tr: 'Koyu',
-            ru: 'Темная',
-            zh: '深色',
-          ),
-        _ => l10nPick(
-            context,
-            en: 'System default',
-            fa: 'سیستم',
-            ar: 'النظام',
-            tr: 'Sistem varsayılanı',
-            ru: 'По умолчанию',
-            zh: '跟随系统',
-          ),
-      };
+    'light' => l10nPick(
+      context,
+      en: 'Light',
+      fa: 'روشن',
+      ar: 'فاتح',
+      tr: 'Açık',
+      ru: 'Светлая',
+      zh: '浅色',
+    ),
+    'dark' => l10nPick(
+      context,
+      en: 'Dark',
+      fa: 'تیره',
+      ar: 'داكن',
+      tr: 'Koyu',
+      ru: 'Темная',
+      zh: '深色',
+    ),
+    _ => l10nPick(
+      context,
+      en: 'System default',
+      fa: 'سیستم',
+      ar: 'النظام',
+      tr: 'Sistem varsayılanı',
+      ru: 'По умолчанию',
+      zh: '跟随系统',
+    ),
+  };
 
-  Widget _iconBox({
-    required IconData icon,
-    required SettingsIconStyle style,
-  }) {
+  Widget _iconBox({required IconData icon, required SettingsIconStyle style}) {
     return Container(
       width: 38,
       height: 38,
@@ -1778,8 +1792,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required VoidCallback onTap,
   }) {
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Material(
       color: Colors.transparent,
@@ -1799,10 +1814,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ? null
             : Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: secondaryTextColor,
-                ),
+                style: TextStyle(fontSize: 12, color: secondaryTextColor),
               ),
         trailing: _trailingChevron(context, isDark),
         onTap: onTap,
@@ -1820,8 +1832,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required VoidCallback? onTap,
   }) {
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Material(
       color: Colors.transparent,
@@ -1841,12 +1854,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ? null
             : Text(
                 subtitle,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: secondaryTextColor,
-                ),
+                style: TextStyle(fontSize: 12, color: secondaryTextColor),
               ),
-        trailing: trailing ??
+        trailing:
+            trailing ??
             (onTap != null ? _trailingChevron(context, isDark) : null),
         onTap: onTap,
       ),
@@ -1862,8 +1873,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required ValueChanged<bool> onChanged,
   }) {
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return SwitchListTile.adaptive(
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
@@ -1880,15 +1892,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ? null
           : Text(
               subtitle,
-              style: TextStyle(
-                fontSize: 12,
-                color: secondaryTextColor,
-              ),
+              style: TextStyle(fontSize: 12, color: secondaryTextColor),
             ),
       value: value,
       onChanged: onChanged,
-      activeTrackColor:
-          isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+      activeTrackColor: isDark
+          ? AppColors.mainSoftBlue
+          : AppColors.lightPrimary,
     );
   }
 
@@ -1934,11 +1944,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.fingerprint_rounded,
-                size: 20.sp,
-                color: accentColor,
-              ),
+              Icon(Icons.fingerprint_rounded, size: 20.sp, color: accentColor),
               if (_hasFaceBiometric) ...[
                 SizedBox(width: 2.w),
                 Icon(
@@ -1966,9 +1972,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required VoidCallback onTestHardware,
   }) {
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
-    final accentColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
+    final accentColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
 
     return Material(
       color: Colors.transparent,
@@ -1997,15 +2006,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: secondaryTextColor,
-                    ),
+                    style: TextStyle(fontSize: 12, color: secondaryTextColor),
                   ),
                   SizedBox(height: 4.h),
                   Row(
                     children: [
-                      Icon(Icons.verified_user_rounded, size: 11.sp, color: AppColors.success),
+                      Icon(
+                        Icons.verified_user_rounded,
+                        size: 11.sp,
+                        color: AppColors.success,
+                      ),
                       SizedBox(width: 4.w),
                       Text(
                         l10nPick(
@@ -2029,10 +2039,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       onTap: isTesting ? null : onTestHardware,
                       borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
                           color: accentColor.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
                           border: Border.all(
                             color: accentColor.withValues(alpha: 0.28),
                             width: 0.8,
@@ -2103,10 +2118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-        border: Border.all(
-          color: color.withValues(alpha: 0.28),
-          width: 0.8,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.28), width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -2119,8 +2131,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SizedBox(width: 4.w),
           Text(
             isEnabled
-                ? l10nPick(context, en: 'Enabled', fa: 'فعال', ar: 'مفعّل', zh: '已启用')
-                : l10nPick(context, en: 'Disabled', fa: 'غیرفعال', ar: 'معطّل', zh: '未启用'),
+                ? l10nPick(
+                    context,
+                    en: 'Enabled',
+                    fa: 'فعال',
+                    ar: 'مفعّل',
+                    zh: '已启用',
+                  )
+                : l10nPick(
+                    context,
+                    en: 'Disabled',
+                    fa: 'غیرفعال',
+                    ar: 'معطّل',
+                    zh: '未启用',
+                  ),
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w700,
@@ -2139,10 +2163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-        border: Border.all(
-          color: color.withValues(alpha: 0.28),
-          width: 0.8,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.28), width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -2157,8 +2178,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
           SizedBox(width: 6.w),
           Text(
             isConfigured
-                ? l10nPick(context, en: 'Configured', fa: 'فعال', ar: 'مفعّل', zh: '已设置')
-                : l10nPick(context, en: 'Not Set', fa: 'تنظیم نشده', ar: 'غير معيّن', zh: '未设置'),
+                ? l10nPick(
+                    context,
+                    en: 'Configured',
+                    fa: 'فعال',
+                    ar: 'مفعّل',
+                    zh: '已设置',
+                  )
+                : l10nPick(
+                    context,
+                    en: 'Not Set',
+                    fa: 'تنظیم نشده',
+                    ar: 'غير معيّن',
+                    zh: '未设置',
+                  ),
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w700,
@@ -2176,7 +2209,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required bool isDark,
     required VoidCallback onTap,
   }) {
-    final primaryColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.mainSoftBlue
+        : AppColors.lightPrimary;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
@@ -2188,7 +2223,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               : (isDark ? AppColors.darkSurface : AppColors.white),
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
           border: Border.all(
-            color: isSelected ? primaryColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            color: isSelected
+                ? primaryColor
+                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             width: isSelected ? 1.4 : 0.8,
           ),
         ),
@@ -2205,12 +2242,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SizedBox(width: 6.w),
             Text(
               length == 4
-                  ? l10nPick(context, en: '4 Digits', fa: '۴ رقم', ar: '4 أرقام', zh: '4位')
-                  : l10nPick(context, en: '6 Digits', fa: '۶ رقم', ar: '6 أرقام', zh: '6位'),
+                  ? l10nPick(
+                      context,
+                      en: '4 Digits',
+                      fa: '۴ رقم',
+                      ar: '4 أرقام',
+                      zh: '4位',
+                    )
+                  : l10nPick(
+                      context,
+                      en: '6 Digits',
+                      fa: '۶ رقم',
+                      ar: '6 أرقام',
+                      zh: '6位',
+                    ),
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                color: isSelected ? primaryColor : (isDark ? AppColors.softGray : AppColors.lightTextSecondary),
+                color: isSelected
+                    ? primaryColor
+                    : (isDark
+                          ? AppColors.softGray
+                          : AppColors.lightTextSecondary),
               ),
             ),
           ],
@@ -2249,7 +2302,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       width: 40.w,
                       height: 4.h,
                       decoration: BoxDecoration(
-                        color: isDark ? AppColors.softGray.withValues(alpha: 0.4) : AppColors.lightWarmGray,
+                        color: isDark
+                            ? AppColors.softGray.withValues(alpha: 0.4)
+                            : AppColors.lightWarmGray,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -2260,13 +2315,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     children: [
                       Icon(
                         Icons.dialpad_rounded,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.lightPrimary,
                         size: 24.sp,
                       ),
                       SizedBox(width: 8.w),
                       Text(
-                        l10nPick(context, en: 'Transaction PIN', fa: 'رمز انتقال وجه', ar: 'رمز التحويل', zh: '转账密码'),
-                        style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w700, color: primaryTextColor),
+                        l10nPick(
+                          context,
+                          en: 'Transaction PIN',
+                          fa: 'رمز انتقال وجه',
+                          ar: 'رمز التحويل',
+                          zh: '转账密码',
+                        ),
+                        style: TextStyle(
+                          fontSize: 17.sp,
+                          fontWeight: FontWeight.w700,
+                          color: primaryTextColor,
+                        ),
                       ),
                     ],
                   ),
@@ -2282,7 +2349,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.softGray
+                          : AppColors.lightTextSecondary,
                       height: 1.4,
                     ),
                   ),
@@ -2291,12 +2360,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // Visual Dots Display
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 14.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.4),
+                      color: isDark
+                          ? AppColors.darkCard
+                          : AppColors.greyLight.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                       border: Border.all(
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
                         width: 0.8,
                       ),
                     ),
@@ -2337,12 +2413,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         SizedBox(height: 10.h),
                         Text(
                           isPinConfigured
-                              ? l10nPick(context, en: 'PIN is Active & Protected ($selectedLength digits)', fa: 'رمز فعال و محافظت‌شده است ($selectedLength رقم)', ar: 'الرمز مفعّل ومحمي', zh: '密码已启用并受保护')
-                              : l10nPick(context, en: 'PIN not configured ($selectedLength digits)', fa: 'رمز تنظیم نشده است ($selectedLength رقم)', ar: 'الرمز غير معيّن', zh: '尚未设置密码'),
+                              ? l10nPick(
+                                  context,
+                                  en: 'PIN is Active & Protected ($selectedLength digits)',
+                                  fa: 'رمز فعال و محافظت‌شده است ($selectedLength رقم)',
+                                  ar: 'الرمز مفعّل ومحمي',
+                                  zh: '密码已启用并受保护',
+                                )
+                              : l10nPick(
+                                  context,
+                                  en: 'PIN not configured ($selectedLength digits)',
+                                  fa: 'رمز تنظیم نشده است ($selectedLength رقم)',
+                                  ar: 'الرمز غير معيّن',
+                                  zh: '尚未设置密码',
+                                ),
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w600,
-                            color: isPinConfigured ? AppColors.success : AppColors.warning,
+                            color: isPinConfigured
+                                ? AppColors.success
+                                : AppColors.warning,
                           ),
                         ),
                       ],
@@ -2354,19 +2444,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   // Action Buttons
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
-                      foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                      backgroundColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
+                      foregroundColor: isDark
+                          ? AppColors.deepBlack
+                          : AppColors.white,
                       minimumSize: Size(double.infinity, 46.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                       ),
                     ),
                     icon: Icon(Icons.pin_rounded, size: 18.sp),
                     label: Text(
                       isPinConfigured
-                          ? l10nPick(context, en: 'Change Transaction PIN', fa: 'تغییر رمز انتقال وجه', ar: 'تغيير رمز التحويل', zh: '修改转账密码')
-                          : l10nPick(context, en: 'Set Transaction PIN', fa: 'تعیین رمز انتقال وجه', ar: 'تعيين رمز التحويل', zh: '设置转账密码'),
-                      style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                          ? l10nPick(
+                              context,
+                              en: 'Change Transaction PIN',
+                              fa: 'تغییر رمز انتقال وجه',
+                              ar: 'تغيير رمز التحويل',
+                              zh: '修改转账密码',
+                            )
+                          : l10nPick(
+                              context,
+                              en: 'Set Transaction PIN',
+                              fa: 'تعیین رمز انتقال وجه',
+                              ar: 'تعيين رمز التحويل',
+                              zh: '设置转账密码',
+                            ),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     onPressed: () {
                       Navigator.pop(ctx);
@@ -2417,8 +2528,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 child: Row(
                   children: [
                     Text(
@@ -2437,19 +2550,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 Material(
                   color: Colors.transparent,
                   child: ListTile(
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 2,
+                    ),
                     minTileHeight: 48,
                     leading: item.icon != null
                         ? Icon(
                             item.icon,
                             color: item.isSelected
                                 ? (isDark
-                                    ? AppColors.mainSoftBlue
-                                    : AppColors.lightPrimary)
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.lightPrimary)
                                 : (isDark
-                                    ? AppColors.softGray
-                                    : AppColors.lightTextSecondary),
+                                      ? AppColors.softGray
+                                      : AppColors.lightTextSecondary),
                             size: 22,
                           )
                         : null,
@@ -2462,8 +2577,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             : FontWeight.w500,
                         color: item.isSelected
                             ? (isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.lightPrimary)
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.lightPrimary)
                             : primaryTextColor,
                       ),
                     ),
@@ -2491,8 +2606,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     HapticFeedback.lightImpact();
     final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     await showModalBottomSheet<void>(
@@ -2770,29 +2886,29 @@ class SettingsIconTokens {
 
   /// Profile setting tile (name, photo)
   static SettingsIconStyle profile({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-        backgroundColor: isDark
-            ? AppColors.darkPrimaryContainer
-            : AppColors.brandVioletContainer,
-      );
+    iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+    backgroundColor: isDark
+        ? AppColors.darkPrimaryContainer
+        : AppColors.brandVioletContainer,
+  );
 
   /// KYC / ID Verification tile (tier & document status)
   static SettingsIconStyle kyc({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
-        backgroundColor: isDark
-            ? AppColors.darkSecondaryContainer
-            : AppColors.lightSecondaryContainer,
-      );
+    iconColor: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+    backgroundColor: isDark
+        ? AppColors.darkSecondaryContainer
+        : AppColors.lightSecondaryContainer,
+  );
 
   // ------------------ CATEGORY: DEMO & QA LAB ------------------
 
   /// Tester control panel tile
   static SettingsIconStyle demoLab({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-        backgroundColor: isDark
-            ? AppColors.darkPrimaryContainer
-            : AppColors.brandVioletContainer,
-      );
+    iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+    backgroundColor: isDark
+        ? AppColors.darkPrimaryContainer
+        : AppColors.brandVioletContainer,
+  );
 
   // ------------------ CATEGORY: SECURITY ------------------
 
@@ -2815,7 +2931,8 @@ class SettingsIconTokens {
       );
 
   /// Two-factor authentication (Google Authenticator) tile
-  static SettingsIconStyle twoFactor({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle twoFactor({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.success,
         backgroundColor: isDark
             ? AppColors.success.withValues(alpha: 0.20)
@@ -2823,7 +2940,8 @@ class SettingsIconTokens {
       );
 
   /// Dynamic payment OTP generator tile
-  static SettingsIconStyle paymentOtp({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle paymentOtp({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.info,
         backgroundColor: isDark
             ? AppColors.info.withValues(alpha: 0.20)
@@ -2840,7 +2958,8 @@ class SettingsIconTokens {
       );
 
   /// Biometric authentication toggle tile
-  static SettingsIconStyle biometric({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle biometric({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.mutedBlue,
         backgroundColor: isDark
             ? AppColors.darkSecondaryContainer
@@ -2848,7 +2967,8 @@ class SettingsIconTokens {
       );
 
   /// Auto app lock timer tile
-  static SettingsIconStyle autoAppLock({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle autoAppLock({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.warning,
         backgroundColor: isDark
             ? AppColors.warning.withValues(alpha: 0.20)
@@ -2856,7 +2976,8 @@ class SettingsIconTokens {
       );
 
   /// App lock PIN tile (local device unlock)
-  static SettingsIconStyle appLockPin({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle appLockPin({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: isDark ? AppColors.warmWhite : AppColors.softGray,
         backgroundColor: isDark
             ? AppColors.darkSurfaceVariant
@@ -2887,20 +3008,19 @@ class SettingsIconTokens {
   static SettingsIconStyle notificationAccess({
     required bool isDark,
     required bool granted,
-  }) =>
-      granted
-          ? SettingsIconStyle(
-              iconColor: AppColors.success,
-              backgroundColor: isDark
-                  ? AppColors.success.withValues(alpha: 0.20)
-                  : AppColors.successContainer,
-            )
-          : SettingsIconStyle(
-              iconColor: AppColors.error,
-              backgroundColor: isDark
-                  ? AppColors.error.withValues(alpha: 0.20)
-                  : AppColors.errorContainer,
-            );
+  }) => granted
+      ? SettingsIconStyle(
+          iconColor: AppColors.success,
+          backgroundColor: isDark
+              ? AppColors.success.withValues(alpha: 0.20)
+              : AppColors.successContainer,
+        )
+      : SettingsIconStyle(
+          iconColor: AppColors.error,
+          backgroundColor: isDark
+              ? AppColors.error.withValues(alpha: 0.20)
+              : AppColors.errorContainer,
+        );
 
   /// Financial notification preferences tile
   static SettingsIconStyle notificationFinancial({required bool isDark}) =>
@@ -2931,14 +3051,15 @@ class SettingsIconTokens {
 
   /// Notification sound toggle tile
   static SettingsIconStyle sound({required bool isDark}) => SettingsIconStyle(
-        iconColor: AppColors.info,
-        backgroundColor: isDark
-            ? AppColors.darkSurfaceVariant
-            : AppColors.infoContainer,
-      );
+    iconColor: AppColors.info,
+    backgroundColor: isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.infoContainer,
+  );
 
   /// Notification vibration toggle tile
-  static SettingsIconStyle vibration({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle vibration({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
         backgroundColor: isDark
             ? AppColors.darkPrimaryContainer
@@ -2968,7 +3089,8 @@ class SettingsIconTokens {
   // ------------------ CATEGORY: PERSONALIZATION ------------------
 
   /// Language selection tile
-  static SettingsIconStyle language({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle language({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.info,
         backgroundColor: isDark
             ? AppColors.info.withValues(alpha: 0.20)
@@ -2977,14 +3099,15 @@ class SettingsIconTokens {
 
   /// Theme mode selection tile
   static SettingsIconStyle theme({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-        backgroundColor: isDark
-            ? AppColors.darkPrimaryContainer
-            : AppColors.brandVioletContainer,
-      );
+    iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+    backgroundColor: isDark
+        ? AppColors.darkPrimaryContainer
+        : AppColors.brandVioletContainer,
+  );
 
   /// Rate display unit tile
-  static SettingsIconStyle rateUnit({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle rateUnit({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.success,
         backgroundColor: isDark
             ? AppColors.success.withValues(alpha: 0.20)
@@ -2995,30 +3118,31 @@ class SettingsIconTokens {
 
   /// Support and tickets tile
   static SettingsIconStyle support({required bool isDark}) => SettingsIconStyle(
-        iconColor: AppColors.mutedBlue,
-        backgroundColor: isDark
-            ? AppColors.darkSecondaryContainer
-            : AppColors.lightSecondaryContainer,
-      );
+    iconColor: AppColors.mutedBlue,
+    backgroundColor: isDark
+        ? AppColors.darkSecondaryContainer
+        : AppColors.lightSecondaryContainer,
+  );
 
   /// About us tile
   static SettingsIconStyle about({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-        backgroundColor: isDark
-            ? AppColors.darkPrimaryContainer
-            : AppColors.brandVioletContainer,
-      );
+    iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+    backgroundColor: isDark
+        ? AppColors.darkPrimaryContainer
+        : AppColors.brandVioletContainer,
+  );
 
   /// Terms and privacy tile
   static SettingsIconStyle terms({required bool isDark}) => SettingsIconStyle(
-        iconColor: isDark ? AppColors.warmWhite : AppColors.softGray,
-        backgroundColor: isDark
-            ? AppColors.darkSurfaceVariant
-            : AppColors.lightSurfaceVariant,
-      );
+    iconColor: isDark ? AppColors.warmWhite : AppColors.softGray,
+    backgroundColor: isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightSurfaceVariant,
+  );
 
   /// Check for application updates tile
-  static SettingsIconStyle appUpdate({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle appUpdate({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.success,
         backgroundColor: isDark
             ? AppColors.success.withValues(alpha: 0.20)
@@ -3029,14 +3153,15 @@ class SettingsIconTokens {
 
   /// Simulated KYC status tile in demo panel
   static SettingsIconStyle demoKyc({required bool isDark}) => SettingsIconStyle(
-        iconColor: AppColors.success,
-        backgroundColor: isDark
-            ? AppColors.success.withValues(alpha: 0.20)
-            : AppColors.successContainer,
-      );
+    iconColor: AppColors.success,
+    backgroundColor: isDark
+        ? AppColors.success.withValues(alpha: 0.20)
+        : AppColors.successContainer,
+  );
 
   /// Exit demo mode tile
-  static SettingsIconStyle demoExit({required bool isDark}) => SettingsIconStyle(
+  static SettingsIconStyle demoExit({required bool isDark}) =>
+      SettingsIconStyle(
         iconColor: AppColors.error,
         backgroundColor: isDark
             ? AppColors.error.withValues(alpha: 0.20)

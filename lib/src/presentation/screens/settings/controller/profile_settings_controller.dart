@@ -233,7 +233,11 @@ class ProfileSettingsController extends GetxController {
   }
 
   // Update Cities based on Country Code
-  void updateCitiesForCountry(String code, {String? name, bool resetCity = true}) {
+  void updateCitiesForCountry(
+    String code, {
+    String? name,
+    bool resetCity = true,
+  }) {
     isCityLoading.value = true;
     try {
       final cities = CountryCityHelper.getCities(code, countryName: name);
@@ -270,7 +274,11 @@ class ProfileSettingsController extends GetxController {
           countryController.text = findCountry.name ?? "";
           countryCode.value = findCountry.code ?? "";
           countryDialCode.value = findCountry.dialCode ?? "";
-          updateCitiesForCountry(findCountry.code ?? "", name: findCountry.name, resetCity: false);
+          updateCitiesForCountry(
+            findCountry.code ?? "",
+            name: findCountry.name,
+            resetCity: false,
+          );
         } else if (countryCode.value.isNotEmpty) {
           updateCitiesForCountry(countryCode.value, resetCity: false);
         }
@@ -331,8 +339,8 @@ class ProfileSettingsController extends GetxController {
         genderCode = l == 'male' || l == 'm'
             ? 'male'
             : l == 'female' || l == 'f'
-                ? 'female'
-                : 'other';
+            ? 'female'
+            : 'other';
       }
       final formData = dio.FormData.fromMap({
         'first_name': firstNameController.text,
@@ -379,9 +387,7 @@ class ProfileSettingsController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ submitUpdateProfile() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        loc.allControllerLoadError,
-      );
+      ToastHelper().showErrorToast(loc.allControllerLoadError);
     } finally {
       isProfileUpdateLoading.value = false;
     }

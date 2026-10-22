@@ -346,13 +346,15 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ECardoTokens.brand700(context),
                       side: BorderSide(
-                        color: ECardoTokens.brand500(context)
-                            .withValues(alpha: 0.4),
+                        color: ECardoTokens.brand500(
+                          context,
+                        ).withValues(alpha: 0.4),
                         width: 1.2.w,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                       ),
                       padding: EdgeInsets.symmetric(
                         vertical: 10.h,
@@ -393,8 +395,8 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                   _isAccordionExpanded
                       ? (isRtl ? 'نمایش کمتر' : 'Show less')
                       : (isRtl
-                          ? 'نمایش بیشتر (${allAmenities.length})'
-                          : 'Show all (${allAmenities.length})'),
+                            ? 'نمایش بیشتر (${allAmenities.length})'
+                            : 'Show all (${allAmenities.length})'),
                   style: TextStyle(
                     color: ECardoTokens.brand700(context),
                     fontWeight: FontWeight.w700,
@@ -422,10 +424,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-        border: Border.all(
-          color: borderColor,
-          width: 1.w,
-        ),
+        border: Border.all(color: borderColor, width: 1.w),
         boxShadow: ECardoTokens.shadowCard(context),
       ),
       child: Row(
@@ -439,11 +438,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
               shape: BoxShape.circle,
             ),
             child: Center(
-              child: Icon(
-                amenity.icon,
-                size: 18.sp,
-                color: brandColor,
-              ),
+              child: Icon(amenity.icon, size: 18.sp, color: brandColor),
             ),
           ),
           SizedBox(width: 8.w),
@@ -489,8 +484,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
 
         return Container(
           constraints: BoxConstraints(
-            maxHeight:
-                MediaQuery.of(bottomSheetContext).size.height * 0.82,
+            maxHeight: MediaQuery.of(bottomSheetContext).size.height * 0.82,
           ),
           decoration: BoxDecoration(
             color: cardBg,
@@ -521,8 +515,9 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                       padding: EdgeInsets.all(8.r),
                       decoration: BoxDecoration(
                         color: ECardoTokens.brand100(bottomSheetContext),
-                        borderRadius:
-                            BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                       ),
                       child: Icon(
                         Icons.hotel_rounded,
@@ -545,8 +540,7 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                     ),
                     IconButton(
                       icon: const Icon(Icons.close_rounded),
-                      onPressed: () =>
-                          Navigator.of(bottomSheetContext).pop(),
+                      onPressed: () => Navigator.of(bottomSheetContext).pop(),
                     ),
                   ],
                 ),
@@ -599,20 +593,17 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                           Container(
                             decoration: BoxDecoration(
                               color: ECardoTokens.surfaceSunken(context),
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusLg),
-                              border: Border.all(
-                                color: borderColor,
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusLg,
                               ),
+                              border: Border.all(color: borderColor),
                             ),
                             child: ListView.separated(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: categoryAmenities.length,
-                              separatorBuilder: (_, _) => Divider(
-                                color: borderColor,
-                                height: 1.h,
-                              ),
+                              separatorBuilder: (_, _) =>
+                                  Divider(color: borderColor, height: 1.h),
                               itemBuilder: (context, itemIdx) {
                                 final item = categoryAmenities[itemIdx];
                                 return Padding(
@@ -625,11 +616,13 @@ class _HotelAmenitiesGridState extends State<HotelAmenitiesGrid> {
                                       Container(
                                         padding: EdgeInsets.all(7.r),
                                         decoration: BoxDecoration(
-                                          color:
-                                              ECardoTokens.surfaceCard(context),
+                                          color: ECardoTokens.surfaceCard(
+                                            context,
+                                          ),
                                           shape: BoxShape.circle,
-                                          boxShadow:
-                                              ECardoTokens.shadowCard(context),
+                                          boxShadow: ECardoTokens.shadowCard(
+                                            context,
+                                          ),
                                         ),
                                         child: Icon(
                                           item.icon,

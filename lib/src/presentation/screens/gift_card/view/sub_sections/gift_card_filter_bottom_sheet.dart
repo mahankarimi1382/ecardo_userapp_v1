@@ -137,7 +137,8 @@ class _GiftCardFilterBottomSheetState extends State<GiftCardFilterBottomSheet> {
                           bottomSheetHeight: 500.h,
                           currentlySelectedValue:
                               controller.giftCardCountryController.text,
-                          notFoundText: localization.giftCardFilterCountryNotFound,
+                          notFoundText:
+                              localization.giftCardFilterCountryNotFound,
                         ),
                       );
                     },

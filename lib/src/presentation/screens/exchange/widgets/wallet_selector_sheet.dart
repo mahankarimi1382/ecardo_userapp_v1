@@ -87,8 +87,9 @@ class _WalletSelectorSheetState extends State<WalletSelectorSheet> {
             width: 40,
             height: 5,
             decoration: BoxDecoration(
-              color: ExchangeDesignTokens.textPrimary(context)
-                  .withValues(alpha: 0.2),
+              color: ExchangeDesignTokens.textPrimary(
+                context,
+              ).withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
             ),
           ),
@@ -176,11 +177,13 @@ class _WalletSelectorSheetState extends State<WalletSelectorSheet> {
                         onSelected: _handleSelect,
                       ),
                     ),
-                    if (crypto.isNotEmpty) const SizedBox(height: AppSpacing.xl),
+                    if (crypto.isNotEmpty)
+                      const SizedBox(height: AppSpacing.xl),
                   ],
                   if (crypto.isNotEmpty) ...[
                     _SectionHeader(
-                      label: widget.cryptoHeader ??
+                      label:
+                          widget.cryptoHeader ??
                           loc.exchangeWalletSectionCrypto,
                     ),
                     const SizedBox(height: AppSpacing.sm),
@@ -215,9 +218,7 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.symmetric(
-        horizontal: AppSpacing.xs,
-      ),
+      padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.xs),
       child: Text(
         label,
         style: TextStyle(
@@ -253,11 +254,11 @@ class _WalletRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? (isDark
-                  ? AppColors.mainSoftBlue.withValues(alpha: 0.16)
-                  : AppColors.lightPrimary.withValues(alpha: 0.08))
+                    ? AppColors.mainSoftBlue.withValues(alpha: 0.16)
+                    : AppColors.lightPrimary.withValues(alpha: 0.08))
               : (isDark
-                  ? AppColors.darkSurfaceVariant
-                  : AppColors.lightBackground),
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightBackground),
           borderRadius: BorderRadius.circular(AppSpacing.radius),
           border: isSelected
               ? Border.all(
@@ -302,8 +303,8 @@ class _WalletRow extends StatelessWidget {
                                   fontWeight: FontWeight.w900,
                                   color: isSelected
                                       ? (isDark
-                                          ? AppColors.mainSoftBlue
-                                          : AppColors.lightPrimary)
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.lightPrimary)
                                       : ExchangeDesignTokens.textPrimary(
                                           context,
                                         ),

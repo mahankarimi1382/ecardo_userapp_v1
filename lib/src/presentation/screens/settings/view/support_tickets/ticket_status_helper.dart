@@ -191,13 +191,21 @@ class _TicketStatusBadgeState extends State<TicketStatusBadge>
   @override
   Widget build(BuildContext context) {
     final statusColor = TicketStatusHelper.color(widget.status);
-    final statusBg = TicketStatusHelper.containerColor(widget.status, isDark: widget.isDark);
-    final statusBorder = TicketStatusHelper.borderColor(widget.status, isDark: widget.isDark);
+    final statusBg = TicketStatusHelper.containerColor(
+      widget.status,
+      isDark: widget.isDark,
+    );
+    final statusBorder = TicketStatusHelper.borderColor(
+      widget.status,
+      isDark: widget.isDark,
+    );
     final label = TicketStatusHelper.label(widget.localization, widget.status);
-    final isPulsing = TicketStatusHelper.hasPulse(widget.status) && _pulseAnimation != null;
+    final isPulsing =
+        TicketStatusHelper.hasPulse(widget.status) && _pulseAnimation != null;
 
     return Container(
-      padding: widget.padding ??
+      padding:
+          widget.padding ??
           const EdgeInsets.symmetric(horizontal: 10, vertical: 4.5),
       decoration: BoxDecoration(
         color: statusBg,
@@ -216,7 +224,9 @@ class _TicketStatusBadgeState extends State<TicketStatusBadge>
                   width: 7.5,
                   height: 7.5,
                   decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: _pulseAnimation!.value),
+                    color: statusColor.withValues(
+                      alpha: _pulseAnimation!.value,
+                    ),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(

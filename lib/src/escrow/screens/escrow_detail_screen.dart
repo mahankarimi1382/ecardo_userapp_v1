@@ -56,7 +56,10 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
           child: Obx(() {
-            final o = controller.activeOrder.value ?? widget.initialOrder ?? EscrowController.defaultOrders.first;
+            final o =
+                controller.activeOrder.value ??
+                widget.initialOrder ??
+                EscrowController.defaultOrders.first;
             return CommonAppBar(
               title: 'Deal ${o.contractNo}',
               isBackLogicApply: true,
@@ -66,15 +69,21 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
         ),
       ),
       body: Obx(() {
-        if (controller.isActionLoading.value && controller.activeOrder.value == null) {
+        if (controller.isActionLoading.value &&
+            controller.activeOrder.value == null) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final o = controller.activeOrder.value ?? widget.initialOrder ?? EscrowController.defaultOrders.first;
+        final o =
+            controller.activeOrder.value ??
+            widget.initialOrder ??
+            EscrowController.defaultOrders.first;
         final isFundsHeld = o.isFundsHeld;
         final isInspection = o.isInspection;
         final isDisputed = o.isDisputed;
-        final lockedAmount = o.totalEscrowAmount > 0 ? o.totalEscrowAmount : 2400.0;
+        final lockedAmount = o.totalEscrowAmount > 0
+            ? o.totalEscrowAmount
+            : 2400.0;
 
         return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -102,16 +111,21 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: isFundsHeld
                                 ? ECardoTokens.successBg(context)
                                 : isInspection
-                                    ? ECardoTokens.sand100(context)
-                                    : isDisputed
-                                        ? ECardoTokens.dangerBg(context)
-                                        : ECardoTokens.brand100(context),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                                ? ECardoTokens.sand100(context)
+                                : isDisputed
+                                ? ECardoTokens.dangerBg(context)
+                                : ECardoTokens.brand100(context),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusSm.r,
+                            ),
                           ),
                           child: Text(
                             o.statusLabel,
@@ -121,10 +135,10 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                               color: isFundsHeld
                                   ? ECardoTokens.success(context)
                                   : isInspection
-                                      ? ECardoTokens.sand600(context)
-                                      : isDisputed
-                                          ? ECardoTokens.danger(context)
-                                          : ECardoTokens.brand700(context),
+                                  ? ECardoTokens.sand600(context)
+                                  : isDisputed
+                                  ? ECardoTokens.danger(context)
+                                  : ECardoTokens.brand700(context),
                             ),
                           ),
                         ),
@@ -164,16 +178,25 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                     // Delivery due pill
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
                       decoration: BoxDecoration(
                         color: ECardoTokens.surfaceSunken(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd.r,
+                        ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10nPick(context, fa: 'مهلت ارسال: ۳ روز مانده', en: 'Delivery due in 3 days'),
+                            l10nPick(
+                              context,
+                              fa: 'مهلت ارسال: ۳ روز مانده',
+                              en: 'Delivery due in 3 days',
+                            ),
                             style: TextStyle(
                               fontSize: 12.5.sp,
                               fontWeight: FontWeight.w700,
@@ -182,7 +205,11 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                           ),
                           SizedBox(height: 2.h),
                           Text(
-                            l10nPick(context, fa: 'پس از تاریخ ۷ اکتبر خریدار حق ثبت اختلاف خواهد داشت.', en: 'After 7 Oct the buyer may open a dispute.'),
+                            l10nPick(
+                              context,
+                              fa: 'پس از تاریخ ۷ اکتبر خریدار حق ثبت اختلاف خواهد داشت.',
+                              en: 'After 7 Oct the buyer may open a dispute.',
+                            ),
                             style: TextStyle(
                               fontSize: 11.sp,
                               color: ECardoTokens.inkMuted(context),
@@ -221,34 +248,58 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                     _buildProgressStep(
                       context,
                       stepNum: '1',
-                      title: l10nPick(context, fa: 'توافق طرفین و پذیرش شرایط', en: 'Deal accepted'),
+                      title: l10nPick(
+                        context,
+                        fa: 'توافق طرفین و پذیرش شرایط',
+                        en: 'Deal accepted',
+                      ),
                       sub: '27 Sep · Delta Trading Co.',
                       isDone: true,
                     ),
                     _buildProgressStep(
                       context,
                       stepNum: '2',
-                      title: l10nPick(context, fa: 'تأمین وجه توسط خریدار در حساب امانی', en: 'Buyer funded escrow'),
+                      title: l10nPick(
+                        context,
+                        fa: 'تأمین وجه توسط خریدار در حساب امانی',
+                        en: 'Buyer funded escrow',
+                      ),
                       sub: '28 Sep · 2,424.00 USD received',
                       isDone: true,
                     ),
                     _buildProgressStep(
                       context,
                       stepNum: '3',
-                      title: l10nPick(context, fa: 'در انتظار ارسال کالا توسط فروشنده', en: 'Awaiting your delivery'),
-                      sub: l10nPick(context, fa: 'پس از تحویل به باربری علامت بزنید', en: 'Mark as shipped once goods leave'),
+                      title: l10nPick(
+                        context,
+                        fa: 'در انتظار ارسال کالا توسط فروشنده',
+                        en: 'Awaiting your delivery',
+                      ),
+                      sub: l10nPick(
+                        context,
+                        fa: 'پس از تحویل به باربری علامت بزنید',
+                        en: 'Mark as shipped once goods leave',
+                      ),
                       isActive: true,
                     ),
                     _buildProgressStep(
                       context,
                       stepNum: '4',
-                      title: l10nPick(context, fa: 'مهلت بازرسی خریدار', en: 'Buyer inspection'),
+                      title: l10nPick(
+                        context,
+                        fa: 'مهلت بازرسی خریدار',
+                        en: 'Buyer inspection',
+                      ),
                       sub: '72 hours after delivery',
                     ),
                     _buildProgressStep(
                       context,
                       stepNum: '5',
-                      title: l10nPick(context, fa: 'آزادسازی وجه به حساب شما', en: 'Funds released to you'),
+                      title: l10nPick(
+                        context,
+                        fa: 'آزادسازی وجه به حساب شما',
+                        en: 'Funds released to you',
+                      ),
                       sub: '2,400.00 USD · fee paid by buyer',
                       isLast: true,
                     ),
@@ -271,13 +322,21 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                   children: [
                     _buildDetailRow(
                       context,
-                      label: l10nPick(context, fa: 'طرف مقابل معامله', en: 'Counterparty'),
+                      label: l10nPick(
+                        context,
+                        fa: 'طرف مقابل معامله',
+                        en: 'Counterparty',
+                      ),
                       value: o.counterpartyLabel,
                     ),
                     Divider(color: ECardoTokens.border(context), height: 16.h),
                     _buildDetailRow(
                       context,
-                      label: l10nPick(context, fa: 'مهلت بازرسی', en: 'Inspection window'),
+                      label: l10nPick(
+                        context,
+                        fa: 'مهلت بازرسی',
+                        en: 'Inspection window',
+                      ),
                       value: '${o.inspectionHours} hours',
                     ),
                     Divider(color: ECardoTokens.border(context), height: 16.h),
@@ -286,7 +345,10 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                       children: [
                         Text(
                           l10nPick(context, fa: 'مدارک ضمیمه', en: 'Documents'),
-                          style: TextStyle(fontSize: 13.sp, color: ECardoTokens.inkMuted(context)),
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            color: ECardoTokens.inkMuted(context),
+                          ),
                         ),
                         Text(
                           '2 files',
@@ -316,7 +378,10 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
         ),
         child: SafeArea(
           child: Obx(() {
-            final o = controller.activeOrder.value ?? widget.initialOrder ?? EscrowController.defaultOrders.first;
+            final o =
+                controller.activeOrder.value ??
+                widget.initialOrder ??
+                EscrowController.defaultOrders.first;
             if (o.isInspection) {
               return SizedBox(
                 height: 48.h,
@@ -325,12 +390,24 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                     backgroundColor: ECardoTokens.brand900(context),
                     foregroundColor: ECardoTokens.inkOnBrand,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg.r,
+                      ),
+                    ),
                   ),
-                  onPressed: () => Get.to(() => EscrowInspectionScreen(order: o)),
+                  onPressed: () =>
+                      Get.to(() => EscrowInspectionScreen(order: o)),
                   child: Text(
-                    l10nPick(context, fa: 'بررسی و آزادسازی کالا (Inspect delivery)', en: 'Inspect delivery'),
-                    style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w800),
+                    l10nPick(
+                      context,
+                      fa: 'بررسی و آزادسازی کالا (Inspect delivery)',
+                      en: 'Inspect delivery',
+                    ),
+                    style: TextStyle(
+                      fontSize: 14.5.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               );
@@ -344,12 +421,24 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                     backgroundColor: ECardoTokens.danger(context),
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg.r,
+                      ),
+                    ),
                   ),
-                  onPressed: () => Get.to(() => EscrowDisputeReviewScreen(order: o)),
+                  onPressed: () =>
+                      Get.to(() => EscrowDisputeReviewScreen(order: o)),
                   child: Text(
-                    l10nPick(context, fa: 'مشاهده پرونده اختلاف (Dispute review)', en: 'Dispute review'),
-                    style: TextStyle(fontSize: 14.5.sp, fontWeight: FontWeight.w800),
+                    l10nPick(
+                      context,
+                      fa: 'مشاهده پرونده اختلاف (Dispute review)',
+                      en: 'Dispute review',
+                    ),
+                    style: TextStyle(
+                      fontSize: 14.5.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               );
@@ -363,23 +452,37 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                   foregroundColor: ECardoTokens.inkOnBrand,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusLg.r,
+                    ),
                   ),
                 ),
                 onPressed: () {
                   HapticFeedback.lightImpact();
                   final sTitle = l10nPick(context, fa: 'موفقیت', en: 'Success');
-                  final sMsg = l10nPick(context, fa: 'ارسال با موفقیت ثبت شد و تایمر بازرسی خریدار فعال گردید.', en: 'Delivery recorded.');
+                  final sMsg = l10nPick(
+                    context,
+                    fa: 'ارسال با موفقیت ثبت شد و تایمر بازرسی خریدار فعال گردید.',
+                    en: 'Delivery recorded.',
+                  );
                   final sBg = ECardoTokens.successBg(context);
                   final sColor = ECardoTokens.success(context);
                   Get.defaultDialog(
-                    title: l10nPick(context, fa: 'تأیید ارسال کالا', en: 'Mark as delivered'),
+                    title: l10nPick(
+                      context,
+                      fa: 'تأیید ارسال کالا',
+                      en: 'Mark as delivered',
+                    ),
                     middleText: l10nPick(
                       context,
                       fa: 'آیا کالا را به خریدار یا باربری تحویل داده‌اید؟ با تأیید این مورد، تایمر مهلت بازرسی خریدار آغاز خواهد شد.',
                       en: 'Mark goods as delivered? This will start the buyer inspection countdown.',
                     ),
-                    textConfirm: l10nPick(context, fa: 'تأیید تحویل', en: 'Confirm'),
+                    textConfirm: l10nPick(
+                      context,
+                      fa: 'تأیید تحویل',
+                      en: 'Confirm',
+                    ),
                     textCancel: l10nPick(context, fa: 'انصراف', en: 'Cancel'),
                     buttonColor: ECardoTokens.brand900(context),
                     confirmTextColor: Colors.white,
@@ -439,26 +542,32 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                 color: isDone
                     ? ECardoTokens.successBg(context)
                     : isActive
-                        ? ECardoTokens.brand100(context)
-                        : ECardoTokens.surfaceSunken(context),
+                    ? ECardoTokens.brand100(context)
+                    : ECardoTokens.surfaceSunken(context),
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isDone
                       ? ECardoTokens.success(context)
                       : isActive
-                          ? ECardoTokens.brand900(context)
-                          : ECardoTokens.border(context),
+                      ? ECardoTokens.brand900(context)
+                      : ECardoTokens.border(context),
                 ),
               ),
               child: Center(
                 child: isDone
-                    ? Icon(Icons.check_rounded, size: 14.sp, color: ECardoTokens.success(context))
+                    ? Icon(
+                        Icons.check_rounded,
+                        size: 14.sp,
+                        color: ECardoTokens.success(context),
+                      )
                     : Text(
                         stepNum,
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w800,
-                          color: isActive ? ECardoTokens.brand900(context) : ECardoTokens.inkMuted(context),
+                          color: isActive
+                              ? ECardoTokens.brand900(context)
+                              : ECardoTokens.inkMuted(context),
                         ),
                       ),
               ),
@@ -467,7 +576,9 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
               Container(
                 width: 2.w,
                 height: 32.h,
-                color: isDone ? ECardoTokens.success(context) : ECardoTokens.border(context),
+                color: isDone
+                    ? ECardoTokens.success(context)
+                    : ECardoTokens.border(context),
               ),
           ],
         ),
@@ -488,7 +599,9 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
                 sub,
                 style: TextStyle(
                   fontSize: 11.5.sp,
-                  color: isActive ? ECardoTokens.sand600(context) : ECardoTokens.inkMuted(context),
+                  color: isActive
+                      ? ECardoTokens.sand600(context)
+                      : ECardoTokens.inkMuted(context),
                 ),
               ),
               if (!isLast) SizedBox(height: 12.h),
@@ -499,7 +612,11 @@ class _EscrowDetailScreenState extends State<EscrowDetailScreen> {
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, {required String label, required String value}) {
+  Widget _buildDetailRow(
+    BuildContext context, {
+    required String label,
+    required String value,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

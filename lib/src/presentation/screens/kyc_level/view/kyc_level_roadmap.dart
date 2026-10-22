@@ -80,7 +80,8 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
     if (widget.onLevelTap != null) {
       widget.onLevelTap!();
     } else {
-      final target = controller.nextLevel?.level ??
+      final target =
+          controller.nextLevel?.level ??
           (controller.status.value?.currentLevel ?? 2);
       Get.toNamed(
         BaseRoute.kycSubmitWizard,
@@ -95,8 +96,9 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
     final localization = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Obx(() {
       if (controller.isLoading.value && controller.levels.isEmpty) {
@@ -109,7 +111,8 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
           child: EcardoEmptyState(
             animateGlow: false,
             iconData: Icons.verified_user_outlined,
-            title: localization?.kycRoadmapTitle ??
+            title:
+                localization?.kycRoadmapTitle ??
                 l10nPick(
                   context,
                   en: 'Verification Roadmap',
@@ -149,13 +152,20 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                     Container(
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                            .withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                       child: Icon(
                         Icons.verified_user_rounded,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.lightPrimary,
                         size: 20.sp,
                       ),
                     ),
@@ -258,15 +268,19 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                     } else {
                       Get.toNamed(
                         BaseRoute.kycSubmitWizard,
-                        arguments: {'target_level': controller.nextLevel!.level},
+                        arguments: {
+                          'target_level': controller.nextLevel!.level,
+                        },
                       );
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
-                    foregroundColor:
-                        isDark ? AppColors.deepBlack : AppColors.white,
+                    backgroundColor: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.lightPrimary,
+                    foregroundColor: isDark
+                        ? AppColors.deepBlack
+                        : AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     ),
@@ -298,7 +312,8 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
     bool isDark,
     KycLevelController controller,
   ) {
-    final reason = controller.status.value?.rejectionReason ??
+    final reason =
+        controller.status.value?.rejectionReason ??
         controller.rejectionData.value?.message ??
         l10nPick(
           context,
@@ -361,7 +376,9 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                     Text(
                       reason,
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: isDark ? AppColors.warmWhite : AppColors.deepBlack,
+                        color: isDark
+                            ? AppColors.warmWhite
+                            : AppColors.deepBlack,
                         height: 1.35,
                       ),
                     ),
@@ -530,10 +547,15 @@ class _KycLevelRoadmapState extends State<KycLevelRoadmap>
                     ),
                     SizedBox(width: 6.w),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 1.5.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.success.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                       ),
                       child: Text(
                         l10nPick(context, en: 'ACTIVE', fa: 'فعال'),
@@ -616,8 +638,9 @@ class _KycProgressionHeader extends StatelessWidget {
     final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     // Progress calculation across 3 tiers (0, 33%, 66%, 100%)
     final progressFraction = (currentLevel / 3.0).clamp(0.0, 1.0);
@@ -663,15 +686,18 @@ class _KycProgressionHeader extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                      .withValues(alpha: 0.12),
+                  color:
+                      (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 ),
                 child: Text(
                   '$percentInt% ${l10nPick(context, en: 'Completed', fa: 'تکمیل شده')}',
                   style: AppTextStyles.labelSmall.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.lightPrimary,
                     fontSize: 10.5.sp,
                   ),
                 ),
@@ -688,7 +714,9 @@ class _KycProgressionHeader extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   height: 8.h,
-                  color: isDark ? AppColors.darkBackground : AppColors.lightOutlineVariant,
+                  color: isDark
+                      ? AppColors.darkBackground
+                      : AppColors.lightOutlineVariant,
                 ),
                 FractionallySizedBox(
                   widthFactor: progressFraction,
@@ -696,10 +724,7 @@ class _KycProgressionHeader extends StatelessWidget {
                     height: 8.h,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [
-                          AppColors.brandViolet,
-                          AppColors.success,
-                        ],
+                        colors: [AppColors.brandViolet, AppColors.success],
                       ),
                       borderRadius: BorderRadius.circular(6.r),
                     ),
@@ -778,7 +803,11 @@ class _KycProgressionHeader extends StatelessWidget {
               Expanded(
                 child: _buildBenefitPill(
                   icon: Icons.credit_card_outlined,
-                  title: l10nPick(context, en: 'Virtual Cards', fa: 'کارت مجازی'),
+                  title: l10nPick(
+                    context,
+                    en: 'Virtual Cards',
+                    fa: 'کارت مجازی',
+                  ),
                   value: currentLevel >= 3
                       ? l10nPick(context, en: 'Unlimited', fa: 'نامحدود')
                       : (currentLevel == 2 ? '۳ کارت' : '۱ کارت'),
@@ -789,7 +818,11 @@ class _KycProgressionHeader extends StatelessWidget {
               Expanded(
                 child: _buildBenefitPill(
                   icon: Icons.swap_horiz_rounded,
-                  title: l10nPick(context, en: 'P2P Trading', fa: 'معاملات P2P'),
+                  title: l10nPick(
+                    context,
+                    en: 'P2P Trading',
+                    fa: 'معاملات P2P',
+                  ),
                   value: currentLevel >= 2
                       ? l10nPick(context, en: 'Unlocked', fa: 'فعال')
                       : l10nPick(context, en: 'Locked', fa: 'قفل'),
@@ -880,22 +913,18 @@ class _KycProgressionHeader extends StatelessWidget {
                     ),
                   ]
                 : (isPulsing
-                    ? [
-                        BoxShadow(
-                          color: AppColors.warning.withValues(
-                            alpha: 0.45 * pulseFactor,
+                      ? [
+                          BoxShadow(
+                            color: AppColors.warning.withValues(
+                              alpha: 0.45 * pulseFactor,
+                            ),
+                            blurRadius: 10 * pulseFactor,
+                            spreadRadius: 1.5,
                           ),
-                          blurRadius: 10 * pulseFactor,
-                          spreadRadius: 1.5,
-                        ),
-                      ]
-                    : null),
+                        ]
+                      : null),
           ),
-          child: Icon(
-            nodeIcon,
-            color: nodeColor,
-            size: 18.sp,
-          ),
+          child: Icon(nodeIcon, color: nodeColor, size: 18.sp),
         ),
         SizedBox(height: 6.h),
         Text(
@@ -949,7 +978,9 @@ class _KycProgressionHeader extends StatelessWidget {
                   title,
                   style: AppTextStyles.labelSmall.copyWith(
                     fontSize: 8.5.sp,
-                    color: isDark ? AppColors.softGray : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.softGray
+                        : AppColors.lightTextSecondary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -998,8 +1029,9 @@ class _StepperLevelCard extends StatelessWidget {
     final statusColor = _statusColor(level, color);
     final statusIcon = _statusIcon(level);
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     final cardBg = isDark
         ? AppColors.darkSurface
@@ -1038,11 +1070,7 @@ class _StepperLevelCard extends StatelessWidget {
                           ]
                         : null,
                   ),
-                  child: Icon(
-                    statusIcon,
-                    color: statusColor,
-                    size: 18.sp,
-                  ),
+                  child: Icon(statusIcon, color: statusColor, size: 18.sp),
                 ),
                 // Stepper Line to next step
                 if (!isLast)
@@ -1052,7 +1080,9 @@ class _StepperLevelCard extends StatelessWidget {
                       margin: EdgeInsets.symmetric(vertical: 4.h),
                       color: level.isCompleted
                           ? AppColors.success.withValues(alpha: 0.6)
-                          : (isDark ? AppColors.darkDivider : AppColors.lightDivider),
+                          : (isDark
+                                ? AppColors.darkDivider
+                                : AppColors.lightDivider),
                     ),
                   ),
               ],
@@ -1114,7 +1144,9 @@ class _StepperLevelCard extends StatelessWidget {
                                 spacing: 6.w,
                                 children: [
                                   Text(
-                                    localization?.kycUpgradeLevelChip(level.level) ??
+                                    localization?.kycUpgradeLevelChip(
+                                          level.level,
+                                        ) ??
                                         'Level ${level.level}',
                                     style: AppTextStyles.labelSmall.copyWith(
                                       fontWeight: FontWeight.w700,
@@ -1127,8 +1159,12 @@ class _StepperLevelCard extends StatelessWidget {
                                       vertical: 2.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: statusColor.withValues(alpha: 0.12),
-                                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                                      color: statusColor.withValues(
+                                        alpha: 0.12,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusSm,
+                                      ),
                                     ),
                                     child: Text(
                                       _statusLabel(level, localization),
@@ -1144,12 +1180,15 @@ class _StepperLevelCard extends StatelessWidget {
                               if (level.isLocked)
                                 Icon(
                                   Icons.lock_outline_rounded,
-                                  color: isDark ? AppColors.softGray : AppColors.lightTextHint,
+                                  color: isDark
+                                      ? AppColors.softGray
+                                      : AppColors.lightTextHint,
                                   size: 16.sp,
                                 )
                               else if (level.isAvailable)
                                 Icon(
-                                  Directionality.of(context) == TextDirection.rtl
+                                  Directionality.of(context) ==
+                                          TextDirection.rtl
                                       ? Icons.chevron_left_rounded
                                       : Icons.chevron_right_rounded,
                                   color: color,
@@ -1165,7 +1204,9 @@ class _StepperLevelCard extends StatelessWidget {
                             style: AppTextStyles.titleSmall.copyWith(
                               fontWeight: FontWeight.w800,
                               color: level.isLocked
-                                  ? (isDark ? AppColors.softGray : AppColors.lightTextHint)
+                                  ? (isDark
+                                        ? AppColors.softGray
+                                        : AppColors.lightTextHint)
                                   : primaryTextColor,
                             ),
                             maxLines: 1,
@@ -1203,7 +1244,9 @@ class _StepperLevelCard extends StatelessWidget {
                                     color: isDark
                                         ? AppColors.darkBackground
                                         : AppColors.lightBackground,
-                                    borderRadius: BorderRadius.circular(AppSpacing.radiusXs),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusXs,
+                                    ),
                                     border: Border.all(
                                       color: isDark
                                           ? AppColors.darkBorder
@@ -1249,26 +1292,26 @@ class _StepperLevelCard extends StatelessWidget {
     if (level.name.isNotEmpty) return level.name;
     return switch (level.level) {
       1 => l10nPick(
-          context,
-          en: 'Tier 1 — Basic',
-          fa: 'سطح ۱ — پایه (شماره تماس و ایمیل)',
-          ar: 'المستوى 1 — الأساسي (الهاتف والبريد)',
-          zh: '第 1 级 — 基础认证 (手机与邮箱)',
-        ),
+        context,
+        en: 'Tier 1 — Basic',
+        fa: 'سطح ۱ — پایه (شماره تماس و ایمیل)',
+        ar: 'المستوى 1 — الأساسي (الهاتف والبريد)',
+        zh: '第 1 级 — 基础认证 (手机与邮箱)',
+      ),
       2 => l10nPick(
-          context,
-          en: 'Tier 2 — Standard',
-          fa: 'سطح ۲ — استاندارد (کارت ملی و شناسنامه)',
-          ar: 'المستوى 2 — المعياري (الهوية وجواز السفر)',
-          zh: '第 2 级 — 标准认证 (身份证与护照)',
-        ),
+        context,
+        en: 'Tier 2 — Standard',
+        fa: 'سطح ۲ — استاندارد (کارت ملی و شناسنامه)',
+        ar: 'المستوى 2 — المعياري (الهوية وجواز السفر)',
+        zh: '第 2 级 — 标准认证 (身份证与护照)',
+      ),
       3 => l10nPick(
-          context,
-          en: 'Tier 3 — VIP',
-          fa: 'سطح ۳ — طلایی (احراز ویدیویی و نشانی)',
-          ar: 'المستوى 3 — الذهبي (الفيديو والعنوان)',
-          zh: '第 3 级 — 尊享认证 (视频活体与地址)',
-        ),
+        context,
+        en: 'Tier 3 — VIP',
+        fa: 'سطح ۳ — طلایی (احراز ویدیویی و نشانی)',
+        ar: 'المستوى 3 — الذهبي (الفيديو والعنوان)',
+        zh: '第 3 级 — 尊享认证 (视频活体与地址)',
+      ),
       _ => 'Level ${level.level}',
     };
   }
@@ -1279,35 +1322,36 @@ class _StepperLevelCard extends StatelessWidget {
     }
     return switch (level.level) {
       1 => l10nPick(
-          context,
-          en: 'Email & phone verified. \$1,000/day limit, 1 virtual card, basic transfers.',
-          fa: 'تأیید ایمیل و شماره موبایل. سقف تراکنش روزانه ۱,۰۰۰ دلار، ۱ کارت مجازی و انتقال پایه.',
-          ar: 'توثيق الهاتف والبريد. حد يومي 1,000 دولار، بطاقة افتراضية واحدة، تحويلات أساسية.',
-          zh: '邮箱与手机认证。每日限额 \$1,000，1 张虚拟卡，基础转账。',
-        ),
+        context,
+        en: 'Email & phone verified. \$1,000/day limit, 1 virtual card, basic transfers.',
+        fa: 'تأیید ایمیل و شماره موبایل. سقف تراکنش روزانه ۱,۰۰۰ دلار، ۱ کارت مجازی و انتقال پایه.',
+        ar: 'توثيق الهاتف والبريد. حد يومي 1,000 دولار، بطاقة افتراضية واحدة، تحويلات أساسية.',
+        zh: '邮箱与手机认证。每日限额 \$1,000，1 张虚拟卡，基础转账。',
+      ),
       2 => l10nPick(
-          context,
-          en: 'National ID / Passport verified. \$10,000/day limit, 3 virtual cards, P2P trading access & travel booking.',
-          fa: 'احراز با کارت ملی و شناسنامه. سقف روزانه ۱۰,۰۰۰ دلار، ۳ کارت مجازی، دسترسی به معاملات P2P و رزرو سفر.',
-          ar: 'توثيق الهوية الوطنية أو الجواز. حد 10,000 دولار، 3 بطاقات، تداول P2P وحجوزات سفر.',
-          zh: '身份证/护照认证。每日限额 \$10,000，3 张虚拟卡，P2P 交易与商旅兑换。',
-        ),
+        context,
+        en: 'National ID / Passport verified. \$10,000/day limit, 3 virtual cards, P2P trading access & travel booking.',
+        fa: 'احراز با کارت ملی و شناسنامه. سقف روزانه ۱۰,۰۰۰ دلار، ۳ کارت مجازی، دسترسی به معاملات P2P و رزرو سفر.',
+        ar: 'توثيق الهوية الوطنية أو الجواز. حد 10,000 دولار، 3 بطاقات، تداول P2P وحجوزات سفر.',
+        zh: '身份证/护照认证。每日限额 \$10,000，3 张虚拟卡，P2P 交易与商旅兑换。',
+      ),
       3 => l10nPick(
-          context,
-          en: 'Address proof & video liveness. \$100,000 / Unlimited daily limit, unlimited cards, loan access & VIP concierge.',
-          fa: 'تأیید آدرس و اسکن ویدیویی چهره. سقف روزانه تا ۱۰۰,۰۰۰ دلار/نامحدود، کارت‌های نامحدود، تسهیلات و پشتیبانی VIP.',
-          ar: 'إثبات العنوان والتحقق الحيوي. حد 100,000 دولار/غير محدود، بطاقات غير محدودة، قروض ودعم VIP.',
-          zh: '住址证明与活体视频认证。每日最高 \$100,000 限额，无限量虚拟卡，信贷与专属客服。',
-        ),
-      _ => level.description.isNotEmpty
-          ? level.description
-          : l10nPick(
-              context,
-              en: 'Commercial verification. Enterprise limits, merchant settlements & dedicated account manager.',
-              fa: 'احراز هویت تجاری شرکتی. سقف‌های اختصاصی، درگاه پرداخت و مدیر حساب اختصاصی.',
-              ar: 'توثيق الشركات والمؤسسات. حدود مؤسسية مخصصة، تسويات تجارية ومدير حساب مخصص.',
-              zh: '企业资质认证。专属定制限额，商户结算通道与专属客户经理。',
-            ),
+        context,
+        en: 'Address proof & video liveness. \$100,000 / Unlimited daily limit, unlimited cards, loan access & VIP concierge.',
+        fa: 'تأیید آدرس و اسکن ویدیویی چهره. سقف روزانه تا ۱۰۰,۰۰۰ دلار/نامحدود، کارت‌های نامحدود، تسهیلات و پشتیبانی VIP.',
+        ar: 'إثبات العنوان والتحقق الحيوي. حد 100,000 دولار/غير محدود، بطاقات غير محدودة، قروض ودعم VIP.',
+        zh: '住址证明与活体视频认证。每日最高 \$100,000 限额，无限量虚拟卡，信贷与专属客服。',
+      ),
+      _ =>
+        level.description.isNotEmpty
+            ? level.description
+            : l10nPick(
+                context,
+                en: 'Commercial verification. Enterprise limits, merchant settlements & dedicated account manager.',
+                fa: 'احراز هویت تجاری شرکتی. سقف‌های اختصاصی، درگاه پرداخت و مدیر حساب اختصاصی.',
+                ar: 'توثيق الشركات والمؤسسات. حدود مؤسسية مخصصة، تسويات تجارية ومدير حساب مخصص.',
+                zh: '企业资质认证。专属定制限额，商户结算通道与专属客户经理。',
+              ),
     };
   }
 
@@ -1316,31 +1360,71 @@ class _StepperLevelCard extends StatelessWidget {
     bool isDark,
     KycLevel level,
   ) {
-    final chipBg = isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant;
-    final borderCol = isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant;
+    final chipBg = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightSurfaceVariant;
+    final borderCol = isDark
+        ? AppColors.darkBorder
+        : AppColors.lightOutlineVariant;
     final textColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
     final (limitText, cardText, featureText) = switch (level.level) {
       1 => (
-          '\$1,000 / day',
-          l10nPick(context, en: '1 Card', fa: '۱ کارت', ar: 'بطاقة 1', zh: '1张卡'),
-          l10nPick(context, en: 'Transfers', fa: 'انتقال پایه', ar: 'تحويلات', zh: '转账'),
+        '\$1,000 / day',
+        l10nPick(context, en: '1 Card', fa: '۱ کارت', ar: 'بطاقة 1', zh: '1张卡'),
+        l10nPick(
+          context,
+          en: 'Transfers',
+          fa: 'انتقال پایه',
+          ar: 'تحويلات',
+          zh: '转账',
         ),
+      ),
       2 => (
-          '\$10,000 / day',
-          l10nPick(context, en: '3 Cards', fa: '۳ کارت', ar: '3 بطاقات', zh: '3张卡'),
-          l10nPick(context, en: 'P2P & FX', fa: 'معاملات P2P و صرافی', ar: 'تداول P2P وصرافة', zh: 'P2P交易与兑换'),
+        '\$10,000 / day',
+        l10nPick(
+          context,
+          en: '3 Cards',
+          fa: '۳ کارت',
+          ar: '3 بطاقات',
+          zh: '3张卡',
         ),
+        l10nPick(
+          context,
+          en: 'P2P & FX',
+          fa: 'معاملات P2P و صرافی',
+          ar: 'تداول P2P وصرافة',
+          zh: 'P2P交易与兑换',
+        ),
+      ),
       3 => (
-          '\$100,000 / day',
-          l10nPick(context, en: 'Unlimited Cards', fa: 'کارت نامحدود', ar: 'بطاقات غير محدودة', zh: '无限卡'),
-          l10nPick(context, en: 'Loans & VIP', fa: 'تسهیلات و VIP', ar: 'قروض وVIP', zh: '信贷与VIP'),
+        '\$100,000 / day',
+        l10nPick(
+          context,
+          en: 'Unlimited Cards',
+          fa: 'کارت نامحدود',
+          ar: 'بطاقات غير محدودة',
+          zh: '无限卡',
         ),
+        l10nPick(
+          context,
+          en: 'Loans & VIP',
+          fa: 'تسهیلات و VIP',
+          ar: 'قروض وVIP',
+          zh: '信贷与VIP',
+        ),
+      ),
       _ => (
-          'Custom Limits',
-          l10nPick(context, en: 'Corporate', fa: 'شرکتی', ar: 'شركات', zh: '企业卡'),
-          l10nPick(context, en: 'Facilities', fa: 'امکانات تجاری', ar: 'بوابات تجارية', zh: '商户设施'),
+        'Custom Limits',
+        l10nPick(context, en: 'Corporate', fa: 'شرکتی', ar: 'شركات', zh: '企业卡'),
+        l10nPick(
+          context,
+          en: 'Facilities',
+          fa: 'امکانات تجاری',
+          ar: 'بوابات تجارية',
+          zh: '商户设施',
         ),
+      ),
     };
 
     Widget microChip(IconData icon, String text) {
@@ -1455,7 +1539,10 @@ class _LimitsSection extends StatelessWidget {
             children: rows
                 .map(
                   (row) => Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 2.h,
+                    ),
                     decoration: BoxDecoration(
                       color: chipBg,
                       borderRadius: BorderRadius.circular(AppSpacing.radiusXs),

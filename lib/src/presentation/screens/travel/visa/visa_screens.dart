@@ -82,9 +82,8 @@ class VisaIntroScreen extends StatelessWidget {
             (country) => Padding(
               padding: EdgeInsets.only(bottom: 12.h),
               child: TravelCard(
-                onTap: () => Get.to(
-                  () => VisaRequestFormScreen(country: country),
-                ),
+                onTap: () =>
+                    Get.to(() => VisaRequestFormScreen(country: country)),
                 child: Row(
                   children: [
                     Text(country.flagEmoji, style: TextStyle(fontSize: 34.sp)),
@@ -145,10 +144,8 @@ class VisaIntroScreen extends StatelessWidget {
   }
 }
 
-String travelVisaProcessingLabel(
-  AppLocalizations localization,
-  int days,
-) => localization.travelVisaProcessingDays(days);
+String travelVisaProcessingLabel(AppLocalizations localization, int days) =>
+    localization.travelVisaProcessingDays(days);
 
 class VisaRequestFormScreen extends StatefulWidget {
   final VisaCountry country;
@@ -186,9 +183,7 @@ class _VisaRequestFormScreenState extends State<VisaRequestFormScreen> {
   int get _totalPrice =>
       _basePrice * _applicants * (_entries == 'multiple' ? 2 : 1);
 
-  Future<void> _pickDate({
-    required bool isTravelDate,
-  }) async {
+  Future<void> _pickDate({required bool isTravelDate}) async {
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
@@ -426,8 +421,7 @@ class _VisaRequestFormScreenState extends State<VisaRequestFormScreen> {
                       labelText: localization.travelVisaFullName,
                       prefixIcon: const Icon(Icons.person_outline_rounded),
                     ),
-                    validator: (value) =>
-                        value == null || value.trim().isEmpty
+                    validator: (value) => value == null || value.trim().isEmpty
                         ? localization.travelFormRequired
                         : null,
                   ),

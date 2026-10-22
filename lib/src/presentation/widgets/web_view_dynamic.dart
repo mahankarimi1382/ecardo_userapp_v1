@@ -28,7 +28,8 @@ class _WebViewDynamicState extends State<WebViewDynamic> {
 
     // phase3-fix: refuse to render arbitrary or foreign links in-app.
     final uri = Uri.tryParse(finalUrl);
-    final allowed = uri != null &&
+    final allowed =
+        uri != null &&
         uri.scheme == 'https' &&
         (uri.host == 'ecardo.ir' || uri.host.endsWith('.ecardo.ir'));
     if (!allowed) {
@@ -73,7 +74,9 @@ class _WebViewDynamicState extends State<WebViewDynamic> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
-                  child: Text(AppLocalizations.of(context)!.webViewLinkCannotOpen),
+                  child: Text(
+                    AppLocalizations.of(context)!.webViewLinkCannotOpen,
+                  ),
                 ),
               )
             else

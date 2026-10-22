@@ -19,7 +19,8 @@ void main() {
         tester,
         const Scaffold(body: TransferReviewStepSection()),
         registrations: [
-          () => registerController<TransferController>(_TestTransferController()),
+          () =>
+              registerController<TransferController>(_TestTransferController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -32,7 +33,8 @@ void main() {
         const Scaffold(body: TransferReviewStepSection()),
         dark: true,
         registrations: [
-          () => registerController<TransferController>(_TestTransferController()),
+          () =>
+              registerController<TransferController>(_TestTransferController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -44,7 +46,9 @@ void main() {
         tester,
         const Scaffold(body: TransferSuccessStepSection()),
         registrations: [
-          () => registerController<TransferController>(_TestTransferControllerSuccess()),
+          () => registerController<TransferController>(
+            _TestTransferControllerSuccess(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -57,7 +61,9 @@ void main() {
         const Scaffold(body: TransferSuccessStepSection()),
         dark: true,
         registrations: [
-          () => registerController<TransferController>(_TestTransferControllerSuccess()),
+          () => registerController<TransferController>(
+            _TestTransferControllerSuccess(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );

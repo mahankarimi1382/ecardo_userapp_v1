@@ -109,25 +109,28 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                     letterSpacing: -0.2,
                   ),
                 ),
-                Obx(() => Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
+                Obx(
+                  () => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: accentColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusFull,
                       ),
-                      decoration: BoxDecoration(
-                        color: accentColor.withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusFull),
+                    ),
+                    child: Text(
+                      "${controller.withdrawAccountList.length} ${l10nPick(context, en: 'Saved', fa: 'ذخیره‌شده', ar: 'محفوظ', tr: 'Kayıtlı', ru: 'Сохранено')}",
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: accentColor,
                       ),
-                      child: Text(
-                        "${controller.withdrawAccountList.length} ${l10nPick(context, en: 'Saved', fa: 'ذخیره‌شده', ar: 'محفوظ', tr: 'Kayıtlı', ru: 'Сохранено')}",
-                        style: TextStyle(
-                          fontSize: 11.5,
-                          fontWeight: FontWeight.w700,
-                          color: accentColor,
-                        ),
-                      ),
-                    )),
+                    ),
+                  ),
+                ),
               ],
             ),
 
@@ -276,7 +279,8 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                     // Destination Card Selector
                     Obx(() {
                       final selectedAccount = controller.withdrawAccount.value;
-                      final hasAccount = selectedAccount != null &&
+                      final hasAccount =
+                          selectedAccount != null &&
                           controller.withdrawAccountController.text.isNotEmpty;
 
                       if (hasAccount) {
@@ -300,12 +304,15 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                           margin: const EdgeInsets.symmetric(vertical: 6),
                           decoration: BoxDecoration(
                             color: isDark
-                                ? AppColors.darkSurfaceVariant
-                                    .withValues(alpha: 0.5)
-                                : AppColors.lightSurfaceVariant
-                                    .withValues(alpha: 0.7),
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusXl),
+                                ? AppColors.darkSurfaceVariant.withValues(
+                                    alpha: 0.5,
+                                  )
+                                : AppColors.lightSurfaceVariant.withValues(
+                                    alpha: 0.7,
+                                  ),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusXl,
+                            ),
                             border: Border.all(
                               color: isDark
                                   ? AppColors.darkBorder
@@ -410,8 +417,8 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                         ),
                         // Available Balance hint
                         Obx(() {
-                          final cur = controller
-                                  .withdrawAccount.value?.currency ??
+                          final cur =
+                              controller.withdrawAccount.value?.currency ??
                               "USD";
                           final balance = controller.availableBalance;
                           return Text(
@@ -435,18 +442,21 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                       padding: const EdgeInsets.all(AppSpacing.md),
                       decoration: BoxDecoration(
                         color: isDark
-                            ? AppColors.darkSurfaceVariant
-                                .withValues(alpha: 0.5)
-                            : AppColors.lightSecondaryContainer
-                                .withValues(alpha: 0.35),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusLg),
+                            ? AppColors.darkSurfaceVariant.withValues(
+                                alpha: 0.5,
+                              )
+                            : AppColors.lightSecondaryContainer.withValues(
+                                alpha: 0.35,
+                              ),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg,
+                        ),
                         border: Border.all(
                           color: controller.isAmountFocused.value
                               ? accentColor
                               : (isDark
-                                  ? AppColors.darkBorder
-                                  : AppColors.lightBorder),
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorder),
                           width: controller.isAmountFocused.value ? 1.5 : 1.0,
                         ),
                       ),
@@ -457,8 +467,12 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                             focusNode: controller.amountFocusNode,
                             isFocused: controller.isAmountFocused.value,
                             isSuffixIconCompact: false,
-                            suffixIcon: (controller.withdrawAccount.value
-                                        ?.currency?.isNotEmpty ??
+                            suffixIcon:
+                                (controller
+                                        .withdrawAccount
+                                        .value
+                                        ?.currency
+                                        ?.isNotEmpty ??
                                     false)
                                 ? Container(
                                     margin: const EdgeInsetsDirectional.only(
@@ -477,7 +491,9 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                                       ),
                                     ),
                                     child: Text(
-                                      controller.withdrawAccount.value!
+                                      controller
+                                              .withdrawAccount
+                                              .value!
                                               .currency ??
                                           "",
                                       style: TextStyle(
@@ -503,7 +519,11 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                           const SizedBox(height: AppSpacing.md),
 
                           // Quick percentage / amount chips (25%, 50%, 75%, Max / تمام موجودی)
-                          _buildQuickPercentageRow(context, isDark, accentColor),
+                          _buildQuickPercentageRow(
+                            context,
+                            isDark,
+                            accentColor,
+                          ),
                         ],
                       ),
                     ),
@@ -511,9 +531,9 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                     // Min & Max dynamic limits indicator
                     Obx(() {
                       final withdrawAccount = controller.withdrawAccount.value;
-                      final hasAccount = withdrawAccount != null &&
-                          controller
-                              .withdrawAccountController.text.isNotEmpty;
+                      final hasAccount =
+                          withdrawAccount != null &&
+                          controller.withdrawAccountController.text.isNotEmpty;
 
                       if (!hasAccount) return const SizedBox.shrink();
 
@@ -522,26 +542,27 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                             currencyCode: withdrawAccount.currency ?? "",
                             siteCurrencyCode:
                                 Get.find<SettingsService>().getSetting(
-                                      "site_currency",
-                                    ) ??
-                                    "",
+                                  "site_currency",
+                                ) ??
+                                "",
                             siteCurrencyDecimals:
                                 Get.find<SettingsService>().getSetting(
-                                      "site_currency_decimals",
-                                    ) ??
-                                    "2",
-                            isCrypto:
-                                withdrawAccount.method?.isCrypto ?? false,
+                                  "site_currency_decimals",
+                                ) ??
+                                "2",
+                            isCrypto: withdrawAccount.method?.isCrypto ?? false,
                           );
 
-                      final min = double.tryParse(
-                                withdrawAccount.method?.minWithdraw ?? "0",
-                              )?.toStringAsFixed(calculateDecimals) ??
+                      final min =
+                          double.tryParse(
+                            withdrawAccount.method?.minWithdraw ?? "0",
+                          )?.toStringAsFixed(calculateDecimals) ??
                           "0.00";
 
-                      final max = double.tryParse(
-                                withdrawAccount.method?.maxWithdraw ?? "0",
-                              )?.toStringAsFixed(calculateDecimals) ??
+                      final max =
+                          double.tryParse(
+                            withdrawAccount.method?.maxWithdraw ?? "0",
+                          )?.toStringAsFixed(calculateDecimals) ??
                           "0.00";
 
                       return Padding(
@@ -567,7 +588,8 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
 
                     // Dynamic Withdrawal Limit Progress Indicator (used vs available daily limit)
                     Obx(() {
-                      final enteredAmount = double.tryParse(
+                      final enteredAmount =
+                          double.tryParse(
                             controller.amountController.text.trim(),
                           ) ??
                           0.0;
@@ -589,7 +611,8 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
 
                     // Live Fee & Payout Breakdown Card
                     Obx(() {
-                      final requested = double.tryParse(
+                      final requested =
+                          double.tryParse(
                             controller.amountController.text.trim(),
                           ) ??
                           0.0;
@@ -684,16 +707,14 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                   decoration: BoxDecoration(
                     color: isMax
                         ? accentColor.withValues(alpha: isDark ? 0.22 : 0.12)
-                        : (isDark
-                            ? AppColors.darkCard
-                            : AppColors.white),
+                        : (isDark ? AppColors.darkCard : AppColors.white),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                     border: Border.all(
                       color: isMax
                           ? accentColor.withValues(alpha: 0.5)
                           : (isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder),
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                     ),
                   ),
                   child: Center(
@@ -701,13 +722,12 @@ class _WithdrawAmountStepSectionState extends State<WithdrawAmountStepSection> {
                       label,
                       style: TextStyle(
                         fontSize: isMax ? 11.5 : 12,
-                        fontWeight:
-                            isMax ? FontWeight.w800 : FontWeight.w700,
+                        fontWeight: isMax ? FontWeight.w800 : FontWeight.w700,
                         color: isMax
                             ? accentColor
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary),
                         letterSpacing: 0,
                       ),
                     ),

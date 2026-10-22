@@ -24,14 +24,18 @@ class VisaPaymentScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(context, en: 'Visa Payment', fa: 'پرداخت هزینه ویزا'),
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -40,7 +44,9 @@ class VisaPaymentScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           onPressed: () => Get.back(),
@@ -67,7 +73,10 @@ class VisaPaymentScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              VisaCountryFlag(flagUrl: request.countryFlag, size: 36),
+                              VisaCountryFlag(
+                                flagUrl: request.countryFlag,
+                                size: 36,
+                              ),
                               SizedBox(width: AppSpacing.sm.w),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,14 +86,18 @@ class VisaPaymentScreen extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w800,
-                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary,
                                     ),
                                   ),
                                   Text(
                                     request.visaTitle,
                                     style: TextStyle(
                                       fontSize: 11.5.sp,
-                                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                      color: isDark
+                                          ? AppColors.darkTextSecondary
+                                          : AppColors.lightTextSecondary,
                                     ),
                                   ),
                                 ],
@@ -96,16 +109,24 @@ class VisaPaymentScreen extends StatelessWidget {
                       ),
                       Divider(
                         height: AppSpacing.xxl,
-                        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                        color: isDark
+                            ? AppColors.darkDivider
+                            : AppColors.lightDivider,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            l10nPick(context, en: 'Case Tracking No.', fa: 'شماره پیگیری پرونده:'),
+                            l10nPick(
+                              context,
+                              en: 'Case Tracking No.',
+                              fa: 'شماره پیگیری پرونده:',
+                            ),
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                           Directionality(
@@ -115,7 +136,9 @@ class VisaPaymentScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightSecondary,
                               ),
                             ),
                           ),
@@ -126,10 +149,16 @@ class VisaPaymentScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            l10nPick(context, en: 'Applicant Name:', fa: 'نام متقاضی:'),
+                            l10nPick(
+                              context,
+                              en: 'Applicant Name:',
+                              fa: 'نام متقاضی:',
+                            ),
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                           Text(
@@ -137,7 +166,9 @@ class VisaPaymentScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12.5.sp,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                         ],
@@ -153,11 +184,17 @@ class VisaPaymentScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Fee Breakdown', fa: 'ریز هزینه‌های قابل پرداخت'),
+                        l10nPick(
+                          context,
+                          en: 'Fee Breakdown',
+                          fa: 'ریز هزینه‌های قابل پرداخت',
+                        ),
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.md.h),
@@ -166,52 +203,96 @@ class VisaPaymentScreen extends StatelessWidget {
                       _costItem(
                         context,
                         isDark: isDark,
-                        title: l10nPick(context, en: '1. Platform Service Fee', fa: '۱. هزینه خدمات و کارشناسی پرونده'),
-                        subtitle: l10nPick(context, en: 'Application audit, translation check, and tracking', fa: 'بررسی مدارک، فرم‌بندی و پیگیری اختصاصی'),
-                        amount: formatVisaPrice(request.serviceFee, request.currency, context: context),
+                        title: l10nPick(
+                          context,
+                          en: '1. Platform Service Fee',
+                          fa: '۱. هزینه خدمات و کارشناسی پرونده',
+                        ),
+                        subtitle: l10nPick(
+                          context,
+                          en: 'Application audit, translation check, and tracking',
+                          fa: 'بررسی مدارک، فرم‌بندی و پیگیری اختصاصی',
+                        ),
+                        amount: formatVisaPrice(
+                          request.serviceFee,
+                          request.currency,
+                          context: context,
+                        ),
                       ),
                       Divider(
                         height: AppSpacing.xxl,
-                        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                        color: isDark
+                            ? AppColors.darkDivider
+                            : AppColors.lightDivider,
                       ),
 
                       // Row 2: Gov Fee
                       _costItem(
                         context,
                         isDark: isDark,
-                        title: l10nPick(context, en: '2. Embassy & Government Fee', fa: '۲. تعرفه رسمی سفارت و اداره مهاجرت'),
-                        subtitle: l10nPick(context, en: 'Official immigration authority fee for issuance', fa: 'تعرفه مستقیم مراجع صادرکننده ویزا'),
-                        amount: formatVisaPrice(request.govFee, request.currency, context: context),
+                        title: l10nPick(
+                          context,
+                          en: '2. Embassy & Government Fee',
+                          fa: '۲. تعرفه رسمی سفارت و اداره مهاجرت',
+                        ),
+                        subtitle: l10nPick(
+                          context,
+                          en: 'Official immigration authority fee for issuance',
+                          fa: 'تعرفه مستقیم مراجع صادرکننده ویزا',
+                        ),
+                        amount: formatVisaPrice(
+                          request.govFee,
+                          request.currency,
+                          context: context,
+                        ),
                       ),
                       Divider(
                         height: AppSpacing.xxl,
-                        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                        color: isDark
+                            ? AppColors.darkDivider
+                            : AppColors.lightDivider,
                       ),
 
                       // Total Row
                       Container(
                         padding: EdgeInsets.all(AppSpacing.md.r),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurfaceVariant : AppColors.infoContainer,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          color: isDark
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.infoContainer,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              l10nPick(context, en: 'Total Amount to Pay:', fa: 'کل مبلغ قابل پرداخت:'),
+                              l10nPick(
+                                context,
+                                en: 'Total Amount to Pay:',
+                                fa: 'کل مبلغ قابل پرداخت:',
+                              ),
                               style: TextStyle(
                                 fontSize: 13.5.sp,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.deepBlack,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.deepBlack,
                               ),
                             ),
                             Text(
-                              formatVisaPrice(request.totalFee, request.currency, context: context),
+                              formatVisaPrice(
+                                request.totalFee,
+                                request.currency,
+                                context: context,
+                              ),
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w900,
-                                color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightSecondary,
                               ),
                             ),
                           ],
@@ -228,21 +309,33 @@ class VisaPaymentScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Payment Method', fa: 'روش پرداخت'),
+                        l10nPick(
+                          context,
+                          en: 'Payment Method',
+                          fa: 'روش پرداخت',
+                        ),
                         style: TextStyle(
                           fontSize: 13.5.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.sm.h),
                       Container(
                         padding: EdgeInsets.all(AppSpacing.md.r),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          color: isDark
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.lightBackground,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                           border: Border.all(
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightSecondary,
                             width: 1.5,
                           ),
                         ),
@@ -251,12 +344,16 @@ class VisaPaymentScreen extends StatelessWidget {
                             Container(
                               padding: EdgeInsets.all(AppSpacing.sm.r),
                               decoration: BoxDecoration(
-                                color: isDark ? AppColors.darkPrimaryContainer : AppColors.infoContainer,
+                                color: isDark
+                                    ? AppColors.darkPrimaryContainer
+                                    : AppColors.infoContainer,
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.account_balance_wallet_rounded,
-                                color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightSecondary,
                                 size: AppSpacing.iconSm.r,
                               ),
                             ),
@@ -266,19 +363,31 @@ class VisaPaymentScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    l10nPick(context, en: 'eCardo Multi-Currency Wallet', fa: 'کیف پول چندارزی eCardo'),
+                                    l10nPick(
+                                      context,
+                                      en: 'eCardo Multi-Currency Wallet',
+                                      fa: 'کیف پول چندارزی eCardo',
+                                    ),
                                     style: TextStyle(
                                       fontSize: 13.sp,
                                       fontWeight: FontWeight.w700,
-                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary,
                                     ),
                                   ),
                                   SizedBox(height: 2.h),
                                   Text(
-                                    l10nPick(context, en: 'Instant debit with double-entry ledger lock', fa: 'کسر آنی با ضمانت بازگشت و ایمنی کامل'),
+                                    l10nPick(
+                                      context,
+                                      en: 'Instant debit with double-entry ledger lock',
+                                      fa: 'کسر آنی با ضمانت بازگشت و ایمنی کامل',
+                                    ),
                                     style: TextStyle(
                                       fontSize: 11.sp,
-                                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                      color: isDark
+                                          ? AppColors.darkTextSecondary
+                                          : AppColors.lightTextSecondary,
                                     ),
                                   ),
                                 ],
@@ -286,7 +395,9 @@ class VisaPaymentScreen extends StatelessWidget {
                             ),
                             Icon(
                               Icons.check_circle_rounded,
-                              color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                              color: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightSecondary,
                             ),
                           ],
                         ),
@@ -300,14 +411,22 @@ class VisaPaymentScreen extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(AppSpacing.md.r),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.success.withValues(alpha: 0.15) : AppColors.successContainer,
+                    color: isDark
+                        ? AppColors.success.withValues(alpha: 0.15)
+                        : AppColors.successContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                    border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
+                    border: Border.all(
+                      color: AppColors.success.withValues(alpha: 0.4),
+                    ),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.security_rounded, color: AppColors.success, size: 20.r),
+                      Icon(
+                        Icons.security_rounded,
+                        color: AppColors.success,
+                        size: 20.r,
+                      ),
                       SizedBox(width: AppSpacing.sm.w),
                       Expanded(
                         child: Text(
@@ -335,7 +454,9 @@ class VisaPaymentScreen extends StatelessWidget {
                 color: AppColors.black.withValues(alpha: 0.35),
                 child: Center(
                   child: CircularProgressIndicator(
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightSecondary,
                   ),
                 ),
               ),
@@ -367,7 +488,9 @@ class VisaPaymentScreen extends StatelessWidget {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+              backgroundColor: isDark
+                  ? AppColors.darkPrimary
+                  : AppColors.lightSecondary,
               foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(
@@ -414,7 +537,9 @@ class VisaPaymentScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -422,7 +547,9 @@ class VisaPaymentScreen extends StatelessWidget {
                 subtitle,
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -433,7 +560,9 @@ class VisaPaymentScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
       ],

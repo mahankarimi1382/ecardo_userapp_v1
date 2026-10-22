@@ -574,10 +574,7 @@ List<GetPage> routesHandler = [
   ),
 
   // App self-update (v1.0.8+8)
-  GetPage(
-    name: BaseRoute.appUpdate,
-    page: () => RoutesConfig.appUpdate,
-  ),
+  GetPage(name: BaseRoute.appUpdate, page: () => RoutesConfig.appUpdate),
 
   // Locale switch waypoint — no binding, no controller: must build while
   // every GetX controller has just been disposed (LocaleThemeService).

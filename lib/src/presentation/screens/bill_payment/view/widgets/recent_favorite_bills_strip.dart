@@ -38,13 +38,11 @@ class RecentBillItem {
 class RecentFavoriteBillsStrip extends StatefulWidget {
   final Function(RecentBillItem item)? onQuickPay;
 
-  const RecentFavoriteBillsStrip({
-    super.key,
-    this.onQuickPay,
-  });
+  const RecentFavoriteBillsStrip({super.key, this.onQuickPay});
 
   @override
-  State<RecentFavoriteBillsStrip> createState() => _RecentFavoriteBillsStripState();
+  State<RecentFavoriteBillsStrip> createState() =>
+      _RecentFavoriteBillsStripState();
 }
 
 class _RecentFavoriteBillsStripState extends State<RecentFavoriteBillsStrip> {
@@ -135,14 +133,19 @@ class _RecentFavoriteBillsStripState extends State<RecentFavoriteBillsStrip> {
                   Container(
                     padding: EdgeInsets.all(5.w),
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                          .withValues(alpha: 0.12),
+                      color:
+                          (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.deepBlack)
+                              .withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.star_rounded,
                       size: 16.w,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.deepBlack,
                     ),
                   ),
                   SizedBox(width: 8.w),
@@ -151,7 +154,9 @@ class _RecentFavoriteBillsStripState extends State<RecentFavoriteBillsStrip> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.warmWhite
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -190,11 +195,14 @@ class _RecentFavoriteBillsStripState extends State<RecentFavoriteBillsStrip> {
                   if (widget.onQuickPay != null) {
                     widget.onQuickPay!(item);
                   } else {
-                    Get.toNamed(item.route, arguments: {
-                      'prefill_id': item.identifier,
-                      'operator_id': item.operatorId,
-                      'amount': item.lastAmountToman,
-                    });
+                    Get.toNamed(
+                      item.route,
+                      arguments: {
+                        'prefill_id': item.identifier,
+                        'operator_id': item.operatorId,
+                        'amount': item.lastAmountToman,
+                      },
+                    );
                   }
                 },
               );
@@ -258,7 +266,9 @@ class _RecentBillCard extends StatelessWidget {
                       width: 32.w,
                       height: 32.w,
                       decoration: BoxDecoration(
-                        color: item.tintColor.withValues(alpha: isDark ? 0.25 : 0.14),
+                        color: item.tintColor.withValues(
+                          alpha: isDark ? 0.25 : 0.14,
+                        ),
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Icon(
@@ -270,11 +280,15 @@ class _RecentBillCard extends StatelessWidget {
                     GestureDetector(
                       onTap: onFavoriteToggle,
                       child: Icon(
-                        item.isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
+                        item.isFavorite
+                            ? Icons.star_rounded
+                            : Icons.star_border_rounded,
                         size: 19.w,
                         color: item.isFavorite
                             ? const Color(0xFFF59E0B)
-                            : (isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+                            : (isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary),
                       ),
                     ),
                   ],
@@ -288,7 +302,9 @@ class _RecentBillCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.warmWhite
+                            : AppColors.lightTextPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -299,7 +315,9 @@ class _RecentBillCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                         letterSpacing: 0.3,
                       ),
                       maxLines: 1,
@@ -313,7 +331,9 @@ class _RecentBillCard extends StatelessWidget {
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(vertical: 5.h),
                   decoration: BoxDecoration(
-                    color: item.tintColor.withValues(alpha: isDark ? 0.20 : 0.12),
+                    color: item.tintColor.withValues(
+                      alpha: isDark ? 0.20 : 0.12,
+                    ),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
                   child: Row(

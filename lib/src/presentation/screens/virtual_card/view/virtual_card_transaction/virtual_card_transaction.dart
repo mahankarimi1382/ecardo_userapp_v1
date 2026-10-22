@@ -35,7 +35,9 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Column(
         children: [
@@ -109,12 +111,16 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                         color: isDark ? AppColors.darkSurface : AppColors.white,
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                           width: 1.0,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                            color: Colors.black.withValues(
+                              alpha: isDark ? 0.25 : 0.04,
+                            ),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -127,7 +133,9 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                             height: 42.h,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.r),
-                              color: statusColor.withValues(alpha: isDark ? 0.20 : 0.12),
+                              color: statusColor.withValues(
+                                alpha: isDark ? 0.20 : 0.12,
+                              ),
                             ),
                             child: Icon(icon, color: statusColor, size: 22.w),
                           ),
@@ -145,7 +153,9 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                                           letterSpacing: 0,
                                           fontWeight: FontWeight.w700,
                                           fontSize: 14.5.sp,
-                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                          color: isDark
+                                              ? AppColors.darkTextPrimary
+                                              : AppColors.lightTextPrimary,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -198,7 +208,9 @@ class _VirtualCardTransactionState extends State<VirtualCardTransaction> {
                                           letterSpacing: 0,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 11.5.sp,
-                                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                                          color: isDark
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextTertiary,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),

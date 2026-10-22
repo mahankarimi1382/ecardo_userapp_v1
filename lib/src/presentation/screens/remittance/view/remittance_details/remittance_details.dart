@@ -9,15 +9,16 @@ import 'package:ecardo_user/src/presentation/screens/remittance/model/remittance
 class RemittanceDetailsScreen extends StatefulWidget {
   const RemittanceDetailsScreen({super.key});
   @override
-  State<RemittanceDetailsScreen> createState() => _RemittanceDetailsScreenState();
+  State<RemittanceDetailsScreen> createState() =>
+      _RemittanceDetailsScreenState();
 }
 
 class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
   // BUG-09: RemittanceBinding in routes_handler.dart is the single DI source.
   final RemittanceController controller =
       Get.isRegistered<RemittanceController>()
-          ? Get.find<RemittanceController>()
-          : Get.put(RemittanceController());
+      ? Get.find<RemittanceController>()
+      : Get.put(RemittanceController());
 
   @override
   void initState() {
@@ -36,65 +37,161 @@ class _RemittanceDetailsScreenState extends State<RemittanceDetailsScreen> {
         elevation: 0,
         centerTitle: true,
         leading: const BackButton(color: AppColors.lightTextPrimary),
-        title: Text(l.remittanceDetailsTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)),
+        title: Text(
+          l.remittanceDetailsTitle,
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.lightTextPrimary,
+          ),
+        ),
       ),
       body: Obx(() {
-        if (controller.isDetailsLoading.value) return const Center(child: CircularProgressIndicator());
+        if (controller.isDetailsLoading.value)
+          return const Center(child: CircularProgressIndicator());
         final r = controller.selectedRemittance.value;
-        if (r == null) return Center(child: Text(l.remittanceNotFound, style: TextStyle(color: AppColors.lightTextSecondary)));
+        if (r == null)
+          return Center(
+            child: Text(
+              l.remittanceNotFound,
+              style: TextStyle(color: AppColors.lightTextSecondary),
+            ),
+          );
         return SingleChildScrollView(
           padding: EdgeInsets.all(16.w),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            _StatusBanner(status: r.status, l: l),
-            SizedBox(height: 16.h),
-            _Card('Tracking', [_Row('UUID', r.uuid), _Row('Reference', r.trx), if (r.createdAt != null) _Row('Created', _formatDate(r.createdAt!))]),
-            SizedBox(height: 16.h),
-            _Card(l.remittancePayoutDetails, [
-              // M-7 — decimals now come from DynamicDecimalsHelper via the
-              // controller (API-driven); falls back to 2 like before.
-              _Row(l.remittanceSendAmount, controller.formatAmount(r.sendAmount, currencyId: r.sendCurrencyId)),
-              // TODO(lead): exchange-rate precision is not exposed by the
-              // remittance API payload — 4 kept as-is to preserve display.
-              _Row(l.remittanceExchangeRate, r.exchangeRate.toStringAsFixed(4)),
-              _Row(l.remittanceReceiveAmount, controller.formatAmount(r.receiveAmount, currencyId: r.receiveCurrencyId)),
-              _Row(l.remittanceSystemFee, controller.formatAmount(r.systemFee, currencyId: r.sendCurrencyId)),
-              _Row(l.remittanceTotalPayable, controller.formatAmount(r.totalPayable, currencyId: r.sendCurrencyId), bold: true),
-            ]),
-            SizedBox(height: 16.h),
-            if (r.senderInfo != null) _Card(l.remittanceReviewSender, [
-              _Row(l.remittanceSenderName, r.senderInfo!.name),
-              _Row(l.remittanceSelectCountry, r.senderInfo!.country.toUpperCase()),
-              _Row(l.remittanceSenderPhone, r.senderInfo!.phone),
-              _Row(l.remittanceSenderIdNumber, r.senderInfo!.idNumber),
-              _Row(l.remittanceSenderTypeIndividual, r.senderInfo!.type == 'individual' ? l.remittanceSenderTypeIndividual : l.remittanceSenderTypeBusiness),
-            ]),
-            SizedBox(height: 16.h),
-            if (r.receiverInfo != null) _Card(l.remittanceReviewReceiver, [
-              _Row(l.remittanceReceiverName, r.receiverInfo!.name),
-              _Row(l.remittanceSelectCountry, r.receiverInfo!.country.toUpperCase()),
-              _Row(l.remittanceReceiverPhone, r.receiverInfo!.phone),
-              if (r.receiverInfo!.bankName != null) _Row(l.remittanceBankName, r.receiverInfo!.bankName!),
-              if (r.receiverInfo!.accountNumber != null) _Row(l.remittanceAccountNumber, r.receiverInfo!.accountNumber!),
-              if (r.receiverInfo!.iban != null) _Row(l.remittanceIban, r.receiverInfo!.iban!),
-              if (r.receiverInfo!.alipayAccount != null) _Row(l.remittanceAlipayAccount, r.receiverInfo!.alipayAccount!),
-              if (r.receiverInfo!.wechatAccount != null) _Row(l.remittanceWechatAccount, r.receiverInfo!.wechatAccount!),
-            ]),
-            if (r.attachments != null && r.attachments!.isNotEmpty) ...[
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _StatusBanner(status: r.status, l: l),
               SizedBox(height: 16.h),
-              _Card('${l.remittanceUploadDocuments} (${r.attachments!.length})', r.attachments!.map((a) => _Row(_attachmentLabel(a.type, l), a.filePath.split('/').last)).toList()),
-            ],
-            if (r.logs != null && r.logs!.isNotEmpty) ...[
+              _Card('Tracking', [
+                _Row('UUID', r.uuid),
+                _Row('Reference', r.trx),
+                if (r.createdAt != null)
+                  _Row('Created', _formatDate(r.createdAt!)),
+              ]),
               SizedBox(height: 16.h),
-              _Card(l.remittanceDetailsSectionTimeline, r.logs!.map((log) => _LogEntry(log: log, l: l)).toList()),
+              _Card(l.remittancePayoutDetails, [
+                // M-7 — decimals now come from DynamicDecimalsHelper via the
+                // controller (API-driven); falls back to 2 like before.
+                _Row(
+                  l.remittanceSendAmount,
+                  controller.formatAmount(
+                    r.sendAmount,
+                    currencyId: r.sendCurrencyId,
+                  ),
+                ),
+                // TODO(lead): exchange-rate precision is not exposed by the
+                // remittance API payload — 4 kept as-is to preserve display.
+                _Row(
+                  l.remittanceExchangeRate,
+                  r.exchangeRate.toStringAsFixed(4),
+                ),
+                _Row(
+                  l.remittanceReceiveAmount,
+                  controller.formatAmount(
+                    r.receiveAmount,
+                    currencyId: r.receiveCurrencyId,
+                  ),
+                ),
+                _Row(
+                  l.remittanceSystemFee,
+                  controller.formatAmount(
+                    r.systemFee,
+                    currencyId: r.sendCurrencyId,
+                  ),
+                ),
+                _Row(
+                  l.remittanceTotalPayable,
+                  controller.formatAmount(
+                    r.totalPayable,
+                    currencyId: r.sendCurrencyId,
+                  ),
+                  bold: true,
+                ),
+              ]),
+              SizedBox(height: 16.h),
+              if (r.senderInfo != null)
+                _Card(l.remittanceReviewSender, [
+                  _Row(l.remittanceSenderName, r.senderInfo!.name),
+                  _Row(
+                    l.remittanceSelectCountry,
+                    r.senderInfo!.country.toUpperCase(),
+                  ),
+                  _Row(l.remittanceSenderPhone, r.senderInfo!.phone),
+                  _Row(l.remittanceSenderIdNumber, r.senderInfo!.idNumber),
+                  _Row(
+                    l.remittanceSenderTypeIndividual,
+                    r.senderInfo!.type == 'individual'
+                        ? l.remittanceSenderTypeIndividual
+                        : l.remittanceSenderTypeBusiness,
+                  ),
+                ]),
+              SizedBox(height: 16.h),
+              if (r.receiverInfo != null)
+                _Card(l.remittanceReviewReceiver, [
+                  _Row(l.remittanceReceiverName, r.receiverInfo!.name),
+                  _Row(
+                    l.remittanceSelectCountry,
+                    r.receiverInfo!.country.toUpperCase(),
+                  ),
+                  _Row(l.remittanceReceiverPhone, r.receiverInfo!.phone),
+                  if (r.receiverInfo!.bankName != null)
+                    _Row(l.remittanceBankName, r.receiverInfo!.bankName!),
+                  if (r.receiverInfo!.accountNumber != null)
+                    _Row(
+                      l.remittanceAccountNumber,
+                      r.receiverInfo!.accountNumber!,
+                    ),
+                  if (r.receiverInfo!.iban != null)
+                    _Row(l.remittanceIban, r.receiverInfo!.iban!),
+                  if (r.receiverInfo!.alipayAccount != null)
+                    _Row(
+                      l.remittanceAlipayAccount,
+                      r.receiverInfo!.alipayAccount!,
+                    ),
+                  if (r.receiverInfo!.wechatAccount != null)
+                    _Row(
+                      l.remittanceWechatAccount,
+                      r.receiverInfo!.wechatAccount!,
+                    ),
+                ]),
+              if (r.attachments != null && r.attachments!.isNotEmpty) ...[
+                SizedBox(height: 16.h),
+                _Card(
+                  '${l.remittanceUploadDocuments} (${r.attachments!.length})',
+                  r.attachments!
+                      .map(
+                        (a) => _Row(
+                          _attachmentLabel(a.type, l),
+                          a.filePath.split('/').last,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+              if (r.logs != null && r.logs!.isNotEmpty) ...[
+                SizedBox(height: 16.h),
+                _Card(
+                  l.remittanceDetailsSectionTimeline,
+                  r.logs!.map((log) => _LogEntry(log: log, l: l)).toList(),
+                ),
+              ],
             ],
-          ]),
+          ),
         );
       }),
     );
   }
 
-  String _attachmentLabel(String t, AppLocalizations l) => switch (t) { 'kyc' => l.remittanceDocTypeKyc, 'payment_receipt' => l.remittanceDocTypePaymentReceipt, 'payout_receipt' => l.remittanceDocTypePayoutReceipt, _ => l.remittanceDocTypeOther };
-  String _formatDate(DateTime dt) => '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  String _attachmentLabel(String t, AppLocalizations l) => switch (t) {
+    'kyc' => l.remittanceDocTypeKyc,
+    'payment_receipt' => l.remittanceDocTypePaymentReceipt,
+    'payout_receipt' => l.remittanceDocTypePayoutReceipt,
+    _ => l.remittanceDocTypeOther,
+  };
+  String _formatDate(DateTime dt) =>
+      '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
 }
 
 class _StatusBanner extends StatelessWidget {
@@ -107,26 +204,62 @@ class _StatusBanner extends StatelessWidget {
     final color = _statusColor(status);
     return Container(
       padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12), border: Border.all(color: color.withValues(alpha: 0.3))),
-      child: Row(children: [
-        Icon(_statusIcon(status), color: color, size: 24.sp),
-        SizedBox(width: 12.w),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(remittanceStatusLabel(status, l), style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: color)),
-          Text(status.isTerminal ? l.remittanceStatusFinalized : status.isPending ? l.remittanceStatusProcessing : l.remittanceStatusActionNeeded, style: TextStyle(fontSize: 11.sp, color: color.withValues(alpha: 0.8))),
-        ])),
-      ]),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(_statusIcon(status), color: color, size: 24.sp),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  remittanceStatusLabel(status, l),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
+                ),
+                Text(
+                  status.isTerminal
+                      ? l.remittanceStatusFinalized
+                      : status.isPending
+                      ? l.remittanceStatusProcessing
+                      : l.remittanceStatusActionNeeded,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: color.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Color _statusColor(RemittanceStatus s) => switch (s) {
-    RemittanceStatus.completed || RemittanceStatus.destinationPaid || RemittanceStatus.refundCompleted => AppColors.success,
-    RemittanceStatus.rejected || RemittanceStatus.expired || RemittanceStatus.cancelled => AppColors.error,
-    RemittanceStatus.draft || RemittanceStatus.waitingInformation || RemittanceStatus.waitingDocuments => AppColors.grey,
+    RemittanceStatus.completed ||
+    RemittanceStatus.destinationPaid ||
+    RemittanceStatus.refundCompleted => AppColors.success,
+    RemittanceStatus.rejected ||
+    RemittanceStatus.expired ||
+    RemittanceStatus.cancelled => AppColors.error,
+    RemittanceStatus.draft ||
+    RemittanceStatus.waitingInformation ||
+    RemittanceStatus.waitingDocuments => AppColors.grey,
     _ => AppColors.warning,
   };
 
-  IconData _statusIcon(RemittanceStatus s) => s.isTerminal ? (s == RemittanceStatus.completed ? Icons.check_circle : Icons.cancel) : Icons.hourglass_top;
+  IconData _statusIcon(RemittanceStatus s) => s.isTerminal
+      ? (s == RemittanceStatus.completed ? Icons.check_circle : Icons.cancel)
+      : Icons.hourglass_top;
 }
 
 class _Card extends StatelessWidget {
@@ -136,8 +269,26 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(14.w),
-    decoration: BoxDecoration(color: AppColors.lightSurface, borderRadius: BorderRadius.circular(12), border: Border.all(color: AppColors.lightBorder)),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text(title, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: AppColors.lightTextPrimary)), SizedBox(height: 12.h), ...children]),
+    decoration: BoxDecoration(
+      color: AppColors.lightSurface,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: AppColors.lightBorder),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w700,
+            color: AppColors.lightTextPrimary,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        ...children,
+      ],
+    ),
   );
 }
 
@@ -148,11 +299,31 @@ class _Row extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: EdgeInsets.only(bottom: 8.h),
-    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextSecondary)),
-      SizedBox(width: 12.w),
-      Expanded(child: Text(value, textAlign: TextAlign.start, style: TextStyle(fontSize: 12.sp, color: AppColors.lightTextPrimary, fontWeight: bold ? FontWeight.w700 : FontWeight.w500))),
-    ]),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: AppColors.lightTextSecondary,
+          ),
+        ),
+        SizedBox(width: 12.w),
+        Expanded(
+          child: Text(
+            value,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: AppColors.lightTextPrimary,
+              fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -163,28 +334,67 @@ class _LogEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
     padding: EdgeInsets.only(bottom: 10.h),
-    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Container(margin: EdgeInsets.only(top: 4.h), width: 8.w, height: 8.w, decoration: BoxDecoration(color: AppColors.lightPrimary, shape: BoxShape.circle)),
-      SizedBox(width: 10.w),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(log.newStatus != null ? remittanceStatusLabel(log.newStatus!, l) : '-', style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600, color: AppColors.lightTextPrimary)),
-        if (log.note != null && log.note!.isNotEmpty) ...[
-          SizedBox(height: 2.h),
-          Text(log.note!, style: TextStyle(fontSize: 11.sp, color: AppColors.lightTextSecondary)),
-        ],
-        SizedBox(height: 2.h),
-        Text(_meta(log), style: TextStyle(fontSize: 10.sp, color: AppColors.lightTextSecondary)),
-      ])),
-    ]),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 4.h),
+          width: 8.w,
+          height: 8.w,
+          decoration: BoxDecoration(
+            color: AppColors.lightPrimary,
+            shape: BoxShape.circle,
+          ),
+        ),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                log.newStatus != null
+                    ? remittanceStatusLabel(log.newStatus!, l)
+                    : '-',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.lightTextPrimary,
+                ),
+              ),
+              if (log.note != null && log.note!.isNotEmpty) ...[
+                SizedBox(height: 2.h),
+                Text(
+                  log.note!,
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: AppColors.lightTextSecondary,
+                  ),
+                ),
+              ],
+              SizedBox(height: 2.h),
+              Text(
+                _meta(log),
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: AppColors.lightTextSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
   );
 
   String _meta(RemittanceLog log) {
     final parts = <String>[];
     if (log.causerType != null) parts.add('by ${log.causerType}');
-    if (log.ipAddress != null && log.ipAddress != 'system') parts.add('IP: ${log.ipAddress}');
+    if (log.ipAddress != null && log.ipAddress != 'system')
+      parts.add('IP: ${log.ipAddress}');
     if (log.createdAt != null) parts.add(_formatDate(log.createdAt!));
     return parts.join(' • ');
   }
 
-  String _formatDate(DateTime dt) => '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+  String _formatDate(DateTime dt) =>
+      '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
 }

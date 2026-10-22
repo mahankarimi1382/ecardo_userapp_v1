@@ -131,7 +131,8 @@ class P2pBuyAdController extends GetxController {
       final options = methods
           .map((method) {
             final id = method.paymentMethod?.id ?? method.id ?? 0;
-            final name = method.paymentMethod?.name ??
+            final name =
+                method.paymentMethod?.name ??
                 (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
             final fields = method.fields ?? <ad_payment_method.Field>[];
             final accountInfo = fields.isNotEmpty
@@ -176,7 +177,8 @@ class P2pBuyAdController extends GetxController {
     final fallbackOptions = detailsMethods
         .map((method) {
           final id = method.paymentMethodId ?? method.id ?? 0;
-          final name = method.paymentMethod?.name ??
+          final name =
+              method.paymentMethod?.name ??
               (AppLocalizations.of(Get.context!)?.p2pMethod ?? 'Method');
           final fields = method.fields ?? <ad_details.Field>[];
           final accountInfo = fields.isNotEmpty

@@ -7,10 +7,16 @@ class GuaranteeBinding extends Bindings {
   @override
   void dependencies() {
     if (!Get.isRegistered<GuaranteeApiService>()) {
-      Get.lazyPut<GuaranteeApiService>(() => GuaranteeApiService(), fenix: true);
+      Get.lazyPut<GuaranteeApiService>(
+        () => GuaranteeApiService(),
+        fenix: true,
+      );
     }
     if (!Get.isRegistered<GuaranteeController>()) {
-      Get.lazyPut<GuaranteeController>(() => GuaranteeController(), fenix: true);
+      Get.lazyPut<GuaranteeController>(
+        () => GuaranteeController(),
+        fenix: true,
+      );
     }
   }
 }

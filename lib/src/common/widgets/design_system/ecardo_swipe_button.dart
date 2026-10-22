@@ -133,7 +133,8 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     if (!mounted) return;
     final disableAnimations =
         MediaQuery.maybeDisableAnimationsOf(context) ?? false;
-    final shouldAnimate = widget.animateShimmer &&
+    final shouldAnimate =
+        widget.animateShimmer &&
         !disableAnimations &&
         widget.enabled &&
         !widget.isLoading &&
@@ -152,7 +153,11 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     }
   }
 
-  void _onHorizontalDragUpdate(DragUpdateDetails details, double maxDrag, {bool isRtl = false}) {
+  void _onHorizontalDragUpdate(
+    DragUpdateDetails details,
+    double maxDrag, {
+    bool isRtl = false,
+  }) {
     if (!widget.enabled || widget.isLoading || widget.isSuccess || _completed) {
       return;
     }
@@ -196,10 +201,7 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     // Animation, and leaving the old listener attached would keep calling setState
     // from a stale animation — accumulating one per swipe attempt.
     _resetAnimation.removeListener(_onAnimationTick);
-    _resetAnimation = Tween<double>(
-      begin: _dragPosition,
-      end: target,
-    ).animate(
+    _resetAnimation = Tween<double>(begin: _dragPosition, end: target).animate(
       CurvedAnimation(parent: _resetController, curve: curve),
     )..addListener(_onAnimationTick);
   }
@@ -247,15 +249,20 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
         builder: (context, constraints) {
           final totalWidth = constraints.maxWidth;
           final maxDrag = math.max(0.0, totalWidth - thumbSize - 8.0);
-          final progress = maxDrag > 0 ? (_dragPosition / maxDrag).clamp(0.0, 1.0) : 0.0;
+          final progress = maxDrag > 0
+              ? (_dragPosition / maxDrag).clamp(0.0, 1.0)
+              : 0.0;
           final isInteractive =
-              widget.enabled && !widget.isLoading && !widget.isSuccess && !_completed;
+              widget.enabled &&
+              !widget.isLoading &&
+              !widget.isSuccess &&
+              !_completed;
 
           final label = widget.isLoading
               ? (widget.loadingText ?? 'Processing...')
               : widget.isSuccess
-                  ? (widget.successText ?? 'Confirmed')
-                  : widget.text;
+              ? (widget.successText ?? 'Confirmed')
+              : widget.text;
 
           return Semantics(
             container: true,
@@ -297,18 +304,12 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
 
     final defaultGradient = isDark
         ? const LinearGradient(
-            colors: [
-              Color(0xFF263345),
-              AppColors.mainSoftBlue,
-            ],
+            colors: [Color(0xFF263345), AppColors.mainSoftBlue],
             begin: AlignmentDirectional.centerStart,
             end: AlignmentDirectional.centerEnd,
           )
         : const LinearGradient(
-            colors: [
-              AppColors.darkGray,
-              AppColors.deepBlack,
-            ],
+            colors: [AppColors.darkGray, AppColors.deepBlack],
             begin: AlignmentDirectional.centerStart,
             end: AlignmentDirectional.centerEnd,
           );
@@ -387,7 +388,8 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
     double totalWidth,
     double thumbSize,
   ) {
-    final textColor = widget.textColor ??
+    final textColor =
+        widget.textColor ??
         (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary);
 
     // Fade out as thumb travels across
@@ -422,37 +424,32 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
   }
 
   Widget _buildShimmerArrows(Color textColor, {bool isRtl = false}) {
-    final icon = isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded;
+    final icon = isRtl
+        ? Icons.chevron_left_rounded
+        : Icons.chevron_right_rounded;
     final sign = isRtl ? 1.0 : -1.0;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: textColor.withValues(alpha: 0.35),
-        ),
+        Icon(icon, size: 16, color: textColor.withValues(alpha: 0.35)),
         Transform.translate(
           offset: Offset(sign * 8, 0),
-          child: Icon(
-            icon,
-            size: 16,
-            color: textColor.withValues(alpha: 0.70),
-          ),
+          child: Icon(icon, size: 16, color: textColor.withValues(alpha: 0.70)),
         ),
         Transform.translate(
           offset: Offset(sign * 16, 0),
-          child: Icon(
-            icon,
-            size: 16,
-            color: textColor,
-          ),
+          child: Icon(icon, size: 16, color: textColor),
         ),
       ],
     );
   }
 
-  Widget _buildThumb(bool isDark, double size, double progress, {bool isRtl = false}) {
+  Widget _buildThumb(
+    bool isDark,
+    double size,
+    double progress, {
+    bool isRtl = false,
+  }) {
     final defaultThumbColor = isDark ? AppColors.darkSurface : AppColors.white;
     final thumbColor = widget.thumbColor ?? defaultThumbColor;
 
@@ -483,7 +480,8 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
         ],
       ),
       child: Center(
-        child: widget.icon ??
+        child:
+            widget.icon ??
             Icon(
               isRtl ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
               color: iconColor,
@@ -494,7 +492,9 @@ class EcardoSwipeButtonState extends State<EcardoSwipeButton>
   }
 
   Widget _buildLoadingState(bool isDark) {
-    final textColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     return Positioned.fill(
       child: Row(

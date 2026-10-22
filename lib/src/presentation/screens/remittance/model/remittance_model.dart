@@ -154,7 +154,9 @@ enum RemittanceStatus {
       this == RemittanceStatus.refundCompleted;
 
   bool get isPending =>
-      !isTerminal && this != RemittanceStatus.unknown && this != RemittanceStatus.draft;
+      !isTerminal &&
+      this != RemittanceStatus.unknown &&
+      this != RemittanceStatus.draft;
 
   bool get canUploadDocuments =>
       this == RemittanceStatus.waitingDocuments ||
@@ -227,13 +229,13 @@ class RemittanceMethod {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'country_code': countryCode,
-        'name': name,
-        'receive_currency_id': receiveCurrencyId,
-        'fields': fields,
-        'status': status,
-      };
+    'id': id,
+    'country_code': countryCode,
+    'name': name,
+    'receive_currency_id': receiveCurrencyId,
+    'fields': fields,
+    'status': status,
+  };
 
   /// True when the method is active (status == 1 / true).
   bool get isActive => status == 1;
@@ -379,22 +381,22 @@ class RemittanceQuote {
   }
 
   Map<String, dynamic> toJson() => {
-        'user_id': userId,
-        'send_amount': sendAmount,
-        'send_currency_id': sendCurrencyId,
-        'receive_currency_id': receiveCurrencyId,
-        'method_id': methodId,
-        'exchange_rate': exchangeRate,
-        'receive_amount': receiveAmount,
-        'system_fee': systemFee,
-        'total_payable': totalPayable,
-        'rate_locked_at': rateLockedAt?.toIso8601String(),
-        'rate_expires_at': rateExpiresAt?.toIso8601String(),
-        'rate_expires_in_seconds': rateExpiresInSeconds,
-        if (rateSource != null) 'rate_source': rateSource,
-        if (minAmount != null) 'min_amount': minAmount,
-        if (maxAmount != null) 'max_amount': maxAmount,
-      };
+    'user_id': userId,
+    'send_amount': sendAmount,
+    'send_currency_id': sendCurrencyId,
+    'receive_currency_id': receiveCurrencyId,
+    'method_id': methodId,
+    'exchange_rate': exchangeRate,
+    'receive_amount': receiveAmount,
+    'system_fee': systemFee,
+    'total_payable': totalPayable,
+    'rate_locked_at': rateLockedAt?.toIso8601String(),
+    'rate_expires_at': rateExpiresAt?.toIso8601String(),
+    'rate_expires_in_seconds': rateExpiresInSeconds,
+    if (rateSource != null) 'rate_source': rateSource,
+    if (minAmount != null) 'min_amount': minAmount,
+    if (maxAmount != null) 'max_amount': maxAmount,
+  };
 
   bool get isExpired =>
       rateExpiresAt != null && DateTime.now().isAfter(rateExpiresAt!);
@@ -417,12 +419,12 @@ class RemittanceSenderInfo {
   });
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'country': country,
-        'phone': phone,
-        'id_number': idNumber,
-        'type': type,
-      };
+    'name': name,
+    'country': country,
+    'phone': phone,
+    'id_number': idNumber,
+    'type': type,
+  };
 }
 
 /// Receiver info structure.
@@ -466,19 +468,19 @@ class RemittanceReceiverInfo {
   });
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'country': country,
-        'phone': phone,
-        if (bankName != null) 'bank_name': bankName,
-        if (accountNumber != null) 'account_number': accountNumber,
-        if (iban != null) 'iban': iban,
-        if (alipayAccount != null) 'alipay_account': alipayAccount,
-        if (wechatAccount != null) 'wechat_account': wechatAccount,
-        if (swift != null) 'swift': swift,
-        if (shabaNumber != null) 'shaba_number': shabaNumber,
-        if (usdtAddress != null) 'usdt_address': usdtAddress,
-        if (cardNumber != null) 'card_number': cardNumber,
-      };
+    'name': name,
+    'country': country,
+    'phone': phone,
+    if (bankName != null) 'bank_name': bankName,
+    if (accountNumber != null) 'account_number': accountNumber,
+    if (iban != null) 'iban': iban,
+    if (alipayAccount != null) 'alipay_account': alipayAccount,
+    if (wechatAccount != null) 'wechat_account': wechatAccount,
+    if (swift != null) 'swift': swift,
+    if (shabaNumber != null) 'shaba_number': shabaNumber,
+    if (usdtAddress != null) 'usdt_address': usdtAddress,
+    if (cardNumber != null) 'card_number': cardNumber,
+  };
 }
 
 /// A remittance request record.

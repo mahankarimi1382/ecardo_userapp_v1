@@ -15,11 +15,13 @@ class ElectricityReviewStepSection extends StatelessWidget {
     final ElectricityController controller = Get.find<ElectricityController>();
     final settings = Get.find<SettingsService>();
 
-    final int decimals = int.tryParse(
+    final int decimals =
+        int.tryParse(
           settings.getSetting("site_currency_decimals")?.toString() ?? "2",
         ) ??
         2;
-    final String currency = settings.getSetting("site_currency")?.toString() ?? "تومان";
+    final String currency =
+        settings.getSetting("site_currency")?.toString() ?? "تومان";
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w),
@@ -29,23 +31,32 @@ class ElectricityReviewStepSection extends StatelessWidget {
 
         final recipient = controller.targetBillId.value.isNotEmpty
             ? controller.targetBillId.value
-            : (controller.dynamicFieldControllers.values.firstOrNull?.text ?? 'شناسه قبض');
+            : (controller.dynamicFieldControllers.values.firstOrNull?.text ??
+                  'شناسه قبض');
 
         final baseAmountText =
             "${controller.amountText.value.isEmpty ? "0" : controller.amountText.value} ${controller.serviceData.value?.currency ?? currency}";
 
         return BillReviewReceiptCard(
-          serviceTitle: localization?.electricityReviewTitle ?? 'قبض برق و خدمات توانیر',
+          serviceTitle:
+              localization?.electricityReviewTitle ?? 'قبض برق و خدمات توانیر',
           operatorId: null,
-          operatorName: controller.serviceData.value?.name ?? 'شرکت توزیع نیروی برق',
+          operatorName:
+              controller.serviceData.value?.name ?? 'شرکت توزیع نیروی برق',
           recipientValue: recipient,
           recipientLabel: 'شناسه قبض / کنتور',
           baseAmount: baseAmountText,
-          chargeAmount: controller.chargeText.value.isEmpty ? '0 $currency' : controller.chargeText.value,
-          conversionRate: controller.rateText.value.isEmpty ? null : controller.rateText.value,
+          chargeAmount: controller.chargeText.value.isEmpty
+              ? '0 $currency'
+              : controller.chargeText.value,
+          conversionRate: controller.rateText.value.isEmpty
+              ? null
+              : controller.rateText.value,
           payableAmount: payableText,
           isLoading: controller.isSubmitLoading.value,
-          confirmButtonText: localization?.electricityReviewConfirmButton ?? 'تأیید و پرداخت قبض',
+          confirmButtonText:
+              localization?.electricityReviewConfirmButton ??
+              'تأیید و پرداخت قبض',
           backButtonText: localization?.electricityReviewBackButton ?? 'بازگشت',
           onBack: () => controller.currentStep.value = 0,
           onConfirm: () => controller.submitPayBill(),

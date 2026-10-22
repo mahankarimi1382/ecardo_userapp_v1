@@ -37,13 +37,16 @@ class TransferStepIndicator extends StatelessWidget {
             : colorScheme.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         border: Border.all(
-          color: colorScheme.outlineVariant.withValues(alpha: isDark ? 0.25 : 0.4),
+          color: colorScheme.outlineVariant.withValues(
+            alpha: isDark ? 0.25 : 0.4,
+          ),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : AppColors.lightShadow)
-                .withValues(alpha: isDark ? 0.3 : 0.05),
+            color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+              alpha: isDark ? 0.3 : 0.05,
+            ),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -57,7 +60,9 @@ class TransferStepIndicator extends StatelessWidget {
                 index: i,
                 label: steps[i],
                 isActive: i == currentStep,
-                isCompleted: i < currentStep || (currentStep == steps.length - 1 && i == currentStep),
+                isCompleted:
+                    i < currentStep ||
+                    (currentStep == steps.length - 1 && i == currentStep),
                 isDark: isDark,
                 colorScheme: colorScheme,
                 onTap: (onStepTapped != null && i < currentStep)
@@ -179,13 +184,13 @@ class _StepNode extends StatelessWidget {
               fontWeight: isActive
                   ? FontWeight.w700
                   : isCompleted
-                      ? FontWeight.w600
-                      : FontWeight.w500,
+                  ? FontWeight.w600
+                  : FontWeight.w500,
               color: isActive
                   ? colorScheme.onSurface
                   : isCompleted
-                      ? colorScheme.onSurface.withValues(alpha: 0.8)
-                      : colorScheme.onSurface.withValues(alpha: 0.4),
+                  ? colorScheme.onSurface.withValues(alpha: 0.8)
+                  : colorScheme.onSurface.withValues(alpha: 0.4),
               letterSpacing: 0.1,
             ),
             child: Text(
@@ -232,10 +237,7 @@ class _StepProgressConnector extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    AppColors.success,
-                    colorScheme.primary,
-                  ],
+                  colors: [AppColors.success, colorScheme.primary],
                 ),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 boxShadow: isFilled

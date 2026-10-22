@@ -26,7 +26,13 @@ class LoanCalculatorSlider extends StatefulWidget {
   final List<double>? quickAmounts;
   final String currency; // 'USD' or 'IRR'
   final bool? showGracePeriod;
-  final void Function(double amount, int months, int graceMonths, double monthlyPayment)? onPlanChanged;
+  final void Function(
+    double amount,
+    int months,
+    int graceMonths,
+    double monthlyPayment,
+  )?
+  onPlanChanged;
   final void Function({
     required double amount,
     required int months,
@@ -34,7 +40,8 @@ class LoanCalculatorSlider extends StatefulWidget {
     required double totalInterest,
     required double totalRepayment,
     required double aprRate,
-  })? onCalculationChanged;
+  })?
+  onCalculationChanged;
 
   const LoanCalculatorSlider({
     super.key,
@@ -66,7 +73,8 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   late int _months;
   late int _graceMonths;
 
-  bool get effectiveShowGracePeriod => widget.showGracePeriod ?? (widget.presetDurations == null);
+  bool get effectiveShowGracePeriod =>
+      widget.showGracePeriod ?? (widget.presetDurations == null);
 
   List<int> get effectiveTerms => widget.presetDurations ?? widget.termOptions;
 
@@ -93,7 +101,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   @override
   void initState() {
     super.initState();
-    final initial = widget.initialAmount ?? (widget.currency.toUpperCase() == 'USD' ? 10000.0 : 50000000.0);
+    final initial =
+        widget.initialAmount ??
+        (widget.currency.toUpperCase() == 'USD' ? 10000.0 : 50000000.0);
     _amount = initial.clamp(safeMinAmount, safeMaxAmount);
     _months = (widget.initialMonths ?? 12).clamp(safeMinMonths, safeMaxMonths);
     if (!effectiveTerms.contains(_months) && effectiveTerms.isNotEmpty) {
@@ -114,7 +124,8 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     super.didUpdateWidget(oldWidget);
     bool changed = false;
 
-    if (widget.initialAmount != null && widget.initialAmount != oldWidget.initialAmount) {
+    if (widget.initialAmount != null &&
+        widget.initialAmount != oldWidget.initialAmount) {
       _amount = widget.initialAmount!.clamp(safeMinAmount, safeMaxAmount);
       changed = true;
     } else {
@@ -125,7 +136,8 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
       }
     }
 
-    if (widget.initialMonths != null && widget.initialMonths != oldWidget.initialMonths) {
+    if (widget.initialMonths != null &&
+        widget.initialMonths != oldWidget.initialMonths) {
       _months = widget.initialMonths!.clamp(safeMinMonths, safeMaxMonths);
       changed = true;
     } else {
@@ -147,8 +159,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
   double get _monthlyRate => (widget.annualInterestRate / 100.0) / 12.0;
 
-  int get _effectiveGraceMonths =>
-      effectiveShowGracePeriod ? _graceMonths.clamp(0, math.max(0, _months - 1)).toInt() : 0;
+  int get _effectiveGraceMonths => effectiveShowGracePeriod
+      ? _graceMonths.clamp(0, math.max(0, _months - 1)).toInt()
+      : 0;
 
   /// Standard EMI calculation using French amortization
   double get _monthlyPayment {
@@ -196,7 +209,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   String _formatAmount(double val) {
     if (widget.currency.toUpperCase() == 'USD') {
       final isWhole = (val - val.truncateToDouble()).abs() < 0.001;
-      final fixedStr = isWhole ? val.toStringAsFixed(0) : val.toStringAsFixed(2);
+      final fixedStr = isWhole
+          ? val.toStringAsFixed(0)
+          : val.toStringAsFixed(2);
       final parts = fixedStr.split('.');
       final intPart = parts[0].replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -221,13 +236,23 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
       return widget.quickAmounts!;
     }
     if (widget.currency.toUpperCase() == 'USD') {
-      return [1000.0, 5000.0, 10000.0, 25000.0, 50000.0, 100000.0]
-          .where((a) => a >= widget.minAmount && a <= widget.maxAmount)
-          .toList();
+      return [
+        1000.0,
+        5000.0,
+        10000.0,
+        25000.0,
+        50000.0,
+        100000.0,
+      ].where((a) => a >= widget.minAmount && a <= widget.maxAmount).toList();
     }
-    return [10000000.0, 25000000.0, 50000000.0, 100000000.0, 200000000.0, 500000000.0]
-        .where((a) => a >= widget.minAmount && a <= widget.maxAmount)
-        .toList();
+    return [
+      10000000.0,
+      25000000.0,
+      50000000.0,
+      100000000.0,
+      200000000.0,
+      500000000.0,
+    ].where((a) => a >= widget.minAmount && a <= widget.maxAmount).toList();
   }
 
   String _quickChipLabel(BuildContext context, double amount) {
@@ -248,16 +273,31 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final sunkenColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
+    final sunkenColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
 
     final amountRange = math.max(0.0, safeMaxAmount - safeMinAmount);
-    final amountDivisions = safeStepAmount > 0 ? (amountRange / safeStepAmount).round() : null;
-    final effectiveAmountDivisions = amountDivisions != null && amountDivisions > 0 && amountDivisions <= 500 ? amountDivisions : null;
+    final amountDivisions = safeStepAmount > 0
+        ? (amountRange / safeStepAmount).round()
+        : null;
+    final effectiveAmountDivisions =
+        amountDivisions != null && amountDivisions > 0 && amountDivisions <= 500
+        ? amountDivisions
+        : null;
 
     final durationRange = math.max(0, safeMaxMonths - safeMinMonths);
     final durationDivisions = durationRange > 0 ? durationRange : null;
@@ -354,7 +394,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               ),
               SizedBox(width: AppSpacing.xs.w),
               Text(
-                widget.currency.toUpperCase() == 'USD' ? 'USD' : _currencyLabel(context),
+                widget.currency.toUpperCase() == 'USD'
+                    ? 'USD'
+                    : _currencyLabel(context),
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w700,
@@ -370,11 +412,16 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: primaryAccent,
-              inactiveTrackColor: isDark ? AppColors.darkOutlineVariant : AppColors.lightOutlineVariant,
+              inactiveTrackColor: isDark
+                  ? AppColors.darkOutlineVariant
+                  : AppColors.lightOutlineVariant,
               thumbColor: primaryAccent,
               overlayColor: primaryAccent.withValues(alpha: 0.15),
               trackHeight: 5.h,
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.r, elevation: 3),
+              thumbShape: RoundSliderThumbShape(
+                enabledThumbRadius: 10.r,
+                elevation: 3,
+              ),
               overlayShape: RoundSliderOverlayShape(overlayRadius: 18.r),
             ),
             child: Slider(
@@ -400,7 +447,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
           // Amount Bounds (Min / Max)
           Padding(
-            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.xs.w),
+            padding: EdgeInsetsDirectional.symmetric(
+              horizontal: AppSpacing.xs.w,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -434,11 +483,14 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               physics: const BouncingScrollPhysics(),
               child: Row(
                 children: _effectiveQuickAmounts.map((q) {
-                  final isSelected = (_amount - q).abs() < (widget.stepAmount / 2);
+                  final isSelected =
+                      (_amount - q).abs() < (widget.stepAmount / 2);
                   return Padding(
                     padding: EdgeInsetsDirectional.only(end: AppSpacing.xs.w),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                       onTap: () {
                         HapticFeedback.selectionClick();
                         setState(() {
@@ -448,10 +500,15 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                       },
                       child: AnimatedContainer(
                         duration: AppSpacing.fast,
-                        padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 5.h),
+                        padding: EdgeInsetsDirectional.symmetric(
+                          horizontal: 10.w,
+                          vertical: 5.h,
+                        ),
                         decoration: BoxDecoration(
                           color: isSelected ? primaryAccent : sunkenColor,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
                           border: Border.all(
                             color: isSelected ? primaryAccent : borderColor,
                             width: 1.2,
@@ -461,7 +518,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           _quickChipLabel(context, q),
                           style: TextStyle(
                             fontSize: 11.sp,
-                            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                            fontWeight: isSelected
+                                ? FontWeight.w800
+                                : FontWeight.w600,
                             color: isSelected
                                 ? (isDark ? AppColors.deepBlack : Colors.white)
                                 : textPrimary,
@@ -476,7 +535,10 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           ],
 
           SizedBox(height: AppSpacing.md.h),
-          Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+          Divider(
+            height: 1,
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
           SizedBox(height: AppSpacing.md.h),
 
           // ------------------ SECTION 2: DURATION SLIDER & PRESETS ------------------
@@ -525,7 +587,10 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               ),
               SizedBox(width: 8.w),
               Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 10.w,
+                  vertical: 4.h,
+                ),
                 decoration: BoxDecoration(
                   color: primaryAccent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -548,15 +613,23 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: primaryAccent,
-              inactiveTrackColor: isDark ? AppColors.darkOutlineVariant : AppColors.lightOutlineVariant,
+              inactiveTrackColor: isDark
+                  ? AppColors.darkOutlineVariant
+                  : AppColors.lightOutlineVariant,
               thumbColor: primaryAccent,
               overlayColor: primaryAccent.withValues(alpha: 0.15),
               trackHeight: 5.h,
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.r, elevation: 3),
+              thumbShape: RoundSliderThumbShape(
+                enabledThumbRadius: 10.r,
+                elevation: 3,
+              ),
               overlayShape: RoundSliderOverlayShape(overlayRadius: 18.r),
             ),
             child: Slider(
-              value: _months.toDouble().clamp(safeMinMonths.toDouble(), safeMaxMonths.toDouble()),
+              value: _months.toDouble().clamp(
+                safeMinMonths.toDouble(),
+                safeMaxMonths.toDouble(),
+              ),
               min: safeMinMonths.toDouble(),
               max: safeMaxMonths.toDouble(),
               divisions: durationDivisions,
@@ -578,7 +651,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
           // Duration Bounds
           Padding(
-            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.xs.w),
+            padding: EdgeInsetsDirectional.symmetric(
+              horizontal: AppSpacing.xs.w,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -615,7 +690,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                   child: Padding(
                     padding: EdgeInsetsDirectional.symmetric(horizontal: 3.w),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                       onTap: () {
                         HapticFeedback.selectionClick();
                         setState(() {
@@ -632,7 +709,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           color: isSelected ? primaryAccent : sunkenColor,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                           border: Border.all(
                             color: isSelected ? primaryAccent : borderColor,
                             width: isSelected ? 1.4 : 1.0,
@@ -640,7 +719,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           boxShadow: isSelected
                               ? [
                                   BoxShadow(
-                                    color: primaryAccent.withValues(alpha: 0.25),
+                                    color: primaryAccent.withValues(
+                                      alpha: 0.25,
+                                    ),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
@@ -651,7 +732,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           '$m ${l10nPick(context, fa: 'ماهه', en: 'Mo', ar: 'شهر', zh: '月')}',
                           style: TextStyle(
                             fontSize: 11.5.sp,
-                            fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
+                            fontWeight: isSelected
+                                ? FontWeight.w900
+                                : FontWeight.w600,
                             color: isSelected
                                 ? (isDark ? AppColors.deepBlack : Colors.white)
                                 : textPrimary,
@@ -683,9 +766,14 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 180),
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 7.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: isSelected ? primaryAccent : (isDark ? sunkenColor : Colors.white),
+                      color: isSelected
+                          ? primaryAccent
+                          : (isDark ? sunkenColor : Colors.white),
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
                         color: isSelected ? primaryAccent : borderColor,
@@ -705,7 +793,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                       '$m ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}',
                       style: TextStyle(
                         fontSize: 11.5.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
                         color: isSelected
                             ? (isDark ? AppColors.deepBlack : Colors.white)
                             : textPrimary,
@@ -720,9 +810,20 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           // Optional Grace Period Toggle
           if (effectiveShowGracePeriod) ...[
             SizedBox(height: AppSpacing.md.h),
-            Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+            Divider(
+              height: 1,
+              color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            ),
             SizedBox(height: AppSpacing.md.h),
-            _buildGracePeriodSelector(context, isDark, primaryAccent, borderColor, sunkenColor, textPrimary, textSecondary),
+            _buildGracePeriodSelector(
+              context,
+              isDark,
+              primaryAccent,
+              borderColor,
+              sunkenColor,
+              textPrimary,
+              textSecondary,
+            ),
           ],
 
           SizedBox(height: AppSpacing.lg.h),
@@ -746,7 +847,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
               ),
               borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
               border: Border.all(
-                color: isDark ? AppColors.darkBorder : primaryAccent.withValues(alpha: 0.18),
+                color: isDark
+                    ? AppColors.darkBorder
+                    : primaryAccent.withValues(alpha: 0.18),
               ),
             ),
             child: Column(
@@ -764,7 +867,8 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           ar: 'القسط الشهري',
                           zh: '每月供款',
                         ),
-                        value: '${_formatAmount(_monthlyPayment)} ${_currencyLabel(context)}',
+                        value:
+                            '${_formatAmount(_monthlyPayment)} ${_currencyLabel(context)}',
                         caption: _effectiveGraceMonths > 0
                             ? l10nPick(
                                 context,
@@ -788,11 +892,15 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                     Container(
                       width: 1,
                       height: 48.h,
-                      color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                      color: isDark
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider,
                     ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsetsDirectional.only(start: AppSpacing.sm.w),
+                        padding: EdgeInsetsDirectional.only(
+                          start: AppSpacing.sm.w,
+                        ),
                         child: _buildMetricTile(
                           context,
                           title: l10nPick(
@@ -802,7 +910,8 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                             ar: 'الفائدة السنوية APR',
                             zh: '年化利率 (APR)',
                           ),
-                          value: '${widget.annualInterestRate.toStringAsFixed(1)}٪',
+                          value:
+                              '${widget.annualInterestRate.toStringAsFixed(1)}٪',
                           caption: l10nPick(
                             context,
                             fa: 'فرمول بانکی استاندارد',
@@ -820,7 +929,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
 
                 Divider(
                   height: AppSpacing.lg.h,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: isDark
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
                 ),
 
                 // Row 2: Total Interest & Total Repayment
@@ -836,7 +947,8 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                           ar: 'إجمالي الفائدة',
                           zh: '总利息',
                         ),
-                        value: '${_formatAmount(_totalInterest)} ${_currencyLabel(context)}',
+                        value:
+                            '${_formatAmount(_totalInterest)} ${_currencyLabel(context)}',
                         caption: l10nPick(
                           context,
                           fa: 'هزینه کل دریافت وام',
@@ -852,11 +964,15 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                     Container(
                       width: 1,
                       height: 48.h,
-                      color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                      color: isDark
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider,
                     ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsetsDirectional.only(start: AppSpacing.sm.w),
+                        padding: EdgeInsetsDirectional.only(
+                          start: AppSpacing.sm.w,
+                        ),
                         child: _buildMetricTile(
                           context,
                           title: l10nPick(
@@ -866,7 +982,8 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                             ar: 'إجمالي السداد',
                             zh: '还款总计',
                           ),
-                          value: '${_formatAmount(_totalRepayment)} ${_currencyLabel(context)}',
+                          value:
+                              '${_formatAmount(_totalRepayment)} ${_currencyLabel(context)}',
                           caption: l10nPick(
                             context,
                             fa: 'اصل وام + سود کل',
@@ -887,15 +1004,26 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                   SizedBox(height: AppSpacing.sm.h),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 6.h),
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 10.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEF3C7).withValues(alpha: 0.8),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                      border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.4)),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
+                      border: Border.all(
+                        color: const Color(0xFFF59E0B).withValues(alpha: 0.4),
+                      ),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.info_outline, size: 14.sp, color: const Color(0xFFB45309)),
+                        Icon(
+                          Icons.info_outline,
+                          size: 14.sp,
+                          color: const Color(0xFFB45309),
+                        ),
                         SizedBox(width: 6.w),
                         Expanded(
                           child: Text(
@@ -904,7 +1032,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                               fontSize: 10.5.sp,
                               fontWeight: FontWeight.w700,
                               color: const Color(0xFF92400E),
-                              fontFeatures: const [FontFeature.tabularFigures()],
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
                             ),
                           ),
                         ),
@@ -920,7 +1050,11 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     );
   }
 
-  Widget _buildCurrencyPill(BuildContext context, bool isDark, Color primaryAccent) {
+  Widget _buildCurrencyPill(
+    BuildContext context,
+    bool isDark,
+    Color primaryAccent,
+  ) {
     final isUsd = widget.currency.toUpperCase() == 'USD';
     const greenAccent = Color(0xFF10B981);
 
@@ -941,7 +1075,9 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            isUsd ? Icons.attach_money_rounded : Icons.account_balance_wallet_outlined,
+            isUsd
+                ? Icons.attach_money_rounded
+                : Icons.account_balance_wallet_outlined,
             size: 13.sp,
             color: isUsd ? greenAccent : primaryAccent,
           ),
@@ -973,7 +1109,11 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
       children: [
         Row(
           children: [
-            Icon(Icons.hourglass_top_rounded, size: 16.sp, color: const Color(0xFFF59E0B)),
+            Icon(
+              Icons.hourglass_top_rounded,
+              size: 16.sp,
+              color: const Color(0xFFF59E0B),
+            ),
             SizedBox(width: 6.w),
             Expanded(
               child: Text(
@@ -998,7 +1138,13 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
           children: widget.gracePeriodOptions.map((g) {
             final isSelected = _graceMonths == g;
             final label = g == 0
-                ? l10nPick(context, fa: 'بدون تنفس', en: 'None', ar: 'بدون', zh: '无')
+                ? l10nPick(
+                    context,
+                    fa: 'بدون تنفس',
+                    en: 'None',
+                    ar: 'بدون',
+                    zh: '无',
+                  )
                 : '$g ${l10nPick(context, fa: 'ماه', en: 'Mo', ar: 'شهر', zh: '月')}';
 
             return Expanded(
@@ -1019,16 +1165,22 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: isSelected ? const Color(0xFFD97706) : sunkenColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                       border: Border.all(
-                        color: isSelected ? const Color(0xFFD97706) : borderColor,
+                        color: isSelected
+                            ? const Color(0xFFD97706)
+                            : borderColor,
                       ),
                     ),
                     child: Text(
                       label,
                       style: TextStyle(
                         fontSize: 10.5.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
                         color: isSelected ? Colors.white : textPrimary,
                       ),
                     ),
@@ -1051,8 +1203,12 @@ class _LoanCalculatorSliderState extends State<LoanCalculatorSlider> {
     required bool isDark,
     Color? accentColor,
   }) {
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

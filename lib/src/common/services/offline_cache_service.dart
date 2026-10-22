@@ -56,10 +56,8 @@ class OfflineCacheService {
   }
 
   /// Get data even if expired — for showing stale data with a timestamp
-  Future<({Map<String, dynamic>? data, DateTime? cachedAt, bool isStale})> getWithMeta(
-    String key, {
-    Duration? ttl,
-  }) async {
+  Future<({Map<String, dynamic>? data, DateTime? cachedAt, bool isStale})>
+  getWithMeta(String key, {Duration? ttl}) async {
     try {
       final prefs = await _prefs;
       final json = prefs.getString(_prefix + key);

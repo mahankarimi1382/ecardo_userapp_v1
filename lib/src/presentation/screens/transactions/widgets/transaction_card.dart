@@ -37,7 +37,8 @@ class TransactionCard extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: '${transaction.type ?? 'Transaction'} ${isPlus ? '+' : '-'}${transaction.amount ?? ''}',
+      label:
+          '${transaction.type ?? 'Transaction'} ${isPlus ? '+' : '-'}${transaction.amount ?? ''}',
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -82,7 +83,9 @@ class TransactionCard extends StatelessWidget {
                             children: [
                               Flexible(
                                 child: Text(
-                                  JalaliDateHelper.format(transaction.createdAt),
+                                  JalaliDateHelper.format(
+                                    transaction.createdAt,
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTextStyles.bodySmall.copyWith(
@@ -96,9 +99,10 @@ class TransactionCard extends StatelessWidget {
                               if (transaction.method != null &&
                                   transaction.method!.trim().isNotEmpty) ...[
                                 Padding(
-                                  padding: const EdgeInsetsDirectional.symmetric(
-                                    horizontal: AppSpacing.xs,
-                                  ),
+                                  padding:
+                                      const EdgeInsetsDirectional.symmetric(
+                                        horizontal: AppSpacing.xs,
+                                      ),
                                   child: Text(
                                     '•',
                                     style: AppTextStyles.bodySmall.copyWith(
@@ -164,8 +168,12 @@ class TransactionCard extends StatelessWidget {
   }
 
   Widget _buildAvatar(BuildContext context, bool isDark, bool isPlus) {
-    final catColor = TransactionDynamicColor.getTransactionColor(transaction.type);
-    final iconPath = TransactionDynamicIcon.getTransactionIcon(transaction.type);
+    final catColor = TransactionDynamicColor.getTransactionColor(
+      transaction.type,
+    );
+    final iconPath = TransactionDynamicIcon.getTransactionIcon(
+      transaction.type,
+    );
 
     return Stack(
       clipBehavior: Clip.none,
@@ -183,10 +191,7 @@ class TransactionCard extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(AppSpacing.sm + 2),
-            child: Image.asset(
-              iconPath,
-              excludeFromSemantics: true,
-            ),
+            child: Image.asset(iconPath, excludeFromSemantics: true),
           ),
         ),
         // Mini direction indicator badge
@@ -205,7 +210,9 @@ class TransactionCard extends StatelessWidget {
               ),
             ),
             child: Icon(
-              isPlus ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded,
+              isPlus
+                  ? Icons.arrow_downward_rounded
+                  : Icons.arrow_upward_rounded,
               size: 11,
               color: AppColors.white,
             ),
@@ -220,7 +227,8 @@ class TransactionCard extends StatelessWidget {
     if (desc != null && desc.isNotEmpty && desc != transaction.type) {
       return desc;
     }
-    return transaction.type ?? l10nPick(context, en: 'Transaction', fa: 'تراکنش', ar: 'معاملة');
+    return transaction.type ??
+        l10nPick(context, en: 'Transaction', fa: 'تراکنش', ar: 'معاملة');
   }
 
   Widget _buildAmountText(bool isPlus, Color amountColor) {
@@ -229,7 +237,8 @@ class TransactionCard extends StatelessWidget {
 
     final String formattedText;
     if (isCrypto) {
-      formattedText = '$prefix${transaction.amount ?? '0'} ${transaction.trxCurrencyCode ?? ''}';
+      formattedText =
+          '$prefix${transaction.amount ?? '0'} ${transaction.trxCurrencyCode ?? ''}';
     } else {
       final symbol = transaction.trxCurrencySymbol ?? '';
       formattedText = '$prefix$symbol${transaction.amount ?? '0'}';
@@ -268,7 +277,12 @@ class TransactionCard extends StatelessWidget {
           : AppColors.warningContainer;
       pillFg = AppColors.warning;
       pillIcon = Icons.access_time_filled_rounded;
-      pillText = l10nPick(context, en: 'Pending', fa: 'در انتظار', ar: 'قيد الانتظار');
+      pillText = l10nPick(
+        context,
+        en: 'Pending',
+        fa: 'در انتظار',
+        ar: 'قيد الانتظار',
+      );
     } else if (transaction.isFailed) {
       pillBg = isDark
           ? AppColors.error.withValues(alpha: 0.18)
@@ -285,7 +299,9 @@ class TransactionCard extends StatelessWidget {
           ? AppColors.darkTextSecondary
           : AppColors.lightTextSecondary;
       pillIcon = Icons.info_rounded;
-      pillText = normalized.isNotEmpty ? normalized : l10nPick(context, en: 'Completed', fa: 'انجام شد', ar: 'مكتمل');
+      pillText = normalized.isNotEmpty
+          ? normalized
+          : l10nPick(context, en: 'Completed', fa: 'انجام شد', ar: 'مكتمل');
     }
 
     return Container(

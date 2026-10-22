@@ -84,8 +84,10 @@ class _GiftHistoryState extends State<GiftHistory> {
                 child: EcardoEmptyState(
                   iconData: Icons.redeem_rounded,
                   title: 'No Gift Codes Created',
-                  description: 'You have not generated any gift vouchers yet. Tap create to send one to a friend.',
-                  primaryActionLabel: localizations.noInternetConnectionRetryButton,
+                  description:
+                      'You have not generated any gift vouchers yet. Tap create to send one to a friend.',
+                  primaryActionLabel:
+                      localizations.noInternetConnectionRetryButton,
                   onPrimaryAction: _onRefresh,
                 ),
               );
@@ -109,15 +111,23 @@ class _GiftHistoryState extends State<GiftHistory> {
                   final currency = gift.currency ?? 'USD';
                   final isCrypto = gift.isCrypto ?? false;
 
-                  final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-                    currencyCode: currency,
-                    siteCurrencyCode: settingsService.getSetting('site_currency') ?? 'USD',
-                    siteCurrencyDecimals:
-                        settingsService.getSetting('site_currency_decimals') ?? '2',
-                    isCrypto: isCrypto,
-                  );
+                  final calculateDecimals = DynamicDecimalsHelper()
+                      .getDynamicDecimals(
+                        currencyCode: currency,
+                        siteCurrencyCode:
+                            settingsService.getSetting('site_currency') ??
+                            'USD',
+                        siteCurrencyDecimals:
+                            settingsService.getSetting(
+                              'site_currency_decimals',
+                            ) ??
+                            '2',
+                        isCrypto: isCrypto,
+                      );
 
-                  DateTime? parsedDate = DateTime.tryParse(gift.createdAt ?? '');
+                  DateTime? parsedDate = DateTime.tryParse(
+                    gift.createdAt ?? '',
+                  );
                   final formattedDate = parsedDate != null
                       ? DateFormat('dd MMM yyyy, hh:mm a').format(parsedDate)
                       : (gift.createdAt ?? '');
@@ -127,7 +137,9 @@ class _GiftHistoryState extends State<GiftHistory> {
                   return Container(
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkCard : const Color(0xFFFFFDF9),
+                      color: isDark
+                          ? AppColors.darkCard
+                          : const Color(0xFFFFFDF9),
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                       border: Border.all(
                         color: isDark
@@ -151,7 +163,9 @@ class _GiftHistoryState extends State<GiftHistory> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsetsDirectional.only(end: AppSpacing.sm),
+                                padding: const EdgeInsetsDirectional.only(
+                                  end: AppSpacing.sm,
+                                ),
                                 child: SelectableText(
                                   gift.code ?? '',
                                   style: AppTextStyles.titleSmall.copyWith(
@@ -166,7 +180,9 @@ class _GiftHistoryState extends State<GiftHistory> {
                               ),
                             ),
                             InkWell(
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusSm,
+                              ),
                               onTap: () {
                                 HapticFeedback.lightImpact();
                                 Clipboard.setData(
@@ -180,9 +196,14 @@ class _GiftHistoryState extends State<GiftHistory> {
                                 width: 34,
                                 height: 34,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                                  color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                                      .withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusSm,
+                                  ),
+                                  color:
+                                      (isDark
+                                              ? AppColors.mainSoftBlue
+                                              : AppColors.deepBlack)
+                                          .withValues(alpha: 0.1),
                                   border: Border.all(
                                     color: isDark
                                         ? AppColors.darkBorder
@@ -224,9 +245,14 @@ class _GiftHistoryState extends State<GiftHistory> {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: (isRedeemed ? AppColors.warning : AppColors.success)
-                                    .withValues(alpha: 0.14),
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                                color:
+                                    (isRedeemed
+                                            ? AppColors.warning
+                                            : AppColors.success)
+                                        .withValues(alpha: 0.14),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusFull,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -236,7 +262,9 @@ class _GiftHistoryState extends State<GiftHistory> {
                                         ? Icons.check_circle_outline_rounded
                                         : Icons.redeem_rounded,
                                     size: 13,
-                                    color: isRedeemed ? AppColors.warning : AppColors.success,
+                                    color: isRedeemed
+                                        ? AppColors.warning
+                                        : AppColors.success,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
@@ -245,7 +273,9 @@ class _GiftHistoryState extends State<GiftHistory> {
                                         : localizations.giftHistoryClaimable,
                                     style: AppTextStyles.labelSmall.copyWith(
                                       fontWeight: FontWeight.w700,
-                                      color: isRedeemed ? AppColors.warning : AppColors.success,
+                                      color: isRedeemed
+                                          ? AppColors.warning
+                                          : AppColors.success,
                                     ),
                                   ),
                                 ],

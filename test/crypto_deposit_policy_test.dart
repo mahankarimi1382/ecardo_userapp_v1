@@ -64,10 +64,9 @@ void main() {
 
     test('accepts a permanent assignment without an expiry', () {
       final policy = CryptoDepositPolicy.fromServerData(
-        validPayload(overrides: {
-          'assignment_mode': 'permanent',
-          'expires_at': null,
-        }),
+        validPayload(
+          overrides: {'assignment_mode': 'permanent', 'expires_at': null},
+        ),
         now: now,
       );
       expect(policy.expiresAt, isNull);
@@ -101,26 +100,29 @@ void main() {
       );
     });
 
-    test('preserves exact fractional token precision without double truncation', () {
-      final p1 = CryptoDepositPolicy.fromServerData(
-        validPayload(overrides: {'minimum_deposit': '1.001000'}),
-        now: now,
-      );
-      expect(p1.minimumDeposit, 1.001);
-      expect(p1.formattedMinimumDeposit, '1.001');
+    test(
+      'preserves exact fractional token precision without double truncation',
+      () {
+        final p1 = CryptoDepositPolicy.fromServerData(
+          validPayload(overrides: {'minimum_deposit': '1.001000'}),
+          now: now,
+        );
+        expect(p1.minimumDeposit, 1.001);
+        expect(p1.formattedMinimumDeposit, '1.001');
 
-      final p2 = CryptoDepositPolicy.fromServerData(
-        validPayload(overrides: {'minimum_deposit': '0.000001'}),
-        now: now,
-      );
-      expect(p2.formattedMinimumDeposit, '0.000001');
+        final p2 = CryptoDepositPolicy.fromServerData(
+          validPayload(overrides: {'minimum_deposit': '0.000001'}),
+          now: now,
+        );
+        expect(p2.formattedMinimumDeposit, '0.000001');
 
-      final p3 = CryptoDepositPolicy.fromServerData(
-        validPayload(overrides: {'minimum_deposit': '10.500000'}),
-        now: now,
-      );
-      expect(p3.formattedMinimumDeposit, '10.5');
-    });
+        final p3 = CryptoDepositPolicy.fromServerData(
+          validPayload(overrides: {'minimum_deposit': '10.500000'}),
+          now: now,
+        );
+        expect(p3.formattedMinimumDeposit, '10.5');
+      },
+    );
 
     test('rejects a disabled feature even if an address is present', () {
       expect(

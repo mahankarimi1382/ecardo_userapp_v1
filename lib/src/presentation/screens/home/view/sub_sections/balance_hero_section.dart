@@ -36,9 +36,9 @@ class BalanceHeroSection extends StatelessWidget {
         currencyCode = selectedWallet.code ?? 'USD';
         currencySymbol = selectedWallet.symbol;
       } else {
-        final defaultWallet = wallets.firstWhereOrNull(
-          (w) => w.isDefault == true,
-        ) ?? (wallets.isNotEmpty ? wallets.first : null);
+        final defaultWallet =
+            wallets.firstWhereOrNull((w) => w.isDefault == true) ??
+            (wallets.isNotEmpty ? wallets.first : null);
 
         if (defaultWallet != null) {
           currentBalance = double.tryParse(defaultWallet.balance ?? '0') ?? 0.0;
@@ -62,8 +62,7 @@ class BalanceHeroSection extends StatelessWidget {
       double? liveUsdToIrt;
       if (Get.isRegistered<WalletLiveRateService>()) {
         final liveRates = Get.find<WalletLiveRateService>();
-        final rateIrr =
-            liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
+        final rateIrr = liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
         if (rateIrr != null && rateIrr > 0) {
           liveUsdToIrt = rateIrr / 10.0;
         } else {
@@ -89,7 +88,8 @@ class BalanceHeroSection extends StatelessWidget {
             RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
             (m) => '${m[1]},',
           );
-          secondaryEquivalent = '≈ $formattedToman ${l10nPick(context, en: "Toman", fa: "تومان", ar: "تومان", tr: "Tümen", ru: "Туман", zh: "托曼")}';
+          secondaryEquivalent =
+              '≈ $formattedToman ${l10nPick(context, en: "Toman", fa: "تومان", ar: "تومان", tr: "Tümen", ru: "Туман", zh: "托曼")}';
         } else if (curUpper == 'IRT' || curUpper == 'TOMAN') {
           final usdEq = currentBalance / liveUsdToIrt;
           secondaryEquivalent = '≈ \$${usdEq.toStringAsFixed(2)} USD';

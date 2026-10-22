@@ -80,19 +80,19 @@ class MenuItemModel {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'price': price,
-        'currency': currency,
-        if (imageUrl != null) 'image_url': imageUrl,
-        'is_halal': isHalal,
-        'is_vegan': isVegan,
-        'is_gluten_free': isGlutenFree,
-        'calories': calories,
-        'prep_minutes': prepMinutes,
-        'spicy_level': spicyLevel,
-      };
+    'id': id,
+    'title': title,
+    'description': description,
+    'price': price,
+    'currency': currency,
+    if (imageUrl != null) 'image_url': imageUrl,
+    'is_halal': isHalal,
+    'is_vegan': isVegan,
+    'is_gluten_free': isGlutenFree,
+    'calories': calories,
+    'prep_minutes': prepMinutes,
+    'spicy_level': spicyLevel,
+  };
 
   factory MenuItemModel.fromJson(Map<String, dynamic> json) {
     return MenuItemModel(
@@ -156,24 +156,24 @@ class RestaurantModel {
   });
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'id': id,
-        'name': name,
-        'terminal_location': terminalLocation,
-        'city': city,
-        'cuisine_type': cuisineType,
-        'rating': rating,
-        'reviews_count': reviewsCount,
-        'opening_hours': openingHours,
-        'available_modes': availableModes.map((m) => m.wireName).toList(),
-        'menu': menu.map((m) => m.toJson()).toList(),
-        'min_order_amount': minOrderAmount,
-        'currency': currency,
-        'table_reservation_deposit': tableReservationDeposit,
-        'cancellation_policy': cancellationPolicy.toJson(),
-        'dietary_options': dietaryOptions,
-        'avg_prep_minutes': avgPrepMinutes,
-      };
+    'schema_version': schemaVersion,
+    'id': id,
+    'name': name,
+    'terminal_location': terminalLocation,
+    'city': city,
+    'cuisine_type': cuisineType,
+    'rating': rating,
+    'reviews_count': reviewsCount,
+    'opening_hours': openingHours,
+    'available_modes': availableModes.map((m) => m.wireName).toList(),
+    'menu': menu.map((m) => m.toJson()).toList(),
+    'min_order_amount': minOrderAmount,
+    'currency': currency,
+    'table_reservation_deposit': tableReservationDeposit,
+    'cancellation_policy': cancellationPolicy.toJson(),
+    'dietary_options': dietaryOptions,
+    'avg_prep_minutes': avgPrepMinutes,
+  };
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) {
     return RestaurantModel(
@@ -186,12 +186,17 @@ class RestaurantModel {
       rating: (json['rating'] as num?)?.toDouble() ?? 4.8,
       reviewsCount: json['reviews_count'] as int? ?? 0,
       openingHours: json['opening_hours'] as String? ?? '24/7',
-      availableModes: (json['available_modes'] as List<dynamic>?)
+      availableModes:
+          (json['available_modes'] as List<dynamic>?)
               ?.map((e) => DiningServiceMode.fromWireName(e.toString()))
               .toList() ??
           [DiningServiceMode.airportGatePickup],
-      menu: (json['menu'] as List<dynamic>?)
-              ?.map((e) => MenuItemModel.fromJson(Map<String, dynamic>.from(e as Map)))
+      menu:
+          (json['menu'] as List<dynamic>?)
+              ?.map(
+                (e) =>
+                    MenuItemModel.fromJson(Map<String, dynamic>.from(e as Map)),
+              )
               .toList() ??
           const [],
       minOrderAmount: (json['min_order_amount'] as num?)?.toDouble() ?? 10.0,
@@ -200,11 +205,14 @@ class RestaurantModel {
           (json['table_reservation_deposit'] as num?)?.toDouble() ?? 5.0,
       cancellationPolicy: json['cancellation_policy'] != null
           ? ExperienceCancellationPolicy.fromJson(
-              Map<String, dynamic>.from(json['cancellation_policy'] as Map))
+              Map<String, dynamic>.from(json['cancellation_policy'] as Map),
+            )
           : const ExperienceCancellationPolicy(freeCancellationHours: 2),
       dietaryOptions:
-          (json['dietary_options'] as List<dynamic>?)?.map((e) => e.toString()).toList() ??
-              const [],
+          (json['dietary_options'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
       avgPrepMinutes: json['avg_prep_minutes'] as int? ?? 15,
     );
   }
@@ -224,15 +232,18 @@ class DiningOrderItem {
   double get subtotal => item.price * quantity;
 
   Map<String, dynamic> toJson() => {
-        'item': item.toJson(),
-        'quantity': quantity,
-        if (specialInstructions != null) 'special_instructions': specialInstructions,
-        'subtotal': subtotal,
-      };
+    'item': item.toJson(),
+    'quantity': quantity,
+    if (specialInstructions != null)
+      'special_instructions': specialInstructions,
+    'subtotal': subtotal,
+  };
 
   factory DiningOrderItem.fromJson(Map<String, dynamic> json) {
     return DiningOrderItem(
-      item: MenuItemModel.fromJson(Map<String, dynamic>.from(json['item'] as Map)),
+      item: MenuItemModel.fromJson(
+        Map<String, dynamic>.from(json['item'] as Map),
+      ),
       quantity: json['quantity'] as int? ?? 1,
       specialInstructions: json['special_instructions'] as String?,
     );
@@ -256,7 +267,8 @@ class DiningOrderModel {
   final double refundedAmount;
   final String currency;
   final String refundDestinationWalletCurrency;
-  final String status; // preparing, ready_for_pickup, completed, cancelled, refunded
+  final String
+  status; // preparing, ready_for_pickup, completed, cancelled, refunded
   final String? cancellationReason;
   final DateTime orderedAt;
   final DateTime? cancelledAt;
@@ -284,12 +296,16 @@ class DiningOrderModel {
     this.cancellationReason,
     required this.orderedAt,
     this.cancelledAt,
-    this.cancellationPolicy = const ExperienceCancellationPolicy(freeCancellationHours: 2),
+    this.cancellationPolicy = const ExperienceCancellationPolicy(
+      freeCancellationHours: 2,
+    ),
     String? voucherCode,
     String? qrPayload,
-  })  : refundDestinationWalletCurrency = refundDestinationWalletCurrency ?? currency,
-        voucherCode = voucherCode ?? orderId,
-        qrPayload = qrPayload ?? 'ECARDO-DINING-PASS-$orderId-$restaurantId-$status';
+  }) : refundDestinationWalletCurrency =
+           refundDestinationWalletCurrency ?? currency,
+       voucherCode = voucherCode ?? orderId,
+       qrPayload =
+           qrPayload ?? 'ECARDO-DINING-PASS-$orderId-$restaurantId-$status';
 
   bool get isCancelled => status == 'cancelled' || status == 'refunded';
   bool get canCancel => !isCancelled && status != 'completed';
@@ -306,7 +322,8 @@ class DiningOrderModel {
         currency: currency,
         refundDestinationWalletCurrency: refundDestinationWalletCurrency,
         isFreeCancellation: true,
-        policySummary: 'Immediate cancellation (within 5 min). 100% refunded to $currency wallet.',
+        policySummary:
+            'Immediate cancellation (within 5 min). 100% refunded to $currency wallet.',
       );
     }
 
@@ -356,29 +373,29 @@ class DiningOrderModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'order_id': orderId,
-        'restaurant_id': restaurantId,
-        'restaurant_name': restaurantName,
-        'terminal_location': terminalLocation,
-        'mode': mode.wireName,
-        if (flightNumber != null) 'flight_number': flightNumber,
-        if (gateOrTable != null) 'gate_or_table': gateOrTable,
-        'pickup_time': pickupTime,
-        'items': items.map((i) => i.toJson()).toList(),
-        'total_amount': totalAmount,
-        'penalty_amount': penaltyAmount,
-        'refunded_amount': refundedAmount,
-        'currency': currency,
-        'refund_destination_wallet_currency': refundDestinationWalletCurrency,
-        'status': status,
-        if (cancellationReason != null) 'cancellation_reason': cancellationReason,
-        'ordered_at': orderedAt.toIso8601String(),
-        if (cancelledAt != null) 'cancelled_at': cancelledAt!.toIso8601String(),
-        'cancellation_policy': cancellationPolicy.toJson(),
-        'voucher_code': voucherCode,
-        'qr_payload': qrPayload,
-      };
+    'schema_version': schemaVersion,
+    'order_id': orderId,
+    'restaurant_id': restaurantId,
+    'restaurant_name': restaurantName,
+    'terminal_location': terminalLocation,
+    'mode': mode.wireName,
+    if (flightNumber != null) 'flight_number': flightNumber,
+    if (gateOrTable != null) 'gate_or_table': gateOrTable,
+    'pickup_time': pickupTime,
+    'items': items.map((i) => i.toJson()).toList(),
+    'total_amount': totalAmount,
+    'penalty_amount': penaltyAmount,
+    'refunded_amount': refundedAmount,
+    'currency': currency,
+    'refund_destination_wallet_currency': refundDestinationWalletCurrency,
+    'status': status,
+    if (cancellationReason != null) 'cancellation_reason': cancellationReason,
+    'ordered_at': orderedAt.toIso8601String(),
+    if (cancelledAt != null) 'cancelled_at': cancelledAt!.toIso8601String(),
+    'cancellation_policy': cancellationPolicy.toJson(),
+    'voucher_code': voucherCode,
+    'qr_payload': qrPayload,
+  };
 
   factory DiningOrderModel.fromJson(Map<String, dynamic> json) {
     return DiningOrderModel(
@@ -391,8 +408,13 @@ class DiningOrderModel {
       flightNumber: json['flight_number'] as String?,
       gateOrTable: json['gate_or_table'] as String?,
       pickupTime: json['pickup_time'] as String? ?? '',
-      items: (json['items'] as List<dynamic>?)
-              ?.map((e) => DiningOrderItem.fromJson(Map<String, dynamic>.from(e as Map)))
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map(
+                (e) => DiningOrderItem.fromJson(
+                  Map<String, dynamic>.from(e as Map),
+                ),
+              )
               .toList() ??
           const [],
       totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0.0,
@@ -411,7 +433,8 @@ class DiningOrderModel {
           : null,
       cancellationPolicy: json['cancellation_policy'] != null
           ? ExperienceCancellationPolicy.fromJson(
-              Map<String, dynamic>.from(json['cancellation_policy'] as Map))
+              Map<String, dynamic>.from(json['cancellation_policy'] as Map),
+            )
           : const ExperienceCancellationPolicy(freeCancellationHours: 2),
       voucherCode: json['voucher_code'] as String?,
       qrPayload: json['qr_payload'] as String?,

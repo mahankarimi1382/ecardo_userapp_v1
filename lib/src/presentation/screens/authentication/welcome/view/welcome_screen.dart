@@ -62,8 +62,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     return PopScope(
       canPop: false,
@@ -80,7 +81,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        backgroundColor: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightBackground,
         appBar: const CommonDefaultAppBar(),
         body: AmbientAuthBackground(
           child: SafeArea(
@@ -161,8 +164,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                                 tr: 'Gerçek zamanlı dönüşüm ve kurumsal güvenlikle 40+ fiat ve kriptoyu yönetin.',
                                                 ru: 'Управление 40+ валютами и криптоактивами с моментальным обменом.',
                                               ),
-                                              icon: Icons.account_balance_wallet_rounded,
-                                              imageAsset: PngAssets.walletsService,
+                                              icon: Icons
+                                                  .account_balance_wallet_rounded,
+                                              imageAsset:
+                                                  PngAssets.walletsService,
                                               accentGradient: const [
                                                 AppColors.info,
                                                 AppColors.mainSoftBlue,
@@ -208,7 +213,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                                 ru: 'Отправляйте средства за секунды без скрытых комиссий с защитой банка.',
                                               ),
                                               icon: Icons.bolt_rounded,
-                                              imageAsset: PngAssets.transferService,
+                                              imageAsset:
+                                                  PngAssets.transferService,
                                               accentGradient: const [
                                                 AppColors.success,
                                                 AppColors.mutedBlue,
@@ -254,7 +260,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                                 ru: 'Выпускайте виртуальные карты или заказывайте металлические карты.',
                                               ),
                                               icon: Icons.credit_card_rounded,
-                                              imageAsset: PngAssets.virtualCardService,
+                                              imageAsset:
+                                                  PngAssets.virtualCardService,
                                               accentGradient: const [
                                                 AppColors.brandViolet,
                                                 AppColors.mainSoftBlue,
@@ -300,7 +307,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                                 ru: 'Обменивайтесь напрямую с верифицированными пользователями с защитой 100%.',
                                               ),
                                               icon: Icons.swap_horiz_rounded,
-                                              imageAsset: PngAssets.p2pTradingService,
+                                              imageAsset:
+                                                  PngAssets.p2pTradingService,
                                               accentGradient: const [
                                                 Color(0xFFD97706),
                                                 Color(0xFFF59E0B),
@@ -341,7 +349,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       width: double.infinity,
                                       height: 54.h,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(18.r),
+                                        borderRadius: BorderRadius.circular(
+                                          18.r,
+                                        ),
                                         gradient: LinearGradient(
                                           colors: isDark
                                               ? const [
@@ -355,10 +365,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                         ),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: (isDark
-                                                    ? const Color(0xFF38BDF8)
-                                                    : AppColors.deepBlack)
-                                                .withValues(alpha: 0.32),
+                                            color:
+                                                (isDark
+                                                        ? const Color(
+                                                            0xFF38BDF8,
+                                                          )
+                                                        : AppColors.deepBlack)
+                                                    .withValues(alpha: 0.32),
                                             blurRadius: 18,
                                             offset: const Offset(0, 6),
                                           ),
@@ -367,20 +380,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       child: Material(
                                         color: Colors.transparent,
                                         child: InkWell(
-                                          borderRadius: BorderRadius.circular(18.r),
-                                          onTap: () => Get.toNamed(BaseRoute.email),
+                                          borderRadius: BorderRadius.circular(
+                                            18.r,
+                                          ),
+                                          onTap: () =>
+                                              Get.toNamed(BaseRoute.email),
                                           child: Center(
                                             child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Flexible(
                                                   child: Text(
-                                                    localizations.welcomeCreateAccount,
+                                                    localizations
+                                                        .welcomeCreateAccount,
                                                     maxLines: 1,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.w900,
+                                                      fontWeight:
+                                                          FontWeight.w900,
                                                       fontSize: 16.sp,
                                                       color: Colors.white,
                                                       letterSpacing: 0,
@@ -407,13 +427,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       width: double.infinity,
                                       height: 52.h,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(18.r),
+                                        borderRadius: BorderRadius.circular(
+                                          18.r,
+                                        ),
                                         color: isDark
-                                            ? Colors.white.withValues(alpha: 0.05)
-                                            : AppColors.white.withValues(alpha: 0.9),
+                                            ? Colors.white.withValues(
+                                                alpha: 0.05,
+                                              )
+                                            : AppColors.white.withValues(
+                                                alpha: 0.9,
+                                              ),
                                         border: Border.all(
                                           color: isDark
-                                              ? Colors.white.withValues(alpha: 0.18)
+                                              ? Colors.white.withValues(
+                                                  alpha: 0.18,
+                                                )
                                               : AppColors.lightBorder,
                                           width: 1.4,
                                         ),
@@ -421,8 +449,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                       child: Material(
                                         color: Colors.transparent,
                                         child: InkWell(
-                                          borderRadius: BorderRadius.circular(18.r),
-                                          onTap: () => Get.toNamed(BaseRoute.signIn),
+                                          borderRadius: BorderRadius.circular(
+                                            18.r,
+                                          ),
+                                          onTap: () =>
+                                              Get.toNamed(BaseRoute.signIn),
                                           child: Center(
                                             child: Text(
                                               localizations.welcomeSignIn,
@@ -468,8 +499,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: (isDark ? const Color(0xFF38BDF8) : AppColors.mainSoftBlue)
-                    .withValues(alpha: isDark ? 0.15 : 0.25),
+                color:
+                    (isDark ? const Color(0xFF38BDF8) : AppColors.mainSoftBlue)
+                        .withValues(alpha: isDark ? 0.15 : 0.25),
                 blurRadius: 20,
                 spreadRadius: 2,
               ),
@@ -499,10 +531,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     required List<Color> accentGradient,
     required bool isDark,
   }) {
-    final titleColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final subtitleColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final titleColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final subtitleColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     return EcardoGlassCard(
       variant: EcardoGlassVariant.standard,
@@ -537,7 +571,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           borderRadius: BorderRadius.circular(16.r),
                           boxShadow: [
                             BoxShadow(
-                              color: accentGradient.first.withValues(alpha: 0.35),
+                              color: accentGradient.first.withValues(
+                                alpha: 0.35,
+                              ),
                               blurRadius: 14,
                               offset: const Offset(0, 4),
                             ),
@@ -550,28 +586,35 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       // Feature Tag Badge
                       Flexible(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                          decoration: BoxDecoration(
-                          color: accentGradient.first.withValues(alpha: 0.14),
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: accentGradient.first.withValues(alpha: 0.40),
-                            width: 1,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 5.h,
                           ),
-                        ),
-                        child: Text(
-                          tag,
-                          style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w900,
-                            color: isDark ? accentGradient.last : accentGradient.first,
-                            letterSpacing: 0.8,
+                          decoration: BoxDecoration(
+                            color: accentGradient.first.withValues(alpha: 0.14),
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: accentGradient.first.withValues(
+                                alpha: 0.40,
+                              ),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            tag,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w900,
+                              color: isDark
+                                  ? accentGradient.last
+                                  : accentGradient.first,
+                              letterSpacing: 0.8,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                   SizedBox(height: 12.h),
                   Text(
                     title,
@@ -589,7 +632,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? const Color(0xFF38BDF8) : const Color(0xFF2563EB),
+                      color: isDark
+                          ? const Color(0xFF38BDF8)
+                          : const Color(0xFF2563EB),
                       letterSpacing: 0,
                     ),
                   ),
@@ -639,15 +684,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               color: isActive
                   ? (isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack)
                   : (isDark
-                      ? Colors.white.withValues(alpha: 0.15)
-                      : const Color(0xFFCBD5E1)),
+                        ? Colors.white.withValues(alpha: 0.15)
+                        : const Color(0xFFCBD5E1)),
               boxShadow: isActive
                   ? [
                       BoxShadow(
-                        color: (isDark
-                                ? const Color(0xFF38BDF8)
-                                : AppColors.deepBlack)
-                            .withValues(alpha: 0.4),
+                        color:
+                            (isDark
+                                    ? const Color(0xFF38BDF8)
+                                    : AppColors.deepBlack)
+                                .withValues(alpha: 0.4),
                         blurRadius: 6,
                       ),
                     ]

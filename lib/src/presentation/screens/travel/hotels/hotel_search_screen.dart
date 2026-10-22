@@ -49,10 +49,12 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
     final previousSearch = controller.lastHotelSearch.value;
     final details = controller.hotelBookingDetails.value;
     cityController.text = previousSearch?.city ?? '';
-    checkInDate = previousSearch?.checkInDate ??
+    checkInDate =
+        previousSearch?.checkInDate ??
         details.checkInDate ??
         DateTime.now().add(const Duration(days: 30));
-    checkOutDate = previousSearch?.checkOutDate ??
+    checkOutDate =
+        previousSearch?.checkOutDate ??
         details.checkOutDate ??
         checkInDate.add(const Duration(days: 2));
     roomCount = previousSearch?.roomCount ?? details.roomCount;
@@ -100,16 +102,16 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
     });
     try {
       final values = await ensureTravelController().repository.searchHotels(
-            TravelHotelSearch(
-              city: city,
-              checkInDate: checkInDate,
-              checkOutDate: checkOutDate,
-              roomCount: roomCount,
-              adultCount: adultCount,
-              childCount: childCount,
-              roomOccupancies: roomOccupancies,
-            ),
-          );
+        TravelHotelSearch(
+          city: city,
+          checkInDate: checkInDate,
+          checkOutDate: checkOutDate,
+          roomCount: roomCount,
+          adultCount: adultCount,
+          childCount: childCount,
+          roomOccupancies: roomOccupancies,
+        ),
+      );
       if (mounted) setState(() => recommendedHotels = values.take(8).toList());
     } catch (_) {
       if (mounted) setState(() => recommendedHotels = const []);
@@ -149,8 +151,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
       showTravelMessage(
         context,
         title: localization.travelHotelSearch,
-        message: AppLocalizations.of(context)!
-            .hotel_select_a_destination_city_or_hotel,
+        message: AppLocalizations.of(
+          context,
+        )!.hotel_select_a_destination_city_or_hotel,
       );
       return;
     }
@@ -175,10 +178,12 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
     );
     if (!mounted) return;
     if (succeeded) {
-      Get.to(() => HotelListScreen(
-            initialMinStars: filterMinStars,
-            initialFreeCancellation: filterFreeCancellation,
-          ));
+      Get.to(
+        () => HotelListScreen(
+          initialMinStars: filterMinStars,
+          initialFreeCancellation: filterFreeCancellation,
+        ),
+      );
     } else {
       showTravelMessage(
         context,
@@ -242,9 +247,12 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                           vertical: 4.h,
                         ),
                         decoration: BoxDecoration(
-                          color: ECardoTokens.inkOnBrand.withValues(alpha: 0.18),
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusSm),
+                          color: ECardoTokens.inkOnBrand.withValues(
+                            alpha: 0.18,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusSm,
+                          ),
                         ),
                         child: Text(
                           isRtl
@@ -288,12 +296,15 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                 children: [
                   // Destination City / Hotel Input
                   Semantics(
-                    label: isRtl ? 'مقصد شهر یا هتل' : 'Destination city or hotel',
+                    label: isRtl
+                        ? 'مقصد شهر یا هتل'
+                        : 'Destination city or hotel',
                     button: true,
                     child: InkWell(
                       onTap: _selectDestination,
-                      borderRadius:
-                          BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 14.w,
@@ -301,8 +312,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.surfaceSunken(context),
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                           border: Border.all(
                             color: ECardoTokens.border(context),
                           ),
@@ -342,8 +354,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                                   SizedBox(height: 2.h),
                                   Text(
                                     cityController.text.isEmpty
-                                        ? AppLocalizations.of(context)!
-                                            .hotel_search_by_city_or_hotel_name
+                                        ? AppLocalizations.of(
+                                            context,
+                                          )!.hotel_search_by_city_or_hotel_name
                                         : cityController.text,
                                     style: TextStyle(
                                       fontSize: 14.sp,
@@ -376,8 +389,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                     button: true,
                     child: InkWell(
                       onTap: _selectDates,
-                      borderRadius:
-                          BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 14.w,
@@ -385,8 +399,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.surfaceSunken(context),
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                           border: Border.all(
                             color: ECardoTokens.border(context),
                           ),
@@ -412,8 +427,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    AppLocalizations.of(context)!
-                                        .hotel_check_in_and_check_out,
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.hotel_check_in_and_check_out,
                                     style: TextStyle(
                                       fontSize: 11.sp,
                                       color: ECardoTokens.inkMuted(context),
@@ -456,12 +472,15 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
 
                   // Guests & Rooms Tile
                   Semantics(
-                    label: isRtl ? 'تعداد مهمانان و اتاق‌ها' : 'Guests and Rooms',
+                    label: isRtl
+                        ? 'تعداد مهمانان و اتاق‌ها'
+                        : 'Guests and Rooms',
                     button: true,
                     child: InkWell(
                       onTap: _showGuestPicker,
-                      borderRadius:
-                          BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 14.w,
@@ -469,8 +488,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.surfaceSunken(context),
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                           border: Border.all(
                             color: ECardoTokens.border(context),
                           ),
@@ -558,7 +578,11 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                               : ECardoTokens.inkMuted(context),
                         ),
                         label: Text(
-                          hotelFlowText(context, 'کنسلی رایگان', 'Free Cancellation'),
+                          hotelFlowText(
+                            context,
+                            'کنسلی رایگان',
+                            'Free Cancellation',
+                          ),
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: filterFreeCancellation
@@ -637,9 +661,8 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                               ? ECardoTokens.sand400(context)
                               : ECardoTokens.border(context),
                         ),
-                        onSelected: (sel) => setState(
-                          () => filterMinStars = sel ? 5 : null,
-                        ),
+                        onSelected: (sel) =>
+                            setState(() => filterMinStars = sel ? 5 : null),
                       ),
                     ],
                   ),
@@ -703,11 +726,13 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         color: isSelected
                             ? ECardoTokens.brand100(context)
                             : ECardoTokens.surfaceCard(context),
-                        borderRadius:
-                            BorderRadius.circular(ECardoTokens.radiusLg),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusLg,
+                        ),
                         child: InkWell(
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusLg),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusLg,
+                          ),
                           onTap: () {
                             setState(() => cityController.text = city.value);
                             _loadRecommendations(city.value);
@@ -715,8 +740,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                           child: Container(
                             padding: EdgeInsets.all(12.r),
                             decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusLg),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusLg,
+                              ),
                               border: Border.all(
                                 color: isSelected
                                     ? ECardoTokens.brand700(context)
@@ -753,8 +779,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                                 ),
                                 SizedBox(height: 2.h),
                                 Text(
-                                  AppLocalizations.of(context)!
-                                      .hotelHotelsCount(count),
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.hotelHotelsCount(count),
                                   style: TextStyle(
                                     color: ECardoTokens.inkMuted(context),
                                     fontSize: 10.sp,
@@ -815,8 +842,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
             else if (recommendedHotels.isEmpty)
               TravelEmptyState(
                 icon: Icons.hotel_rounded,
-                title: AppLocalizations.of(context)!
-                    .hotel_no_recommended_hotels_are_available_for_this,
+                title: AppLocalizations.of(
+                  context,
+                )!.hotel_no_recommended_hotels_are_available_for_this,
                 message: localization.travelOfferUnavailable,
               )
             else
@@ -862,11 +890,13 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                         padding: EdgeInsets.only(bottom: 8.h),
                         child: Material(
                           color: ECardoTokens.surfaceCard(context),
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                           child: InkWell(
-                            borderRadius:
-                                BorderRadius.circular(ECardoTokens.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                             onTap: () => setState(() {
                               cityController.text = search.city;
                               checkInDate = search.checkInDate;
@@ -924,8 +954,9 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                                           ' – '
                                           '${MaterialLocalizations.of(context).formatCompactDate(search.checkOutDate)}',
                                           style: TextStyle(
-                                            color:
-                                                ECardoTokens.inkMuted(context),
+                                            color: ECardoTokens.inkMuted(
+                                              context,
+                                            ),
                                             fontSize: 11.sp,
                                           ),
                                         ),
@@ -1012,10 +1043,10 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                       IconButton(
                         onPressed: selectedRooms.length < 8
                             ? () => setSheetState(
-                                  () => selectedRooms.add(
-                                    const TravelRoomOccupancy(adults: 1),
-                                  ),
-                                )
+                                () => selectedRooms.add(
+                                  const TravelRoomOccupancy(adults: 1),
+                                ),
+                              )
                             : null,
                         icon: Icon(
                           Icons.add_circle_outline_rounded,
@@ -1030,9 +1061,11 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          for (var index = 0;
-                              index < selectedRooms.length;
-                              index++)
+                          for (
+                            var index = 0;
+                            index < selectedRooms.length;
+                            index++
+                          )
                             Padding(
                               padding: EdgeInsets.only(top: 10.h),
                               child: Container(
@@ -1068,10 +1101,10 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                                       onChanged: (value) => setSheetState(
                                         () => selectedRooms[index] =
                                             TravelRoomOccupancy(
-                                          adults: value,
-                                          children:
-                                              selectedRooms[index].children,
-                                        ),
+                                              adults: value,
+                                              children:
+                                                  selectedRooms[index].children,
+                                            ),
                                       ),
                                     ),
                                     _CountRow(
@@ -1082,10 +1115,10 @@ class _HotelSearchScreenState extends State<HotelSearchScreen> {
                                       onChanged: (value) => setSheetState(
                                         () => selectedRooms[index] =
                                             TravelRoomOccupancy(
-                                          adults:
-                                              selectedRooms[index].adults,
-                                          children: value,
-                                        ),
+                                              adults:
+                                                  selectedRooms[index].adults,
+                                              children: value,
+                                            ),
                                       ),
                                     ),
                                   ],
@@ -1190,8 +1223,9 @@ String formatHotelOccupancy(
   } else {
     final roomStr = '$rooms ${rooms > 1 ? 'Rooms' : 'Room'}';
     final adultStr = '$adults ${adults > 1 ? 'Adults' : 'Adult'}';
-    final childStr =
-        children > 0 ? ', $children ${children > 1 ? 'Children' : 'Child'}' : '';
+    final childStr = children > 0
+        ? ', $children ${children > 1 ? 'Children' : 'Child'}'
+        : '';
     return '$roomStr, $adultStr$childStr';
   }
 }

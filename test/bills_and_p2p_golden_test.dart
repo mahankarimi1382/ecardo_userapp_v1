@@ -40,20 +40,13 @@ void main() {
   group('BillPaymentScreen Visual Regression Tests', () {
     testWidgets('bill_payment — light', (tester) async {
       _ignoreOverflows();
-      await pumpScreen(
-        tester,
-        const BillPaymentScreen(),
-      );
+      await pumpScreen(tester, const BillPaymentScreen());
       await capture(tester, 'bill_payment__light');
     });
 
     testWidgets('bill_payment — dark', (tester) async {
       _ignoreOverflows();
-      await pumpScreen(
-        tester,
-        const BillPaymentScreen(),
-        dark: true,
-      );
+      await pumpScreen(tester, const BillPaymentScreen(), dark: true);
       await capture(tester, 'bill_payment__dark');
     });
   });

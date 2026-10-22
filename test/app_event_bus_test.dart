@@ -12,11 +12,13 @@ void main() {
         receivedEvent = event;
       });
 
-      AppEventBus.emit(BalanceChangedEvent(
-        sourceModule: 'airtime',
-        currencyCode: 'USD',
-        amount: 25.0,
-      ));
+      AppEventBus.emit(
+        BalanceChangedEvent(
+          sourceModule: 'airtime',
+          currencyCode: 'USD',
+          amount: 25.0,
+        ),
+      );
 
       // Allow event stream tick
       await Future.delayed(const Duration(milliseconds: 50));
@@ -54,9 +56,13 @@ void main() {
 
     test('emits and receives WalletListChangedEvent', () async {
       WalletListChangedEvent? received;
-      final sub = AppEventBus.on<WalletListChangedEvent>().listen((e) => received = e);
+      final sub = AppEventBus.on<WalletListChangedEvent>().listen(
+        (e) => received = e,
+      );
 
-      AppEventBus.emit(WalletListChangedEvent(action: 'create', currencyCode: 'EUR'));
+      AppEventBus.emit(
+        WalletListChangedEvent(action: 'create', currencyCode: 'EUR'),
+      );
 
       await Future.delayed(const Duration(milliseconds: 50));
 

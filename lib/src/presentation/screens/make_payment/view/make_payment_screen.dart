@@ -85,7 +85,8 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                             isBackLogicApply: true,
                             rightSideWidget: controller.currentStep.value == 0
                                 ? Semantics(
-                                    label: localization.makePaymentHistoryScreenTitle,
+                                    label: localization
+                                        .makePaymentHistoryScreenTitle,
                                     button: true,
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(
@@ -106,11 +107,11 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                                           child: Padding(
                                             padding:
                                                 const EdgeInsetsDirectional.only(
-                                              end: AppSpacing.page,
-                                              start: AppSpacing.sm,
-                                              top: AppSpacing.sm,
-                                              bottom: AppSpacing.sm,
-                                            ),
+                                                  end: AppSpacing.page,
+                                                  start: AppSpacing.sm,
+                                                  top: AppSpacing.sm,
+                                                  bottom: AppSpacing.sm,
+                                                ),
                                             child: Image.asset(
                                               PngAssets.commonHistoryIcon,
                                               width: AppSpacing.iconLg,
@@ -160,8 +161,8 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                                 Padding(
                                   padding:
                                       const EdgeInsetsDirectional.symmetric(
-                                    horizontal: AppSpacing.page,
-                                  ),
+                                        horizontal: AppSpacing.page,
+                                      ),
                                   child: _buildWallet(isDark),
                                 ),
                                 const SizedBox(height: AppSpacing.xxl),
@@ -185,11 +186,13 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                                         : AppColors.lightCard,
                                     borderRadius:
                                         const BorderRadiusDirectional.only(
-                                      topStart:
-                                          Radius.circular(AppSpacing.radiusXl),
-                                      topEnd:
-                                          Radius.circular(AppSpacing.radiusXl),
-                                    ),
+                                          topStart: Radius.circular(
+                                            AppSpacing.radiusXl,
+                                          ),
+                                          topEnd: Radius.circular(
+                                            AppSpacing.radiusXl,
+                                          ),
+                                        ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: isDark
@@ -235,7 +238,8 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
 
     return Semantics(
       button: true,
-      label: '${localization.makePaymentScreenBalance}: ${currentWallet.formattedBalance} ${currentWallet.code}',
+      label:
+          '${localization.makePaymentScreenBalance}: ${currentWallet.formattedBalance} ${currentWallet.code}',
       hint: localization.makePaymentScreenWalletsNotFound,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -262,14 +266,8 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
             gradient: LinearGradient(
               colors: isDark
-                  ? [
-                      AppColors.darkSurfaceVariant,
-                      AppColors.deepBlack,
-                    ]
-                  : [
-                      AppColors.deepBlack,
-                      AppColors.darkGray,
-                    ],
+                  ? [AppColors.darkSurfaceVariant, AppColors.deepBlack]
+                  : [AppColors.deepBlack, AppColors.darkGray],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -287,128 +285,129 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
               ),
             ],
           ),
-        padding: const EdgeInsets.all(AppSpacing.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  width: AppSpacing.iconLg,
-                  height: AppSpacing.iconLg,
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.white.withValues(alpha: 0.25),
-                      width: 1,
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    width: AppSpacing.iconLg,
+                    height: AppSpacing.iconLg,
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.white.withValues(alpha: 0.25),
+                        width: 1,
+                      ),
+                    ),
+                    child:
+                        currentWallet.isDefault == true ||
+                            currentWallet.icon == null ||
+                            currentWallet.icon!.isEmpty
+                        ? Text(
+                            currentWallet.symbol ?? currentWallet.code ?? r'$',
+                            style: const TextStyle(
+                              letterSpacing: 0,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 15,
+                              color: AppColors.white,
+                            ),
+                          )
+                        : ClipOval(
+                            child: Image.network(
+                              currentWallet.icon!,
+                              width: AppSpacing.iconLg,
+                              height: AppSpacing.iconLg,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Text(
+                                  currentWallet.symbol ?? r'$',
+                                  style: const TextStyle(
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 15,
+                                    color: AppColors.white,
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Text(
+                      currentWallet.name ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 18,
+                        color: AppColors.white,
+                      ),
                     ),
                   ),
-                  child: currentWallet.isDefault == true ||
-                          currentWallet.icon == null ||
-                          currentWallet.icon!.isEmpty
-                      ? Text(
-                          currentWallet.symbol ?? currentWallet.code ?? r'$',
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          currentWallet.code ?? "",
                           style: const TextStyle(
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15,
-                            color: AppColors.white,
-                          ),
-                        )
-                      : ClipOval(
-                          child: Image.network(
-                            currentWallet.icon!,
-                            width: AppSpacing.iconLg,
-                            height: AppSpacing.iconLg,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Text(
-                                currentWallet.symbol ?? r'$',
-                                style: const TextStyle(
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 15,
-                                  color: AppColors.white,
-                                ),
-                              );
-                            },
+                            color: AppColors.warmWhite,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
                           ),
                         ),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                Expanded(
-                  child: Text(
-                    currentWallet.name ?? "",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 18,
-                      color: AppColors.white,
+                        const SizedBox(width: AppSpacing.xs),
+                        const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: AppColors.warmWhite,
+                          size: 16,
+                        ),
+                      ],
                     ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: AppSpacing.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.white.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        currentWallet.code ?? "",
-                        style: const TextStyle(
-                          color: AppColors.warmWhite,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: AppColors.warmWhite,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.xl),
-            Text(
-              localization.makePaymentScreenBalance,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                color: AppColors.warmWhite.withValues(alpha: 0.70),
+                ],
               ),
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              "${currentWallet.formattedBalance} ${currentWallet.code}",
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                letterSpacing: -0.5,
-                fontWeight: FontWeight.w900,
-                fontSize: 28,
-                color: AppColors.white,
+              const SizedBox(height: AppSpacing.xl),
+              Text(
+                localization.makePaymentScreenBalance,
+                style: TextStyle(
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: AppColors.warmWhite.withValues(alpha: 0.70),
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                "${currentWallet.formattedBalance} ${currentWallet.code}",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  letterSpacing: -0.5,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 28,
+                  color: AppColors.white,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

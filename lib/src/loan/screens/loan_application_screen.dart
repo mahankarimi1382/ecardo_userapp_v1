@@ -48,13 +48,18 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     super.initState();
     if (widget.initialProduct != null) {
       controller.selectProduct(widget.initialProduct!);
-    } else if (controller.selectedProduct.value == null && controller.products.isNotEmpty) {
+    } else if (controller.selectedProduct.value == null &&
+        controller.products.isNotEmpty) {
       controller.selectProduct(controller.products.first);
     }
 
-    final p = controller.selectedProduct.value ?? LoanController.defaultProducts.first;
+    final p =
+        controller.selectedProduct.value ??
+        LoanController.defaultProducts.first;
     _amount = 10000.0.clamp(p.minAmount, p.maxAmount);
-    _tenureMonths = p.tenureOptions.contains(6) ? 6 : (p.tenureOptions.isNotEmpty ? p.tenureOptions.first : 6);
+    _tenureMonths = p.tenureOptions.contains(6)
+        ? 6
+        : (p.tenureOptions.isNotEmpty ? p.tenureOptions.first : 6);
 
     controller.amountInput.value = _amount.toInt().toString();
     controller.selectedTenure.value = _tenureMonths;
@@ -77,7 +82,12 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     controller.selectedTenure.value = months;
   }
 
-  void _onPlanChanged(double amount, int months, int graceMonths, double monthlyPayment) {
+  void _onPlanChanged(
+    double amount,
+    int months,
+    int graceMonths,
+    double monthlyPayment,
+  ) {
     setState(() {
       _amount = amount;
       _tenureMonths = months;
@@ -90,20 +100,38 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final backgroundColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+    final backgroundColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Obx(() {
-      final product = controller.selectedProduct.value ?? LoanController.defaultProducts.first;
-      final rateAnnual = product.interestRatePct > 0 ? product.interestRatePct : 14.0;
+      final product =
+          controller.selectedProduct.value ??
+          LoanController.defaultProducts.first;
+      final rateAnnual = product.interestRatePct > 0
+          ? product.interestRatePct
+          : 14.0;
 
       // Collateral requirements: 150% USDT lock if crypto-backed
-      final requiresCollateral = product.requiredCollateralType != null || product.collateralRatioPct > 0;
-      final collateralRatio = product.collateralRatioPct > 0 ? product.collateralRatioPct : 150.0;
+      final requiresCollateral =
+          product.requiredCollateralType != null ||
+          product.collateralRatioPct > 0;
+      final collateralRatio = product.collateralRatioPct > 0
+          ? product.collateralRatioPct
+          : 150.0;
       final collateralNeededUsdt = _amount * (collateralRatio / 100.0);
       final hasEnoughCollateral = _availableWalletUsdt >= collateralNeededUsdt;
 
@@ -130,15 +158,21 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
             children: [
               // ------------------ 1. 4-STEP PROGRESS STEPPER ------------------
               // Step 1: Application & Collateral is currently active
-              const LoanStatusStepper(
-                currentStep: 1,
-              ),
+              const LoanStatusStepper(currentStep: 1),
 
               SizedBox(height: AppSpacing.md.h),
 
               // ------------------ 2. PRODUCT SELECTOR BAR ------------------
               if (controller.products.length > 1) ...[
-                _buildProductSelector(context, product, isDark, primaryAccent, surfaceColor, borderColor, textPrimary),
+                _buildProductSelector(
+                  context,
+                  product,
+                  isDark,
+                  primaryAccent,
+                  surfaceColor,
+                  borderColor,
+                  textPrimary,
+                ),
                 SizedBox(height: AppSpacing.md.h),
               ],
 
@@ -192,7 +226,14 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               SizedBox(height: AppSpacing.lg.h),
 
               // ------------------ 6. TERMS ACCEPTANCE CHECKBOX ------------------
-              _buildTermsCheckbox(context, isDark, primaryAccent, borderColor, textPrimary, textSecondary),
+              _buildTermsCheckbox(
+                context,
+                isDark,
+                primaryAccent,
+                borderColor,
+                textPrimary,
+                textSecondary,
+              ),
 
               SizedBox(height: AppSpacing.huge.h),
             ],
@@ -237,11 +278,19 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               Icon(Icons.tune_rounded, size: 16.sp, color: primaryAccent),
               SizedBox(width: 8.w),
               Text(
-                l10nPick(context, fa: 'طرح انتخابی:', en: 'Selected Plan:', ar: 'الخطة:', zh: '已选方案：'),
+                l10nPick(
+                  context,
+                  fa: 'طرح انتخابی:',
+                  en: 'Selected Plan:',
+                  ar: 'الخطة:',
+                  zh: '已选方案：',
+                ),
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
               SizedBox(width: 6.w),
@@ -256,8 +305,16 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
             ],
           ),
           PopupMenuButton<LoanProductModel>(
-            icon: Icon(Icons.swap_horiz_rounded, size: 20.sp, color: primaryAccent),
-            tooltip: l10nPick(context, fa: 'تغییر طرح تسهیلاتی', en: 'Switch Plan'),
+            icon: Icon(
+              Icons.swap_horiz_rounded,
+              size: 20.sp,
+              color: primaryAccent,
+            ),
+            tooltip: l10nPick(
+              context,
+              fa: 'تغییر طرح تسهیلاتی',
+              en: 'Switch Plan',
+            ),
             onSelected: (p) {
               HapticFeedback.selectionClick();
               controller.selectProduct(p);
@@ -272,7 +329,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                   p.localizedName(context),
                   style: TextStyle(
                     fontSize: 12.5.sp,
-                    fontWeight: p.id == current.id ? FontWeight.w800 : FontWeight.w500,
+                    fontWeight: p.id == current.id
+                        ? FontWeight.w800
+                        : FontWeight.w500,
                     color: p.id == current.id ? primaryAccent : null,
                   ),
                 ),
@@ -324,7 +383,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                   Icon(
                     Icons.shield_outlined,
                     size: 17.sp,
-                    color: hasEnoughCollateral ? AppColors.success : AppColors.error,
+                    color: hasEnoughCollateral
+                        ? AppColors.success
+                        : AppColors.error,
                   ),
                   SizedBox(width: 6.w),
                   Text(
@@ -344,7 +405,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ],
               ),
               Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 8.w,
+                  vertical: 3.h,
+                ),
                 decoration: BoxDecoration(
                   color: hasEnoughCollateral
                       ? AppColors.successContainer
@@ -353,12 +417,26 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ),
                 child: Text(
                   hasEnoughCollateral
-                      ? l10nPick(context, fa: 'موجودی کافی', en: 'Sufficient', ar: 'كافي', zh: '额度充足')
-                      : l10nPick(context, fa: 'کسری موجودی', en: 'Insufficient', ar: 'غير كافي', zh: '额度不足'),
+                      ? l10nPick(
+                          context,
+                          fa: 'موجودی کافی',
+                          en: 'Sufficient',
+                          ar: 'كافي',
+                          zh: '额度充足',
+                        )
+                      : l10nPick(
+                          context,
+                          fa: 'کسری موجودی',
+                          en: 'Insufficient',
+                          ar: 'غير كافي',
+                          zh: '额度不足',
+                        ),
                   style: TextStyle(
                     fontSize: 10.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: hasEnoughCollateral ? AppColors.success : AppColors.error,
+                    color: hasEnoughCollateral
+                        ? AppColors.success
+                        : AppColors.error,
                   ),
                 ),
               ),
@@ -366,7 +444,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
           ),
 
           SizedBox(height: AppSpacing.sm.h),
-          Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+          Divider(
+            height: 1,
+            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+          ),
           SizedBox(height: AppSpacing.sm.h),
 
           // Required vs Available
@@ -415,7 +496,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w800,
-                  color: hasEnoughCollateral ? AppColors.success : AppColors.error,
+                  color: hasEnoughCollateral
+                      ? AppColors.success
+                      : AppColors.error,
                   fontFeatures: const [FontFeature.tabularFigures()],
                 ),
               ),
@@ -432,7 +515,11 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.warning_amber_rounded, size: 16.sp, color: AppColors.error),
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 16.sp,
+                    color: AppColors.error,
+                  ),
                   SizedBox(width: 6.w),
                   Expanded(
                     child: Text(
@@ -511,7 +598,11 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                           shape: BoxShape.circle,
                         ),
                         child: Center(
-                          child: Icon(Icons.table_view_rounded, size: 17.sp, color: primaryAccent),
+                          child: Icon(
+                            Icons.table_view_rounded,
+                            size: 17.sp,
+                            color: primaryAccent,
+                          ),
                         ),
                       ),
                       SizedBox(width: 8.w),
@@ -541,7 +632,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                               ar: 'تفاصيل الأصل والفائدة والرصيد',
                               zh: '期数、本金、利息与剩余本金',
                             ),
-                            style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              color: textSecondary,
+                            ),
                           ),
                         ],
                       ),
@@ -561,7 +655,10 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
 
           if (_showAmortizationTable) ...[
             SizedBox(height: AppSpacing.sm.h),
-            Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+            Divider(
+              height: 1,
+              color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            ),
             SizedBox(height: AppSpacing.md.h),
 
             // Embedded Amortization Schedule Component
@@ -604,7 +701,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
             Checkbox(
               value: _termsAccepted,
               activeColor: primaryAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.r),
+              ),
               onChanged: (val) {
                 HapticFeedback.selectionClick();
                 setState(() {
@@ -650,7 +749,8 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
     Color borderColor,
     Color textSecondary,
   ) {
-    final canProceed = _termsAccepted && (!requiresCollateral || hasEnoughCollateral);
+    final canProceed =
+        _termsAccepted && (!requiresCollateral || hasEnoughCollateral);
 
     return Container(
       padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
@@ -674,7 +774,9 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
               height: 48.h,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: canProceed ? primaryAccent : AppColors.softGray,
+                  backgroundColor: canProceed
+                      ? primaryAccent
+                      : AppColors.softGray,
                   foregroundColor: isDark ? AppColors.deepBlack : Colors.white,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -684,16 +786,20 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 onPressed: canProceed
                     ? () {
                         HapticFeedback.lightImpact();
-                        controller.amountInput.value = _amount.toInt().toString();
+                        controller.amountInput.value = _amount
+                            .toInt()
+                            .toString();
                         controller.selectedTenure.value = _tenureMonths;
                         controller.termsAccepted.value = true;
-                        Get.to(() => LoanConfirmScreen(
-                              amount: _amount,
-                              tenureMonths: _tenureMonths,
-                              graceMonths: _graceMonths,
-                              collateralType: product.requiredCollateralType,
-                              collateralRatioPct: product.collateralRatioPct,
-                            ));
+                        Get.to(
+                          () => LoanConfirmScreen(
+                            amount: _amount,
+                            tenureMonths: _tenureMonths,
+                            graceMonths: _graceMonths,
+                            collateralType: product.requiredCollateralType,
+                            collateralRatioPct: product.collateralRatioPct,
+                          ),
+                        );
                       }
                     : null,
                 child: Text(
@@ -720,10 +826,7 @@ class _LoanApplicationScreenState extends State<LoanApplicationScreen> {
                 ar: 'لن يتم خصم أو قفل أي مبلغ حتى توقيع العقد النهائي.',
                 zh: '在最终电子签约确认之前，系统不会冻结或扣除您的任何资金。',
               ),
-              style: TextStyle(
-                fontSize: 10.5.sp,
-                color: textSecondary,
-              ),
+              style: TextStyle(fontSize: 10.5.sp, color: textSecondary),
             ),
           ],
         ),

@@ -43,7 +43,12 @@ Future<void> _copyReferralLink(BuildContext context) async {
     code = Get.find<ReferralController>().referralModel.value.data?.code;
   }
   if ((code == null || code.isEmpty) && Get.isRegistered<HomeController>()) {
-    code = Get.find<HomeController>().dashboardModel.value.data?.referral?.referralCode;
+    code = Get.find<HomeController>()
+        .dashboardModel
+        .value
+        .data
+        ?.referral
+        ?.referralCode;
   }
   if (code == null || code.isEmpty) {
     try {
@@ -68,7 +73,8 @@ class ReferredFriendList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ReferredFriendsController controller = Get.find<ReferredFriendsController>();
+    final ReferredFriendsController controller =
+        Get.find<ReferredFriendsController>();
     final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -121,8 +127,12 @@ class ReferredFriendList extends StatelessWidget {
               physics: const AlwaysScrollableScrollPhysics(),
               child: EcardoEmptyState(
                 iconData: Icons.group_add_rounded,
-                iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                glowColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                iconColor: isDark
+                    ? AppColors.mainSoftBlue
+                    : AppColors.brandViolet,
+                glowColor: isDark
+                    ? AppColors.mainSoftBlue
+                    : AppColors.brandViolet,
                 title: _refL(
                   context,
                   en: 'No Friends Invited Yet',
@@ -142,7 +152,8 @@ class ReferredFriendList extends StatelessWidget {
                   ar: 'نسخ رابط الإحالة',
                 ),
                 onPrimaryAction: () => _copyReferralLink(context),
-                secondaryActionLabel: localization.noInternetConnectionRetryButton,
+                secondaryActionLabel:
+                    localization.noInternetConnectionRetryButton,
                 onSecondaryAction: controller.fetchReferredFriends,
               ),
             ),
@@ -177,13 +188,19 @@ class ReferredFriendList extends StatelessWidget {
                     backgroundColor: isDark
                         ? AppColors.darkSurfaceVariant
                         : AppColors.brandVioletContainer,
-                    backgroundImage: avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
+                    backgroundImage: avatarUrl.isNotEmpty
+                        ? NetworkImage(avatarUrl)
+                        : null,
                     child: avatarUrl.isEmpty
                         ? Text(
-                            username.isNotEmpty ? username[0].toUpperCase() : '?',
+                            username.isNotEmpty
+                                ? username[0].toUpperCase()
+                                : '?',
                             style: AppTextStyles.titleMedium.copyWith(
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                              color: isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet,
                             ),
                           )
                         : null,
@@ -224,11 +241,14 @@ class ReferredFriendList extends StatelessWidget {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                      color: (referred.status == true
-                              ? AppColors.success
-                              : AppColors.error)
-                          .withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusFull,
+                      ),
+                      color:
+                          (referred.status == true
+                                  ? AppColors.success
+                                  : AppColors.error)
+                              .withValues(alpha: 0.12),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

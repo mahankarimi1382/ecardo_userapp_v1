@@ -49,7 +49,9 @@ class RemittanceStepper extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: 4.w),
                 color: isCompleted
                     ? AppColors.lightPrimary
-                    : (isDark ? AppColors.darkBorder : AppColors.lightBackground),
+                    : (isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBackground),
               ),
             );
           }
@@ -103,8 +105,12 @@ class _StepIndicator extends StatelessWidget {
       textColor = isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary;
     } else {
       bgColor = isDark ? const Color(0xFF26262C) : AppColors.lightBackground;
-      iconColor = isDark ? const Color(0xFF9E9EA4) : AppColors.lightTextPrimary.withValues(alpha: 0.6);
-      textColor = isDark ? const Color(0xFF9E9EA4) : AppColors.lightTextPrimary.withValues(alpha: 0.6);
+      iconColor = isDark
+          ? const Color(0xFF9E9EA4)
+          : AppColors.lightTextPrimary.withValues(alpha: 0.6);
+      textColor = isDark
+          ? const Color(0xFF9E9EA4)
+          : AppColors.lightTextPrimary.withValues(alpha: 0.6);
     }
 
     return Column(
@@ -113,10 +119,7 @@ class _StepIndicator extends StatelessWidget {
         Container(
           width: 28.w,
           height: 28.w,
-          decoration: BoxDecoration(
-            color: bgColor,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
           child: Center(
             child: isCompleted
                 ? Icon(Icons.check, color: iconColor, size: 16.sp)

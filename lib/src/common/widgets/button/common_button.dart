@@ -5,12 +5,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 
 /// Visual style variants for [CommonButton].
-enum ButtonVariant {
-  primary,
-  secondary,
-  outline,
-  text,
-}
+enum ButtonVariant { primary, secondary, outline, text }
 
 class CommonButton extends StatelessWidget {
   final double? width;
@@ -138,13 +133,15 @@ class CommonButton extends StatelessWidget {
 
     switch (variant) {
       case ButtonVariant.primary:
-        effectiveBgColor = backgroundColor ??
+        effectiveBgColor =
+            backgroundColor ??
             (colorScheme.primary == AppColors.deepBlack
                 ? (theme.brightness == Brightness.dark
-                    ? AppColors.darkPrimary
-                    : AppColors.lightPrimary)
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary)
                 : colorScheme.primary);
-        effectiveTextColor = textColor ??
+        effectiveTextColor =
+            textColor ??
             (effectiveBgColor == AppColors.darkPrimary
                 ? AppColors.deepBlack
                 : AppColors.white);
@@ -185,17 +182,15 @@ class CommonButton extends StatelessWidget {
         onTap: isLoading == true
             ? null
             : (onPressed == null
-                ? null
-                : () {
-                    AppHaptics.light();
-                    onPressed!();
-                  }),
+                  ? null
+                  : () {
+                      AppHaptics.light();
+                      onPressed!();
+                    }),
         child: Container(
           padding: EdgeInsetsGeometry.symmetric(horizontal: 8.w, vertical: 4.h),
           width: width == double.infinity ? double.infinity : width?.w,
-          constraints: BoxConstraints(
-            minHeight: (height ?? 48).h,
-          ),
+          constraints: BoxConstraints(minHeight: (height ?? 48).h),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius.r),
@@ -203,7 +198,10 @@ class CommonButton extends StatelessWidget {
             gradient: gradient,
             boxShadow: boxShadow,
             border: effectiveBorderColor != null && effectiveBorderWidth > 0
-                ? Border.all(color: effectiveBorderColor, width: effectiveBorderWidth.w)
+                ? Border.all(
+                    color: effectiveBorderColor,
+                    width: effectiveBorderWidth.w,
+                  )
                 : null,
           ),
           child: isLoading == true

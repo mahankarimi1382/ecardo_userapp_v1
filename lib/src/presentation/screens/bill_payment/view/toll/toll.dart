@@ -41,8 +41,9 @@ class _TollState extends State<Toll> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Stack(
         children: [
@@ -75,7 +76,7 @@ class _TollState extends State<Toll> {
                     : controller.currentStep.value == 1
                     ? const TollReviewStepSection()
                     : // PAYMENT-FIX (P-2): backend-driven pending/success step.
-                    controller.currentStep.value == 2
+                      controller.currentStep.value == 2
                     ? _buildResultStep(context)
                     : const SizedBox(),
               ),
@@ -103,27 +104,30 @@ class _TollState extends State<Toll> {
     final settings = Get.find<SettingsService>();
     final String currency =
         settings.getSetting("site_currency")?.toString() ?? "";
-    final String serviceCurrency =
-        controller.serviceData.value?.currency ?? '';
+    final String serviceCurrency = controller.serviceData.value?.currency ?? '';
     final int siteDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: currency,
       siteCurrencyCode: currency,
-      siteCurrencyDecimals:
-          settings.getSetting("site_currency_decimals")?.toString(),
+      siteCurrencyDecimals: settings
+          .getSetting("site_currency_decimals")
+          ?.toString(),
       isCrypto: false,
     );
     final int serviceDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: serviceCurrency,
       siteCurrencyCode: currency,
-      siteCurrencyDecimals:
-          settings.getSetting("site_currency_decimals")?.toString(),
+      siteCurrencyDecimals: settings
+          .getSetting("site_currency_decimals")
+          ?.toString(),
       isCrypto: false,
     );
 
     final parsedAmount = double.tryParse(controller.amountText.value);
     final String formattedAmount = parsedAmount != null
         ? parsedAmount.toStringAsFixed(serviceDecimals)
-        : (controller.amountText.value.isEmpty ? '0' : controller.amountText.value);
+        : (controller.amountText.value.isEmpty
+              ? '0'
+              : controller.amountText.value);
 
     return BillPaymentResultStepSection(
       result: controller.lastBillPaymentResult.value,

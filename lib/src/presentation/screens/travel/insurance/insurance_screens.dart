@@ -31,10 +31,7 @@ const List<InsurancePlan> defaultInsurancePlans = standardInsurancePlans;
 class TravelInsuranceScreen extends StatefulWidget {
   final bool isOffline;
 
-  const TravelInsuranceScreen({
-    super.key,
-    this.isOffline = false,
-  });
+  const TravelInsuranceScreen({super.key, this.isOffline = false});
 
   @override
   State<TravelInsuranceScreen> createState() => _TravelInsuranceScreenState();
@@ -100,7 +97,8 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     _birthDateController.text = DateFormat('yyyy-MM-dd').format(date);
     final now = DateTime.now();
     int age = now.year - date.year;
-    if (now.month < date.month || (now.month == date.month && now.day < date.day)) {
+    if (now.month < date.month ||
+        (now.month == date.month && now.day < date.day)) {
       age--;
     }
     setState(() {
@@ -135,10 +133,20 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     final nationalId = _nationalCodeController.text.trim();
     final phone = _phoneController.text.trim();
 
-    if (fullName.isEmpty || passportNo.isEmpty || nationalId.isEmpty || phone.isEmpty) {
+    if (fullName.isEmpty ||
+        passportNo.isEmpty ||
+        nationalId.isEmpty ||
+        phone.isEmpty) {
       showTravelMessage(
         context,
-        title: l10nPick(context, en: 'Incomplete Information', fa: 'اطلاعات ناقص است', ar: 'بيانات ناقصة', tr: 'Eksik Bilgi', ru: 'Неполные данные'),
+        title: l10nPick(
+          context,
+          en: 'Incomplete Information',
+          fa: 'اطلاعات ناقص است',
+          ar: 'بيانات ناقصة',
+          tr: 'Eksik Bilgi',
+          ru: 'Неполные данные',
+        ),
         message: l10nPick(
           context,
           en: 'Please complete all required fields (English full name, passport number, national ID, and mobile phone).',
@@ -154,7 +162,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     if (fullName.length < 3) {
       showTravelMessage(
         context,
-        title: l10nPick(context, en: 'Invalid Name', fa: 'نام نامعتبر', ar: 'اسم غير صالح'),
+        title: l10nPick(
+          context,
+          en: 'Invalid Name',
+          fa: 'نام نامعتبر',
+          ar: 'اسم غير صالح',
+        ),
         message: l10nPick(
           context,
           en: 'Full name in English must contain at least 3 characters as in your passport.',
@@ -168,7 +181,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     if (passportNo.length < 6) {
       showTravelMessage(
         context,
-        title: l10nPick(context, en: 'Invalid Passport', fa: 'گذرنامه نامعتبر', ar: 'جواز غير صالح'),
+        title: l10nPick(
+          context,
+          en: 'Invalid Passport',
+          fa: 'گذرنامه نامعتبر',
+          ar: 'جواز غير صالح',
+        ),
         message: l10nPick(
           context,
           en: 'Please enter a valid passport number (at least 6 characters).',
@@ -182,7 +200,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     if (_formKey.currentState?.validate() != true) {
       showTravelMessage(
         context,
-        title: l10nPick(context, en: 'Validation Error', fa: 'خطای اعتبارسنجی فرم', ar: 'خطأ في التحقق'),
+        title: l10nPick(
+          context,
+          en: 'Validation Error',
+          fa: 'خطای اعتبارسنجی فرم',
+          ar: 'خطأ في التحقق',
+        ),
         message: l10nPick(
           context,
           en: 'Please complete all required fields according to your passport.',
@@ -196,7 +219,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     if (!_schengenCheck.isValid) {
       showTravelMessage(
         context,
-        title: l10nPick(context, en: 'Schengen Non-Compliant', fa: 'عدم تطابق با ضوابط شنگن', ar: 'غير متوافق مع شنغن'),
+        title: l10nPick(
+          context,
+          en: 'Schengen Non-Compliant',
+          fa: 'عدم تطابق با ضوابط شنگن',
+          ar: 'غير متوافق مع شنغن',
+        ),
         message: l10nPick(
           context,
           en: _schengenCheck.errorMessageEn ?? '',
@@ -208,7 +236,8 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
 
     setState(() => _isProcessing = true);
 
-    final birthDateTime = DateTime.tryParse(_birthDateController.text) ?? DateTime(1995, 5, 15);
+    final birthDateTime =
+        DateTime.tryParse(_birthDateController.text) ?? DateTime(1995, 5, 15);
     final traveler = InsuredTraveler(
       fullNameEn: fullName.toUpperCase(),
       passportNumber: passportNo,
@@ -233,7 +262,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
       setState(() => _isProcessing = false);
       showTravelMessage(
         context,
-        title: l10nPick(context, en: 'Issuance Failed', fa: 'خطا در صدور بیمه‌نامه', ar: 'فشل الإصدار'),
+        title: l10nPick(
+          context,
+          en: 'Issuance Failed',
+          fa: 'خطا در صدور بیمه‌نامه',
+          ar: 'فشل الإصدار',
+        ),
         message: l10nPick(
           context,
           en: result.errorEn ?? 'Policy could not be issued.',
@@ -253,8 +287,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
       id: policy.id,
       serviceKey: 'insurance',
       title: 'بیمه مسافرتی ${policy.plan.titleFa}',
-      subtitle: '${policy.plan.coverageLimit} · ${policy.durationDays} روزه (${policy.destinationCountry})',
-      amountLabel: '${formatMockAmount(policy.breakdown.totalPremium)} ${localization.travelMockCurrency}',
+      subtitle:
+          '${policy.plan.coverageLimit} · ${policy.durationDays} روزه (${policy.destinationCountry})',
+      amountLabel:
+          '${formatMockAmount(policy.breakdown.totalPremium)} ${localization.travelMockCurrency}',
       reference: policy.certificateNumber,
       createdAt: policy.issuedAt,
       details: {
@@ -306,8 +342,16 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
       ),
       showTravelNavigation: false,
       trailing: IconButton(
-        tooltip: l10nPick(context, en: 'Claims & Assistance', fa: 'اعلام خسارت و امداد', ar: 'المطالبات والمساعدة'),
-        icon: Icon(Icons.support_agent_rounded, color: ECardoTokens.brand500(context)),
+        tooltip: l10nPick(
+          context,
+          en: 'Claims & Assistance',
+          fa: 'اعلام خسارت و امداد',
+          ar: 'المطالبات والمساعدة',
+        ),
+        icon: Icon(
+          Icons.support_agent_rounded,
+          color: ECardoTokens.brand500(context),
+        ),
         onPressed: () => Get.to(() => const InsuranceClaimScreen()),
       ),
       bottomNavigationBar: SafeArea(
@@ -315,7 +359,9 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
           padding: EdgeInsetsDirectional.all(16.r),
           decoration: BoxDecoration(
             color: ECardoTokens.surfaceCard(context),
-            border: Border(top: BorderSide(color: ECardoTokens.border(context))),
+            border: Border(
+              top: BorderSide(color: ECardoTokens.border(context)),
+            ),
             boxShadow: ECardoTokens.shadowCard(context),
           ),
           child: Row(
@@ -349,7 +395,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                 width: 175.w,
                 child: CommonButton(
                   text: _isProcessing
-                      ? l10nPick(context, en: 'Issuing...', fa: 'در حال صدور...', ar: 'جاري الإصدار...')
+                      ? l10nPick(
+                          context,
+                          en: 'Issuing...',
+                          fa: 'در حال صدور...',
+                          ar: 'جاري الإصدار...',
+                        )
                       : l10nPick(
                           context,
                           en: 'Issue Policy Online',
@@ -358,7 +409,9 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                           zh: '即时在线出单',
                         ),
                   backgroundColor: ECardoTokens.brand700(context),
-                  onPressed: _isProcessing ? () {} : () => _submitOrder(context),
+                  onPressed: _isProcessing
+                      ? () {}
+                      : () => _submitOrder(context),
                 ),
               ),
             ],
@@ -396,7 +449,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
             // Destination Country Input
             TextFormField(
               initialValue: _destinationCountry,
-              style: TextStyle(color: ECardoTokens.ink(context), fontSize: 13.sp),
+              style: TextStyle(
+                color: ECardoTokens.ink(context),
+                fontSize: 13.sp,
+              ),
               decoration: InputDecoration(
                 labelText: l10nPick(
                   context,
@@ -404,8 +460,14 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                   fa: 'کشور یا شهر مقصد اصلی سفر',
                   ar: 'الدولة أو المدينة الوجهة الرئيسية',
                 ),
-                labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-                prefixIcon: Icon(Icons.flight_land_rounded, color: ECardoTokens.brand500(context)),
+                labelStyle: TextStyle(
+                  color: ECardoTokens.inkMuted(context),
+                  fontSize: 12.sp,
+                ),
+                prefixIcon: Icon(
+                  Icons.flight_land_rounded,
+                  color: ECardoTokens.brand500(context),
+                ),
                 filled: true,
                 fillColor: ECardoTokens.surfaceSunken(context),
                 border: OutlineInputBorder(
@@ -418,7 +480,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                  borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                  borderSide: BorderSide(
+                    color: ECardoTokens.focusRing(context),
+                    width: 1.5,
+                  ),
                 ),
               ),
               onChanged: (val) => _destinationCountry = val,
@@ -473,7 +538,9 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               _buildSchengenAlertBanner(context),
               SizedBox(height: 10.h),
             ],
-            ...standardInsurancePlans.map((plan) => _buildPlanCard(context, plan, isDark)),
+            ...standardInsurancePlans.map(
+              (plan) => _buildPlanCard(context, plan, isDark),
+            ),
             SizedBox(height: 16.h),
 
             // Optional Addon Riders
@@ -486,7 +553,9 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               ),
             ),
             SizedBox(height: 8.h),
-            ...InsuranceAddon.values.map((addon) => _buildAddonCard(context, addon, isDark)),
+            ...InsuranceAddon.values.map(
+              (addon) => _buildAddonCard(context, addon, isDark),
+            ),
             SizedBox(height: 16.h),
 
             // Insured Person Form
@@ -518,11 +587,17 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
       decoration: BoxDecoration(
         color: ECardoTokens.warningBg(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-        border: Border.all(color: ECardoTokens.warning(context).withValues(alpha: 0.4)),
+        border: Border.all(
+          color: ECardoTokens.warning(context).withValues(alpha: 0.4),
+        ),
       ),
       child: Row(
         children: [
-          Icon(Icons.wifi_off_rounded, color: ECardoTokens.warning(context), size: 20),
+          Icon(
+            Icons.wifi_off_rounded,
+            color: ECardoTokens.warning(context),
+            size: 20,
+          ),
           SizedBox(width: 8.w),
           Expanded(
             child: Text(
@@ -550,7 +625,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
         gradient: LinearGradient(
-          colors: [ECardoTokens.brand900(context), ECardoTokens.brand700(context)],
+          colors: [
+            ECardoTokens.brand900(context),
+            ECardoTokens.brand700(context),
+          ],
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
         ),
@@ -598,7 +676,11 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
             ),
           ),
           SizedBox(width: 8.w),
-          Icon(Icons.health_and_safety_rounded, size: 52, color: ECardoTokens.sand400(context)),
+          Icon(
+            Icons.health_and_safety_rounded,
+            size: 52,
+            color: ECardoTokens.sand400(context),
+          ),
         ],
       ),
     );
@@ -610,27 +692,60 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
       runSpacing: 8.h,
       children: [
         _ZoneChip(
-          label: l10nPick(context, en: 'Schengen Area (EU)', fa: 'حوزه شنگن و اروپا', ar: 'منطقة شنغن', zh: '申根欧洲'),
+          label: l10nPick(
+            context,
+            en: 'Schengen Area (EU)',
+            fa: 'حوزه شنگن و اروپا',
+            ar: 'منطقة شنغن',
+            zh: '申根欧洲',
+          ),
           selected: _zone == InsuranceDestinationZone.schengen,
-          onTap: () => setState(() => _zone = InsuranceDestinationZone.schengen),
+          onTap: () =>
+              setState(() => _zone = InsuranceDestinationZone.schengen),
         ),
         _ZoneChip(
-          label: l10nPick(context, en: 'Worldwide (All Countries)', fa: 'سراسر جهان (کلیه کشورها)', ar: 'جميع أنحاء العالم', zh: '全球通用'),
+          label: l10nPick(
+            context,
+            en: 'Worldwide (All Countries)',
+            fa: 'سراسر جهان (کلیه کشورها)',
+            ar: 'جميع أنحاء العالم',
+            zh: '全球通用',
+          ),
           selected: _zone == InsuranceDestinationZone.worldwide,
-          onTap: () => setState(() => _zone = InsuranceDestinationZone.worldwide),
+          onTap: () =>
+              setState(() => _zone = InsuranceDestinationZone.worldwide),
         ),
         _ZoneChip(
-          label: l10nPick(context, en: 'Worldwide (Excl. USA/CAN)', fa: 'سراسر جهان (به‌جز آمریکا/کانادا)', ar: 'العالم (باستثناء أمريكا)'),
+          label: l10nPick(
+            context,
+            en: 'Worldwide (Excl. USA/CAN)',
+            fa: 'سراسر جهان (به‌جز آمریکا/کانادا)',
+            ar: 'العالم (باستثناء أمريكا)',
+          ),
           selected: _zone == InsuranceDestinationZone.worldwideExcludingUsa,
-          onTap: () => setState(() => _zone = InsuranceDestinationZone.worldwideExcludingUsa),
+          onTap: () => setState(
+            () => _zone = InsuranceDestinationZone.worldwideExcludingUsa,
+          ),
         ),
         _ZoneChip(
-          label: l10nPick(context, en: 'Turkey & Middle East', fa: 'ترکیه و خاورمیانه', ar: 'تركيا والشرق الأوسط', zh: '土耳其与中东'),
+          label: l10nPick(
+            context,
+            en: 'Turkey & Middle East',
+            fa: 'ترکیه و خاورمیانه',
+            ar: 'تركيا والشرق الأوسط',
+            zh: '土耳其与中东',
+          ),
           selected: _zone == InsuranceDestinationZone.middleEast,
-          onTap: () => setState(() => _zone = InsuranceDestinationZone.middleEast),
+          onTap: () =>
+              setState(() => _zone = InsuranceDestinationZone.middleEast),
         ),
         _ZoneChip(
-          label: l10nPick(context, en: 'Asia & Pacific', fa: 'آسیا و شرق دور', ar: 'آسيا والمحيط الهادئ'),
+          label: l10nPick(
+            context,
+            en: 'Asia & Pacific',
+            fa: 'آسیا و شرق دور',
+            ar: 'آسيا والمحيط الهادئ',
+          ),
           selected: _zone == InsuranceDestinationZone.asia,
           onTap: () => setState(() => _zone = InsuranceDestinationZone.asia),
         ),
@@ -656,7 +771,9 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                       : ECardoTokens.surfaceCard(context),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   border: Border.all(
-                    color: isSelected ? ECardoTokens.brand700(context) : ECardoTokens.border(context),
+                    color: isSelected
+                        ? ECardoTokens.brand700(context)
+                        : ECardoTokens.border(context),
                   ),
                 ),
                 child: Center(
@@ -664,8 +781,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                     '$days ${l10nPick(context, en: 'd', fa: 'روز', ar: 'يوم', zh: '天')}',
                     style: TextStyle(
                       fontSize: 11.5.sp,
-                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                      color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                      fontWeight: isSelected
+                          ? FontWeight.w900
+                          : FontWeight.w600,
+                      color: isSelected
+                          ? ECardoTokens.inkOnBrand
+                          : ECardoTokens.ink(context),
                     ),
                   ),
                 ),
@@ -688,14 +809,19 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               onTap: () => setState(() => _ageBand = band),
               borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
               child: Container(
-                padding: EdgeInsetsDirectional.symmetric(vertical: 8.h, horizontal: 4.w),
+                padding: EdgeInsetsDirectional.symmetric(
+                  vertical: 8.h,
+                  horizontal: 4.w,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? ECardoTokens.brand700(context)
                       : ECardoTokens.surfaceCard(context),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                   border: Border.all(
-                    color: isSelected ? ECardoTokens.brand700(context) : ECardoTokens.border(context),
+                    color: isSelected
+                        ? ECardoTokens.brand700(context)
+                        : ECardoTokens.border(context),
                   ),
                 ),
                 child: Column(
@@ -705,8 +831,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                        color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                        fontWeight: isSelected
+                            ? FontWeight.w900
+                            : FontWeight.w600,
+                        color: isSelected
+                            ? ECardoTokens.inkOnBrand
+                            : ECardoTokens.ink(context),
                       ),
                     ),
                     SizedBox(height: 2.h),
@@ -715,7 +845,9 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                       style: TextStyle(
                         fontSize: 9.5.sp,
                         fontWeight: FontWeight.w700,
-                        color: isSelected ? ECardoTokens.inkOnBrandMuted(context) : ECardoTokens.inkMuted(context),
+                        color: isSelected
+                            ? ECardoTokens.inkOnBrandMuted(context)
+                            : ECardoTokens.inkMuted(context),
                       ),
                     ),
                   ],
@@ -734,11 +866,17 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
       decoration: BoxDecoration(
         color: ECardoTokens.dangerBg(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-        border: Border.all(color: ECardoTokens.danger(context).withValues(alpha: 0.3)),
+        border: Border.all(
+          color: ECardoTokens.danger(context).withValues(alpha: 0.3),
+        ),
       ),
       child: Row(
         children: [
-          Icon(Icons.warning_amber_rounded, color: ECardoTokens.danger(context), size: 22),
+          Icon(
+            Icons.warning_amber_rounded,
+            color: ECardoTokens.danger(context),
+            size: 22,
+          ),
           SizedBox(width: 10.w),
           Expanded(
             child: Text(
@@ -800,8 +938,16 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                     children: [
                       CircleAvatar(
                         radius: 12.r,
-                        backgroundColor: isSelected ? plan.color : ECardoTokens.borderStrong(context),
-                        child: isSelected ? const Icon(Icons.check, size: 14, color: Colors.white) : null,
+                        backgroundColor: isSelected
+                            ? plan.color
+                            : ECardoTokens.borderStrong(context),
+                        child: isSelected
+                            ? const Icon(
+                                Icons.check,
+                                size: 14,
+                                color: Colors.white,
+                              )
+                            : null,
                       ),
                       SizedBox(width: 10.w),
                       Text(
@@ -815,10 +961,15 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                     ],
                   ),
                   Container(
-                    padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding: EdgeInsetsDirectional.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
                       color: plan.color.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm,
+                      ),
                     ),
                     child: Text(
                       plan.coverageLimit,
@@ -832,25 +983,31 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                 ],
               ),
               SizedBox(height: 10.h),
-              ...plan.benefits.map((b) => Padding(
-                    padding: EdgeInsetsDirectional.only(bottom: 4.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.check_circle_outline_rounded, size: 15, color: plan.color),
-                        SizedBox(width: 8.w),
-                        Expanded(
-                          child: Text(
-                            b,
-                            style: TextStyle(
-                              fontSize: 11.sp,
-                              color: ECardoTokens.inkMuted(context),
-                            ),
+              ...plan.benefits.map(
+                (b) => Padding(
+                  padding: EdgeInsetsDirectional.only(bottom: 4.h),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline_rounded,
+                        size: 15,
+                        color: plan.color,
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          b,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: ECardoTokens.inkMuted(context),
                           ),
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -858,7 +1015,11 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     );
   }
 
-  Widget _buildAddonCard(BuildContext context, InsuranceAddon addon, bool isDark) {
+  Widget _buildAddonCard(
+    BuildContext context,
+    InsuranceAddon addon,
+    bool isDark,
+  ) {
     final isSelected = _selectedAddons.contains(addon);
     final cost = addon.calculateCost(_durationDays);
     final surfaceColor = ECardoTokens.surfaceCard(context);
@@ -882,7 +1043,9 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
             color: surfaceColor,
             borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
             border: Border.all(
-              color: isSelected ? ECardoTokens.brand700(context) : ECardoTokens.border(context),
+              color: isSelected
+                  ? ECardoTokens.brand700(context)
+                  : ECardoTokens.border(context),
               width: isSelected ? 1.5 : 1.0,
             ),
             boxShadow: isSelected ? ECardoTokens.shadowCard(context) : null,
@@ -890,8 +1053,12 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
           child: Row(
             children: [
               Icon(
-                isSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
-                color: isSelected ? ECardoTokens.brand700(context) : ECardoTokens.inkMuted(context),
+                isSelected
+                    ? Icons.check_box_rounded
+                    : Icons.check_box_outline_blank_rounded,
+                color: isSelected
+                    ? ECardoTokens.brand700(context)
+                    : ECardoTokens.inkMuted(context),
                 size: 22.sp,
               ),
               SizedBox(width: 8.w),
@@ -909,7 +1076,11 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                     ),
                     SizedBox(height: 2.h),
                     Text(
-                      l10nPick(context, en: addon.coverageLimitEn, fa: addon.coverageLimitFa),
+                      l10nPick(
+                        context,
+                        en: addon.coverageLimitEn,
+                        fa: addon.coverageLimitFa,
+                      ),
                       style: TextStyle(
                         fontSize: 10.5.sp,
                         color: ECardoTokens.inkMuted(context),
@@ -933,7 +1104,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     );
   }
 
-  Widget _buildTravelerFormCard(BuildContext context, AppLocalizations localization) {
+  Widget _buildTravelerFormCard(
+    BuildContext context,
+    AppLocalizations localization,
+  ) {
     return Container(
       padding: EdgeInsetsDirectional.all(18.r),
       decoration: BoxDecoration(
@@ -973,8 +1147,14 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                 ar: 'الاسم الكامل بالإنجليزية',
                 zh: '护照英文姓名（大写）',
               ),
-              labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-              prefixIcon: Icon(Icons.person_outline_rounded, color: ECardoTokens.brand500(context)),
+              labelStyle: TextStyle(
+                color: ECardoTokens.inkMuted(context),
+                fontSize: 12.sp,
+              ),
+              prefixIcon: Icon(
+                Icons.person_outline_rounded,
+                color: ECardoTokens.brand500(context),
+              ),
               filled: true,
               fillColor: ECardoTokens.surfaceSunken(context),
               border: OutlineInputBorder(
@@ -987,7 +1167,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                borderSide: BorderSide(
+                  color: ECardoTokens.focusRing(context),
+                  width: 1.5,
+                ),
               ),
             ),
             validator: (val) {
@@ -1011,8 +1194,14 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                 ar: 'رقم جواز السفر',
                 zh: '护照号码',
               ),
-              labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-              prefixIcon: Icon(Icons.menu_book_rounded, color: ECardoTokens.brand500(context)),
+              labelStyle: TextStyle(
+                color: ECardoTokens.inkMuted(context),
+                fontSize: 12.sp,
+              ),
+              prefixIcon: Icon(
+                Icons.menu_book_rounded,
+                color: ECardoTokens.brand500(context),
+              ),
               filled: true,
               fillColor: ECardoTokens.surfaceSunken(context),
               border: OutlineInputBorder(
@@ -1025,7 +1214,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                borderSide: BorderSide(
+                  color: ECardoTokens.focusRing(context),
+                  width: 1.5,
+                ),
               ),
             ),
             validator: (val) {
@@ -1050,8 +1242,14 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                 ar: 'الرقم القومي',
                 zh: '身份证号',
               ),
-              labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-              prefixIcon: Icon(Icons.badge_outlined, color: ECardoTokens.brand500(context)),
+              labelStyle: TextStyle(
+                color: ECardoTokens.inkMuted(context),
+                fontSize: 12.sp,
+              ),
+              prefixIcon: Icon(
+                Icons.badge_outlined,
+                color: ECardoTokens.brand500(context),
+              ),
               filled: true,
               fillColor: ECardoTokens.surfaceSunken(context),
               border: OutlineInputBorder(
@@ -1064,7 +1262,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                borderSide: BorderSide(
+                  color: ECardoTokens.focusRing(context),
+                  width: 1.5,
+                ),
               ),
             ),
             validator: (val) {
@@ -1078,11 +1279,22 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
 
           // Birth Date Picker
           CommonSingleDatePicker(
-            initialDate: DateTime.tryParse(_birthDateController.text) ?? DateTime(1995, 5, 15),
+            initialDate:
+                DateTime.tryParse(_birthDateController.text) ??
+                DateTime(1995, 5, 15),
             firstDate: DateTime(1930),
             lastDate: DateTime.now(),
-            hintText: l10nPick(context, en: 'Date of Birth', fa: 'تاریخ تولد مسافر', ar: 'تاريخ الميلاد'),
-            suffixIcon: Icon(Icons.cake_outlined, size: 18, color: ECardoTokens.brand500(context)),
+            hintText: l10nPick(
+              context,
+              en: 'Date of Birth',
+              fa: 'تاریخ تولد مسافر',
+              ar: 'تاريخ الميلاد',
+            ),
+            suffixIcon: Icon(
+              Icons.cake_outlined,
+              size: 18,
+              color: ECardoTokens.brand500(context),
+            ),
             onDateSelected: _onBirthDateSelected,
           ),
           SizedBox(height: 12.h),
@@ -1099,8 +1311,14 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
                 fa: 'شماره تلفن همراه جهت ارسال پیامک و پشتیبانی',
                 ar: 'رقم الهاتف المحمول',
               ),
-              labelStyle: TextStyle(color: ECardoTokens.inkMuted(context), fontSize: 12.sp),
-              prefixIcon: Icon(Icons.phone_rounded, color: ECardoTokens.brand500(context)),
+              labelStyle: TextStyle(
+                color: ECardoTokens.inkMuted(context),
+                fontSize: 12.sp,
+              ),
+              prefixIcon: Icon(
+                Icons.phone_rounded,
+                color: ECardoTokens.brand500(context),
+              ),
               filled: true,
               fillColor: ECardoTokens.surfaceSunken(context),
               border: OutlineInputBorder(
@@ -1113,7 +1331,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                borderSide: BorderSide(color: ECardoTokens.focusRing(context), width: 1.5),
+                borderSide: BorderSide(
+                  color: ECardoTokens.focusRing(context),
+                  width: 1.5,
+                ),
               ),
             ),
             validator: (val) {
@@ -1136,7 +1357,11 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
               ar: 'تاريخ بدء التأمين',
               zh: '起保日期',
             ),
-            suffixIcon: Icon(Icons.calendar_month_rounded, size: 18, color: ECardoTokens.brand500(context)),
+            suffixIcon: Icon(
+              Icons.calendar_month_rounded,
+              size: 18,
+              color: ECardoTokens.brand500(context),
+            ),
             onDateSelected: _onStartDateSelected,
           ),
         ],
@@ -1144,7 +1369,10 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
     );
   }
 
-  Widget _buildPriceBreakdownCard(BuildContext context, AppLocalizations localization) {
+  Widget _buildPriceBreakdownCard(
+    BuildContext context,
+    AppLocalizations localization,
+  ) {
     final breakdown = _premiumBreakdown;
     return Container(
       padding: EdgeInsetsDirectional.all(18.r),
@@ -1173,14 +1401,22 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
           SizedBox(height: 10.h),
           _breakdownRow(
             context,
-            l10nPick(context, en: 'Base Medical Coverage', fa: 'حق‌بیمه پایه درمانی (${breakdown.durationDays} روز)'),
+            l10nPick(
+              context,
+              en: 'Base Medical Coverage',
+              fa: 'حق‌بیمه پایه درمانی (${breakdown.durationDays} روز)',
+            ),
             '${formatMockAmount(breakdown.baseMedicalPremium)} ${localization.travelMockCurrency}',
           ),
           if (breakdown.ageSurcharge > 0) ...[
             SizedBox(height: 6.h),
             _breakdownRow(
               context,
-              l10nPick(context, en: 'Age Risk Surcharge (${breakdown.ageBand.labelEn})', fa: 'اضافه نرخ ریسک سنی (${breakdown.ageBand.labelFa})'),
+              l10nPick(
+                context,
+                en: 'Age Risk Surcharge (${breakdown.ageBand.labelEn})',
+                fa: 'اضافه نرخ ریسک سنی (${breakdown.ageBand.labelFa})',
+              ),
               '+${formatMockAmount(breakdown.ageSurcharge)} ${localization.travelMockCurrency}',
             ),
           ],
@@ -1188,7 +1424,11 @@ class _TravelInsuranceScreenState extends State<TravelInsuranceScreen> {
             SizedBox(height: 6.h),
             _breakdownRow(
               context,
-              l10nPick(context, en: 'Selected Protection Riders', fa: 'پوشش‌های تکمیلی و الحاقیه'),
+              l10nPick(
+                context,
+                en: 'Selected Protection Riders',
+                fa: 'پوشش‌های تکمیلی و الحاقیه',
+              ),
               '+${formatMockAmount(breakdown.addonsTotal)} ${localization.travelMockCurrency}',
             ),
           ],
@@ -1264,12 +1504,17 @@ class _ZoneChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
       child: Container(
-        padding: EdgeInsetsDirectional.symmetric(horizontal: 12.w, vertical: 8.h),
+        padding: EdgeInsetsDirectional.symmetric(
+          horizontal: 12.w,
+          vertical: 8.h,
+        ),
         decoration: BoxDecoration(
           color: selected ? ECardoTokens.brand700(context) : surfaceColor,
           borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
           border: Border.all(
-            color: selected ? ECardoTokens.brand700(context) : ECardoTokens.border(context),
+            color: selected
+                ? ECardoTokens.brand700(context)
+                : ECardoTokens.border(context),
           ),
         ),
         child: Text(
@@ -1277,7 +1522,9 @@ class _ZoneChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 11.5.sp,
             fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
-            color: selected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+            color: selected
+                ? ECardoTokens.inkOnBrand
+                : ECardoTokens.ink(context),
           ),
         ),
       ),
@@ -1310,12 +1557,7 @@ class InsuranceCertificateScreen extends StatelessWidget {
 
   String _generateBarcodeSvg() {
     final barcode = Barcode.code128();
-    return barcode.toSvg(
-      policyNumber,
-      width: 260,
-      height: 60,
-      drawText: false,
-    );
+    return barcode.toSvg(policyNumber, width: 260, height: 60, drawText: false);
   }
 
   String _generateQrSvg() {
@@ -1328,12 +1570,14 @@ class InsuranceCertificateScreen extends StatelessWidget {
   }
 
   Future<void> _exportPdf(BuildContext context) async {
-    final targetPolicy = policy ??
+    final targetPolicy =
+        policy ??
         InsurancePolicy(
           id: 'ins-$policyNumber',
           policyNumber: policyNumber,
           certificateNumber: policyNumber,
-          qrVerificationPayload: 'https://verify.ecardo.io/insurance/policy/$policyNumber',
+          qrVerificationPayload:
+              'https://verify.ecardo.io/insurance/policy/$policyNumber',
           traveler: InsuredTraveler(
             fullNameEn: insuredName,
             passportNumber: passportNumber,
@@ -1364,8 +1608,13 @@ class InsuranceCertificateScreen extends StatelessWidget {
           issuedAt: DateTime.now(),
         );
 
-    final bytes = await InsuranceDocumentBuilder.buildCertificateBytes(targetPolicy);
-    await Printing.sharePdf(bytes: bytes, filename: 'Insurance_Certificate_$policyNumber.pdf');
+    final bytes = await InsuranceDocumentBuilder.buildCertificateBytes(
+      targetPolicy,
+    );
+    await Printing.sharePdf(
+      bytes: bytes,
+      filename: 'Insurance_Certificate_$policyNumber.pdf',
+    );
   }
 
   void _requestFreeLookCancellation(BuildContext context) {
@@ -1383,7 +1632,9 @@ class InsuranceCertificateScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogCtx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusXl)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+        ),
         title: Text(
           l10nPick(
             dialogCtx,
@@ -1430,7 +1681,9 @@ class InsuranceCertificateScreen extends StatelessWidget {
                 backgroundColor: ECardoTokens.danger(context),
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                ),
               ),
               onPressed: () async {
                 Navigator.pop(dialogCtx);
@@ -1443,7 +1696,12 @@ class InsuranceCertificateScreen extends StatelessWidget {
                 if (context.mounted) {
                   showTravelMessage(
                     context,
-                    title: l10nPick(context, en: 'Policy Cancelled', fa: 'بیمه‌نامه لغو شد', ar: 'تم إلغاء الوثيقة'),
+                    title: l10nPick(
+                      context,
+                      en: 'Policy Cancelled',
+                      fa: 'بیمه‌نامه لغو شد',
+                      ar: 'تم إلغاء الوثيقة',
+                    ),
                     message: l10nPick(
                       context,
                       en: 'Full refund will be credited to your eCardo wallet.',
@@ -1454,7 +1712,12 @@ class InsuranceCertificateScreen extends StatelessWidget {
                 }
               },
               child: Text(
-                l10nPick(context, en: 'Confirm Cancellation', fa: 'تأیید لغو و استرداد وجه', ar: 'تأكيد الإلغاء'),
+                l10nPick(
+                  context,
+                  en: 'Confirm Cancellation',
+                  fa: 'تأیید لغو و استرداد وجه',
+                  ar: 'تأكيد الإلغاء',
+                ),
                 style: const TextStyle(fontWeight: FontWeight.w800),
               ),
             ),
@@ -1483,7 +1746,9 @@ class InsuranceCertificateScreen extends StatelessWidget {
           padding: EdgeInsetsDirectional.all(16.r),
           decoration: BoxDecoration(
             color: ECardoTokens.surfaceCard(context),
-            border: Border(top: BorderSide(color: ECardoTokens.border(context))),
+            border: Border(
+              top: BorderSide(color: ECardoTokens.border(context)),
+            ),
             boxShadow: ECardoTokens.shadowCard(context),
           ),
           child: Column(
@@ -1495,14 +1760,25 @@ class InsuranceCertificateScreen extends StatelessWidget {
                     child: OutlinedButton.icon(
                       icon: Icon(Icons.picture_as_pdf_rounded, size: 18),
                       style: OutlinedButton.styleFrom(
-                        padding: EdgeInsetsDirectional.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusMd)),
+                        padding: EdgeInsetsDirectional.symmetric(
+                          vertical: 12.h,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
+                        ),
                         side: BorderSide(color: ECardoTokens.border(context)),
                         backgroundColor: ECardoTokens.surfaceSunken(context),
                       ),
                       onPressed: () => _exportPdf(context),
                       label: Text(
-                        l10nPick(context, en: 'Download PDF', fa: 'دانلود فایل PDF', ar: 'تحميل PDF'),
+                        l10nPick(
+                          context,
+                          en: 'Download PDF',
+                          fa: 'دانلود فایل PDF',
+                          ar: 'تحميل PDF',
+                        ),
                         style: TextStyle(
                           fontSize: 11.5.sp,
                           fontWeight: FontWeight.w700,
@@ -1514,11 +1790,18 @@ class InsuranceCertificateScreen extends StatelessWidget {
                   SizedBox(width: 10.w),
                   Expanded(
                     child: CommonButton(
-                      text: l10nPick(context, en: 'Submit Claim', fa: 'اعلام و ثبت خسارت', ar: 'تقديم مطالبة'),
+                      text: l10nPick(
+                        context,
+                        en: 'Submit Claim',
+                        fa: 'اعلام و ثبت خسارت',
+                        ar: 'تقديم مطالبة',
+                      ),
                       textColor: Colors.white,
                       backgroundColor: ECardoTokens.brand700(context),
                       onPressed: () => Get.to(
-                        () => InsuranceClaimScreen(initialPolicyNumber: policyNumber),
+                        () => InsuranceClaimScreen(
+                          initialPolicyNumber: policyNumber,
+                        ),
                       ),
                     ),
                   ),
@@ -1528,7 +1811,12 @@ class InsuranceCertificateScreen extends StatelessWidget {
               TextButton(
                 onPressed: () => _requestFreeLookCancellation(context),
                 child: Text(
-                  l10nPick(context, en: 'Cancel Policy (Free-Look)', fa: 'لغو بیمه‌نامه و استرداد وجه', ar: 'إلغاء الوثيقة والاسترداد'),
+                  l10nPick(
+                    context,
+                    en: 'Cancel Policy (Free-Look)',
+                    fa: 'لغو بیمه‌نامه و استرداد وجه',
+                    ar: 'إلغاء الوثيقة والاسترداد',
+                  ),
                   style: TextStyle(
                     fontSize: 11.sp,
                     color: ECardoTokens.danger(context),
@@ -1549,12 +1837,18 @@ class InsuranceCertificateScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: ECardoTokens.successBg(context),
               borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
-              border: Border.all(color: ECardoTokens.success(context).withValues(alpha: 0.4)),
+              border: Border.all(
+                color: ECardoTokens.success(context).withValues(alpha: 0.4),
+              ),
               boxShadow: ECardoTokens.shadowCard(context),
             ),
             child: Row(
               children: [
-                Icon(Icons.verified_rounded, color: ECardoTokens.success(context), size: 28),
+                Icon(
+                  Icons.verified_rounded,
+                  color: ECardoTokens.success(context),
+                  size: 28,
+                ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
@@ -1612,8 +1906,17 @@ class InsuranceCertificateScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Policy Number', fa: 'شماره بیمه‌نامه', ar: 'رقم الوثيقة', zh: '保单编号'),
-                      style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkMuted(context)),
+                      l10nPick(
+                        context,
+                        en: 'Policy Number',
+                        fa: 'شماره بیمه‌نامه',
+                        ar: 'رقم الوثيقة',
+                        zh: '保单编号',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                     Text(
                       policyNumber,
@@ -1631,8 +1934,17 @@ class InsuranceCertificateScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Insured Person', fa: 'نام بیمه‌گذار', ar: 'المؤمن عليه', zh: '被保险人'),
-                      style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkMuted(context)),
+                      l10nPick(
+                        context,
+                        en: 'Insured Person',
+                        fa: 'نام بیمه‌گذار',
+                        ar: 'المؤمن عليه',
+                        zh: '被保险人',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                     Text(
                       insuredName,
@@ -1649,8 +1961,17 @@ class InsuranceCertificateScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Passport Number', fa: 'شماره پاسپورت', ar: 'رقم جواز السفر', zh: '护照号码'),
-                      style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkMuted(context)),
+                      l10nPick(
+                        context,
+                        en: 'Passport Number',
+                        fa: 'شماره پاسپورت',
+                        ar: 'رقم جواز السفر',
+                        zh: '护照号码',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                     Text(
                       passportNumber,
@@ -1668,12 +1989,25 @@ class InsuranceCertificateScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Coverage Limit', fa: 'سقف تعهدات پوشش', ar: 'حد التغطية', zh: '最高保额'),
-                      style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkMuted(context)),
+                      l10nPick(
+                        context,
+                        en: 'Coverage Limit',
+                        fa: 'سقف تعهدات پوشش',
+                        ar: 'حد التغطية',
+                        zh: '最高保额',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                     Text(
                       plan.coverageLimit,
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: plan.color),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w900,
+                        color: plan.color,
+                      ),
                     ),
                   ],
                 ),
@@ -1682,8 +2016,17 @@ class InsuranceCertificateScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Validity Period', fa: 'مدت اعتبار', ar: 'فترة الصلاحية', zh: '保险期间'),
-                      style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkMuted(context)),
+                      l10nPick(
+                        context,
+                        en: 'Validity Period',
+                        fa: 'مدت اعتبار',
+                        ar: 'فترة الصلاحية',
+                        zh: '保险期间',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                     Text(
                       '${DateFormat('yyyy-MM-dd').format(startDate)} ➔ ${DateFormat('yyyy-MM-dd').format(endDate)} ($durationDays days)',
@@ -1705,19 +2048,32 @@ class InsuranceCertificateScreen extends StatelessWidget {
                         padding: EdgeInsetsDirectional.all(8.r),
                         decoration: BoxDecoration(
                           color: ECardoTokens.surfaceSunken(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                         ),
-                        child: SvgPicture.string(_generateBarcodeSvg(), height: 44.h),
+                        child: SvgPicture.string(
+                          _generateBarcodeSvg(),
+                          height: 44.h,
+                        ),
                       ),
                       SizedBox(height: 12.h),
                       Container(
                         padding: EdgeInsets.all(10.r),
                         decoration: BoxDecoration(
                           color: ECardoTokens.surfaceCard(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
-                          border: Border.all(color: ECardoTokens.border(context)),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusXl,
+                          ),
+                          border: Border.all(
+                            color: ECardoTokens.border(context),
+                          ),
                         ),
-                        child: SvgPicture.string(_generateQrSvg(), width: 110.r, height: 110.r),
+                        child: SvgPicture.string(
+                          _generateQrSvg(),
+                          width: 110.r,
+                          height: 110.r,
+                        ),
                       ),
                       SizedBox(height: 6.h),
                       Text(
@@ -1744,11 +2100,18 @@ class InsuranceCertificateScreen extends StatelessWidget {
                   children: [
                     Text(
                       localization.travelTotal,
-                      style: TextStyle(fontSize: 12.sp, color: ECardoTokens.inkMuted(context)),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: ECardoTokens.inkMuted(context),
+                      ),
                     ),
                     Text(
                       '${formatMockAmount(totalPrice)} ${localization.travelMockCurrency}',
-                      style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: plan.color),
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w900,
+                        color: plan.color,
+                      ),
                     ),
                   ],
                 ),
@@ -1774,7 +2137,10 @@ class InsuranceCertificateScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.phone_in_talk_rounded, color: ECardoTokens.brand700(context)),
+                Icon(
+                  Icons.phone_in_talk_rounded,
+                  color: ECardoTokens.brand700(context),
+                ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(

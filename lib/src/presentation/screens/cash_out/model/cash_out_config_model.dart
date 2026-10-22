@@ -8,8 +8,9 @@ class CashOutConfigModel {
   CashOutConfigModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? CashOutConfigData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? CashOutConfigData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -19,8 +20,9 @@ class CashOutConfigData {
   CashOutConfigData({this.settings});
 
   CashOutConfigData.fromJson(Map<String, dynamic> json) {
-    settings =
-        json['settings'] != null ? Settings.fromJson(json['settings']) : null;
+    settings = json['settings'] != null
+        ? Settings.fromJson(json['settings'])
+        : null;
   }
 }
 

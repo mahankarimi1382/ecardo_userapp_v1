@@ -11,12 +11,21 @@ class StockController extends GetxController {
   final Rx<StockMarketModel?> selectedMarket = Rx<StockMarketModel?>(null);
   final Rx<StockSymbolModel?> selectedSymbol = Rx<StockSymbolModel?>(null);
 
-  final Rx<StockTradingAccountModel?> account = Rx<StockTradingAccountModel?>(null);
+  final Rx<StockTradingAccountModel?> account = Rx<StockTradingAccountModel?>(
+    null,
+  );
   final RxMap<String, dynamic> portfolioData = <String, dynamic>{}.obs;
-  final Rx<StockPortfolioSummaryModel?> portfolioSummary = Rx<StockPortfolioSummaryModel?>(null);
+  final Rx<StockPortfolioSummaryModel?> portfolioSummary =
+      Rx<StockPortfolioSummaryModel?>(null);
   final RxList<StockHoldingModel> holdings = <StockHoldingModel>[].obs;
   final RxList<StockOrderModel> orders = <StockOrderModel>[].obs;
-  final RxSet<String> watchlist = <String>{'AAPL', 'NVDA', '700.HK', 'MSFT', '7203.T'}.obs;
+  final RxSet<String> watchlist = <String>{
+    'AAPL',
+    'NVDA',
+    '700.HK',
+    'MSFT',
+    '7203.T',
+  }.obs;
 
   final RxBool isLoading = false.obs;
   final RxBool isOrderLoading = false.obs;
@@ -57,66 +66,162 @@ class StockController extends GetxController {
     RiskQuestionModel(
       id: 'Q1',
       category: 'EXPERIENCE',
-      questionFa: 'میزان سابقه و تجربه شما در معامله سهام و بازارهای مالی بین‌المللی چقدر است؟',
-      questionEn: 'What is your level of experience in international equity and financial markets?',
+      questionFa:
+          'میزان سابقه و تجربه شما در معامله سهام و بازارهای مالی بین‌المللی چقدر است؟',
+      questionEn:
+          'What is your level of experience in international equity and financial markets?',
       options: [
-        RiskQuestionOptionModel(key: 'EXP_NONE', labelFa: 'مبتدی (کمتر از ۱ سال)', labelEn: 'Novice (< 1 year)', score: 5),
-        RiskQuestionOptionModel(key: 'EXP_MID', labelFa: 'متوسط (۱ تا ۳ سال)', labelEn: 'Intermediate (1-3 years)', score: 15),
-        RiskQuestionOptionModel(key: 'EXP_ADV', labelFa: 'پیشرفته (بیش از ۳ سال)', labelEn: 'Advanced (> 3 years)', score: 20),
+        RiskQuestionOptionModel(
+          key: 'EXP_NONE',
+          labelFa: 'مبتدی (کمتر از ۱ سال)',
+          labelEn: 'Novice (< 1 year)',
+          score: 5,
+        ),
+        RiskQuestionOptionModel(
+          key: 'EXP_MID',
+          labelFa: 'متوسط (۱ تا ۳ سال)',
+          labelEn: 'Intermediate (1-3 years)',
+          score: 15,
+        ),
+        RiskQuestionOptionModel(
+          key: 'EXP_ADV',
+          labelFa: 'پیشرفته (بیش از ۳ سال)',
+          labelEn: 'Advanced (> 3 years)',
+          score: 20,
+        ),
       ],
     ),
     RiskQuestionModel(
       id: 'Q2',
       category: 'HORIZON',
-      questionFa: 'افق زمانی سرمایه‌گذاری مدنظر شما در بورس‌های خارجی چگونه است؟',
-      questionEn: 'What is your expected investment time horizon for foreign stocks?',
+      questionFa:
+          'افق زمانی سرمایه‌گذاری مدنظر شما در بورس‌های خارجی چگونه است؟',
+      questionEn:
+          'What is your expected investment time horizon for foreign stocks?',
       options: [
-        RiskQuestionOptionModel(key: 'HOR_SHORT', labelFa: 'کوتاه‌مدت (کمتر از ۶ ماه)', labelEn: 'Short Term (< 6 months)', score: 5),
-        RiskQuestionOptionModel(key: 'HOR_MID', labelFa: 'میان‌مدت (۶ ماه تا ۲ سال)', labelEn: 'Medium Term (6m-2y)', score: 15),
-        RiskQuestionOptionModel(key: 'HOR_LONG', labelFa: 'بلندمدت (بیش از ۲ سال)', labelEn: 'Long Term (> 2 years)', score: 20),
+        RiskQuestionOptionModel(
+          key: 'HOR_SHORT',
+          labelFa: 'کوتاه‌مدت (کمتر از ۶ ماه)',
+          labelEn: 'Short Term (< 6 months)',
+          score: 5,
+        ),
+        RiskQuestionOptionModel(
+          key: 'HOR_MID',
+          labelFa: 'میان‌مدت (۶ ماه تا ۲ سال)',
+          labelEn: 'Medium Term (6m-2y)',
+          score: 15,
+        ),
+        RiskQuestionOptionModel(
+          key: 'HOR_LONG',
+          labelFa: 'بلندمدت (بیش از ۲ سال)',
+          labelEn: 'Long Term (> 2 years)',
+          score: 20,
+        ),
       ],
     ),
     RiskQuestionModel(
       id: 'Q3',
       category: 'TOLERANCE',
-      questionFa: 'واکنش شما در مواجهه با افت موقت ۲۰٪ از ارزش سبد دارایی چیست؟',
-      questionEn: 'How would you react to a temporary 20% decline in portfolio valuation?',
+      questionFa:
+          'واکنش شما در مواجهه با افت موقت ۲۰٪ از ارزش سبد دارایی چیست؟',
+      questionEn:
+          'How would you react to a temporary 20% decline in portfolio valuation?',
       options: [
-        RiskQuestionOptionModel(key: 'TOL_LOW', labelFa: 'فروش فوری برای جلوگیری از زیان بیشتر', labelEn: 'Liquidate immediately to avoid losses', score: 5),
-        RiskQuestionOptionModel(key: 'TOL_MID', labelFa: 'صبر و حفظ سهام بر اساس تحلیل بنیادی', labelEn: 'Hold patiently according to fundamentals', score: 15),
-        RiskQuestionOptionModel(key: 'TOL_HIGH', labelFa: 'افزایش حجم خرید در قیمت‌های پایین‌تر', labelEn: 'Buy the dip and increase position', score: 20),
+        RiskQuestionOptionModel(
+          key: 'TOL_LOW',
+          labelFa: 'فروش فوری برای جلوگیری از زیان بیشتر',
+          labelEn: 'Liquidate immediately to avoid losses',
+          score: 5,
+        ),
+        RiskQuestionOptionModel(
+          key: 'TOL_MID',
+          labelFa: 'صبر و حفظ سهام بر اساس تحلیل بنیادی',
+          labelEn: 'Hold patiently according to fundamentals',
+          score: 15,
+        ),
+        RiskQuestionOptionModel(
+          key: 'TOL_HIGH',
+          labelFa: 'افزایش حجم خرید در قیمت‌های پایین‌تر',
+          labelEn: 'Buy the dip and increase position',
+          score: 20,
+        ),
       ],
     ),
     RiskQuestionModel(
       id: 'Q4',
       category: 'ALLOCATION',
-      questionFa: 'چه نسبتی از کل نقدینگی مازاد خود را به بازار سهام بین‌الملل تخصیص می‌دهید؟',
-      questionEn: 'What percentage of your surplus liquid assets will be allocated to stocks?',
+      questionFa:
+          'چه نسبتی از کل نقدینگی مازاد خود را به بازار سهام بین‌الملل تخصیص می‌دهید؟',
+      questionEn:
+          'What percentage of your surplus liquid assets will be allocated to stocks?',
       options: [
-        RiskQuestionOptionModel(key: 'ALLOC_LOW', labelFa: 'کمتر از ۱۰ درصد', labelEn: 'Less than 10%', score: 5),
-        RiskQuestionOptionModel(key: 'ALLOC_MID', labelFa: '۱۰ تا ۲۵ درصد', labelEn: '10% to 25%', score: 15),
-        RiskQuestionOptionModel(key: 'ALLOC_HIGH', labelFa: 'بیش از ۲۵ درصد', labelEn: 'Over 25%', score: 20),
+        RiskQuestionOptionModel(
+          key: 'ALLOC_LOW',
+          labelFa: 'کمتر از ۱۰ درصد',
+          labelEn: 'Less than 10%',
+          score: 5,
+        ),
+        RiskQuestionOptionModel(
+          key: 'ALLOC_MID',
+          labelFa: '۱۰ تا ۲۵ درصد',
+          labelEn: '10% to 25%',
+          score: 15,
+        ),
+        RiskQuestionOptionModel(
+          key: 'ALLOC_HIGH',
+          labelFa: 'بیش از ۲۵ درصد',
+          labelEn: 'Over 25%',
+          score: 20,
+        ),
       ],
     ),
     RiskQuestionModel(
       id: 'Q5',
       category: 'GOAL',
       questionFa: 'هدف اصلی شما از سرمایه‌گذاری در بورس‌های بین‌المللی چیست؟',
-      questionEn: 'What is your primary investment goal in international equities?',
+      questionEn:
+          'What is your primary investment goal in international equities?',
       options: [
-        RiskQuestionOptionModel(key: 'GOAL_SAFE', labelFa: 'حفظ ارزش دارایی در برابر تورم ارزی', labelEn: 'Capital Preservation vs inflation', score: 5),
-        RiskQuestionOptionModel(key: 'GOAL_GROWTH', labelFa: 'رشد متوازن ارزش دارایی و دریافت سود نقدی', labelEn: 'Balanced Growth & Dividends', score: 15),
-        RiskQuestionOptionModel(key: 'GOAL_SPEC', labelFa: 'حداکثر بازدهی از نوسانات پرسرعت سهام', labelEn: 'Max capital appreciation & volatility', score: 20),
+        RiskQuestionOptionModel(
+          key: 'GOAL_SAFE',
+          labelFa: 'حفظ ارزش دارایی در برابر تورم ارزی',
+          labelEn: 'Capital Preservation vs inflation',
+          score: 5,
+        ),
+        RiskQuestionOptionModel(
+          key: 'GOAL_GROWTH',
+          labelFa: 'رشد متوازن ارزش دارایی و دریافت سود نقدی',
+          labelEn: 'Balanced Growth & Dividends',
+          score: 15,
+        ),
+        RiskQuestionOptionModel(
+          key: 'GOAL_SPEC',
+          labelFa: 'حداکثر بازدهی از نوسانات پرسرعت سهام',
+          labelEn: 'Max capital appreciation & volatility',
+          score: 20,
+        ),
       ],
     ),
     RiskQuestionModel(
       id: 'Q6',
       category: 'FX_KNOWLEDGE',
-      questionFa: 'آیا از ریسک نوسانات برابری ارز مبدا و مقصد (FX Volatility) و قاعده تسویه T+2 آگاهی دارید؟',
-      questionEn: 'Are you aware of FX exchange rate risks and the T+2 settlement cycle?',
+      questionFa:
+          'آیا از ریسک نوسانات برابری ارز مبدا و مقصد (FX Volatility) و قاعده تسویه T+2 آگاهی دارید؟',
+      questionEn:
+          'Are you aware of FX exchange rate risks and the T+2 settlement cycle?',
       options: [
-        RiskQuestionOptionModel(key: 'FX_NO', labelFa: 'آشنایی محدودی دارم و نیاز به هشدار شفاف دارم', labelEn: 'Limited understanding, need warnings', score: 5),
-        RiskQuestionOptionModel(key: 'FX_MKT_YES', labelFa: 'کاملاً آگاه بوده و شرایط تسویه ارزی را می‌پذیرم', labelEn: 'Fully aware and accept T+2 settlement terms', score: 20),
+        RiskQuestionOptionModel(
+          key: 'FX_NO',
+          labelFa: 'آشنایی محدودی دارم و نیاز به هشدار شفاف دارم',
+          labelEn: 'Limited understanding, need warnings',
+          score: 5,
+        ),
+        RiskQuestionOptionModel(
+          key: 'FX_MKT_YES',
+          labelFa: 'کاملاً آگاه بوده و شرایط تسویه ارزی را می‌پذیرم',
+          labelEn: 'Fully aware and accept T+2 settlement terms',
+          score: 20,
+        ),
       ],
     ),
   ];
@@ -413,7 +518,9 @@ class StockController extends GetxController {
     double totalRealized = 0.0;
 
     for (final h in holdings) {
-      final fxToUsd = h.currency == 'HKD' ? 0.128 : (h.currency == 'GBP' ? 1.30 : (h.currency == 'JPY' ? 0.0068 : 1.0));
+      final fxToUsd = h.currency == 'HKD'
+          ? 0.128
+          : (h.currency == 'GBP' ? 1.30 : (h.currency == 'JPY' ? 0.0068 : 1.0));
       totalVal += h.currentValue * fxToUsd;
       totalCost += h.costBasis * fxToUsd;
       totalRealized += h.realizedPnl * fxToUsd;
@@ -547,15 +654,20 @@ class StockController extends GetxController {
     // Approximate FX rates for UI preview
     double fxRate = 1.0;
     if (payCurrency.value == 'IRR') {
-      fxRate = mkt.baseCurrency == 'USD' ? 620000.0 : (mkt.baseCurrency == 'HKD' ? 79500.0 : 790000.0);
+      fxRate = mkt.baseCurrency == 'USD'
+          ? 620000.0
+          : (mkt.baseCurrency == 'HKD' ? 79500.0 : 790000.0);
     } else if (payCurrency.value == 'USDT' || payCurrency.value == 'USD') {
-      fxRate = mkt.baseCurrency == 'USD' ? 1.0 : (mkt.baseCurrency == 'HKD' ? 0.128 : 1.30);
+      fxRate = mkt.baseCurrency == 'USD'
+          ? 1.0
+          : (mkt.baseCurrency == 'HKD' ? 0.128 : 1.30);
     } else if (payCurrency.value == mkt.baseCurrency) {
       fxRate = 1.0;
     }
 
     calculatedFxRate.value = fxRate;
-    calculatedPayAmount.value = (totalMarketCurrency + calculatedCommission.value) * fxRate;
+    calculatedPayAmount.value =
+        (totalMarketCurrency + calculatedCommission.value) * fxRate;
 
     try {
       final fx = await _service.getFxQuote(
@@ -564,8 +676,11 @@ class StockController extends GetxController {
         amount: totalMarketCurrency,
       );
       if (fx != null) {
-        calculatedPayAmount.value = (fx['gross_amount'] as num?)?.toDouble() ?? calculatedPayAmount.value;
-        calculatedFxRate.value = (fx['exchange_rate'] as num?)?.toDouble() ?? calculatedFxRate.value;
+        calculatedPayAmount.value =
+            (fx['gross_amount'] as num?)?.toDouble() ??
+            calculatedPayAmount.value;
+        calculatedFxRate.value =
+            (fx['exchange_rate'] as num?)?.toDouble() ?? calculatedFxRate.value;
       }
     } catch (_) {
       // Fallback already calculated
@@ -666,7 +781,8 @@ class StockController extends GetxController {
         if (DemoAccountService.isDemoInterceptionAllowedNow) {
           // Create local validated pending order in demo mode
           final pendingOrder = StockOrderModel(
-            orderNo: 'ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
+            orderNo:
+                'ORD-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
             ticker: selectedSymbol.value!.ticker,
             nameFa: selectedSymbol.value!.nameFa,
             side: orderSide.value,

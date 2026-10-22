@@ -137,13 +137,14 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
 
     final bookingDetails = controller.hotelBookingDetails.value;
     final nights =
-        bookingDetails.checkInDate != null && bookingDetails.checkOutDate != null
-            ? bookingDetails.checkOutDate!
-                .difference(bookingDetails.checkInDate!)
-                .inDays
-                .clamp(1, 365)
-                .toInt()
-            : 1;
+        bookingDetails.checkInDate != null &&
+            bookingDetails.checkOutDate != null
+        ? bookingDetails.checkOutDate!
+              .difference(bookingDetails.checkInDate!)
+              .inDays
+              .clamp(1, 365)
+              .toInt()
+        : 1;
 
     final selectedRooms = _selectedRooms(rooms, offer.total.currency);
     final selectedRoomCount = selectedRooms.fold(
@@ -154,9 +155,11 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
       0,
       (total, room) => total + (room.unitPrice * room.quantity * nights),
     );
-    final selectedCurrency = selectedRooms.firstOrNull?.currency ?? offer.total.currency;
+    final selectedCurrency =
+        selectedRooms.firstOrNull?.currency ?? offer.total.currency;
 
-    final canCheckout = selectedRooms.isNotEmpty &&
+    final canCheckout =
+        selectedRooms.isNotEmpty &&
         selectedRooms.every((room) => room.unitPrice > 0) &&
         controller.canPurchase(TravelProductType.hotel);
 
@@ -187,8 +190,9 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!
-                                .hotelRoomsForNights(selectedRoomCount, nights),
+                            AppLocalizations.of(
+                              context,
+                            )!.hotelRoomsForNights(selectedRoomCount, nights),
                             style: TextStyle(
                               color: ECardoTokens.inkMuted(context),
                               fontSize: 11.sp,
@@ -222,7 +226,9 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                       child: CommonButton(
                         width: double.infinity,
                         height: 48,
-                        text: AppLocalizations.of(context)!.hotel_continue_booking,
+                        text: AppLocalizations.of(
+                          context,
+                        )!.hotel_continue_booking,
                         backgroundColor: ECardoTokens.brand900(context),
                         onPressed: canCheckout
                             ? () {
@@ -350,11 +356,13 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.brand100(context),
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusMd),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusMd,
+                          ),
                           border: Border.all(
-                            color: ECardoTokens.brand700(context)
-                                .withValues(alpha: 0.3),
+                            color: ECardoTokens.brand700(
+                              context,
+                            ).withValues(alpha: 0.3),
                           ),
                         ),
                         child: Column(
@@ -399,8 +407,9 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceCard(context),
-                      borderRadius:
-                          BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       border: Border.all(color: ECardoTokens.border(context)),
                     ),
                     child: Row(
@@ -434,8 +443,9 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                               Get.snackbar(
                                 isRtl ? 'کپی شد' : 'Copied',
                                 '$latitude, $longitude',
-                                backgroundColor:
-                                    ECardoTokens.surfaceCard(context),
+                                backgroundColor: ECardoTokens.surfaceCard(
+                                  context,
+                                ),
                                 colorText: ECardoTokens.ink(context),
                               );
                             },
@@ -452,8 +462,10 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                 SizedBox(height: 18.h),
                 CancellationPolicyTimelineCard(
                   checkInDate: bookingDetails.checkInDate,
-                  customPolicySummary:
-                      _providerCancellationSummary(context, product),
+                  customPolicySummary: _providerCancellationSummary(
+                    context,
+                    product,
+                  ),
                 ),
 
                 // About Hotel Description
@@ -505,7 +517,9 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                   SizedBox(height: 26.h),
                   SizedBox(key: _compareKey),
                   TravelSectionHeader(
-                    title: isRtl ? 'جدول مقایسه اتاق‌ها' : 'Room Comparison Table',
+                    title: isRtl
+                        ? 'جدول مقایسه اتاق‌ها'
+                        : 'Room Comparison Table',
                   ),
                   SizedBox(height: 10.h),
                   _RoomComparisonTable(
@@ -529,7 +543,9 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                     children: [
                       Expanded(
                         child: TravelSectionHeader(
-                          title: AppLocalizations.of(context)!.hotel_available_rooms,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.hotel_available_rooms,
                         ),
                       ),
                       TextButton.icon(
@@ -551,13 +567,19 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 14.h),
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 10.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.brand100(context),
-                      borderRadius:
-                          BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       border: Border.all(
-                        color: ECardoTokens.brand700(context).withValues(alpha: 0.2),
+                        color: ECardoTokens.brand700(
+                          context,
+                        ).withValues(alpha: 0.2),
                       ),
                     ),
                     child: Row(
@@ -584,44 +606,46 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                       ],
                     ),
                   ),
-                  ...rooms.map(
-                    (room) {
-                      final roomId = room['room_id']?.toString() ?? '';
-                      final qty = _roomQuantities[roomId] ?? 0;
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 14.h),
-                        child: HotelRoomSelectionCard(
-                          room: room,
-                          enabled: controller.canPurchase(TravelProductType.hotel),
-                          nights: nights,
-                          quantity: qty,
-                          onQuantityChanged: (quantity) => setState(() {
-                            if (roomId.isNotEmpty) {
-                              _roomQuantities[roomId] = quantity;
-                            }
-                          }),
-                          onSelect: () => setState(() {
-                            if (roomId.isNotEmpty) {
-                              _roomQuantities[roomId] = qty > 0 ? 0 : 1;
-                            }
-                          }),
-                          onTapDetails: () => Get.to(
-                            () => RoomSelectionScreen(
-                              hotelOffer: offer,
-                              initialSelectedRoomId: roomId,
-                            ),
+                  ...rooms.map((room) {
+                    final roomId = room['room_id']?.toString() ?? '';
+                    final qty = _roomQuantities[roomId] ?? 0;
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 14.h),
+                      child: HotelRoomSelectionCard(
+                        room: room,
+                        enabled: controller.canPurchase(
+                          TravelProductType.hotel,
+                        ),
+                        nights: nights,
+                        quantity: qty,
+                        onQuantityChanged: (quantity) => setState(() {
+                          if (roomId.isNotEmpty) {
+                            _roomQuantities[roomId] = quantity;
+                          }
+                        }),
+                        onSelect: () => setState(() {
+                          if (roomId.isNotEmpty) {
+                            _roomQuantities[roomId] = qty > 0 ? 0 : 1;
+                          }
+                        }),
+                        onTapDetails: () => Get.to(
+                          () => RoomSelectionScreen(
+                            hotelOffer: offer,
+                            initialSelectedRoomId: roomId,
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }),
                 ],
 
                 // Location Map Preview Card
                 SizedBox(height: 24.h),
                 SizedBox(key: _locationKey),
                 TravelSectionHeader(
-                  title: isRtl ? 'موقعیت مکانی و دسترسی' : 'Location & Surroundings',
+                  title: isRtl
+                      ? 'موقعیت مکانی و دسترسی'
+                      : 'Location & Surroundings',
                 ),
                 SizedBox(height: 10.h),
                 _LocationMapPreviewCard(
@@ -635,7 +659,9 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                 SizedBox(height: 24.h),
                 SizedBox(key: _reviewsKey),
                 TravelSectionHeader(
-                  title: AppLocalizations.of(context)!.hotel_guest_ratings_and_reviews,
+                  title: AppLocalizations.of(
+                    context,
+                  )!.hotel_guest_ratings_and_reviews,
                 ),
                 SizedBox(height: 10.h),
                 _VerifiedReviewsSection(
@@ -648,8 +674,10 @@ class _HotelDetailScreenState extends State<HotelDetailScreen> {
                 SizedBox(height: 10.h),
                 CancellationPolicyTimelineCard(
                   checkInDate: bookingDetails.checkInDate,
-                  customPolicySummary:
-                      _providerCancellationSummary(context, product),
+                  customPolicySummary: _providerCancellationSummary(
+                    context,
+                    product,
+                  ),
                 ),
                 SizedBox(height: 40.h),
               ],
@@ -776,8 +804,7 @@ class _HotelGalleryWithLightboxState extends State<_HotelGalleryWithLightbox> {
                   end: index == gallery.length - 1 ? 0.0 : 8.w,
                 ),
                 child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(ECardoTokens.radius2xl),
+                  borderRadius: BorderRadius.circular(ECardoTokens.radius2xl),
                   child: Image.network(
                     gallery[index],
                     fit: BoxFit.cover,
@@ -1080,7 +1107,10 @@ class _RoomComparisonTable extends StatelessWidget {
             final roomId = room['room_id']?.toString() ?? '';
             final hasBreakfast =
                 room['breakfast_included'] == true ||
-                room['meal_plan']?.toString().toLowerCase().contains('breakfast') == true;
+                room['meal_plan']?.toString().toLowerCase().contains(
+                      'breakfast',
+                    ) ==
+                    true;
 
             return DataRow(
               cells: [
@@ -1095,13 +1125,16 @@ class _RoomComparisonTable extends StatelessWidget {
                 ),
                 DataCell(
                   Text(
-                    (room['bed_type'] ?? room['beds'] ?? '1 King / 2 Twin').toString(),
+                    (room['bed_type'] ?? room['beds'] ?? '1 King / 2 Twin')
+                        .toString(),
                     style: TextStyle(color: ECardoTokens.inkMuted(context)),
                   ),
                 ),
                 DataCell(
                   Icon(
-                    hasBreakfast ? Icons.check_circle_rounded : Icons.cancel_outlined,
+                    hasBreakfast
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_outlined,
                     size: 18.sp,
                     color: hasBreakfast
                         ? ECardoTokens.success(context)
@@ -1129,15 +1162,23 @@ class _RoomComparisonTable extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: ECardoTokens.brand900(context),
                       foregroundColor: ECardoTokens.inkOnBrand,
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 6.h,
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
                       ),
                       elevation: 0,
                     ),
                     child: Text(
                       isRtl ? 'انتخاب' : 'Select',
-                      style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w800),
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -1169,10 +1210,22 @@ class _LocationMapPreviewCard extends StatelessWidget {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     final landmarks = [
-      {'name': isRtl ? 'ایستگاه مترو مرکز شهر' : 'City Center Metro Station', 'dist': '350 m'},
-      {'name': isRtl ? 'مرکز خرید اصلی و بلوار تجاری' : 'Grand Shopping Mall', 'dist': '800 m'},
-      {'name': isRtl ? 'ساحل و اسکله تفریحی' : 'Marina Waterfront', 'dist': '1.4 km'},
-      {'name': isRtl ? 'فرودگاه بین‌المللی' : 'International Airport', 'dist': '12.8 km'},
+      {
+        'name': isRtl ? 'ایستگاه مترو مرکز شهر' : 'City Center Metro Station',
+        'dist': '350 m',
+      },
+      {
+        'name': isRtl ? 'مرکز خرید اصلی و بلوار تجاری' : 'Grand Shopping Mall',
+        'dist': '800 m',
+      },
+      {
+        'name': isRtl ? 'ساحل و اسکله تفریحی' : 'Marina Waterfront',
+        'dist': '1.4 km',
+      },
+      {
+        'name': isRtl ? 'فرودگاه بین‌المللی' : 'International Airport',
+        'dist': '12.8 km',
+      },
     ];
 
     return Container(
@@ -1226,7 +1279,10 @@ class _LocationMapPreviewCard extends StatelessWidget {
                       ),
                       SizedBox(height: 6.h),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.surfaceCard(context),
                           borderRadius: BorderRadius.circular(8.r),
@@ -1255,7 +1311,9 @@ class _LocationMapPreviewCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isRtl ? 'اماکن دیدنی و دسترسی‌ها:' : 'Surroundings & Landmarks:',
+                  isRtl
+                      ? 'اماکن دیدنی و دسترسی‌ها:'
+                      : 'Surroundings & Landmarks:',
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
@@ -1285,7 +1343,10 @@ class _LocationMapPreviewCard extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
                           decoration: BoxDecoration(
                             color: ECardoTokens.surfaceSunken(context),
                             borderRadius: BorderRadius.circular(4.r),
@@ -1385,7 +1446,9 @@ class _VerifiedReviewsSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isRtl ? 'فوق‌العاده بر اساس نظرات تایید شده' : 'Exceptional verified reviews',
+                      isRtl
+                          ? 'فوق‌العاده بر اساس نظرات تایید شده'
+                          : 'Exceptional verified reviews',
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w900,
@@ -1394,7 +1457,9 @@ class _VerifiedReviewsSection extends StatelessWidget {
                     ),
                     SizedBox(height: 2.h),
                     Text(
-                      isRtl ? '۱۰۰٪ مهمانان واقعی با اقامت تایید شده' : '100% verified real stays',
+                      isRtl
+                          ? '۱۰۰٪ مهمانان واقعی با اقامت تایید شده'
+                          : '100% verified real stays',
                       style: TextStyle(
                         fontSize: 11.sp,
                         color: ECardoTokens.inkMuted(context),

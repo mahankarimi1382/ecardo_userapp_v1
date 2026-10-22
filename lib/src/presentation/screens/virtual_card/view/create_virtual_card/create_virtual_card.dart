@@ -57,7 +57,9 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Stack(
         children: [
@@ -103,9 +105,11 @@ class _CreateVirtualCardState extends State<CreateVirtualCard> {
                           SizedBox(height: 12.h),
                           _FeeBreakdownTable(controller: controller),
                           SizedBox(height: 16.h),
-                          Obx(() => controller.creationMode.value == 'product'
-                              ? _IrrProductArea(controller: controller)
-                              : const SizedBox.shrink()),
+                          Obx(
+                            () => controller.creationMode.value == 'product'
+                                ? _IrrProductArea(controller: controller)
+                                : const SizedBox.shrink(),
+                          ),
                           SizedBox(height: 20.h),
                           _SectionHeader(
                             title: l10nPick(
@@ -214,9 +218,7 @@ class _IrrProductArea extends StatelessWidget {
                   : 'No active card product is currently available.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: hasError
-                    ? AppColors.error
-                    : AppColors.lightTextTertiary,
+                color: hasError ? AppColors.error : AppColors.lightTextTertiary,
                 fontSize: 13.sp,
               ),
             ),
@@ -251,12 +253,17 @@ class _UnifiedProviderSelector extends StatelessWidget {
           (product) => _ProviderOption(
             value: 'product:${product.id}',
             title: product.name ?? product.code ?? 'Card product',
-            subtitle: [
-              product.issuer?.name,
-              product.issuer?.countryCode,
-              product.issuer?.network,
-            ].whereType<String>().where((value) => value.isNotEmpty).join(' · '),
-            network: product.issuer?.network ?? product.display?.network ?? 'VISA',
+            subtitle:
+                [
+                      product.issuer?.name,
+                      product.issuer?.countryCode,
+                      product.issuer?.network,
+                    ]
+                    .whereType<String>()
+                    .where((value) => value.isNotEmpty)
+                    .join(' · '),
+            network:
+                product.issuer?.network ?? product.display?.network ?? 'VISA',
             currency: product.currency?.toUpperCase() ?? 'USD',
           ),
         ),
@@ -265,7 +272,8 @@ class _UnifiedProviderSelector extends StatelessWidget {
             .map(
               (provider) => _ProviderOption(
                 value: 'legacy:${provider.code}',
-                title: provider.name ?? provider.code ?? 'Virtual card provider',
+                title:
+                    provider.name ?? provider.code ?? 'Virtual card provider',
                 subtitle: 'Legacy provider integration',
                 network: 'CARD',
                 currency: 'USD',
@@ -298,7 +306,9 @@ class _UnifiedProviderSelector extends StatelessWidget {
               dynamicField: CommonTextInputField(
                 suffixIcon: Image.asset(
                   PngAssets.arrowDownCommonIcon,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextTertiary,
                 ),
                 focusNode: controller.cardProviderFocusNode,
                 isFocused: controller.isCardProviderFocused.value,
@@ -312,7 +322,9 @@ class _UnifiedProviderSelector extends StatelessWidget {
                   zh: '选择发卡机构',
                 ),
                 controller: controller.cardProviderController,
-                suffixIconColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                suffixIconColor: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextTertiary,
                 readOnly: true,
                 onTap: () {
                   final selectedOption = options.firstWhereOrNull(
@@ -371,13 +383,16 @@ class _UnifiedProviderSelector extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.5.sp,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
             SizedBox(height: 8.h),
             // Modern Tokenized Card Provider Selection Cards
             ...options.map((option) {
-              final isSelected = option.value == controller.selectedCreationOption.value;
+              final isSelected =
+                  option.value == controller.selectedCreationOption.value;
               return Padding(
                 padding: EdgeInsets.only(bottom: 8.h),
                 child: _ProviderSelectionCard(
@@ -424,11 +439,11 @@ class _ProviderSelectionCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? (isDark
-                    ? AppColors.darkPrimaryContainer.withValues(alpha: 0.40)
-                    : AppColors.brandVioletContainer.withValues(alpha: 0.50))
+                      ? AppColors.darkPrimaryContainer.withValues(alpha: 0.40)
+                      : AppColors.brandVioletContainer.withValues(alpha: 0.50))
                 : (isDark
-                    ? AppColors.darkSurfaceVariant.withValues(alpha: 0.35)
-                    : AppColors.lightSurfaceVariant.withValues(alpha: 0.60)),
+                      ? AppColors.darkSurfaceVariant.withValues(alpha: 0.35)
+                      : AppColors.lightSurfaceVariant.withValues(alpha: 0.60)),
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             border: Border.all(
               color: isSelected
@@ -439,7 +454,9 @@ class _ProviderSelectionCard extends StatelessWidget {
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: activeColor.withValues(alpha: isDark ? 0.25 : 0.12),
+                      color: activeColor.withValues(
+                        alpha: isDark ? 0.25 : 0.12,
+                      ),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -460,7 +477,9 @@ class _ProviderSelectionCard extends StatelessWidget {
                   border: Border.all(
                     color: isSelected
                         ? activeColor
-                        : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        : (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder),
                     width: 1.0,
                   ),
                 ),
@@ -469,7 +488,9 @@ class _ProviderSelectionCard extends StatelessWidget {
                     Icons.credit_card_rounded,
                     color: isSelected
                         ? activeColor
-                        : (isDark ? AppColors.darkTextPrimary : AppColors.brandViolet),
+                        : (isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.brandViolet),
                     size: 22.sp,
                   ),
                 ),
@@ -487,23 +508,36 @@ class _ProviderSelectionCard extends StatelessWidget {
                             option.title,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w600,
                               color: isSelected
-                                  ? (isDark ? AppColors.darkTextPrimary : AppColors.brandViolet)
-                                  : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                                  ? (isDark
+                                        ? AppColors.darkTextPrimary
+                                        : AppColors.brandViolet)
+                                  : (isDark
+                                        ? AppColors.darkTextPrimary
+                                        : AppColors.lightTextPrimary),
                             ),
                           ),
                         ),
                         if (option.currency.isNotEmpty) ...[
                           SizedBox(width: 6.w),
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 2.h,
+                            ),
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? activeColor.withValues(alpha: 0.18)
                                   : (isDark
-                                      ? AppColors.darkBorder.withValues(alpha: 0.5)
-                                      : AppColors.lightBorder.withValues(alpha: 0.5)),
+                                        ? AppColors.darkBorder.withValues(
+                                            alpha: 0.5,
+                                          )
+                                        : AppColors.lightBorder.withValues(
+                                            alpha: 0.5,
+                                          )),
                               borderRadius: BorderRadius.circular(4.r),
                             ),
                             child: Text(
@@ -513,7 +547,9 @@ class _ProviderSelectionCard extends StatelessWidget {
                                 fontWeight: FontWeight.w700,
                                 color: isSelected
                                     ? activeColor
-                                    : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                                    : (isDark
+                                          ? AppColors.darkTextSecondary
+                                          : AppColors.lightTextSecondary),
                               ),
                             ),
                           ),
@@ -526,7 +562,9 @@ class _ProviderSelectionCard extends StatelessWidget {
                         option.subtitle,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextTertiary,
                         ),
                       ),
                     ],
@@ -544,7 +582,9 @@ class _ProviderSelectionCard extends StatelessWidget {
                   border: Border.all(
                     color: isSelected
                         ? activeColor
-                        : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                        : (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder),
                     width: 1.5,
                   ),
                 ),
@@ -579,7 +619,8 @@ class _FeeBreakdownTable extends StatelessWidget {
 
     return Obx(() {
       final product = controller.selectedCardProduct.value;
-      final isProductMode = controller.creationMode.value == 'product' && product != null;
+      final isProductMode =
+          controller.creationMode.value == 'product' && product != null;
 
       final currency = isProductMode
           ? (product.currency ?? 'USD').toUpperCase()
@@ -601,21 +642,31 @@ class _FeeBreakdownTable extends StatelessWidget {
       // Card Issuance Fee calculation
       final double creationFee = isProductMode
           ? product.creationFee.toDouble()
-          : (double.tryParse(settingsService.getSetting('card_creation_charge') ?? '0') ?? 0);
+          : (double.tryParse(
+                  settingsService.getSetting('card_creation_charge') ?? '0',
+                ) ??
+                0);
 
       // Physical Card Fee
-      final bool hasPhysical = isProductMode &&
+      final bool hasPhysical =
+          isProductMode &&
           product.capabilities?.canRequestPhysical == true &&
           controller.requestPhysical.value;
-      final double physicalFee = hasPhysical ? product.physicalCardFee.toDouble() : 0.0;
+      final double physicalFee = hasPhysical
+          ? product.physicalCardFee.toDouble()
+          : 0.0;
 
       // Initial Load Amount entered or minimum
-      final double enteredAmount = double.tryParse(controller.amountController.text.trim()) ?? 0.0;
-      final double minLoad = isProductMode ? product.minimumInitialLoad.toDouble() : 0.0;
+      final double enteredAmount =
+          double.tryParse(controller.amountController.text.trim()) ?? 0.0;
+      final double minLoad = isProductMode
+          ? product.minimumInitialLoad.toDouble()
+          : 0.0;
       final double displayLoad = enteredAmount > 0 ? enteredAmount : minLoad;
 
       // Total Estimated Cost
-      final double totalPayable = creationFee + physicalFee + (isProductMode ? displayLoad : 0.0);
+      final double totalPayable =
+          creationFee + physicalFee + (isProductMode ? displayLoad : 0.0);
 
       String format(num value) {
         final formatted = formatter.format(value).trim();
@@ -646,7 +697,9 @@ class _FeeBreakdownTable extends StatelessWidget {
                 Icon(
                   Icons.receipt_long_rounded,
                   size: 18.sp,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 ),
                 SizedBox(width: 8.w),
                 Text(
@@ -662,7 +715,9 @@ class _FeeBreakdownTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.5.sp,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ],
@@ -707,7 +762,9 @@ class _FeeBreakdownTable extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
               isDark: isDark,
@@ -731,7 +788,9 @@ class _FeeBreakdownTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 isDark: isDark,
@@ -756,7 +815,9 @@ class _FeeBreakdownTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 isDark: isDark,
@@ -818,7 +879,9 @@ class _FeeBreakdownTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 Text(
@@ -826,7 +889,9 @@ class _FeeBreakdownTable extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                 ),
               ],
@@ -858,7 +923,9 @@ class _FeeRow extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 12.5.sp,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextTertiary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -888,10 +955,7 @@ class _ProviderOptionTile extends StatelessWidget {
   final _ProviderOption option;
   final bool isSelected;
 
-  const _ProviderOptionTile({
-    required this.option,
-    required this.isSelected,
-  });
+  const _ProviderOptionTile({required this.option, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -904,8 +968,8 @@ class _ProviderOptionTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: isSelected
             ? (isDark
-                ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
-                : AppColors.brandVioletContainer.withValues(alpha: 0.45))
+                  ? AppColors.darkPrimaryContainer.withValues(alpha: 0.35)
+                  : AppColors.brandVioletContainer.withValues(alpha: 0.45))
             : (isDark ? AppColors.darkCard : AppColors.lightBackground),
         borderRadius: BorderRadius.circular(16.r),
         border: isSelected
@@ -929,7 +993,9 @@ class _ProviderOptionTile extends StatelessWidget {
                   style: TextStyle(
                     color: isSelected
                         ? activeColor
-                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                        : (isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary),
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w700,
                   ),
@@ -939,7 +1005,9 @@ class _ProviderOptionTile extends StatelessWidget {
                   Text(
                     option.subtitle,
                     style: TextStyle(
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary,
                       fontSize: 12.sp,
                     ),
                   ),
@@ -948,11 +1016,7 @@ class _ProviderOptionTile extends StatelessWidget {
             ),
           ),
           if (isSelected)
-            Icon(
-              Icons.check_circle_rounded,
-              color: activeColor,
-              size: 20.sp,
-            ),
+            Icon(Icons.check_circle_rounded, color: activeColor, size: 20.sp),
         ],
       ),
     );
@@ -977,14 +1041,18 @@ class _SectionHeader extends StatelessWidget {
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 4.h),
         Text(
           subtitle,
           style: TextStyle(
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextTertiary,
             fontSize: 13.sp,
           ),
         ),
@@ -1006,8 +1074,11 @@ class _AvailabilityMessage extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: (isDark ? AppColors.darkSurfaceVariant : AppColors.lightTextTertiary)
-            .withValues(alpha: 0.08),
+        color:
+            (isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightTextTertiary)
+                .withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -1018,7 +1089,9 @@ class _AvailabilityMessage extends StatelessWidget {
         message,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextTertiary,
           fontSize: 13.sp,
         ),
       ),
@@ -1039,17 +1112,19 @@ class _CreateCardPreviewHero extends StatelessWidget {
       final holder = controller.selectedCardHolder.value;
       final typedName = controller.nameController.text.trim();
       final holderName = controller.selectedTab.value
-          ? (holder?.name?.isNotEmpty == true ? holder!.name! : 'CARDHOLDER NAME')
+          ? (holder?.name?.isNotEmpty == true
+                ? holder!.name!
+                : 'CARDHOLDER NAME')
           : (typedName.isNotEmpty ? typedName : 'CARDHOLDER NAME');
 
-      final cardTitle = product?.display?.title ??
+      final cardTitle =
+          product?.display?.title ??
           product?.name ??
           provider?.name ??
           'Virtual Card';
 
-      final network = product?.display?.network ??
-          product?.issuer?.network ??
-          'Visa';
+      final network =
+          product?.display?.network ?? product?.issuer?.network ?? 'Visa';
 
       final currency = product?.currency?.toUpperCase() ?? 'USD';
 

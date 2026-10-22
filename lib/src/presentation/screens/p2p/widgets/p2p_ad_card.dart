@@ -35,9 +35,7 @@ class _MicroScaleTapState extends State<MicroScaleTap> {
     final enabled = widget.onTap != null;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTapDown: enabled
-          ? (_) => setState(() => _isPressed = true)
-          : null,
+      onTapDown: enabled ? (_) => setState(() => _isPressed = true) : null,
       onTapUp: enabled
           ? (_) {
               setState(() => _isPressed = false);
@@ -97,18 +95,23 @@ class P2pAdCard extends StatelessWidget {
     final actionButtonText = isOwnAd
         ? l10nPick(context, en: 'Your Ad', fa: 'آگهی شما')
         : isAdTypeBuy
-            ? l10nPick(context, en: 'Sell $assetCode', fa: 'فروش $assetCode')
-            : l10nPick(context, en: 'Buy $assetCode', fa: 'خرید $assetCode');
+        ? l10nPick(context, en: 'Sell $assetCode', fa: 'فروش $assetCode')
+        : l10nPick(context, en: 'Buy $assetCode', fa: 'خرید $assetCode');
 
     final emeraldGreen = AppColors.success;
     final rubyRed = AppColors.error;
 
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
-    final paymentMethodsList = item.paymentMethods ?? <marketplace.PaymentMethodElement>[];
+    final paymentMethodsList =
+        item.paymentMethods ?? <marketplace.PaymentMethodElement>[];
 
     return Container(
       padding: EdgeInsets.all(AppSpacing.md.r),
@@ -141,7 +144,10 @@ class P2pAdCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: isDark
-                            ? const [AppColors.darkPrimaryContainer, AppColors.brandVioletDeep]
+                            ? const [
+                                AppColors.darkPrimaryContainer,
+                                AppColors.brandVioletDeep,
+                              ]
                             : const [AppColors.darkGray, AppColors.deepBlack],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -149,8 +155,11 @@ class P2pAdCard extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: (isDark ? AppColors.brandVioletDeep : AppColors.black)
-                              .withValues(alpha: 0.20),
+                          color:
+                              (isDark
+                                      ? AppColors.brandVioletDeep
+                                      : AppColors.black)
+                                  .withValues(alpha: 0.20),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -222,12 +231,21 @@ class P2pAdCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.5.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.w,
+                            vertical: 2.5.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: emeraldGreen.withValues(alpha: isDark ? 0.18 : 0.10),
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                            color: emeraldGreen.withValues(
+                              alpha: isDark ? 0.18 : 0.10,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusXs.r,
+                            ),
                             border: Border.all(
-                              color: emeraldGreen.withValues(alpha: isDark ? 0.35 : 0.22),
+                              color: emeraldGreen.withValues(
+                                alpha: isDark ? 0.35 : 0.22,
+                              ),
                             ),
                           ),
                           child: Row(
@@ -271,10 +289,14 @@ class P2pAdCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
@@ -381,11 +403,15 @@ class P2pAdCard extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       decoration: BoxDecoration(
                         color: isOwnAd
-                            ? (isDark ? AppColors.darkSurfaceVariant : AppColors.lightOutlineVariant)
+                            ? (isDark
+                                  ? AppColors.darkSurfaceVariant
+                                  : AppColors.lightOutlineVariant)
                             : isAdTypeBuy
-                                ? rubyRed
-                                : emeraldGreen,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                            ? rubyRed
+                            : emeraldGreen,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd.r,
+                        ),
                         boxShadow: isOwnAd
                             ? null
                             : [
@@ -405,7 +431,9 @@ class P2pAdCard extends StatelessWidget {
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
                             color: isOwnAd
-                                ? (isDark ? AppColors.darkTextSecondary : AppColors.softGray)
+                                ? (isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.softGray)
                                 : AppColors.white,
                           ),
                         ),
@@ -473,11 +501,7 @@ class P2pAdCard extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 12.5.r,
-          color: textSecondary.withValues(alpha: 0.7),
-        ),
+        Icon(icon, size: 12.5.r, color: textSecondary.withValues(alpha: 0.7)),
         SizedBox(width: 4.w),
         Expanded(
           child: RichText(
@@ -537,14 +561,19 @@ class P2pAdCard extends StatelessWidget {
         for (final m in displayMethods)
           _buildPaymentChip(
             name: m.paymentMethod?.name ?? '--',
-            badgeTheme: _getPaymentMethodTheme(m.paymentMethod?.name ?? '', isDark),
+            badgeTheme: _getPaymentMethodTheme(
+              m.paymentMethod?.name ?? '',
+              isDark,
+            ),
             isDark: isDark,
           ),
         if (remainingCount > 0)
           Container(
             padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+              color: isDark
+                  ? AppColors.darkSurfaceVariant
+                  : AppColors.lightSurfaceVariant,
               borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
             ),
             child: Text(
@@ -553,7 +582,9 @@ class P2pAdCard extends StatelessWidget {
                 letterSpacing: 0,
                 fontSize: 9.5.sp,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.softGray,
               ),
             ),
           ),
@@ -618,7 +649,9 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('کیف پول') ||
         lower.contains('wallet')) {
       return _PaymentBadgeTheme(
-        bg: isDark ? AppColors.darkPrimaryContainer : AppColors.brandVioletContainer,
+        bg: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.brandVioletContainer,
         text: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
         border: isDark ? AppColors.darkPrimary : AppColors.lightBorder,
         accent: AppColors.brandViolet,
@@ -634,7 +667,9 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('ساتنا') ||
         lower.contains('iban')) {
       return _PaymentBadgeTheme(
-        bg: isDark ? AppColors.darkSecondaryContainer : AppColors.lightSecondaryContainer,
+        bg: isDark
+            ? AppColors.darkSecondaryContainer
+            : AppColors.lightSecondaryContainer,
         text: isDark ? AppColors.lightSecondary : AppColors.mutedBlue,
         border: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         accent: AppColors.mutedBlue,
@@ -647,7 +682,9 @@ class P2pAdCard extends StatelessWidget {
         lower.contains('c2c') ||
         lower.contains('debit')) {
       return _PaymentBadgeTheme(
-        bg: isDark ? AppColors.darkPrimaryContainer : AppColors.lightSurfaceVariant,
+        bg: isDark
+            ? AppColors.darkPrimaryContainer
+            : AppColors.lightSurfaceVariant,
         text: isDark ? AppColors.mainSoftBlue : AppColors.brandVioletDeep,
         border: isDark ? AppColors.darkOutline : AppColors.lightOutline,
         accent: AppColors.brandVioletDeep,

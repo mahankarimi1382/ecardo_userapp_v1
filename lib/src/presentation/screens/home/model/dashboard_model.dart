@@ -20,8 +20,9 @@ class DashboardData {
   DashboardData({this.referral, this.info, this.user});
 
   DashboardData.fromJson(Map<String, dynamic> json) {
-    referral =
-        json['referral'] != null ? Referral.fromJson(json['referral']) : null;
+    referral = json['referral'] != null
+        ? Referral.fromJson(json['referral'])
+        : null;
     info = json['info'] != null ? Info.fromJson(json['info']) : null;
     user = json['user'] != null ? User.fromJson(json['user']) : null;
   }
@@ -56,10 +57,9 @@ class Info {
 
   Info.fromJson(Map<String, dynamic> json) {
     timeWiseWish = json['time_wise_wish'];
-    exchangeConfig =
-        json['exchange_config'] != null
-            ? ExchangeConfig.fromJson(json['exchange_config'])
-            : null;
+    exchangeConfig = json['exchange_config'] != null
+        ? ExchangeConfig.fromJson(json['exchange_config'])
+        : null;
     lastLogin = json['last_login'];
     unreadNotificationsCount = json['unread_notifications_count'];
   }

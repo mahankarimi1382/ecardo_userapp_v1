@@ -62,8 +62,12 @@ class DeviceSessionsController extends GetxController {
           appVersion: 'Web Client v1.2',
           ipAddress: '185.192.112.5',
           location: 'تهران، ایران',
-          loginTimestamp: DateTime.now().subtract(const Duration(days: 2, hours: 3)),
-          lastActive: DateTime.now().subtract(const Duration(hours: 2, minutes: 15)),
+          loginTimestamp: DateTime.now().subtract(
+            const Duration(days: 2, hours: 3),
+          ),
+          lastActive: DateTime.now().subtract(
+            const Duration(hours: 2, minutes: 15),
+          ),
           isCurrentDevice: false,
         ),
         DeviceSessionItem(
@@ -76,8 +80,12 @@ class DeviceSessionsController extends GetxController {
           appVersion: 'Ecardo iOS v1.0.40',
           ipAddress: '2.188.75.140',
           location: 'اصفهان، ایران',
-          loginTimestamp: DateTime.now().subtract(const Duration(days: 5, hours: 8)),
-          lastActive: DateTime.now().subtract(const Duration(hours: 19, minutes: 40)),
+          loginTimestamp: DateTime.now().subtract(
+            const Duration(days: 5, hours: 8),
+          ),
+          lastActive: DateTime.now().subtract(
+            const Duration(hours: 19, minutes: 40),
+          ),
           isCurrentDevice: false,
         ),
         DeviceSessionItem(
@@ -90,8 +98,12 @@ class DeviceSessionsController extends GetxController {
           appVersion: 'Web Client v1.2',
           ipAddress: '91.240.64.12',
           location: 'دبی، امارات متحده عربی',
-          loginTimestamp: DateTime.now().subtract(const Duration(days: 8, hours: 1)),
-          lastActive: DateTime.now().subtract(const Duration(days: 3, hours: 4)),
+          loginTimestamp: DateTime.now().subtract(
+            const Duration(days: 8, hours: 1),
+          ),
+          lastActive: DateTime.now().subtract(
+            const Duration(days: 3, hours: 4),
+          ),
           isCurrentDevice: false,
         ),
       ]);
@@ -101,7 +113,8 @@ class DeviceSessionsController extends GetxController {
         SecurityAuditLogItem(
           id: 'audit_01',
           title: 'ورود موفق به نشست فعلی (این دستگاه)',
-          description: '${detected.deviceName} • ${detected.location} • احراز هویت با بیومتریک',
+          description:
+              '${detected.deviceName} • ${detected.location} • احراز هویت با بیومتریک',
           timestamp: DateTime.now().subtract(const Duration(minutes: 12)),
           type: SecurityAuditType.signIn,
           ipAddress: detected.ipAddress,
@@ -110,8 +123,11 @@ class DeviceSessionsController extends GetxController {
         SecurityAuditLogItem(
           id: 'audit_02',
           title: 'ورود از مرورگر وب (Chrome در Windows)',
-          description: 'Windows 11 Pro • تهران • احراز هویت استاندارد با رمز عبور و پیامک',
-          timestamp: DateTime.now().subtract(const Duration(hours: 2, minutes: 15)),
+          description:
+              'Windows 11 Pro • تهران • احراز هویت استاندارد با رمز عبور و پیامک',
+          timestamp: DateTime.now().subtract(
+            const Duration(hours: 2, minutes: 15),
+          ),
           type: SecurityAuditType.signIn,
           ipAddress: '185.192.112.5',
           location: 'تهران، ایران',
@@ -119,7 +135,8 @@ class DeviceSessionsController extends GetxController {
         SecurityAuditLogItem(
           id: 'audit_03',
           title: 'هشدار امنیتی: اتصال تبلت جدید',
-          description: 'iPad Pro 12.9" • اصفهان • تأیید موفق با کد یک‌بارمصرف دومرحله‌ای (2FA)',
+          description:
+              'iPad Pro 12.9" • اصفهان • تأیید موفق با کد یک‌بارمصرف دومرحله‌ای (2FA)',
           timestamp: DateTime.now().subtract(const Duration(days: 1, hours: 4)),
           type: SecurityAuditType.newDeviceAlert,
           ipAddress: '2.188.75.140',
@@ -128,14 +145,16 @@ class DeviceSessionsController extends GetxController {
         SecurityAuditLogItem(
           id: 'audit_04',
           title: 'تغییر موفقیت‌آمیز رمز عبور حساب',
-          description: 'رمز عبور حساب از طریق منوی امنیت تغییر یافت و نشست‌های قدیمی بازبینی شدند',
+          description:
+              'رمز عبور حساب از طریق منوی امنیت تغییر یافت و نشست‌های قدیمی بازبینی شدند',
           timestamp: DateTime.now().subtract(const Duration(days: 8)),
           type: SecurityAuditType.passwordChange,
         ),
         SecurityAuditLogItem(
           id: 'audit_05',
           title: 'فعال‌سازی ورود دو مرحله‌ای (Google 2FA)',
-          description: 'Google Authenticator برای ورود به حساب کاربری فعال گردید',
+          description:
+              'Google Authenticator برای ورود به حساب کاربری فعال گردید',
           timestamp: DateTime.now().subtract(const Duration(days: 18)),
           type: SecurityAuditType.twoFactor,
         ),
@@ -144,7 +163,9 @@ class DeviceSessionsController extends GetxController {
       // 4. Read Biometrics & AppLock configuration
       final supported = await _bio.isSupported();
       final enabled = await _bio.isEnabled();
-      final lockMin = _settings != null ? await _settings!.getAppLockMinutes() : 0;
+      final lockMin = _settings != null
+          ? await _settings!.getAppLockMinutes()
+          : 0;
       final hasPin = Get.isRegistered<AppLockService>()
           ? await Get.find<AppLockService>().hasPinSet()
           : await AppLockService().hasPinSet();
@@ -168,8 +189,9 @@ class DeviceSessionsController extends GetxController {
     String appVer = 'v1.0.41 (Build 41)';
 
     try {
-      final pInfo = await PackageInfo.fromPlatform()
-          .timeout(const Duration(milliseconds: 300));
+      final pInfo = await PackageInfo.fromPlatform().timeout(
+        const Duration(milliseconds: 300),
+      );
       appVer = 'v${pInfo.version} (${pInfo.buildNumber})';
     } catch (_) {}
 
@@ -183,21 +205,28 @@ class DeviceSessionsController extends GetxController {
         operatingSystem = web.userAgent ?? 'Web Browser';
       } else if (Platform.isAndroid) {
         final android = await info.androidInfo;
-        final model = android.model.isNotEmpty ? android.model : 'Android Device';
+        final model = android.model.isNotEmpty
+            ? android.model
+            : 'Android Device';
         final brand = android.manufacturer.capitalizeFirst ?? '';
         deviceName = brand.isNotEmpty ? '$brand $model' : model;
         deviceType = DeviceFormFactor.phone;
         os = DeviceOs.android;
-        operatingSystem = 'Android ${android.version.release} (SDK ${android.version.sdkInt})';
+        operatingSystem =
+            'Android ${android.version.release} (SDK ${android.version.sdkInt})';
       } else if (Platform.isIOS) {
         final ios = await info.iosInfo;
         deviceName = ios.name.isNotEmpty ? ios.name : 'iPhone';
-        deviceType = ios.model.toLowerCase().contains('ipad') ? DeviceFormFactor.tablet : DeviceFormFactor.phone;
+        deviceType = ios.model.toLowerCase().contains('ipad')
+            ? DeviceFormFactor.tablet
+            : DeviceFormFactor.phone;
         os = DeviceOs.ios;
         operatingSystem = '${ios.systemName} ${ios.systemVersion}';
       } else if (Platform.isWindows) {
         final win = await info.windowsInfo;
-        deviceName = win.computerName.isNotEmpty ? win.computerName : 'Windows PC';
+        deviceName = win.computerName.isNotEmpty
+            ? win.computerName
+            : 'Windows PC';
         deviceType = DeviceFormFactor.desktop;
         os = DeviceOs.windows;
         operatingSystem = 'Windows 11 (${win.productName})';
@@ -228,7 +257,9 @@ class DeviceSessionsController extends GetxController {
       appVersion: appVer,
       ipAddress: '5.127.189.42',
       location: 'تهران، ایران',
-      loginTimestamp: DateTime.now().subtract(const Duration(hours: 3, minutes: 12)),
+      loginTimestamp: DateTime.now().subtract(
+        const Duration(hours: 3, minutes: 12),
+      ),
       lastActive: DateTime.now(),
       isCurrentDevice: true,
     );
@@ -246,7 +277,9 @@ class DeviceSessionsController extends GetxController {
     isLoading.value = true;
     await Future.delayed(const Duration(milliseconds: 450));
     if (currentDevice.value != null) {
-      currentDevice.value = currentDevice.value!.copyWith(lastActive: DateTime.now());
+      currentDevice.value = currentDevice.value!.copyWith(
+        lastActive: DateTime.now(),
+      );
     }
     isLoading.value = false;
     ToastHelper().showSuccessToast(toastMsg);
@@ -260,7 +293,9 @@ class DeviceSessionsController extends GetxController {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     final auditTitle = l10nPick(
       context,
@@ -282,11 +317,16 @@ class DeviceSessionsController extends GetxController {
       backgroundColor: cardBg,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXl),
+        ),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.page,
+            vertical: AppSpacing.md,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -296,7 +336,9 @@ class DeviceSessionsController extends GetxController {
                   height: 4.h,
                   margin: EdgeInsets.only(bottom: AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                 ),
@@ -349,10 +391,14 @@ class DeviceSessionsController extends GetxController {
                 width: double.infinity,
                 padding: EdgeInsets.all(AppSpacing.md),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkCard : AppColors.greyLight.withValues(alpha: 0.45),
+                  color: isDark
+                      ? AppColors.darkCard
+                      : AppColors.greyLight.withValues(alpha: 0.45),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                     width: 0.8,
                   ),
                 ),
@@ -362,11 +408,19 @@ class DeviceSessionsController extends GetxController {
                       width: 40.w,
                       height: 40.w,
                       decoration: BoxDecoration(
-                        color: session.os.brandColor.withValues(alpha: isDark ? 0.22 : 0.12),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        color: session.os.brandColor.withValues(
+                          alpha: isDark ? 0.22 : 0.12,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                       ),
                       child: Center(
-                        child: Icon(session.icon, color: session.os.brandColor, size: 22.sp),
+                        child: Icon(
+                          session.icon,
+                          color: session.os.brandColor,
+                          size: 22.sp,
+                        ),
                       ),
                     ),
                     SizedBox(width: AppSpacing.md),
@@ -376,12 +430,17 @@ class DeviceSessionsController extends GetxController {
                         children: [
                           Text(
                             session.deviceName,
-                            style: AppTextStyles.titleSmall.copyWith(color: primaryTextColor),
+                            style: AppTextStyles.titleSmall.copyWith(
+                              color: primaryTextColor,
+                            ),
                           ),
                           SizedBox(height: 2.h),
                           Text(
                             '${session.operatingSystem} • ${session.clientVersion}',
-                            style: AppTextStyles.bodySmall.copyWith(color: secondaryTextColor, fontSize: 11.5.sp),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: secondaryTextColor,
+                              fontSize: 11.5.sp,
+                            ),
                           ),
                           SizedBox(height: 2.h),
                           Text(
@@ -451,8 +510,16 @@ class DeviceSessionsController extends GetxController {
                 height: 44.h,
                 child: TextButton(
                   child: Text(
-                    l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
-                    style: AppTextStyles.labelMedium.copyWith(color: secondaryTextColor),
+                    l10nPick(
+                      context,
+                      en: 'Cancel',
+                      fa: 'انصراف',
+                      ar: 'إلغاء',
+                      zh: '取消',
+                    ),
+                    style: AppTextStyles.labelMedium.copyWith(
+                      color: secondaryTextColor,
+                    ),
                   ),
                   onPressed: () => Navigator.pop(ctx, false),
                 ),
@@ -468,7 +535,8 @@ class DeviceSessionsController extends GetxController {
       otherSessions.removeWhere((item) => item.id == session.id);
       addAudit(
         title: auditTitle,
-        description: '${session.deviceName} • ${session.ipAddress} • ${session.location}',
+        description:
+            '${session.deviceName} • ${session.ipAddress} • ${session.location}',
         type: SecurityAuditType.sessionRevoked,
         ipAddress: session.ipAddress,
         location: session.location,
@@ -479,7 +547,10 @@ class DeviceSessionsController extends GetxController {
     return false;
   }
 
-  Future<void> revokeSession(BuildContext context, DeviceSessionItem session) async {
+  Future<void> revokeSession(
+    BuildContext context,
+    DeviceSessionItem session,
+  ) async {
     await confirmAndRevokeSessionWithBottomSheet(context, session);
   }
 
@@ -491,7 +562,9 @@ class DeviceSessionsController extends GetxController {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     final auditTitle = l10nPick(
       context,
@@ -520,11 +593,16 @@ class DeviceSessionsController extends GetxController {
       backgroundColor: cardBg,
       isScrollControlled: true,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXl),
+        ),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.page,
+            vertical: AppSpacing.md,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -534,7 +612,9 @@ class DeviceSessionsController extends GetxController {
                   height: 4.h,
                   margin: EdgeInsets.only(bottom: AppSpacing.md),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   ),
                 ),
@@ -569,7 +649,10 @@ class DeviceSessionsController extends GetxController {
               ),
               SizedBox(height: AppSpacing.xs),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 3.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: 3.h,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.error.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -592,10 +675,12 @@ class DeviceSessionsController extends GetxController {
               Text(
                 l10nPick(
                   context,
-                  en: 'All active sessions on browsers, tablets, and computers (except this device) '
+                  en:
+                      'All active sessions on browsers, tablets, and computers (except this device) '
                       'will be immediately revoked. Anyone using them will be locked out.\n\n'
                       'This device will remain safely active.',
-                  fa: 'تمامی نشست‌های فعال در مرورگرها، تبلت‌ها و رایانه‌های دیگر بلافاصله مسدود '
+                  fa:
+                      'تمامی نشست‌های فعال در مرورگرها، تبلت‌ها و رایانه‌های دیگر بلافاصله مسدود '
                       'شده و دسترسی آن‌ها به حساب شما لغو می‌گردد.\n\n'
                       'نشست شما روی همین دستگاه همچنان فعال و امن باقی خواهد ماند.',
                   ar: 'سيتم إلغاء جميع الجلسات النشطة على الأجهزة الأخرى فورًا.',
@@ -646,8 +731,16 @@ class DeviceSessionsController extends GetxController {
                 height: 44.h,
                 child: TextButton(
                   child: Text(
-                    l10nPick(context, en: 'Cancel', fa: 'انصراف', ar: 'إلغاء', zh: '取消'),
-                    style: AppTextStyles.labelMedium.copyWith(color: secondaryTextColor),
+                    l10nPick(
+                      context,
+                      en: 'Cancel',
+                      fa: 'انصراف',
+                      ar: 'إلغاء',
+                      zh: '取消',
+                    ),
+                    style: AppTextStyles.labelMedium.copyWith(
+                      color: secondaryTextColor,
+                    ),
                   ),
                   onPressed: () => Navigator.pop(ctx, false),
                 ),

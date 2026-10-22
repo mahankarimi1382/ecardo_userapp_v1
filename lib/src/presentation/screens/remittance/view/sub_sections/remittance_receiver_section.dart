@@ -36,8 +36,14 @@ class RemittanceReceiverSection extends StatelessWidget {
   /// (e.g. transient network failure). Keep in sync with the payout
   /// methods' country coverage (CN / IR today).
   static const _fallbackCountries = [
-    ('IR', 'Iran'), ('CN', 'China'), ('TR', 'Turkey'), ('AE', 'UAE'),
-    ('RU', 'Russia'), ('PK', 'Pakistan'), ('AF', 'Afghanistan'), ('IQ', 'Iraq'),
+    ('IR', 'Iran'),
+    ('CN', 'China'),
+    ('TR', 'Turkey'),
+    ('AE', 'UAE'),
+    ('RU', 'Russia'),
+    ('PK', 'Pakistan'),
+    ('AF', 'Afghanistan'),
+    ('IQ', 'Iraq'),
   ];
 
   /// Validates Iranian Sheba format:
@@ -110,7 +116,8 @@ class RemittanceReceiverSection extends StatelessWidget {
         controller.receiverPhoneController.text.trim().isEmpty ||
         controller.selectedReceiverCountry.value.isEmpty) {
       ToastHelper().showErrorToast(
-        l?.remittanceErrCompleteReceiver ?? 'Please complete receiver information',
+        l?.remittanceErrCompleteReceiver ??
+            'Please complete receiver information',
       );
       return false;
     }
@@ -159,7 +166,9 @@ class RemittanceReceiverSection extends StatelessWidget {
       final fc = controller.methodFieldController(field.name);
       if (fc == null || fc.text.trim().isEmpty) {
         ToastHelper().showErrorToast(
-          l?.remittanceErrRequiredField(controller.localizedFieldLabel(field)) ??
+          l?.remittanceErrRequiredField(
+                controller.localizedFieldLabel(field),
+              ) ??
               'Please enter ${field.label}',
         );
         return false;
@@ -170,7 +179,10 @@ class RemittanceReceiverSection extends StatelessWidget {
   }
 
   /// Convenience method that validates the receiver form and triggers [RemittanceController.nextStep].
-  static void proceedToNextStep(BuildContext context, RemittanceController controller) {
+  static void proceedToNextStep(
+    BuildContext context,
+    RemittanceController controller,
+  ) {
     if (validate(context, controller)) {
       controller.nextStep();
     }
@@ -191,23 +203,46 @@ class RemittanceReceiverSection extends StatelessWidget {
         _Field(c.receiverNameController, l.remittanceReceiverName),
         SizedBox(height: 16.h),
         _Label(l.remittanceSelectCountry),
-        Obx(() => _CountryDropdown(
-              value: c.selectedReceiverCountry.value,
-              countries: c.countries.isNotEmpty
-                  ? c.countries.map((x) => (x.code ?? '', x.name ?? '')).toList()
-                  : _fallbackCountries,
-              onChanged: (v) => c.selectedReceiverCountry.value = v ?? '',
-              hint: l.remittanceSelectCountry,
-            )),
+        Obx(
+          () => _CountryDropdown(
+            value: c.selectedReceiverCountry.value,
+            countries: c.countries.isNotEmpty
+                ? c.countries.map((x) => (x.code ?? '', x.name ?? '')).toList()
+                : _fallbackCountries,
+            onChanged: (v) => c.selectedReceiverCountry.value = v ?? '',
+            hint: l.remittanceSelectCountry,
+          ),
+        ),
         SizedBox(height: 16.h),
         _Label(l.remittanceReceiverPhone),
-        _Field(c.receiverPhoneController, '+86 138 0000 0000', keyboardType: TextInputType.phone),
+        _Field(
+          c.receiverPhoneController,
+          '+86 138 0000 0000',
+          keyboardType: TextInputType.phone,
+        ),
         SizedBox(height: 24.h),
         Divider(color: isDark ? AppColors.darkDivider : AppColors.lightBorder),
         SizedBox(height: 16.h),
-        Text(l.remittancePayoutDetails, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+        Text(
+          l.remittancePayoutDetails,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
+          ),
+        ),
         SizedBox(height: 4.h),
-        Text(l.remittancePayoutDetailsHint, style: TextStyle(fontSize: 11.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+        Text(
+          l.remittancePayoutDetailsHint,
+          style: TextStyle(
+            fontSize: 11.sp,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+          ),
+        ),
         SizedBox(height: 16.h),
         // Task-12 — dynamic fields driven by the selected method. Wrapped
         // in Obx so switching the payout method re-renders the form.
@@ -215,17 +250,44 @@ class RemittanceReceiverSection extends StatelessWidget {
           final fields = c.selectedMethodFields;
           if (fields.isEmpty) {
             // Legacy generic set — method defines no custom fields.
-            return Column(children: [
-              _LabeledField(controller: c, name: 'bank_name', label: c.localizedFieldLabel(_generic('bank_name')), required: false),
-              SizedBox(height: 16.h),
-              _LabeledField(controller: c, name: 'account_number', label: c.localizedFieldLabel(_generic('account_number')), required: false),
-              SizedBox(height: 16.h),
-              _LabeledField(controller: c, name: 'iban', label: c.localizedFieldLabel(_generic('iban')), required: false),
-              SizedBox(height: 16.h),
-              _LabeledField(controller: c, name: 'alipay_account', label: c.localizedFieldLabel(_generic('alipay_account')), required: false),
-              SizedBox(height: 16.h),
-              _LabeledField(controller: c, name: 'wechat_account', label: c.localizedFieldLabel(_generic('wechat_account')), required: false),
-            ]);
+            return Column(
+              children: [
+                _LabeledField(
+                  controller: c,
+                  name: 'bank_name',
+                  label: c.localizedFieldLabel(_generic('bank_name')),
+                  required: false,
+                ),
+                SizedBox(height: 16.h),
+                _LabeledField(
+                  controller: c,
+                  name: 'account_number',
+                  label: c.localizedFieldLabel(_generic('account_number')),
+                  required: false,
+                ),
+                SizedBox(height: 16.h),
+                _LabeledField(
+                  controller: c,
+                  name: 'iban',
+                  label: c.localizedFieldLabel(_generic('iban')),
+                  required: false,
+                ),
+                SizedBox(height: 16.h),
+                _LabeledField(
+                  controller: c,
+                  name: 'alipay_account',
+                  label: c.localizedFieldLabel(_generic('alipay_account')),
+                  required: false,
+                ),
+                SizedBox(height: 16.h),
+                _LabeledField(
+                  controller: c,
+                  name: 'wechat_account',
+                  label: c.localizedFieldLabel(_generic('wechat_account')),
+                  required: false,
+                ),
+              ],
+            );
           }
           return Column(
             children: [
@@ -259,7 +321,11 @@ class RemittanceReceiverSection extends StatelessWidget {
 
   TextStyle _title(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary);
+    return TextStyle(
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w700,
+      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+    );
   }
 }
 
@@ -294,7 +360,8 @@ class _LabeledFieldState extends State<_LabeledField> {
   void _validate(String value) {
     String? err;
     final trimmed = value.trim();
-    final isSheba = widget.name == 'shaba_number' ||
+    final isSheba =
+        widget.name == 'shaba_number' ||
         (widget.name == 'iban' &&
             (widget.controller.selectedReceiverCountry.value == 'IR' ||
                 trimmed.toUpperCase().startsWith('IR')));
@@ -302,11 +369,17 @@ class _LabeledFieldState extends State<_LabeledField> {
 
     if (isSheba) {
       if (trimmed.isNotEmpty || widget.required) {
-        err = RemittanceReceiverSection.validateSheba(trimmed, required: widget.required);
+        err = RemittanceReceiverSection.validateSheba(
+          trimmed,
+          required: widget.required,
+        );
       }
     } else if (isCard) {
       if (trimmed.isNotEmpty || widget.required) {
-        err = RemittanceReceiverSection.validateCardNumber(trimmed, required: widget.required);
+        err = RemittanceReceiverSection.validateCardNumber(
+          trimmed,
+          required: widget.required,
+        );
       }
     }
 
@@ -319,7 +392,9 @@ class _LabeledFieldState extends State<_LabeledField> {
 
   @override
   Widget build(BuildContext context) {
-    final fieldController = widget.controller.methodFieldController(widget.name);
+    final fieldController = widget.controller.methodFieldController(
+      widget.name,
+    );
     if (fieldController == null) {
       // Unknown backend field name — skip silently (never crash).
       return const SizedBox.shrink();
@@ -333,7 +408,8 @@ class _LabeledFieldState extends State<_LabeledField> {
           widget.label,
           errorText: _errorText,
           onChanged: _validate,
-          keyboardType: widget.name == 'card_number' || widget.name == 'account_number'
+          keyboardType:
+              widget.name == 'card_number' || widget.name == 'account_number'
               ? TextInputType.number
               : TextInputType.text,
         ),
@@ -350,7 +426,15 @@ class _Label extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: EdgeInsets.only(bottom: 6.h),
-      child: Text(text, style: TextStyle(fontSize: 13.sp, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 13.sp,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
+        ),
+      ),
     );
   }
 }
@@ -387,7 +471,9 @@ class _Field extends StatelessWidget {
           onChanged: onChanged,
           style: TextStyle(
             fontSize: 14.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           decoration: InputDecoration(
             filled: true,
@@ -404,7 +490,10 @@ class _Field extends StatelessWidget {
               color: AppColors.error,
               fontWeight: FontWeight.w500,
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 14.w,
+              vertical: 14.h,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(color: borderColor),
@@ -475,21 +564,27 @@ class _CountryDropdown extends StatelessWidget {
               hint,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: isDark ? AppColors.darkTextHint : AppColors.lightTextHint,
+                color: isDark
+                    ? AppColors.darkTextHint
+                    : AppColors.lightTextHint,
               ),
             ),
             isExpanded: true,
             items: countries
-                .map((c) => DropdownMenuItem(
-                      value: c.$1,
-                      child: Text(
-                        '${c.$1} — ${c.$2}',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
+                .map(
+                  (c) => DropdownMenuItem(
+                    value: c.$1,
+                    child: Text(
+                      '${c.$1} — ${c.$2}',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList(),
             onChanged: (val) {
               HapticFeedback.lightImpact();

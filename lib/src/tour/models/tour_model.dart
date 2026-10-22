@@ -1,4 +1,3 @@
-
 class TourModel {
   final int id;
   final String title;
@@ -71,32 +70,50 @@ class TourModel {
       durationNights: int.tryParse('${json['duration_nights']}') ?? 0,
       basePrice: double.tryParse('${json['base_price']}') ?? 0.0,
       currency: json['currency']?.toString() ?? 'IRT',
-      depositAllowed: json['deposit_allowed'] == true || json['deposit_allowed'] == 1,
+      depositAllowed:
+          json['deposit_allowed'] == true || json['deposit_allowed'] == 1,
       depositPercent: double.tryParse('${json['deposit_percent']}') ?? 30.0,
       ratingAvg: double.tryParse('${json['rating_avg']}') ?? 5.0,
       ratingCount: int.tryParse('${json['rating_count']}') ?? 0,
       featuredImage: json['featured_image']?.toString(),
-      gallery: (json['gallery'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      gallery:
+          (json['gallery'] as List?)?.map((e) => e.toString()).toList() ?? [],
       tags: (json['tags'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      executionModels: (json['execution_models'] as List?)?.map((e) => e.toString()).toList() ?? ['group', 'private'],
-      hotelTiers: (json['hotel_tiers'] as List?)?.map((e) => e.toString()).toList() ?? ['ECO', 'STD', 'LUX'],
-      itinerary: (json['itinerary'] as List?)
+      executionModels:
+          (json['execution_models'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          ['group', 'private'],
+      hotelTiers:
+          (json['hotel_tiers'] as List?)?.map((e) => e.toString()).toList() ??
+          ['ECO', 'STD', 'LUX'],
+      itinerary:
+          (json['itinerary'] as List?)
               ?.map((e) => TourItineraryDay.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
       includedServices:
-          (json['included_services'] as List?)?.map((e) => e.toString()).toList() ?? [],
+          (json['included_services'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       excludedServices:
-          (json['excluded_services'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      departures: (json['departures'] as List?)
+          (json['excluded_services'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
+      departures:
+          (json['departures'] as List?)
               ?.map((e) => TourDeparture.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      hotels: (json['hotels'] as List?)
+      hotels:
+          (json['hotels'] as List?)
               ?.map((e) => TourHotel.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      activities: (json['activities'] as List?)
+      activities:
+          (json['activities'] as List?)
               ?.map((e) => TourActivity.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -128,7 +145,9 @@ class TourItineraryDay {
       title: json['title']?.toString() ?? '',
       description: json['description']?.toString() ?? '',
       meals: (json['meals'] as List?)?.map((e) => e.toString()).toList() ?? [],
-      activities: (json['activities'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      activities:
+          (json['activities'] as List?)?.map((e) => e.toString()).toList() ??
+          [],
     );
   }
 }
@@ -192,7 +211,8 @@ class TourHotel {
       tierLabel: json['tier_label']?.toString() ?? 'استاندارد',
       priceDelta: double.tryParse('${json['price_delta']}') ?? 0.0,
       rating: double.tryParse('${json['rating']}') ?? 4.0,
-      amenities: (json['amenities'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      amenities:
+          (json['amenities'] as List?)?.map((e) => e.toString()).toList() ?? [],
     );
   }
 }
@@ -295,11 +315,17 @@ class TourBookingModel {
     return TourBookingModel(
       id: json['id'] is int ? json['id'] : int.tryParse('${json['id']}') ?? 0,
       bookingNo: json['booking_no']?.toString() ?? 'TR-${json['id']}',
-      tourTitle: tour?['title']?.toString() ?? json['tour_title']?.toString() ?? 'تور مسافرتی',
-      tourCity: tour?['city']?.toString() ?? json['tour_city']?.toString() ?? '',
+      tourTitle:
+          tour?['title']?.toString() ??
+          json['tour_title']?.toString() ??
+          'تور مسافرتی',
+      tourCity:
+          tour?['city']?.toString() ?? json['tour_city']?.toString() ?? '',
       tourImage: tour?['featured_image']?.toString(),
-      departDate: dep?['depart_date']?.toString() ?? json['depart_date']?.toString(),
-      returnDate: dep?['return_date']?.toString() ?? json['return_date']?.toString(),
+      departDate:
+          dep?['depart_date']?.toString() ?? json['depart_date']?.toString(),
+      returnDate:
+          dep?['return_date']?.toString() ?? json['return_date']?.toString(),
       model: json['model']?.toString() ?? 'group',
       tier: json['tier']?.toString() ?? 'STD',
       roomType: json['room_type']?.toString(),
@@ -321,8 +347,11 @@ class TourBookingModel {
       guidePhone: json['guide_phone']?.toString(),
       meetingPoint: json['meeting_point']?.toString(),
       depositDeadline: json['deposit_deadline']?.toString(),
-      travelers: (json['travelers'] as List?)
-              ?.map((e) => TourTravelerModel.fromJson(e as Map<String, dynamic>))
+      travelers:
+          (json['travelers'] as List?)
+              ?.map(
+                (e) => TourTravelerModel.fromJson(e as Map<String, dynamic>),
+              )
               .toList() ??
           [],
       createdAt: json['created_at']?.toString(),
@@ -369,4 +398,3 @@ class TourTravelerModel {
     };
   }
 }
-

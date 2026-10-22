@@ -94,14 +94,18 @@ class OperatorSelectorWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.warmWhite
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 Text(
                   'شناسایی خودکار پیش‌شماره',
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -149,7 +153,9 @@ class _OperatorCard extends StatelessWidget {
         ? operator.primaryColor.withValues(alpha: 0.18)
         : operator.primaryColor.withValues(alpha: 0.08);
 
-    final inactiveBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final inactiveBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
 
     return AnimatedContainer(
       duration: AppDurations.fast,
@@ -166,7 +172,9 @@ class _OperatorCard extends StatelessWidget {
         boxShadow: isSelected
             ? [
                 BoxShadow(
-                  color: operator.primaryColor.withValues(alpha: isDark ? 0.35 : 0.22),
+                  color: operator.primaryColor.withValues(
+                    alpha: isDark ? 0.35 : 0.22,
+                  ),
                   blurRadius: 10,
                   offset: const Offset(0, 3),
                 ),
@@ -186,7 +194,10 @@ class _OperatorCard extends StatelessWidget {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    _OperatorLogoBadge(operator: operator, isSelected: isSelected),
+                    _OperatorLogoBadge(
+                      operator: operator,
+                      isSelected: isSelected,
+                    ),
                     if (isSelected)
                       Positioned(
                         top: -2,
@@ -214,7 +225,9 @@ class _OperatorCard extends StatelessWidget {
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                     color: isSelected
                         ? (isDark ? Colors.white : operator.primaryColor)
-                        : (isDark ? AppColors.warmWhite : AppColors.lightTextPrimary),
+                        : (isDark
+                              ? AppColors.warmWhite
+                              : AppColors.lightTextPrimary),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -224,7 +237,9 @@ class _OperatorCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 9.sp,
                     fontWeight: FontWeight.w500,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -242,10 +257,7 @@ class _OperatorLogoBadge extends StatelessWidget {
   final OperatorInfo operator;
   final bool isSelected;
 
-  const _OperatorLogoBadge({
-    required this.operator,
-    required this.isSelected,
-  });
+  const _OperatorLogoBadge({required this.operator, required this.isSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -257,10 +269,7 @@ class _OperatorLogoBadge extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            operator.primaryColor,
-            operator.accentColor,
-          ],
+          colors: [operator.primaryColor, operator.accentColor],
         ),
         boxShadow: [
           BoxShadow(
@@ -270,9 +279,7 @@ class _OperatorLogoBadge extends StatelessWidget {
           ),
         ],
       ),
-      child: Center(
-        child: _buildBadgeGlyph(operator.id),
-      ),
+      child: Center(child: _buildBadgeGlyph(operator.id)),
     );
   }
 
@@ -321,20 +328,44 @@ class _MciLogoPainter extends CustomPainter {
     // Draw MCI abstract overlapping curved swooshes
     final path1 = Path()
       ..moveTo(size.width * 0.3, size.height * 0.7)
-      ..quadraticBezierTo(size.width * 0.1, size.height * 0.3, size.width * 0.5, size.height * 0.15)
-      ..quadraticBezierTo(size.width * 0.4, size.height * 0.5, size.width * 0.3, size.height * 0.7);
+      ..quadraticBezierTo(
+        size.width * 0.1,
+        size.height * 0.3,
+        size.width * 0.5,
+        size.height * 0.15,
+      )
+      ..quadraticBezierTo(
+        size.width * 0.4,
+        size.height * 0.5,
+        size.width * 0.3,
+        size.height * 0.7,
+      );
     canvas.drawPath(path1, paint1);
 
     final path2 = Path()
       ..moveTo(size.width * 0.7, size.height * 0.3)
-      ..quadraticBezierTo(size.width * 0.9, size.height * 0.7, size.width * 0.5, size.height * 0.85)
-      ..quadraticBezierTo(size.width * 0.6, size.height * 0.5, size.width * 0.7, size.height * 0.3);
+      ..quadraticBezierTo(
+        size.width * 0.9,
+        size.height * 0.7,
+        size.width * 0.5,
+        size.height * 0.85,
+      )
+      ..quadraticBezierTo(
+        size.width * 0.6,
+        size.height * 0.5,
+        size.width * 0.7,
+        size.height * 0.3,
+      );
     canvas.drawPath(path2, paint2);
 
     final centerDot = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.5), 2.0, centerDot);
+    canvas.drawCircle(
+      Offset(size.width * 0.5, size.height * 0.5),
+      2.0,
+      centerDot,
+    );
   }
 
   @override
@@ -360,7 +391,11 @@ class _IrancellLogoPainter extends CustomPainter {
       height: size.height * 0.5,
     );
     canvas.drawOval(rect, ringPaint);
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.5), 2.5, dotPaint);
+    canvas.drawCircle(
+      Offset(size.width * 0.5, size.height * 0.5),
+      2.5,
+      dotPaint,
+    );
   }
 
   @override
@@ -379,9 +414,21 @@ class _RightelLogoPainter extends CustomPainter {
       ..color = Colors.white
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.5), size.width * 0.35, ringPaint);
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.5), size.width * 0.18, ringPaint);
-    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.5), 2.2, dotPaint);
+    canvas.drawCircle(
+      Offset(size.width * 0.5, size.height * 0.5),
+      size.width * 0.35,
+      ringPaint,
+    );
+    canvas.drawCircle(
+      Offset(size.width * 0.5, size.height * 0.5),
+      size.width * 0.18,
+      ringPaint,
+    );
+    canvas.drawCircle(
+      Offset(size.width * 0.5, size.height * 0.5),
+      2.2,
+      dotPaint,
+    );
   }
 
   @override

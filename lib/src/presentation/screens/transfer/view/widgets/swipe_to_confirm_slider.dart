@@ -63,13 +63,9 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
 
   void _resetSlider() {
     _hasTriggered = false;
-    _slideAnimation = Tween<double>(
-      begin: _dragPosition,
-      end: 0.0,
-    ).animate(CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation = Tween<double>(begin: _dragPosition, end: 0.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
+    );
     _animController.forward(from: 0.0);
   }
 
@@ -85,7 +81,9 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxDrag = math.max(0.0, constraints.maxWidth - widget.height);
-        final progress = maxDrag > 0 ? (_dragPosition / maxDrag).clamp(0.0, 1.0) : 0.0;
+        final progress = maxDrag > 0
+            ? (_dragPosition / maxDrag).clamp(0.0, 1.0)
+            : 0.0;
 
         return Container(
           height: widget.height,
@@ -95,7 +93,9 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                 : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
             border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: isDark ? 0.35 : 0.5),
+              color: colorScheme.outlineVariant.withValues(
+                alpha: isDark ? 0.35 : 0.5,
+              ),
               width: 1,
             ),
           ),
@@ -109,8 +109,12 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.12),
-                      colorScheme.primary.withValues(alpha: isDark ? 0.35 : 0.25),
+                      colorScheme.primary.withValues(
+                        alpha: isDark ? 0.2 : 0.12,
+                      ),
+                      colorScheme.primary.withValues(
+                        alpha: isDark ? 0.35 : 0.25,
+                      ),
                     ],
                     begin: AlignmentDirectional.centerStart,
                     end: AlignmentDirectional.centerEnd,
@@ -138,7 +142,9 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                       ),
                       const SizedBox(width: AppSpacing.xs),
                       Icon(
-                        isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+                        isRtl
+                            ? Icons.chevron_left_rounded
+                            : Icons.chevron_right_rounded,
                         size: 18,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
@@ -162,8 +168,13 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                   onHorizontalDragUpdate: (details) {
                     if (widget.isLoading || _hasTriggered) return;
                     final dx = isRtl ? -details.delta.dx : details.delta.dx;
-                    final newPosition = (_dragPosition + dx).clamp(0.0, maxDrag);
-                    final currentProgress = maxDrag > 0 ? (newPosition / maxDrag) : 0.0;
+                    final newPosition = (_dragPosition + dx).clamp(
+                      0.0,
+                      maxDrag,
+                    );
+                    final currentProgress = maxDrag > 0
+                        ? (newPosition / maxDrag)
+                        : 0.0;
                     setState(() {
                       _dragPosition = newPosition;
                     });
@@ -179,18 +190,23 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                       _isDragging = false;
                     });
 
-                    final currentProgress = maxDrag > 0 ? (_dragPosition / maxDrag) : 0.0;
+                    final currentProgress = maxDrag > 0
+                        ? (_dragPosition / maxDrag)
+                        : 0.0;
                     if (currentProgress >= 0.85) {
                       _hasTriggered = true;
                       HapticFeedback.heavyImpact();
                       // Snap to end
-                      _slideAnimation = Tween<double>(
-                        begin: _dragPosition,
-                        end: maxDrag,
-                      ).animate(CurvedAnimation(
-                        parent: _animController,
-                        curve: Curves.easeOutCubic,
-                      ));
+                      _slideAnimation =
+                          Tween<double>(
+                            begin: _dragPosition,
+                            end: maxDrag,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: _animController,
+                              curve: Curves.easeOutCubic,
+                            ),
+                          );
                       _animController.forward(from: 0.0).then((_) {
                         widget.onConfirmed();
                       });
@@ -235,7 +251,9 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                               ),
                             )
                           : Icon(
-                              isRtl ? Icons.arrow_back_rounded : Icons.arrow_forward_rounded,
+                              isRtl
+                                  ? Icons.arrow_back_rounded
+                                  : Icons.arrow_forward_rounded,
                               size: 20,
                               color: colorScheme.onPrimary,
                             ),

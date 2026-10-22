@@ -122,14 +122,14 @@ class ExchangeDesignTokens {
       isDark(context) ? AppColors.mainSoftBlue : AppColors.lightPrimary;
 
   static List<BoxShadow> swapButtonShadow(BuildContext context) => [
-        BoxShadow(
-          color: isDark(context)
-              ? Colors.black.withValues(alpha: 0.45)
-              : AppColors.lightPrimary.withValues(alpha: 0.18),
-          blurRadius: 14,
-          offset: const Offset(0, 4),
-        ),
-      ];
+    BoxShadow(
+      color: isDark(context)
+          ? Colors.black.withValues(alpha: 0.45)
+          : AppColors.lightPrimary.withValues(alpha: 0.18),
+      blurRadius: 14,
+      offset: const Offset(0, 4),
+    ),
+  ];
 
   // ------------------ Quick Chip Tokens ------------------
   static Color chipBackground(BuildContext context, {bool isSelected = false}) {
@@ -166,22 +166,22 @@ class ExchangeDesignTokens {
 
   // ------------------ Shadow Generators ------------------
   static List<BoxShadow> cardShadow(BuildContext context) => [
-        BoxShadow(
-          color: isDark(context)
-              ? Colors.black.withValues(alpha: 0.30)
-              : AppColors.lightTextPrimary.withValues(alpha: 0.04),
-          blurRadius: 18,
-          offset: const Offset(0, 6),
-        ),
-      ];
+    BoxShadow(
+      color: isDark(context)
+          ? Colors.black.withValues(alpha: 0.30)
+          : AppColors.lightTextPrimary.withValues(alpha: 0.04),
+      blurRadius: 18,
+      offset: const Offset(0, 6),
+    ),
+  ];
 
   static List<BoxShadow> heroCardShadow(BuildContext context) => [
-        BoxShadow(
-          color: isDark(context)
-              ? Colors.black.withValues(alpha: 0.50)
-              : AppColors.lightPrimary.withValues(alpha: 0.20),
-          blurRadius: 24,
-          offset: const Offset(0, 10),
-        ),
-      ];
+    BoxShadow(
+      color: isDark(context)
+          ? Colors.black.withValues(alpha: 0.50)
+          : AppColors.lightPrimary.withValues(alpha: 0.20),
+      blurRadius: 24,
+      offset: const Offset(0, 10),
+    ),
+  ];
 }

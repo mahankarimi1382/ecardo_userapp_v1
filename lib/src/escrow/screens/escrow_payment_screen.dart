@@ -37,7 +37,11 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
       Get.back();
       Get.snackbar(
         l10nPick(context, fa: 'پرداخت موفق', en: 'Payment Success'),
-        l10nPick(context, fa: 'وجه با موفقیت به حساب امانی واریز گردید.', en: 'Funds deposited into escrow successfully.'),
+        l10nPick(
+          context,
+          fa: 'وجه با موفقیت به حساب امانی واریز گردید.',
+          en: 'Funds deposited into escrow successfully.',
+        ),
         backgroundColor: AppColors.success,
         colorText: AppColors.white,
       );
@@ -48,18 +52,26 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
   Widget build(BuildContext context) {
     final deal = widget.order;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: isDark
+            ? AppColors.darkSurface
+            : AppColors.lightSurface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -70,7 +82,9 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
           l10nPick(context, fa: 'پرداخت به حساب امانی', en: 'Pay into Escrow'),
           style: AppTextStyles.titleMedium.copyWith(
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
       ),
@@ -88,7 +102,9 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                     : AppColors.warningContainer,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                 border: Border.all(
-                  color: AppColors.warning.withValues(alpha: isDark ? 0.3 : 0.35),
+                  color: AppColors.warning.withValues(
+                    alpha: isDark ? 0.3 : 0.35,
+                  ),
                 ),
               ),
               child: Column(
@@ -125,7 +141,11 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: l10nPick(context, fa: 'مبلغ کالا: ', en: 'Item: '),
+                              text: l10nPick(
+                                context,
+                                fa: 'مبلغ کالا: ',
+                                en: 'Item: ',
+                              ),
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: isDark
                                     ? AppColors.darkTextSecondary
@@ -133,7 +153,8 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                               ),
                             ),
                             TextSpan(
-                              text: '${deal.amount.toStringAsFixed(0)} ${deal.currency}',
+                              text:
+                                  '${deal.amount.toStringAsFixed(0)} ${deal.currency}',
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: isDark
                                     ? AppColors.darkTextPrimary
@@ -148,7 +169,11 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: l10nPick(context, fa: 'کارمزد امانی: ', en: 'Fee: '),
+                              text: l10nPick(
+                                context,
+                                fa: 'کارمزد امانی: ',
+                                en: 'Fee: ',
+                              ),
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: isDark
                                     ? AppColors.darkTextSecondary
@@ -156,7 +181,8 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                               ),
                             ),
                             TextSpan(
-                              text: '${deal.feeAmount.toStringAsFixed(0)} ${deal.currency}',
+                              text:
+                                  '${deal.feeAmount.toStringAsFixed(0)} ${deal.currency}',
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: isDark
                                     ? AppColors.darkTextPrimary
@@ -175,10 +201,16 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
             SizedBox(height: AppSpacing.xxl.h),
 
             Text(
-              l10nPick(context, fa: 'انتخاب منبع پرداخت:', en: 'Choose Payment Source:'),
+              l10nPick(
+                context,
+                fa: 'انتخاب منبع پرداخت:',
+                en: 'Choose Payment Source:',
+              ),
               style: AppTextStyles.titleSmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -219,8 +251,7 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                         child: RadioListTile<String>(
                           value: 'wallet',
                           activeColor: primaryAccent,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.padded,
+                          materialTapTargetSize: MaterialTapTargetSize.padded,
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.md.w,
                             vertical: AppSpacing.xs.h,
@@ -231,8 +262,9 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                               fa: 'کیف پول eCardo (کسر مستقیم)',
                               en: 'eCardo Wallet (Instant)',
                             ),
-                            style: AppTextStyles.bodyMedium
-                                .copyWith(fontWeight: FontWeight.w700),
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                           subtitle: Text(
                             l10nPick(
@@ -251,7 +283,9 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                     ),
                     Divider(
                       height: 1,
-                      color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                      color: isDark
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider,
                     ),
                     Semantics(
                       button: true,
@@ -272,8 +306,7 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                         child: RadioListTile<String>(
                           value: 'gateway',
                           activeColor: primaryAccent,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.padded,
+                          materialTapTargetSize: MaterialTapTargetSize.padded,
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: AppSpacing.md.w,
                             vertical: AppSpacing.xs.h,
@@ -284,8 +317,9 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                               fa: 'درگاه پرداخت اینترنتی بانکی',
                               en: 'Online Bank Gateway',
                             ),
-                            style: AppTextStyles.bodyMedium
-                                .copyWith(fontWeight: FontWeight.w700),
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                           subtitle: Text(
                             l10nPick(
@@ -333,10 +367,8 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
                     child: Text(
                       l10nPick(
                         context,
-                        fa:
-                            'تضمین صد درصدی پلتفرم: وجه واریزی تا زمان تایید رضایت شما از کالا، هرگز به فروشنده تحویل داده نخواهد شد.',
-                        en:
-                            '100% Platform Guarantee: Funds will never be released until your full satisfaction.',
+                        fa: 'تضمین صد درصدی پلتفرم: وجه واریزی تا زمان تایید رضایت شما از کالا، هرگز به فروشنده تحویل داده نخواهد شد.',
+                        en: '100% Platform Guarantee: Funds will never be released until your full satisfaction.',
                       ),
                       style: AppTextStyles.bodySmall.copyWith(
                         color: isDark
@@ -352,26 +384,40 @@ class _EscrowPaymentScreenState extends State<EscrowPaymentScreen> {
             SizedBox(height: AppSpacing.lg.h),
 
             // Submit Button
-            Obx(() => SizedBox(
-                  width: double.infinity,
-                  height: 52.h,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryAccent,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                height: 52.h,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusLg.r,
+                      ),
                     ),
-                    onPressed: controller.isActionLoading.value ? null : _handlePay,
-                    child: controller.isActionLoading.value
-                        ? const CircularProgressIndicator(color: AppColors.white)
-                        : Text(
-                            l10nPick(context, fa: 'تایید و واریز به حساب امانی', en: 'Confirm & Deposit'),
-                            style: AppTextStyles.labelLarge.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isDark ? AppColors.deepBlack : AppColors.white,
-                            ),
-                          ),
                   ),
-                )),
+                  onPressed: controller.isActionLoading.value
+                      ? null
+                      : _handlePay,
+                  child: controller.isActionLoading.value
+                      ? const CircularProgressIndicator(color: AppColors.white)
+                      : Text(
+                          l10nPick(
+                            context,
+                            fa: 'تایید و واریز به حساب امانی',
+                            en: 'Confirm & Deposit',
+                          ),
+                          style: AppTextStyles.labelLarge.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: isDark
+                                ? AppColors.deepBlack
+                                : AppColors.white,
+                          ),
+                        ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

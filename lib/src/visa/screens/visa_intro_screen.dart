@@ -20,7 +20,9 @@ class VisaIntroScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -37,9 +39,17 @@ class VisaIntroScreen extends StatelessWidget {
               child: IconButton(
                 icon: Icon(
                   Icons.history_rounded,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightPrimary,
                 ),
-                tooltip: l10nPick(context, fa: 'درخواست‌های من', en: 'My Visas', ar: 'تأشيراتي', zh: '我的签证'),
+                tooltip: l10nPick(
+                  context,
+                  fa: 'درخواست‌های من',
+                  en: 'My Visas',
+                  ar: 'تأشيراتي',
+                  zh: '我的签证',
+                ),
                 onPressed: () {
                   HapticFeedback.lightImpact();
                   Get.to(() => const VisaListScreen());
@@ -61,7 +71,9 @@ class VisaIntroScreen extends StatelessWidget {
               ar: 'استعراض الدول وتقديم الطلب',
               zh: '浏览目的地国家并申请',
             ),
-            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+            backgroundColor: isDark
+                ? AppColors.darkPrimary
+                : AppColors.lightPrimary,
             textColor: isDark ? AppColors.deepBlack : AppColors.white,
             onPressed: () {
               HapticFeedback.lightImpact();
@@ -101,7 +113,11 @@ class VisaIntroScreen extends StatelessWidget {
                           color: AppColors.mainSoftBlue.withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.flight_takeoff_rounded, color: AppColors.mainSoftBlue, size: 26.sp),
+                        child: Icon(
+                          Icons.flight_takeoff_rounded,
+                          color: AppColors.mainSoftBlue,
+                          size: 26.sp,
+                        ),
                       ),
                       SizedBox(width: AppSpacing.md.w),
                       Expanded(
@@ -113,7 +129,11 @@ class VisaIntroScreen extends StatelessWidget {
                             ar: 'التأشيرات الإلكترونية والخدمات القنصلية',
                             zh: '电子签证（e-Visa）与领事実务',
                           ),
-                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w900, color: AppColors.white),
+                          style: TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -151,7 +171,9 @@ class VisaIntroScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -161,8 +183,10 @@ class VisaIntroScreen extends StatelessWidget {
               icon: Icons.beach_access_rounded,
               titleFa: 'ویزای توریستی و گردشگری (Tourist eVisa)',
               titleEn: 'Tourist eVisa',
-              descFa: 'صدور سریع الکترونیکی بدون نیاز به ارسال فیزیکی گذرنامه برای مقاصد منتخب.',
-              descEn: 'Instant electronic issuance with zero passport mailing for qualifying countries.',
+              descFa:
+                  'صدور سریع الکترونیکی بدون نیاز به ارسال فیزیکی گذرنامه برای مقاصد منتخب.',
+              descEn:
+                  'Instant electronic issuance with zero passport mailing for qualifying countries.',
             ),
             _buildTypeCard(
               context,
@@ -170,8 +194,10 @@ class VisaIntroScreen extends StatelessWidget {
               icon: Icons.business_center_rounded,
               titleFa: 'ویزای تجاری و بازرگانی (Business Visa)',
               titleEn: 'Business & Commercial Visa',
-              descFa: 'اخذ دعوت‌نامه رسمی، ویزای نمایشگاهی و جلسات بازرگانی بین‌المللی.',
-              descEn: 'Official business invitation letters, trade expo entry, and corporate meetings.',
+              descFa:
+                  'اخذ دعوت‌نامه رسمی، ویزای نمایشگاهی و جلسات بازرگانی بین‌المللی.',
+              descEn:
+                  'Official business invitation letters, trade expo entry, and corporate meetings.',
             ),
             _buildTypeCard(
               context,
@@ -179,8 +205,10 @@ class VisaIntroScreen extends StatelessWidget {
               icon: Icons.school_rounded,
               titleFa: 'ویزای تحصیلی و دانشجویی (Student Visa)',
               titleEn: 'Study & Student Visa',
-              descFa: 'مشاوره پذیرش دانشگاهی، استعلام سفارت و بررسی تمکن مالی متقاضی.',
-              descEn: 'University admission advisory, embassy interview prep, and financial proofing.',
+              descFa:
+                  'مشاوره پذیرش دانشگاهی، استعلام سفارت و بررسی تمکن مالی متقاضی.',
+              descEn:
+                  'University admission advisory, embassy interview prep, and financial proofing.',
             ),
             _buildTypeCard(
               context,
@@ -188,8 +216,10 @@ class VisaIntroScreen extends StatelessWidget {
               icon: Icons.work_outline_rounded,
               titleFa: 'ویزای کاری و جاب‌آفر (Work Permit)',
               titleEn: 'Work & Employment Permit',
-              descFa: 'ارزیابی قراردادهای استخدامی خارجی و پیگیری تأییدیه اداره مهاجرت کشور مقصد.',
-              descEn: 'Overseas employment contract evaluation and destination immigration approval.',
+              descFa:
+                  'ارزیابی قراردادهای استخدامی خارجی و پیگیری تأییدیه اداره مهاجرت کشور مقصد.',
+              descEn:
+                  'Overseas employment contract evaluation and destination immigration approval.',
             ),
 
             SizedBox(height: AppSpacing.xl.h),
@@ -206,15 +236,47 @@ class VisaIntroScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
-            _buildStepRow(context, isDark: isDark, step: '۱', titleFa: 'انتخاب کشور مقصد و نوع ویزا', titleEn: 'Select Destination & Type'),
-            _buildStepRow(context, isDark: isDark, step: '۲', titleFa: 'تکمیل مشخصات مسافر و پاسپورت', titleEn: 'Enter Passenger Details'),
-            _buildStepRow(context, isDark: isDark, step: '۳', titleFa: 'آپلود مدارک هویتی و عکس پرسنلی', titleEn: 'Upload Passport & Documents'),
-            _buildStepRow(context, isDark: isDark, step: '۴', titleFa: 'پرداخت امن هزینه کنسولی از والت', titleEn: 'Secure Wallet Payment'),
-            _buildStepRow(context, isDark: isDark, step: '۵', titleFa: 'بررسی کارشناس و صدور نهایی e-Visa', titleEn: 'Consultant Audit & e-Visa Issue'),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۱',
+              titleFa: 'انتخاب کشور مقصد و نوع ویزا',
+              titleEn: 'Select Destination & Type',
+            ),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۲',
+              titleFa: 'تکمیل مشخصات مسافر و پاسپورت',
+              titleEn: 'Enter Passenger Details',
+            ),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۳',
+              titleFa: 'آپلود مدارک هویتی و عکس پرسنلی',
+              titleEn: 'Upload Passport & Documents',
+            ),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۴',
+              titleFa: 'پرداخت امن هزینه کنسولی از والت',
+              titleEn: 'Secure Wallet Payment',
+            ),
+            _buildStepRow(
+              context,
+              isDark: isDark,
+              step: '۵',
+              titleFa: 'بررسی کارشناس و صدور نهایی e-Visa',
+              titleEn: 'Consultant Audit & e-Visa Issue',
+            ),
             SizedBox(height: AppSpacing.xxxl.h),
           ],
         ),
@@ -237,7 +299,9 @@ class VisaIntroScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,7 +309,8 @@ class VisaIntroScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(AppSpacing.sm.r),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkPrimary : AppColors.lightSecondary).withValues(alpha: 0.12),
+              color: (isDark ? AppColors.darkPrimary : AppColors.lightSecondary)
+                  .withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -264,7 +329,9 @@ class VisaIntroScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: 3.h),
@@ -272,7 +339,9 @@ class VisaIntroScreen extends StatelessWidget {
                   l10nPick(context, fa: descFa, en: descEn),
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -319,7 +388,9 @@ class VisaIntroScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ),

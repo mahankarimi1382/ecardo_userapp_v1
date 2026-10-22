@@ -6,8 +6,9 @@ class TypesAndStatusModel {
 
   TypesAndStatusModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    data =
-        json['data'] != null ? TypesAndStatusData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? TypesAndStatusData.fromJson(json['data'])
+        : null;
   }
 }
 

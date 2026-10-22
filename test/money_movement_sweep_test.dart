@@ -56,8 +56,9 @@ void main() {
   });
 
   group('MonogramAvatar Suite', () {
-    testWidgets('renders single-word and two-word initials accurately',
-        (tester) async {
+    testWidgets('renders single-word and two-word initials accurately', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _wrapWithHarness(
           const Row(
@@ -76,15 +77,12 @@ void main() {
       expect(find.text('A'), findsOneWidget);
     });
 
-    testWidgets('renders verified badge when isVerified is true',
-        (tester) async {
+    testWidgets('renders verified badge when isVerified is true', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _wrapWithHarness(
-          const MonogramAvatar(
-            name: 'Ali Reza',
-            size: 48,
-            isVerified: true,
-          ),
+          const MonogramAvatar(name: 'Ali Reza', size: 48, isVerified: true),
         ),
       );
       await tester.pumpAndSettle();
@@ -92,15 +90,12 @@ void main() {
       expect(find.byIcon(Icons.check), findsOneWidget);
     });
 
-    testWidgets('hides verified badge when isVerified is false',
-        (tester) async {
+    testWidgets('hides verified badge when isVerified is false', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _wrapWithHarness(
-          const MonogramAvatar(
-            name: 'John Doe',
-            size: 48,
-            isVerified: false,
-          ),
+          const MonogramAvatar(name: 'John Doe', size: 48, isVerified: false),
         ),
       );
       await tester.pumpAndSettle();
@@ -127,8 +122,9 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('renders cleanly in dark mode without overflow',
-        (tester) async {
+    testWidgets('renders cleanly in dark mode without overflow', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _wrapWithHarness(
           const MonogramAvatar(name: 'Dark User', size: 56),
@@ -143,8 +139,9 @@ void main() {
   });
 
   group('QuickAmountSelector Suite', () {
-    testWidgets('populates text field with expected percentage on chip tap',
-        (tester) async {
+    testWidgets('populates text field with expected percentage on chip tap', (
+      tester,
+    ) async {
       final controller = TextEditingController();
 
       await tester.pumpWidget(
@@ -197,8 +194,9 @@ void main() {
   });
 
   group('Glassmorphic Review Cards Suite', () {
-    testWidgets('renders EcardoGlassCard with standard and frosted variants',
-        (tester) async {
+    testWidgets('renders EcardoGlassCard with standard and frosted variants', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _wrapWithHarness(
           const Column(
@@ -223,15 +221,12 @@ void main() {
   });
 
   group('RTL Layout & Directionality Suite', () {
-    testWidgets('Monogram avatar renders in Persian RTL correctly',
-        (tester) async {
+    testWidgets('Monogram avatar renders in Persian RTL correctly', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _wrapWithHarness(
-          const MonogramAvatar(
-            name: 'رضا کمالی',
-            size: 52,
-            isVerified: true,
-          ),
+          const MonogramAvatar(name: 'رضا کمالی', size: 52, isVerified: true),
           locale: const Locale('fa'),
           textDirection: TextDirection.rtl,
         ),

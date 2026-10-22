@@ -64,17 +64,23 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
 
     // Step-up Security: Verify Transaction Passcode
     final bool isPasscodeEnabled =
-        Get.find<SettingsService>().getSetting("cashout_passcode_status") == "1";
+        Get.find<SettingsService>().getSetting("cashout_passcode_status") ==
+        "1";
 
     String? storedPasscode = controller.userModel.value.data?.passcode;
     bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
     if (storedPasscode == null || storedPasscode.isEmpty) {
       if (Get.isRegistered<HomeController>()) {
-        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
-        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+        storedPasscode =
+            Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??=
+            Get.find<HomeController>().userModel.value.data?.hasPasscode;
       }
     }
-    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+    final hasPasscode = PasscodeHelper.userHasPasscode(
+      storedPasscode,
+      hasPasscodeFlag,
+    );
 
     if (isPasscodeEnabled && hasPasscode) {
       final dynamic verified = await Get.bottomSheet<dynamic>(
@@ -158,7 +164,9 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                   color: isDark ? AppColors.darkCard : AppColors.white,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -213,8 +221,9 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                       ),
                       decoration: BoxDecoration(
                         color: AppColors.success.withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -281,7 +290,9 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                       : AppColors.lightSurfaceVariant.withValues(alpha: 0.8),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
@@ -322,8 +333,9 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                   decoration: BoxDecoration(
                     color: isDark
                         ? AppColors.darkSurfaceVariant.withValues(alpha: 0.4)
-                        : AppColors.lightSecondaryContainer
-                            .withValues(alpha: 0.45),
+                        : AppColors.lightSecondaryContainer.withValues(
+                            alpha: 0.45,
+                          ),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                     border: Border.all(
                       color: accentColor.withValues(alpha: 0.35),
@@ -333,11 +345,7 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.shield_outlined,
-                        size: 14,
-                        color: accentColor,
-                      ),
+                      Icon(Icons.shield_outlined, size: 14, color: accentColor),
                       const SizedBox(width: AppSpacing.xs),
                       Text(
                         l10nPick(
@@ -365,43 +373,46 @@ class _CashOutReviewStepSectionState extends State<CashOutReviewStepSection> {
               const SizedBox(height: AppSpacing.xl),
 
               // Swipe to Confirm Button
-              Obx(() => EcardoSwipeButton(
-                    key: _swipeKey,
-                    text: l10nPick(
-                      context,
-                      en: 'Swipe to Confirm Cash-out',
-                      fa: 'بکشید برای تأیید تسویه نقدی',
-                      ar: 'اسحب لتأكيد السحب',
-                      tr: 'Nakit Çekimi Onaylamak İçin Kaydırın',
-                      ru: 'Проведите для подтверждения',
-                      zh: '滑动以确认提现',
-                    ),
-                    loadingText: l10nPick(
-                      context,
-                      en: 'Processing Cash-out...',
-                      fa: 'در حال پردازش درخواست نقدی...',
-                      ar: 'جار معالجة السحب...',
-                      tr: 'İşleniyor...',
-                      ru: 'Обработка...',
-                      zh: '正在处理提现...',
-                    ),
-                    successText: l10nPick(
-                      context,
-                      en: 'Cash-out Confirmed',
-                      fa: 'تسویه نقدی تأیید شد',
-                      ar: 'تم تأكيد السحب',
-                      tr: 'Onaylandı',
-                      ru: 'Подтверждено',
-                      zh: '提现已确认',
-                    ),
-                    isLoading: controller.isCashOutLoading.value,
-                    enabled: !controller.chargeLoadFailed.value &&
-                        !controller.isCashOutLoading.value,
-                    onSwipeComplete: () async {
-                      await _handleConfirmCashOut(context);
-                      _swipeKey.currentState?.reset();
-                    },
-                  )),
+              Obx(
+                () => EcardoSwipeButton(
+                  key: _swipeKey,
+                  text: l10nPick(
+                    context,
+                    en: 'Swipe to Confirm Cash-out',
+                    fa: 'بکشید برای تأیید تسویه نقدی',
+                    ar: 'اسحب لتأكيد السحب',
+                    tr: 'Nakit Çekimi Onaylamak İçin Kaydırın',
+                    ru: 'Проведите для подтверждения',
+                    zh: '滑动以确认提现',
+                  ),
+                  loadingText: l10nPick(
+                    context,
+                    en: 'Processing Cash-out...',
+                    fa: 'در حال پردازش درخواست نقدی...',
+                    ar: 'جار معالجة السحب...',
+                    tr: 'İşleniyor...',
+                    ru: 'Обработка...',
+                    zh: '正在处理提现...',
+                  ),
+                  successText: l10nPick(
+                    context,
+                    en: 'Cash-out Confirmed',
+                    fa: 'تسویه نقدی تأیید شد',
+                    ar: 'تم تأكيد السحب',
+                    tr: 'Onaylandı',
+                    ru: 'Подтверждено',
+                    zh: '提现已确认',
+                  ),
+                  isLoading: controller.isCashOutLoading.value,
+                  enabled:
+                      !controller.chargeLoadFailed.value &&
+                      !controller.isCashOutLoading.value,
+                  onSwipeComplete: () async {
+                    await _handleConfirmCashOut(context);
+                    _swipeKey.currentState?.reset();
+                  },
+                ),
+              ),
 
               const SizedBox(height: AppSpacing.md),
 

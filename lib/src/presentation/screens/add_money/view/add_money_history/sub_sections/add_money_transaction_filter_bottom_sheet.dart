@@ -31,9 +31,7 @@ class _AddMoneyTransactionFilterBottomSheetState
       duration: AppDurations.normal,
       curve: Curves.easeOutQuart,
       height: 400,
-      margin: const EdgeInsetsDirectional.symmetric(
-        horizontal: AppSpacing.md,
-      ),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: const BorderRadiusDirectional.only(
@@ -143,8 +141,8 @@ class _AddMoneyTransactionFilterBottomSheetState
                                       alignment: Alignment.center,
                                       padding:
                                           const EdgeInsetsDirectional.symmetric(
-                                        horizontal: AppSpacing.lg,
-                                      ),
+                                            horizontal: AppSpacing.lg,
+                                          ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
                                           AppSpacing.radiusSm,

@@ -190,7 +190,10 @@ final _restaurant = ExtraServiceConfig(
   detailRows: (item, localization) => [
     MapEntry(localization.travelRestaurantCuisine, item.extra['cuisine'] ?? ''),
     MapEntry(localization.travelRestaurantHours, item.extra['hours'] ?? ''),
-    MapEntry(localization.travelRestaurantCapacity, item.extra['capacity'] ?? ''),
+    MapEntry(
+      localization.travelRestaurantCapacity,
+      item.extra['capacity'] ?? '',
+    ),
   ],
   formFields: (item, localization) => [
     TravelFormFieldSpec(
@@ -236,7 +239,10 @@ final _food = ExtraServiceConfig(
   priceUnit: (localization) => localization.travelCatalogPerItem,
   items: (localization) => mockFoodItems,
   detailRows: (item, localization) => [
-    MapEntry(localization.travelFoodPreparation, item.extra['preparation'] ?? ''),
+    MapEntry(
+      localization.travelFoodPreparation,
+      item.extra['preparation'] ?? '',
+    ),
     MapEntry(localization.travelIncluded, item.subtitle),
   ],
   formFields: (item, localization) => [
@@ -416,8 +422,14 @@ final _insurance = ExtraServiceConfig(
   priceUnit: (localization) => localization.travelCatalogPerPerson,
   items: (localization) => mockInsuranceItems,
   detailRows: (item, localization) => [
-    MapEntry(localization.travelInsuranceCoverage, item.extra['coverage'] ?? ''),
-    MapEntry(localization.travelInsuranceDuration, item.extra['duration'] ?? ''),
+    MapEntry(
+      localization.travelInsuranceCoverage,
+      item.extra['coverage'] ?? '',
+    ),
+    MapEntry(
+      localization.travelInsuranceDuration,
+      item.extra['duration'] ?? '',
+    ),
     MapEntry(localization.travelIncluded, item.subtitle),
   ],
   formFields: (item, localization) => [
@@ -464,8 +476,14 @@ final _translator = ExtraServiceConfig(
   priceUnit: (localization) => localization.travelCatalogPerDay,
   items: (localization) => mockTranslatorItems,
   detailRows: (item, localization) => [
-    MapEntry(localization.travelTranslatorLanguages, item.extra['languages'] ?? ''),
-    MapEntry(localization.travelTranslatorExperience, item.extra['experience'] ?? ''),
+    MapEntry(
+      localization.travelTranslatorLanguages,
+      item.extra['languages'] ?? '',
+    ),
+    MapEntry(
+      localization.travelTranslatorExperience,
+      item.extra['experience'] ?? '',
+    ),
     MapEntry(localization.travelIncluded, item.subtitle),
   ],
   formFields: (item, localization) => [

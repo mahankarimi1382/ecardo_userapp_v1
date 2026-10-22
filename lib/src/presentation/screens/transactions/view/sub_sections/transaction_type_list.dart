@@ -13,45 +13,118 @@ class TransactionTypeList extends StatelessWidget {
   static String localizeType(BuildContext context, String type) {
     switch (type) {
       case 'All':
-        return l10nPick(context, en: 'All', fa: 'همه', ar: 'الكل', tr: 'Tümü', ru: 'Все', zh: '全部');
+        return l10nPick(
+          context,
+          en: 'All',
+          fa: 'همه',
+          ar: 'الكل',
+          tr: 'Tümü',
+          ru: 'Все',
+          zh: '全部',
+        );
       case 'Deposit':
         return l10nPick(context, en: 'Deposit', fa: 'واریز', ar: 'إيداع');
       case 'Manual Deposit':
-        return l10nPick(context, en: 'Manual Deposit', fa: 'واریز دستی', ar: 'إيداع يدوي');
+        return l10nPick(
+          context,
+          en: 'Manual Deposit',
+          fa: 'واریز دستی',
+          ar: 'إيداع يدوي',
+        );
       case 'Withdraw':
         return l10nPick(context, en: 'Withdraw', fa: 'برداشت', ar: 'سحب');
       case 'Withdraw Auto':
-        return l10nPick(context, en: 'Auto Withdraw', fa: 'برداشت خودکار', ar: 'سحب تلقائي');
+        return l10nPick(
+          context,
+          en: 'Auto Withdraw',
+          fa: 'برداشت خودکار',
+          ar: 'سحب تلقائي',
+        );
       case 'Send Money':
-        return l10nPick(context, en: 'Send Money', fa: 'ارسال پول', ar: 'إرسال أموال');
+        return l10nPick(
+          context,
+          en: 'Send Money',
+          fa: 'ارسال پول',
+          ar: 'إرسال أموال',
+        );
       case 'Receive Money':
-        return l10nPick(context, en: 'Receive Money', fa: 'دریافت پول', ar: 'استلام أموال');
+        return l10nPick(
+          context,
+          en: 'Receive Money',
+          fa: 'دریافت پول',
+          ar: 'استلام أموال',
+        );
       case 'Cash Received':
-        return l10nPick(context, en: 'Cash Received', fa: 'نقد دریافتی', ar: 'نقد مستلم');
+        return l10nPick(
+          context,
+          en: 'Cash Received',
+          fa: 'نقد دریافتی',
+          ar: 'نقد مستلم',
+        );
       case 'Refund':
         return l10nPick(context, en: 'Refund', fa: 'بازگشت وجه', ar: 'استرداد');
       case 'Referral':
-        return l10nPick(context, en: 'Referral', fa: 'دعوت دوستان', ar: 'إحالة');
+        return l10nPick(
+          context,
+          en: 'Referral',
+          fa: 'دعوت دوستان',
+          ar: 'إحالة',
+        );
       case 'Exchange':
         return l10nPick(context, en: 'Exchange', fa: 'تبدیل ارز', ar: 'تبادل');
       case 'Gift Redeemed':
-        return l10nPick(context, en: 'Gift Redeemed', fa: 'کارت هدیه مصرفی', ar: 'استرداد هدية');
+        return l10nPick(
+          context,
+          en: 'Gift Redeemed',
+          fa: 'کارت هدیه مصرفی',
+          ar: 'استرداد هدية',
+        );
       case 'Signup Bonus':
-        return l10nPick(context, en: 'Signup Bonus', fa: 'پاداش ثبت‌نام', ar: 'مكافأة التسجيل');
+        return l10nPick(
+          context,
+          en: 'Signup Bonus',
+          fa: 'پاداش ثبت‌نام',
+          ar: 'مكافأة التسجيل',
+        );
       case 'Cash In':
-        return l10nPick(context, en: 'Cash In', fa: 'شارژ کیف پول', ar: 'إيداع نقدي');
+        return l10nPick(
+          context,
+          en: 'Cash In',
+          fa: 'شارژ کیف پول',
+          ar: 'إيداع نقدي',
+        );
       case 'Cash Out':
-        return l10nPick(context, en: 'Cash Out', fa: 'نقد کردن', ar: 'سحب نقدي');
+        return l10nPick(
+          context,
+          en: 'Cash Out',
+          fa: 'نقد کردن',
+          ar: 'سحب نقدي',
+        );
       case 'Credit':
-        return l10nPick(context, en: 'Credit', fa: 'بستانکار (ورودی)', ar: 'دائن');
+        return l10nPick(
+          context,
+          en: 'Credit',
+          fa: 'بستانکار (ورودی)',
+          ar: 'دائن',
+        );
       case 'Debit':
         return l10nPick(context, en: 'Debit', fa: 'بدهکار (خروجی)', ar: 'مدين');
       case 'Request Money':
-        return l10nPick(context, en: 'Request Money', fa: 'درخواست پول', ar: 'طلب أموال');
+        return l10nPick(
+          context,
+          en: 'Request Money',
+          fa: 'درخواست پول',
+          ar: 'طلب أموال',
+        );
       case 'Invoice':
         return l10nPick(context, en: 'Invoice', fa: 'فاکتور', ar: 'فاتورة');
       case 'Pay Bill':
-        return l10nPick(context, en: 'Pay Bill', fa: 'پرداخت قبض', ar: 'دفع فاتورة');
+        return l10nPick(
+          context,
+          en: 'Pay Bill',
+          fa: 'پرداخت قبض',
+          ar: 'دفع فاتورة',
+        );
       default:
         return type;
     }
@@ -79,7 +152,9 @@ class TransactionTypeList extends StatelessWidget {
               : (isDark ? AppColors.darkSurfaceVariant : AppColors.white);
           final fg = isSelected
               ? (isDark ? AppColors.deepBlack : AppColors.white)
-              : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary);
+              : (isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary);
           final borderColor = isSelected
               ? Colors.transparent
               : (isDark ? AppColors.darkBorder : AppColors.lightBorder);
@@ -118,10 +193,11 @@ class TransactionTypeList extends StatelessWidget {
                     boxShadow: isSelected
                         ? [
                             BoxShadow(
-                              color: (isDark
-                                      ? AppColors.mainSoftBlue
-                                      : AppColors.deepBlack)
-                                  .withValues(alpha: 0.22),
+                              color:
+                                  (isDark
+                                          ? AppColors.mainSoftBlue
+                                          : AppColors.deepBlack)
+                                      .withValues(alpha: 0.22),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -132,7 +208,9 @@ class TransactionTypeList extends StatelessWidget {
                     localizedLabel,
                     style: AppTextStyles.labelLarge.copyWith(
                       color: fg,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight: isSelected
+                          ? FontWeight.w700
+                          : FontWeight.w500,
                     ),
                   ),
                 ),

@@ -174,7 +174,10 @@ class GetCardInfo extends StatelessWidget {
                     height: 130.h,
                     child: Opacity(
                       opacity: 0.18,
-                      child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain),
+                      child: Image.asset(
+                        PngAssets.cardMap,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),

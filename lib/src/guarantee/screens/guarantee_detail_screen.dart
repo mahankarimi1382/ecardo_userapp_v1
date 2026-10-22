@@ -18,7 +18,11 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 class GuaranteeDetailScreen extends StatefulWidget {
   final int caseId;
   final GuaranteeCaseModel? initialCase;
-  const GuaranteeDetailScreen({super.key, required this.caseId, this.initialCase});
+  const GuaranteeDetailScreen({
+    super.key,
+    required this.caseId,
+    this.initialCase,
+  });
 
   @override
   State<GuaranteeDetailScreen> createState() => _GuaranteeDetailScreenState();
@@ -36,7 +40,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
     if (widget.initialCase != null) {
       controller.selectedCase.value = widget.initialCase;
     }
-    final id = widget.caseId > 0 ? widget.caseId : (Get.arguments is int ? Get.arguments as int : 0);
+    final id = widget.caseId > 0
+        ? widget.caseId
+        : (Get.arguments is int ? Get.arguments as int : 0);
     if (id > 0) {
       controller.fetchCase(id);
     }
@@ -46,7 +52,10 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
     try {
       if (Get.isRegistered<HomeController>()) {
         final u = Get.find<HomeController>().userModel.value.data;
-        final name = [u?.firstName, u?.lastName].where((s) => s != null && s.isNotEmpty).join(' ');
+        final name = [
+          u?.firstName,
+          u?.lastName,
+        ].where((s) => s != null && s.isNotEmpty).join(' ');
         if (name.isNotEmpty) return name;
       }
     } catch (_) {}
@@ -55,168 +64,259 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
 
   String _statusFa(String status) {
     switch (status) {
-      case 'DRAFT': return 'پیش‌نویس پرونده';
-      case 'UNDER_REVIEW': return 'در حال بررسی';
-      case 'COMPLEMENT_REQUIRED': return 'نیاز به تکمیل مدارک';
-      case 'MARGIN_PENDING': return 'در انتظار تودیع وجه التزام';
-      case 'IN_ISSUANCE': return 'در حال صدور بانک';
-      case 'ISSUED': return 'صادر شد (فعال)';
-      case 'CLAIMED': return 'مطالبه‌شده (فریز)';
-      case 'EXPIRED': return 'منقضی (انتظار ۳۰ روزه)';
-      case 'RELEASED': return 'تضامین آزاد شد';
-      case 'REJECTED': return 'رد شد';
-      case 'CANCELLED': return 'لغو';
-      default: return status;
+      case 'DRAFT':
+        return 'پیش‌نویس پرونده';
+      case 'UNDER_REVIEW':
+        return 'در حال بررسی';
+      case 'COMPLEMENT_REQUIRED':
+        return 'نیاز به تکمیل مدارک';
+      case 'MARGIN_PENDING':
+        return 'در انتظار تودیع وجه التزام';
+      case 'IN_ISSUANCE':
+        return 'در حال صدور بانک';
+      case 'ISSUED':
+        return 'صادر شد (فعال)';
+      case 'CLAIMED':
+        return 'مطالبه‌شده (فریز)';
+      case 'EXPIRED':
+        return 'منقضی (انتظار ۳۰ روزه)';
+      case 'RELEASED':
+        return 'تضامین آزاد شد';
+      case 'REJECTED':
+        return 'رد شد';
+      case 'CANCELLED':
+        return 'لغو';
+      default:
+        return status;
     }
   }
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'RELEASED': return AppColors.success;
-      case 'ISSUED': return AppColors.brandViolet;
-      case 'CLAIMED': return AppColors.error;
-      case 'REJECTED': case 'CANCELLED': return AppColors.grey;
-      case 'MARGIN_PENDING': case 'IN_ISSUANCE': return AppColors.warning;
-      case 'UNDER_REVIEW': case 'COMPLEMENT_REQUIRED': return AppColors.info;
-      default: return Colors.blueGrey;
+      case 'RELEASED':
+        return AppColors.success;
+      case 'ISSUED':
+        return AppColors.brandViolet;
+      case 'CLAIMED':
+        return AppColors.error;
+      case 'REJECTED':
+      case 'CANCELLED':
+        return AppColors.grey;
+      case 'MARGIN_PENDING':
+      case 'IN_ISSUANCE':
+        return AppColors.warning;
+      case 'UNDER_REVIEW':
+      case 'COMPLEMENT_REQUIRED':
+        return AppColors.info;
+      default:
+        return Colors.blueGrey;
     }
   }
 
   void _confirm(String title, String message, Future<bool> Function() action) {
     final errTitle = l10nPick(context, en: 'Error', fa: 'خطا');
-    final errBody = l10nPick(context, en: 'Action failed.', fa: 'عملیات ناموفق بود.');
+    final errBody = l10nPick(
+      context,
+      en: 'Action failed.',
+      fa: 'عملیات ناموفق بود.',
+    );
 
-    Get.dialog(AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
-      title: Text(title, style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800)),
-      content: Text(message, style: AppTextStyles.bodyMedium),
-      actions: [
-        Semantics(
-          button: true,
-          label: l10nPick(context, en: 'Cancel', fa: 'انصراف'),
-          child: TextButton(
-            style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              Get.back();
-            },
-            child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف')),
-          ),
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
         ),
-        Semantics(
-          button: true,
-          label: l10nPick(context, en: 'Confirm', fa: 'تأیید'),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.brandViolet,
-              minimumSize: const Size(64, 44),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-            ),
-            onPressed: () async {
-              HapticFeedback.lightImpact();
-              Get.back();
-              final ok = await action();
-              if (!mounted) return;
-              if (!ok) {
-                Get.snackbar(
-                  errTitle,
-                  errBody,
-                  backgroundColor: AppColors.error,
-                  colorText: AppColors.white,
-                );
-              }
-            },
-            child: Text(
-              l10nPick(context, en: 'Confirm', fa: 'تأیید'),
-              style: const TextStyle(color: AppColors.white),
-            ),
-          ),
-        ),
-      ],
-    ));
-  }
-
-  void _showUploadDocDialog(GuaranteeCaseModel c) {
-    String docType = 'base_contract';
-    final fileRefCtrl = TextEditingController(text: '/docs/contract_scan.pdf');
-    final successTitle = l10nPick(context, en: 'Uploaded', fa: 'بارگذاری شد');
-    final successBody = l10nPick(context, en: 'Document attached to case.', fa: 'مدرک با موفقیت ضمیمه پرونده گردید.');
-
-    Get.dialog(StatefulBuilder(
-      builder: (ctx, setDlgState) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
         title: Text(
-          l10nPick(ctx, en: 'Upload Document', fa: 'بارگذاری مدارک پرونده'),
+          title,
           style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800),
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10nPick(ctx, en: 'Document Type:', fa: 'نوع مدرک الزامی:'), style: AppTextStyles.bodySmall),
-            SizedBox(height: AppSpacing.xs.h),
-            DropdownButton<String>(
-              isExpanded: true,
-              value: docType,
-              items: [
-                DropdownMenuItem(value: 'base_contract', child: Text(l10nPick(ctx, en: 'Base Contract / Tender Notice', fa: 'قرارداد پایه یا آگهی مناقصه'))),
-                DropdownMenuItem(value: 'registration', child: Text(l10nPick(ctx, en: 'Company Registration / Articles', fa: 'مدارک ثبتی شرکت و اساسنامه'))),
-                DropdownMenuItem(value: 'financials', child: Text(l10nPick(ctx, en: 'Financial Statements / Tax Balance', fa: 'صورت‌های مالی و تراز مالیاتی'))),
-              ],
-              onChanged: (v) => setDlgState(() => docType = v ?? 'base_contract'),
-            ),
-            SizedBox(height: AppSpacing.sm.h),
-            TextField(
-              controller: fileRefCtrl,
-              decoration: InputDecoration(
-                labelText: l10nPick(ctx, en: 'File name / reference', fa: 'نام یا شناسه فایل'),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-              ),
-            ),
-          ],
-        ),
+        content: Text(message, style: AppTextStyles.bodyMedium),
         actions: [
           Semantics(
             button: true,
-            label: l10nPick(ctx, en: 'Cancel', fa: 'انصراف'),
+            label: l10nPick(context, en: 'Cancel', fa: 'انصراف'),
             child: TextButton(
               style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
               onPressed: () {
                 HapticFeedback.lightImpact();
                 Get.back();
               },
-              child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
+              child: Text(l10nPick(context, en: 'Cancel', fa: 'انصراف')),
             ),
           ),
           Semantics(
             button: true,
-            label: l10nPick(ctx, en: 'Upload', fa: 'بارگذاری'),
+            label: l10nPick(context, en: 'Confirm', fa: 'تأیید'),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.brandViolet,
                 minimumSize: const Size(64, 44),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                ),
               ),
               onPressed: () async {
                 HapticFeedback.lightImpact();
                 Get.back();
-                final ok = await controller.uploadDoc(c.id, docType, fileRefCtrl.text.trim());
+                final ok = await action();
                 if (!mounted) return;
-                if (ok) {
+                if (!ok) {
                   Get.snackbar(
-                    successTitle,
-                    successBody,
-                    backgroundColor: AppColors.success,
+                    errTitle,
+                    errBody,
+                    backgroundColor: AppColors.error,
                     colorText: AppColors.white,
                   );
                 }
               },
-              child: Text(l10nPick(ctx, en: 'Upload', fa: 'بارگذاری'), style: const TextStyle(color: AppColors.white)),
+              child: Text(
+                l10nPick(context, en: 'Confirm', fa: 'تأیید'),
+                style: const TextStyle(color: AppColors.white),
+              ),
             ),
           ),
         ],
       ),
-    ));
+    );
+  }
+
+  void _showUploadDocDialog(GuaranteeCaseModel c) {
+    String docType = 'base_contract';
+    final fileRefCtrl = TextEditingController(text: '/docs/contract_scan.pdf');
+    final successTitle = l10nPick(context, en: 'Uploaded', fa: 'بارگذاری شد');
+    final successBody = l10nPick(
+      context,
+      en: 'Document attached to case.',
+      fa: 'مدرک با موفقیت ضمیمه پرونده گردید.',
+    );
+
+    Get.dialog(
+      StatefulBuilder(
+        builder: (ctx, setDlgState) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
+          title: Text(
+            l10nPick(ctx, en: 'Upload Document', fa: 'بارگذاری مدارک پرونده'),
+            style: AppTextStyles.titleSmall.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10nPick(ctx, en: 'Document Type:', fa: 'نوع مدرک الزامی:'),
+                style: AppTextStyles.bodySmall,
+              ),
+              SizedBox(height: AppSpacing.xs.h),
+              DropdownButton<String>(
+                isExpanded: true,
+                value: docType,
+                items: [
+                  DropdownMenuItem(
+                    value: 'base_contract',
+                    child: Text(
+                      l10nPick(
+                        ctx,
+                        en: 'Base Contract / Tender Notice',
+                        fa: 'قرارداد پایه یا آگهی مناقصه',
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'registration',
+                    child: Text(
+                      l10nPick(
+                        ctx,
+                        en: 'Company Registration / Articles',
+                        fa: 'مدارک ثبتی شرکت و اساسنامه',
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'financials',
+                    child: Text(
+                      l10nPick(
+                        ctx,
+                        en: 'Financial Statements / Tax Balance',
+                        fa: 'صورت‌های مالی و تراز مالیاتی',
+                      ),
+                    ),
+                  ),
+                ],
+                onChanged: (v) =>
+                    setDlgState(() => docType = v ?? 'base_contract'),
+              ),
+              SizedBox(height: AppSpacing.sm.h),
+              TextField(
+                controller: fileRefCtrl,
+                decoration: InputDecoration(
+                  labelText: l10nPick(
+                    ctx,
+                    en: 'File name / reference',
+                    fa: 'نام یا شناسه فایل',
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Semantics(
+              button: true,
+              label: l10nPick(ctx, en: 'Cancel', fa: 'انصراف'),
+              child: TextButton(
+                style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Get.back();
+                },
+                child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
+              ),
+            ),
+            Semantics(
+              button: true,
+              label: l10nPick(ctx, en: 'Upload', fa: 'بارگذاری'),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.brandViolet,
+                  minimumSize: const Size(64, 44),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  ),
+                ),
+                onPressed: () async {
+                  HapticFeedback.lightImpact();
+                  Get.back();
+                  final ok = await controller.uploadDoc(
+                    c.id,
+                    docType,
+                    fileRefCtrl.text.trim(),
+                  );
+                  if (!mounted) return;
+                  if (ok) {
+                    Get.snackbar(
+                      successTitle,
+                      successBody,
+                      backgroundColor: AppColors.success,
+                      colorText: AppColors.white,
+                    );
+                  }
+                },
+                child: Text(
+                  l10nPick(ctx, en: 'Upload', fa: 'بارگذاری'),
+                  style: const TextStyle(color: AppColors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showDepositDialog(GuaranteeCaseModel c) {
@@ -225,123 +325,161 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
     final feePct = c.bankOffer?.feePct ?? c.instrument?.feePct ?? 1.0;
     final marginAmount = (c.amount * marginPct / 100.0).toStringAsFixed(2);
     final feeAmount = (c.amount * feePct / 100.0).toStringAsFixed(2);
-    final depositSuccessTitle = l10nPick(context, en: 'Deposited', fa: 'تودیع شد');
+    final depositSuccessTitle = l10nPick(
+      context,
+      en: 'Deposited',
+      fa: 'تودیع شد',
+    );
     final depositSuccessBody = l10nPick(
       context,
       en: 'Margin locked in escrow — sent to bank for issuance.',
       fa: 'وجه التزام نزد پلتفرم حبس شد و پرونده به بانک صادرکننده ارسال گردید.',
     );
 
-    Get.dialog(StatefulBuilder(
-      builder: (ctx, setDlgState) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
-        title: Text(
-          l10nPick(ctx, en: 'Deposit Margin', fa: 'تودیع وجه التزام و کارمزد صدور'),
-          style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10nPick(
-                ctx,
-                en: 'Margin ($marginPct%): $marginAmount ${c.currency}',
-                fa: 'وجه التزام ($marginPct٪): $marginAmount ${c.currency}',
+    Get.dialog(
+      StatefulBuilder(
+        builder: (ctx, setDlgState) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
+          title: Text(
+            l10nPick(
+              ctx,
+              en: 'Deposit Margin',
+              fa: 'تودیع وجه التزام و کارمزد صدور',
+            ),
+            style: AppTextStyles.titleSmall.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10nPick(
+                  ctx,
+                  en: 'Margin ($marginPct%): $marginAmount ${c.currency}',
+                  fa: 'وجه التزام ($marginPct٪): $marginAmount ${c.currency}',
+                ),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-              style: AppTextStyles.bodyMedium.copyWith(fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: AppSpacing.xs.h),
-            Text(
-              l10nPick(
-                ctx,
-                en: 'Issuance Fee ($feePct%): $feeAmount ${c.currency}',
-                fa: 'کارمزد صدور ($feePct٪): $feeAmount ${c.currency}',
+              SizedBox(height: AppSpacing.xs.h),
+              Text(
+                l10nPick(
+                  ctx,
+                  en: 'Issuance Fee ($feePct%): $feeAmount ${c.currency}',
+                  fa: 'کارمزد صدور ($feePct٪): $feeAmount ${c.currency}',
+                ),
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.softGray,
+                ),
               ),
-              style: AppTextStyles.bodySmall.copyWith(color: AppColors.softGray),
-            ),
-            Divider(height: 24, color: AppColors.lightDivider),
-            Text(
-              l10nPick(ctx, en: 'Funding Source (held in escrow):', fa: 'منشأ وجه (حبس نزد پلتفرم):'),
-              style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: AppSpacing.xs.h),
-            RadioGroup<String>(
-              groupValue: source,
-              onChanged: (v) {
-                HapticFeedback.selectionClick();
-                setDlgState(() => source = v ?? 'WALLET_FIAT');
-              },
-              child: Column(
-                children: [
-                  RadioListTile<String>(
-                    dense: true,
-                    value: 'WALLET_FIAT',
-                    activeColor: AppColors.brandViolet,
-                    title: Text(
-                      l10nPick(ctx, en: 'Internal Fiat Wallet', fa: 'کیف پول فیات داخلی'),
-                      style: AppTextStyles.bodySmall,
+              Divider(height: 24, color: AppColors.lightDivider),
+              Text(
+                l10nPick(
+                  ctx,
+                  en: 'Funding Source (held in escrow):',
+                  fa: 'منشأ وجه (حبس نزد پلتفرم):',
+                ),
+                style: AppTextStyles.bodySmall.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: AppSpacing.xs.h),
+              RadioGroup<String>(
+                groupValue: source,
+                onChanged: (v) {
+                  HapticFeedback.selectionClick();
+                  setDlgState(() => source = v ?? 'WALLET_FIAT');
+                },
+                child: Column(
+                  children: [
+                    RadioListTile<String>(
+                      dense: true,
+                      value: 'WALLET_FIAT',
+                      activeColor: AppColors.brandViolet,
+                      title: Text(
+                        l10nPick(
+                          ctx,
+                          en: 'Internal Fiat Wallet',
+                          fa: 'کیف پول فیات داخلی',
+                        ),
+                        style: AppTextStyles.bodySmall,
+                      ),
                     ),
-                  ),
-                  RadioListTile<String>(
-                    dense: true,
-                    value: 'WALLET_CRYPTO',
-                    activeColor: AppColors.brandViolet,
-                    title: Text(
-                      l10nPick(ctx, en: 'Crypto Wallet (Instant FX snapshot)', fa: 'کیف پول رمزارز (تبدیل لحظه‌ای)'),
-                      style: AppTextStyles.bodySmall,
+                    RadioListTile<String>(
+                      dense: true,
+                      value: 'WALLET_CRYPTO',
+                      activeColor: AppColors.brandViolet,
+                      title: Text(
+                        l10nPick(
+                          ctx,
+                          en: 'Crypto Wallet (Instant FX snapshot)',
+                          fa: 'کیف پول رمزارز (تبدیل لحظه‌ای)',
+                        ),
+                        style: AppTextStyles.bodySmall,
+                      ),
                     ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Semantics(
+              button: true,
+              label: l10nPick(ctx, en: 'Cancel', fa: 'انصراف'),
+              child: TextButton(
+                style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
+                onPressed: () {
+                  HapticFeedback.lightImpact();
+                  Get.back();
+                },
+                child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
+              ),
+            ),
+            Semantics(
+              button: true,
+              label: l10nPick(
+                ctx,
+                en: 'Deposit Margin',
+                fa: 'تودیع وجه التزام',
+              ),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.brandViolet,
+                  minimumSize: const Size(64, 44),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                   ),
-                ],
+                ),
+                onPressed: () async {
+                  HapticFeedback.lightImpact();
+                  Get.back();
+                  final ok = await controller.depositMargin(c.id, source);
+                  if (!mounted) return;
+                  if (ok) {
+                    Get.snackbar(
+                      depositSuccessTitle,
+                      depositSuccessBody,
+                      backgroundColor: AppColors.success,
+                      colorText: AppColors.white,
+                    );
+                  }
+                },
+                child: Text(
+                  l10nPick(ctx, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
+                  style: const TextStyle(color: AppColors.white),
+                ),
               ),
             ),
           ],
         ),
-        actions: [
-          Semantics(
-            button: true,
-            label: l10nPick(ctx, en: 'Cancel', fa: 'انصراف'),
-            child: TextButton(
-              style: TextButton.styleFrom(minimumSize: const Size(64, 44)),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                Get.back();
-              },
-              child: Text(l10nPick(ctx, en: 'Cancel', fa: 'انصراف')),
-            ),
-          ),
-          Semantics(
-            button: true,
-            label: l10nPick(ctx, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.brandViolet,
-                minimumSize: const Size(64, 44),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-              ),
-              onPressed: () async {
-                HapticFeedback.lightImpact();
-                Get.back();
-                final ok = await controller.depositMargin(c.id, source);
-                if (!mounted) return;
-                if (ok) {
-                  Get.snackbar(
-                    depositSuccessTitle,
-                    depositSuccessBody,
-                    backgroundColor: AppColors.success,
-                    colorText: AppColors.white,
-                  );
-                }
-              },
-              child: Text(
-                l10nPick(ctx, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
-                style: const TextStyle(color: AppColors.white),
-              ),
-            ),
-          ),
-        ],
       ),
-    ));
+    );
   }
 
   @override
@@ -349,7 +487,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -385,10 +525,14 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
               Container(
                 padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  color: isDark
+                      ? AppColors.darkSurface
+                      : AppColors.lightSurface,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Column(
@@ -402,14 +546,23 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           style: AppTextStyles.titleSmall.copyWith(
                             fontWeight: FontWeight.w800,
                             fontFamily: 'monospace',
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         Container(
-                          padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 4.h),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 10.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: _statusColor(c.status).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                            color: _statusColor(
+                              c.status,
+                            ).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                           child: Text(
                             _statusFa(c.status),
@@ -426,7 +579,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                       inst?.name ?? c.beneficiaryName,
                       style: AppTextStyles.titleMedium.copyWith(
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: AppSpacing.xs.h),
@@ -437,7 +592,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                         fa: 'ذینفع: ${c.beneficiaryName} · مبلغ: ${c.amount} ${c.currency}',
                       ),
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                     Text(
@@ -447,7 +604,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                         fa: 'مدت اعتبار: ${c.validityMonths} ماه',
                       ),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
                       ),
                     ),
                   ],
@@ -460,17 +619,25 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.info.withValues(alpha: 0.15) : AppColors.infoContainer,
+                    color: isDark
+                        ? AppColors.info.withValues(alpha: 0.15)
+                        : AppColors.infoContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: AppColors.info.withValues(alpha: isDark ? 0.35 : 0.25),
+                      color: AppColors.info.withValues(
+                        alpha: isDark ? 0.35 : 0.25,
+                      ),
                     ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Required Case Documents', fa: 'مدارک الزامی پرونده'),
+                        l10nPick(
+                          context,
+                          en: 'Required Case Documents',
+                          fa: 'مدارک الزامی پرونده',
+                        ),
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
                           color: isDark ? AppColors.info : AppColors.deepBlack,
@@ -484,42 +651,68 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           fa: 'قرارداد پایه یا آگهی مناقصه، مدارک ثبتی شرکت و صورت‌های مالی را بارگذاری کنید.',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.sm.h),
-                      ...c.documents.map((doc) => Padding(
-                            padding: EdgeInsetsDirectional.symmetric(vertical: 2.h),
-                            child: Row(
-                              children: [
-                                Icon(Icons.description, size: 14, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
-                                SizedBox(width: AppSpacing.xs.w),
-                                Expanded(
-                                  child: Text(
-                                    '${doc.docType}: ${doc.fileRef} (${doc.status})',
-                                    style: AppTextStyles.labelSmall.copyWith(
-                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                                    ),
+                      ...c.documents.map(
+                        (doc) => Padding(
+                          padding: EdgeInsetsDirectional.symmetric(
+                            vertical: 2.h,
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.description,
+                                size: 14,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
+                              ),
+                              SizedBox(width: AppSpacing.xs.w),
+                              Expanded(
+                                child: Text(
+                                  '${doc.docType}: ${doc.fileRef} (${doc.status})',
+                                  style: AppTextStyles.labelSmall.copyWith(
+                                    color: isDark
+                                        ? AppColors.darkTextPrimary
+                                        : AppColors.lightTextPrimary,
                                   ),
                                 ),
-                              ],
-                            ),
-                          )),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                       SizedBox(height: AppSpacing.md.h),
                       Row(
                         children: [
                           Expanded(
                             child: Semantics(
                               button: true,
-                              label: l10nPick(context, en: 'Upload Document', fa: 'بارگذاری مدرک'),
+                              label: l10nPick(
+                                context,
+                                en: 'Upload Document',
+                                fa: 'بارگذاری مدرک',
+                              ),
                               child: OutlinedButton.icon(
                                 style: OutlinedButton.styleFrom(
                                   minimumSize: Size(double.infinity, 44.h),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusMd.r,
+                                    ),
+                                  ),
                                 ),
                                 icon: const Icon(Icons.upload_file, size: 16),
                                 label: Text(
-                                  l10nPick(context, en: 'Upload Doc', fa: 'بارگذاری مدرک'),
+                                  l10nPick(
+                                    context,
+                                    en: 'Upload Doc',
+                                    fa: 'بارگذاری مدرک',
+                                  ),
                                   style: AppTextStyles.labelSmall,
                                 ),
                                 onPressed: () {
@@ -533,21 +726,49 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           Expanded(
                             child: Semantics(
                               button: true,
-                              label: l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
+                              label: l10nPick(
+                                context,
+                                en: 'Submit Case',
+                                fa: 'ثبت نهایی پرونده',
+                              ),
                               child: ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: isDark ? AppColors.brandViolet : AppColors.brandVioletDeep,
+                                  backgroundColor: isDark
+                                      ? AppColors.brandViolet
+                                      : AppColors.brandVioletDeep,
                                   minimumSize: Size(double.infinity, 44.h),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusMd.r,
+                                    ),
+                                  ),
                                 ),
-                                icon: const Icon(Icons.send, color: AppColors.white, size: 16),
+                                icon: const Icon(
+                                  Icons.send,
+                                  color: AppColors.white,
+                                  size: 16,
+                                ),
                                 label: Text(
-                                  l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
-                                  style: const TextStyle(color: AppColors.white),
+                                  l10nPick(
+                                    context,
+                                    en: 'Submit Case',
+                                    fa: 'ثبت نهایی پرونده',
+                                  ),
+                                  style: const TextStyle(
+                                    color: AppColors.white,
+                                  ),
                                 ),
                                 onPressed: () => _confirm(
-                                  l10nPick(context, en: 'Submit Case', fa: 'ثبت نهایی پرونده'),
-                                  l10nPick(context, en: 'Submit case for analyst and bank review?', fa: 'پرونده جهت بررسی کارشناس و استعلام بانک ارسال شود؟'),
+                                  l10nPick(
+                                    context,
+                                    en: 'Submit Case',
+                                    fa: 'ثبت نهایی پرونده',
+                                  ),
+                                  l10nPick(
+                                    context,
+                                    en: 'Submit case for analyst and bank review?',
+                                    fa: 'پرونده جهت بررسی کارشناس و استعلام بانک ارسال شود؟',
+                                  ),
                                   () => controller.submitCase(c.id),
                                 ),
                               ),
@@ -566,10 +787,14 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.info.withValues(alpha: 0.15) : AppColors.infoContainer,
+                    color: isDark
+                        ? AppColors.info.withValues(alpha: 0.15)
+                        : AppColors.infoContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: AppColors.info.withValues(alpha: isDark ? 0.35 : 0.25),
+                      color: AppColors.info.withValues(
+                        alpha: isDark ? 0.35 : 0.25,
+                      ),
                     ),
                   ),
                   child: Row(
@@ -584,7 +809,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                             fa: 'پرونده در دست بررسی کارشناس اعتباری و استعلام بانک صادرکننده است (سقف ۵ روز کاری).',
                           ),
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ),
@@ -599,17 +826,25 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
+                    color: isDark
+                        ? AppColors.warning.withValues(alpha: 0.15)
+                        : AppColors.warningContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.25),
+                      color: AppColors.warning.withValues(
+                        alpha: isDark ? 0.35 : 0.25,
+                      ),
                     ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Bank Approved — Margin Required', fa: 'موافقت مشروط بانک — تودیع وجه التزام'),
+                        l10nPick(
+                          context,
+                          en: 'Bank Approved — Margin Required',
+                          fa: 'موافقت مشروط بانک — تودیع وجه التزام',
+                        ),
                         style: AppTextStyles.titleSmall.copyWith(
                           fontWeight: FontWeight.w800,
                           color: AppColors.warning,
@@ -623,24 +858,43 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           fa: 'مهلت تودیع ۴۸ ساعت است. وجه التزام نزد پلتفرم حبس می‌شود (نه نزد بانک).',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.md.h),
                       Semantics(
                         button: true,
-                        label: l10nPick(context, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
+                        label: l10nPick(
+                          context,
+                          en: 'Deposit Margin',
+                          fa: 'تودیع وجه التزام',
+                        ),
                         child: SizedBox(
                           width: double.infinity,
                           height: 48.h,
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isDark ? AppColors.brandViolet : AppColors.brandVioletDeep,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
+                              backgroundColor: isDark
+                                  ? AppColors.brandViolet
+                                  : AppColors.brandVioletDeep,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusLg.r,
+                                ),
+                              ),
                             ),
-                            icon: const Icon(Icons.account_balance_wallet, color: AppColors.white),
+                            icon: const Icon(
+                              Icons.account_balance_wallet,
+                              color: AppColors.white,
+                            ),
                             label: Text(
-                              l10nPick(context, en: 'Deposit Margin', fa: 'تودیع وجه التزام'),
+                              l10nPick(
+                                context,
+                                en: 'Deposit Margin',
+                                fa: 'تودیع وجه التزام',
+                              ),
                               style: const TextStyle(color: AppColors.white),
                             ),
                             onPressed: () {
@@ -661,15 +915,22 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
+                    color: isDark
+                        ? AppColors.warning.withValues(alpha: 0.15)
+                        : AppColors.warningContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.25),
+                      color: AppColors.warning.withValues(
+                        alpha: isDark ? 0.35 : 0.25,
+                      ),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.hourglass_bottom, color: AppColors.warning),
+                      const Icon(
+                        Icons.hourglass_bottom,
+                        color: AppColors.warning,
+                      ),
                       SizedBox(width: AppSpacing.md.w),
                       Expanded(
                         child: Text(
@@ -679,7 +940,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                             fa: 'بانک صادرکننده در حال صدور و مهر سند رسمی است (حداکثر ۳ روز کاری).',
                           ),
                           style: AppTextStyles.bodySmall.copyWith(
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ),
@@ -689,7 +952,13 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
               ],
 
               // G6: Certificate or Preview
-              if (c.issued != null || {'ISSUED', 'CLAIMED', 'EXPIRED', 'RELEASED'}.contains(c.status)) ...[
+              if (c.issued != null ||
+                  {
+                    'ISSUED',
+                    'CLAIMED',
+                    'EXPIRED',
+                    'RELEASED',
+                  }.contains(c.status)) ...[
                 SizedBox(height: AppSpacing.md.h),
                 GuaranteeCertificateWidget.fromCase(
                   c,
@@ -699,16 +968,27 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 SizedBox(height: AppSpacing.md.h),
                 Container(
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.lightSurface,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
                   ),
                   child: Theme(
-                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                    data: Theme.of(
+                      context,
+                    ).copyWith(dividerColor: Colors.transparent),
                     child: ExpansionTile(
-                      leading: Icon(Icons.verified_outlined, color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet),
+                      leading: Icon(
+                        Icons.verified_outlined,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                      ),
                       title: Text(
                         l10nPick(
                           context,
@@ -717,7 +997,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           ar: 'معاينة شهادة الضمان الرقمية',
                           zh: '数字保函电子凭单预审预览',
                         ),
-                        style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800),
+                        style: AppTextStyles.titleSmall.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                       children: [
                         Padding(
@@ -739,10 +1021,14 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.error.withValues(alpha: 0.15) : AppColors.errorContainer,
+                    color: isDark
+                        ? AppColors.error.withValues(alpha: 0.15)
+                        : AppColors.errorContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: AppColors.error.withValues(alpha: isDark ? 0.35 : 0.25),
+                      color: AppColors.error.withValues(
+                        alpha: isDark ? 0.35 : 0.25,
+                      ),
                     ),
                   ),
                   child: Column(
@@ -753,7 +1039,11 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           const Icon(Icons.warning, color: AppColors.error),
                           SizedBox(width: AppSpacing.sm.w),
                           Text(
-                            l10nPick(context, en: 'Beneficiary Claim Received', fa: 'مطالبه ذینفع از بانک دریافت شد'),
+                            l10nPick(
+                              context,
+                              en: 'Beneficiary Claim Received',
+                              fa: 'مطالبه ذینفع از بانک دریافت شد',
+                            ),
                             style: AppTextStyles.titleSmall.copyWith(
                               fontWeight: FontWeight.w800,
                               color: AppColors.error,
@@ -769,7 +1059,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           fa: 'وجه التزام کاملاً فریز شده و طبق رویه بانکی تایمر انقضا متوقف است.',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
@@ -783,18 +1075,28 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                 Container(
                   padding: EdgeInsetsDirectional.all(AppSpacing.lg.w),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.lightSurface,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Legal 30-Day Waiting Period', fa: 'مهلت انتظار قانونی ۳۰ روزه'),
-                        style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w800),
+                        l10nPick(
+                          context,
+                          en: 'Legal 30-Day Waiting Period',
+                          fa: 'مهلت انتظار قانونی ۳۰ روزه',
+                        ),
+                        style: AppTextStyles.titleSmall.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                       SizedBox(height: AppSpacing.xs.h),
                       Text(
@@ -804,7 +1106,9 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
                           fa: 'جهت اطمینان از عدم مطالبه دیرهنگام، آزادسازی پس از مهلت انتظار ۳۰ روزه انجام می‌شود.',
                         ),
                         style: AppTextStyles.bodySmall.copyWith(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
@@ -813,7 +1117,13 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
               ],
 
               // Cancel Case
-              if (['DRAFT', 'UNDER_REVIEW', 'COMPLEMENT_REQUIRED', 'MARGIN_PENDING', 'IN_ISSUANCE'].contains(c.status)) ...[
+              if ([
+                'DRAFT',
+                'UNDER_REVIEW',
+                'COMPLEMENT_REQUIRED',
+                'MARGIN_PENDING',
+                'IN_ISSUANCE',
+              ].contains(c.status)) ...[
                 SizedBox(height: AppSpacing.md.h),
                 Semantics(
                   button: true,
@@ -845,31 +1155,47 @@ class _GuaranteeDetailScreenState extends State<GuaranteeDetailScreen> {
               // Timeline & Events
               SizedBox(height: AppSpacing.md.h),
               Text(
-                l10nPick(context, en: 'Timeline & Bank Queries', fa: 'تایم‌لاین رویدادها و استعلام‌های بانک'),
+                l10nPick(
+                  context,
+                  en: 'Timeline & Bank Queries',
+                  fa: 'تایم‌لاین رویدادها و استعلام‌های بانک',
+                ),
                 style: AppTextStyles.titleSmall.copyWith(
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               SizedBox(height: AppSpacing.sm.h),
-              ...c.events.map((e) => Padding(
-                    padding: EdgeInsetsDirectional.symmetric(vertical: 4.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(Icons.circle, size: 8, color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet),
-                        SizedBox(width: AppSpacing.sm.w),
-                        Expanded(
-                          child: Text(
-                            '${e.createdAt?.toLocal() ?? ''} · ${e.actorRole}${e.source != null ? ' [${e.source}]' : ''}${e.reason != null ? ' — ${e.reason}' : ''}',
-                            style: AppTextStyles.bodySmall.copyWith(
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                            ),
+              ...c.events.map(
+                (e) => Padding(
+                  padding: EdgeInsetsDirectional.symmetric(vertical: 4.h),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.circle,
+                        size: 8,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
+                      ),
+                      SizedBox(width: AppSpacing.sm.w),
+                      Expanded(
+                        child: Text(
+                          '${e.createdAt?.toLocal() ?? ''} · ${e.actorRole}${e.source != null ? ' [${e.source}]' : ''}${e.reason != null ? ' — ${e.reason}' : ''}',
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
-                      ],
-                    ),
-                  )),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: AppSpacing.xxl.h),
             ],
           ),

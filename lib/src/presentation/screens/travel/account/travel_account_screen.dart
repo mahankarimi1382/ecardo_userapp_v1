@@ -100,9 +100,8 @@ class TravelAccountScreen extends StatelessWidget {
             title: localization.travelMyEsims,
             subtitle: localization.travelMyEsimsDescription,
             onTap: () => Get.to(
-              () => const TravelOrdersScreen(
-                initialType: TravelProductType.esim,
-              ),
+              () =>
+                  const TravelOrdersScreen(initialType: TravelProductType.esim),
             ),
           ),
           _AccountTile(
@@ -172,7 +171,10 @@ class _AccountTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+                  Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.w900),
+                  ),
                   SizedBox(height: 4.h),
                   Text(
                     subtitle,

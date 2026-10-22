@@ -59,8 +59,9 @@ class HotelVoucherScreen extends StatefulWidget {
 class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
   bool _isGeneratingPdf = false;
 
-  String get _refCode =>
-      widget.bookingReference.isNotEmpty ? widget.bookingReference : 'EC-HTL-${widget.orderId.hashCode.abs().toString().padLeft(6, '0').substring(0, 6)}';
+  String get _refCode => widget.bookingReference.isNotEmpty
+      ? widget.bookingReference
+      : 'EC-HTL-${widget.orderId.hashCode.abs().toString().padLeft(6, '0').substring(0, 6)}';
 
   Future<void> _exportPdfVoucher() async {
     setState(() => _isGeneratingPdf = true);
@@ -153,7 +154,10 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                           pw.SizedBox(height: 4),
                           pw.Text(
                             widget.hotelAddress,
-                            style: const pw.TextStyle(fontSize: 11, color: PdfColors.grey700),
+                            style: const pw.TextStyle(
+                              fontSize: 11,
+                              color: PdfColors.grey700,
+                            ),
                           ),
                           pw.SizedBox(height: 12),
                           pw.Text(
@@ -165,7 +169,10 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                           ),
                           pw.Text(
                             'Contact: ${widget.guestEmail} | ${widget.guestPhone}',
-                            style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey700),
+                            style: const pw.TextStyle(
+                              fontSize: 10,
+                              color: PdfColors.grey700,
+                            ),
                           ),
                         ],
                       ),
@@ -188,11 +195,20 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          pw.Text('Check-in Date & Time', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                          pw.Text(
+                            'Check-in Date & Time',
+                            style: const pw.TextStyle(
+                              fontSize: 10,
+                              color: PdfColors.grey600,
+                            ),
+                          ),
                           pw.SizedBox(height: 2),
                           pw.Text(
                             '${widget.checkInDate.year}/${widget.checkInDate.month.toString().padLeft(2, '0')}/${widget.checkInDate.day.toString().padLeft(2, '0')} (From 14:00)',
-                            style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                            style: pw.TextStyle(
+                              fontSize: 11,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -201,11 +217,20 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          pw.Text('Check-out Date & Time', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                          pw.Text(
+                            'Check-out Date & Time',
+                            style: const pw.TextStyle(
+                              fontSize: 10,
+                              color: PdfColors.grey600,
+                            ),
+                          ),
                           pw.SizedBox(height: 2),
                           pw.Text(
                             '${widget.checkOutDate.year}/${widget.checkOutDate.month.toString().padLeft(2, '0')}/${widget.checkOutDate.day.toString().padLeft(2, '0')} (Until 12:00)',
-                            style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold),
+                            style: pw.TextStyle(
+                              fontSize: 11,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -214,9 +239,21 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                       child: pw.Column(
                         crossAxisAlignment: pw.CrossAxisAlignment.start,
                         children: [
-                          pw.Text('Duration', style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey600)),
+                          pw.Text(
+                            'Duration',
+                            style: const pw.TextStyle(
+                              fontSize: 10,
+                              color: PdfColors.grey600,
+                            ),
+                          ),
                           pw.SizedBox(height: 2),
-                          pw.Text('${widget.nights} Nights', style: pw.TextStyle(fontSize: 11, fontWeight: pw.FontWeight.bold)),
+                          pw.Text(
+                            '${widget.nights} Nights',
+                            style: pw.TextStyle(
+                              fontSize: 11,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -230,7 +267,10 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                 // Reserved Rooms
                 pw.Text(
                   'Reserved Accommodation',
-                  style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
+                  style: pw.TextStyle(
+                    fontSize: 12,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
                 ),
                 pw.SizedBox(height: 8),
                 ...widget.selectedRooms.map((room) {
@@ -239,10 +279,16 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                     child: pw.Row(
                       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
-                        pw.Text('${room.quantity}x ${room.name}', style: const pw.TextStyle(fontSize: 10)),
+                        pw.Text(
+                          '${room.quantity}x ${room.name}',
+                          style: const pw.TextStyle(fontSize: 10),
+                        ),
                         pw.Text(
                           '${room.currency} ${(room.unitPrice * room.quantity * widget.nights).toStringAsFixed(2)}',
-                          style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
+                          style: pw.TextStyle(
+                            fontSize: 10,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -257,7 +303,13 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                 pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text('Total Paid (Taxes & Fees Included)', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+                    pw.Text(
+                      'Total Paid (Taxes & Fees Included)',
+                      style: pw.TextStyle(
+                        fontSize: 12,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
                     pw.Text(
                       '${widget.currency} ${widget.totalAmount.toStringAsFixed(2)}',
                       style: pw.TextStyle(
@@ -280,7 +332,10 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                   ),
                   child: pw.Text(
                     'Important: Present this digital voucher or printed copy alongside a valid government-issued photo ID upon check-in. In case of late arrival after 20:00, kindly contact the hotel front desk.',
-                    style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
+                    style: const pw.TextStyle(
+                      fontSize: 8,
+                      color: PdfColors.grey700,
+                    ),
                   ),
                 ),
               ],
@@ -341,8 +396,9 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: ECardoTokens.successBg(context),
-                          borderRadius:
-                              BorderRadius.circular(ECardoTokens.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            ECardoTokens.radiusSm,
+                          ),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -413,7 +469,9 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
               child: Column(
                 children: [
                   Text(
-                    isRtl ? 'کیوآرکد پذیرش سریع در هتل' : 'Express Desk Check-in QR Code',
+                    isRtl
+                        ? 'کیوآرکد پذیرش سریع در هتل'
+                        : 'Express Desk Check-in QR Code',
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w800,
@@ -435,7 +493,9 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                     padding: EdgeInsets.all(12.r),
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceSunken(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       border: Border.all(color: ECardoTokens.border(context)),
                     ),
                     child: SvgPicture.string(
@@ -512,7 +572,9 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                         child: _VoucherDateBlock(
                           label: AppLocalizations.of(context)!.hotel_check_in,
                           date: widget.checkInDate,
-                          timeNotice: isRtl ? 'ساعت ۱۴:۰۰ به بعد' : 'From 14:00',
+                          timeNotice: isRtl
+                              ? 'ساعت ۱۴:۰۰ به بعد'
+                              : 'From 14:00',
                           icon: Icons.login_rounded,
                         ),
                       ),
@@ -594,7 +656,10 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
                               travelMoney(
                                 context,
                                 TravelMoney(
-                                  amount: room.unitPrice * room.quantity * widget.nights,
+                                  amount:
+                                      room.unitPrice *
+                                      room.quantity *
+                                      widget.nights,
                                   currency: room.currency,
                                 ),
                               ),
@@ -653,7 +718,9 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
             CommonButton(
               width: double.infinity,
               height: 52,
-              text: isRtl ? 'دریافت فایل واچر رسمی (PDF)' : 'Download PDF Voucher',
+              text: isRtl
+                  ? 'دریافت فایل واچر رسمی (PDF)'
+                  : 'Download PDF Voucher',
               backgroundColor: ECardoTokens.brand900(context),
               isLoading: _isGeneratingPdf,
               onPressed: _exportPdfVoucher,

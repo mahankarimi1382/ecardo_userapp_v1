@@ -34,18 +34,21 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
   @override
   void initState() {
     super.initState();
-    final safeInitial = widget.initialPage.clamp(0, max(0, widget.wallets.length - 1)).toInt();
+    final safeInitial = widget.initialPage
+        .clamp(0, max(0, widget.wallets.length - 1))
+        .toInt();
     _currentPage = safeInitial.toDouble();
-    _pageController = PageController(
-      viewportFraction: _kViewportFraction,
-      initialPage: safeInitial,
-    )..addListener(() {
-        if (mounted) {
-          setState(() {
-            _currentPage = _pageController.page ?? 0.0;
-          });
-        }
-      });
+    _pageController =
+        PageController(
+          viewportFraction: _kViewportFraction,
+          initialPage: safeInitial,
+        )..addListener(() {
+          if (mounted) {
+            setState(() {
+              _currentPage = _pageController.page ?? 0.0;
+            });
+          }
+        });
   }
 
   @override
@@ -54,7 +57,9 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
     if (widget.initialPage != oldWidget.initialPage &&
         widget.initialPage != _currentPage.round() &&
         _pageController.hasClients) {
-      final safeTarget = widget.initialPage.clamp(0, max(0, widget.wallets.length - 1)).toInt();
+      final safeTarget = widget.initialPage
+          .clamp(0, max(0, widget.wallets.length - 1))
+          .toInt();
       _pageController.animateToPage(
         safeTarget,
         duration: const Duration(milliseconds: 300),
@@ -118,7 +123,10 @@ class _WalletCardCarouselState extends State<WalletCardCarousel> {
                   child: Center(
                     child: MultiCurrencyFlipCard(
                       wallet: wallet,
-                      width: min(MediaQuery.of(context).size.width * _kViewportFraction, 420.0),
+                      width: min(
+                        MediaQuery.of(context).size.width * _kViewportFraction,
+                        420.0,
+                      ),
                       height: 212,
                       onTap: widget.onCardTap != null
                           ? () => widget.onCardTap!(wallet)

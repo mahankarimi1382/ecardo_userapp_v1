@@ -1,4 +1,3 @@
-
 class LicenseProductItem {
   final int id;
   final String name;
@@ -44,16 +43,28 @@ class LicenseProductItem {
       category: json['category'] ?? 'software',
       vendor: json['vendor'],
       description: json['description'],
-      editions: (json['editions'] as List?)?.map((e) => e.toString()).toList() ?? ['Standard'],
-      durationsMonths: (json['durations_months'] as List?)?.map((e) => int.tryParse('$e') ?? 12).toList() ?? [12],
+      editions:
+          (json['editions'] as List?)?.map((e) => e.toString()).toList() ??
+          ['Standard'],
+      durationsMonths:
+          (json['durations_months'] as List?)
+              ?.map((e) => int.tryParse('$e') ?? 12)
+              .toList() ??
+          [12],
       priceUsd: double.tryParse('${json['price_usd']}') ?? 0.0,
-      editionPricing: json['edition_pricing'] is Map ? Map<String, dynamic>.from(json['edition_pricing']) : {},
-      durationMultipliers: json['duration_multipliers'] is Map ? Map<String, dynamic>.from(json['duration_multipliers']) : {},
+      editionPricing: json['edition_pricing'] is Map
+          ? Map<String, dynamic>.from(json['edition_pricing'])
+          : {},
+      durationMultipliers: json['duration_multipliers'] is Map
+          ? Map<String, dynamic>.from(json['duration_multipliers'])
+          : {},
       activationGuide: json['activation_guide'],
       refundPolicy: json['refund_policy'],
       featuredImage: json['featured_image'],
       isInStock: json['is_in_stock'] == true,
-      stockCount: json['stock_count'] is int ? json['stock_count'] : int.tryParse('${json['stock_count']}') ?? 0,
+      stockCount: json['stock_count'] is int
+          ? json['stock_count']
+          : int.tryParse('${json['stock_count']}') ?? 0,
     );
   }
 
@@ -64,7 +75,8 @@ class LicenseProductItem {
     }
     double mult = 1.0;
     if (durationMultipliers.containsKey(months.toString())) {
-      mult = double.tryParse('${durationMultipliers[months.toString()]}') ?? mult;
+      mult =
+          double.tryParse('${durationMultipliers[months.toString()]}') ?? mult;
     }
     return double.parse((base * mult).toStringAsFixed(2));
   }
@@ -115,7 +127,9 @@ class LicenseOrderItem {
 
   factory LicenseOrderItem.fromJson(Map<String, dynamic> json) {
     final keyData = json['delivered_key'] is Map ? json['delivered_key'] : null;
-    final cryptoData = json['crypto_payment'] is Map ? json['crypto_payment'] : null;
+    final cryptoData = json['crypto_payment'] is Map
+        ? json['crypto_payment']
+        : null;
     final prodData = json['product'] is Map ? json['product'] : null;
 
     return LicenseOrderItem(
@@ -123,21 +137,27 @@ class LicenseOrderItem {
       orderNo: json['order_no'] ?? '',
       productName: prodData?['name'],
       edition: json['edition'] ?? 'Standard',
-      durationMonths: json['duration_months'] is int ? json['duration_months'] : int.tryParse('${json['duration_months']}') ?? 12,
+      durationMonths: json['duration_months'] is int
+          ? json['duration_months']
+          : int.tryParse('${json['duration_months']}') ?? 12,
       priceUsd: double.tryParse('${json['price_usd']}') ?? 0.0,
       payRoute: json['pay_route'] ?? 'CRYPTO_WALLET',
       payRouteLabel: json['pay_route_label'] ?? '',
       status: json['status'] ?? 'DRAFT',
       statusLabel: json['status_label'] ?? '',
       priceLockExpiresAt: json['price_lock_expires_at'],
-      priceLockRemainingSeconds: json['price_lock_remaining_seconds'] is int ? json['price_lock_remaining_seconds'] : int.tryParse('${json['price_lock_remaining_seconds']}') ?? 0,
+      priceLockRemainingSeconds: json['price_lock_remaining_seconds'] is int
+          ? json['price_lock_remaining_seconds']
+          : int.tryParse('${json['price_lock_remaining_seconds']}') ?? 0,
       paymentDeadline: json['payment_deadline'],
       keyMasked: keyData?['key_masked'],
       licenseKey: keyData?['license_key'],
       keyExpiresAt: keyData?['expires_at'],
       cryptoNetwork: cryptoData?['network'],
       cryptoWalletAddress: cryptoData?['wallet_address'],
-      cryptoExpectedAmount: double.tryParse('${cryptoData?['expected_amount']}'),
+      cryptoExpectedAmount: double.tryParse(
+        '${cryptoData?['expected_amount']}',
+      ),
     );
   }
 }
@@ -177,13 +197,17 @@ class LicenseKeyItem {
       orderNo: json['order_no'] ?? '',
       productName: json['product_name'] ?? '',
       edition: json['edition'] ?? 'Standard',
-      durationMonths: json['duration_months'] is int ? json['duration_months'] : int.tryParse('${json['duration_months']}') ?? 12,
+      durationMonths: json['duration_months'] is int
+          ? json['duration_months']
+          : int.tryParse('${json['duration_months']}') ?? 12,
       licenseKey: json['license_key'] ?? '',
       keyMasked: json['key_masked'] ?? '',
       issuedAt: json['issued_at'],
       expiresAt: json['expires_at'],
       isExpired: json['is_expired'] == true,
-      daysRemaining: json['days_remaining'] is int ? json['days_remaining'] : int.tryParse('${json['days_remaining']}'),
+      daysRemaining: json['days_remaining'] is int
+          ? json['days_remaining']
+          : int.tryParse('${json['days_remaining']}'),
       activationGuide: json['activation_guide'],
     );
   }

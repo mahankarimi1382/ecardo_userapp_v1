@@ -7,17 +7,16 @@ class StaleDataBanner extends StatelessWidget {
   final DateTime cachedAt;
   final VoidCallback? onRetry;
 
-  const StaleDataBanner({
-    super.key,
-    required this.cachedAt,
-    this.onRetry,
-  });
+  const StaleDataBanner({super.key, required this.cachedAt, this.onRetry});
 
   String _ageLabel() {
     final diff = DateTime.now().difference(cachedAt);
-    if (diff.inMinutes < 1) return l10nPickAuto(en: 'just now', fa: 'همین الان');
-    if (diff.inMinutes < 60) return '${diff.inMinutes} ${l10nPickAuto(en: 'minutes ago', fa: 'دقیقه پیش')}';
-    if (diff.inHours < 24) return '${diff.inHours} ${l10nPickAuto(en: 'hours ago', fa: 'ساعت پیش')}';
+    if (diff.inMinutes < 1)
+      return l10nPickAuto(en: 'just now', fa: 'همین الان');
+    if (diff.inMinutes < 60)
+      return '${diff.inMinutes} ${l10nPickAuto(en: 'minutes ago', fa: 'دقیقه پیش')}';
+    if (diff.inHours < 24)
+      return '${diff.inHours} ${l10nPickAuto(en: 'hours ago', fa: 'ساعت پیش')}';
     return '${diff.inDays} ${l10nPickAuto(en: 'days ago', fa: 'روز پیش')}';
   }
 
@@ -28,7 +27,11 @@ class StaleDataBanner extends StatelessWidget {
       color: AppColors.warning.withValues(alpha: 0.12),
       child: Row(
         children: [
-          const Icon(Icons.cloud_off_rounded, size: 16, color: AppColors.warning),
+          const Icon(
+            Icons.cloud_off_rounded,
+            size: 16,
+            color: AppColors.warning,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(

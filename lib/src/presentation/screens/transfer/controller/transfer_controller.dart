@@ -38,8 +38,7 @@ class TransferController extends GetxController {
   final Rxn<Map<String, dynamic>> successTransferData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  AppLocalizations get localization =>
-      AppLocalizations.of(Get.context!)!;
+  AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
 
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> transferWalletsList = <Wallets>[].obs;
@@ -225,28 +224,29 @@ class TransferController extends GetxController {
 
     final lookedUp = lookedUpRecipient.value;
     if (lookedUp != null) {
-      final lookedUpAccount = (lookedUp['account_number'] ??
-              lookedUp['accountNumber'] ??
-              lookedUp['uid'])
-          ?.toString()
-          .trim();
+      final lookedUpAccount =
+          (lookedUp['account_number'] ??
+                  lookedUp['accountNumber'] ??
+                  lookedUp['uid'])
+              ?.toString()
+              .trim();
 
-      final isMatch = (lookedUpAccount != null && lookedUpAccount == cleanAccount) ||
-          (lookedUpAccount == null && recipientUidController.text.trim() == cleanAccount) ||
+      final isMatch =
+          (lookedUpAccount != null && lookedUpAccount == cleanAccount) ||
+          (lookedUpAccount == null &&
+              recipientUidController.text.trim() == cleanAccount) ||
           recipientUidController.text.trim() == cleanAccount;
 
       if (isMatch) {
-        final name = lookedUp['name']?.toString() ??
+        final name =
+            lookedUp['name']?.toString() ??
             lookedUp['nickname']?.toString() ??
             cleanAccount;
         final avatar = lookedUp['avatar']?.toString();
         return Beneficiaries(
           accountNumber: cleanAccount,
           nickname: name,
-          receiver: Receiver(
-            name: name,
-            avatar: avatar,
-          ),
+          receiver: Receiver(name: name, avatar: avatar),
         );
       }
     }
@@ -270,7 +270,10 @@ class TransferController extends GetxController {
     if (userChargeType == "percentage") {
       final percent = double.tryParse(userChargeStr) ?? 0.0;
       // BUG-11 (P2): Safe monetary calculation without binary floating-point drift.
-      calculatedCharge = MoneyMathHelper.calculatePercentCharge(amount, percent);
+      calculatedCharge = MoneyMathHelper.calculatePercentCharge(
+        amount,
+        percent,
+      );
       charge.value = calculatedCharge;
       totalAmount.value = MoneyMathHelper.add(amount, calculatedCharge);
     } else {
@@ -350,13 +353,10 @@ class TransferController extends GetxController {
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: walletCode,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting(
-            "site_currency",
-          ) ??
-          'USD',
-      siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-            "site_currency_decimals",
-          ) ??
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
           '2',
       isCrypto: isCrypto,
     );
@@ -366,7 +366,8 @@ class TransferController extends GetxController {
     final double min =
         double.tryParse(currentWallet.transferLimit?.min ?? '') ?? 0.0;
     final double max =
-        double.tryParse(currentWallet.transferLimit?.max ?? '') ?? double.infinity;
+        double.tryParse(currentWallet.transferLimit?.max ?? '') ??
+        double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
@@ -437,7 +438,10 @@ class TransferController extends GetxController {
         if (msg.contains('timed out') || msg.contains('timeout')) {
           throw Exception(response.message ?? 'Request timed out');
         }
-        if (PasscodeHelper.isPasscodeRequired(response.message, wasPasscodeProvided: wasPasscodeProvided)) {
+        if (PasscodeHelper.isPasscodeRequired(
+          response.message,
+          wasPasscodeProvided: wasPasscodeProvided,
+        )) {
           isTransferAmountLoading.value = false;
           final dynamic verified = await Get.bottomSheet<dynamic>(
             const VerifyPasscodeBottomSheet(),
@@ -465,7 +469,8 @@ class TransferController extends GetxController {
       debugPrint('❌ transferAmount() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       final errStr = e.toString().toLowerCase();
-      final isTimeout = NetworkErrorHelper.isTimeout(e) ||
+      final isTimeout =
+          NetworkErrorHelper.isTimeout(e) ||
           errStr.contains('timed out') ||
           errStr.contains('timeout') ||
           errStr.contains('connectiontimeout') ||
@@ -483,7 +488,10 @@ class TransferController extends GetxController {
             zh: '请求响应超时。请在重试前在交易记录中核实，以避免重复转账。',
           ),
         );
-      } else if (PasscodeHelper.isPasscodeRequired(e, wasPasscodeProvided: wasPasscodeProvided)) {
+      } else if (PasscodeHelper.isPasscodeRequired(
+        e,
+        wasPasscodeProvided: wasPasscodeProvided,
+      )) {
         isTransferAmountLoading.value = false;
         final dynamic verified = await Get.bottomSheet<dynamic>(
           const VerifyPasscodeBottomSheet(),

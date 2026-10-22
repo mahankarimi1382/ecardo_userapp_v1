@@ -52,9 +52,7 @@ class _ElectricityState extends State<Electricity> {
                   child: Column(
                     children: [
                       SizedBox(height: 16.h),
-                      CommonAppBar(
-                        title: controller.screenTitle,
-                      ),
+                      CommonAppBar(title: controller.screenTitle),
                       SizedBox(height: 30.h),
                     ],
                   ),
@@ -66,7 +64,7 @@ class _ElectricityState extends State<Electricity> {
                     : controller.currentStep.value == 1
                     ? ElectricityReviewStepSection()
                     : // PAYMENT-FIX (P-2): backend-driven pending/success step.
-                    controller.currentStep.value == 2
+                      controller.currentStep.value == 2
                     ? _buildResultStep(context)
                     : SizedBox(),
               ),

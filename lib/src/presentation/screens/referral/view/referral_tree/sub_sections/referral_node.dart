@@ -18,10 +18,12 @@ class ReferralNode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final Color primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final Color nodeBackgroundColor =
-        isDark ? AppColors.darkCard : AppColors.white;
+    final Color primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final Color nodeBackgroundColor = isDark
+        ? AppColors.darkCard
+        : AppColors.white;
 
     final nodeBorder = Border.all(
       color: isRoot
@@ -47,7 +49,10 @@ class ReferralNode extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -59,7 +64,9 @@ class ReferralNode extends StatelessWidget {
                   backgroundColor: isDark
                       ? AppColors.darkSurfaceVariant
                       : AppColors.lightSecondaryContainer,
-                  backgroundImage: avatarUrl.isNotEmpty ? NetworkImage(avatarUrl) : null,
+                  backgroundImage: avatarUrl.isNotEmpty
+                      ? NetworkImage(avatarUrl)
+                      : null,
                   onBackgroundImageError: avatarUrl.isNotEmpty
                       ? (dynamic exception, StackTrace? stackTrace) {}
                       : null,
@@ -69,7 +76,9 @@ class ReferralNode extends StatelessWidget {
                           style: TextStyle(
                             fontSize: isRoot ? 20 : 16,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.deepBlack,
                           ),
                         )
                       : null,

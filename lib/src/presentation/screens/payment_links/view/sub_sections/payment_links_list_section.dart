@@ -101,8 +101,9 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                 builder: (context, constraints) => SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: ConstrainedBox(
-                    constraints:
-                        BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Center(
                       child: EcardoEmptyState(
                         title: localizations.paymentLinksAppBarTitle,
@@ -142,16 +143,15 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                 itemBuilder: (context, index) {
                   final PaymentLinks paymentLink = paymentLinks[index];
                   final isPaid = paymentLink.isPaid == true;
-                  final statusColor =
-                      isPaid ? AppColors.success : AppColors.warning;
+                  final statusColor = isPaid
+                      ? AppColors.success
+                      : AppColors.warning;
 
                   return Container(
                     padding: const EdgeInsets.all(AppSpacing.lg),
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.darkCard : AppColors.lightCard,
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusLg,
-                      ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                       border: Border.all(
                         color: isDark
                             ? AppColors.darkBorder
@@ -174,8 +174,9 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                           children: [
                             Expanded(
                               child: Padding(
-                                padding:
-                                    const EdgeInsetsDirectional.only(end: 8),
+                                padding: const EdgeInsetsDirectional.only(
+                                  end: 8,
+                                ),
                                 child: Text(
                                   paymentLink.number ?? "",
                                   style: TextStyle(
@@ -192,10 +193,9 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                             ),
                             Semantics(
                               button: true,
-                              label: localizations
-                                  .paymentLinksCopySuccessToast,
-                              tooltip: localizations
-                                  .paymentLinksCopySuccessToast,
+                              label: localizations.paymentLinksCopySuccessToast,
+                              tooltip:
+                                  localizations.paymentLinksCopySuccessToast,
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(
                                   AppSpacing.radiusSm,
@@ -208,8 +208,7 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                                     ),
                                   );
                                   ToastHelper().showSuccessToast(
-                                    localizations
-                                        .paymentLinksCopySuccessToast,
+                                    localizations.paymentLinksCopySuccessToast,
                                   );
                                 },
                                 child: ConstrainedBox(
@@ -222,19 +221,20 @@ class _PaymentLinksListSectionState extends State<PaymentLinksListSection> {
                                       width: 36,
                                       height: 36,
                                       decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(
+                                        borderRadius: BorderRadius.circular(
                                           AppSpacing.radiusSm,
                                         ),
-                                        color: (isDark
-                                                ? AppColors.darkPrimary
-                                                : AppColors.brandViolet)
-                                            .withValues(alpha: 0.10),
+                                        color:
+                                            (isDark
+                                                    ? AppColors.darkPrimary
+                                                    : AppColors.brandViolet)
+                                                .withValues(alpha: 0.10),
                                         border: Border.all(
-                                          color: (isDark
-                                                  ? AppColors.darkPrimary
-                                                  : AppColors.brandViolet)
-                                              .withValues(alpha: 0.25),
+                                          color:
+                                              (isDark
+                                                      ? AppColors.darkPrimary
+                                                      : AppColors.brandViolet)
+                                                  .withValues(alpha: 0.25),
                                           width: 1,
                                         ),
                                       ),

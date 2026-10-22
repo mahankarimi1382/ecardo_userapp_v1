@@ -27,7 +27,9 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final surfaceColor = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
 
@@ -52,7 +54,9 @@ class _ChangePasswordState extends State<ChangePassword> {
                       topEnd: Radius.circular(24),
                     ),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                       width: 1,
                     ),
                   ),
@@ -96,10 +100,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       : PngAssets.eyeHideCommonIcon,
                                 ),
                                 color: controller.isCurrentPasswordFocused.value
-                                    ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                                    ? (isDark
+                                          ? AppColors.mainSoftBlue
+                                          : AppColors.lightPrimary)
                                     : (isDark
-                                        ? AppColors.softGray
-                                        : AppColors.lightTextPrimary.withValues(alpha: 0.44)),
+                                          ? AppColors.softGray
+                                          : AppColors.lightTextPrimary
+                                                .withValues(alpha: 0.44)),
                               ),
                             ),
                           ),
@@ -140,10 +147,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       : PngAssets.eyeHideCommonIcon,
                                 ),
                                 color: controller.isNewPasswordFocused.value
-                                    ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                                    ? (isDark
+                                          ? AppColors.mainSoftBlue
+                                          : AppColors.lightPrimary)
                                     : (isDark
-                                        ? AppColors.softGray
-                                        : AppColors.lightTextPrimary.withValues(alpha: 0.44)),
+                                          ? AppColors.softGray
+                                          : AppColors.lightTextPrimary
+                                                .withValues(alpha: 0.44)),
                               ),
                             ),
                           ),
@@ -185,10 +195,13 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       : PngAssets.eyeHideCommonIcon,
                                 ),
                                 color: controller.isConfirmPasswordFocused.value
-                                    ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                                    ? (isDark
+                                          ? AppColors.mainSoftBlue
+                                          : AppColors.lightPrimary)
                                     : (isDark
-                                        ? AppColors.softGray
-                                        : AppColors.lightTextPrimary.withValues(alpha: 0.44)),
+                                          ? AppColors.softGray
+                                          : AppColors.lightTextPrimary
+                                                .withValues(alpha: 0.44)),
                               ),
                             ),
                           ),

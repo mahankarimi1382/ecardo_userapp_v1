@@ -46,7 +46,9 @@ class VisaService extends GetxService {
 
   /// Fetch single request details by caseNo
   Future<VisaRequestModel?> getRequestDetail(String caseNo) async {
-    final response = await _network.get(endpoint: '/user/visa/requests/$caseNo');
+    final response = await _network.get(
+      endpoint: '/user/visa/requests/$caseNo',
+    );
     if (response.data != null && response.data?['data'] is Map) {
       return VisaRequestModel.fromJson(
         Map<String, dynamic>.from(response.data!['data']),
@@ -66,8 +68,16 @@ class VisaService extends GetxService {
     final names = fullName.trim().split(' ');
     final firstName = names.isNotEmpty ? names.first : 'Applicant';
     final lastName = names.length > 1 ? names.sublist(1).join(' ') : 'Traveler';
-    final passportNo = (applicantInfo['passport_no'] ?? applicantInfo['passport_number'] ?? 'A1000000').toString().toUpperCase();
-    final passportExpiry = applicantInfo['passport_expiry_date'] ?? applicantInfo['passport_expiry'] ?? '${DateTime.now().year + 5}-10-20';
+    final passportNo =
+        (applicantInfo['passport_no'] ??
+                applicantInfo['passport_number'] ??
+                'A1000000')
+            .toString()
+            .toUpperCase();
+    final passportExpiry =
+        applicantInfo['passport_expiry_date'] ??
+        applicantInfo['passport_expiry'] ??
+        '${DateTime.now().year + 5}-10-20';
 
     final payload = <String, dynamic>{
       'catalog_id': catalogId,

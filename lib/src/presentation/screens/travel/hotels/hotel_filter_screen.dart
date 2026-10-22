@@ -174,16 +174,18 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
           padding: EdgeInsets.all(AppSpacing.lg.r),
           decoration: BoxDecoration(
             color: ECardoTokens.surfaceCard(context),
-            border: Border(top: BorderSide(color: ECardoTokens.border(context))),
+            border: Border(
+              top: BorderSide(color: ECardoTokens.border(context)),
+            ),
             boxShadow: ECardoTokens.shadowSheet(context),
           ),
           child: SizedBox(
             height: 52.h,
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(
-                value.copyWith(name: nameController.text.trim()),
-              ),
+              onPressed: () => Navigator.of(
+                context,
+              ).pop(value.copyWith(name: nameController.text.trim())),
               style: ElevatedButton.styleFrom(
                 backgroundColor: ECardoTokens.brand900(context),
                 foregroundColor: ECardoTokens.inkOnBrand,
@@ -194,10 +196,7 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               ),
               child: Text(
                 AppLocalizations.of(context)!.hotel_apply_filters,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
               ),
             ),
           ),
@@ -258,7 +257,9 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
                     vertical: 14.h,
                   ),
                   border: InputBorder.none,
-                  labelText: AppLocalizations.of(context)!.hotel_search_hotel_name,
+                  labelText: AppLocalizations.of(
+                    context,
+                  )!.hotel_search_hotel_name,
                   labelStyle: TextStyle(
                     color: ECardoTokens.inkMuted(context),
                     fontSize: 13.sp,
@@ -293,8 +294,9 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
                         activeTrackColor: ECardoTokens.brand700(context),
                         inactiveTrackColor: ECardoTokens.surfaceSunken(context),
                         thumbColor: ECardoTokens.brand700(context),
-                        overlayColor:
-                            ECardoTokens.brand500(context).withValues(alpha: 0.15),
+                        overlayColor: ECardoTokens.brand500(
+                          context,
+                        ).withValues(alpha: 0.15),
                       ),
                       child: RangeSlider(
                         values: range,
@@ -336,102 +338,89 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
                 child: Wrap(
                   spacing: 8.w,
                   runSpacing: 8.h,
-                  children: (options.stars.toList()..sort())
-                      .map(
-                        (star) {
-                          final selected = value.stars.contains(star);
-                          return FilterChip(
-                            label: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  '$star',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    color: selected
-                                        ? ECardoTokens.sand600(context)
-                                        : ECardoTokens.ink(context),
-                                  ),
-                                ),
-                                SizedBox(width: 3.w),
-                                Icon(
-                                  Icons.star_rounded,
-                                  size: 14.sp,
-                                  color: ECardoTokens.sand600(context),
-                                ),
-                              ],
-                            ),
-                            selected: selected,
-                            backgroundColor: ECardoTokens.surfaceCard(context),
-                            selectedColor: ECardoTokens.sand100(context),
-                            checkmarkColor: ECardoTokens.sand600(context),
-                            side: BorderSide(
+                  children: (options.stars.toList()..sort()).map((star) {
+                    final selected = value.stars.contains(star);
+                    return FilterChip(
+                      label: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '$star',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
                               color: selected
-                                  ? ECardoTokens.sand400(context)
-                                  : ECardoTokens.border(context),
+                                  ? ECardoTokens.sand600(context)
+                                  : ECardoTokens.ink(context),
                             ),
-                            onSelected: (_) => _toggle(
-                              value.stars,
-                              star,
-                              (next) => setState(
-                                () => value = value.copyWith(stars: next),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                      .toList(),
+                          ),
+                          SizedBox(width: 3.w),
+                          Icon(
+                            Icons.star_rounded,
+                            size: 14.sp,
+                            color: ECardoTokens.sand600(context),
+                          ),
+                        ],
+                      ),
+                      selected: selected,
+                      backgroundColor: ECardoTokens.surfaceCard(context),
+                      selectedColor: ECardoTokens.sand100(context),
+                      checkmarkColor: ECardoTokens.sand600(context),
+                      side: BorderSide(
+                        color: selected
+                            ? ECardoTokens.sand400(context)
+                            : ECardoTokens.border(context),
+                      ),
+                      onSelected: (_) => _toggle(
+                        value.stars,
+                        star,
+                        (next) =>
+                            setState(() => value = value.copyWith(stars: next)),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             _FilterSection(
               title: AppLocalizations.of(context)!.hotel_special_offers,
               child: options.specialOffers.isEmpty
                   ? Text(
-                      AppLocalizations.of(context)!
-                          .hotel_admin_configured_special_offers_will_appear,
+                      AppLocalizations.of(
+                        context,
+                      )!.hotel_admin_configured_special_offers_will_appear,
                       style: TextStyle(color: ECardoTokens.inkMuted(context)),
                     )
                   : Wrap(
                       spacing: 8.w,
                       runSpacing: 8.h,
-                      children: options.specialOffers
-                          .map(
-                            (item) {
-                              final selected =
-                                  value.specialOffers.contains(item);
-                              return FilterChip(
-                                label: Text(
-                                  item,
-                                  style: TextStyle(
-                                    color: selected
-                                        ? ECardoTokens.brand700(context)
-                                        : ECardoTokens.ink(context),
-                                  ),
-                                ),
-                                selected: selected,
-                                backgroundColor:
-                                    ECardoTokens.surfaceCard(context),
-                                selectedColor:
-                                    ECardoTokens.brand100(context),
-                                checkmarkColor:
-                                    ECardoTokens.brand700(context),
-                                side: BorderSide(
-                                  color: selected
-                                      ? ECardoTokens.brand500(context)
-                                      : ECardoTokens.border(context),
-                                ),
-                                onSelected: (_) => _toggle(
-                                  value.specialOffers,
-                                  item,
-                                  (next) => setState(
-                                    () => value =
-                                        value.copyWith(specialOffers: next),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                          .toList(),
+                      children: options.specialOffers.map((item) {
+                        final selected = value.specialOffers.contains(item);
+                        return FilterChip(
+                          label: Text(
+                            item,
+                            style: TextStyle(
+                              color: selected
+                                  ? ECardoTokens.brand700(context)
+                                  : ECardoTokens.ink(context),
+                            ),
+                          ),
+                          selected: selected,
+                          backgroundColor: ECardoTokens.surfaceCard(context),
+                          selectedColor: ECardoTokens.brand100(context),
+                          checkmarkColor: ECardoTokens.brand700(context),
+                          side: BorderSide(
+                            color: selected
+                                ? ECardoTokens.brand500(context)
+                                : ECardoTokens.border(context),
+                          ),
+                          onSelected: (_) => _toggle(
+                            value.specialOffers,
+                            item,
+                            (next) => setState(
+                              () => value = value.copyWith(specialOffers: next),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
             ),
             if (features.isNotEmpty)
@@ -474,43 +463,40 @@ class _HotelFilterScreenState extends State<HotelFilterScreen> {
               child: Wrap(
                 spacing: 8.w,
                 runSpacing: 8.h,
-                children: [3.0, 3.5, 4.0, 4.5]
-                    .map(
-                      (rating) {
-                        final selected = value.minimumRating == rating;
-                        return ChoiceChip(
-                          label: Text(
-                            '$rating+',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: selected
-                                  ? ECardoTokens.inkOnBrand
-                                  : ECardoTokens.ink(context),
-                            ),
-                          ),
-                          selected: selected,
-                          selectedColor: ECardoTokens.brand900(context),
-                          backgroundColor: ECardoTokens.surfaceCard(context),
-                          side: BorderSide(
-                            color: selected
-                                ? ECardoTokens.brand900(context)
-                                : ECardoTokens.border(context),
-                          ),
-                          onSelected: (sel) => setState(
-                            () => value = value.copyWith(
-                              minimumRating: rating,
-                              clearMinimumRating: !sel,
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                    .toList(),
+                children: [3.0, 3.5, 4.0, 4.5].map((rating) {
+                  final selected = value.minimumRating == rating;
+                  return ChoiceChip(
+                    label: Text(
+                      '$rating+',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: selected
+                            ? ECardoTokens.inkOnBrand
+                            : ECardoTokens.ink(context),
+                      ),
+                    ),
+                    selected: selected,
+                    selectedColor: ECardoTokens.brand900(context),
+                    backgroundColor: ECardoTokens.surfaceCard(context),
+                    side: BorderSide(
+                      color: selected
+                          ? ECardoTokens.brand900(context)
+                          : ECardoTokens.border(context),
+                    ),
+                    onSelected: (sel) => setState(
+                      () => value = value.copyWith(
+                        minimumRating: rating,
+                        clearMinimumRating: !sel,
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
             _SwitchFilter(
-              title: AppLocalizations.of(context)!
-                  .hotel_hotels_with_available_rooms_only,
+              title: AppLocalizations.of(
+                context,
+              )!.hotel_hotels_with_available_rooms_only,
               value: value.availableRoomsOnly,
               onChanged: (next) => setState(
                 () => value = value.copyWith(availableRoomsOnly: next),
@@ -618,36 +604,31 @@ class _ExpandableFilterChips extends StatelessWidget {
         Wrap(
           spacing: 8.w,
           runSpacing: 8.h,
-          children: visible
-              .map(
-                (item) {
-                  final isSelected = selected.contains(item);
-                  return FilterChip(
-                    label: Text(
-                      item,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
-                        color: isSelected
-                            ? ECardoTokens.brand700(context)
-                            : ECardoTokens.ink(context),
-                      ),
-                    ),
-                    selected: isSelected,
-                    backgroundColor: ECardoTokens.surfaceCard(context),
-                    selectedColor: ECardoTokens.brand100(context),
-                    checkmarkColor: ECardoTokens.brand700(context),
-                    side: BorderSide(
-                      color: isSelected
-                          ? ECardoTokens.brand500(context)
-                          : ECardoTokens.border(context),
-                    ),
-                    onSelected: (_) => onSelected(item),
-                  );
-                },
-              )
-              .toList(),
+          children: visible.map((item) {
+            final isSelected = selected.contains(item);
+            return FilterChip(
+              label: Text(
+                item,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected
+                      ? ECardoTokens.brand700(context)
+                      : ECardoTokens.ink(context),
+                ),
+              ),
+              selected: isSelected,
+              backgroundColor: ECardoTokens.surfaceCard(context),
+              selectedColor: ECardoTokens.brand100(context),
+              checkmarkColor: ECardoTokens.brand700(context),
+              side: BorderSide(
+                color: isSelected
+                    ? ECardoTokens.brand500(context)
+                    : ECardoTokens.border(context),
+              ),
+              onSelected: (_) => onSelected(item),
+            );
+          }).toList(),
         ),
         if (values.length > 6)
           TextButton.icon(
@@ -665,10 +646,7 @@ class _ExpandableFilterChips extends StatelessWidget {
               expanded
                   ? AppLocalizations.of(context)!.hotel_show_less
                   : AppLocalizations.of(context)!.hotel_show_more,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
-              ),
+              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
             ),
           ),
       ],

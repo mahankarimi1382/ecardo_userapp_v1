@@ -58,7 +58,9 @@ void main() {
         equals('/app-version'),
       );
       expect(
-        DemoAccountService.normalizeEndpoint('/api/get-settings-v2?cb=17482348'),
+        DemoAccountService.normalizeEndpoint(
+          '/api/get-settings-v2?cb=17482348',
+        ),
         equals('/get-settings-v2'),
       );
       expect(
@@ -215,63 +217,78 @@ void main() {
       networkService = Get.put(NetworkService());
     });
 
-    test('NetworkService.get intercepts /user/dashboard with 0ms delay', () async {
-      final sw = Stopwatch()..start();
-      final resp = await networkService.get(endpoint: '/user/dashboard');
-      sw.stop();
+    test(
+      'NetworkService.get intercepts /user/dashboard with 0ms delay',
+      () async {
+        final sw = Stopwatch()..start();
+        final resp = await networkService.get(endpoint: '/user/dashboard');
+        sw.stop();
 
-      expect(resp.status, equals(Status.completed));
-      expect(resp.data, isNotNull);
-      expect(resp.data!['status'], equals('success'));
-      expect(sw.elapsedMilliseconds, lessThan(50));
-    });
+        expect(resp.status, equals(Status.completed));
+        expect(resp.data, isNotNull);
+        expect(resp.data!['status'], equals('success'));
+        expect(sw.elapsedMilliseconds, lessThan(50));
+      },
+    );
 
-    test('NetworkService.get intercepts /user/wallets with 0ms delay', () async {
-      final sw = Stopwatch()..start();
-      final resp = await networkService.get(endpoint: '/user/wallets');
-      sw.stop();
+    test(
+      'NetworkService.get intercepts /user/wallets with 0ms delay',
+      () async {
+        final sw = Stopwatch()..start();
+        final resp = await networkService.get(endpoint: '/user/wallets');
+        sw.stop();
 
-      expect(resp.status, equals(Status.completed));
-      expect(resp.data, isNotNull);
-      expect(sw.elapsedMilliseconds, lessThan(50));
-    });
+        expect(resp.status, equals(Status.completed));
+        expect(resp.data, isNotNull);
+        expect(sw.elapsedMilliseconds, lessThan(50));
+      },
+    );
 
-    test('NetworkService.globalGet intercepts /get-settings-v2 with 0ms delay', () async {
-      final sw = Stopwatch()..start();
-      final resp = await networkService.globalGet(
-        endpoint: '/get-settings-v2?cb=123',
-      );
-      sw.stop();
+    test(
+      'NetworkService.globalGet intercepts /get-settings-v2 with 0ms delay',
+      () async {
+        final sw = Stopwatch()..start();
+        final resp = await networkService.globalGet(
+          endpoint: '/get-settings-v2?cb=123',
+        );
+        sw.stop();
 
-      expect(resp.status, equals(Status.completed));
-      expect(resp.data, isNotNull);
-      expect(sw.elapsedMilliseconds, lessThan(50));
-    });
+        expect(resp.status, equals(Status.completed));
+        expect(resp.data, isNotNull);
+        expect(sw.elapsedMilliseconds, lessThan(50));
+      },
+    );
 
-    test('NetworkService.globalPost intercepts immediate mock in demo mode', () async {
-      final sw = Stopwatch()..start();
-      final resp = await networkService.globalPost(
-        endpoint: '/auth/user/login-otp/request',
-        data: {'email': 'demo@ecardo.ir'},
-      );
-      sw.stop();
+    test(
+      'NetworkService.globalPost intercepts immediate mock in demo mode',
+      () async {
+        final sw = Stopwatch()..start();
+        final resp = await networkService.globalPost(
+          endpoint: '/auth/user/login-otp/request',
+          data: {'email': 'demo@ecardo.ir'},
+        );
+        sw.stop();
 
-      expect(resp.status, equals(Status.completed));
-      expect(resp.data, isNotNull);
-      expect(sw.elapsedMilliseconds, lessThan(50));
-    });
+        expect(resp.status, equals(Status.completed));
+        expect(resp.data, isNotNull);
+        expect(sw.elapsedMilliseconds, lessThan(50));
+      },
+    );
 
-    test('NetworkService.post intercepts immediate mock without timeout', () async {
-      final sw = Stopwatch()..start();
-      final resp = await networkService.post(
-        endpoint: '/user/transfer',
-        data: {'amount': '10.00', 'to': 'user2'},
-      );
-      sw.stop();
+    test(
+      'NetworkService.post intercepts immediate mock without timeout',
+      () async {
+        final sw = Stopwatch()..start();
+        final resp = await networkService.post(
+          endpoint: '/user/transfer',
+          data: {'amount': '10.00', 'to': 'user2'},
+        );
+        sw.stop();
 
-      expect(resp.status, equals(Status.completed));
-      expect(resp.data, isNotNull);
-      expect(sw.elapsedMilliseconds, lessThan(50));
-    });
+        expect(resp.status, equals(Status.completed));
+        expect(resp.data, isNotNull);
+        expect(sw.elapsedMilliseconds, lessThan(50));
+      },
+    );
   });
 }

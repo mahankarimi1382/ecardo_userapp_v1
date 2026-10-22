@@ -22,11 +22,7 @@ class MyAdsSubSection extends StatefulWidget {
   final MyAdsController? controller;
   final VoidCallback? onCreateAd;
 
-  const MyAdsSubSection({
-    super.key,
-    this.controller,
-    this.onCreateAd,
-  });
+  const MyAdsSubSection({super.key, this.controller, this.onCreateAd});
 
   @override
   State<MyAdsSubSection> createState() => _MyAdsSubSectionState();
@@ -109,23 +105,22 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
                   fa: 'ایجاد آگهی جدید',
                 ),
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: 44.w,
-                    minHeight: 44.h,
-                  ),
+                  constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
                   child: Material(
                     color: AppColors.transparent,
                     child: InkWell(
                       onTap: _handleCreateAdTap,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                       child: Ink(
                         decoration: BoxDecoration(
                           color: isDark
                               ? AppColors.darkPrimary
                               : AppColors.brandViolet,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusMd.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                         ),
                         padding: EdgeInsets.symmetric(
                           horizontal: 14.w,
@@ -184,10 +179,12 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
                   ),
                   child: EcardoEmptyState(
                     iconData: Icons.campaign_outlined,
-                    iconColor:
-                        isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                    glowColor:
-                        isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    iconColor: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
+                    glowColor: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                     title: l10nPick(
                       context,
                       en: 'No P2P Ads Posted Yet',
@@ -221,8 +218,9 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
             // 3. Populated My Ads List
             return RefreshIndicator(
               color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
-              backgroundColor:
-                  isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              backgroundColor: isDark
+                  ? AppColors.darkSurface
+                  : AppColors.lightSurface,
               onRefresh: () => controller.fetchMyAds(isRefresh: true),
               child: ListView.separated(
                 controller: _scrollController,
@@ -256,7 +254,8 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
                 },
                 separatorBuilder: (context, index) =>
                     SizedBox(height: AppSpacing.cardGap.h),
-                itemCount: controller.adsList.length +
+                itemCount:
+                    controller.adsList.length +
                     (controller.isPaginationLoading.value ? 1 : 0),
               ),
             );
@@ -267,10 +266,12 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
   }
 
   Widget _buildMyAdsShimmer(bool isDark) {
-    final baseColor =
-        isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-    final highlightColor =
-        isDark ? AppColors.darkSurface : AppColors.lightBackground;
+    final baseColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightSurfaceVariant;
+    final highlightColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightBackground;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
@@ -300,8 +301,9 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
                     height: 20.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                   Container(
@@ -309,8 +311,9 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
                     height: 20.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                 ],

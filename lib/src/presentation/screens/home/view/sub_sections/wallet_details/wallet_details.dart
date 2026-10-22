@@ -70,7 +70,9 @@ class _WalletDetailsState extends State<WalletDetails> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       body: Obx(
         () => controller.isLoading.value
             ? CommonLoading()
@@ -136,7 +138,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                 letterSpacing: 0,
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ],
@@ -525,7 +529,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                                         letterSpacing: 0,
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
-                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
@@ -535,7 +541,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                                       style: TextStyle(
                                         letterSpacing: 0,
                                         fontSize: 13,
-                                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                                        color: isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextTertiary,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -591,7 +599,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                                 fontSize: 15,
                                 color: transaction.isPlus == true
                                     ? AppColors.success
-                                    : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                                    : (isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary),
                               ),
                             ),
                           ],
@@ -605,7 +615,9 @@ class _WalletDetailsState extends State<WalletDetails> {
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   child: Divider(
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
                     height: 0,
                   ),
                 );

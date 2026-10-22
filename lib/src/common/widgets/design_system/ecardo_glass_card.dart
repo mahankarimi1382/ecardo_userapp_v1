@@ -96,16 +96,14 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
       duration: const Duration(milliseconds: 120),
       reverseDuration: const Duration(milliseconds: 240),
     );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: widget.pressedScale,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOutQuad,
-        reverseCurve: Curves.easeOutBack,
-      ),
-    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: widget.pressedScale)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeInOutQuad,
+            reverseCurve: Curves.easeOutBack,
+          ),
+        );
   }
 
   @override
@@ -138,7 +136,8 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
   }
 
   bool get _isInteractive =>
-      widget.interactive && (widget.onTap != null || widget.onLongPress != null);
+      widget.interactive &&
+      (widget.onTap != null || widget.onLongPress != null);
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +147,8 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
     final isBlurDisabled = widget.disableBlur || disableAnimations;
 
     // Resolve color styling dynamically based on theme and variant
-    final resolvedBg = widget.backgroundColor ??
+    final resolvedBg =
+        widget.backgroundColor ??
         _resolveBackgroundColor(isDark, disableBlur: isBlurDisabled);
     final resolvedBorderGradient =
         widget.borderGradient ?? _resolveBorderGradient(isDark);
@@ -170,10 +170,7 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
           gradient: RadialGradient(
             center: widget.glowAlignment,
             radius: widget.glowRadius,
-            colors: [
-              resolvedGlow,
-              resolvedGlow.withValues(alpha: 0.0),
-            ],
+            colors: [resolvedGlow, resolvedGlow.withValues(alpha: 0.0)],
             stops: const [0.0, 1.0],
           ),
         ),
@@ -209,10 +206,7 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
     }
 
     if (widget.margin != null) {
-      cardBody = Padding(
-        padding: widget.margin!,
-        child: cardBody,
-      );
+      cardBody = Padding(padding: widget.margin!, child: cardBody);
     }
 
     if (!_isInteractive) {
@@ -226,10 +220,7 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
       onTap: widget.onTap,
       onLongPress: widget.onLongPress,
       behavior: HitTestBehavior.opaque,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: cardBody,
-      ),
+      child: ScaleTransition(scale: _scaleAnimation, child: cardBody),
     );
   }
 
@@ -284,74 +275,74 @@ class _EcardoGlassCardState extends State<EcardoGlassCard>
     if (isDark) {
       return switch (widget.variant) {
         EcardoGlassVariant.neon => const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0x80ABC3EA),
-              Color(0x33849ACD),
-              Color(0x0DFFFFFF),
-              Color(0x59ABC3EA),
-            ],
-            stops: [0.0, 0.35, 0.7, 1.0],
-          ),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0x80ABC3EA),
+            Color(0x33849ACD),
+            Color(0x0DFFFFFF),
+            Color(0x59ABC3EA),
+          ],
+          stops: [0.0, 0.35, 0.7, 1.0],
+        ),
         EcardoGlassVariant.accent => const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0x66ABC3EA),
-              Color(0x26849ACD),
-              Color(0x0AFFFFFF),
-              Color(0x33ABC3EA),
-            ],
-            stops: [0.0, 0.4, 0.7, 1.0],
-          ),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0x66ABC3EA),
+            Color(0x26849ACD),
+            Color(0x0AFFFFFF),
+            Color(0x33ABC3EA),
+          ],
+          stops: [0.0, 0.4, 0.7, 1.0],
+        ),
         _ => const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0x47FFFFFF),
-              Color(0x1AFFFFFF),
-              Color(0x08FFFFFF),
-              Color(0x26ABC3EA),
-            ],
-            stops: [0.0, 0.35, 0.7, 1.0],
-          ),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0x47FFFFFF),
+            Color(0x1AFFFFFF),
+            Color(0x08FFFFFF),
+            Color(0x26ABC3EA),
+          ],
+          stops: [0.0, 0.35, 0.7, 1.0],
+        ),
       };
     } else {
       return switch (widget.variant) {
         EcardoGlassVariant.neon => const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFFFFF),
-              Color(0x80ABC3EA),
-              Color(0x40D5CBC8),
-              Color(0x99ABC3EA),
-            ],
-            stops: [0.0, 0.35, 0.7, 1.0],
-          ),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFFFFFFFF),
+            Color(0x80ABC3EA),
+            Color(0x40D5CBC8),
+            Color(0x99ABC3EA),
+          ],
+          stops: [0.0, 0.35, 0.7, 1.0],
+        ),
         EcardoGlassVariant.accent => const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFAFFFFFF),
-              Color(0x66ABC3EA),
-              Color(0x2BD5CBC8),
-              Color(0x66849ACD),
-            ],
-            stops: [0.0, 0.4, 0.75, 1.0],
-          ),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFAFFFFFF),
+            Color(0x66ABC3EA),
+            Color(0x2BD5CBC8),
+            Color(0x66849ACD),
+          ],
+          stops: [0.0, 0.4, 0.75, 1.0],
+        ),
         _ => const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xF5FFFFFF),
-              Color(0x4DFFFFFF),
-              Color(0x33D5CBC8),
-              Color(0x66ABC3EA),
-            ],
-            stops: [0.0, 0.35, 0.75, 1.0],
-          ),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xF5FFFFFF),
+            Color(0x4DFFFFFF),
+            Color(0x33D5CBC8),
+            Color(0x66ABC3EA),
+          ],
+          stops: [0.0, 0.35, 0.75, 1.0],
+        ),
       };
     }
   }
@@ -428,7 +419,8 @@ class _GradientBorderPainter extends CustomPainter {
     if (borderWidth <= 0) return;
 
     final halfWidth = borderWidth / 2;
-    final rect = Offset(halfWidth, halfWidth) &
+    final rect =
+        Offset(halfWidth, halfWidth) &
         Size(size.width - borderWidth, size.height - borderWidth);
     final rrect = RRect.fromRectAndRadius(
       rect,

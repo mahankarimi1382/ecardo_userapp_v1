@@ -23,33 +23,36 @@ void main() {
   }
 
   group('CipLoungeReservationScreen', () {
-    testWidgets('renders CIP Lounge Reservation Screen with airport and pricing', (tester) async {
+    testWidgets(
+      'renders CIP Lounge Reservation Screen with airport and pricing',
+      (tester) async {
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (context, child) =>
+                const MaterialApp(home: CipLoungeReservationScreen()),
+          ),
+        );
+
+        // Verify header and sections exist
+        expect(find.text('Airport CIP & VIP Lounge'), findsOneWidget);
+        expect(find.text('Select Airport'), findsOneWidget);
+        expect(find.text('Flight Type'), findsOneWidget);
+        expect(find.text('Flight Information'), findsOneWidget);
+        expect(find.text('Guests'), findsOneWidget);
+        expect(find.text('Included CIP & Lounge Amenities'), findsOneWidget);
+        expect(find.text('Reserve CIP Lounge Service'), findsOneWidget);
+      },
+    );
+
+    testWidgets('increments guest count and recalculates price correctly', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
-            home: CipLoungeReservationScreen(),
-          ),
-        ),
-      );
-
-      // Verify header and sections exist
-      expect(find.text('Airport CIP & VIP Lounge'), findsOneWidget);
-      expect(find.text('Select Airport'), findsOneWidget);
-      expect(find.text('Flight Type'), findsOneWidget);
-      expect(find.text('Flight Information'), findsOneWidget);
-      expect(find.text('Guests'), findsOneWidget);
-      expect(find.text('Included CIP & Lounge Amenities'), findsOneWidget);
-      expect(find.text('Reserve CIP Lounge Service'), findsOneWidget);
-    });
-
-    testWidgets('increments guest count and recalculates price correctly', (tester) async {
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
-            home: CipLoungeReservationScreen(),
-          ),
+          builder: (context, child) =>
+              const MaterialApp(home: CipLoungeReservationScreen()),
         ),
       );
 
@@ -68,90 +71,96 @@ void main() {
   });
 
   group('HotelRoomSelectionCard (RoomOptionCard)', () {
-    testWidgets('renders room details, badges, chips, price, and responds to selection', (tester) async {
-      int selectedQty = 0;
+    testWidgets(
+      'renders room details, badges, chips, price, and responds to selection',
+      (tester) async {
+        int selectedQty = 0;
 
-      final testRoom = <String, dynamic>{
-        'room_id': 'deluxe-suite-101',
-        'room_name': 'Deluxe King Suite',
-        'room_size': '45 m²',
-        'bed_type': '1 King Bed',
-        'capacity': '2 Adults, 1 Child',
-        'breakfast_included': true,
-        'price': 150.0,
-        'currency': 'USD',
-        'features': ['City View', 'Balcony', 'Bathtub', 'High-speed Wi-Fi'],
-      };
+        final testRoom = <String, dynamic>{
+          'room_id': 'deluxe-suite-101',
+          'room_name': 'Deluxe King Suite',
+          'room_size': '45 m²',
+          'bed_type': '1 King Bed',
+          'capacity': '2 Adults, 1 Child',
+          'breakfast_included': true,
+          'price': 150.0,
+          'currency': 'USD',
+          'features': ['City View', 'Balcony', 'Bathtub', 'High-speed Wi-Fi'],
+        };
 
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (context, child) => MaterialApp(
-            home: Scaffold(
-              body: SingleChildScrollView(
-                child: StatefulBuilder(
-                  builder: (context, setState) {
-                    return HotelRoomSelectionCard(
-                      room: testRoom,
-                      nights: 2,
-                      quantity: selectedQty,
-                      onQuantityChanged: (q) {
-                        setState(() {
-                          selectedQty = q;
-                        });
-                      },
-                      onSelect: () {
-                        setState(() {
-                          selectedQty = selectedQty > 0 ? 0 : 1;
-                        });
-                      },
-                    );
-                  },
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (context, child) => MaterialApp(
+              home: Scaffold(
+                body: SingleChildScrollView(
+                  child: StatefulBuilder(
+                    builder: (context, setState) {
+                      return HotelRoomSelectionCard(
+                        room: testRoom,
+                        nights: 2,
+                        quantity: selectedQty,
+                        onQuantityChanged: (q) {
+                          setState(() {
+                            selectedQty = q;
+                          });
+                        },
+                        onSelect: () {
+                          setState(() {
+                            selectedQty = selectedQty > 0 ? 0 : 1;
+                          });
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
+        );
 
-      // Verify title & size
-      expect(find.text('Deluxe King Suite'), findsOneWidget);
-      expect(find.text('45 m²'), findsOneWidget);
+        // Verify title & size
+        expect(find.text('Deluxe King Suite'), findsOneWidget);
+        expect(find.text('45 m²'), findsOneWidget);
 
-      // Verify badges
-      expect(find.text('Breakfast Included'), findsOneWidget);
-      expect(find.text('Free Cancellation until 48h before check-in'), findsOneWidget);
+        // Verify badges
+        expect(find.text('Breakfast Included'), findsOneWidget);
+        expect(
+          find.text('Free Cancellation until 48h before check-in'),
+          findsOneWidget,
+        );
 
-      // Verify chips
-      expect(find.text('1 King Bed'), findsOneWidget);
-      expect(find.text('2 Adults, 1 Child'), findsOneWidget);
-      expect(find.text('City View'), findsOneWidget);
-      expect(find.text('Balcony'), findsOneWidget);
+        // Verify chips
+        expect(find.text('1 King Bed'), findsOneWidget);
+        expect(find.text('2 Adults, 1 Child'), findsOneWidget);
+        expect(find.text('City View'), findsOneWidget);
+        expect(find.text('Balcony'), findsOneWidget);
 
-      // Verify initial unselected state
-      expect(find.text('Select Room'), findsOneWidget);
-      expect(find.text('Includes taxes & fees'), findsOneWidget);
+        // Verify initial unselected state
+        expect(find.text('Select Room'), findsOneWidget);
+        expect(find.text('Includes taxes & fees'), findsOneWidget);
 
-      // Tap "Select Room" button
-      await tester.tap(find.text('Select Room'));
-      await tester.pump();
+        // Tap "Select Room" button
+        await tester.tap(find.text('Select Room'));
+        await tester.pump();
 
-      // Verify selected state
-      expect(selectedQty, 1);
-      expect(find.text('Selected'), findsOneWidget);
-    });
+        // Verify selected state
+        expect(selectedQty, 1);
+        expect(find.text('Selected'), findsOneWidget);
+      },
+    );
   });
 
   group('HotelAmenitiesGrid', () {
-    testWidgets('renders grid with core hotel amenities and view all button', (tester) async {
+    testWidgets('renders grid with core hotel amenities and view all button', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
           builder: (context, child) => const MaterialApp(
             home: Scaffold(
-              body: SingleChildScrollView(
-                child: HotelAmenitiesGrid(),
-              ),
+              body: SingleChildScrollView(child: HotelAmenitiesGrid()),
             ),
           ),
         ),
@@ -171,7 +180,9 @@ void main() {
   });
 
   group('CancellationPolicyTimelineCard', () {
-    testWidgets('renders 3 cancellation stages and wallet deposit rules', (tester) async {
+    testWidgets('renders 3 cancellation stages and wallet deposit rules', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -192,53 +203,60 @@ void main() {
 
       // Check wallet deposit rules summary
       expect(
-        find.text('Refunds deposit directly to your eCardo Wallet within 1-24 hours.'),
+        find.text(
+          'Refunds deposit directly to your eCardo Wallet within 1-24 hours.',
+        ),
         findsOneWidget,
       );
     });
   });
 
   group('EsimDataUsageGauge', () {
-    testWidgets('renders total data, remaining data, days left, and responds to top-up tap', (tester) async {
-      bool topUpTapped = false;
+    testWidgets(
+      'renders total data, remaining data, days left, and responds to top-up tap',
+      (tester) async {
+        bool topUpTapped = false;
 
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (context, child) => MaterialApp(
-            home: Scaffold(
-              body: SingleChildScrollView(
-                child: EsimDataUsageGauge(
-                  totalDataGb: 10.0,
-                  usedDataGb: 6.4,
-                  daysRemaining: 14,
-                  countryOrRegion: 'Turkey & Europe',
-                  onTopUpTap: () => topUpTapped = true,
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (context, child) => MaterialApp(
+              home: Scaffold(
+                body: SingleChildScrollView(
+                  child: EsimDataUsageGauge(
+                    totalDataGb: 10.0,
+                    usedDataGb: 6.4,
+                    daysRemaining: 14,
+                    countryOrRegion: 'Turkey & Europe',
+                    onTopUpTap: () => topUpTapped = true,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      // Check numbers and labels
-      expect(find.text('Turkey & Europe'), findsOneWidget);
-      expect(find.text('Active eSIM'), findsOneWidget);
-      expect(find.text('3.6 GB'), findsOneWidget);
-      expect(find.text('Remaining of 10.0 GB'), findsOneWidget);
-      expect(find.text('14 Days left'), findsOneWidget);
-      expect(find.text('6.4 GB'), findsOneWidget);
-      expect(find.text('36% Available'), findsOneWidget);
+        // Check numbers and labels
+        expect(find.text('Turkey & Europe'), findsOneWidget);
+        expect(find.text('Active eSIM'), findsOneWidget);
+        expect(find.text('3.6 GB'), findsOneWidget);
+        expect(find.text('Remaining of 10.0 GB'), findsOneWidget);
+        expect(find.text('14 Days left'), findsOneWidget);
+        expect(find.text('6.4 GB'), findsOneWidget);
+        expect(find.text('36% Available'), findsOneWidget);
 
-      // Verify top up button
-      final topUpButton = find.text('+ Top-Up Data');
-      expect(topUpButton, findsOneWidget);
-      await tester.tap(topUpButton);
-      expect(topUpTapped, true);
-    });
+        // Verify top up button
+        final topUpButton = find.text('+ Top-Up Data');
+        expect(topUpButton, findsOneWidget);
+        await tester.tap(topUpButton);
+        expect(topUpTapped, true);
+      },
+    );
 
-    testWidgets('shows low data alert when remaining is under 15%', (tester) async {
+    testWidgets('shows low data alert when remaining is under 15%', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         ScreenUtilInit(
           designSize: const Size(375, 812),
@@ -264,57 +282,59 @@ void main() {
   });
 
   group('EsimActivationCard', () {
-    testWidgets('renders QR code, SM-DP+ address, activation code, and installation steps', (tester) async {
-      phoneSurface(tester);
+    testWidgets(
+      'renders QR code, SM-DP+ address, activation code, and installation steps',
+      (tester) async {
+        phoneSurface(tester);
 
-      await tester.pumpWidget(
-        ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (context, child) => const MaterialApp(
-            home: Scaffold(
-              body: SingleChildScrollView(
-                child: EsimActivationCard(
-                  smdpAddress: 'rsp.truphone.com',
-                  activationCode: 'EC-TR-98421-B884',
-                  confirmationCode: 'None',
-                  countryOrRegion: 'Turkey & Europe',
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (context, child) => const MaterialApp(
+              home: Scaffold(
+                body: SingleChildScrollView(
+                  child: EsimActivationCard(
+                    smdpAddress: 'rsp.truphone.com',
+                    activationCode: 'EC-TR-98421-B884',
+                    confirmationCode: 'None',
+                    countryOrRegion: 'Turkey & Europe',
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      // Verify header & titles
-      expect(find.text('eSIM Activation & Setup'), findsOneWidget);
-      expect(find.text('SM-DP+ Address'), findsOneWidget);
-      expect(find.text('rsp.truphone.com'), findsOneWidget);
-      expect(find.text('Activation Code'), findsOneWidget);
-      expect(find.text('EC-TR-98421-B884'), findsOneWidget);
-      expect(find.text('Confirmation Code'), findsOneWidget);
-      expect(find.text('None (Not Required)'), findsOneWidget);
+        // Verify header & titles
+        expect(find.text('eSIM Activation & Setup'), findsOneWidget);
+        expect(find.text('SM-DP+ Address'), findsOneWidget);
+        expect(find.text('rsp.truphone.com'), findsOneWidget);
+        expect(find.text('Activation Code'), findsOneWidget);
+        expect(find.text('EC-TR-98421-B884'), findsOneWidget);
+        expect(find.text('Confirmation Code'), findsOneWidget);
+        expect(find.text('None (Not Required)'), findsOneWidget);
 
-      // Verify iOS vs Android tabs
-      expect(find.text('iOS (iPhone / iPad)'), findsOneWidget);
-      expect(find.text('Android'), findsOneWidget);
+        // Verify iOS vs Android tabs
+        expect(find.text('iOS (iPhone / iPad)'), findsOneWidget);
+        expect(find.text('Android'), findsOneWidget);
 
-      // Default is iOS steps
-      expect(find.text('1. Open Cellular Settings'), findsOneWidget);
+        // Default is iOS steps
+        expect(find.text('1. Open Cellular Settings'), findsOneWidget);
 
-      // The card is taller than the viewport, so the platform tabs sit
-      // off-screen at the default 800x600 test surface. Scroll it into view
-      // before tapping or the tap lands outside the render tree.
-      final androidTab = find.text('Android');
-      await tester.ensureVisible(androidTab);
-      await tester.pumpAndSettle();
-      await tester.tap(androidTab);
-      await tester.pumpAndSettle();
+        // The card is taller than the viewport, so the platform tabs sit
+        // off-screen at the default 800x600 test surface. Scroll it into view
+        // before tapping or the tap lands outside the render tree.
+        final androidTab = find.text('Android');
+        await tester.ensureVisible(androidTab);
+        await tester.pumpAndSettle();
+        await tester.tap(androidTab);
+        await tester.pumpAndSettle();
 
-      expect(find.text('1. Open SIM Manager'), findsOneWidget);
-      // The iOS step list must be gone, not stacked under the Android one.
-      expect(find.text('1. Open Cellular Settings'), findsNothing);
-    });
+        expect(find.text('1. Open SIM Manager'), findsOneWidget);
+        // The iOS step list must be gone, not stacked under the Android one.
+        expect(find.text('1. Open Cellular Settings'), findsNothing);
+      },
+    );
   });
 }
-

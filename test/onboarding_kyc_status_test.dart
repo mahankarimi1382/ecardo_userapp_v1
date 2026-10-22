@@ -17,25 +17,39 @@ void main() {
       return emailVerified && passwordSetup && personalInfo && isKycValid;
     }
 
-    test('kyc == 1 (approved) is considered valid and completes onboarding', () {
-      final completed = checkAllStepsCompleted(
-        emailVerified: true,
-        passwordSetup: true,
-        personalInfo: true,
-        kyc: 1, // Admin approved
-      );
-      expect(completed, isTrue, reason: 'Approved KYC users must be allowed to complete onboarding');
-    });
+    test(
+      'kyc == 1 (approved) is considered valid and completes onboarding',
+      () {
+        final completed = checkAllStepsCompleted(
+          emailVerified: true,
+          passwordSetup: true,
+          personalInfo: true,
+          kyc: 1, // Admin approved
+        );
+        expect(
+          completed,
+          isTrue,
+          reason: 'Approved KYC users must be allowed to complete onboarding',
+        );
+      },
+    );
 
-    test('kyc == 2 (in review) is considered valid and completes onboarding', () {
-      final completed = checkAllStepsCompleted(
-        emailVerified: true,
-        passwordSetup: true,
-        personalInfo: true,
-        kyc: 2, // In review
-      );
-      expect(completed, isTrue, reason: 'Users in review must be allowed into dashboard');
-    });
+    test(
+      'kyc == 2 (in review) is considered valid and completes onboarding',
+      () {
+        final completed = checkAllStepsCompleted(
+          emailVerified: true,
+          passwordSetup: true,
+          personalInfo: true,
+          kyc: 2, // In review
+        );
+        expect(
+          completed,
+          isTrue,
+          reason: 'Users in review must be allowed into dashboard',
+        );
+      },
+    );
 
     test('kyc == 3 (rejected) does NOT complete onboarding', () {
       final completed = checkAllStepsCompleted(
@@ -44,7 +58,11 @@ void main() {
         personalInfo: true,
         kyc: 3, // Rejected
       );
-      expect(completed, isFalse, reason: 'Rejected KYC must require action before completion');
+      expect(
+        completed,
+        isFalse,
+        reason: 'Rejected KYC must require action before completion',
+      );
     });
 
     test('kyc == 0 (unverified) does NOT complete onboarding', () {
@@ -57,15 +75,18 @@ void main() {
       expect(completed, isFalse, reason: 'Unverified KYC must require action');
     });
 
-    test('missing personal info does NOT complete onboarding even if kyc == 1', () {
-      final completed = checkAllStepsCompleted(
-        emailVerified: true,
-        passwordSetup: true,
-        personalInfo: false,
-        kyc: 1,
-      );
-      expect(completed, isFalse);
-    });
+    test(
+      'missing personal info does NOT complete onboarding even if kyc == 1',
+      () {
+        final completed = checkAllStepsCompleted(
+          emailVerified: true,
+          passwordSetup: true,
+          personalInfo: false,
+          kyc: 1,
+        );
+        expect(completed, isFalse);
+      },
+    );
   });
 
   group('UserModel KYC deserialization integrity', () {
@@ -91,57 +112,86 @@ void main() {
   });
 
   group('Registration Country Selection and Formatting Tests', () {
-    test('_setSelectedCountry fallback logic selects IR when selected is false for all', () {
-      final countryList = <CountryData>[
-        CountryData(name: 'Germany', code: 'DE', dialCode: '+49', selected: false),
-        CountryData(name: 'Iran', code: 'IR', dialCode: '+98', selected: false),
-        CountryData(name: 'Turkey', code: 'TR', dialCode: '+90', selected: false),
-      ];
+    test(
+      '_setSelectedCountry fallback logic selects IR when selected is false for all',
+      () {
+        final countryList = <CountryData>[
+          CountryData(
+            name: 'Germany',
+            code: 'DE',
+            dialCode: '+49',
+            selected: false,
+          ),
+          CountryData(
+            name: 'Iran',
+            code: 'IR',
+            dialCode: '+98',
+            selected: false,
+          ),
+          CountryData(
+            name: 'Turkey',
+            code: 'TR',
+            dialCode: '+90',
+            selected: false,
+          ),
+        ];
 
-      final selectedCountry = countryList.firstWhereOrNull(
-            (country) => country.selected == true,
-          ) ??
-          countryList.firstWhereOrNull(
-            (country) => country.code == 'IR',
-          ) ??
-          countryList.firstOrNull;
+        final selectedCountry =
+            countryList.firstWhereOrNull(
+              (country) => country.selected == true,
+            ) ??
+            countryList.firstWhereOrNull((country) => country.code == 'IR') ??
+            countryList.firstOrNull;
 
-      expect(selectedCountry, isNotNull);
-      expect(selectedCountry?.code, 'IR');
-      expect(selectedCountry?.dialCode, '+98');
-    });
+        expect(selectedCountry, isNotNull);
+        expect(selectedCountry?.code, 'IR');
+        expect(selectedCountry?.dialCode, '+98');
+      },
+    );
 
-    test('_setSelectedCountry fallback logic selects first country when IR not present', () {
-      final countryList = <CountryData>[
-        CountryData(name: 'Germany', code: 'DE', dialCode: '+49', selected: false),
-        CountryData(name: 'Turkey', code: 'TR', dialCode: '+90', selected: false),
-      ];
+    test(
+      '_setSelectedCountry fallback logic selects first country when IR not present',
+      () {
+        final countryList = <CountryData>[
+          CountryData(
+            name: 'Germany',
+            code: 'DE',
+            dialCode: '+49',
+            selected: false,
+          ),
+          CountryData(
+            name: 'Turkey',
+            code: 'TR',
+            dialCode: '+90',
+            selected: false,
+          ),
+        ];
 
-      final selectedCountry = countryList.firstWhereOrNull(
-            (country) => country.selected == true,
-          ) ??
-          countryList.firstWhereOrNull(
-            (country) => country.code == 'IR',
-          ) ??
-          countryList.firstOrNull;
+        final selectedCountry =
+            countryList.firstWhereOrNull(
+              (country) => country.selected == true,
+            ) ??
+            countryList.firstWhereOrNull((country) => country.code == 'IR') ??
+            countryList.firstOrNull;
 
-      expect(selectedCountry, isNotNull);
-      expect(selectedCountry?.code, 'DE');
-    });
+        expect(selectedCountry, isNotNull);
+        expect(selectedCountry?.code, 'DE');
+      },
+    );
 
-    test('firstWhereOrNull on empty countryList returns null without crashing', () {
-      final countryList = <CountryData>[];
+    test(
+      'firstWhereOrNull on empty countryList returns null without crashing',
+      () {
+        final countryList = <CountryData>[];
 
-      final selectedCountry = countryList.firstWhereOrNull(
-            (item) => item.code == 'IR',
-          ) ??
-          countryList.firstWhereOrNull(
-            (item) => item.code == 'IR',
-          ) ??
-          countryList.firstOrNull;
+        final selectedCountry =
+            countryList.firstWhereOrNull((item) => item.code == 'IR') ??
+            countryList.firstWhereOrNull((item) => item.code == 'IR') ??
+            countryList.firstOrNull;
 
-      expect(selectedCountry, isNull);
-    });
+        expect(selectedCountry, isNull);
+      },
+    );
 
     test('country is formatted as dialCode:code and not omitted', () {
       final countryDialCode = '+98'.obs;
@@ -159,32 +209,36 @@ void main() {
   });
 
   group('NetworkService response conversion and registration status tests', () {
-    test('statusCode 200 and 201 are both accepted as successful registration', () {
-      for (final code in [200, 201]) {
-        final isSuccess = code == 200 || code == 201;
-        expect(isSuccess, isTrue);
-      }
-      expect(400 == 200 || 400 == 201, isFalse);
-    });
+    test(
+      'statusCode 200 and 201 are both accepted as successful registration',
+      () {
+        for (final code in [200, 201]) {
+          final isSuccess = code == 200 || code == 201;
+          expect(isSuccess, isTrue);
+        }
+        expect(400 == 200 || 400 == 201, isFalse);
+      },
+    );
 
-    test('Map<dynamic, dynamic> safely converts to Map<String, dynamic> without TypeError', () {
-      final dynamic rawDioData = <dynamic, dynamic>{
-        'status': 'success',
-        'data': <dynamic, dynamic>{
-          'token': 'mock_token_123',
-        },
-      };
+    test(
+      'Map<dynamic, dynamic> safely converts to Map<String, dynamic> without TypeError',
+      () {
+        final dynamic rawDioData = <dynamic, dynamic>{
+          'status': 'success',
+          'data': <dynamic, dynamic>{'token': 'mock_token_123'},
+        };
 
-      // Raw cast throws TypeError
-      expect(
-        () => rawDioData as Map<String, dynamic>,
-        throwsA(isA<TypeError>()),
-      );
+        // Raw cast throws TypeError
+        expect(
+          () => rawDioData as Map<String, dynamic>,
+          throwsA(isA<TypeError>()),
+        );
 
-      // Safe conversion works cleanly
-      final safeMap = Map<String, dynamic>.from(rawDioData as Map);
-      expect(safeMap['status'], 'success');
-      expect(safeMap['data']['token'], 'mock_token_123');
-    });
+        // Safe conversion works cleanly
+        final safeMap = Map<String, dynamic>.from(rawDioData as Map);
+        expect(safeMap['status'], 'success');
+        expect(safeMap['data']['token'], 'mock_token_123');
+      },
+    );
   });
 }

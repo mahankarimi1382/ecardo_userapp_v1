@@ -60,24 +60,34 @@ class _TransferSuccessStepSectionState
     final senderTx =
         controller.successTransferData.value?["sender_transaction"];
 
-    final rawFinalAmount = senderTx?["final_amount"] ??
-        controller.amountController.text;
+    final rawFinalAmount =
+        senderTx?["final_amount"] ?? controller.amountController.text;
     final amount = double.tryParse(rawFinalAmount.toString()) ?? 0.0;
 
     final tnxId = _nonEmpty(senderTx?["tnx"]?.toString());
     final createdAt = senderTx?["created_at"]?.toString() ?? '';
     final description = senderTx?["description"]?.toString() ?? '';
     final rawCharge = senderTx?["charge"];
-    final chargeVal = double.tryParse(rawCharge?.toString() ?? '0') ?? controller.charge.value;
+    final chargeVal =
+        double.tryParse(rawCharge?.toString() ?? '0') ??
+        controller.charge.value;
 
     final recipientAccount = controller.recipientUidController.text.trim();
-    final maskedRecipientAccount = WithdrawDestinationCard.maskAccountNumber(recipientAccount);
-    final matchedBeneficiary = controller.findBeneficiaryByAccount(recipientAccount);
-    final recipientName = matchedBeneficiary?.nickname ??
+    final maskedRecipientAccount = WithdrawDestinationCard.maskAccountNumber(
+      recipientAccount,
+    );
+    final matchedBeneficiary = controller.findBeneficiaryByAccount(
+      recipientAccount,
+    );
+    final recipientName =
+        matchedBeneficiary?.nickname ??
         matchedBeneficiary?.receiver?.name ??
-        (maskedRecipientAccount.isNotEmpty ? maskedRecipientAccount : recipientAccount);
+        (maskedRecipientAccount.isNotEmpty
+            ? maskedRecipientAccount
+            : recipientAccount);
 
-    final senderAccount = currentWallet?.accountNo?.trim() ??
+    final senderAccount =
+        currentWallet?.accountNo?.trim() ??
         senderTx?["account_number"]?.toString().trim() ??
         senderTx?["from_wallet"]?.toString().trim() ??
         '';
@@ -132,7 +142,8 @@ class _TransferSuccessStepSectionState
                 status: EcardoReceiptStatus.success,
                 items: [
                   EcardoReceiptItem(
-                    label: localization.transferReviewStepSectionRecipientAccount,
+                    label:
+                        localization.transferReviewStepSectionRecipientAccount,
                     value: maskedRecipientAccount.isNotEmpty
                         ? maskedRecipientAccount
                         : recipientAccount,
@@ -148,11 +159,14 @@ class _TransferSuccessStepSectionState
                       tr: 'Cüzdandan',
                       ru: 'Из кошелька',
                     ),
-                    value: maskedSenderAccount != null && maskedSenderAccount.isNotEmpty
+                    value:
+                        maskedSenderAccount != null &&
+                            maskedSenderAccount.isNotEmpty
                         ? '${currentWallet?.name ?? "Wallet"} ($maskedSenderAccount)'
                         : (currentWallet?.name ?? 'Wallet'),
                   ),
-                  if (maskedSenderAccount != null && maskedSenderAccount.isNotEmpty)
+                  if (maskedSenderAccount != null &&
+                      maskedSenderAccount.isNotEmpty)
                     EcardoReceiptItem(
                       label: l10nPick(
                         context,
@@ -203,7 +217,9 @@ class _TransferSuccessStepSectionState
                     currency: walletCode,
                     decimals: calculateDecimals,
                     isHighlighted: true,
-                    valueColor: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                    valueColor: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.deepBlack,
                   ),
                 ],
                 note: l10nPick(
@@ -231,7 +247,8 @@ class _TransferSuccessStepSectionState
                 borderRadius: AppSpacing.radiusLg,
                 width: double.infinity,
                 height: 52,
-                text: localization.transferSuccessStepSectionTransferAgainButton,
+                text:
+                    localization.transferSuccessStepSectionTransferAgainButton,
               ),
               const SizedBox(height: AppSpacing.md),
               CommonButton(

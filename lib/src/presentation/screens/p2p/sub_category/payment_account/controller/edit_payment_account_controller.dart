@@ -22,6 +22,7 @@ import 'payment_account_controller.dart';
 class EditPaymentAccountController extends GetxController {
   /// وضعیت بارگذاری/ارسال
   final RxBool isLoading = false.obs;
+
   /// انتخاب‌گر تصویر
   final ImagePicker _picker = ImagePicker();
   // PAYMENT-FIX (P-1): the manual `tokenService` bearer header was removed —
@@ -44,6 +45,7 @@ class EditPaymentAccountController extends GetxController {
     if (account.fields != null) {
       for (final field in account.fields!) {
         final controller = TextEditingController();
+
         /// پیش‌بارگذاری مقدار موجود (فقط فیلدهای متنی)
         if (field.value != null &&
             field.value!.isNotEmpty &&
@@ -73,8 +75,7 @@ class EditPaymentAccountController extends GetxController {
       for (final entry in dynamicFieldControllers.entries) {
         final fieldName = entry.key;
         final fieldType = entry.value['type'] as String;
-        final controller =
-            entry.value['controller'] as TextEditingController?;
+        final controller = entry.value['controller'] as TextEditingController?;
         final fieldValue = controller?.text ?? '';
         final existingValue = entry.value['value'] as String? ?? '';
         final xFile = selectedImages[fieldName];
@@ -156,7 +157,8 @@ class EditPaymentAccountController extends GetxController {
     final lower = fileName.toLowerCase();
     if (lower.endsWith('.pdf')) return dio.DioMediaType('application', 'pdf');
     if (lower.endsWith('.png')) return dio.DioMediaType('image', 'png');
-    if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) return dio.DioMediaType('image', 'jpeg');
+    if (lower.endsWith('.jpg') || lower.endsWith('.jpeg'))
+      return dio.DioMediaType('image', 'jpeg');
     if (lower.endsWith('.webp')) return dio.DioMediaType('image', 'webp');
     return dio.DioMediaType('application', 'octet-stream');
   }

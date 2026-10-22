@@ -28,7 +28,9 @@ class _GiftRedeemSectionState extends State<GiftRedeemSection> {
 
     return Expanded(
       child: Container(
-        margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.lg),
+        margin: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.lg,
+        ),
         padding: const EdgeInsetsDirectional.only(
           start: AppSpacing.xl,
           end: AppSpacing.xl,

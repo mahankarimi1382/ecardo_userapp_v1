@@ -71,9 +71,11 @@ class _DocumentAlignmentGuideBoxState extends State<DocumentAlignmentGuideBox>
 
   @override
   Widget build(BuildContext context) {
-    final effectiveFrameColor = widget.frameColor ??
+    final effectiveFrameColor =
+        widget.frameColor ??
         (widget.isDark ? AppColors.mainSoftBlue : AppColors.brandViolet);
-    final effectiveOverlayColor = widget.overlayColor ??
+    final effectiveOverlayColor =
+        widget.overlayColor ??
         (widget.isDark
             ? AppColors.black.withValues(alpha: 0.65)
             : AppColors.deepBlack.withValues(alpha: 0.45));
@@ -224,8 +226,9 @@ class _DocumentGuidePainter extends CustomPainter {
   void _paintCardWatermark(Canvas canvas, Rect rect) {
     // Subtle ghost watermark indicating document orientation
     final watermarkPaint = Paint()
-      ..color = (isDark ? AppColors.white : AppColors.deepBlack)
-          .withValues(alpha: isDark ? 0.12 : 0.08)
+      ..color = (isDark ? AppColors.white : AppColors.deepBlack).withValues(
+        alpha: isDark ? 0.12 : 0.08,
+      )
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
@@ -250,7 +253,9 @@ class _DocumentGuidePainter extends CustomPainter {
 
     for (int i = 0; i < 3; i++) {
       final y = startY + (i * 14.h);
-      final currentEnd = (i == 2) ? lineStartX + (lineEndX - lineStartX) * 0.6 : lineEndX;
+      final currentEnd = (i == 2)
+          ? lineStartX + (lineEndX - lineStartX) * 0.6
+          : lineEndX;
       canvas.drawLine(
         Offset(lineStartX, y),
         Offset(currentEnd, y),
@@ -268,7 +273,8 @@ class _DocumentGuidePainter extends CustomPainter {
       height: ovalHeight,
     );
 
-    final bgPath = Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+    final bgPath = Path()
+      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
     final ovalPath = Path()..addOval(ovalRect);
     final diff = Path.combine(PathOperation.difference, bgPath, ovalPath);
 
@@ -397,11 +403,7 @@ class _RealtimeTipsBannerState extends State<RealtimeTipsBanner> {
                 color: tip.iconColor.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                tip.icon,
-                size: 15.sp,
-                color: tip.iconColor,
-              ),
+              child: Icon(tip.icon, size: 15.sp, color: tip.iconColor),
             ),
             SizedBox(width: 8.w),
             Flexible(
@@ -469,13 +471,17 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     final fileLength = file.existsSync() ? file.lengthSync() : 0;
     final sizeInMB = fileLength / (1024 * 1024);
     final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
-    final isSizeValid = !UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes);
+    final isSizeValid = !UploadHelper.exceedsSize(
+      file,
+      UploadHelper.maxKycDocBytes,
+    );
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
@@ -520,9 +526,7 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                   decoration: BoxDecoration(
-                    color: (isSizeValid
-                            ? AppColors.success
-                            : AppColors.error)
+                    color: (isSizeValid ? AppColors.success : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -563,7 +567,9 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(alpha: 0.4),
+                  color:
+                      (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                          .withValues(alpha: 0.4),
                   width: 1.5,
                 ),
               ),
@@ -627,7 +633,9 @@ class DocumentConfirmationPreviewSheet extends StatelessWidget {
                         minimumSize: Size(0, 48.h),
                         padding: EdgeInsets.symmetric(vertical: 12.h),
                         side: BorderSide(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),

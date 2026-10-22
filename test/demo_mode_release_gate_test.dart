@@ -33,8 +33,14 @@ void main() {
       // The whole point of the fix: a non-debug build is refused unconditionally,
       // no matter how favourable the other two inputs are.
       expect(permitted(debug: false), isFalse);
-      expect(permitted(debug: false, registered: true, demoActive: true), isFalse);
-      expect(permitted(debug: false, registered: false, demoActive: false), isFalse);
+      expect(
+        permitted(debug: false, registered: true, demoActive: true),
+        isFalse,
+      );
+      expect(
+        permitted(debug: false, registered: false, demoActive: false),
+        isFalse,
+      );
     });
 
     test('a non-debug build cannot be coaxed into intercepting', () {
@@ -42,25 +48,48 @@ void main() {
       for (final registered in [true, false]) {
         for (final demoActive in [true, false]) {
           expect(
-            permitted(debug: false, registered: registered, demoActive: demoActive),
+            permitted(
+              debug: false,
+              registered: registered,
+              demoActive: demoActive,
+            ),
             isFalse,
-            reason: 'release build must never intercept '
+            reason:
+                'release build must never intercept '
                 '(registered: $registered, demoActive: $demoActive)',
           );
         }
       }
     });
 
-    test('intercepts only in debug with the service registered AND demo active', () {
-      expect(permitted(), isTrue);
-      expect(permitted(debug: true, registered: true, demoActive: true), isTrue);
-    });
+    test(
+      'intercepts only in debug with the service registered AND demo active',
+      () {
+        expect(permitted(), isTrue);
+        expect(
+          permitted(debug: true, registered: true, demoActive: true),
+          isTrue,
+        );
+      },
+    );
 
-    test('debug alone is not enough — service and demo session are both required', () {
-      expect(permitted(debug: true, registered: false, demoActive: true), isFalse);
-      expect(permitted(debug: true, registered: true, demoActive: false), isFalse);
-      expect(permitted(debug: true, registered: false, demoActive: false), isFalse);
-    });
+    test(
+      'debug alone is not enough — service and demo session are both required',
+      () {
+        expect(
+          permitted(debug: true, registered: false, demoActive: true),
+          isFalse,
+        );
+        expect(
+          permitted(debug: true, registered: true, demoActive: false),
+          isFalse,
+        );
+        expect(
+          permitted(debug: true, registered: false, demoActive: false),
+          isFalse,
+        );
+      },
+    );
 
     test('debug-only build availability follows kDebugMode', () {
       // Guards the main.dart registration gate and _loadPersistedDemoState /
@@ -76,51 +105,58 @@ void main() {
       expect(DemoAccountService.isDemoInterceptionAllowedNow, isFalse);
     });
 
-    test('a registered, active demo session cannot fabricate data in a release build',
-        () async {
-      // End-to-end against the live object: even with the service registered and
-      // isDemoMode set to true, the dispatcher must refuse outside debug.
-      SharedPreferences.setMockInitialValues({});
-      Get.testMode = true;
-      Get.reset();
+    test(
+      'a registered, active demo session cannot fabricate data in a release build',
+      () async {
+        // End-to-end against the live object: even with the service registered and
+        // isDemoMode set to true, the dispatcher must refuse outside debug.
+        SharedPreferences.setMockInitialValues({});
+        Get.testMode = true;
+        Get.reset();
 
-      final service = Get.put<DemoAccountService>(DemoAccountService());
-      service.isDemoMode.value = true;
+        final service = Get.put<DemoAccountService>(DemoAccountService());
+        service.isDemoMode.value = true;
 
-      final mock = service.handleDemoRequest(
-        endpoint: '/auth/user/get',
-        method: 'GET',
-      );
-      final fallback = service.handleDemoFallback(
-        endpoint: '/loan/apply',
-        method: 'POST',
-      );
-
-      if (kDebugMode) {
-        // Debug: the demo tool keeps working end to end.
-        expect(mock, isNotNull);
-        expect(fallback, isNotNull);
-      } else {
-        expect(mock, isNull, reason: 'release build must not fabricate a profile');
-        expect(
-          fallback,
-          isNull,
-          reason: 'release build must not fabricate a loan approval',
+        final mock = service.handleDemoRequest(
+          endpoint: '/auth/user/get',
+          method: 'GET',
         );
-      }
+        final fallback = service.handleDemoFallback(
+          endpoint: '/loan/apply',
+          method: 'POST',
+        );
 
-      // Whatever the build, the build flag itself is what drives the refusal.
-      expect(
-        DemoAccountService.isDemoInterceptionAllowedNow,
-        kDebugMode && DemoAccountService.isDemoInterceptionPermitted(
-          isDebugBuild: DemoAccountService.isDemoAvailableInThisBuild,
-          isServiceRegistered: true,
-          isDemoModeActive: true,
-        ),
-      );
+        if (kDebugMode) {
+          // Debug: the demo tool keeps working end to end.
+          expect(mock, isNotNull);
+          expect(fallback, isNotNull);
+        } else {
+          expect(
+            mock,
+            isNull,
+            reason: 'release build must not fabricate a profile',
+          );
+          expect(
+            fallback,
+            isNull,
+            reason: 'release build must not fabricate a loan approval',
+          );
+        }
 
-      await Get.deleteAll(force: true);
-    });
+        // Whatever the build, the build flag itself is what drives the refusal.
+        expect(
+          DemoAccountService.isDemoInterceptionAllowedNow,
+          kDebugMode &&
+              DemoAccountService.isDemoInterceptionPermitted(
+                isDebugBuild: DemoAccountService.isDemoAvailableInThisBuild,
+                isServiceRegistered: true,
+                isDemoModeActive: true,
+              ),
+        );
+
+        await Get.deleteAll(force: true);
+      },
+    );
 
     test('persisted demo state is ignored outside debug builds', () async {
       SharedPreferences.setMockInitialValues({});

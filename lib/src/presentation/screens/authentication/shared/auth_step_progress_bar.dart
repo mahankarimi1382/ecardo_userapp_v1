@@ -10,10 +10,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 class AuthStepProgressBar extends StatelessWidget {
   final int currentStep; // 1, 2, or 3
 
-  const AuthStepProgressBar({
-    super.key,
-    required this.currentStep,
-  });
+  const AuthStepProgressBar({super.key, required this.currentStep});
 
   @override
   Widget build(BuildContext context) {
@@ -183,9 +180,7 @@ class AuthStepProgressBar extends StatelessWidget {
         ),
       ];
     } else {
-      circleBg = isDark
-          ? AppColors.darkBorder
-          : AppColors.lightOutlineVariant;
+      circleBg = isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant;
       iconColor = isDark
           ? AppColors.darkTextSecondary
           : AppColors.lightTextTertiary;
@@ -222,12 +217,12 @@ class AuthStepProgressBar extends StatelessWidget {
             color: isActive
                 ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
                 : (isCompleted
-                    ? (isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary)
-                    : (isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextTertiary)),
+                      ? (isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary)
+                      : (isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextTertiary)),
           ),
         ),
         SizedBox(height: 1.h),
@@ -245,10 +240,7 @@ class AuthStepProgressBar extends StatelessWidget {
     );
   }
 
-  Widget _buildConnector({
-    required bool isPassed,
-    required bool isDark,
-  }) {
+  Widget _buildConnector({required bool isPassed, required bool isDark}) {
     return Padding(
       padding: EdgeInsets.only(bottom: 24.h),
       child: Container(
@@ -258,9 +250,7 @@ class AuthStepProgressBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(2.r),
           color: isPassed
               ? AppColors.brandViolet
-              : (isDark
-                  ? AppColors.darkBorder
-                  : AppColors.lightOutlineVariant),
+              : (isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant),
           gradient: isPassed
               ? const LinearGradient(
                   colors: [AppColors.brandViolet, AppColors.brandVioletDeep],

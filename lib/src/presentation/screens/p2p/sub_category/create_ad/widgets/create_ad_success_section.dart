@@ -121,7 +121,10 @@ class CreateAdSuccessSection extends StatelessWidget {
                     value: adData?.adNumber ?? '-',
                   ),
                   _divider(),
-                  _buildInfoRow(title: localization.p2pMethod, value: methodName),
+                  _buildInfoRow(
+                    title: localization.p2pMethod,
+                    value: methodName,
+                  ),
                 ],
               ),
             ),
@@ -130,10 +133,7 @@ class CreateAdSuccessSection extends StatelessWidget {
               text: localization.p2pGoToMyAds,
               onPressed: () => Get.offAllNamed(
                 BaseRoute.p2pTrading,
-                arguments: {
-                  'initial_tab': 3,
-                  'from_create_ad_success': true,
-                },
+                arguments: {'initial_tab': 3, 'from_create_ad_success': true},
               ),
               width: double.infinity,
             ),

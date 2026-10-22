@@ -82,7 +82,9 @@ class MyAdsController extends GetxController {
         queryParams.add('fiat_currency=${selectedFiatCurrencyIdFilter.value}');
       }
       if (selectedAssetCurrencyIdFilter.value != null) {
-        queryParams.add('asset_currency=${selectedAssetCurrencyIdFilter.value}');
+        queryParams.add(
+          'asset_currency=${selectedAssetCurrencyIdFilter.value}',
+        );
       }
 
       final response = await Get.find<NetworkService>().get(
@@ -197,7 +199,8 @@ class MyAdsController extends GetxController {
   }) async {
     try {
       final response = await Get.find<NetworkService>().get(
-        endpoint: '${ApiPath.paymentAccountEndpoint}?currency_id=$fiatCurrencyId',
+        endpoint:
+            '${ApiPath.paymentAccountEndpoint}?currency_id=$fiatCurrencyId',
       );
 
       if (response.status == Status.completed && response.data != null) {

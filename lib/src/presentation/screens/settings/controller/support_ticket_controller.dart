@@ -49,8 +49,9 @@ class SupportTicketController extends GetxController {
       );
 
       if (response.status == Status.completed) {
-        supportTicketModel.value =
-            SupportTicketModel.fromJson(_unwrap(response.data!));
+        supportTicketModel.value = SupportTicketModel.fromJson(
+          _unwrap(response.data!),
+        );
         final tickets = supportTicketModel.value.data?.tickets ?? const [];
         // TICKET-FIX: pagination can be absent depending on the backend
         // envelope — never null-assert it. Fall back to counting tickets
@@ -85,8 +86,7 @@ class SupportTicketController extends GetxController {
           '${ApiPath.supportTicketsEndpoint}?${queryParams.join('&')}';
       final response = await Get.find<NetworkService>().get(endpoint: endpoint);
       if (response.status == Status.completed) {
-        final newTickets =
-            SupportTicketModel.fromJson(_unwrap(response.data!));
+        final newTickets = SupportTicketModel.fromJson(_unwrap(response.data!));
         final incoming = newTickets.data?.tickets ?? const [];
 
         if (incoming.isEmpty) {

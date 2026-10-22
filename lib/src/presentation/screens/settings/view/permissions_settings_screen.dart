@@ -173,9 +173,13 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -259,7 +263,9 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
               ru: 'Не запрошено',
               zh: '未请求',
             );
-            statusColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+            statusColor = isDark
+                ? AppColors.softGray
+                : AppColors.lightTextTertiary;
             statusIcon = Icons.radio_button_unchecked_rounded;
             action = l10nPick(
               context,
@@ -288,13 +294,18 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                        .withValues(alpha: 0.12),
+                    color:
+                        (isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                   ),
                   child: Icon(
                     item.icon,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.lightPrimary,
                     size: 22,
                   ),
                 ),
@@ -341,7 +352,9 @@ class _PermissionsSettingsScreenState extends State<PermissionsSettingsScreen>
                     child: Text(
                       action,
                       style: AppTextStyles.labelMedium.copyWith(
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.lightPrimary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -93,7 +93,11 @@ class EmailController extends GetxController {
       debugPrint('❌ sendVerifyEmail() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
+        localizationOrNull?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isLoading.value = false;

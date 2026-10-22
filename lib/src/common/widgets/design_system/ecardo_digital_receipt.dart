@@ -17,11 +17,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
 /// Status of the transaction represented in [EcardoDigitalReceipt].
-enum EcardoReceiptStatus {
-  success,
-  pending,
-  failed,
-}
+enum EcardoReceiptStatus { success, pending, failed }
 
 /// An entry row in the receipt breakdown table.
 class EcardoReceiptItem {
@@ -61,6 +57,7 @@ class EcardoReceiptItem {
 /// - Share and Export action buttons with tactile bounce press.
 class EcardoDigitalReceipt extends StatefulWidget {
   final String title;
+
   /// Authoritative backend reference (`tnx`). Null when the backend response
   /// did not carry one yet — the receipt then shows a localized "pending"
   /// placeholder instead of inventing an identifier.
@@ -126,13 +123,17 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _measureNotchPosition());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _measureNotchPosition(),
+    );
   }
 
   @override
   void didUpdateWidget(EcardoDigitalReceipt oldWidget) {
     super.didUpdateWidget(oldWidget);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _measureNotchPosition());
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _measureNotchPosition(),
+    );
   }
 
   @override
@@ -143,13 +144,22 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
 
   void _measureNotchPosition() {
     if (!mounted) return;
-    final dividerBox = _dividerKey.currentContext?.findRenderObject() as RenderBox?;
-    final containerBox = _containerKey.currentContext?.findRenderObject() as RenderBox?;
+    final dividerBox =
+        _dividerKey.currentContext?.findRenderObject() as RenderBox?;
+    final containerBox =
+        _containerKey.currentContext?.findRenderObject() as RenderBox?;
 
-    if (dividerBox != null && containerBox != null && dividerBox.hasSize && containerBox.hasSize) {
-      final offset = dividerBox.localToGlobal(Offset.zero, ancestor: containerBox);
+    if (dividerBox != null &&
+        containerBox != null &&
+        dividerBox.hasSize &&
+        containerBox.hasSize) {
+      final offset = dividerBox.localToGlobal(
+        Offset.zero,
+        ancestor: containerBox,
+      );
       final calculatedY = offset.dy + (dividerBox.size.height / 2);
-      if (_measuredNotchY == null || (_measuredNotchY! - calculatedY).abs() > 0.5) {
+      if (_measuredNotchY == null ||
+          (_measuredNotchY! - calculatedY).abs() > 0.5) {
         setState(() {
           _measuredNotchY = calculatedY;
         });
@@ -163,7 +173,9 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
 
     _feedbackTimer?.cancel();
     setState(() {
-      _feedbackMessage = label != null ? '$label Copied' : 'Copied to Clipboard';
+      _feedbackMessage = label != null
+          ? '$label Copied'
+          : 'Copied to Clipboard';
     });
 
     _feedbackTimer = Timer(const Duration(milliseconds: 1800), () {
@@ -203,142 +215,148 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
-            // 1. Ticket Card Body with custom notches
-            CustomPaint(
-              key: _containerKey,
-              painter: _ReceiptBorderPainter(
-                borderRadius: _borderRadius,
-                notchRadius: _notchRadius,
-                notchY: _measuredNotchY,
-                borderColor: borderColor,
-                borderWidth: 1.2,
-                fillColor: cardBg,
-                drawShadow: true,
-                isDark: isDark,
-              ),
-              child: ClipPath(
-                clipper: _ReceiptClipper(
+              // 1. Ticket Card Body with custom notches
+              CustomPaint(
+                key: _containerKey,
+                painter: _ReceiptBorderPainter(
                   borderRadius: _borderRadius,
                   notchRadius: _notchRadius,
                   notchY: _measuredNotchY,
+                  borderColor: borderColor,
+                  borderWidth: 1.2,
+                  fillColor: cardBg,
+                  drawShadow: true,
+                  isDark: isDark,
                 ),
-                child: Container(
-                  color: Colors.transparent,
-                  padding: widget.padding,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Header & Status
-                      _buildHeader(context, isDark),
-                      const SizedBox(height: AppSpacing.md),
-
-                      // Primary Amount Hero
-                      if (widget.primaryAmount != null) ...[
-                        _buildHeroAmount(isDark),
-                        const SizedBox(height: AppSpacing.md),
-                      ],
-
-                      // Reference code pill
-                      _buildReferenceCode(isDark),
-                      const SizedBox(height: AppSpacing.lg),
-
-                      // Breakdown table items
-                      if (widget.items.isNotEmpty) ...[
-                        ...widget.items.map((item) => _buildItemRow(context, item, isDark)),
-                        const SizedBox(height: AppSpacing.sm),
-                      ],
-
-                      // Optional free-text note (e.g. settlement terms, memo)
-                      if (widget.note != null && widget.note!.isNotEmpty) ...[
-                        _buildNote(widget.note!, isDark),
-                        const SizedBox(height: AppSpacing.sm),
-                      ],
-
-                      // Jagged Perforation Divider with Ticket Notches
-                      Container(
-                        key: _dividerKey,
-                        height: _notchRadius * 2,
-                        alignment: Alignment.center,
-                        child: CustomPaint(
-                          size: const Size(double.infinity, 8),
-                          painter: _JaggedPerforationPainter(
-                            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
-                            strokeWidth: 1.2,
-                            toothWidth: 8.0,
-                            toothHeight: 4.0,
-                            padding: _notchRadius + 4,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-
-                      // Barcode & Cryptographic Security Note
-                      if (widget.showBarcode && _hasReference) ...[
-                        _buildBarcodeSection(isDark),
-                        const SizedBox(height: AppSpacing.sm),
-                      ],
-
-                      // Timestamp and Verified Footer
-                      _buildFooter(isDark),
-                    ],
+                child: ClipPath(
+                  clipper: _ReceiptClipper(
+                    borderRadius: _borderRadius,
+                    notchRadius: _notchRadius,
+                    notchY: _measuredNotchY,
                   ),
-                ),
-              ),
-            ),
-
-            // 2. Angled Watermark Stamp (e.g. PAID / VERIFIED)
-            if (widget.showWatermark)
-              Positioned(
-                top: 72,
-                right: 20,
-                child: _buildWatermarkStamp(isDark),
-              ),
-
-            // 3. Floating Copy Feedback Chip
-            if (_feedbackMessage != null)
-              Positioned(
-                top: 12,
-                child: AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: _feedbackMessage != null ? 1.0 : 0.0,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.deepBlack,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.25),
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Row(
+                    color: Colors.transparent,
+                    padding: widget.padding,
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Icon(
-                          Icons.check_circle_rounded,
-                          size: 14,
-                          color: AppColors.success,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          _feedbackMessage!,
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                        // Header & Status
+                        _buildHeader(context, isDark),
+                        const SizedBox(height: AppSpacing.md),
+
+                        // Primary Amount Hero
+                        if (widget.primaryAmount != null) ...[
+                          _buildHeroAmount(isDark),
+                          const SizedBox(height: AppSpacing.md),
+                        ],
+
+                        // Reference code pill
+                        _buildReferenceCode(isDark),
+                        const SizedBox(height: AppSpacing.lg),
+
+                        // Breakdown table items
+                        if (widget.items.isNotEmpty) ...[
+                          ...widget.items.map(
+                            (item) => _buildItemRow(context, item, isDark),
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                        ],
+
+                        // Optional free-text note (e.g. settlement terms, memo)
+                        if (widget.note != null && widget.note!.isNotEmpty) ...[
+                          _buildNote(widget.note!, isDark),
+                          const SizedBox(height: AppSpacing.sm),
+                        ],
+
+                        // Jagged Perforation Divider with Ticket Notches
+                        Container(
+                          key: _dividerKey,
+                          height: _notchRadius * 2,
+                          alignment: Alignment.center,
+                          child: CustomPaint(
+                            size: const Size(double.infinity, 8),
+                            painter: _JaggedPerforationPainter(
+                              color: isDark
+                                  ? AppColors.darkDivider
+                                  : AppColors.lightDivider,
+                              strokeWidth: 1.2,
+                              toothWidth: 8.0,
+                              toothHeight: 4.0,
+                              padding: _notchRadius + 4,
+                            ),
                           ),
                         ),
+                        const SizedBox(height: AppSpacing.sm),
+
+                        // Barcode & Cryptographic Security Note
+                        if (widget.showBarcode && _hasReference) ...[
+                          _buildBarcodeSection(isDark),
+                          const SizedBox(height: AppSpacing.sm),
+                        ],
+
+                        // Timestamp and Verified Footer
+                        _buildFooter(isDark),
                       ],
                     ),
                   ),
                 ),
               ),
+
+              // 2. Angled Watermark Stamp (e.g. PAID / VERIFIED)
+              if (widget.showWatermark)
+                Positioned(
+                  top: 72,
+                  right: 20,
+                  child: _buildWatermarkStamp(isDark),
+                ),
+
+              // 3. Floating Copy Feedback Chip
+              if (_feedbackMessage != null)
+                Positioned(
+                  top: 12,
+                  child: AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: _feedbackMessage != null ? 1.0 : 0.0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.deepBlack,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.25),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.check_circle_rounded,
+                            size: 14,
+                            color: AppColors.success,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            _feedbackMessage!,
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
@@ -420,26 +438,26 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
 
     final (bg, border, text, icon, label) = switch (widget.status) {
       EcardoReceiptStatus.success => (
-          surface(AppColors.successContainer, AppColors.success),
-          AppColors.success.withValues(alpha: 0.35),
-          AppColors.success,
-          Icons.check_circle_rounded,
-          'Success',
-        ),
+        surface(AppColors.successContainer, AppColors.success),
+        AppColors.success.withValues(alpha: 0.35),
+        AppColors.success,
+        Icons.check_circle_rounded,
+        'Success',
+      ),
       EcardoReceiptStatus.pending => (
-          surface(AppColors.warningContainer, AppColors.warning),
-          AppColors.warning.withValues(alpha: 0.35),
-          AppColors.warning,
-          Icons.schedule_rounded,
-          'Pending',
-        ),
+        surface(AppColors.warningContainer, AppColors.warning),
+        AppColors.warning.withValues(alpha: 0.35),
+        AppColors.warning,
+        Icons.schedule_rounded,
+        'Pending',
+      ),
       EcardoReceiptStatus.failed => (
-          surface(AppColors.errorContainer, AppColors.error),
-          AppColors.error.withValues(alpha: 0.35),
-          AppColors.error,
-          Icons.cancel_rounded,
-          'Failed',
-        ),
+        surface(AppColors.errorContainer, AppColors.error),
+        AppColors.error.withValues(alpha: 0.35),
+        AppColors.error,
+        Icons.cancel_rounded,
+        'Failed',
+      ),
     };
 
     return Container(
@@ -467,7 +485,10 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
   }
 
   Widget _buildHeroAmount(bool isDark) {
-    final formatted = _formatAmount(widget.primaryAmount!, widget.primaryDecimals);
+    final formatted = _formatAmount(
+      widget.primaryAmount!,
+      widget.primaryDecimals,
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -493,9 +514,7 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
               widget.primaryCurrency!,
               style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.w700,
-                color: isDark
-                    ? AppColors.mainSoftBlue
-                    : AppColors.mutedBlue,
+                color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
               ),
             ),
           ],
@@ -536,7 +555,9 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
               : AppColors.lightSecondaryContainer.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
           border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.lightOutlineVariant,
             width: 0.8,
           ),
         ),
@@ -566,12 +587,14 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
                       letterSpacing: _hasReference ? 1.0 : 0,
-                      fontStyle: _hasReference ? FontStyle.normal : FontStyle.italic,
+                      fontStyle: _hasReference
+                          ? FontStyle.normal
+                          : FontStyle.italic,
                       color: _hasReference
                           ? null
                           : (isDark
-                              ? AppColors.darkTextTertiary
-                              : AppColors.lightTextTertiary),
+                                ? AppColors.darkTextTertiary
+                                : AppColors.lightTextTertiary),
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -593,16 +616,25 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
     );
   }
 
-  Widget _buildItemRow(BuildContext context, EcardoReceiptItem item, bool isDark) {
+  Widget _buildItemRow(
+    BuildContext context,
+    EcardoReceiptItem item,
+    bool isDark,
+  ) {
     String valueText = item.value ?? '';
     if (item.amount != null) {
-      valueText = '${_formatAmount(item.amount!, item.decimals)} ${item.currency ?? ''}'.trim();
+      valueText =
+          '${_formatAmount(item.amount!, item.decimals)} ${item.currency ?? ''}'
+              .trim();
     }
 
-    final textColor = item.valueColor ??
+    final textColor =
+        item.valueColor ??
         (item.isHighlighted
             ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary));
+            : (isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary));
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -625,10 +657,12 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
           const SizedBox(width: 8),
           Flexible(
             flex: 6,
-            child: item.trailing ??
+            child:
+                item.trailing ??
                 GestureDetector(
                   onTap: item.isCopyable
-                      ? () => _triggerCopy(item.copyText ?? valueText, item.label)
+                      ? () =>
+                            _triggerCopy(item.copyText ?? valueText, item.label)
                       : null,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -685,7 +719,9 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
         style: AppTextStyles.bodySmall.copyWith(
           fontSize: 11,
           height: 1.45,
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
         ),
       ),
     );
@@ -765,7 +801,8 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
   }
 
   Widget _buildWatermarkStamp(bool isDark) {
-    final stampText = widget.watermarkText ??
+    final stampText =
+        widget.watermarkText ??
         switch (widget.status) {
           EcardoReceiptStatus.success => 'PAID',
           EcardoReceiptStatus.pending => 'PENDING',
@@ -815,12 +852,15 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
     HapticFeedback.lightImpact();
 
     try {
-      final boundary = _receiptCaptureKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      final boundary =
+          _receiptCaptureKey.currentContext?.findRenderObject()
+              as RenderRepaintBoundary?;
       if (boundary == null) {
         // Fallback to text share
         await SharePlus.instance.share(
           ShareParams(
-            text: '${widget.title}\n${_hasReference ? 'Ref: ${widget.transactionReference!.trim()}\n' : ''}Amount: ${widget.primaryAmount ?? ""} ${widget.primaryCurrency ?? ""}',
+            text:
+                '${widget.title}\n${_hasReference ? 'Ref: ${widget.transactionReference!.trim()}\n' : ''}Amount: ${widget.primaryAmount ?? ""} ${widget.primaryCurrency ?? ""}',
             subject: 'eCardo Receipt',
           ),
         );
@@ -911,7 +951,9 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
     Get.toNamed(
       BaseRoute.addNewTicket,
       arguments: {
-        'transaction_ref': _hasReference ? widget.transactionReference!.trim() : '',
+        'transaction_ref': _hasReference
+            ? widget.transactionReference!.trim()
+            : '',
         'amount': widget.primaryAmount,
         'currency': widget.primaryCurrency,
         'title': widget.title,
@@ -944,13 +986,21 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: _ReceiptActionButton(
-                icon: widget.onDownload != null ? Icons.download_rounded : Icons.copy_rounded,
+                icon: widget.onDownload != null
+                    ? Icons.download_rounded
+                    : Icons.copy_rounded,
                 label: l10nPick(
                   context,
-                  en: widget.onDownload != null ? 'Download PDF' : 'Copy Ref ID',
-                  fa: widget.onDownload != null ? 'دانلود PDF' : 'کپی کد پیگیری',
+                  en: widget.onDownload != null
+                      ? 'Download PDF'
+                      : 'Copy Ref ID',
+                  fa: widget.onDownload != null
+                      ? 'دانلود PDF'
+                      : 'کپی کد پیگیری',
                   ar: widget.onDownload != null ? 'تحميل PDF' : 'نسخ المرجع',
-                  tr: widget.onDownload != null ? 'PDF İndir' : 'Referansı Kopyala',
+                  tr: widget.onDownload != null
+                      ? 'PDF İndir'
+                      : 'Referansı Kopyala',
                   ru: widget.onDownload != null ? 'Скачать PDF' : 'Скопировать',
                 ),
                 onPressed: _handleDownload,
@@ -974,7 +1024,9 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
                   Icon(
                     Icons.support_agent_rounded,
                     size: 15,
-                    color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                    color: isDark
+                        ? AppColors.mainSoftBlue
+                        : AppColors.brandViolet,
                   ),
                   const SizedBox(width: 6),
                   Flexible(
@@ -990,7 +1042,9 @@ class _EcardoDigitalReceiptState extends State<EcardoDigitalReceipt> {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -1037,9 +1091,10 @@ class _ReceiptActionButtonState extends State<_ReceiptActionButton>
       duration: const Duration(milliseconds: 90),
       reverseDuration: const Duration(milliseconds: 180),
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -1056,7 +1111,9 @@ class _ReceiptActionButtonState extends State<_ReceiptActionButton>
 
     final fg = widget.isPrimary
         ? (widget.isDark ? AppColors.deepBlack : Colors.white)
-        : (widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary);
+        : (widget.isDark
+              ? AppColors.darkTextPrimary
+              : AppColors.lightTextPrimary);
 
     return GestureDetector(
       onTapDown: (_) {
@@ -1078,12 +1135,16 @@ class _ReceiptActionButtonState extends State<_ReceiptActionButton>
             border: Border.all(
               color: widget.isPrimary
                   ? Colors.transparent
-                  : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  : (widget.isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder),
               width: 1.0,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: widget.isDark ? 0.25 : 0.05),
+                color: Colors.black.withValues(
+                  alpha: widget.isDark ? 0.25 : 0.05,
+                ),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -1140,19 +1201,35 @@ class _ReceiptClipper extends CustomClipper<Path> {
 
     // Right edge down to notch
     path.lineTo(w, ny - nr);
-    path.arcToPoint(Offset(w, ny + nr), radius: Radius.circular(nr), clockwise: false);
+    path.arcToPoint(
+      Offset(w, ny + nr),
+      radius: Radius.circular(nr),
+      clockwise: false,
+    );
 
     // Right edge down to bottom corner
     path.lineTo(w, h - r);
-    path.arcToPoint(Offset(w - r, h), radius: Radius.circular(r), clockwise: true);
+    path.arcToPoint(
+      Offset(w - r, h),
+      radius: Radius.circular(r),
+      clockwise: true,
+    );
 
     // Bottom edge to left corner
     path.lineTo(r, h);
-    path.arcToPoint(Offset(0, h - r), radius: Radius.circular(r), clockwise: true);
+    path.arcToPoint(
+      Offset(0, h - r),
+      radius: Radius.circular(r),
+      clockwise: true,
+    );
 
     // Left edge up to notch
     path.lineTo(0, ny + nr);
-    path.arcToPoint(Offset(0, ny - nr), radius: Radius.circular(nr), clockwise: false);
+    path.arcToPoint(
+      Offset(0, ny - nr),
+      radius: Radius.circular(nr),
+      clockwise: false,
+    );
 
     // Left edge up to top corner
     path.lineTo(0, r);
@@ -1303,9 +1380,36 @@ class _BarcodePlaceholderPainter extends CustomPainter {
 
     // Deterministic pseudo-random bar pattern
     final widths = [
-      1.5, 3.0, 1.0, 2.0, 4.0, 1.0, 2.5, 1.5, 3.5, 1.0,
-      2.0, 1.5, 4.0, 2.0, 1.0, 3.0, 1.5, 2.0, 1.0, 3.5,
-      2.5, 1.0, 2.0, 3.0, 1.5, 4.0, 1.0, 2.0, 1.5, 3.0,
+      1.5,
+      3.0,
+      1.0,
+      2.0,
+      4.0,
+      1.0,
+      2.5,
+      1.5,
+      3.5,
+      1.0,
+      2.0,
+      1.5,
+      4.0,
+      2.0,
+      1.0,
+      3.0,
+      1.5,
+      2.0,
+      1.0,
+      3.5,
+      2.5,
+      1.0,
+      2.0,
+      3.0,
+      1.5,
+      4.0,
+      1.0,
+      2.0,
+      1.5,
+      3.0,
     ];
 
     double currentX = 0;

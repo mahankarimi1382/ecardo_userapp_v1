@@ -34,10 +34,7 @@ class AppLockWrapper extends StatelessWidget {
 
       return Stack(
         fit: StackFit.expand,
-        children: [
-          child,
-          if (shouldShow) const LockScreen(),
-        ],
+        children: [child, if (shouldShow) const LockScreen()],
       );
     });
   }

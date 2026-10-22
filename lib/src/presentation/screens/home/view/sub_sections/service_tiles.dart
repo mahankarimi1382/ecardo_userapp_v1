@@ -114,15 +114,9 @@ void onTileTap(BuildContext context, ResolvedTile resolved) {
       final tile = resolved.tile;
       if (tile.pageBuilder != null) {
         tile.beforeNavigate?.call();
-        Get.to(
-          tile.pageBuilder!(),
-          arguments: tile.argumentsBuilder?.call(),
-        );
+        Get.to(tile.pageBuilder!(), arguments: tile.argumentsBuilder?.call());
       } else if (tile.route.isNotEmpty) {
-        Get.toNamed(
-          tile.route,
-          arguments: tile.argumentsBuilder?.call(),
-        );
+        Get.toNamed(tile.route, arguments: tile.argumentsBuilder?.call());
       }
       return;
     case TileState.kycLocked:
@@ -191,8 +185,9 @@ class _PagedServiceTilesGridState extends State<PagedServiceTilesGrid> {
     final double dynamicHeight = rows * 82.0 + (rows - 1) * 8.0;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Column(
       children: [
@@ -257,8 +252,9 @@ class ServiceTileView extends StatelessWidget {
     final tile = resolved.tile;
     final disabled = resolved.state != TileState.available;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return InkWell(
       borderRadius: BorderRadius.circular(8),
@@ -301,8 +297,8 @@ class ServiceTileView extends StatelessWidget {
                       height: 24,
                       color: disabled
                           ? (isDark
-                              ? AppColors.white.withValues(alpha: 0.30)
-                              : AppColors.black.withValues(alpha: 0.30))
+                                ? AppColors.white.withValues(alpha: 0.30)
+                                : AppColors.black.withValues(alpha: 0.30))
                           : (isDark ? AppColors.white : null),
                     ),
                   ),
@@ -343,12 +339,13 @@ class ServiceTileView extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 11.5,
-                  color: (isDark
-                          ? AppColors.darkTextPrimary
-                          : const Color(0xFF2D2D2D))
-                      .withValues(
-                    alpha: disabled ? 0.35 : (isDark ? 0.85 : 0.70),
-                  ),
+                  color:
+                      (isDark
+                              ? AppColors.darkTextPrimary
+                              : const Color(0xFF2D2D2D))
+                          .withValues(
+                            alpha: disabled ? 0.35 : (isDark ? 0.85 : 0.70),
+                          ),
                   fontWeight: FontWeight.w700,
                 ),
               ),

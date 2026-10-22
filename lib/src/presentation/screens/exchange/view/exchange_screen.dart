@@ -42,9 +42,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: CommonDefaultAppBar(
-        backgroundColor: bgColor,
-      ),
+      appBar: CommonDefaultAppBar(backgroundColor: bgColor),
       body: SafeArea(
         top: false,
         child: Stack(
@@ -175,9 +173,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
             topStart: Radius.circular(AppSpacing.radiusXl),
             topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
-          border: Border.all(
-            color: ExchangeDesignTokens.cardBorder(context),
-          ),
+          border: Border.all(color: ExchangeDesignTokens.cardBorder(context)),
           boxShadow: [
             BoxShadow(
               color: isDark
@@ -197,8 +193,9 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
               width: 40,
               height: 5,
               decoration: BoxDecoration(
-                color: ExchangeDesignTokens.textPrimary(context)
-                    .withValues(alpha: 0.2),
+                color: ExchangeDesignTokens.textPrimary(
+                  context,
+                ).withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
               ),
             ),
@@ -235,7 +232,9 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                               items[index],
                               style: TextStyle(
                                 letterSpacing: 0,
-                                color: ExchangeDesignTokens.textPrimary(context),
+                                color: ExchangeDesignTokens.textPrimary(
+                                  context,
+                                ),
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
                                 fontFamily: 'Plus Jakarta Sans',

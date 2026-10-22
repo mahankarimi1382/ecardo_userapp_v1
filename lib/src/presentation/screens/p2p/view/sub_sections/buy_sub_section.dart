@@ -43,7 +43,8 @@ class BuySubSection extends StatelessWidget {
     final p2pController = _controller;
 
     return Obx(() {
-      final isLoading = (p2pController.isMarketplaceLoading.value &&
+      final isLoading =
+          (p2pController.isMarketplaceLoading.value &&
               p2pController.p2pAds.isEmpty) ||
           p2pController.isCurrenciesLoading.value;
 
@@ -159,8 +160,9 @@ class BuySubSection extends StatelessWidget {
         },
         child: RefreshIndicator(
           color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
-          backgroundColor:
-              isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          backgroundColor: isDark
+              ? AppColors.darkSurface
+              : AppColors.lightSurface,
           onRefresh: () => p2pController.fetchMarketplaceAds(isRefresh: true),
           child: ListView.separated(
             physics: const BouncingScrollPhysics(
@@ -191,7 +193,8 @@ class BuySubSection extends StatelessWidget {
             separatorBuilder: (context, index) {
               return SizedBox(height: AppSpacing.cardGap.h);
             },
-            itemCount: p2pController.p2pAds.length +
+            itemCount:
+                p2pController.p2pAds.length +
                 (p2pController.isMarketplacePaginationLoading.value ? 1 : 0),
           ),
         ),
@@ -200,14 +203,17 @@ class BuySubSection extends StatelessWidget {
   }
 
   Widget _buildBuyShimmer(bool isDark) {
-    final baseColor =
-        isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-    final highlightColor =
-        isDark ? AppColors.darkSurface : AppColors.lightBackground;
+    final baseColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightSurfaceVariant;
+    final highlightColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightBackground;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final dividerColor =
-        isDark ? AppColors.darkDivider : AppColors.lightDivider;
+    final dividerColor = isDark
+        ? AppColors.darkDivider
+        : AppColors.lightDivider;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -246,8 +252,9 @@ class BuySubSection extends StatelessWidget {
                           height: 14.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                         SizedBox(height: 6.h),
@@ -256,8 +263,9 @@ class BuySubSection extends StatelessWidget {
                           height: 10.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                       ],
@@ -268,8 +276,9 @@ class BuySubSection extends StatelessWidget {
                     height: 18.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius:
-                          BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                 ],
@@ -289,8 +298,9 @@ class BuySubSection extends StatelessWidget {
                           height: 20.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                         SizedBox(height: 8.h),
@@ -299,8 +309,9 @@ class BuySubSection extends StatelessWidget {
                           height: 12.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                         SizedBox(height: 6.h),
@@ -309,8 +320,9 @@ class BuySubSection extends StatelessWidget {
                           height: 12.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius:
-                                BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                       ],
@@ -324,8 +336,9 @@ class BuySubSection extends StatelessWidget {
                         height: 18.h,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusSm.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
                         ),
                       ),
                       SizedBox(height: 10.h),
@@ -334,8 +347,9 @@ class BuySubSection extends StatelessWidget {
                         height: 38.h,
                         decoration: BoxDecoration(
                           color: baseColor,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusMd.r),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusMd.r,
+                          ),
                         ),
                       ),
                     ],

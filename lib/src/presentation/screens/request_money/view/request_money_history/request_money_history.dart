@@ -129,14 +129,13 @@ class _RequestMoneyHistoryState extends State<RequestMoneyHistory>
           Column(
             children: [
               const SizedBox(height: AppSpacing.lg),
-              CommonAppBar(
-                title: localization.requestMoneyHistoryScreenTitle,
-              ),
+              CommonAppBar(title: localization.requestMoneyHistoryScreenTitle),
               const SizedBox(height: AppSpacing.md),
               Expanded(
                 child: Obx(() {
                   final requests =
-                      controller.receivedRequestModel.value.data?.requests ?? [];
+                      controller.receivedRequestModel.value.data?.requests ??
+                      [];
 
                   if (controller.isLoading.value) {
                     return const CommonLoading();
@@ -155,8 +154,9 @@ class _RequestMoneyHistoryState extends State<RequestMoneyHistory>
                       builder: (context, constraints) => SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
                         child: ConstrainedBox(
-                          constraints:
-                              BoxConstraints(minHeight: constraints.maxHeight),
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
                           child: Center(
                             child: EcardoEmptyState(
                               title:
@@ -193,8 +193,7 @@ class _RequestMoneyHistoryState extends State<RequestMoneyHistory>
                       itemBuilder: (context, index) {
                         final Requests request = requests[index];
                         final recipientName = _getRequesterName(request);
-                        final statusColor =
-                            _getStatusColor(request.status);
+                        final statusColor = _getStatusColor(request.status);
 
                         return InkWell(
                           borderRadius: BorderRadius.circular(

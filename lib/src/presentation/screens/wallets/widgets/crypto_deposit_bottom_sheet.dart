@@ -153,9 +153,12 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
 
     try {
       final networkService = Get.find<NetworkService>();
-      final walletParam = widget.wallet.id != null ? '&wallet_id=${widget.wallet.id}' : '';
+      final walletParam = widget.wallet.id != null
+          ? '&wallet_id=${widget.wallet.id}'
+          : '';
       final response = await networkService.get(
-        endpoint: '/user/crypto-wallet/address?chain=TRON&asset=USDT$walletParam',
+        endpoint:
+            '/user/crypto-wallet/address?chain=TRON&asset=USDT$walletParam',
       );
 
       if (response.status != Status.completed || response.data == null) {
@@ -189,7 +192,8 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
         return;
       }
 
-      final expectedWalletId = (widget.wallet.accountNo != null &&
+      final expectedWalletId =
+          (widget.wallet.accountNo != null &&
               CryptoDepositPolicy.isValidUuid(widget.wallet.accountNo!))
           ? widget.wallet.accountNo
           : null;
@@ -331,8 +335,9 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
     final bannerBg = isDark
         ? AppColors.warning.withValues(alpha: 0.15)
         : AppColors.warningContainer;
-    final bannerBorder =
-        AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.5);
+    final bannerBorder = AppColors.warning.withValues(
+      alpha: isDark ? 0.35 : 0.5,
+    );
 
     return Container(
       width: double.infinity,
@@ -528,8 +533,9 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
     final bannerBg = isDark
         ? AppColors.warning.withValues(alpha: 0.15)
         : AppColors.warningContainer;
-    final bannerBorder =
-        AppColors.warning.withValues(alpha: isDark ? 0.35 : 0.5);
+    final bannerBorder = AppColors.warning.withValues(
+      alpha: isDark ? 0.35 : 0.5,
+    );
 
     return Container(
       width: double.infinity,
@@ -803,17 +809,18 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
                   decoration: BoxDecoration(
                     color: isDark
                         ? (_depositsDisabled
-                            ? AppColors.warning.withValues(alpha: 0.15)
-                            : AppColors.error.withValues(alpha: 0.15))
+                              ? AppColors.warning.withValues(alpha: 0.15)
+                              : AppColors.error.withValues(alpha: 0.15))
                         : (_depositsDisabled
-                            ? AppColors.warningContainer
-                            : AppColors.errorContainer),
+                              ? AppColors.warningContainer
+                              : AppColors.errorContainer),
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(
-                      color: (_depositsDisabled
-                              ? AppColors.warning
-                              : AppColors.error)
-                          .withValues(alpha: isDark ? 0.35 : 0.5),
+                      color:
+                          (_depositsDisabled
+                                  ? AppColors.warning
+                                  : AppColors.error)
+                              .withValues(alpha: isDark ? 0.35 : 0.5),
                     ),
                   ),
                   child: Column(
@@ -1057,12 +1064,7 @@ class _CryptoDepositBottomSheetState extends State<CryptoDepositBottomSheet> {
 
               // Security & policy banner — values come only from the policy.
               if (hasValidPolicy)
-                _buildNetworkWarningBanner(
-                  context,
-                  policy,
-                  isDark,
-                  inkMuted,
-                ),
+                _buildNetworkWarningBanner(context, policy, isDark, inkMuted),
               SizedBox(height: 8.h),
             ],
           ),

@@ -19,9 +19,7 @@ class ToastHelper {
     }
     // Prune stale entries so the map cannot grow unbounded.
     if (_lastShownAt.length > 32) {
-      _lastShownAt.removeWhere(
-        (_, at) => now.difference(at) > _dedupeWindow,
-      );
+      _lastShownAt.removeWhere((_, at) => now.difference(at) > _dedupeWindow);
     }
     _lastShownAt[message] = now;
     return true;

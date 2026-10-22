@@ -48,7 +48,8 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
   DateTime departureDate = DateTime.now().add(const Duration(days: 7));
   int adultCount = 1;
   int childCount = 0;
-  TrainCategory? selectedCategory; // high_speed, express, regional, night_sleeper
+  TrainCategory?
+  selectedCategory; // high_speed, express, regional, night_sleeper
 
   Future<void> _pickCity({required bool isOrigin}) async {
     final localization = AppLocalizations.of(context)!;
@@ -64,7 +65,9 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
             Padding(
               padding: EdgeInsets.all(16.r),
               child: Text(
-                isOrigin ? localization.travelOrigin : localization.travelDestination,
+                isOrigin
+                    ? localization.travelOrigin
+                    : localization.travelDestination,
                 style: TextStyle(
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w900,
@@ -74,7 +77,10 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
             ),
             ...mockIranCities.map(
               (city) => ListTile(
-                leading: Icon(Icons.train_rounded, color: ECardoTokens.brand500(context)),
+                leading: Icon(
+                  Icons.train_rounded,
+                  color: ECardoTokens.brand500(context),
+                ),
                 title: TravelBidiText(city),
                 onTap: () => Navigator.pop(context, city),
               ),
@@ -123,7 +129,10 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new_rounded, color: ECardoTokens.inkOnBrand),
+                        icon: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: ECardoTokens.inkOnBrand,
+                        ),
                         onPressed: () => Get.back(),
                       ),
                       Text(
@@ -231,7 +240,8 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
 
                   // Date Picker Field
                   _SearchFieldCard(
-                    title: localization?.travelDepartureDate ?? 'Departure Date',
+                    title:
+                        localization?.travelDepartureDate ?? 'Departure Date',
                     subtitle: DateFormat('yyyy-MM-dd').format(departureDate),
                     icon: Icons.calendar_month_rounded,
                     onTap: () async {
@@ -241,20 +251,21 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
                         firstDate: DateTime.now(),
                         lastDate: DateTime.now().add(const Duration(days: 365)),
                         builder: (context, child) {
-                          return Theme(
-                            data: ThemeData.light(),
-                            child: child!,
-                          );
+                          return Theme(data: ThemeData.light(), child: child!);
                         },
                       );
-                      if (picked != null) setState(() => departureDate = picked);
+                      if (picked != null)
+                        setState(() => departureDate = picked);
                     },
                   ),
 
                   SizedBox(height: 20.h),
 
                   // Passenger Count (Adul+Child)
-                  _PassengerSection(adultCount: adultCount, childCount: childCount),
+                  _PassengerSection(
+                    adultCount: adultCount,
+                    childCount: childCount,
+                  ),
 
                   SizedBox(height: 20.h),
 
@@ -300,7 +311,9 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
                           ),
                           selected: isSelected,
                           onSelected: (selected) {
-                            setState(() => selectedCategory = selected ? cat : null);
+                            setState(
+                              () => selectedCategory = selected ? cat : null,
+                            );
                           },
                         );
                       }).toList(),
@@ -314,9 +327,13 @@ class _TrainSearchScreenState extends State<TrainSearchScreen> {
                     padding: EdgeInsets.all(14.r),
                     decoration: BoxDecoration(
                       color: ECardoTokens.sand100(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       border: Border.all(
-                        color: ECardoTokens.sand400(context).withValues(alpha: 0.25),
+                        color: ECardoTokens.sand400(
+                          context,
+                        ).withValues(alpha: 0.25),
                       ),
                     ),
                     child: Row(
@@ -555,7 +572,8 @@ class _JourneyDetailsScreenState extends State<JourneyDetailsScreen> {
   int get _calculatedPrice {
     final basePrice = widget.journey.basePrice;
     final sleeperPremium = _selectedSleeper.pricePremium();
-    return (basePrice + sleeperPremium) * (widget.adultCount + widget.childCount);
+    return (basePrice + sleeperPremium) *
+        (widget.adultCount + widget.childCount);
   }
 
   @override
@@ -583,7 +601,10 @@ class _JourneyDetailsScreenState extends State<JourneyDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new_rounded, color: ECardoTokens.inkOnBrand),
+                        icon: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: ECardoTokens.inkOnBrand,
+                        ),
                         onPressed: () => Get.back(),
                       ),
                       Text(
@@ -604,124 +625,135 @@ class _JourneyDetailsScreenState extends State<JourneyDetailsScreen> {
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                // Departure/Arrival Summary
-                _HeaderSummary(
-                  origin: widget.origin,
-                  destination: widget.destination,
-                  departTime: widget.journey.departLabel,
-                  arrivalTime: widget.journey.arrivalLabel,
-                  duration: widget.journey.durationLabel,
-                  category: widget.journey.category,
-                  operator: widget.journey.operator,
-                ),
-
-                SizedBox(height: 24.h),
-
-                // Amenities Tags
-                if (widget.journey.amenities.isNotEmpty) ...[
-                  Text(
-                    'Amenities:',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: ECardoTokens.ink(context),
-                    ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Departure/Arrival Summary
+                  _HeaderSummary(
+                    origin: widget.origin,
+                    destination: widget.destination,
+                    departTime: widget.journey.departLabel,
+                    arrivalTime: widget.journey.arrivalLabel,
+                    duration: widget.journey.durationLabel,
+                    category: widget.journey.category,
+                    operator: widget.journey.operator,
                   ),
-                  SizedBox(height: 10.h),
-                  Wrap(
-                    spacing: 8.w,
-                    runSpacing: 8.h,
-                    children: widget.journey.amenities.map((amenity) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                        decoration: BoxDecoration(
-                          color: ECardoTokens.brand100(context),
-                          borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                        ),
-                        child: Text(
-                          amenity,
-                          style: TextStyle(fontSize: 10.sp, color: ECardoTokens.brand900(context)),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-
-                  SizedBox(height: 20.h),
-                ],
-
-                // Connection Safety Alert
-                if (widget.journey.transferInfo != null) ...[
-                  _ConnectionSafetyAlert(info: widget.journey.transferInfo!),
-                  SizedBox(height: 20.h),
-                ],
-
-                // Sleeper & Gender Rule Selection
-                _SleeperSelectionPanel(
-                  selectedSleeper: _selectedSleeper,
-                  selectedGenderRule: _selectedGenderRule,
-                  sleepers: widget.journey.availableSleepers,
-                  genderRules: widget.journey.availableGenderRules,
-                  onSleeperChanged: (sleeper) {
-                    setState(() => _selectedSleeper = sleeper);
-                  },
-                  onGenderRuleChanged: (rule) {
-                    setState(() => _selectedGenderRule = rule);
-                  },
-                ),
-
-                SizedBox(height: 20.h),
-
-                // Intermediate Stops Timeline
-                if (widget.journey.intermediateStops.isNotEmpty) ...[
-                  Text(
-                    'Intermediate Stops:',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
-                      color: ECardoTokens.ink(context),
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  StopTimeline(stops: widget.journey.intermediateStops),
 
                   SizedBox(height: 24.h),
-                ],
 
-                // Price Summary
-                _PriceSummary(
-                  adultPrice: widget.journey.basePrice,
-                  sleeperPremium: _selectedSleeper.pricePremium(),
-                  adultCount: widget.adultCount,
-                  childCount: widget.childCount,
-                ),
-
-                SizedBox(height: 24.h),
-
-                // Book Button
-                CommonButton(
-                  text: 'Continue Booking',
-                  width: double.infinity,
-                  backgroundColor: ECardoTokens.brand500(context),
-                  textColor: ECardoTokens.inkOnBrand,
-                  borderRadius: ECardoTokens.radiusLg,
-                  onPressed: () {
-                    Get.to(
-                      () => BookingConfirmationScreen(
-                        journey: widget.journey,
-                        origin: widget.origin,
-                        destination: widget.destination,
-                        departureDate: widget.departureDate,
-                        adultCount: widget.adultCount,
-                        childCount: widget.childCount,
-                        selectedSleeper: _selectedSleeper,
-                        selectedGenderRule: _selectedGenderRule,
-                        totalPrice: _calculatedPrice,
+                  // Amenities Tags
+                  if (widget.journey.amenities.isNotEmpty) ...[
+                    Text(
+                      'Amenities:',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: ECardoTokens.ink(context),
                       ),
-                    );
-                  },
-                ),
-              ]),
+                    ),
+                    SizedBox(height: 10.h),
+                    Wrap(
+                      spacing: 8.w,
+                      runSpacing: 8.h,
+                      children: widget.journey.amenities.map((amenity) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: ECardoTokens.brand100(context),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusSm,
+                            ),
+                          ),
+                          child: Text(
+                            amenity,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: ECardoTokens.brand900(context),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+
+                    SizedBox(height: 20.h),
+                  ],
+
+                  // Connection Safety Alert
+                  if (widget.journey.transferInfo != null) ...[
+                    _ConnectionSafetyAlert(info: widget.journey.transferInfo!),
+                    SizedBox(height: 20.h),
+                  ],
+
+                  // Sleeper & Gender Rule Selection
+                  _SleeperSelectionPanel(
+                    selectedSleeper: _selectedSleeper,
+                    selectedGenderRule: _selectedGenderRule,
+                    sleepers: widget.journey.availableSleepers,
+                    genderRules: widget.journey.availableGenderRules,
+                    onSleeperChanged: (sleeper) {
+                      setState(() => _selectedSleeper = sleeper);
+                    },
+                    onGenderRuleChanged: (rule) {
+                      setState(() => _selectedGenderRule = rule);
+                    },
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  // Intermediate Stops Timeline
+                  if (widget.journey.intermediateStops.isNotEmpty) ...[
+                    Text(
+                      'Intermediate Stops:',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: ECardoTokens.ink(context),
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    StopTimeline(stops: widget.journey.intermediateStops),
+
+                    SizedBox(height: 24.h),
+                  ],
+
+                  // Price Summary
+                  _PriceSummary(
+                    adultPrice: widget.journey.basePrice,
+                    sleeperPremium: _selectedSleeper.pricePremium(),
+                    adultCount: widget.adultCount,
+                    childCount: widget.childCount,
+                  ),
+
+                  SizedBox(height: 24.h),
+
+                  // Book Button
+                  CommonButton(
+                    text: 'Continue Booking',
+                    width: double.infinity,
+                    backgroundColor: ECardoTokens.brand500(context),
+                    textColor: ECardoTokens.inkOnBrand,
+                    borderRadius: ECardoTokens.radiusLg,
+                    onPressed: () {
+                      Get.to(
+                        () => BookingConfirmationScreen(
+                          journey: widget.journey,
+                          origin: widget.origin,
+                          destination: widget.destination,
+                          departureDate: widget.departureDate,
+                          adultCount: widget.adultCount,
+                          childCount: widget.childCount,
+                          selectedSleeper: _selectedSleeper,
+                          selectedGenderRule: _selectedGenderRule,
+                          totalPrice: _calculatedPrice,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -759,7 +791,8 @@ class BookingConfirmationScreen extends StatefulWidget {
   });
 
   @override
-  State<BookingConfirmationScreen> createState() => _BookingConfirmationScreenState();
+  State<BookingConfirmationScreen> createState() =>
+      _BookingConfirmationScreenState();
 }
 
 class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
@@ -871,12 +904,13 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                           labelText: 'Full Name',
                           prefixIcon: const Icon(Icons.person_outline_rounded),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                           ),
                         ),
-                        validator: (value) => value?.trim().isEmpty ?? true
-                            ? 'Required'
-                            : null,
+                        validator: (value) =>
+                            value?.trim().isEmpty ?? true ? 'Required' : null,
                         onSaved: (value) => p['name'] = value?.trim() ?? '',
                       ),
 
@@ -890,13 +924,15 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                             child: Icon(Icons.badge_rounded),
                           ),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                           ),
                         ),
-                        validator: (value) => (value?.trim().length ?? 0) < 10
-                            ? 'Invalid'
-                            : null,
-                        onSaved: (value) => p['nationalCode'] = value?.trim() ?? '',
+                        validator: (value) =>
+                            (value?.trim().length ?? 0) < 10 ? 'Invalid' : null,
+                        onSaved: (value) =>
+                            p['nationalCode'] = value?.trim() ?? '',
                       ),
 
                       SizedBox(height: 12.h),
@@ -907,7 +943,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                           labelText: 'Phone',
                           prefixIcon: const Icon(Icons.phone_rounded),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                           ),
                         ),
                         keyboardType: TextInputType.phone,
@@ -965,9 +1003,7 @@ class _SearchFieldCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: ECardoTokens.surfaceCard(context),
           borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-          border: Border.all(
-            color: ECardoTokens.border(context),
-          ),
+          border: Border.all(color: ECardoTokens.border(context)),
           boxShadow: ECardoTokens.shadowCard(context),
         ),
         child: Row(
@@ -978,7 +1014,11 @@ class _SearchFieldCard extends StatelessWidget {
                 color: ECardoTokens.brand100(context),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
               ),
-              child: Icon(icon, color: ECardoTokens.brand500(context), size: 20.r),
+              child: Icon(
+                icon,
+                color: ECardoTokens.brand500(context),
+                size: 20.r,
+              ),
             ),
             SizedBox(width: 14.w),
             Expanded(
@@ -1070,7 +1110,11 @@ class _PassengerCounter extends StatelessWidget {
   final int count;
   final IconData icon;
 
-  const _PassengerCounter({required this.label, required this.count, required this.icon});
+  const _PassengerCounter({
+    required this.label,
+    required this.count,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1085,7 +1129,13 @@ class _PassengerCounter extends StatelessWidget {
           child: Icon(icon, color: ECardoTokens.brand500(context), size: 24.r),
         ),
         SizedBox(height: 8.h),
-        Text(label, style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context))),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11.sp,
+            color: ECardoTokens.inkMuted(context),
+          ),
+        ),
         SizedBox(height: 4.h),
         Text(
           '$count',
@@ -1138,7 +1188,11 @@ class _HeaderSummary extends StatelessWidget {
                   color: ECardoTokens.brand100(context),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                 ),
-                child: Icon(category.icon, color: ECardoTokens.brand500(context), size: 16.r),
+                child: Icon(
+                  category.icon,
+                  color: ECardoTokens.brand500(context),
+                  size: 16.r,
+                ),
               ),
               SizedBox(width: 10.w),
               Text(
@@ -1171,14 +1225,20 @@ class _StationBlock extends StatelessWidget {
   final String time;
   final String type;
 
-  const _StationBlock({required this.city, required this.time, required this.type});
+  const _StationBlock({
+    required this.city,
+    required this.time,
+    required this.type,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       flex: type == 'origin' || type == 'dest' ? 1 : 2,
       child: Column(
-        crossAxisAlignment: type == 'origin' ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+        crossAxisAlignment: type == 'origin'
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.end,
         children: [
           Text(
             time,
@@ -1215,7 +1275,11 @@ class _DurationBlock extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.swap_horiz_rounded, color: ECardoTokens.brand500(context), size: 20.r),
+          Icon(
+            Icons.swap_horiz_rounded,
+            color: ECardoTokens.brand500(context),
+            size: 20.r,
+          ),
           SizedBox(height: 6.h),
           Text(
             duration,
@@ -1248,11 +1312,7 @@ class _ConnectionSafetyAlert extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            safetyLevel.icon,
-            color: safetyLevel.color,
-            size: 28.r,
-          ),
+          Icon(safetyLevel.icon, color: safetyLevel.color, size: 28.r),
           SizedBox(width: 14.w),
           Expanded(
             child: Column(
@@ -1341,24 +1401,39 @@ class _SleeperSelectionPanel extends StatelessWidget {
                 onTap: () => onSleeperChanged(sleeper),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 10.h,
+                  ),
                   decoration: BoxDecoration(
-                    color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.surfaceSunken(context),
+                    color: isSelected
+                        ? ECardoTokens.brand900(context)
+                        : ECardoTokens.surfaceSunken(context),
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                     border: Border.all(
-                      color: isSelected ? ECardoTokens.brand500(context) : ECardoTokens.border(context),
+                      color: isSelected
+                          ? ECardoTokens.brand500(context)
+                          : ECardoTokens.border(context),
                     ),
                   ),
                   child: Column(
                     children: [
-                      Icon(sleeper.icon, color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.inkMuted(context), size: 24.r),
+                      Icon(
+                        sleeper.icon,
+                        color: isSelected
+                            ? ECardoTokens.inkOnBrand
+                            : ECardoTokens.inkMuted(context),
+                        size: 24.r,
+                      ),
                       SizedBox(height: 6.h),
                       Text(
                         sleeper.localizedTitle(isRtl: false),
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w700,
-                          color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                          color: isSelected
+                              ? ECardoTokens.inkOnBrand
+                              : ECardoTokens.ink(context),
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -1366,7 +1441,9 @@ class _SleeperSelectionPanel extends StatelessWidget {
                         '+${sleeper.pricePremium()} Toman',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.success(context),
+                          color: isSelected
+                              ? ECardoTokens.inkOnBrand
+                              : ECardoTokens.success(context),
                         ),
                       ),
                     ],
@@ -1397,25 +1474,40 @@ class _SleeperSelectionPanel extends StatelessWidget {
                 onTap: () => onGenderRuleChanged(rule),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 10.h,
+                  ),
                   decoration: BoxDecoration(
-                    color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.surfaceSunken(context),
+                    color: isSelected
+                        ? ECardoTokens.brand900(context)
+                        : ECardoTokens.surfaceSunken(context),
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                     border: Border.all(
-                      color: isSelected ? ECardoTokens.brand500(context) : ECardoTokens.border(context),
+                      color: isSelected
+                          ? ECardoTokens.brand500(context)
+                          : ECardoTokens.border(context),
                     ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(rule.icon, color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.inkMuted(context), size: 20.r),
+                      Icon(
+                        rule.icon,
+                        color: isSelected
+                            ? ECardoTokens.inkOnBrand
+                            : ECardoTokens.inkMuted(context),
+                        size: 20.r,
+                      ),
                       SizedBox(width: 8.w),
                       Text(
                         rule.localizedBadge(isRtl: false),
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w700,
-                          color: isSelected ? ECardoTokens.inkOnBrand : ECardoTokens.ink(context),
+                          color: isSelected
+                              ? ECardoTokens.inkOnBrand
+                              : ECardoTokens.ink(context),
                         ),
                       ),
                     ],
@@ -1447,7 +1539,9 @@ class StopTimeline extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 8.r,
-                  backgroundColor: stop.isMajorHub ? ECardoTokens.brand500(context) : ECardoTokens.inkMuted(context),
+                  backgroundColor: stop.isMajorHub
+                      ? ECardoTokens.brand500(context)
+                      : ECardoTokens.inkMuted(context),
                   child: null,
                 ),
                 SizedBox(width: 12.w),
@@ -1459,7 +1553,9 @@ class StopTimeline extends StatelessWidget {
                         stop.stationName,
                         style: TextStyle(
                           fontSize: 12.sp,
-                          fontWeight: index == 0 || index == stops.length - 1 ? FontWeight.w800 : FontWeight.w600,
+                          fontWeight: index == 0 || index == stops.length - 1
+                              ? FontWeight.w800
+                              : FontWeight.w600,
                           color: ECardoTokens.ink(context),
                         ),
                       ),
@@ -1538,7 +1634,9 @@ class _PriceSummary extends StatelessWidget {
       decoration: BoxDecoration(
         color: ECardoTokens.brand100(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-        border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.2)),
+        border: Border.all(
+          color: ECardoTokens.brand500(context).withValues(alpha: 0.2),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1570,9 +1668,19 @@ class _PriceSummary extends StatelessWidget {
               children: [
                 Text(
                   'Sleeper premium ($sleeperPremium Toman)',
-                  style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: ECardoTokens.inkMuted(context),
+                  ),
                 ),
-                Text(formatAmount(sleeperPremium), style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: ECardoTokens.success(context))),
+                Text(
+                  formatAmount(sleeperPremium),
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                    color: ECardoTokens.success(context),
+                  ),
+                ),
               ],
             ),
           ],
@@ -1638,7 +1746,8 @@ class JourneyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final totalPeople = adultCount + childCount;
     final baseTotal = journey.basePrice * totalPeople;
-    final sleeperTotal = journey.availableSleepers.first.pricePremium() * totalPeople;
+    final sleeperTotal =
+        journey.availableSleepers.first.pricePremium() * totalPeople;
     final total = baseTotal + sleeperTotal;
 
     return GestureDetector(
@@ -1658,7 +1767,10 @@ class JourneyCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 6.h,
+                  ),
                   decoration: BoxDecoration(
                     color: ECardoTokens.brand100(context),
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
@@ -1699,8 +1811,21 @@ class JourneyCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4.h),
-                      Text(journey.originStation, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context))),
-                      Text(journey.departurePlatform, style: TextStyle(fontSize: 10.sp, color: ECardoTokens.inkMuted(context))),
+                      Text(
+                        journey.originStation,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.ink(context),
+                        ),
+                      ),
+                      Text(
+                        journey.departurePlatform,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -1708,7 +1833,11 @@ class JourneyCard extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.swap_horiz_rounded, color: ECardoTokens.brand500(context), size: 20.r),
+                      Icon(
+                        Icons.swap_horiz_rounded,
+                        color: ECardoTokens.brand500(context),
+                        size: 20.r,
+                      ),
                       SizedBox(height: 6.h),
                       Text(
                         journey.durationLabel,
@@ -1734,8 +1863,21 @@ class JourneyCard extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 4.h),
-                      Text(journey.destinationStation, style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context))),
-                      Text(journey.arrivalPlatform, style: TextStyle(fontSize: 10.sp, color: ECardoTokens.inkMuted(context))),
+                      Text(
+                        journey.destinationStation,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.ink(context),
+                        ),
+                      ),
+                      Text(
+                        journey.arrivalPlatform,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -1752,22 +1894,36 @@ class JourneyCard extends StatelessWidget {
                     children: [
                       Text(
                         journey.trainName,
-                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context)),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w800,
+                          color: ECardoTokens.ink(context),
+                        ),
                       ),
                       SizedBox(height: 4.h),
                       Text(
                         'Train #${journey.trainNumber}',
-                        style: TextStyle(fontSize: 10.sp, color: ECardoTokens.inkMuted(context)),
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
                       ),
                     ],
                   ),
                 ),
                 if (journey.transferInfo != null) ...[
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: journey.transferInfo!.safetyLevel.color.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                      color: journey.transferInfo!.safetyLevel.color.withValues(
+                        alpha: 0.1,
+                      ),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm,
+                      ),
                     ),
                     child: Icon(
                       journey.transferInfo!.safetyLevel.icon,
@@ -1778,11 +1934,18 @@ class JourneyCard extends StatelessWidget {
                   SizedBox(width: 6.w),
                 ],
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 6.h,
+                  ),
                   decoration: BoxDecoration(
                     color: ECardoTokens.sand100(context),
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-                    border: Border.all(color: ECardoTokens.sand400(context).withValues(alpha: 0.2)),
+                    border: Border.all(
+                      color: ECardoTokens.sand400(
+                        context,
+                      ).withValues(alpha: 0.2),
+                    ),
                   ),
                   child: Text(
                     formatAmount(total),

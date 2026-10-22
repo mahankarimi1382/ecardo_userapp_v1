@@ -75,7 +75,8 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         navigate: BaseRoute.airtime,
         tintColor: AppColors.info,
         badge: 'محبوب',
-        keywords: 'airtime mci irancell rightel شارژ سیم کارت همراه اول ایرانسل رایتل شاتل اعتباری',
+        keywords:
+            'airtime mci irancell rightel شارژ سیم کارت همراه اول ایرانسل رایتل شاتل اعتباری',
       ),
       BillCategoryItem(
         id: 'data_bundle',
@@ -85,7 +86,8 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         navigate: BaseRoute.dataBundle,
         tintColor: AppColors.brandViolet,
         badge: 'تخفیف',
-        keywords: 'data bundle internet بسته اینترنت همراه دیتا گیگابایت مودم بسته',
+        keywords:
+            'data bundle internet بسته اینترنت همراه دیتا گیگابایت مودم بسته',
       ),
       BillCategoryItem(
         id: 'internet',
@@ -94,7 +96,8 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         icon: PngAssets.commonInternetIcon,
         navigate: BaseRoute.internet,
         tintColor: AppColors.mainSoftBlue,
-        keywords: 'internet adsl vdsl ftth شاتل مخابرات آسیاتک اینترنت ثابت پارس آنلاین',
+        keywords:
+            'internet adsl vdsl ftth شاتل مخابرات آسیاتک اینترنت ثابت پارس آنلاین',
       ),
       BillCategoryItem(
         id: 'electricity',
@@ -104,7 +107,8 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         navigate: BaseRoute.electricity,
         tintColor: AppColors.warning,
         badge: 'فوری',
-        keywords: 'electricity power توانیر برق قبض شناسه پرداخت برق سراسری کنتور',
+        keywords:
+            'electricity power توانیر برق قبض شناسه پرداخت برق سراسری کنتور',
       ),
       BillCategoryItem(
         id: 'water',
@@ -115,10 +119,10 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         tintColor: AppColors.mutedBlue,
         keywords: 'water bill آب و فاضلاب آبفا قبض آب کنتور آب مصرفی',
         onCustomTap: () {
-          Get.toNamed(BaseRoute.electricity, arguments: {
-            'service_type': 'water',
-            'title': 'قبض آب و فاضلاب',
-          });
+          Get.toNamed(
+            BaseRoute.electricity,
+            arguments: {'service_type': 'water', 'title': 'قبض آب و فاضلاب'},
+          );
         },
       ),
       BillCategoryItem(
@@ -129,7 +133,8 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         navigate: BaseRoute.toll,
         tintColor: AppColors.success,
         badge: 'تسویه آنی',
-        keywords: 'toll road freeway آزادراه عوارض طرح ترافیک پلاک خلافی عوارض خودرویی',
+        keywords:
+            'toll road freeway آزادراه عوارض طرح ترافیک پلاک خلافی عوارض خودرویی',
       ),
       BillCategoryItem(
         id: 'cable',
@@ -138,7 +143,8 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         icon: PngAssets.commonCablesIcon,
         navigate: BaseRoute.cable,
         tintColor: AppColors.error,
-        keywords: 'cable tv iptv فیلمیو نماوا تلویزیون کابلی اشتراک استریم رسانه',
+        keywords:
+            'cable tv iptv فیلمیو نماوا تلویزیون کابلی اشتراک استریم رسانه',
       ),
       BillCategoryItem(
         id: 'government',
@@ -148,7 +154,8 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         navigate: BaseRoute.toll,
         tintColor: AppColors.softGray,
         badge: 'ملی',
-        keywords: 'government tax police خلافی پلیس راهور راهنمایی رانندگی مالیات شهرداری خدمات دولتی',
+        keywords:
+            'government tax police خلافی پلیس راهور راهنمایی رانندگی مالیات شهرداری خدمات دولتی',
         onCustomTap: () {
           _showGovernmentServicesSheet(context);
         },
@@ -194,7 +201,9 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.warmWhite
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ],
@@ -219,10 +228,13 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               color: AppColors.mutedBlue,
               onTap: () {
                 Get.back();
-                Get.toNamed(BaseRoute.electricity, arguments: {
-                  'service_type': 'municipality',
-                  'title': 'عوارض سالیانه شهرداری',
-                });
+                Get.toNamed(
+                  BaseRoute.electricity,
+                  arguments: {
+                    'service_type': 'municipality',
+                    'title': 'عوارض سالیانه شهرداری',
+                  },
+                );
               },
             ),
             _buildGovTile(
@@ -233,10 +245,13 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
               color: AppColors.brandViolet,
               onTap: () {
                 Get.back();
-                Get.toNamed(BaseRoute.electricity, arguments: {
-                  'service_type': 'tax',
-                  'title': 'مالیات نقل و انتقال خودرو',
-                });
+                Get.toNamed(
+                  BaseRoute.electricity,
+                  arguments: {
+                    'service_type': 'tax',
+                    'title': 'مالیات نقل و انتقال خودرو',
+                  },
+                );
               },
             ),
             SizedBox(height: 20.h),
@@ -287,13 +302,17 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
           subtitle,
           style: TextStyle(
             fontSize: 10.sp,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios_rounded,
           size: 14.w,
-          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+          color: isDark
+              ? AppColors.darkTextTertiary
+              : AppColors.lightTextTertiary,
         ),
       ),
     );
@@ -309,8 +328,12 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
         ? allCategories
         : allCategories.where((item) {
             final titleMatch = item.title.toLowerCase().contains(_searchQuery);
-            final subtitleMatch = item.subtitle.toLowerCase().contains(_searchQuery);
-            final keywordMatch = item.keywords.toLowerCase().contains(_searchQuery);
+            final subtitleMatch = item.subtitle.toLowerCase().contains(
+              _searchQuery,
+            );
+            final keywordMatch = item.keywords.toLowerCase().contains(
+              _searchQuery,
+            );
             return titleMatch || subtitleMatch || keywordMatch;
           }).toList();
 
@@ -323,19 +346,24 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
       },
       child: Scaffold(
         appBar: const CommonDefaultAppBar(),
-        backgroundColor: isDark ? AppColors.deepBlack : AppColors.lightBackground,
+        backgroundColor: isDark
+            ? AppColors.deepBlack
+            : AppColors.lightBackground,
         body: Column(
           children: [
             SizedBox(height: 16.h),
             // Screen Header with History shortcut
             CommonAppBar(
-              title: localization?.billPaymentScreenTitle ?? 'پرداخت قبوض و خدمات',
+              title:
+                  localization?.billPaymentScreenTitle ?? 'پرداخت قبوض و خدمات',
               isBackLogicApply: true,
               backLogicFunction: () async {
                 SmartBackHelper.handleBack(context);
               },
               rightSideWidget: Semantics(
-                label: localization?.billPaymentHistoryTitle ?? 'سوابق پرداخت قبوض',
+                label:
+                    localization?.billPaymentHistoryTitle ??
+                    'سوابق پرداخت قبوض',
                 button: true,
                 child: Material(
                   color: Colors.transparent,
@@ -355,14 +383,19 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                           padding: EdgeInsets.all(7.w),
                           margin: EdgeInsetsDirectional.only(end: 18.w),
                           decoration: BoxDecoration(
-                            color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                                .withValues(alpha: 0.10),
+                            color:
+                                (isDark
+                                        ? AppColors.mainSoftBlue
+                                        : AppColors.deepBlack)
+                                    .withValues(alpha: 0.10),
                             shape: BoxShape.circle,
                           ),
                           child: Image.asset(
                             PngAssets.commonHistoryIcon,
                             width: 22.w,
-                            color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.deepBlack,
                           ),
                         ),
                       ),
@@ -381,12 +414,16 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                   color: isDark ? AppColors.darkSurface : AppColors.white,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                     width: 1.0,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                      color: Colors.black.withValues(
+                        alpha: isDark ? 0.25 : 0.04,
+                      ),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
@@ -396,19 +433,26 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                   controller: _searchController,
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.warmWhite
+                        : AppColors.lightTextPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'جستجوی خدمات، اپراتور یا قبض (همراه اول، برق، آب...)',
+                    hintText:
+                        'جستجوی خدمات، اپراتور یا قبض (همراه اول، برق، آب...)',
                     hintStyle: TextStyle(
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextTertiary,
                     ),
                     prefixIcon: Icon(
                       Icons.search_rounded,
                       size: 20.w,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.softGray,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.softGray,
                     ),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? Semantics(
@@ -466,7 +510,9 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.warmWhite
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                           if (_searchQuery.isNotEmpty)
@@ -477,7 +523,9 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                                 style: TextStyle(
                                   fontSize: 11.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: isDark ? AppColors.mainSoftBlue : AppColors.mutedBlue,
+                                  color: isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.mutedBlue,
                                 ),
                               ),
                             ),
@@ -492,10 +540,14 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                         margin: EdgeInsets.all(18.w),
                         padding: EdgeInsets.all(28.w),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurface : AppColors.white,
+                          color: isDark
+                              ? AppColors.darkSurface
+                              : AppColors.white,
                           borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                           ),
                         ),
                         child: Column(
@@ -503,7 +555,9 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                             Icon(
                               Icons.search_off_rounded,
                               size: 44.w,
-                              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                              color: isDark
+                                  ? AppColors.darkTextTertiary
+                                  : AppColors.lightTextTertiary,
                             ),
                             SizedBox(height: 10.h),
                             Text(
@@ -511,7 +565,9 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.warmWhite
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                             SizedBox(height: 4.h),
@@ -520,7 +576,9 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 11.sp,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ],
@@ -533,12 +591,13 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: filteredCategories.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 12.w,
-                            mainAxisSpacing: 12.h,
-                            childAspectRatio: 1.35,
-                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12.w,
+                                mainAxisSpacing: 12.h,
+                                childAspectRatio: 1.35,
+                              ),
                           itemBuilder: (context, index) {
                             final category = filteredCategories[index];
                             return _ServiceGridCard(
@@ -571,13 +630,17 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                                     const Color(0xFF161614),
                                   ]
                                 : [
-                                    AppColors.mainSoftBlue.withValues(alpha: 0.18),
+                                    AppColors.mainSoftBlue.withValues(
+                                      alpha: 0.18,
+                                    ),
                                     const Color(0xFFF0EDEC),
                                   ],
                           ),
                           borderRadius: BorderRadius.circular(16.r),
                           border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                           ),
                         ),
                         child: Row(
@@ -585,14 +648,19 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                             Container(
                               padding: EdgeInsets.all(10.w),
                               decoration: BoxDecoration(
-                                color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                                    .withValues(alpha: 0.12),
+                                color:
+                                    (isDark
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.deepBlack)
+                                        .withValues(alpha: 0.12),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 Icons.card_giftcard_rounded,
                                 size: 22.w,
-                                color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.deepBlack,
                               ),
                             ),
                             SizedBox(width: 12.w),
@@ -605,7 +673,9 @@ class _BillPaymentScreenState extends State<BillPaymentScreen> {
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w800,
-                                      color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                                      color: isDark
+                                          ? AppColors.warmWhite
+                                          : AppColors.lightTextPrimary,
                                     ),
                                   ),
                                   SizedBox(height: 2.h),
@@ -687,7 +757,9 @@ class _ServiceGridCard extends StatelessWidget {
                       width: 42.w,
                       height: 42.w,
                       decoration: BoxDecoration(
-                        color: category.tintColor.withValues(alpha: isDark ? 0.22 : 0.12),
+                        color: category.tintColor.withValues(
+                          alpha: isDark ? 0.22 : 0.12,
+                        ),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Center(
@@ -701,10 +773,15 @@ class _ServiceGridCard extends StatelessWidget {
                     ),
                     if (category.badge != null)
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 6.w,
+                          vertical: 2.h,
+                        ),
                         decoration: BoxDecoration(
                           color: category.tintColor.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusFull,
+                          ),
                         ),
                         child: Text(
                           category.badge!,
@@ -725,7 +802,9 @@ class _ServiceGridCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.warmWhite : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.warmWhite
+                            : AppColors.lightTextPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -736,7 +815,9 @@ class _ServiceGridCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 9.5.sp,
                         fontWeight: FontWeight.w500,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

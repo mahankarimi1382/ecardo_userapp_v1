@@ -26,16 +26,28 @@ class VisaResultScreen extends StatelessWidget {
     final isApproved = request.isApproved;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           isApproved
-              ? l10nPick(context, en: 'E-Visa Issued', fa: 'ویزای الکترونیک صادر شد')
-              : l10nPick(context, en: 'Visa Application Decision', fa: 'نتیجه بررسی درخواست ویزا'),
+              ? l10nPick(
+                  context,
+                  en: 'E-Visa Issued',
+                  fa: 'ویزای الکترونیک صادر شد',
+                )
+              : l10nPick(
+                  context,
+                  en: 'Visa Application Decision',
+                  fa: 'نتیجه بررسی درخواست ویزا',
+                ),
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -44,7 +56,9 @@ class VisaResultScreen extends StatelessWidget {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           onPressed: () => Get.back(),
@@ -66,7 +80,11 @@ class VisaResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildApprovedSection(BuildContext context, VisaController controller, bool isDark) {
+  Widget _buildApprovedSection(
+    BuildContext context,
+    VisaController controller,
+    bool isDark,
+  ) {
     return Column(
       children: [
         // Congratulatory Header Card
@@ -96,11 +114,19 @@ class VisaResultScreen extends StatelessWidget {
                   color: AppColors.white,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.check_circle_rounded, color: AppColors.success, size: 40.r),
+                child: Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.success,
+                  size: 40.r,
+                ),
               ),
               SizedBox(height: AppSpacing.md.h),
               Text(
-                l10nPick(context, en: 'Congratulations!', fa: 'تبریک! ویزای شما صادر گردید'),
+                l10nPick(
+                  context,
+                  en: 'Congratulations!',
+                  fa: 'تبریک! ویزای شما صادر گردید',
+                ),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18.sp,
@@ -146,16 +172,23 @@ class VisaResultScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 15.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ],
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm.w, vertical: AppSpacing.xs.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm.w,
+                      vertical: AppSpacing.xs.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.successContainer,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                     child: Text(
                       l10nPick(context, en: 'VALID E-VISA', fa: 'معتبر'),
@@ -172,12 +205,37 @@ class VisaResultScreen extends StatelessWidget {
                 height: AppSpacing.xxl,
                 color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
               ),
-              _certRow(context, l10nPick(context, en: 'Beneficiary Name:', fa: 'نام متقاضی:'), request.applicantName, isDark),
-              _certRow(context, l10nPick(context, en: 'Passport Number:', fa: 'شماره گذرنامه:'), request.applicantPassport, isDark),
-              _certRow(context, l10nPick(context, en: 'Visa Title:', fa: 'نوع ویزا:'), request.visaTitle, isDark),
-              _certRow(context, l10nPick(context, en: 'Case Reference:', fa: 'شماره پرونده:'), request.caseNo, isDark),
+              _certRow(
+                context,
+                l10nPick(context, en: 'Beneficiary Name:', fa: 'نام متقاضی:'),
+                request.applicantName,
+                isDark,
+              ),
+              _certRow(
+                context,
+                l10nPick(context, en: 'Passport Number:', fa: 'شماره گذرنامه:'),
+                request.applicantPassport,
+                isDark,
+              ),
+              _certRow(
+                context,
+                l10nPick(context, en: 'Visa Title:', fa: 'نوع ویزا:'),
+                request.visaTitle,
+                isDark,
+              ),
+              _certRow(
+                context,
+                l10nPick(context, en: 'Case Reference:', fa: 'شماره پرونده:'),
+                request.caseNo,
+                isDark,
+              ),
               if (request.deliveredAt != null)
-                _certRow(context, l10nPick(context, en: 'Issued Date:', fa: 'تاریخ صدور:'), request.deliveredAt!.split('T').first, isDark),
+                _certRow(
+                  context,
+                  l10nPick(context, en: 'Issued Date:', fa: 'تاریخ صدور:'),
+                  request.deliveredAt!.split('T').first,
+                  isDark,
+                ),
             ],
           ),
         ),
@@ -186,7 +244,8 @@ class VisaResultScreen extends StatelessWidget {
         // Download / Open PDF Button
         ElevatedButton.icon(
           onPressed: () async {
-            if (request.evisaFilePath != null && request.evisaFilePath!.isNotEmpty) {
+            if (request.evisaFilePath != null &&
+                request.evisaFilePath!.isNotEmpty) {
               final path = request.evisaFilePath!;
               final file = File(path);
               if (await file.exists()) {
@@ -198,7 +257,11 @@ class VisaResultScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    l10nPick(context, en: 'Preparing official PDF...', fa: 'در حال آماده‌سازی و دانلود فایل PDF ویزا...'),
+                    l10nPick(
+                      context,
+                      en: 'Preparing official PDF...',
+                      fa: 'در حال آماده‌سازی و دانلود فایل PDF ویزا...',
+                    ),
                   ),
                 ),
               );
@@ -207,13 +270,27 @@ class VisaResultScreen extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.success,
             minimumSize: Size(double.infinity, 50.h),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+            ),
             elevation: 0,
           ),
-          icon: Icon(Icons.download_rounded, color: AppColors.white, size: AppSpacing.iconSm.r),
+          icon: Icon(
+            Icons.download_rounded,
+            color: AppColors.white,
+            size: AppSpacing.iconSm.r,
+          ),
           label: Text(
-            l10nPick(context, en: 'Download Official E-Visa (PDF)', fa: 'دانلود فایل ویزا الکترونیک (PDF)'),
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800, color: AppColors.white),
+            l10nPick(
+              context,
+              en: 'Download Official E-Visa (PDF)',
+              fa: 'دانلود فایل ویزا الکترونیک (PDF)',
+            ),
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w800,
+              color: AppColors.white,
+            ),
           ),
         ),
         SizedBox(height: AppSpacing.md.h),
@@ -229,10 +306,16 @@ class VisaResultScreen extends StatelessWidget {
               foregroundColor: AppColors.success,
               side: const BorderSide(color: AppColors.success, width: 1.2),
               minimumSize: Size(double.infinity, 46.h),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+              ),
             ),
             child: Text(
-              l10nPick(context, en: 'Confirm Delivery', fa: 'تأیید دریافت نهایی ویزا'),
+              l10nPick(
+                context,
+                en: 'Confirm Delivery',
+                fa: 'تأیید دریافت نهایی ویزا',
+              ),
               style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
             ),
           ),
@@ -240,13 +323,23 @@ class VisaResultScreen extends StatelessWidget {
 
         // Important Travel Reminders
         VisaCard(
-          color: isDark ? AppColors.darkSurfaceVariant : AppColors.successContainer.withValues(alpha: 0.6),
+          color: isDark
+              ? AppColors.darkSurfaceVariant
+              : AppColors.successContainer.withValues(alpha: 0.6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l10nPick(context, en: 'Travel Reminders', fa: 'توصیه‌های مهم سفر'),
-                style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: AppColors.success),
+                l10nPick(
+                  context,
+                  en: 'Travel Reminders',
+                  fa: 'توصیه‌های مهم سفر',
+                ),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.success,
+                ),
               ),
               SizedBox(height: AppSpacing.sm.h),
               _reminderItem(
@@ -270,7 +363,11 @@ class VisaResultScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRejectedSection(BuildContext context, VisaController controller, bool isDark) {
+  Widget _buildRejectedSection(
+    BuildContext context,
+    VisaController controller,
+    bool isDark,
+  ) {
     return Column(
       children: [
         // Rejection Header Card
@@ -279,7 +376,9 @@ class VisaResultScreen extends StatelessWidget {
           padding: EdgeInsets.all(AppSpacing.xl.r),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-            color: isDark ? AppColors.darkSurfaceVariant : AppColors.errorContainer,
+            color: isDark
+                ? AppColors.darkSurfaceVariant
+                : AppColors.errorContainer,
             border: Border.all(color: AppColors.error.withValues(alpha: 0.5)),
           ),
           child: Column(
@@ -290,12 +389,24 @@ class VisaResultScreen extends StatelessWidget {
                   color: isDark ? AppColors.darkSurface : AppColors.white,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.highlight_off_rounded, color: AppColors.error, size: 40.r),
+                child: Icon(
+                  Icons.highlight_off_rounded,
+                  color: AppColors.error,
+                  size: 40.r,
+                ),
               ),
               SizedBox(height: AppSpacing.md.h),
               Text(
-                l10nPick(context, en: 'Application Not Approved', fa: 'عدم موافقت با صدور ویزا'),
-                style: TextStyle(fontSize: 17.sp, fontWeight: FontWeight.w900, color: AppColors.error),
+                l10nPick(
+                  context,
+                  en: 'Application Not Approved',
+                  fa: 'عدم موافقت با صدور ویزا',
+                ),
+                style: TextStyle(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.error,
+                ),
               ),
               SizedBox(height: AppSpacing.xs.h),
               Text(
@@ -305,7 +416,11 @@ class VisaResultScreen extends StatelessWidget {
                   fa: 'متأسفانه اداره مهاجرت کشور مقصد با صدور این ویزا موافقت نکرده است.',
                 ),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11.5.sp, color: AppColors.error, height: 1.4),
+                style: TextStyle(
+                  fontSize: 11.5.sp,
+                  color: AppColors.error,
+                  height: 1.4,
+                ),
               ),
             ],
           ),
@@ -319,11 +434,17 @@ class VisaResultScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l10nPick(context, en: 'Official Refusal Explanation', fa: 'علت و شرح عدم صدور'),
+                l10nPick(
+                  context,
+                  en: 'Official Refusal Explanation',
+                  fa: 'علت و شرح عدم صدور',
+                ),
                 style: TextStyle(
                   fontSize: 13.5.sp,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               SizedBox(height: AppSpacing.sm.h),
@@ -331,12 +452,19 @@ class VisaResultScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: EdgeInsets.all(AppSpacing.md.r),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+                  color: isDark
+                      ? AppColors.darkBackground
+                      : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
-                  border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
                 ),
                 child: Text(
-                  request.rejectionReason != null && request.rejectionReason!.isNotEmpty
+                  request.rejectionReason != null &&
+                          request.rejectionReason!.isNotEmpty
                       ? request.rejectionReason!
                       : l10nPick(
                           context,
@@ -345,7 +473,9 @@ class VisaResultScreen extends StatelessWidget {
                         ),
                   style: TextStyle(
                     fontSize: 12.5.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -362,11 +492,17 @@ class VisaResultScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                l10nPick(context, en: 'Refund Statement', fa: 'وضعیت استرداد وجه'),
+                l10nPick(
+                  context,
+                  en: 'Refund Statement',
+                  fa: 'وضعیت استرداد وجه',
+                ),
                 style: TextStyle(
                   fontSize: 13.5.sp,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               SizedBox(height: AppSpacing.sm.h),
@@ -378,7 +514,9 @@ class VisaResultScreen extends StatelessWidget {
                 ),
                 style: TextStyle(
                   fontSize: 11.5.sp,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   height: 1.4,
                 ),
               ),
@@ -406,20 +544,39 @@ class VisaResultScreen extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.mutedBlue,
             minimumSize: Size(double.infinity, 48.h),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+            ),
             elevation: 0,
           ),
-          icon: Icon(Icons.support_agent_rounded, color: AppColors.white, size: AppSpacing.iconSm.r),
+          icon: Icon(
+            Icons.support_agent_rounded,
+            color: AppColors.white,
+            size: AppSpacing.iconSm.r,
+          ),
           label: Text(
-            l10nPick(context, en: 'Contact Visa Specialist / Appeal', fa: 'ثبت اعتراض / تماس با کارشناس'),
-            style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w800, color: AppColors.white),
+            l10nPick(
+              context,
+              en: 'Contact Visa Specialist / Appeal',
+              fa: 'ثبت اعتراض / تماس با کارشناس',
+            ),
+            style: TextStyle(
+              fontSize: 13.5.sp,
+              fontWeight: FontWeight.w800,
+              color: AppColors.white,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _certRow(BuildContext context, String label, String value, bool isDark) {
+  Widget _certRow(
+    BuildContext context,
+    String label,
+    String value,
+    bool isDark,
+  ) {
     return Padding(
       padding: EdgeInsets.only(bottom: AppSpacing.sm.h),
       child: Row(
@@ -429,7 +586,9 @@ class VisaResultScreen extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           Text(
@@ -437,7 +596,9 @@ class VisaResultScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.5.sp,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
         ],
@@ -451,12 +612,20 @@ class VisaResultScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.check_circle_outline, size: 16.r, color: AppColors.success),
+          Icon(
+            Icons.check_circle_outline,
+            size: 16.r,
+            color: AppColors.success,
+          ),
           SizedBox(width: AppSpacing.sm.w),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(fontSize: 11.5.sp, color: AppColors.success, height: 1.35),
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                color: AppColors.success,
+                height: 1.35,
+              ),
             ),
           ),
         ],

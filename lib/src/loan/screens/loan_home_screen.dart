@@ -44,12 +44,22 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final backgroundColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+    final backgroundColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
+    final surfaceColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -148,15 +158,27 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                   TextButton(
                     style: TextButton.styleFrom(
                       foregroundColor: primaryAccent,
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
                     ),
                     onPressed: () {
                       HapticFeedback.lightImpact();
                       Get.to(() => const LoanTrackingScreen());
                     },
                     child: Text(
-                      l10nPick(context, fa: 'همه پرونده‌ها', en: 'View All', ar: 'الكل', zh: '全部'),
-                      style: TextStyle(fontSize: 11.5.sp, fontWeight: FontWeight.w700),
+                      l10nPick(
+                        context,
+                        fa: 'همه پرونده‌ها',
+                        en: 'View All',
+                        ar: 'الكل',
+                        zh: '全部',
+                      ),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ],
@@ -176,7 +198,9 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                 },
                 onTopUpCollateral: () {
                   HapticFeedback.lightImpact();
-                  Get.to(() => LoanCollateralWarningScreen(loanCase: activeCase));
+                  Get.to(
+                    () => LoanCollateralWarningScreen(loanCase: activeCase),
+                  );
                 },
               ),
 
@@ -213,19 +237,21 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
               SizedBox(height: AppSpacing.sm.h),
 
               // ------------------ Product List Cards ------------------
-              ...availableProducts.map((product) => Padding(
-                    padding: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
-                    child: _buildProductCard(
-                      context,
-                      product,
-                      isDark,
-                      primaryAccent,
-                      surfaceColor,
-                      borderColor,
-                      textPrimary,
-                      textSecondary,
-                    ),
-                  )),
+              ...availableProducts.map(
+                (product) => Padding(
+                  padding: EdgeInsetsDirectional.only(bottom: AppSpacing.sm.h),
+                  child: _buildProductCard(
+                    context,
+                    product,
+                    isDark,
+                    primaryAccent,
+                    surfaceColor,
+                    borderColor,
+                    textPrimary,
+                    textSecondary,
+                  ),
+                ),
+              ),
 
               SizedBox(height: AppSpacing.huge.h),
             ],
@@ -236,9 +262,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
         padding: EdgeInsetsDirectional.all(AppSpacing.md.r),
         decoration: BoxDecoration(
           color: surfaceColor,
-          border: Border(
-            top: BorderSide(color: borderColor),
-          ),
+          border: Border(top: BorderSide(color: borderColor)),
           boxShadow: [
             BoxShadow(
               color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -272,10 +296,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                   ar: 'طلب قرض جديد',
                   zh: '立即申请贷款',
                 ),
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w800,
-                ),
+                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
               ),
             ),
           ),
@@ -295,19 +316,25 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
     Color textPrimary,
     Color textSecondary,
   ) {
-    final isCrypto = p.requiredCollateralType != null && p.requiredCollateralType!.isNotEmpty;
+    final isCrypto =
+        p.requiredCollateralType != null &&
+        p.requiredCollateralType!.isNotEmpty;
     final isBusiness = p.audience.toUpperCase() == 'BUSINESS';
 
     final badgeBg = isCrypto
         ? const Color(0xFF10B981).withValues(alpha: 0.12)
-        : (isBusiness ? const Color(0xFF3B82F6).withValues(alpha: 0.12) : primaryAccent.withValues(alpha: 0.12));
+        : (isBusiness
+              ? const Color(0xFF3B82F6).withValues(alpha: 0.12)
+              : primaryAccent.withValues(alpha: 0.12));
     final badgeColor = isCrypto
         ? const Color(0xFF059669)
         : (isBusiness ? const Color(0xFF2563EB) : primaryAccent);
 
     final iconData = isCrypto
         ? Icons.currency_bitcoin_rounded
-        : (isBusiness ? Icons.business_center_rounded : Icons.person_outline_rounded);
+        : (isBusiness
+              ? Icons.business_center_rounded
+              : Icons.person_outline_rounded);
 
     return InkWell(
       borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
@@ -377,7 +404,10 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 4.h),
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: 8.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
                     color: badgeBg,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
@@ -395,7 +425,10 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
             ),
 
             SizedBox(height: AppSpacing.sm.h),
-            Divider(height: 1, color: isDark ? AppColors.darkDivider : AppColors.lightDivider),
+            Divider(
+              height: 1,
+              color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+            ),
             SizedBox(height: AppSpacing.sm.h),
 
             // Bottom Metric Row: Rate + Max Limit + Arrow
@@ -419,11 +452,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                       ),
                     ),
                     SizedBox(width: 10.w),
-                    Container(
-                      width: 1,
-                      height: 12.h,
-                      color: borderColor,
-                    ),
+                    Container(width: 1, height: 12.h, color: borderColor),
                     SizedBox(width: 10.w),
                     Text(
                       '${l10nPick(context, fa: 'تا سقف', en: 'Up to', ar: 'حتى', zh: '最高')} ${p.maxAmount.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]},')} USD',

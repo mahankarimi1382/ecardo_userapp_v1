@@ -126,7 +126,13 @@ class _FlightListScreenState extends State<FlightListScreen> {
                 ),
                 children: [
                   if (search != null)
-                    _buildRouteSummaryCard(context, search, displayOffers.length, offers.length, lang),
+                    _buildRouteSummaryCard(
+                      context,
+                      search,
+                      displayOffers.length,
+                      offers.length,
+                      lang,
+                    ),
                   SizedBox(height: 12.h),
                   _buildJourneyStepper(context, localization),
                   SizedBox(height: 12.h),
@@ -139,18 +145,26 @@ class _FlightListScreenState extends State<FlightListScreen> {
                   else if (hasError)
                     _buildErrorState(context, localization, search, controller)
                   else if (displayOffers.isEmpty)
-                    _buildEmptyState(context, localization, search, controller, lang)
+                    _buildEmptyState(
+                      context,
+                      localization,
+                      search,
+                      controller,
+                      lang,
+                    )
                   else
-                    ...displayOffers.map((offer) => Padding(
-                          padding: EdgeInsets.only(bottom: 12.h),
-                          child: _buildFlightCard(
-                            context,
-                            offer: offer,
-                            search: search,
-                            controller: controller,
-                            lang: lang,
-                          ),
-                        )),
+                    ...displayOffers.map(
+                      (offer) => Padding(
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: _buildFlightCard(
+                          context,
+                          offer: offer,
+                          search: search,
+                          controller: controller,
+                          lang: lang,
+                        ),
+                      ),
+                    ),
                   SizedBox(height: 20.h),
                 ],
               ),
@@ -192,7 +206,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isRound ? Icons.sync_alt_rounded : Icons.flight_takeoff_rounded,
+                  isRound
+                      ? Icons.sync_alt_rounded
+                      : Icons.flight_takeoff_rounded,
                   color: ECardoTokens.brand500(context),
                   size: 20.r,
                 ),
@@ -291,7 +307,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                     borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                   ),
                   child: Text(
-                    FlightCabinClass.fromString(search.cabinClass).localizedLabel(lang),
+                    FlightCabinClass.fromString(
+                      search.cabinClass,
+                    ).localizedLabel(lang),
                     style: TextStyle(
                       color: ECardoTokens.ink(context),
                       fontWeight: FontWeight.w700,
@@ -306,44 +324,100 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  Widget _buildJourneyStepper(BuildContext context, AppLocalizations localization) {
+  Widget _buildJourneyStepper(
+    BuildContext context,
+    AppLocalizations localization,
+  ) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: ECardoTokens.brand100(context).withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-        border: Border.all(color: ECardoTokens.brand500(context).withValues(alpha: 0.2)),
+        border: Border.all(
+          color: ECardoTokens.brand500(context).withValues(alpha: 0.2),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStepItem(context, '1', l10nPick(context, en: 'Search', fa: 'جستجو', ar: 'البحث'), true),
-          Icon(Icons.arrow_forward_ios_rounded, size: 10.r, color: ECardoTokens.brand500(context)),
-          _buildStepItem(context, '2', l10nPick(context, en: 'Select Flight', fa: 'انتخاب پرواز', ar: 'اختيار الرحلة'), true),
-          Icon(Icons.arrow_forward_ios_rounded, size: 10.r, color: ECardoTokens.inkMuted(context)),
-          _buildStepItem(context, '3', l10nPick(context, en: 'Details & Seats', fa: 'صندلی و جزئیات', ar: 'المقاعد'), false),
-          Icon(Icons.arrow_forward_ios_rounded, size: 10.r, color: ECardoTokens.inkMuted(context)),
-          _buildStepItem(context, '4', l10nPick(context, en: 'Checkout', fa: 'پرداخت', ar: 'الدفع'), false),
+          _buildStepItem(
+            context,
+            '1',
+            l10nPick(context, en: 'Search', fa: 'جستجو', ar: 'البحث'),
+            true,
+          ),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 10.r,
+            color: ECardoTokens.brand500(context),
+          ),
+          _buildStepItem(
+            context,
+            '2',
+            l10nPick(
+              context,
+              en: 'Select Flight',
+              fa: 'انتخاب پرواز',
+              ar: 'اختيار الرحلة',
+            ),
+            true,
+          ),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 10.r,
+            color: ECardoTokens.inkMuted(context),
+          ),
+          _buildStepItem(
+            context,
+            '3',
+            l10nPick(
+              context,
+              en: 'Details & Seats',
+              fa: 'صندلی و جزئیات',
+              ar: 'المقاعد',
+            ),
+            false,
+          ),
+          Icon(
+            Icons.arrow_forward_ios_rounded,
+            size: 10.r,
+            color: ECardoTokens.inkMuted(context),
+          ),
+          _buildStepItem(
+            context,
+            '4',
+            l10nPick(context, en: 'Checkout', fa: 'پرداخت', ar: 'الدفع'),
+            false,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildStepItem(BuildContext context, String num, String label, bool active) {
+  Widget _buildStepItem(
+    BuildContext context,
+    String num,
+    String label,
+    bool active,
+  ) {
     return Row(
       children: [
         Container(
           width: 20.r,
           height: 20.r,
           decoration: BoxDecoration(
-            color: active ? ECardoTokens.brand700(context) : ECardoTokens.surfaceSunken(context),
+            color: active
+                ? ECardoTokens.brand700(context)
+                : ECardoTokens.surfaceSunken(context),
             shape: BoxShape.circle,
           ),
           alignment: Alignment.center,
           child: Text(
             num,
             style: TextStyle(
-              color: active ? ECardoTokens.inkOnBrand : ECardoTokens.inkMuted(context),
+              color: active
+                  ? ECardoTokens.inkOnBrand
+                  : ECardoTokens.inkMuted(context),
               fontSize: 10.sp,
               fontWeight: FontWeight.w800,
             ),
@@ -353,7 +427,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
         Text(
           label,
           style: TextStyle(
-            color: active ? ECardoTokens.brand700(context) : ECardoTokens.inkMuted(context),
+            color: active
+                ? ECardoTokens.brand700(context)
+                : ECardoTokens.inkMuted(context),
             fontWeight: active ? FontWeight.w800 : FontWeight.w500,
             fontSize: 10.5.sp,
           ),
@@ -396,7 +472,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
           TextButton(
             onPressed: () => _openComparisonModal(context, offers, lang),
             child: Text(
-              l10nPick(context, en: 'Compare Now', fa: 'مقایسه کن', ar: 'قارن الآن'),
+              l10nPick(
+                context,
+                en: 'Compare Now',
+                fa: 'مقایسه کن',
+                ar: 'قارن الآن',
+              ),
               style: TextStyle(
                 color: ECardoTokens.sand600(context),
                 fontWeight: FontWeight.w900,
@@ -431,10 +512,19 @@ class _FlightListScreenState extends State<FlightListScreen> {
         children: [
           Row(
             children: [
-              Icon(Icons.tune_rounded, size: 16.r, color: ECardoTokens.brand500(context)),
+              Icon(
+                Icons.tune_rounded,
+                size: 16.r,
+                color: ECardoTokens.brand500(context),
+              ),
               SizedBox(width: 6.w),
               Text(
-                l10nPick(context, en: 'Sort & Filter', fa: 'فیلتر و مرتب‌سازی', ar: 'الفلترة والترتيب'),
+                l10nPick(
+                  context,
+                  en: 'Sort & Filter',
+                  fa: 'فیلتر و مرتب‌سازی',
+                  ar: 'الفلترة والترتيب',
+                ),
                 style: TextStyle(
                   color: ECardoTokens.ink(context),
                   fontWeight: FontWeight.w800,
@@ -446,7 +536,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                 TextButton(
                   onPressed: _resetFilters,
                   child: Text(
-                    l10nPick(context, en: 'Reset', fa: 'حذف فیلترها', ar: 'إعادة ضبط'),
+                    l10nPick(
+                      context,
+                      en: 'Reset',
+                      fa: 'حذف فیلترها',
+                      ar: 'إعادة ضبط',
+                    ),
                     style: TextStyle(
                       color: ECardoTokens.brand500(context),
                       fontWeight: FontWeight.w700,
@@ -474,14 +569,22 @@ class _FlightListScreenState extends State<FlightListScreen> {
                     selectedColor: ECardoTokens.brand100(context),
                     checkmarkColor: ECardoTokens.brand500(context),
                     labelStyle: TextStyle(
-                      color: isSelected ? ECardoTokens.brand500(context) : ECardoTokens.ink(context),
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                      color: isSelected
+                          ? ECardoTokens.brand500(context)
+                          : ECardoTokens.ink(context),
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w500,
                       fontSize: 10.5.sp,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm,
+                      ),
                       side: BorderSide(
-                        color: isSelected ? ECardoTokens.brand500(context) : ECardoTokens.border(context),
+                        color: isSelected
+                            ? ECardoTokens.brand500(context)
+                            : ECardoTokens.border(context),
                       ),
                     ),
                   ),
@@ -507,14 +610,22 @@ class _FlightListScreenState extends State<FlightListScreen> {
                     selectedColor: ECardoTokens.sand100(context),
                     checkmarkColor: ECardoTokens.sand600(context),
                     labelStyle: TextStyle(
-                      color: isSelected ? ECardoTokens.sand600(context) : ECardoTokens.ink(context),
-                      fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                      color: isSelected
+                          ? ECardoTokens.sand600(context)
+                          : ECardoTokens.ink(context),
+                      fontWeight: isSelected
+                          ? FontWeight.w800
+                          : FontWeight.w500,
                       fontSize: 10.5.sp,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm,
+                      ),
                       side: BorderSide(
-                        color: isSelected ? ECardoTokens.sand600(context) : ECardoTokens.border(context),
+                        color: isSelected
+                            ? ECardoTokens.sand600(context)
+                            : ECardoTokens.border(context),
                       ),
                     ),
                   ),
@@ -546,14 +657,19 @@ class _FlightListScreenState extends State<FlightListScreen> {
   List<TravelOffer> _applyFiltersAndSorting(List<TravelOffer> source) {
     var result = source.where((offer) {
       if (_stopsFilter != FlightStopsFilter.all) {
-        final stopsStr = offer.attributes['stops_count']?.toString().toLowerCase() ?? '';
-        if (_stopsFilter == FlightStopsFilter.direct && (stopsStr.contains('1') || stopsStr.contains('2'))) {
+        final stopsStr =
+            offer.attributes['stops_count']?.toString().toLowerCase() ?? '';
+        if (_stopsFilter == FlightStopsFilter.direct &&
+            (stopsStr.contains('1') || stopsStr.contains('2'))) {
           return false;
         }
-        if (_stopsFilter == FlightStopsFilter.oneStop && !stopsStr.contains('1')) {
+        if (_stopsFilter == FlightStopsFilter.oneStop &&
+            !stopsStr.contains('1')) {
           return false;
         }
-        if (_stopsFilter == FlightStopsFilter.twoPlusStops && !stopsStr.contains('2') && !stopsStr.contains('3')) {
+        if (_stopsFilter == FlightStopsFilter.twoPlusStops &&
+            !stopsStr.contains('2') &&
+            !stopsStr.contains('3')) {
           return false;
         }
       }
@@ -584,25 +700,38 @@ class _FlightListScreenState extends State<FlightListScreen> {
     required dynamic controller,
     required String lang,
   }) {
-    final airlineName = offer.attributes['airline_name']?.toString() ??
+    final airlineName =
+        offer.attributes['airline_name']?.toString() ??
         offer.metadata['carrier_name']?.toString() ??
         'Emirates';
-    final rawFlightNum = offer.attributes['flight_number']?.toString() ??
+    final rawFlightNum =
+        offer.attributes['flight_number']?.toString() ??
         offer.metadata['flight_number']?.toString() ??
         'EK 972';
     final flightNum = rawFlightNum.replaceAll(RegExp(r'\.+$'), '').trim();
-    final depTime = _formatTime(offer.attributes['departure']?.toString() ?? '10:30');
-    final arrTime = _formatTime(offer.attributes['arrival']?.toString() ?? '14:45');
-    final originCode = offer.attributes['origin']?.toString() ?? search?.origin ?? 'DXB';
-    final destCode = offer.attributes['destination']?.toString() ?? search?.destination ?? 'LHR';
+    final depTime = _formatTime(
+      offer.attributes['departure']?.toString() ?? '10:30',
+    );
+    final arrTime = _formatTime(
+      offer.attributes['arrival']?.toString() ?? '14:45',
+    );
+    final originCode =
+        offer.attributes['origin']?.toString() ?? search?.origin ?? 'DXB';
+    final destCode =
+        offer.attributes['destination']?.toString() ??
+        search?.destination ??
+        'LHR';
     final rawDuration = offer.attributes['duration']?.toString() ?? '7h 15m';
     final duration = formatTravelDuration(rawDuration, lang);
     final stopsCount = offer.attributes['stops_count']?.toString() ?? 'Direct';
-    final isDirect = stopsCount.toLowerCase().contains('direct') || stopsCount.isEmpty;
+    final isDirect =
+        stopsCount.toLowerCase().contains('direct') || stopsCount.isEmpty;
     final fareFamily = _getFareFamily(offer);
     final isCompared = _comparedFlightIds.contains(offer.id);
 
-    final currency = offer.total.currency.isEmpty ? 'USD' : offer.total.currency;
+    final currency = offer.total.currency.isEmpty
+        ? 'USD'
+        : offer.total.currency;
     final formattedPrice = formatTravelPrice(
       context,
       amount: offer.total.amount,
@@ -611,7 +740,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Semantics(
-      label: '$airlineName flight $flightNum from $originCode to $destCode. Departure $depTime, arrival $arrTime. Price $formattedPrice',
+      label:
+          '$airlineName flight $flightNum from $originCode to $destCode. Departure $depTime, arrival $arrTime. Price $formattedPrice',
       child: Container(
         decoration: BoxDecoration(
           color: ECardoTokens.surfaceCard(context),
@@ -642,7 +772,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                       height: 44.r,
                       decoration: BoxDecoration(
                         color: ECardoTokens.surfaceSunken(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                         border: Border.all(color: ECardoTokens.border(context)),
                       ),
                       alignment: Alignment.center,
@@ -684,11 +816,18 @@ class _FlightListScreenState extends State<FlightListScreen> {
                     SizedBox(width: 4.w),
                     Semantics(
                       button: true,
-                      label: isCompared ? 'Remove from comparison' : 'Add to comparison',
+                      label: isCompared
+                          ? 'Remove from comparison'
+                          : 'Add to comparison',
                       child: IconButton(
-                        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+                        constraints: const BoxConstraints(
+                          minWidth: 44,
+                          minHeight: 44,
+                        ),
                         icon: Icon(
-                          isCompared ? Icons.check_circle_rounded : Icons.compare_arrows_rounded,
+                          isCompared
+                              ? Icons.check_circle_rounded
+                              : Icons.compare_arrows_rounded,
                           color: isCompared
                               ? ECardoTokens.sand600(context)
                               : ECardoTokens.inkMuted(context),
@@ -704,7 +843,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                             } else {
                               showTravelMessage(
                                 context,
-                                title: l10nPick(context, en: 'Compare', fa: 'مقایسه', ar: 'مقارنة'),
+                                title: l10nPick(
+                                  context,
+                                  en: 'Compare',
+                                  fa: 'مقایسه',
+                                  ar: 'مقارنة',
+                                ),
                                 message: l10nPick(
                                   context,
                                   en: 'You can compare at most 3 flights',
@@ -728,7 +872,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                             context,
                             depTime,
                             originCode,
-                            label: l10nPick(context, en: 'Departure', fa: 'مبدأ', ar: 'المغادرة'),
+                            label: l10nPick(
+                              context,
+                              en: 'Departure',
+                              fa: 'مبدأ',
+                              ar: 'المغادرة',
+                            ),
                           ),
                           Expanded(
                             child: Padding(
@@ -747,9 +896,13 @@ class _FlightListScreenState extends State<FlightListScreen> {
                                   Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Divider(color: ECardoTokens.border(context), thickness: 1.5),
+                                      Divider(
+                                        color: ECardoTokens.border(context),
+                                        thickness: 1.5,
+                                      ),
                                       Transform.rotate(
-                                        angle: 3.14159, // Point toward destination (left in RTL)
+                                        angle:
+                                            3.14159, // Point toward destination (left in RTL)
                                         child: Icon(
                                           Icons.flight_takeoff_rounded,
                                           size: 14.r,
@@ -760,16 +913,26 @@ class _FlightListScreenState extends State<FlightListScreen> {
                                   ),
                                   SizedBox(height: 3.h),
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w,
+                                      vertical: 2.h,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: isDirect
                                           ? ECardoTokens.successBg(context)
                                           : ECardoTokens.warningBg(context),
-                                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                                      borderRadius: BorderRadius.circular(
+                                        ECardoTokens.radiusSm,
+                                      ),
                                     ),
                                     child: Text(
                                       isDirect
-                                          ? l10nPick(context, en: 'Direct', fa: 'مستقیم', ar: 'مباشر')
+                                          ? l10nPick(
+                                              context,
+                                              en: 'Direct',
+                                              fa: 'مستقیم',
+                                              ar: 'مباشر',
+                                            )
                                           : stopsCount,
                                       style: TextStyle(
                                         color: isDirect
@@ -788,7 +951,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                             context,
                             arrTime,
                             destCode,
-                            label: l10nPick(context, en: 'Arrival', fa: 'مقصد', ar: 'الوصول'),
+                            label: l10nPick(
+                              context,
+                              en: 'Arrival',
+                              fa: 'مقصد',
+                              ar: 'الوصول',
+                            ),
                           ),
                         ]
                       : [
@@ -796,7 +964,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                             context,
                             depTime,
                             originCode,
-                            label: l10nPick(context, en: 'Departure', fa: 'مبدأ', ar: 'المغادرة'),
+                            label: l10nPick(
+                              context,
+                              en: 'Departure',
+                              fa: 'مبدأ',
+                              ar: 'المغادرة',
+                            ),
                           ),
                           Expanded(
                             child: Padding(
@@ -815,7 +988,10 @@ class _FlightListScreenState extends State<FlightListScreen> {
                                   Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Divider(color: ECardoTokens.border(context), thickness: 1.5),
+                                      Divider(
+                                        color: ECardoTokens.border(context),
+                                        thickness: 1.5,
+                                      ),
                                       Icon(
                                         Icons.flight_takeoff_rounded,
                                         size: 14.r,
@@ -825,16 +1001,26 @@ class _FlightListScreenState extends State<FlightListScreen> {
                                   ),
                                   SizedBox(height: 3.h),
                                   Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w,
+                                      vertical: 2.h,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: isDirect
                                           ? ECardoTokens.successBg(context)
                                           : ECardoTokens.warningBg(context),
-                                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                                      borderRadius: BorderRadius.circular(
+                                        ECardoTokens.radiusSm,
+                                      ),
                                     ),
                                     child: Text(
                                       isDirect
-                                          ? l10nPick(context, en: 'Direct', fa: 'مستقیم', ar: 'مباشر')
+                                          ? l10nPick(
+                                              context,
+                                              en: 'Direct',
+                                              fa: 'مستقیم',
+                                              ar: 'مباشر',
+                                            )
                                           : stopsCount,
                                       style: TextStyle(
                                         color: isDirect
@@ -853,7 +1039,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                             context,
                             arrTime,
                             destCode,
-                            label: l10nPick(context, en: 'Arrival', fa: 'مقصد', ar: 'الوصول'),
+                            label: l10nPick(
+                              context,
+                              en: 'Arrival',
+                              fa: 'مقصد',
+                              ar: 'الوصول',
+                            ),
                           ),
                         ],
                 ),
@@ -865,7 +1056,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l10nPick(context, en: 'Price per passenger', fa: 'قیمت هر مسافر', ar: 'السعر لكل راكب'),
+                          l10nPick(
+                            context,
+                            en: 'Price per passenger',
+                            fa: 'قیمت هر مسافر',
+                            ar: 'السعر لكل راكب',
+                          ),
                           style: TextStyle(
                             color: ECardoTokens.inkMuted(context),
                             fontSize: 9.5.sp,
@@ -893,12 +1089,19 @@ class _FlightListScreenState extends State<FlightListScreen> {
                           backgroundColor: ECardoTokens.brand700(context),
                           foregroundColor: ECardoTokens.inkOnBrand,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                           ),
                           elevation: 1,
                         ),
                         child: Text(
-                          l10nPick(context, en: 'View Details', fa: 'مشاهده جزئیات', ar: 'التفاصيل'),
+                          l10nPick(
+                            context,
+                            en: 'View Details',
+                            fa: 'مشاهده جزئیات',
+                            ar: 'التفاصيل',
+                          ),
                           style: TextStyle(
                             fontSize: 11.5.sp,
                             fontWeight: FontWeight.w800,
@@ -916,7 +1119,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  Widget _buildTimeNode(BuildContext context, String time, String code, {String? label}) {
+  Widget _buildTimeNode(
+    BuildContext context,
+    String time,
+    String code, {
+    String? label,
+  }) {
     return Column(
       children: [
         Text(
@@ -951,7 +1159,11 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  Widget _buildFareFamilyChip(BuildContext context, FareFamily family, String lang) {
+  Widget _buildFareFamilyChip(
+    BuildContext context,
+    FareFamily family,
+    String lang,
+  ) {
     Color bg;
     Color fg;
     switch (family) {
@@ -1023,7 +1235,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                       height: 44.r,
                       decoration: BoxDecoration(
                         color: ECardoTokens.surfaceSunken(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                       ),
                     ),
                     SizedBox(width: 12.w),
@@ -1070,7 +1284,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
       decoration: BoxDecoration(
         color: ECardoTokens.surfaceCard(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
-        border: Border.all(color: ECardoTokens.danger(context).withValues(alpha: 0.3)),
+        border: Border.all(
+          color: ECardoTokens.danger(context).withValues(alpha: 0.3),
+        ),
       ),
       child: Column(
         children: [
@@ -1116,7 +1332,14 @@ class _FlightListScreenState extends State<FlightListScreen> {
               }
             },
             icon: const Icon(Icons.refresh_rounded),
-            label: Text(l10nPick(context, en: 'Retry Search', fa: 'تلاش مجدد', ar: 'إعادة المحاولة')),
+            label: Text(
+              l10nPick(
+                context,
+                en: 'Retry Search',
+                fa: 'تلاش مجدد',
+                ar: 'إعادة المحاولة',
+              ),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: ECardoTokens.brand700(context),
               foregroundColor: ECardoTokens.inkOnBrand,
@@ -1179,7 +1402,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
               foregroundColor: ECardoTokens.inkOnBrand,
             ),
             child: Text(
-              l10nPick(context, en: 'Change Search Criteria', fa: 'تغییر معیار جستجو', ar: 'تغيير خيارات البحث'),
+              l10nPick(
+                context,
+                en: 'Change Search Criteria',
+                fa: 'تغییر معیار جستجو',
+                ar: 'تغيير خيارات البحث',
+              ),
             ),
           ),
         ],
@@ -1192,8 +1420,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
     List<TravelOffer> offers,
     String lang,
   ) {
-    final comparedOffers =
-        offers.where((o) => _comparedFlightIds.contains(o.id)).toList();
+    final comparedOffers = offers
+        .where((o) => _comparedFlightIds.contains(o.id))
+        .toList();
 
     showModalBottomSheet<void>(
       context: context,
@@ -1227,7 +1456,12 @@ class _FlightListScreenState extends State<FlightListScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Flight Comparison', fa: 'مقایسه پروازها', ar: 'مقارنة الرحلات'),
+                      l10nPick(
+                        context,
+                        en: 'Flight Comparison',
+                        fa: 'مقایسه پروازها',
+                        ar: 'مقارنة الرحلات',
+                      ),
                       style: TextStyle(
                         color: ECardoTokens.ink(context),
                         fontSize: 16.sp,
@@ -1253,7 +1487,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                       padding: EdgeInsets.all(12.r),
                       decoration: BoxDecoration(
                         color: ECardoTokens.surfaceSunken(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                         border: Border.all(color: ECardoTokens.border(context)),
                       ),
                       child: Column(
@@ -1263,7 +1499,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                item.metadata['carrier_name']?.toString() ?? 'Airline',
+                                item.metadata['carrier_name']?.toString() ??
+                                    'Airline',
                                 style: TextStyle(
                                   color: ECardoTokens.ink(context),
                                   fontWeight: FontWeight.w800,

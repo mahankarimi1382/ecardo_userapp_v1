@@ -11,11 +11,16 @@ class MoneyMathHelper {
 
   /// Calculates percentage charge safely: (amount * percent) / 100.
   /// Returns exact rounded double to [decimals] places.
-  static double calculatePercentCharge(double amount, double percent, {int decimals = 4}) {
+  static double calculatePercentCharge(
+    double amount,
+    double percent, {
+    int decimals = 4,
+  }) {
     if (amount <= 0 || percent <= 0) return 0.0;
     final int scaledAmount = (amount * defaultScale).round();
     final int scaledPercent = (percent * 10000).round();
-    final BigInt numerator = BigInt.from(scaledAmount) * BigInt.from(scaledPercent);
+    final BigInt numerator =
+        BigInt.from(scaledAmount) * BigInt.from(scaledPercent);
     final BigInt denominator = BigInt.from(1000000) * BigInt.from(defaultScale);
 
     final double result = numerator.toDouble() / denominator.toDouble();

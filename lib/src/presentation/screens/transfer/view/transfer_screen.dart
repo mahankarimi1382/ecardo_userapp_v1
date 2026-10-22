@@ -91,7 +91,8 @@ class _TransferScreenState extends State<TransferScreen> {
                 // Top Navigation Bar
                 Obx(
                   () => Visibility(
-                    visible: controller.currentStep.value == 0 ||
+                    visible:
+                        controller.currentStep.value == 0 ||
                         controller.currentStep.value == 1,
                     child: Column(
                       children: [
@@ -192,11 +193,13 @@ class _TransferScreenState extends State<TransferScreen> {
             // Fullscreen Loading Overlay
             Obx(
               () => Visibility(
-                visible: controller.isTransferAmountLoading.value ||
+                visible:
+                    controller.isTransferAmountLoading.value ||
                     controller.isBeneficiaryLoading.value,
                 child: Container(
-                  color: (isDark ? Colors.black : Colors.white)
-                      .withValues(alpha: 0.65),
+                  color: (isDark ? Colors.black : Colors.white).withValues(
+                    alpha: 0.65,
+                  ),
                   child: const CommonLoading(),
                 ),
               ),
@@ -221,15 +224,18 @@ class _TransferScreenState extends State<TransferScreen> {
         height: 180,
         margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         decoration: BoxDecoration(
-          color: isDark ? colorScheme.surfaceContainerHigh : colorScheme.surface,
+          color: isDark
+              ? colorScheme.surfaceContainerHigh
+              : colorScheme.surface,
           borderRadius: const BorderRadiusDirectional.only(
             topStart: Radius.circular(AppSpacing.radiusXl),
             topEnd: Radius.circular(AppSpacing.radiusXl),
           ),
           boxShadow: [
             BoxShadow(
-              color: (isDark ? Colors.black : AppColors.lightShadow)
-                  .withValues(alpha: isDark ? 0.4 : 0.08),
+              color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+                alpha: isDark ? 0.4 : 0.08,
+              ),
               blurRadius: 40,
               offset: Offset.zero,
             ),
@@ -308,11 +314,7 @@ class _HistoryMenuItem extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                size: 20,
-                color: colorScheme.primary,
-              ),
+              Icon(icon, size: 20, color: colorScheme.primary),
               const SizedBox(width: AppSpacing.md),
               Text(
                 title,

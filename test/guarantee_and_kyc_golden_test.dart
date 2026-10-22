@@ -126,7 +126,9 @@ void main() {
         tester,
         const GuaranteeHomeScreen(),
         registrations: [
-          () => registerController<GuaranteeController>(_TestGuaranteeController()),
+          () => registerController<GuaranteeController>(
+            _TestGuaranteeController(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -140,7 +142,9 @@ void main() {
         const GuaranteeHomeScreen(),
         dark: true,
         registrations: [
-          () => registerController<GuaranteeController>(_TestGuaranteeController()),
+          () => registerController<GuaranteeController>(
+            _TestGuaranteeController(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -156,7 +160,8 @@ void main() {
         const KycSubmitWizard(targetLevel: 2),
         registrations: [
           () => registerController<NetworkService>(_MockNetworkService()),
-          () => registerController<KycLevelController>(_TestKycLevelController()),
+          () =>
+              registerController<KycLevelController>(_TestKycLevelController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -171,7 +176,8 @@ void main() {
         dark: true,
         registrations: [
           () => registerController<NetworkService>(_MockNetworkService()),
-          () => registerController<KycLevelController>(_TestKycLevelController()),
+          () =>
+              registerController<KycLevelController>(_TestKycLevelController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );

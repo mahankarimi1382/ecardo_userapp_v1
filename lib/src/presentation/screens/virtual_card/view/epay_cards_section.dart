@@ -20,8 +20,7 @@ class EpayCardsSection extends StatelessWidget {
     required String fa,
     String? ar,
     String? zh,
-  }) =>
-      l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
+  }) => l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +95,11 @@ class EpayCardsSection extends StatelessWidget {
             children: [
               for (final card in controller.epayCards)
                 Container(
-                  margin: EdgeInsetsDirectional.only(start: 18.w, end: 18.w, bottom: 16.h),
+                  margin: EdgeInsetsDirectional.only(
+                    start: 18.w,
+                    end: 18.w,
+                    bottom: 16.h,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(18.r),
                     // مورد ۴ (v1.0.118): گرادیان NUVO Soft Blue → Muted Blue
@@ -180,7 +183,9 @@ class EpayCardsSection extends StatelessWidget {
                             ),
                             SizedBox(height: 6.h),
                             Text(
-                              (card['card_number_masked'] ?? '•••• •••• •••• ••••').toString(),
+                              (card['card_number_masked'] ??
+                                      '•••• •••• •••• ••••')
+                                  .toString(),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
@@ -203,7 +208,9 @@ class EpayCardsSection extends StatelessWidget {
                                         zh: '余额',
                                       ),
                                       style: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.75),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.75,
+                                        ),
                                         fontSize: 10.sp,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -233,7 +240,9 @@ class EpayCardsSection extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12.r),
                                   ),
                                   child: Text(
-                                    (card['status'] ?? '').toString().toUpperCase(),
+                                    (card['status'] ?? '')
+                                        .toString()
+                                        .toUpperCase(),
                                     style: TextStyle(
                                       color: (card['status'] == 'active')
                                           ? const Color(0xFF2E7238)
@@ -247,23 +256,32 @@ class EpayCardsSection extends StatelessWidget {
                                 if (card['status'] == 'active')
                                   ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white.withValues(alpha: 0.25),
+                                      backgroundColor: Colors.white.withValues(
+                                        alpha: 0.25,
+                                      ),
                                       foregroundColor: Colors.white,
                                       elevation: 0,
-                                      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 14.w,
+                                        vertical: 6.h,
+                                      ),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20.r),
+                                        borderRadius: BorderRadius.circular(
+                                          20.r,
+                                        ),
                                         side: BorderSide(
-                                          color: Colors.white.withValues(alpha: 0.4),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.4,
+                                          ),
                                         ),
                                       ),
                                     ),
                                     onPressed: controller.isActionLoading.value
                                         ? null
                                         : () => _showTopupSheet(
-                                              context,
-                                              controller,
-                                            ),
+                                            context,
+                                            controller,
+                                          ),
                                     child: Text(
                                       _pick(
                                         context,
@@ -312,18 +330,14 @@ class EpayCardsSection extends StatelessWidget {
     );
   }
 
-  void _showTopupSheet(
-    BuildContext context,
-    EpayCardController controller,
-  ) {
+  void _showTopupSheet(BuildContext context, EpayCardController controller) {
     final amountController = TextEditingController();
     String pick({
       required String en,
       required String fa,
       String? ar,
       String? zh,
-    }) =>
-        l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
+    }) => l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
 
     Get.bottomSheet(
       SafeArea(
@@ -334,8 +348,12 @@ class EpayCardsSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                pick(en: 'Top up PayCardo card', fa: 'شارژ کارت پی‌کاردو',
-                    ar: 'شحن بطاقة PayCardo', zh: '充值 PayCardo 卡'),
+                pick(
+                  en: 'Top up PayCardo card',
+                  fa: 'شارژ کارت پی‌کاردو',
+                  ar: 'شحن بطاقة PayCardo',
+                  zh: '充值 PayCardo 卡',
+                ),
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 16.sp,
@@ -358,8 +376,9 @@ class EpayCardsSection extends StatelessWidget {
               SizedBox(height: 14.h),
               TextField(
                 controller: amountController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   hintText: 'USD',
                   border: OutlineInputBorder(
@@ -374,8 +393,9 @@ class EpayCardsSection extends StatelessWidget {
                   onPressed: controller.isActionLoading.value
                       ? null
                       : () {
-                          final amount =
-                              double.tryParse(amountController.text.trim());
+                          final amount = double.tryParse(
+                            amountController.text.trim(),
+                          );
                           if (amount == null) {
                             Navigator.of(context).pop();
                             return;

@@ -138,7 +138,8 @@ class _MakePaymentHistoryState extends State<MakePaymentHistory>
                       return EcardoErrorView(
                         message: localization.allControllerLoadError,
                         onRetry: loadData,
-                        retryLabel: localization.noInternetConnectionRetryButton,
+                        retryLabel:
+                            localization.noInternetConnectionRetryButton,
                       );
                     }
 
@@ -159,10 +160,7 @@ class _MakePaymentHistoryState extends State<MakePaymentHistory>
     );
   }
 
-  Widget _buildTransactionsList(
-    AppLocalizations localization,
-    bool isDark,
-  ) {
+  Widget _buildTransactionsList(AppLocalizations localization, bool isDark) {
     final transactions =
         controller.transactionsModel.value.data?.transactions ?? [];
 
@@ -306,10 +304,11 @@ class _MakePaymentHistoryState extends State<MakePaymentHistory>
                             vertical: 1,
                           ),
                           decoration: BoxDecoration(
-                            color: (transaction.isSuccess
-                                    ? AppColors.success
-                                    : AppColors.warning)
-                                .withValues(alpha: 0.12),
+                            color:
+                                (transaction.isSuccess
+                                        ? AppColors.success
+                                        : AppColors.warning)
+                                    .withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(
                               AppSpacing.radiusXs,
                             ),

@@ -78,7 +78,11 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
     if (title.isEmpty || _amount <= 0 || counterparty.isEmpty) {
       Get.snackbar(
         l10nPick(context, fa: 'خطا', en: 'Error'),
-        l10nPick(context, fa: 'لطفاً عنوان معامله، مبلغ و طرف مقابل را مشخص کنید.', en: 'Please fill all required fields.'),
+        l10nPick(
+          context,
+          fa: 'لطفاً عنوان معامله، مبلغ و طرف مقابل را مشخص کنید.',
+          en: 'Please fill all required fields.',
+        ),
         backgroundColor: ECardoTokens.dangerBg(context),
         colorText: ECardoTokens.danger(context),
       );
@@ -110,7 +114,11 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
       Get.to(() => EscrowDetailScreen(orderId: order.id, initialOrder: order));
       Get.snackbar(
         l10nPick(context, fa: 'موفقیت', en: 'Success'),
-        l10nPick(context, fa: 'معامله با موفقیت ثبت و برای طرف مقابل ارسال گردید.', en: 'Escrow deal sent to counterparty.'),
+        l10nPick(
+          context,
+          fa: 'معامله با موفقیت ثبت و برای طرف مقابل ارسال گردید.',
+          en: 'Escrow deal sent to counterparty.',
+        ),
         backgroundColor: ECardoTokens.successBg(context),
         colorText: ECardoTokens.success(context),
       );
@@ -163,7 +171,11 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                 children: [
                   // Role Selector
                   Text(
-                    l10nPick(context, fa: 'نقش شما در این معامله', en: 'Your role'),
+                    l10nPick(
+                      context,
+                      fa: 'نقش شما در این معامله',
+                      en: 'Your role',
+                    ),
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
@@ -176,43 +188,65 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                     children: [
                       Expanded(
                         child: ChoiceChip(
-                          label: Center(child: Text(l10nPick(context, fa: 'فروشنده', en: 'Seller'))),
+                          label: Center(
+                            child: Text(
+                              l10nPick(context, fa: 'فروشنده', en: 'Seller'),
+                            ),
+                          ),
                           selected: _creatorRole == 'SELLER',
                           selectedColor: ECardoTokens.brand900(context),
                           backgroundColor: ECardoTokens.surfaceSunken(context),
                           labelStyle: TextStyle(
                             fontSize: 13.5.sp,
                             fontWeight: FontWeight.w700,
-                            color: _creatorRole == 'SELLER' ? Colors.white : ECardoTokens.ink(context),
+                            color: _creatorRole == 'SELLER'
+                                ? Colors.white
+                                : ECardoTokens.ink(context),
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd.r,
+                            ),
                             side: BorderSide(
-                              color: _creatorRole == 'SELLER' ? ECardoTokens.brand900(context) : ECardoTokens.border(context),
+                              color: _creatorRole == 'SELLER'
+                                  ? ECardoTokens.brand900(context)
+                                  : ECardoTokens.border(context),
                             ),
                           ),
-                          onSelected: (_) => setState(() => _creatorRole = 'SELLER'),
+                          onSelected: (_) =>
+                              setState(() => _creatorRole = 'SELLER'),
                         ),
                       ),
                       SizedBox(width: 8.w),
                       Expanded(
                         child: ChoiceChip(
-                          label: Center(child: Text(l10nPick(context, fa: 'خریدار', en: 'Buyer'))),
+                          label: Center(
+                            child: Text(
+                              l10nPick(context, fa: 'خریدار', en: 'Buyer'),
+                            ),
+                          ),
                           selected: _creatorRole == 'BUYER',
                           selectedColor: ECardoTokens.brand900(context),
                           backgroundColor: ECardoTokens.surfaceSunken(context),
                           labelStyle: TextStyle(
                             fontSize: 13.5.sp,
                             fontWeight: FontWeight.w700,
-                            color: _creatorRole == 'BUYER' ? Colors.white : ECardoTokens.ink(context),
+                            color: _creatorRole == 'BUYER'
+                                ? Colors.white
+                                : ECardoTokens.ink(context),
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd.r,
+                            ),
                             side: BorderSide(
-                              color: _creatorRole == 'BUYER' ? ECardoTokens.brand900(context) : ECardoTokens.border(context),
+                              color: _creatorRole == 'BUYER'
+                                  ? ECardoTokens.brand900(context)
+                                  : ECardoTokens.border(context),
                             ),
                           ),
-                          onSelected: (_) => setState(() => _creatorRole = 'BUYER'),
+                          onSelected: (_) =>
+                              setState(() => _creatorRole = 'BUYER'),
                         ),
                       ),
                     ],
@@ -222,7 +256,11 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
 
                   // Counterparty field
                   Text(
-                    l10nPick(context, fa: 'ایمیل یا شناسه ولت طرف مقابل', en: 'Counterparty email or wallet ID'),
+                    l10nPick(
+                      context,
+                      fa: 'ایمیل یا شناسه ولت طرف مقابل',
+                      en: 'Counterparty email or wallet ID',
+                    ),
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
@@ -234,13 +272,22 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceSunken(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
-                      border: Border.all(color: ECardoTokens.borderStrong(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
+                      border: Border.all(
+                        color: ECardoTokens.borderStrong(context),
+                      ),
                     ),
                     child: TextField(
                       controller: _counterpartyController,
-                      style: TextStyle(fontSize: 14.sp, color: ECardoTokens.ink(context)),
-                      decoration: const InputDecoration(border: InputBorder.none),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: ECardoTokens.ink(context),
+                      ),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
 
@@ -248,7 +295,11 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
 
                   // Deal title
                   Text(
-                    l10nPick(context, fa: 'عنوان معامله و شرح کالا / خدمات', en: 'Deal title / goods'),
+                    l10nPick(
+                      context,
+                      fa: 'عنوان معامله و شرح کالا / خدمات',
+                      en: 'Deal title / goods',
+                    ),
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
@@ -260,13 +311,22 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceSunken(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
-                      border: Border.all(color: ECardoTokens.borderStrong(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
+                      border: Border.all(
+                        color: ECardoTokens.borderStrong(context),
+                      ),
                     ),
                     child: TextField(
                       controller: _titleController,
-                      style: TextStyle(fontSize: 14.sp, color: ECardoTokens.ink(context)),
-                      decoration: const InputDecoration(border: InputBorder.none),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: ECardoTokens.ink(context),
+                      ),
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
 
@@ -286,8 +346,12 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 14.w),
                     decoration: BoxDecoration(
                       color: ECardoTokens.surfaceSunken(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
-                      border: Border.all(color: ECardoTokens.borderStrong(context)),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
+                      border: Border.all(
+                        color: ECardoTokens.borderStrong(context),
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -300,15 +364,22 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                               fontWeight: FontWeight.w800,
                               color: ECardoTokens.ink(context),
                             ),
-                            decoration: const InputDecoration(border: InputBorder.none),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
                             onChanged: _onAmountChanged,
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: ECardoTokens.brand100(context),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusSm.r,
+                            ),
                           ),
                           child: Text(
                             'USD',
@@ -341,19 +412,31 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                 children: [
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'مبلغ معامله', en: 'Deal amount'),
+                    label: l10nPick(
+                      context,
+                      fa: 'مبلغ معامله',
+                      en: 'Deal amount',
+                    ),
                     value: '${_amount.toStringAsFixed(2)} USD',
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'کارمزد ۱٪ اسکرو', en: 'Escrow fee 1% · paid by buyer'),
+                    label: l10nPick(
+                      context,
+                      fa: 'کارمزد ۱٪ اسکرو',
+                      en: 'Escrow fee 1% · paid by buyer',
+                    ),
                     value: '${fee.toStringAsFixed(2)} USD',
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'کل واریز خریدار به حساب امانی', en: 'Buyer pays into escrow'),
+                    label: l10nPick(
+                      context,
+                      fa: 'کل واریز خریدار به حساب امانی',
+                      en: 'Buyer pays into escrow',
+                    ),
                     value: '${total.toStringAsFixed(2)} USD',
                     isBold: true,
                     valueColor: ECardoTokens.brand900(context),
@@ -361,10 +444,15 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                   SizedBox(height: 10.h),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
                       color: ECardoTokens.brand100(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm.r,
+                      ),
                     ),
                     child: Text(
                       l10nPick(
@@ -414,12 +502,18 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                   labelStyle: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w700,
-                    color: isSelected ? Colors.white : ECardoTokens.ink(context),
+                    color: isSelected
+                        ? Colors.white
+                        : ECardoTokens.ink(context),
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusSm.r,
+                    ),
                     side: BorderSide(
-                      color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.border(context),
+                      color: isSelected
+                          ? ECardoTokens.brand900(context)
+                          : ECardoTokens.border(context),
                     ),
                   ),
                   onSelected: (_) => setState(() => _inspectionHours = h),
@@ -449,7 +543,12 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
             Wrap(
               spacing: 8.w,
               children: _feePayerOptions.map((payer) {
-                final isSelected = _feePayer == payer.toUpperCase().replaceAll(' ', '').replaceAll('/', '_');
+                final isSelected =
+                    _feePayer ==
+                    payer
+                        .toUpperCase()
+                        .replaceAll(' ', '')
+                        .replaceAll('/', '_');
                 return ChoiceChip(
                   label: Text(payer),
                   selected: isSelected,
@@ -458,15 +557,26 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                   labelStyle: TextStyle(
                     fontSize: 12.5.sp,
                     fontWeight: FontWeight.w700,
-                    color: isSelected ? Colors.white : ECardoTokens.ink(context),
+                    color: isSelected
+                        ? Colors.white
+                        : ECardoTokens.ink(context),
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusSm.r,
+                    ),
                     side: BorderSide(
-                      color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.border(context),
+                      color: isSelected
+                          ? ECardoTokens.brand900(context)
+                          : ECardoTokens.border(context),
                     ),
                   ),
-                  onSelected: (_) => setState(() => _feePayer = payer.toUpperCase().replaceAll(' ', '').replaceAll('/', '_')),
+                  onSelected: (_) => setState(
+                    () => _feePayer = payer
+                        .toUpperCase()
+                        .replaceAll(' ', '')
+                        .replaceAll('/', '_'),
+                  ),
                 );
               }).toList(),
             ),
@@ -487,9 +597,18 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                 HapticFeedback.lightImpact();
                 setState(() => _attachedFileName = 'Invoice-spec-2026.pdf');
               },
-              icon: Icon(Icons.attach_file_rounded, size: 18.sp, color: ECardoTokens.brand500(context)),
+              icon: Icon(
+                Icons.attach_file_rounded,
+                size: 18.sp,
+                color: ECardoTokens.brand500(context),
+              ),
               label: Text(
-                _attachedFileName ?? l10nPick(context, fa: 'پیوست پیش‌فاکتور یا مشخصات فنی', en: 'Attach invoice or specs'),
+                _attachedFileName ??
+                    l10nPick(
+                      context,
+                      fa: 'پیوست پیش‌فاکتور یا مشخصات فنی',
+                      en: 'Attach invoice or specs',
+                    ),
                 style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
               ),
             ),
@@ -518,7 +637,9 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                     foregroundColor: ECardoTokens.inkOnBrand,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusLg.r,
+                      ),
                     ),
                   ),
                   onPressed: () => _handleSubmit(isDraft: false),
@@ -530,7 +651,10 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
                       ar: 'إرسال إلى الطرف الآخر',
                       zh: '发送给交易对手',
                     ),
-                    style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
@@ -538,7 +662,11 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
               TextButton(
                 onPressed: () => _handleSubmit(isDraft: true),
                 child: Text(
-                  l10nPick(context, fa: 'ذخیره به عنوان پیش‌نویس (Save Draft)', en: 'Save Draft'),
+                  l10nPick(
+                    context,
+                    fa: 'ذخیره به عنوان پیش‌نویس (Save Draft)',
+                    en: 'Save Draft',
+                  ),
                   style: TextStyle(
                     fontSize: 13.5.sp,
                     fontWeight: FontWeight.w700,
@@ -568,7 +696,9 @@ class _EscrowCreateScreenState extends State<EscrowCreateScreen> {
             label,
             style: TextStyle(
               fontSize: 13.sp,
-              color: isBold ? ECardoTokens.ink(context) : ECardoTokens.inkMuted(context),
+              color: isBold
+                  ? ECardoTokens.ink(context)
+                  : ECardoTokens.inkMuted(context),
               fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
             ),
             maxLines: 1,

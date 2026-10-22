@@ -46,7 +46,9 @@ class LoanProductModel {
   double get baseRateAnnual => interestRatePct;
 
   String localizedName(BuildContext context) {
-    if (id == 1 || name.toLowerCase().contains('crypto') || name.contains('رمزارز')) {
+    if (id == 1 ||
+        name.toLowerCase().contains('crypto') ||
+        name.contains('رمزارز')) {
       return l10nPick(
         context,
         fa: 'وام با پشتوانه رمزارز',
@@ -55,7 +57,9 @@ class LoanProductModel {
         zh: '加密资产抵押贷款',
       );
     }
-    if (id == 2 || name.toLowerCase().contains('business') || name.contains('کسب‌وکار')) {
+    if (id == 2 ||
+        name.toLowerCase().contains('business') ||
+        name.contains('کسب‌وکار')) {
       return l10nPick(
         context,
         fa: 'وام کسب‌وکار (SME)',
@@ -81,7 +85,9 @@ class LoanProductModel {
   }
 
   String localizedTagline(BuildContext context) {
-    if (id == 1 || name.toLowerCase().contains('crypto') || name.contains('رمزارز')) {
+    if (id == 1 ||
+        name.toLowerCase().contains('crypto') ||
+        name.contains('رمزارز')) {
       return l10nPick(
         context,
         fa: 'قفل تتر، دریافت دلار · بدون نیاز به چک و ضامن',
@@ -90,7 +96,9 @@ class LoanProductModel {
         zh: '锁定 USDT，借贷 USD · 免信用审核',
       );
     }
-    if (id == 2 || name.toLowerCase().contains('business') || name.contains('کسب‌وکار')) {
+    if (id == 2 ||
+        name.toLowerCase().contains('business') ||
+        name.contains('کسب‌وکار')) {
       return l10nPick(
         context,
         fa: 'ویژه شرکت‌ها و کسب‌وکارهای ثبت‌شده · نیازمند مدارک',
@@ -116,14 +124,10 @@ class LoanProductModel {
   }
 
   String localizedSla(BuildContext context) {
-    if (id == 1 || slaTag.toLowerCase().contains('fast') || slaTag.contains('فوری')) {
-      return l10nPick(
-        context,
-        fa: 'فوری',
-        en: 'Fastest',
-        ar: 'فوري',
-        zh: '极速',
-      );
+    if (id == 1 ||
+        slaTag.toLowerCase().contains('fast') ||
+        slaTag.contains('فوری')) {
+      return l10nPick(context, fa: 'فوری', en: 'Fastest', ar: 'فوري', zh: '极速');
     }
     if (id == 2 || slaTag.contains('5') || slaTag.contains('۵')) {
       return l10nPick(
@@ -148,36 +152,75 @@ class LoanProductModel {
 
   factory LoanProductModel.fromJson(Map<String, dynamic> json) {
     final name = json['name']?.toString() ?? '';
-    final isCrypto = name.toLowerCase().contains('crypto') ||
+    final isCrypto =
+        name.toLowerCase().contains('crypto') ||
         json['required_collateral_type']?.toString().toUpperCase() == 'USDT' ||
         json['required_collateral_type']?.toString().toUpperCase() == 'CRYPTO';
-    final isBusiness = name.toLowerCase().contains('business') ||
+    final isBusiness =
+        name.toLowerCase().contains('business') ||
         json['audience']?.toString().toUpperCase() == 'BUSINESS';
 
     return LoanProductModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       name: name,
-      audience: json['audience']?.toString() ?? (isBusiness ? 'BUSINESS' : 'PERSONAL'),
+      audience:
+          json['audience']?.toString() ??
+          (isBusiness ? 'BUSINESS' : 'PERSONAL'),
       minAmount: (json['min_amount'] as num?)?.toDouble() ?? 500.0,
-      maxAmount: (json['max_amount'] as num?)?.toDouble() ?? (isCrypto ? 100000.0 : isBusiness ? 50000.0 : 5000.0),
-      tenureOptions: ((json['tenure_options'] as List?) ?? (isCrypto ? [3, 6, 12, 24] : [6, 12, 24]))
-          .map((e) => (e as num).toInt())
-          .toList(),
-      interestRatePct: (json['interest_rate_pct'] as num?)?.toDouble() ?? (isCrypto ? 14.0 : isBusiness ? 20.0 : 24.0),
-      requiredCollateralType: json['required_collateral_type']?.toString() ?? (isCrypto ? 'USDT' : null),
+      maxAmount:
+          (json['max_amount'] as num?)?.toDouble() ??
+          (isCrypto
+              ? 100000.0
+              : isBusiness
+              ? 50000.0
+              : 5000.0),
+      tenureOptions:
+          ((json['tenure_options'] as List?) ??
+                  (isCrypto ? [3, 6, 12, 24] : [6, 12, 24]))
+              .map((e) => (e as num).toInt())
+              .toList(),
+      interestRatePct:
+          (json['interest_rate_pct'] as num?)?.toDouble() ??
+          (isCrypto
+              ? 14.0
+              : isBusiness
+              ? 20.0
+              : 24.0),
+      requiredCollateralType:
+          json['required_collateral_type']?.toString() ??
+          (isCrypto ? 'USDT' : null),
       feePct: (json['fee_pct'] as num?)?.toDouble() ?? 1.0,
-      lateFeeDailyPct: (json['late_fee_daily_pct'] as num?)?.toDouble() ?? 0.067,
+      lateFeeDailyPct:
+          (json['late_fee_daily_pct'] as num?)?.toDouble() ?? 0.067,
       lateFeeCapPct: (json['late_fee_cap_pct'] as num?)?.toDouble() ?? 2.0,
-      slaTag: json['sla_tag']?.toString() ?? (isCrypto ? 'Fastest' : isBusiness ? '5 working days' : '2 working days'),
-      tagline: json['tagline']?.toString() ?? (isCrypto
-          ? 'Lock USDT, borrow USD · no credit check'
-          : isBusiness
+      slaTag:
+          json['sla_tag']?.toString() ??
+          (isCrypto
+              ? 'Fastest'
+              : isBusiness
+              ? '5 working days'
+              : '2 working days'),
+      tagline:
+          json['tagline']?.toString() ??
+          (isCrypto
+              ? 'Lock USDT, borrow USD · no credit check'
+              : isBusiness
               ? 'For registered companies · documents needed'
               : 'For KYC tier 2 and above'),
-      collateralRatioPct: (json['collateral_ratio_pct'] as num?)?.toDouble() ?? (isCrypto ? 150.0 : 0.0),
-      requiredKycTier: (json['required_kyc_tier'] as num?)?.toInt() ?? (isBusiness ? 3 : isCrypto ? 1 : 2),
-      warningThresholdPct: (json['warning_threshold_pct'] as num?)?.toDouble() ?? 130.0,
-      liquidationThresholdPct: (json['liquidation_threshold_pct'] as num?)?.toDouble() ?? 120.0,
+      collateralRatioPct:
+          (json['collateral_ratio_pct'] as num?)?.toDouble() ??
+          (isCrypto ? 150.0 : 0.0),
+      requiredKycTier:
+          (json['required_kyc_tier'] as num?)?.toInt() ??
+          (isBusiness
+              ? 3
+              : isCrypto
+              ? 1
+              : 2),
+      warningThresholdPct:
+          (json['warning_threshold_pct'] as num?)?.toDouble() ?? 130.0,
+      liquidationThresholdPct:
+          (json['liquidation_threshold_pct'] as num?)?.toDouble() ?? 120.0,
     );
   }
 }
@@ -358,11 +401,13 @@ class LoanCaseModel {
     if (installments.isEmpty) return requestedAmount;
     final unpaid = installments.where((i) => !i.isPaid);
     if (unpaid.isEmpty) return 0.0;
-    return unpaid.fold(0.0, (sum, i) => sum + (i.totalDue > 0 ? i.totalDue : 0.0));
+    return unpaid.fold(
+      0.0,
+      (sum, i) => sum + (i.totalDue > 0 ? i.totalDue : 0.0),
+    );
   }
 
-  int get paidInstallmentsCount =>
-      installments.where((i) => i.isPaid).length;
+  int get paidInstallmentsCount => installments.where((i) => i.isPaid).length;
 
   int get totalInstallmentsCount =>
       installments.isNotEmpty ? installments.length : tenureMonths;
@@ -404,7 +449,8 @@ class LoanCaseModel {
 
   /// USDT needed to top up collateral to reach required coverage
   double get collateralShortfallUsdt {
-    if (lockedCollateralUsdt <= 0 && (product?.collateralRatioPct ?? 0) <= 0) return 0.0;
+    if (lockedCollateralUsdt <= 0 && (product?.collateralRatioPct ?? 0) <= 0)
+      return 0.0;
     final target = outstandingAmount * effectiveCollateralRatio;
     final diff = target - lockedCollateralUsdt;
     return diff > 0 ? diff : 0.0;
@@ -438,19 +484,30 @@ class LoanCaseModel {
           ? DateTime.tryParse(json['offer_expires_at'].toString())
           : null,
       collaterals: ((json['collaterals'] as List?) ?? [])
-          .map((e) => LoanCollateralModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) => LoanCollateralModel.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
           .toList(),
       installments: ((json['installments'] as List?) ?? [])
-          .map((e) => LoanInstallmentModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) => LoanInstallmentModel.fromJson(
+              Map<String, dynamic>.from(e as Map),
+            ),
+          )
           .toList(),
       events: ((json['events'] as List?) ?? [])
-          .map((e) => LoanEventModel.fromJson(Map<String, dynamic>.from(e as Map)))
+          .map(
+            (e) => LoanEventModel.fromJson(Map<String, dynamic>.from(e as Map)),
+          )
           .toList(),
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())
           : null,
       customCoveragePct: (json['coverage_now_pct'] as num?)?.toDouble(),
-      customCollateralValueUsd: (json['collateral_value_usd'] as num?)?.toDouble(),
+      customCollateralValueUsd: (json['collateral_value_usd'] as num?)
+          ?.toDouble(),
     );
   }
 }

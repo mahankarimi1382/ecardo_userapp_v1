@@ -14,8 +14,8 @@ class ApplyVerificationScreen extends StatefulWidget {
 class _ApplyVerificationScreenState extends State<ApplyVerificationScreen> {
   ApplyVerificationController get controller =>
       Get.isRegistered<ApplyVerificationController>()
-          ? Get.find<ApplyVerificationController>()
-          : Get.put(ApplyVerificationController());
+      ? Get.find<ApplyVerificationController>()
+      : Get.put(ApplyVerificationController());
 
   @override
   Widget build(BuildContext context) {

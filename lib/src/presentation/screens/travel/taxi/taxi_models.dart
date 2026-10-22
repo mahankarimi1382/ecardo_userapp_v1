@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 
 /// Service ride types supported by eCardo Airport Transfer & Taxi
-enum TaxiRideType {
-  airportTransfer,
-  cityRide,
-  intercity,
-}
+enum TaxiRideType { airportTransfer, cityRide, intercity }
 
 /// Airport transfer travel direction
 enum AirportTransferDirection {
   fromAirport, // Flight arrival — meet passenger at airport
-  toAirport,   // Flight departure — drop passenger at airport terminal
+  toAirport, // Flight departure — drop passenger at airport terminal
 }
 
 /// State enum covering all 14 mandatory UI states
@@ -128,10 +124,14 @@ class RidePlace {
       subtitleFa: json['subtitle_fa']?.toString() ?? '',
       address: json['address']?.toString() ?? '',
       latitude: (json['lat'] ?? json['latitude']) != null
-          ? double.tryParse(json['lat']?.toString() ?? json['latitude']?.toString() ?? '')
+          ? double.tryParse(
+              json['lat']?.toString() ?? json['latitude']?.toString() ?? '',
+            )
           : null,
       longitude: (json['lng'] ?? json['longitude']) != null
-          ? double.tryParse(json['lng']?.toString() ?? json['longitude']?.toString() ?? '')
+          ? double.tryParse(
+              json['lng']?.toString() ?? json['longitude']?.toString() ?? '',
+            )
           : null,
       type: json['type']?.toString() ?? 'generic',
       iataCode: json['iata_code']?.toString() ?? json['code']?.toString(),
@@ -284,17 +284,33 @@ class TaxiVehicleClass {
     return TaxiVehicleClass(
       id: json['id']?.toString() ?? 'economy',
       title: json['title']?.toString() ?? json['name']?.toString() ?? 'Sedan',
-      titleFa: json['title_fa']?.toString() ?? json['name_fa']?.toString() ?? 'سواری',
-      titleEn: json['title_en']?.toString() ?? json['name_en']?.toString() ?? 'Sedan',
-      exampleModels: json['example_models']?.toString() ?? json['models']?.toString() ?? '',
-      maxPassengers: int.tryParse(json['max_passengers']?.toString() ?? '') ?? 4,
+      titleFa:
+          json['title_fa']?.toString() ??
+          json['name_fa']?.toString() ??
+          'سواری',
+      titleEn:
+          json['title_en']?.toString() ??
+          json['name_en']?.toString() ??
+          'Sedan',
+      exampleModels:
+          json['example_models']?.toString() ??
+          json['models']?.toString() ??
+          '',
+      maxPassengers:
+          int.tryParse(json['max_passengers']?.toString() ?? '') ?? 4,
       maxLuggage: int.tryParse(json['max_luggage']?.toString() ?? '') ?? 2,
       basePrice: int.tryParse(json['base_price']?.toString() ?? '') ?? 0,
       icon: pickIcon(json['icon']?.toString() ?? json['code']?.toString()),
-      features: (json['features'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+      features:
+          (json['features'] as List?)?.map((e) => e.toString()).toList() ??
+          const [],
       imageUrl: json['image_url']?.toString(),
-      hasChildSeatOption: json['has_child_seat'] == true || json['child_seat_available'] == true,
-      isVip: json['is_vip'] == true || json['code']?.toString().toLowerCase() == 'vip',
+      hasChildSeatOption:
+          json['has_child_seat'] == true ||
+          json['child_seat_available'] == true,
+      isVip:
+          json['is_vip'] == true ||
+          json['code']?.toString().toLowerCase() == 'vip',
     );
   }
 
@@ -336,15 +352,24 @@ class RideVehicleQuote {
     this.isGuaranteedFixedRate = true,
   });
 
-  factory RideVehicleQuote.fromJson(Map<String, dynamic> json, TaxiVehicleClass vehicle) {
+  factory RideVehicleQuote.fromJson(
+    Map<String, dynamic> json,
+    TaxiVehicleClass vehicle,
+  ) {
     return RideVehicleQuote(
       vehicleClass: vehicle,
-      baseFare: int.tryParse(json['base_fare']?.toString() ?? '') ?? vehicle.basePrice,
-      meetAndGreetFee: int.tryParse(json['meet_greet_fee']?.toString() ?? '') ?? 0,
+      baseFare:
+          int.tryParse(json['base_fare']?.toString() ?? '') ??
+          vehicle.basePrice,
+      meetAndGreetFee:
+          int.tryParse(json['meet_greet_fee']?.toString() ?? '') ?? 0,
       childSeatFee: int.tryParse(json['child_seat_fee']?.toString() ?? '') ?? 0,
-      totalFare: int.tryParse(json['total_fare']?.toString() ?? '') ?? vehicle.basePrice,
+      totalFare:
+          int.tryParse(json['total_fare']?.toString() ?? '') ??
+          vehicle.basePrice,
       currency: json['currency']?.toString() ?? 'IRR',
-      estimatedArrivalMins: int.tryParse(json['eta_minutes']?.toString() ?? '') ?? 15,
+      estimatedArrivalMins:
+          int.tryParse(json['eta_minutes']?.toString() ?? '') ?? 15,
       isGuaranteedFixedRate: json['fixed_rate'] != false,
     );
   }
@@ -394,18 +419,26 @@ class RideQuote {
     for (final q in quotesJson) {
       if (q is Map<String, dynamic>) {
         final vId = q['vehicle_id']?.toString() ?? '';
-        final vehicle = vehicleMap[vId] ??
-            TaxiVehicleClass.fromJson(q['vehicle'] as Map<String, dynamic>? ?? {});
+        final vehicle =
+            vehicleMap[vId] ??
+            TaxiVehicleClass.fromJson(
+              q['vehicle'] as Map<String, dynamic>? ?? {},
+            );
         quotes.add(RideVehicleQuote.fromJson(q, vehicle));
       }
     }
 
     return RideQuote(
-      quoteId: json['quote_id']?.toString() ?? 'quote-${DateTime.now().millisecondsSinceEpoch}',
-      distanceKm: (double.tryParse(json['distance_km']?.toString() ?? '') ?? 45.0),
-      durationMinutes: int.tryParse(json['duration_minutes']?.toString() ?? '') ?? 45,
+      quoteId:
+          json['quote_id']?.toString() ??
+          'quote-${DateTime.now().millisecondsSinceEpoch}',
+      distanceKm:
+          (double.tryParse(json['distance_km']?.toString() ?? '') ?? 45.0),
+      durationMinutes:
+          int.tryParse(json['duration_minutes']?.toString() ?? '') ?? 45,
       vehicleQuotes: quotes,
-      expiresAt: DateTime.tryParse(json['expires_at']?.toString() ?? '') ??
+      expiresAt:
+          DateTime.tryParse(json['expires_at']?.toString() ?? '') ??
           DateTime.now().add(const Duration(minutes: 15)),
       currency: json['currency']?.toString() ?? 'IRR',
       isFixedPrice: json['is_fixed_price'] != false,
@@ -526,13 +559,13 @@ class RideCancellationPolicy {
       policySummaryEn: penalty == 0.0
           ? 'Free cancellation with 100% refund up to 24h before pickup.'
           : (penalty == 0.5
-              ? '50% cancellation fee applies within 24h of pickup.'
-              : 'Non-refundable within 4h of scheduled departure.'),
+                ? '50% cancellation fee applies within 24h of pickup.'
+                : 'Non-refundable within 4h of scheduled departure.'),
       policySummaryFa: penalty == 0.0
           ? 'لغو کاملاً رایگان با استرداد ۱۰۰٪ کرایه تا ۲۴ ساعت پیش از اعزام.'
           : (penalty == 0.5
-              ? '۵۰٪ جریمه کنسلی در بازه ۲۴ تا ۴ ساعت مانده به سفر.'
-              : 'غیرقابل استرداد در صورت لغو کمتر از ۴ ساعت مانده به پرواز.'),
+                ? '۵۰٪ جریمه کنسلی در بازه ۲۴ تا ۴ ساعت مانده به سفر.'
+                : 'غیرقابل استرداد در صورت لغو کمتر از ۴ ساعت مانده به پرواز.'),
     );
   }
 }
@@ -713,23 +746,31 @@ class TaxiBookingInfo {
           : AirportTransferDirection.fromAirport,
       origin: json['origin']?.toString() ?? '',
       destination: json['destination']?.toString() ?? '',
-      pickupDate: DateTime.tryParse(json['pickup_date']?.toString() ?? '') ?? DateTime.now(),
+      pickupDate:
+          DateTime.tryParse(json['pickup_date']?.toString() ?? '') ??
+          DateTime.now(),
       pickupTime: json['pickup_time']?.toString() ?? '10:00',
       flightNumber: json['flight_number']?.toString() ?? '',
       terminal: json['terminal']?.toString() ?? '',
       passengerName: json['passenger_name']?.toString() ?? 'مسافر',
       passengerPhone: json['passenger_phone']?.toString() ?? '',
-      passengerCount: int.tryParse(json['passenger_count']?.toString() ?? '') ?? 1,
+      passengerCount:
+          int.tryParse(json['passenger_count']?.toString() ?? '') ?? 1,
       luggageCount: int.tryParse(json['luggage_count']?.toString() ?? '') ?? 1,
-      childSeatCount: int.tryParse(json['child_seat_count']?.toString() ?? '') ?? 0,
+      childSeatCount:
+          int.tryParse(json['child_seat_count']?.toString() ?? '') ?? 0,
       vehicle: vehicle,
       totalFare: int.tryParse(json['total_fare']?.toString() ?? '') ?? 0,
       currency: json['currency']?.toString() ?? 'IRR',
       meetAndGreet: json['meet_and_greet'] == true,
       notes: json['notes']?.toString() ?? '',
-      createdAt: DateTime.tryParse(json['created_at']?.toString() ?? '') ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(json['created_at']?.toString() ?? '') ??
+          DateTime.now(),
       status: json['status']?.toString() ?? 'CONFIRMED',
-      operationalStatus: parseOperationalStatus(json['operational_status']?.toString()),
+      operationalStatus: parseOperationalStatus(
+        json['operational_status']?.toString(),
+      ),
       driver: driver,
       walletTransactionId: json['wallet_txn_id']?.toString(),
       isFixedPrice: json['is_fixed_price'] != false,

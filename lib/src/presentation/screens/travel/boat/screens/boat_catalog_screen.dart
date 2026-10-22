@@ -58,7 +58,9 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
     const oceanColor = Color(0xFF0077B6);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
@@ -66,7 +68,9 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -83,7 +87,9 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -105,14 +111,18 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
       body: Column(
         children: [
           // Offline banner
-          Obx(() => controller.isOffline.value
-              ? ExperienceOfflineBanner(onRetry: () {
-                  setState(() {
-                    _showMyBookingsSheet = false;
-                    controller.loadCatalog(forceRefresh: true);
-                  });
-                })
-              : const SizedBox.shrink()),
+          Obx(
+            () => controller.isOffline.value
+                ? ExperienceOfflineBanner(
+                    onRetry: () {
+                      setState(() {
+                        _showMyBookingsSheet = false;
+                        controller.loadCatalog(forceRefresh: true);
+                      });
+                    },
+                  )
+                : const SizedBox.shrink(),
+          ),
 
           // Marina City Selector Row
           Container(
@@ -134,21 +144,29 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                       c['label']!,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
                         color: isSelected
                             ? Colors.white
-                            : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                            : (isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary),
                       ),
                     ),
                     selected: isSelected,
                     selectedColor: oceanColor,
-                    backgroundColor: isDark ? AppColors.darkCard : AppColors.lightSurface,
+                    backgroundColor: isDark
+                        ? AppColors.darkCard
+                        : AppColors.lightSurface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.r),
                       side: BorderSide(
                         color: isSelected
                             ? oceanColor
-                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            : (isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                       ),
                     ),
                     onSelected: (_) {
@@ -181,22 +199,30 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                       cat['label']!,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w500,
                         color: isSelected
                             ? oceanColor
-                            : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                            : (isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary),
                       ),
                     ),
                     selected: isSelected,
                     showCheckmark: false,
                     selectedColor: oceanColor.withValues(alpha: 0.14),
-                    backgroundColor: isDark ? AppColors.darkCard : AppColors.white,
+                    backgroundColor: isDark
+                        ? AppColors.darkCard
+                        : AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
                       side: BorderSide(
                         color: isSelected
                             ? oceanColor
-                            : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            : (isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                       ),
                     ),
                     onSelected: (_) {
@@ -232,7 +258,8 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
 
                 case ExperienceServiceState.offline:
                   return ExperienceErrorView(
-                    errorMessage: 'شما آفلاین هستید. لطفاً اتصال اینترنت را بررسی کنید.',
+                    errorMessage:
+                        'شما آفلاین هستید. لطفاً اتصال اینترنت را بررسی کنید.',
                     onRetry: () => controller.loadCatalog(forceRefresh: true),
                   );
 
@@ -241,7 +268,8 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                   return ExperienceEmptyView(
                     icon: Icons.directions_boat_outlined,
                     title: 'شناوری در این منطقه یافت نشد.',
-                    subtitle: 'فیلترها را تغییر دهید یا همه مناطق را مشاهده کنید.',
+                    subtitle:
+                        'فیلترها را تغییر دهید یا همه مناطق را مشاهده کنید.',
                     onReset: () => controller.resetFilters(),
                   );
 
@@ -271,10 +299,19 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
     );
   }
 
-  Widget _buildBoatsList(BuildContext context, List<BoatExperienceModel> boats, bool isDark,
-      Color oceanColor) {
+  Widget _buildBoatsList(
+    BuildContext context,
+    List<BoatExperienceModel> boats,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return ListView.builder(
-      padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, 4.h, AppSpacing.lg.w, AppSpacing.xl.h),
+      padding: EdgeInsets.fromLTRB(
+        AppSpacing.lg.w,
+        4.h,
+        AppSpacing.lg.w,
+        AppSpacing.xl.h,
+      ),
       itemCount: boats.length,
       itemBuilder: (context, index) {
         final boat = boats[index];
@@ -290,14 +327,17 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
     Color oceanColor,
   ) {
     return Semantics(
-      label: '${boat.title} - ${boat.hourlyRate.toStringAsFixed(0)} ${boat.currency} بر ساعت',
+      label:
+          '${boat.title} - ${boat.hourlyRate.toStringAsFixed(0)} ${boat.currency} بر ساعت',
       button: true,
       child: Container(
         margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radius.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
           boxShadow: [
             BoxShadow(
               color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -324,7 +364,10 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                     children: [
                       Flexible(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 3.h,
+                          ),
                           decoration: BoxDecoration(
                             color: oceanColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6.r),
@@ -344,14 +387,20 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                       SizedBox(width: 8.w),
                       Row(
                         children: [
-                          const Icon(Icons.star_rounded, color: AppColors.warning, size: 15),
+                          const Icon(
+                            Icons.star_rounded,
+                            color: AppColors.warning,
+                            size: 15,
+                          ),
                           SizedBox(width: 4.w),
                           Text(
                             '${boat.rating}',
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                         ],
@@ -364,7 +413,9 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       height: 1.3,
                     ),
                   ),
@@ -374,8 +425,9 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                       Icon(
                         Icons.place_rounded,
                         size: 14.sp,
-                        color:
-                            isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
                       ),
                       SizedBox(width: 4.w),
                       Expanded(
@@ -383,8 +435,9 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                           boat.marinaName,
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color:
-                                isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -397,8 +450,16 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                     spacing: 8.w,
                     runSpacing: 6.h,
                     children: [
-                      _buildPill(Icons.people_alt_outlined, '${boat.maxPassengers} نفر', isDark),
-                      _buildPill(Icons.straighten_rounded, '${boat.lengthMeters} متر', isDark),
+                      _buildPill(
+                        Icons.people_alt_outlined,
+                        '${boat.maxPassengers} نفر',
+                        isDark,
+                      ),
+                      _buildPill(
+                        Icons.straighten_rounded,
+                        '${boat.lengthMeters} متر',
+                        isDark,
+                      ),
                       _buildPill(Icons.timer_outlined, 'از ۱ ساعت', isDark),
                     ],
                   ),
@@ -415,8 +476,9 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                               'کرایه هر ساعت',
                               style: TextStyle(
                                 fontSize: 10.sp,
-                                color:
-                                    isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                                color: isDark
+                                    ? AppColors.darkTextTertiary
+                                    : AppColors.lightTextTertiary,
                               ),
                             ),
                             Text(
@@ -434,7 +496,10 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: oceanColor,
-                          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 8.h,
+                          ),
                           minimumSize: Size(120.w, 44.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6.r),
@@ -445,8 +510,10 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
                           HapticFeedback.lightImpact();
                           Get.to(() => BoatDetailScreen(boat: boat));
                         },
-                        child: const Text('مشاهده و رزرو',
-                            style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          'مشاهده و رزرو',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
@@ -469,14 +536,21 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12.sp,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+          Icon(
+            icon,
+            size: 12.sp,
+            color: isDark
+                ? AppColors.darkTextTertiary
+                : AppColors.lightTextTertiary,
+          ),
           SizedBox(width: 4.w),
           Text(
             label,
             style: TextStyle(
               fontSize: 10.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -485,7 +559,11 @@ class _BoatCatalogScreenState extends State<BoatCatalogScreen> {
     );
   }
 
-  Widget _buildMyBookingsSheet(BuildContext context, bool isDark, Color oceanColor) {
+  Widget _buildMyBookingsSheet(
+    BuildContext context,
+    bool isDark,
+    Color oceanColor,
+  ) {
     return Obx(() {
       final bookings = controller.myBookings;
       if (bookings.isEmpty) {

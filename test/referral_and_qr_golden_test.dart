@@ -59,7 +59,8 @@ class _TestReferralController extends ReferralController {
   }
 }
 
-const String _mockQrSvg = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+const String _mockQrSvg =
+    '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <rect width="100" height="100" fill="white"/>
   <rect x="10" y="10" width="30" height="30" fill="black"/>
   <rect x="15" y="15" width="20" height="20" fill="white"/>
@@ -147,7 +148,8 @@ void main() {
         const ReferralScreen(),
         registrations: [
           () => registerController<NetworkService>(_MockNetworkService()),
-          () => registerController<ReferralController>(_TestReferralController()),
+          () =>
+              registerController<ReferralController>(_TestReferralController()),
         ],
       );
       await capture(tester, 'referral__light');
@@ -161,7 +163,8 @@ void main() {
         dark: true,
         registrations: [
           () => registerController<NetworkService>(_MockNetworkService()),
-          () => registerController<ReferralController>(_TestReferralController()),
+          () =>
+              registerController<ReferralController>(_TestReferralController()),
         ],
       );
       await capture(tester, 'referral__dark');

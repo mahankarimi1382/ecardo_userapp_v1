@@ -39,17 +39,30 @@ class StockSymbolModel {
 
   factory StockSymbolModel.fromJson(Map<String, dynamic> json) {
     return StockSymbolModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       ticker: json['ticker']?.toString() ?? '',
       nameFa: json['name_fa']?.toString() ?? '',
       nameEn: json['name_en']?.toString() ?? '',
       industry: json['industry']?.toString(),
-      lastPrice: (json['last_price'] is num) ? (json['last_price'] as num).toDouble() : double.tryParse(json['last_price']?.toString() ?? '') ?? 0.0,
-      prevClose: (json['prev_close'] is num) ? (json['prev_close'] as num).toDouble() : double.tryParse(json['prev_close']?.toString() ?? '') ?? 0.0,
-      dayHigh: (json['day_high'] is num) ? (json['day_high'] as num).toDouble() : 0.0,
-      dayLow: (json['day_low'] is num) ? (json['day_low'] as num).toDouble() : 0.0,
-      volume24h: (json['volume_24h'] is num) ? (json['volume_24h'] as num).toInt() : 0,
-      highVolatility: json['high_volatility'] == true || json['high_volatility'] == 1,
+      lastPrice: (json['last_price'] is num)
+          ? (json['last_price'] as num).toDouble()
+          : double.tryParse(json['last_price']?.toString() ?? '') ?? 0.0,
+      prevClose: (json['prev_close'] is num)
+          ? (json['prev_close'] as num).toDouble()
+          : double.tryParse(json['prev_close']?.toString() ?? '') ?? 0.0,
+      dayHigh: (json['day_high'] is num)
+          ? (json['day_high'] as num).toDouble()
+          : 0.0,
+      dayLow: (json['day_low'] is num)
+          ? (json['day_low'] as num).toDouble()
+          : 0.0,
+      volume24h: (json['volume_24h'] is num)
+          ? (json['volume_24h'] as num).toInt()
+          : 0,
+      highVolatility:
+          json['high_volatility'] == true || json['high_volatility'] == 1,
       isTradeable: json['is_tradeable'] != false,
       exchangeCode: json['exchange_code']?.toString(),
     );
@@ -97,17 +110,31 @@ class StockMarketModel {
   factory StockMarketModel.fromJson(Map<String, dynamic> json) {
     final symsRaw = json['symbols'] as List?;
     return StockMarketModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '') ?? 0,
+      id: json['id'] is int
+          ? json['id']
+          : int.tryParse(json['id']?.toString() ?? '') ?? 0,
       code: json['code']?.toString() ?? 'TSE',
       countryCode: json['country_code']?.toString() ?? 'IRN',
       nameFa: json['name_fa']?.toString() ?? '',
       nameEn: json['name_en']?.toString() ?? '',
       baseCurrency: json['base_currency']?.toString() ?? 'IRR',
-      settlementDays: (json['settlement_days'] is num) ? (json['settlement_days'] as num).toInt() : 2,
-      commissionPct: (json['commission_pct'] is num) ? (json['commission_pct'] as num).toDouble() : 0.35,
-      quotesDelayMin: (json['quotes_delay_min'] is num) ? (json['quotes_delay_min'] as num).toInt() : 15,
+      settlementDays: (json['settlement_days'] is num)
+          ? (json['settlement_days'] as num).toInt()
+          : 2,
+      commissionPct: (json['commission_pct'] is num)
+          ? (json['commission_pct'] as num).toDouble()
+          : 0.35,
+      quotesDelayMin: (json['quotes_delay_min'] is num)
+          ? (json['quotes_delay_min'] as num).toInt()
+          : 15,
       symbols: symsRaw != null
-          ? symsRaw.map((e) => StockSymbolModel.fromJson(Map<String, dynamic>.from(e as Map))).toList()
+          ? symsRaw
+                .map(
+                  (e) => StockSymbolModel.fromJson(
+                    Map<String, dynamic>.from(e as Map),
+                  ),
+                )
+                .toList()
           : const [],
     );
   }
@@ -186,7 +213,8 @@ class StockOrderModel {
   final double executedFxRate;
   final double avgExecPrice;
   final double commissionAmount;
-  final String status; // SUBMITTED, PENDING_BROKER, EXECUTED, PARTIALLY_FILLED, CANCELLED, REJECTED
+  final String
+  status; // SUBMITTED, PENDING_BROKER, EXECUTED, PARTIALLY_FILLED, CANCELLED, REJECTED
   final String? brokerRef;
   final int settlementDays;
   final DateTime? createdAt;
@@ -212,7 +240,9 @@ class StockOrderModel {
     this.createdAt,
   });
 
-  double get price => avgExecPrice > 0 ? avgExecPrice : (limitPrice > 0 ? limitPrice : stopPrice);
+  double get price => avgExecPrice > 0
+      ? avgExecPrice
+      : (limitPrice > 0 ? limitPrice : stopPrice);
   double get totalAmount => payAmount;
   String get currency => payCurrency;
 
@@ -235,18 +265,34 @@ class StockOrderModel {
       side: json['side']?.toString() ?? 'BUY',
       type: json['type']?.toString() ?? 'MARKET',
       qty: (json['qty'] is num) ? (json['qty'] as num).toDouble() : 0.0,
-      limitPrice: (json['limit_price'] is num) ? (json['limit_price'] as num).toDouble() : 0.0,
-      stopPrice: (json['stop_price'] is num) ? (json['stop_price'] as num).toDouble() : 0.0,
+      limitPrice: (json['limit_price'] is num)
+          ? (json['limit_price'] as num).toDouble()
+          : 0.0,
+      stopPrice: (json['stop_price'] is num)
+          ? (json['stop_price'] as num).toDouble()
+          : 0.0,
       marketCurrency: json['market_currency']?.toString() ?? 'IRR',
       payCurrency: json['pay_currency']?.toString() ?? 'IRR',
-      payAmount: (json['pay_amount'] is num) ? (json['pay_amount'] as num).toDouble() : 0.0,
-      executedFxRate: (json['executed_fx_rate'] is num) ? (json['executed_fx_rate'] as num).toDouble() : 1.0,
-      avgExecPrice: (json['avg_exec_price'] is num) ? (json['avg_exec_price'] as num).toDouble() : 0.0,
-      commissionAmount: (json['commission_amount'] is num) ? (json['commission_amount'] as num).toDouble() : 0.0,
+      payAmount: (json['pay_amount'] is num)
+          ? (json['pay_amount'] as num).toDouble()
+          : 0.0,
+      executedFxRate: (json['executed_fx_rate'] is num)
+          ? (json['executed_fx_rate'] as num).toDouble()
+          : 1.0,
+      avgExecPrice: (json['avg_exec_price'] is num)
+          ? (json['avg_exec_price'] as num).toDouble()
+          : 0.0,
+      commissionAmount: (json['commission_amount'] is num)
+          ? (json['commission_amount'] as num).toDouble()
+          : 0.0,
       status: json['status']?.toString() ?? 'SUBMITTED',
       brokerRef: json['broker_ref']?.toString(),
-      settlementDays: (json['settlement_days'] is num) ? (json['settlement_days'] as num).toInt() : 2,
-      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      settlementDays: (json['settlement_days'] is num)
+          ? (json['settlement_days'] as num).toInt()
+          : 2,
+      createdAt: json['created_at'] != null
+          ? DateTime.tryParse(json['created_at'].toString())
+          : null,
     );
   }
 }
@@ -302,12 +348,20 @@ class StockHoldingModel {
       ticker: json['ticker']?.toString() ?? '',
       nameFa: json['name_fa']?.toString() ?? '',
       nameEn: json['name_en']?.toString() ?? '',
-      shares: (json['shares'] is num) ? (json['shares'] as num).toDouble() : 0.0,
-      averageCost: (json['average_cost'] is num) ? (json['average_cost'] as num).toDouble() : 0.0,
-      currentPrice: (json['current_price'] is num) ? (json['current_price'] as num).toDouble() : 0.0,
+      shares: (json['shares'] is num)
+          ? (json['shares'] as num).toDouble()
+          : 0.0,
+      averageCost: (json['average_cost'] is num)
+          ? (json['average_cost'] as num).toDouble()
+          : 0.0,
+      currentPrice: (json['current_price'] is num)
+          ? (json['current_price'] as num).toDouble()
+          : 0.0,
       currency: json['currency']?.toString() ?? 'USD',
       exchangeCode: json['exchange_code']?.toString() ?? 'NASDAQ',
-      realizedPnl: (json['realized_pnl'] is num) ? (json['realized_pnl'] as num).toDouble() : 0.0,
+      realizedPnl: (json['realized_pnl'] is num)
+          ? (json['realized_pnl'] as num).toDouble()
+          : 0.0,
     );
   }
 }
@@ -329,9 +383,15 @@ class CurrencyExposureModel {
   factory CurrencyExposureModel.fromJson(Map<String, dynamic> json) {
     return CurrencyExposureModel(
       currency: json['currency']?.toString() ?? 'USD',
-      amountInCurrency: (json['amount_in_currency'] is num) ? (json['amount_in_currency'] as num).toDouble() : 0.0,
-      amountInUsd: (json['amount_in_usd'] is num) ? (json['amount_in_usd'] as num).toDouble() : 0.0,
-      percentage: (json['percentage'] is num) ? (json['percentage'] as num).toDouble() : 0.0,
+      amountInCurrency: (json['amount_in_currency'] is num)
+          ? (json['amount_in_currency'] as num).toDouble()
+          : 0.0,
+      amountInUsd: (json['amount_in_usd'] is num)
+          ? (json['amount_in_usd'] as num).toDouble()
+          : 0.0,
+      percentage: (json['percentage'] is num)
+          ? (json['percentage'] as num).toDouble()
+          : 0.0,
     );
   }
 }
@@ -371,14 +431,32 @@ class StockPortfolioSummaryModel {
     final exposuresRaw = json['currency_exposures'] as List?;
 
     return StockPortfolioSummaryModel(
-      totalValueUsd: (json['total_value_usd'] is num) ? (json['total_value_usd'] as num).toDouble() : 0.0,
-      totalCostBasisUsd: (json['total_cost_basis_usd'] is num) ? (json['total_cost_basis_usd'] as num).toDouble() : 0.0,
-      totalRealizedPnlUsd: (json['total_realized_pnl_usd'] is num) ? (json['total_realized_pnl_usd'] as num).toDouble() : 0.0,
+      totalValueUsd: (json['total_value_usd'] is num)
+          ? (json['total_value_usd'] as num).toDouble()
+          : 0.0,
+      totalCostBasisUsd: (json['total_cost_basis_usd'] is num)
+          ? (json['total_cost_basis_usd'] as num).toDouble()
+          : 0.0,
+      totalRealizedPnlUsd: (json['total_realized_pnl_usd'] is num)
+          ? (json['total_realized_pnl_usd'] as num).toDouble()
+          : 0.0,
       holdings: holdingsRaw != null
-          ? holdingsRaw.map((e) => StockHoldingModel.fromJson(Map<String, dynamic>.from(e as Map))).toList()
+          ? holdingsRaw
+                .map(
+                  (e) => StockHoldingModel.fromJson(
+                    Map<String, dynamic>.from(e as Map),
+                  ),
+                )
+                .toList()
           : const [],
       currencyExposures: exposuresRaw != null
-          ? exposuresRaw.map((e) => CurrencyExposureModel.fromJson(Map<String, dynamic>.from(e as Map))).toList()
+          ? exposuresRaw
+                .map(
+                  (e) => CurrencyExposureModel.fromJson(
+                    Map<String, dynamic>.from(e as Map),
+                  ),
+                )
+                .toList()
           : const [],
     );
   }
@@ -432,7 +510,13 @@ class RiskQuestionModel {
       questionEn: json['question_en']?.toString() ?? '',
       category: json['category']?.toString() ?? '',
       options: optsRaw != null
-          ? optsRaw.map((e) => RiskQuestionOptionModel.fromJson(Map<String, dynamic>.from(e as Map))).toList()
+          ? optsRaw
+                .map(
+                  (e) => RiskQuestionOptionModel.fromJson(
+                    Map<String, dynamic>.from(e as Map),
+                  ),
+                )
+                .toList()
           : const [],
     );
   }

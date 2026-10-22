@@ -22,16 +22,22 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
   late final TabController _tabController;
 
   final TextEditingController _trxController = TextEditingController();
-  final TextEditingController _calcAmountController = TextEditingController(text: '1000');
+  final TextEditingController _calcAmountController = TextEditingController(
+    text: '1000',
+  );
 
   final RxBool _isTracking = false.obs;
-  final Rx<Map<String, dynamic>?> _trackResult = Rx<Map<String, dynamic>?>(null);
+  final Rx<Map<String, dynamic>?> _trackResult = Rx<Map<String, dynamic>?>(
+    null,
+  );
 
   final RxBool _isLoadingCorridors = false.obs;
   final RxList<Map<String, dynamic>> _corridors = <Map<String, dynamic>>[].obs;
 
   // Live Calculator State
-  final Rx<Map<String, dynamic>?> _selectedCorridor = Rx<Map<String, dynamic>?>(null);
+  final Rx<Map<String, dynamic>?> _selectedCorridor = Rx<Map<String, dynamic>?>(
+    null,
+  );
   final RxDouble _sendAmount = 1000.0.obs;
 
   @override
@@ -41,7 +47,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
     _loadCorridors();
 
     _calcAmountController.addListener(() {
-      final val = double.tryParse(_calcAmountController.text.replaceAll(',', '')) ?? 0.0;
+      final val =
+          double.tryParse(_calcAmountController.text.replaceAll(',', '')) ??
+          0.0;
       _sendAmount.value = val;
     });
   }
@@ -81,7 +89,11 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
       } else {
         Get.snackbar(
           l10nPick(context, en: 'Not Found', fa: 'یافت نشد'),
-          l10nPick(context, en: 'No remittance found with this tracking number.', fa: 'حواله‌ای با این شماره پیگیری یافت نشد.'),
+          l10nPick(
+            context,
+            en: 'No remittance found with this tracking number.',
+            fa: 'حواله‌ای با این شماره پیگیری یافت نشد.',
+          ),
           backgroundColor: AppColors.error,
           colorText: AppColors.white,
         );
@@ -96,87 +108,137 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
     String reason = 'NOT_RECEIVED';
     final descCtrl = TextEditingController();
 
-    Get.dialog(StatefulBuilder(
-      builder: (dlgContext, setDlgState) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r)),
-        title: Text(
-          l10nPick(dlgContext, en: 'File Dispute (30-day window)', fa: 'ثبت اختلاف حواله (مهلت ۳۰ روز)'),
-          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10nPick(dlgContext, en: 'Reason:', fa: 'دلیل اختلاف:'),
-              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+    Get.dialog(
+      StatefulBuilder(
+        builder: (dlgContext, setDlgState) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+          ),
+          title: Text(
+            l10nPick(
+              dlgContext,
+              en: 'File Dispute (30-day window)',
+              fa: 'ثبت اختلاف حواله (مهلت ۳۰ روز)',
             ),
-            SizedBox(height: AppSpacing.xs.h),
-            DropdownButton<String>(
-              isExpanded: true,
-              value: reason,
-              items: [
-                DropdownMenuItem(value: 'NOT_RECEIVED', child: Text(l10nPick(dlgContext, en: 'Funds not received', fa: 'وجه به دست گیرنده نرسید'))),
-                DropdownMenuItem(value: 'PARTIAL', child: Text(l10nPick(dlgContext, en: 'Less amount received', fa: 'مبلغ کمتر از فاکتور واریز شد'))),
-                DropdownMenuItem(value: 'WRONG_BENEFICIARY', child: Text(l10nPick(dlgContext, en: 'Wrong account credited', fa: 'حساب اشتباه واریز شد'))),
-              ],
-              onChanged: (v) => setDlgState(() => reason = v ?? 'NOT_RECEIVED'),
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10nPick(dlgContext, en: 'Reason:', fa: 'دلیل اختلاف:'),
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: AppSpacing.xs.h),
+              DropdownButton<String>(
+                isExpanded: true,
+                value: reason,
+                items: [
+                  DropdownMenuItem(
+                    value: 'NOT_RECEIVED',
+                    child: Text(
+                      l10nPick(
+                        dlgContext,
+                        en: 'Funds not received',
+                        fa: 'وجه به دست گیرنده نرسید',
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'PARTIAL',
+                    child: Text(
+                      l10nPick(
+                        dlgContext,
+                        en: 'Less amount received',
+                        fa: 'مبلغ کمتر از فاکتور واریز شد',
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 'WRONG_BENEFICIARY',
+                    child: Text(
+                      l10nPick(
+                        dlgContext,
+                        en: 'Wrong account credited',
+                        fa: 'حساب اشتباه واریز شد',
+                      ),
+                    ),
+                  ),
+                ],
+                onChanged: (v) =>
+                    setDlgState(() => reason = v ?? 'NOT_RECEIVED'),
+              ),
+              SizedBox(height: AppSpacing.sm.h),
+              TextField(
+                controller: descCtrl,
+                maxLines: 3,
+                style: TextStyle(fontSize: 12.sp),
+                decoration: InputDecoration(
+                  labelText: l10nPick(
+                    dlgContext,
+                    en: 'Description / bank reference',
+                    fa: 'توضیحات و شماره پیگیری بانکی',
+                  ),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Get.back(),
+              child: Text(l10nPick(dlgContext, en: 'Cancel', fa: 'انصراف')),
             ),
-            SizedBox(height: AppSpacing.sm.h),
-            TextField(
-              controller: descCtrl,
-              maxLines: 3,
-              style: TextStyle(fontSize: 12.sp),
-              decoration: InputDecoration(
-                labelText: l10nPick(dlgContext, en: 'Description / bank reference', fa: 'توضیحات و شماره پیگیری بانکی'),
-                border: const OutlineInputBorder(),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.error,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                ),
+              ),
+              onPressed: () async {
+                HapticFeedback.lightImpact();
+                Get.back();
+                final ok = await _api.fileDispute(
+                  trx: trx,
+                  reasonType: reason,
+                  description: descCtrl.text.trim(),
+                );
+                if (!mounted) return;
+                if (ok) {
+                  Get.snackbar(
+                    l10nPick(context, en: 'Dispute Filed', fa: 'پرونده ثبت شد'),
+                    l10nPick(
+                      context,
+                      en: 'Dispute opened with destination payout partner (SLA 5 business days).',
+                      fa: 'پرونده اختلاف با شریک پرداخت مقصد گشوده شد (مهلت بررسی ۵ روز کاری).',
+                    ),
+                    backgroundColor: AppColors.warning,
+                    colorText: AppColors.deepBlack,
+                  );
+                } else {
+                  Get.snackbar(
+                    l10nPick(context, en: 'Error', fa: 'خطا'),
+                    l10nPick(
+                      context,
+                      en: 'Failed to file dispute — ensure you are logged in.',
+                      fa: 'خطا در ثبت اختلاف — از اتصال به حساب کاربری مطمئن شوید.',
+                    ),
+                    backgroundColor: AppColors.error,
+                    colorText: AppColors.white,
+                  );
+                }
+              },
+              child: Text(
+                l10nPick(dlgContext, en: 'Submit Dispute', fa: 'ثبت اختلاف'),
+                style: const TextStyle(color: AppColors.white),
               ),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(l10nPick(dlgContext, en: 'Cancel', fa: 'انصراف')),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
-            ),
-            onPressed: () async {
-              HapticFeedback.lightImpact();
-              Get.back();
-              final ok = await _api.fileDispute(
-                trx: trx,
-                reasonType: reason,
-                description: descCtrl.text.trim(),
-              );
-              if (!mounted) return;
-              if (ok) {
-                Get.snackbar(
-                  l10nPick(context, en: 'Dispute Filed', fa: 'پرونده ثبت شد'),
-                  l10nPick(context, en: 'Dispute opened with destination payout partner (SLA 5 business days).', fa: 'پرونده اختلاف با شریک پرداخت مقصد گشوده شد (مهلت بررسی ۵ روز کاری).'),
-                  backgroundColor: AppColors.warning,
-                  colorText: AppColors.deepBlack,
-                );
-              } else {
-                Get.snackbar(
-                  l10nPick(context, en: 'Error', fa: 'خطا'),
-                  l10nPick(context, en: 'Failed to file dispute — ensure you are logged in.', fa: 'خطا در ثبت اختلاف — از اتصال به حساب کاربری مطمئن شوید.'),
-                  backgroundColor: AppColors.error,
-                  colorText: AppColors.white,
-                );
-              }
-            },
-            child: Text(
-              l10nPick(dlgContext, en: 'Submit Dispute', fa: 'ثبت اختلاف'),
-              style: const TextStyle(color: AppColors.white),
-            ),
-          ),
-        ],
       ),
-    ));
+    );
   }
 
   @override
@@ -184,14 +246,22 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
-          l10nPick(context, en: 'Remittance & Corridors', fa: 'حواله ارزی و مسیرها'),
+          l10nPick(
+            context,
+            en: 'Remittance & Corridors',
+            fa: 'حواله ارزی و مسیرها',
+          ),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
@@ -200,7 +270,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           onPressed: () => Get.back(),
@@ -208,14 +280,24 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
         bottom: TabBar(
           controller: _tabController,
           labelColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-          unselectedLabelColor: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
-          indicatorColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+          unselectedLabelColor: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.softGray,
+          indicatorColor: isDark
+              ? AppColors.darkPrimary
+              : AppColors.lightSecondary,
           indicatorWeight: 3,
           labelStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
           tabs: [
-            Tab(text: l10nPick(context, en: 'Calculator', fa: 'محاسبه کارمزد')),
-            Tab(text: l10nPick(context, en: 'Track (TRX)', fa: 'رهگیری عمومی')),
-            Tab(text: l10nPick(context, en: 'Corridors', fa: 'کاتالوگ مسیرها')),
+            Tab(
+              text: l10nPick(context, en: 'Calculator', fa: 'محاسبه کارمزد'),
+            ),
+            Tab(
+              text: l10nPick(context, en: 'Track (TRX)', fa: 'رهگیری عمومی'),
+            ),
+            Tab(
+              text: l10nPick(context, en: 'Corridors', fa: 'کاتالوگ مسیرها'),
+            ),
           ],
         ),
       ),
@@ -253,7 +335,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
             decoration: BoxDecoration(
               color: isDark ? AppColors.darkSurface : AppColors.white,
               borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -266,11 +350,17 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10nPick(context, en: 'Select Remittance Corridor:', fa: 'انتخاب کریدور و مسیر انتقال وجه:'),
+                  l10nPick(
+                    context,
+                    en: 'Select Remittance Corridor:',
+                    fa: 'انتخاب کریدور و مسیر انتقال وجه:',
+                  ),
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 SizedBox(height: AppSpacing.sm.h),
@@ -278,10 +368,19 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                   DropdownButtonFormField<Map<String, dynamic>>(
                     initialValue: corridor,
                     isExpanded: true,
-                    dropdownColor: isDark ? AppColors.darkSurface : AppColors.white,
+                    dropdownColor: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.white,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.sm.h),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.md.w,
+                        vertical: AppSpacing.sm.h,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd.r,
+                        ),
+                      ),
                     ),
                     items: _corridors.map((c) {
                       return DropdownMenuItem<Map<String, dynamic>>(
@@ -291,7 +390,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       );
@@ -314,7 +415,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
             decoration: BoxDecoration(
               color: isDark ? AppColors.darkSurface : AppColors.white,
               borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -330,26 +433,44 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      l10nPick(context, en: 'You Send Amount:', fa: 'مبلغ ارسالی شما:'),
+                      l10nPick(
+                        context,
+                        en: 'You Send Amount:',
+                        fa: 'مبلغ ارسالی شما:',
+                      ),
                       style: TextStyle(
                         fontSize: 12.5.sp,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     if (corridor != null)
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 2.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightSecondary).withValues(alpha: 0.12),
+                          color:
+                              (isDark
+                                      ? AppColors.darkPrimary
+                                      : AppColors.lightSecondary)
+                                  .withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                         child: Text(
-                          ((corridor['source_currencies'] as List?)?.firstOrNull ?? 'USD').toString(),
+                          ((corridor['source_currencies'] as List?)
+                                      ?.firstOrNull ??
+                                  'USD')
+                              .toString(),
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightSecondary,
                           ),
                         ),
                       ),
@@ -358,20 +479,33 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                 SizedBox(height: AppSpacing.sm.h),
                 TextField(
                   controller: _calcAmountController,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   style: TextStyle(
                     fontSize: 20.sp,
                     fontWeight: FontWeight.w900,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                   decoration: InputDecoration(
                     prefixIcon: Icon(
                       Icons.payments_rounded,
-                      color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightSecondary,
                     ),
                     hintText: '1000',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-                    contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.md.h),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md.w,
+                      vertical: AppSpacing.md.h,
+                    ),
                   ),
                 ),
               ],
@@ -387,7 +521,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
             // CTA Button to Start Remittance
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                backgroundColor: isDark
+                    ? AppColors.darkPrimary
+                    : AppColors.lightPrimary,
                 foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
                 padding: EdgeInsets.symmetric(vertical: 14.h),
                 shape: RoundedRectangleBorder(
@@ -403,8 +539,15 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    l10nPick(context, en: 'Send Money Now', fa: 'شروع حواله ارزی'),
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w800),
+                    l10nPick(
+                      context,
+                      en: 'Send Money Now',
+                      fa: 'شروع حواله ارزی',
+                    ),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   SizedBox(width: AppSpacing.sm.w),
                   const Icon(Icons.arrow_forward_rounded, size: 18),
@@ -417,15 +560,22 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
     });
   }
 
-  Widget _buildCalculationBreakdown(Map<String, dynamic> corridor, bool isDark) {
+  Widget _buildCalculationBreakdown(
+    Map<String, dynamic> corridor,
+    bool isDark,
+  ) {
     final feePct = double.tryParse('${corridor['fee_pct']}') ?? 1.2;
     final feeAmount = (_sendAmount.value * feePct) / 100.0;
-    final netSend = (_sendAmount.value - feeAmount) > 0 ? (_sendAmount.value - feeAmount) : 0.0;
+    final netSend = (_sendAmount.value - feeAmount) > 0
+        ? (_sendAmount.value - feeAmount)
+        : 0.0;
     final destCurrency = corridor['dest_currency'] ?? 'EUR';
     final minKyc = corridor['min_kyc_level'] ?? 1;
 
     // Approximate conversion rate for live preview
-    final rate = destCurrency == 'IRT' ? 95000.0 : (destCurrency == 'TRY' ? 36.5 : 0.92);
+    final rate = destCurrency == 'IRT'
+        ? 95000.0
+        : (destCurrency == 'TRY' ? 36.5 : 0.92);
     final recipientGets = netSend * rate;
 
     return Container(
@@ -433,7 +583,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
         boxShadow: [
           BoxShadow(
             color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -446,11 +598,17 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10nPick(context, en: 'Transparent Breakdown:', fa: 'ریز محاسبات شفاف و لحظه‌ای:'),
+            l10nPick(
+              context,
+              en: 'Transparent Breakdown:',
+              fa: 'ریز محاسبات شفاف و لحظه‌ای:',
+            ),
             style: TextStyle(
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           SizedBox(height: AppSpacing.md.h),
@@ -459,7 +617,8 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
           _calcRow(
             icon: Icons.remove_circle_outline_rounded,
             iconColor: AppColors.error,
-            label: '${l10nPick(context, en: 'Our Fee', fa: 'کارمزد شفاف پلتفرم')} ($feePct%)',
+            label:
+                '${l10nPick(context, en: 'Our Fee', fa: 'کارمزد شفاف پلتفرم')} ($feePct%)',
             value: '-${feeAmount.toStringAsFixed(2)}',
             isDark: isDark,
           ),
@@ -468,8 +627,14 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
           // Mid-market rate line
           _calcRow(
             icon: Icons.sync_alt_rounded,
-            iconColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-            label: l10nPick(context, en: 'Real Exchange Rate', fa: 'نرخ لحظه‌ای مرجع'),
+            iconColor: isDark
+                ? AppColors.darkPrimary
+                : AppColors.lightSecondary,
+            label: l10nPick(
+              context,
+              en: 'Real Exchange Rate',
+              fa: 'نرخ لحظه‌ای مرجع',
+            ),
             value: '1 USD ≈ ${rate.toStringAsFixed(2)} $destCurrency',
             isDark: isDark,
           ),
@@ -479,7 +644,11 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
           _calcRow(
             icon: Icons.arrow_downward_rounded,
             iconColor: AppColors.success,
-            label: l10nPick(context, en: 'Recipient Receives', fa: 'مبلغ دریافتی گیرنده'),
+            label: l10nPick(
+              context,
+              en: 'Recipient Receives',
+              fa: 'مبلغ دریافتی گیرنده',
+            ),
             value: '${_formatNumber(recipientGets)} $destCurrency',
             isBold: true,
             isDark: isDark,
@@ -499,22 +668,34 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                   Icon(Icons.bolt_rounded, size: 16.r, color: Colors.amber),
                   SizedBox(width: 4.w),
                   Text(
-                    l10nPick(context, en: 'Delivery: ≤ 2 Hours', fa: 'تحویل: کمتر از ۲ ساعت'),
-                    style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: Colors.amber.shade800),
+                    l10nPick(
+                      context,
+                      en: 'Delivery: ≤ 2 Hours',
+                      fa: 'تحویل: کمتر از ۲ ساعت',
+                    ),
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.amber.shade800,
+                    ),
                   ),
                 ],
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
+                  color: isDark
+                      ? AppColors.darkSurface
+                      : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Text(
                   '${l10nPick(context, en: 'Min KYC', fa: 'احراز هویت')}: Level $minKyc',
                   style: TextStyle(
                     fontSize: 10.5.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
@@ -542,7 +723,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
             label,
             style: TextStyle(
               fontSize: 12.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ),
@@ -551,7 +734,11 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
           style: TextStyle(
             fontSize: isBold ? 14.sp : 12.5.sp,
             fontWeight: isBold ? FontWeight.w900 : FontWeight.w700,
-            color: isBold ? AppColors.success : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            color: isBold
+                ? AppColors.success
+                : (isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary),
           ),
         ),
       ],
@@ -564,11 +751,17 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
       padding: EdgeInsets.all(AppSpacing.lg.r),
       children: [
         Text(
-          l10nPick(context, en: 'Enter remittance tracking number (TRX):', fa: 'شماره پیگیری حواله (TRX) را وارد کنید:'),
+          l10nPick(
+            context,
+            en: 'Enter remittance tracking number (TRX):',
+            fa: 'شماره پیگیری حواله (TRX) را وارد کنید:',
+          ),
           style: TextStyle(
             fontWeight: FontWeight.w800,
             fontSize: 13.5.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: AppSpacing.sm.h),
@@ -578,14 +771,25 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
               child: TextField(
                 controller: _trxController,
                 style: TextStyle(
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                   fontSize: 13.sp,
                 ),
                 decoration: InputDecoration(
                   hintText: 'REM...',
-                  hintStyle: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.softGray),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
-                  contentPadding: EdgeInsets.symmetric(horizontal: AppSpacing.md.w, vertical: AppSpacing.md.h),
+                  hintStyle: TextStyle(
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.softGray,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md.w,
+                    vertical: AppSpacing.md.h,
+                  ),
                 ),
               ),
             ),
@@ -593,21 +797,36 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
             Obx(
               () => ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                  foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: 14.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                  backgroundColor: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
+                  foregroundColor: isDark
+                      ? AppColors.deepBlack
+                      : AppColors.white,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg.w,
+                    vertical: 14.h,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                  ),
                 ),
                 onPressed: _isTracking.value ? null : _track,
                 child: _isTracking.value
                     ? SizedBox(
                         width: 18.w,
                         height: 18.w,
-                        child: const CircularProgressIndicator(color: AppColors.white, strokeWidth: 2),
+                        child: const CircularProgressIndicator(
+                          color: AppColors.white,
+                          strokeWidth: 2,
+                        ),
                       )
                     : Text(
                         l10nPick(context, en: 'Track', fa: 'رهگیری'),
-                        style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13.sp),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 13.sp,
+                        ),
                       ),
               ),
             ),
@@ -620,16 +839,22 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
             return Container(
               padding: EdgeInsets.all(AppSpacing.xxl.r),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade50,
+                color: isDark
+                    ? AppColors.darkSurfaceVariant
+                    : Colors.grey.shade50,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
               ),
               child: Column(
                 children: [
                   Icon(
                     Icons.fingerprint_rounded,
                     size: 40.r,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.softGray,
                   ),
                   SizedBox(height: AppSpacing.sm.h),
                   Text(
@@ -640,7 +865,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                     ),
                     style: TextStyle(
                       fontSize: 11.5.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.softGray,
                       height: 1.45,
                     ),
                     textAlign: TextAlign.center,
@@ -655,7 +882,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
             decoration: BoxDecoration(
               color: isDark ? AppColors.darkSurface : AppColors.white,
               borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              ),
               boxShadow: [
                 BoxShadow(
                   color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -675,19 +904,32 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 14.5.sp,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightSecondary).withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                        color:
+                            (isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightSecondary)
+                                .withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm.r,
+                        ),
                       ),
                       child: Text(
                         r['status_label']?.toString() ?? '',
                         style: TextStyle(
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightSecondary,
                           fontSize: 10.5.sp,
                           fontWeight: FontWeight.w800,
                         ),
@@ -698,24 +940,43 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                 SizedBox(height: AppSpacing.sm.h),
                 if (r['created_at'] != null)
                   Text(
-                    l10nPick(context, en: 'Created: ${r['created_at']}', fa: 'تاریخ ثبت: ${r['created_at']}'),
+                    l10nPick(
+                      context,
+                      en: 'Created: ${r['created_at']}',
+                      fa: 'تاریخ ثبت: ${r['created_at']}',
+                    ),
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.softGray,
                     ),
                   ),
                 Divider(
                   height: AppSpacing.xxl,
-                  color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                  color: isDark
+                      ? AppColors.darkDivider
+                      : AppColors.lightDivider,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton.icon(
-                      icon: const Icon(Icons.report_problem_rounded, color: AppColors.error, size: 16),
+                      icon: const Icon(
+                        Icons.report_problem_rounded,
+                        color: AppColors.error,
+                        size: 16,
+                      ),
                       label: Text(
-                        l10nPick(context, en: 'File Dispute', fa: 'ثبت اختلاف حواله'),
-                        style: const TextStyle(color: AppColors.error, fontWeight: FontWeight.bold),
+                        l10nPick(
+                          context,
+                          en: 'File Dispute',
+                          fa: 'ثبت اختلاف حواله',
+                        ),
+                        style: const TextStyle(
+                          color: AppColors.error,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       onPressed: _showDisputeDialog,
                     ),
@@ -723,7 +984,9 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                       l10nPick(context, en: '30-day window', fa: 'مهلت ۳۰ روز'),
                       style: TextStyle(
                         fontSize: 10.5.sp,
-                        color: isDark ? AppColors.darkTextTertiary : AppColors.softGray,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.softGray,
                       ),
                     ),
                   ],
@@ -747,11 +1010,25 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.route_rounded, size: 48.r, color: isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+              Icon(
+                Icons.route_rounded,
+                size: 48.r,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.softGray,
+              ),
               SizedBox(height: AppSpacing.sm.h),
               Text(
-                l10nPick(context, en: 'No corridors available', fa: 'مسیری یافت نشد'),
-                style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+                l10nPick(
+                  context,
+                  en: 'No corridors available',
+                  fa: 'مسیری یافت نشد',
+                ),
+                style: TextStyle(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.softGray,
+                ),
               ),
             ],
           ),
@@ -773,10 +1050,14 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.white,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 10,
                     offset: const Offset(0, 3),
                   ),
@@ -793,18 +1074,35 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 13.5.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.success.withValues(alpha: 0.18) : AppColors.successContainer,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                          color: isDark
+                              ? AppColors.success.withValues(alpha: 0.18)
+                              : AppColors.successContainer,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
                         ),
                         child: Text(
-                          l10nPick(context, en: 'Fee ${c['fee_pct']}%', fa: 'کارمزد ${c['fee_pct']}٪'),
-                          style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.bold, color: AppColors.success),
+                          l10nPick(
+                            context,
+                            en: 'Fee ${c['fee_pct']}%',
+                            fa: 'کارمزد ${c['fee_pct']}٪',
+                          ),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.success,
+                          ),
                         ),
                       ),
                     ],
@@ -818,16 +1116,24 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                     ),
                     style: TextStyle(
                       fontSize: 10.5.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.softGray,
                     ),
                   ),
                   SizedBox(height: AppSpacing.sm.h),
                   Text(
-                    l10nPick(context, en: 'Payout Methods & Delivery SLA:', fa: 'روش‌های تحویل در مقصد و زمان تحویل:'),
+                    l10nPick(
+                      context,
+                      en: 'Payout Methods & Delivery SLA:',
+                      fa: 'روش‌های تحویل در مقصد و زمان تحویل:',
+                    ),
                     style: TextStyle(
                       fontSize: 10.5.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   SizedBox(height: AppSpacing.xs.h),
@@ -838,16 +1144,25 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
                       final method = m['method']?.toString() ?? '';
                       final sla = m['sla_hours'];
                       return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 2.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.w,
+                          vertical: 2.h,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                          color: isDark
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.lightBackground,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusXs.r,
+                          ),
                         ),
                         child: Text(
                           '$method (≤${sla}h)',
                           style: TextStyle(
                             fontSize: 9.5.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.softGray,
                           ),
                         ),
                       );
@@ -863,8 +1178,12 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
   }
 
   Widget _buildSkeleton(bool isDark) {
-    final baseColor = isDark ? AppColors.darkSurfaceVariant : Colors.grey.shade300;
-    final highlightColor = isDark ? AppColors.darkSurface : Colors.grey.shade100;
+    final baseColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : Colors.grey.shade300;
+    final highlightColor = isDark
+        ? AppColors.darkSurface
+        : Colors.grey.shade100;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -886,8 +1205,8 @@ class _RemittanceTrackScreenState extends State<RemittanceTrackScreen>
 
   String _formatNumber(double number) {
     return number.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 }

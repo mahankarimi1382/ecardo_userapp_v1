@@ -25,7 +25,9 @@ class InternetAmountStepSection extends StatelessWidget {
     final localization = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final containerBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final inputBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final inputBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
 
     return Expanded(
       child: Container(
@@ -66,12 +68,13 @@ class InternetAmountStepSection extends StatelessWidget {
                       controller.selectedOperatorId.value = op.id;
                       controller.selectedOperatorName.value = op.nameFa;
 
-                      final match = controller.payBillServiceList.firstWhereOrNull((s) {
-                        final name = (s.name ?? '').toLowerCase();
-                        return name.contains(op.id) ||
-                            name.contains(op.nameFa) ||
-                            name.contains(op.nameEn.toLowerCase());
-                      });
+                      final match = controller.payBillServiceList
+                          .firstWhereOrNull((s) {
+                            final name = (s.name ?? '').toLowerCase();
+                            return name.contains(op.id) ||
+                                name.contains(op.nameFa) ||
+                                name.contains(op.nameEn.toLowerCase());
+                          });
 
                       if (match != null) {
                         controller.amountController.clear();
@@ -145,7 +148,9 @@ class InternetAmountStepSection extends StatelessWidget {
                       },
                       hintText: localization.internetCountryHint,
                       controller: controller.countryController,
-                      suffixIconColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                      suffixIconColor: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary,
                       readOnly: true,
                     ),
                   ),
@@ -199,7 +204,9 @@ class InternetAmountStepSection extends StatelessWidget {
                       },
                       hintText: localization.internetServiceHint,
                       controller: controller.serviceController,
-                      suffixIconColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                      suffixIconColor: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary,
                       readOnly: true,
                     ),
                   ),
@@ -214,11 +221,13 @@ class InternetAmountStepSection extends StatelessWidget {
                       children: controller.dynamicFieldControllers.entries.map((
                         entry,
                       ) {
-                        final isPhoneField = entry.key.toLowerCase().contains('phone') ||
+                        final isPhoneField =
+                            entry.key.toLowerCase().contains('phone') ||
                             entry.key.toLowerCase().contains('mobile') ||
                             entry.key.contains('موبایل') ||
                             entry.key.contains('شماره') ||
-                            controller.dynamicFieldControllers.keys.first == entry.key;
+                            controller.dynamicFieldControllers.keys.first ==
+                                entry.key;
 
                         return Padding(
                           padding: EdgeInsets.only(bottom: 14.h),
@@ -228,11 +237,14 @@ class InternetAmountStepSection extends StatelessWidget {
                             dynamicField: Obx(
                               () => CommonTextInputField(
                                 focusNode: controller.dynamicFieldsFocusNode,
-                                isFocused: controller.isDynamicFieldFocused.value,
+                                isFocused:
+                                    controller.isDynamicFieldFocused.value,
                                 backgroundColor: inputBg,
                                 controller: entry.value,
                                 hintText: '',
-                                keyboardType: isPhoneField ? TextInputType.phone : TextInputType.text,
+                                keyboardType: isPhoneField
+                                    ? TextInputType.phone
+                                    : TextInputType.text,
                                 onChanged: (val) {
                                   controller.targetAccountNumber.value = val;
                                 },
@@ -241,24 +253,33 @@ class InternetAmountStepSection extends StatelessWidget {
                                         onTap: () {
                                           ContactPickerBottomSheet.show(
                                             context,
-                                            onContactSelected: (name, phone, opId) {
-                                              entry.value.text = phone;
-                                              controller.targetAccountNumber.value = phone;
-                                            },
+                                            onContactSelected:
+                                                (name, phone, opId) {
+                                                  entry.value.text = phone;
+                                                  controller
+                                                          .targetAccountNumber
+                                                          .value =
+                                                      phone;
+                                                },
                                           );
                                         },
                                         child: Container(
                                           margin: EdgeInsets.all(8.w),
                                           padding: EdgeInsets.all(6.w),
                                           decoration: BoxDecoration(
-                                            color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                                                .withValues(alpha: 0.12),
+                                            color:
+                                                (isDark
+                                                        ? AppColors.mainSoftBlue
+                                                        : AppColors.deepBlack)
+                                                    .withValues(alpha: 0.12),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
                                             Icons.contacts_rounded,
                                             size: 18.w,
-                                            color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                                            color: isDark
+                                                ? AppColors.mainSoftBlue
+                                                : AppColors.deepBlack,
                                           ),
                                         ),
                                       )
@@ -280,10 +301,15 @@ class InternetAmountStepSection extends StatelessWidget {
                     selectedAmount: controller.amountText.value,
                     onAmountSelected: (amountToman, amountRials) {
                       final service = controller.serviceData.value;
-                      final isCurrencyRials = service?.currency?.toLowerCase().contains('rial') ?? false;
+                      final isCurrencyRials =
+                          service?.currency?.toLowerCase().contains('rial') ??
+                          false;
 
-                      final targetAmount = isCurrencyRials ? amountRials : amountToman;
-                      controller.amountController.text = targetAmount.toString();
+                      final targetAmount = isCurrencyRials
+                          ? amountRials
+                          : amountToman;
+                      controller.amountController.text = targetAmount
+                          .toString();
                       controller.amountText.value = targetAmount.toString();
                     },
                   ),
@@ -334,7 +360,9 @@ class InternetAmountStepSection extends StatelessWidget {
                             fontSize: 13.sp,
                             color: isDark
                                 ? AppColors.darkTextSecondary
-                                : AppColors.lightTextPrimary.withValues(alpha: 0.50),
+                                : AppColors.lightTextPrimary.withValues(
+                                    alpha: 0.50,
+                                  ),
                           ),
                         ),
                       ),

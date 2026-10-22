@@ -48,33 +48,47 @@ class TaxiSearchScreen extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsetsDirectional.all(ECardoTokens.space4.r),
-          child: Obx(() => CommonButton(
-            width: double.infinity,
-            text: l10nPick(
-              context,
-              en: 'View Available Vehicles & Rates',
-              fa: 'مشاهده خودروها و استعلام نرخ قطعی',
-              ar: 'عرض السيارات والأسعار المتاحة',
-              zh: '查看可选车型及固定报价',
+          child: Obx(
+            () => CommonButton(
+              width: double.infinity,
+              text: l10nPick(
+                context,
+                en: 'View Available Vehicles & Rates',
+                fa: 'مشاهده خودروها و استعلام نرخ قطعی',
+                ar: 'عرض السيارات والأسعار المتاحة',
+                zh: '查看可选车型及固定报价',
+              ),
+              backgroundColor: ECardoTokens.brand500(context),
+              textColor: ECardoTokens.inkOnBrand,
+              isLoading: controller.isLoadingVehicles.value,
+              onPressed: () async {
+                AppHaptics.selection();
+                if (controller.originController.text.trim().isEmpty ||
+                    controller.destinationController.text.trim().isEmpty) {
+                  showTravelMessage(
+                    context,
+                    title: l10nPick(
+                      context,
+                      en: 'Required Fields',
+                      fa: 'فیلدهای الزامی',
+                      ar: 'حقول مطلوبة',
+                      zh: '必填字段',
+                    ),
+                    message: l10nPick(
+                      context,
+                      en: 'Please enter origin and destination.',
+                      fa: 'لطفاً مبدأ و مقصد را وارد فرمایید.',
+                      ar: 'يرجى إدخال نقطة الانطلاق والوجهة.',
+                      zh: '请输入出发地和目的地。',
+                    ),
+                  );
+                  return;
+                }
+                await controller.fetchVehicleEstimates();
+                Get.to(() => const TaxiVehiclesScreen());
+              },
             ),
-            backgroundColor: ECardoTokens.brand500(context),
-            textColor: ECardoTokens.inkOnBrand,
-            isLoading: controller.isLoadingVehicles.value,
-            onPressed: () async {
-              AppHaptics.selection();
-              if (controller.originController.text.trim().isEmpty ||
-                  controller.destinationController.text.trim().isEmpty) {
-                showTravelMessage(
-                  context,
-                  title: l10nPick(context, en: 'Required Fields', fa: 'فیلدهای الزامی', ar: 'حقول مطلوبة', zh: '必填字段'),
-                  message: l10nPick(context, en: 'Please enter origin and destination.', fa: 'لطفاً مبدأ و مقصد را وارد فرمایید.', ar: 'يرجى إدخال نقطة الانطلاق والوجهة.', zh: '请输入出发地和目的地。'),
-                );
-                return;
-              }
-              await controller.fetchVehicleEstimates();
-              Get.to(() => const TaxiVehiclesScreen());
-            },
-          )),
+          ),
         ),
       ),
       child: ListView(
@@ -93,16 +107,24 @@ class TaxiSearchScreen extends StatelessWidget {
           Obx(() {
             if (controller.uiState.value == TaxiUiState.offline) {
               return Container(
-                margin: EdgeInsetsDirectional.only(bottom: ECardoTokens.space3.h),
+                margin: EdgeInsetsDirectional.only(
+                  bottom: ECardoTokens.space3.h,
+                ),
                 padding: EdgeInsetsDirectional.all(ECardoTokens.space3.r),
                 decoration: BoxDecoration(
                   color: ECardoTokens.warningBg(context),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                  border: Border.all(color: ECardoTokens.warning(context).withValues(alpha: 0.4)),
+                  border: Border.all(
+                    color: ECardoTokens.warning(context).withValues(alpha: 0.4),
+                  ),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.wifi_off_rounded, color: ECardoTokens.warning(context), size: 20.r),
+                    Icon(
+                      Icons.wifi_off_rounded,
+                      color: ECardoTokens.warning(context),
+                      size: 20.r,
+                    ),
                     SizedBox(width: ECardoTokens.space2.w),
                     Expanded(
                       child: Text(
@@ -133,11 +155,20 @@ class TaxiSearchScreen extends StatelessWidget {
                 Expanded(
                   child: _RideTypeChip(
                     icon: Icons.flight_land_rounded,
-                    label: l10nPick(context, en: 'Airport Transfer', fa: 'ترانسفر فرودگاه', ar: 'توصيل المطار', zh: '机场接送'),
-                    selected: controller.selectedRideType.value == TaxiRideType.airportTransfer,
+                    label: l10nPick(
+                      context,
+                      en: 'Airport Transfer',
+                      fa: 'ترانسفر فرودگاه',
+                      ar: 'توصيل المطار',
+                      zh: '机场接送',
+                    ),
+                    selected:
+                        controller.selectedRideType.value ==
+                        TaxiRideType.airportTransfer,
                     onTap: () {
                       AppHaptics.selection();
-                      controller.selectedRideType.value = TaxiRideType.airportTransfer;
+                      controller.selectedRideType.value =
+                          TaxiRideType.airportTransfer;
                     },
                   ),
                 ),
@@ -145,8 +176,16 @@ class TaxiSearchScreen extends StatelessWidget {
                 Expanded(
                   child: _RideTypeChip(
                     icon: Icons.location_city_rounded,
-                    label: l10nPick(context, en: 'City Chauffeur', fa: 'تاکسی شهری', ar: 'داخل المدينة', zh: '市内出行'),
-                    selected: controller.selectedRideType.value == TaxiRideType.cityRide,
+                    label: l10nPick(
+                      context,
+                      en: 'City Chauffeur',
+                      fa: 'تاکسی شهری',
+                      ar: 'داخل المدينة',
+                      zh: '市内出行',
+                    ),
+                    selected:
+                        controller.selectedRideType.value ==
+                        TaxiRideType.cityRide,
                     onTap: () {
                       AppHaptics.selection();
                       controller.selectedRideType.value = TaxiRideType.cityRide;
@@ -157,11 +196,20 @@ class TaxiSearchScreen extends StatelessWidget {
                 Expanded(
                   child: _RideTypeChip(
                     icon: Icons.alt_route_rounded,
-                    label: l10nPick(context, en: 'Intercity Trip', fa: 'بین شهری', ar: 'بين المدن', zh: '城际专车'),
-                    selected: controller.selectedRideType.value == TaxiRideType.intercity,
+                    label: l10nPick(
+                      context,
+                      en: 'Intercity Trip',
+                      fa: 'بین شهری',
+                      ar: 'بين المدن',
+                      zh: '城际专车',
+                    ),
+                    selected:
+                        controller.selectedRideType.value ==
+                        TaxiRideType.intercity,
                     onTap: () {
                       AppHaptics.selection();
-                      controller.selectedRideType.value = TaxiRideType.intercity;
+                      controller.selectedRideType.value =
+                          TaxiRideType.intercity;
                     },
                   ),
                 ),
@@ -172,10 +220,15 @@ class TaxiSearchScreen extends StatelessWidget {
 
           // Airport Transfer Direction Selector (Arrival Pickup vs Departure Dropoff)
           Obx(() {
-            if (controller.selectedRideType.value == TaxiRideType.airportTransfer) {
-              final isArrival = controller.transferDirection.value == AirportTransferDirection.fromAirport;
+            if (controller.selectedRideType.value ==
+                TaxiRideType.airportTransfer) {
+              final isArrival =
+                  controller.transferDirection.value ==
+                  AirportTransferDirection.fromAirport;
               return Container(
-                margin: EdgeInsetsDirectional.only(bottom: ECardoTokens.space4.h),
+                margin: EdgeInsetsDirectional.only(
+                  bottom: ECardoTokens.space4.h,
+                ),
                 padding: EdgeInsetsDirectional.all(ECardoTokens.space1.r),
                 decoration: BoxDecoration(
                   color: ECardoTokens.surfaceSunken(context),
@@ -188,15 +241,26 @@ class TaxiSearchScreen extends StatelessWidget {
                       child: InkWell(
                         onTap: () {
                           AppHaptics.selection();
-                          controller.transferDirection.value = AirportTransferDirection.fromAirport;
-                          controller.originController.text = 'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱';
+                          controller.transferDirection.value =
+                              AirportTransferDirection.fromAirport;
+                          controller.originController.text =
+                              'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱';
                         },
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                         child: Container(
-                          padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 8.h),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 6.w,
+                            vertical: 8.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: isArrival ? ECardoTokens.brand500(context) : Colors.transparent,
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            color: isArrival
+                                ? ECardoTokens.brand500(context)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -204,18 +268,30 @@ class TaxiSearchScreen extends StatelessWidget {
                               Icon(
                                 Icons.flight_land_rounded,
                                 size: 16.r,
-                                color: isArrival ? ECardoTokens.inkOnBrand : textSecondary,
+                                color: isArrival
+                                    ? ECardoTokens.inkOnBrand
+                                    : textSecondary,
                               ),
                               SizedBox(width: 6.w),
                               Flexible(
                                 child: Text(
-                                  l10nPick(context, en: 'Pickup from Airport', fa: 'استقبال در فرودگاه (ورودی)', ar: 'استقبال من المطار', zh: '接机'),
+                                  l10nPick(
+                                    context,
+                                    en: 'Pickup from Airport',
+                                    fa: 'استقبال در فرودگاه (ورودی)',
+                                    ar: 'استقبال من المطار',
+                                    zh: '接机',
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 11.sp,
-                                    fontWeight: isArrival ? FontWeight.w900 : FontWeight.w600,
-                                    color: isArrival ? ECardoTokens.inkOnBrand : textSecondary,
+                                    fontWeight: isArrival
+                                        ? FontWeight.w900
+                                        : FontWeight.w600,
+                                    color: isArrival
+                                        ? ECardoTokens.inkOnBrand
+                                        : textSecondary,
                                   ),
                                 ),
                               ),
@@ -228,15 +304,26 @@ class TaxiSearchScreen extends StatelessWidget {
                       child: InkWell(
                         onTap: () {
                           AppHaptics.selection();
-                          controller.transferDirection.value = AirportTransferDirection.toAirport;
-                          controller.destinationController.text = 'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱';
+                          controller.transferDirection.value =
+                              AirportTransferDirection.toAirport;
+                          controller.destinationController.text =
+                              'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱';
                         },
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                         child: Container(
-                          padding: EdgeInsetsDirectional.symmetric(horizontal: 6.w, vertical: 8.h),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 6.w,
+                            vertical: 8.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: !isArrival ? ECardoTokens.brand500(context) : Colors.transparent,
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            color: !isArrival
+                                ? ECardoTokens.brand500(context)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -244,18 +331,30 @@ class TaxiSearchScreen extends StatelessWidget {
                               Icon(
                                 Icons.flight_takeoff_rounded,
                                 size: 16.r,
-                                color: !isArrival ? ECardoTokens.inkOnBrand : textSecondary,
+                                color: !isArrival
+                                    ? ECardoTokens.inkOnBrand
+                                    : textSecondary,
                               ),
                               SizedBox(width: 6.w),
                               Flexible(
                                 child: Text(
-                                  l10nPick(context, en: 'Drop-off at Airport', fa: 'بدرقه به فرودگاه (خروجی)', ar: 'توصيل إلى المطار', zh: '送机'),
+                                  l10nPick(
+                                    context,
+                                    en: 'Drop-off at Airport',
+                                    fa: 'بدرقه به فرودگاه (خروجی)',
+                                    ar: 'توصيل إلى المطار',
+                                    zh: '送机',
+                                  ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 11.sp,
-                                    fontWeight: !isArrival ? FontWeight.w900 : FontWeight.w600,
-                                    color: !isArrival ? ECardoTokens.inkOnBrand : textSecondary,
+                                    fontWeight: !isArrival
+                                        ? FontWeight.w900
+                                        : FontWeight.w600,
+                                    color: !isArrival
+                                        ? ECardoTokens.inkOnBrand
+                                        : textSecondary,
                                   ),
                                 ),
                               ),
@@ -284,13 +383,31 @@ class TaxiSearchScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        l10nPick(context, en: 'Route & Schedule', fa: 'مسیر و زمان‌بندی ترانسفر', ar: 'المسار والجدول الزمني', zh: '行程与时间'),
-                        style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w900, color: textPrimary),
+                        l10nPick(
+                          context,
+                          en: 'Route & Schedule',
+                          fa: 'مسیر و زمان‌بندی ترانسفر',
+                          ar: 'المسار والجدول الزمني',
+                          zh: '行程与时间',
+                        ),
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w900,
+                          color: textPrimary,
+                        ),
                       ),
                     ),
                     IconButton(
-                      tooltip: l10nPick(context, en: 'Swap Route', fa: 'جابجایی مبدأ و مقصد', ar: 'تبديل المسار'),
-                      icon: Icon(Icons.swap_vert_rounded, color: ECardoTokens.brand500(context)),
+                      tooltip: l10nPick(
+                        context,
+                        en: 'Swap Route',
+                        fa: 'جابجایی مبدأ و مقصد',
+                        ar: 'تبديل المسار',
+                      ),
+                      icon: Icon(
+                        Icons.swap_vert_rounded,
+                        color: ECardoTokens.brand500(context),
+                      ),
                       onPressed: () {
                         AppHaptics.light();
                         controller.swapRoute();
@@ -304,8 +421,17 @@ class TaxiSearchScreen extends StatelessWidget {
                 TextFormField(
                   controller: controller.originController,
                   decoration: InputDecoration(
-                    labelText: l10nPick(context, en: 'Pickup Location', fa: 'مبدأ (محل سوار شدن)', ar: 'نقطة الانطلاق', zh: '出发地上车点'),
-                    prefixIcon: Icon(Icons.trip_origin_rounded, color: ECardoTokens.brand500(context)),
+                    labelText: l10nPick(
+                      context,
+                      en: 'Pickup Location',
+                      fa: 'مبدأ (محل سوار شدن)',
+                      ar: 'نقطة الانطلاق',
+                      zh: '出发地上车点',
+                    ),
+                    prefixIcon: Icon(
+                      Icons.trip_origin_rounded,
+                      color: ECardoTokens.brand500(context),
+                    ),
                     border: const OutlineInputBorder(),
                   ),
                 ),
@@ -319,45 +445,84 @@ class TaxiSearchScreen extends StatelessWidget {
                     ActionChip(
                       backgroundColor: ECardoTokens.surfaceSunken(context),
                       side: BorderSide(color: border),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
+                      ),
                       avatar: const Icon(Icons.flight_rounded, size: 14),
-                      label: Text('IKA ترمینال ۱ امام', style: TextStyle(fontSize: 10.5.sp, color: textPrimary)),
+                      label: Text(
+                        'IKA ترمینال ۱ امام',
+                        style: TextStyle(fontSize: 10.5.sp, color: textPrimary),
+                      ),
                       onPressed: () {
                         AppHaptics.light();
-                        controller.originController.text = 'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱';
+                        controller.originController.text =
+                            'فرودگاه بین‌المللی امام خمینی (IKA) - ترمینال ۱';
                       },
                     ),
                     ActionChip(
                       backgroundColor: ECardoTokens.surfaceSunken(context),
                       side: BorderSide(color: border),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm)),
-                      avatar: Icon(Icons.stars_rounded, size: 14, color: ECardoTokens.sand600(context)),
-                      label: Text('IKA سالن تشریفات CIP', style: TextStyle(fontSize: 10.5.sp, color: textPrimary)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
+                      ),
+                      avatar: Icon(
+                        Icons.stars_rounded,
+                        size: 14,
+                        color: ECardoTokens.sand600(context),
+                      ),
+                      label: Text(
+                        'IKA سالن تشریفات CIP',
+                        style: TextStyle(fontSize: 10.5.sp, color: textPrimary),
+                      ),
                       onPressed: () {
                         AppHaptics.light();
-                        controller.originController.text = 'فرودگاه امام خمینی - جایگاه اختصاصی تشریفات CIP';
+                        controller.originController.text =
+                            'فرودگاه امام خمینی - جایگاه اختصاصی تشریفات CIP';
                       },
                     ),
                     ActionChip(
                       backgroundColor: ECardoTokens.surfaceSunken(context),
                       side: BorderSide(color: border),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
+                      ),
                       avatar: const Icon(Icons.local_airport_rounded, size: 14),
-                      label: Text('THR مهرآباد ترمینال ۴ و ۶', style: TextStyle(fontSize: 10.5.sp, color: textPrimary)),
+                      label: Text(
+                        'THR مهرآباد ترمینال ۴ و ۶',
+                        style: TextStyle(fontSize: 10.5.sp, color: textPrimary),
+                      ),
                       onPressed: () {
                         AppHaptics.light();
-                        controller.originController.text = 'فرودگاه مهرآباد، ترمینال ۴ و ۶ (ایران‌ایر و ماهان)';
+                        controller.originController.text =
+                            'فرودگاه مهرآباد، ترمینال ۴ و ۶ (ایران‌ایر و ماهان)';
                       },
                     ),
                     ActionChip(
                       backgroundColor: ECardoTokens.surfaceSunken(context),
                       side: BorderSide(color: border),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(ECardoTokens.radiusSm)),
-                      avatar: const Icon(Icons.flight_takeoff_rounded, size: 14),
-                      label: Text('DXB دبی ترمینال ۱-۳', style: TextStyle(fontSize: 10.5.sp, color: textPrimary)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
+                      ),
+                      avatar: const Icon(
+                        Icons.flight_takeoff_rounded,
+                        size: 14,
+                      ),
+                      label: Text(
+                        'DXB دبی ترمینال ۱-۳',
+                        style: TextStyle(fontSize: 10.5.sp, color: textPrimary),
+                      ),
                       onPressed: () {
                         AppHaptics.light();
-                        controller.originController.text = 'Dubai International Airport (DXB) - Terminal 3';
+                        controller.originController.text =
+                            'Dubai International Airport (DXB) - Terminal 3';
                       },
                     ),
                   ],
@@ -368,8 +533,17 @@ class TaxiSearchScreen extends StatelessWidget {
                 TextFormField(
                   controller: controller.destinationController,
                   decoration: InputDecoration(
-                    labelText: l10nPick(context, en: 'Destination / Drop-off', fa: 'مقصد (محل پیاده شدن)', ar: 'الوجهة / نقطة النزول', zh: '目的地'),
-                    prefixIcon: Icon(Icons.location_on_rounded, color: ECardoTokens.danger(context)),
+                    labelText: l10nPick(
+                      context,
+                      en: 'Destination / Drop-off',
+                      fa: 'مقصد (محل پیاده شدن)',
+                      ar: 'الوجهة / نقطة النزول',
+                      zh: '目的地',
+                    ),
+                    prefixIcon: Icon(
+                      Icons.location_on_rounded,
+                      color: ECardoTokens.danger(context),
+                    ),
                     border: const OutlineInputBorder(),
                   ),
                 ),
@@ -380,13 +554,25 @@ class TaxiSearchScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: Obx(() => CommonSingleDatePicker(
-                        initialDate: controller.pickupDate.value,
-                        firstDate: DateTime.now(),
-                        hintText: l10nPick(context, en: 'Pickup Date', fa: 'تاریخ ترانسفر', ar: 'تاريخ التوصيل', zh: '接送日期'),
-                        suffixIcon: const Icon(Icons.calendar_today_rounded, size: 18),
-                        onDateSelected: (d) => controller.pickupDate.value = d,
-                      )),
+                      child: Obx(
+                        () => CommonSingleDatePicker(
+                          initialDate: controller.pickupDate.value,
+                          firstDate: DateTime.now(),
+                          hintText: l10nPick(
+                            context,
+                            en: 'Pickup Date',
+                            fa: 'تاریخ ترانسفر',
+                            ar: 'تاريخ التوصيل',
+                            zh: '接送日期',
+                          ),
+                          suffixIcon: const Icon(
+                            Icons.calendar_today_rounded,
+                            size: 18,
+                          ),
+                          onDateSelected: (d) =>
+                              controller.pickupDate.value = d,
+                        ),
+                      ),
                     ),
                     SizedBox(width: ECardoTokens.space2.w),
                     Expanded(
@@ -403,26 +589,39 @@ class TaxiSearchScreen extends StatelessWidget {
                                 '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
                           }
                         },
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                         child: Container(
-                          padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 14.h),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 10.w,
+                            vertical: 14.h,
+                          ),
                           decoration: BoxDecoration(
                             color: ECardoTokens.surfaceSunken(context),
-                            borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                            borderRadius: BorderRadius.circular(
+                              ECardoTokens.radiusMd,
+                            ),
                             border: Border.all(color: border),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.access_time_rounded, size: 18.r, color: ECardoTokens.brand500(context)),
+                              Icon(
+                                Icons.access_time_rounded,
+                                size: 18.r,
+                                color: ECardoTokens.brand500(context),
+                              ),
                               SizedBox(width: 6.w),
-                              Obx(() => Text(
-                                controller.pickupTime.value,
-                                style: TextStyle(
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.w700,
-                                  color: textPrimary,
+                              Obx(
+                                () => Text(
+                                  controller.pickupTime.value,
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: textPrimary,
+                                  ),
                                 ),
-                              )),
+                              ),
                             ],
                           ),
                         ),
@@ -444,8 +643,18 @@ class TaxiSearchScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  l10nPick(context, en: 'Flight & Travelers Setup', fa: 'اطلاعات پرواز و مسافران', ar: 'تفاصيل الرحلة والركاب', zh: '航班与乘车人'),
-                  style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w900, color: textPrimary),
+                  l10nPick(
+                    context,
+                    en: 'Flight & Travelers Setup',
+                    fa: 'اطلاعات پرواز و مسافران',
+                    ar: 'تفاصيل الرحلة والركاب',
+                    zh: '航班与乘车人',
+                  ),
+                  style: TextStyle(
+                    fontSize: 13.5.sp,
+                    fontWeight: FontWeight.w900,
+                    color: textPrimary,
+                  ),
                 ),
                 SizedBox(height: ECardoTokens.space3.h),
 
@@ -460,7 +669,10 @@ class TaxiSearchScreen extends StatelessWidget {
                       ar: 'رقم الرحلة الجوية (لتتبع التأخير)',
                       zh: '航班号（用于实时跟踪延误，如 EK-971）',
                     ),
-                    prefixIcon: Icon(Icons.flight_rounded, color: ECardoTokens.brand500(context)),
+                    prefixIcon: Icon(
+                      Icons.flight_rounded,
+                      color: ECardoTokens.brand500(context),
+                    ),
                     border: const OutlineInputBorder(),
                   ),
                 ),
@@ -472,22 +684,44 @@ class TaxiSearchScreen extends StatelessWidget {
                     Expanded(
                       child: TaxiCounterControl(
                         icon: Icons.person_rounded,
-                        label: l10nPick(context, en: 'Passengers', fa: 'تعداد مسافران', ar: 'الركاب', zh: '乘客人数'),
+                        label: l10nPick(
+                          context,
+                          en: 'Passengers',
+                          fa: 'تعداد مسافران',
+                          ar: 'الركاب',
+                          zh: '乘客人数',
+                        ),
                         value: controller.passengerCount,
                         min: 1,
                         max: 8,
-                        unit: l10nPick(context, en: 'pax', fa: 'نفر', ar: 'ركاب'),
+                        unit: l10nPick(
+                          context,
+                          en: 'pax',
+                          fa: 'نفر',
+                          ar: 'ركاب',
+                        ),
                       ),
                     ),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: TaxiCounterControl(
                         icon: Icons.luggage_rounded,
-                        label: l10nPick(context, en: 'Luggage / Bags', fa: 'تعداد چمدان‌ها', ar: 'الحقائب', zh: '行李数量'),
+                        label: l10nPick(
+                          context,
+                          en: 'Luggage / Bags',
+                          fa: 'تعداد چمدان‌ها',
+                          ar: 'الحقائب',
+                          zh: '行李数量',
+                        ),
                         value: controller.luggageCount,
                         min: 0,
                         max: 10,
-                        unit: l10nPick(context, en: 'bags', fa: 'چمدان', ar: 'حقائب'),
+                        unit: l10nPick(
+                          context,
+                          en: 'bags',
+                          fa: 'چمدان',
+                          ar: 'حقائب',
+                        ),
                       ),
                     ),
                   ],
@@ -497,7 +731,12 @@ class TaxiSearchScreen extends StatelessWidget {
                 // Child Safety Seat Counter
                 TaxiCounterControl(
                   icon: Icons.child_friendly_rounded,
-                  label: l10nPick(context, en: 'Child Safety Seats (+75,000 IRR each)', fa: 'صندلی ایمنی کودک (+۷۵,۰۰۰ تومان)', ar: 'مقاعد أمان للأطفال'),
+                  label: l10nPick(
+                    context,
+                    en: 'Child Safety Seats (+75,000 IRR each)',
+                    fa: 'صندلی ایمنی کودک (+۷۵,۰۰۰ تومان)',
+                    ar: 'مقاعد أمان للأطفال',
+                  ),
                   value: controller.childSeatCount,
                   min: 0,
                   max: 3,
@@ -506,35 +745,41 @@ class TaxiSearchScreen extends StatelessWidget {
                 SizedBox(height: ECardoTokens.space3.h),
 
                 // Meet & Greet Switch
-                Obx(() => SwitchListTile.adaptive(
-                  contentPadding: EdgeInsets.zero,
-                  activeTrackColor: ECardoTokens.brand500(context),
-                  title: Text(
-                    l10nPick(
-                      context,
-                      en: 'Meet & Greet (Chauffeur with Name Board)',
-                      fa: 'استقبال فرودگاهی (راننده با تابلوی نام شما در گیت خروجی)',
-                      ar: 'خدمة الاستقبال في المطار (لوحة الاسم)',
-                      zh: '机场举牌接机服务',
+                Obx(
+                  () => SwitchListTile.adaptive(
+                    contentPadding: EdgeInsets.zero,
+                    activeTrackColor: ECardoTokens.brand500(context),
+                    title: Text(
+                      l10nPick(
+                        context,
+                        en: 'Meet & Greet (Chauffeur with Name Board)',
+                        fa: 'استقبال فرودگاهی (راننده با تابلوی نام شما در گیت خروجی)',
+                        ar: 'خدمة الاستقبال في المطار (لوحة الاسم)',
+                        zh: '机场举牌接机服务',
+                      ),
+                      style: TextStyle(
+                        fontSize: 12.5.sp,
+                        fontWeight: FontWeight.w700,
+                        color: textPrimary,
+                      ),
                     ),
-                    style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700, color: textPrimary),
-                  ),
-                  subtitle: Text(
-                    l10nPick(
-                      context,
-                      en: 'Chauffeur waits inside the arrival hall with your name board (+150,000 IRR).',
-                      fa: 'راننده تشریفات در سالن تحویل بار با تابلوی اختصاصی منتظر شما خواهد بود (+۱۵۰,۰۰۰ تومان).',
-                      ar: 'ينتظرك السائق عند بوابة القاعة حاملاً لافتة باسمك.',
-                      zh: '专属司机会在出站口手举姓名牌等候您。',
+                    subtitle: Text(
+                      l10nPick(
+                        context,
+                        en: 'Chauffeur waits inside the arrival hall with your name board (+150,000 IRR).',
+                        fa: 'راننده تشریفات در سالن تحویل بار با تابلوی اختصاصی منتظر شما خواهد بود (+۱۵۰,۰۰۰ تومان).',
+                        ar: 'ينتظرك السائق عند بوابة القاعة حاملاً لافتة باسمك.',
+                        zh: '专属司机会在出站口手举姓名牌等候您。',
+                      ),
+                      style: TextStyle(fontSize: 11.sp, color: textSecondary),
                     ),
-                    style: TextStyle(fontSize: 11.sp, color: textSecondary),
+                    value: controller.meetAndGreet.value,
+                    onChanged: (v) {
+                      AppHaptics.selection();
+                      controller.meetAndGreet.value = v;
+                    },
                   ),
-                  value: controller.meetAndGreet.value,
-                  onChanged: (v) {
-                    AppHaptics.selection();
-                    controller.meetAndGreet.value = v;
-                  },
-                )),
+                ),
               ],
             ),
           ),
@@ -552,7 +797,10 @@ class TaxiSearchScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.verified_user_rounded, color: ECardoTokens.brand500(context)),
+                Icon(
+                  Icons.verified_user_rounded,
+                  color: ECardoTokens.brand500(context),
+                ),
                 SizedBox(width: ECardoTokens.space3.w),
                 Expanded(
                   child: Text(
@@ -609,14 +857,16 @@ class _RideTypeChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected ? selectedBg : unselectedBg,
           borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-          border: Border.all(
-            color: selected ? selectedBg : border,
-          ),
+          border: Border.all(color: selected ? selectedBg : border),
           boxShadow: selected ? ECardoTokens.shadowCard(context) : null,
         ),
         child: Column(
           children: [
-            Icon(icon, color: selected ? ECardoTokens.inkOnBrand : unselectedText, size: 20),
+            Icon(
+              icon,
+              color: selected ? ECardoTokens.inkOnBrand : unselectedText,
+              size: 20,
+            ),
             SizedBox(height: 4.h),
             Text(
               label,

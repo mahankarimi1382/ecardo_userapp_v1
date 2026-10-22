@@ -84,7 +84,12 @@ void main() {
     });
     home.userModel.value = UserModel.fromJson({
       'status': 'success',
-      'data': {'kyc_level': 1, 'passcode': '0', 'kyc': 1, 'addons': <String, dynamic>{}},
+      'data': {
+        'kyc_level': 1,
+        'passcode': '0',
+        'kyc': 1,
+        'addons': <String, dynamic>{},
+      },
     });
     home.walletsList.value = [
       Wallets.fromJson({
@@ -105,8 +110,7 @@ void main() {
     });
   }
 
-  testWidgets(
-      'wallet → referral → services render, scroll and settle without '
+  testWidgets('wallet → referral → services render, scroll and settle without '
       'exceptions (the reported frozen area)', (tester) async {
     final home = Get.find<HomeController>();
     seedData(home);
@@ -122,10 +126,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Page the services grid horizontally (onPageChanged → setState path).
-    await tester.drag(
-      find.byType(PageView),
-      const Offset(-400, 0),
-    );
+    await tester.drag(find.byType(PageView), const Offset(-400, 0));
     await tester.pumpAndSettle();
 
     // Long soak: any rebuild storm / runaway timer surfaces here.
@@ -135,22 +136,24 @@ void main() {
   });
 
   testWidgets(
-      'repeated Rx refreshes (FCM badge style) do not storm the services '
-      'Obx', (tester) async {
-    final home = Get.find<HomeController>();
-    final kyc = Get.find<KycLevelController>();
-    seedData(home);
+    'repeated Rx refreshes (FCM badge style) do not storm the services '
+    'Obx',
+    (tester) async {
+      final home = Get.find<HomeController>();
+      final kyc = Get.find<KycLevelController>();
+      seedData(home);
 
-    await tester.pumpWidget(buildSubject());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(buildSubject());
+      await tester.pumpAndSettle();
 
-    for (var i = 0; i < 10; i++) {
-      home.userModel.refresh();
-      if (kyc.badge.value != null) kyc.badge.refresh();
-      await tester.pump(const Duration(milliseconds: 50));
-    }
-    await tester.pump(const Duration(seconds: 2));
+      for (var i = 0; i < 10; i++) {
+        home.userModel.refresh();
+        if (kyc.badge.value != null) kyc.badge.refresh();
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await tester.pump(const Duration(seconds: 2));
 
-    expect(tester.takeException(), isNull);
-  });
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

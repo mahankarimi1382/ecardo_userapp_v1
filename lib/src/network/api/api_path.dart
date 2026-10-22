@@ -16,7 +16,8 @@ class ApiPath {
       '/change-language/$languageCode';
 
   /// S-024 — authoritative payment status for a gateway transaction.
-  static String paymentStatusEndpoint(String tnx) => '/user/payment-status/$tnx';
+  static String paymentStatusEndpoint(String tnx) =>
+      '/user/payment-status/$tnx';
 
   static String getConverterEndpoint({
     required String amount,

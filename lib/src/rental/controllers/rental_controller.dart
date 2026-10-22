@@ -38,11 +38,15 @@ class RentalController extends GetxController {
       isServiceUnavailable.value = false;
       errorMessage.value = null;
       final result = await _api.getCars(
-        category: selectedCategory.value == 'all' ? null : selectedCategory.value,
+        category: selectedCategory.value == 'all'
+            ? null
+            : selectedCategory.value,
         q: searchQuery.value.isEmpty ? null : searchQuery.value,
       );
       cars.value = result;
-      if (result.isEmpty && searchQuery.value.isEmpty && selectedCategory.value == 'all') {
+      if (result.isEmpty &&
+          searchQuery.value.isEmpty &&
+          selectedCategory.value == 'all') {
         isServiceUnavailable.value = true;
       }
     } catch (e) {
@@ -72,7 +76,11 @@ class RentalController extends GetxController {
   }
 
   /// Create booking — returns error string or null on success
-  Future<String?> createBooking(String pickupAt, String returnAt, String insuranceTier) async {
+  Future<String?> createBooking(
+    String pickupAt,
+    String returnAt,
+    String insuranceTier,
+  ) async {
     final car = selectedBooking.value?.car;
     if (car == null) return 'ERR_PRECONDITION: خودرو انتخاب نشده';
     try {
@@ -99,14 +107,29 @@ class RentalController extends GetxController {
     return ok;
   }
 
-  Future<bool> submitDocs(int bookingId, List<Map<String, dynamic>> docs) async {
+  Future<bool> submitDocs(
+    int bookingId,
+    List<Map<String, dynamic>> docs,
+  ) async {
     final ok = await _api.submitDocs(bookingId, docs);
     if (ok) await fetchBooking(bookingId);
     return ok;
   }
 
-  Future<bool> submitHandover(int bookingId, String phase, List<String> photos, int odometer, int fuelPct) async {
-    final ok = await _api.submitHandover(bookingId, phase, photos, odometer, fuelPct);
+  Future<bool> submitHandover(
+    int bookingId,
+    String phase,
+    List<String> photos,
+    int odometer,
+    int fuelPct,
+  ) async {
+    final ok = await _api.submitHandover(
+      bookingId,
+      phase,
+      photos,
+      odometer,
+      fuelPct,
+    );
     if (ok) await fetchBooking(bookingId);
     return ok;
   }

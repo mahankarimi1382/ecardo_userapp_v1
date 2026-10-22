@@ -148,8 +148,8 @@ class PasswordStrengthMeter extends StatelessWidget {
                         color: i <= score
                             ? color
                             : (isDark
-                                ? AppColors.white.withValues(alpha: 0.10)
-                                : AppColors.lightOutlineVariant),
+                                  ? AppColors.white.withValues(alpha: 0.10)
+                                  : AppColors.lightOutlineVariant),
                         boxShadow: i <= score
                             ? [
                                 BoxShadow(
@@ -322,18 +322,14 @@ class PasswordStrengthMeter extends StatelessWidget {
     final chipBg = isMet
         ? AppColors.success.withValues(alpha: 0.12)
         : (isDark
-            ? AppColors.white.withValues(alpha: 0.05)
-            : AppColors.lightSurfaceVariant);
+              ? AppColors.white.withValues(alpha: 0.05)
+              : AppColors.lightSurfaceVariant);
     final chipBorder = isMet
         ? AppColors.success.withValues(alpha: 0.40)
-        : (isDark
-            ? AppColors.darkBorder
-            : AppColors.lightOutlineVariant);
+        : (isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant);
     final textColor = isMet
         ? AppColors.success
-        : (isDark
-            ? AppColors.darkTextSecondary
-            : AppColors.lightTextTertiary);
+        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary);
 
     return Semantics(
       label:
@@ -350,7 +346,9 @@ class PasswordStrengthMeter extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              isMet ? Icons.check_rounded : Icons.radio_button_unchecked_rounded,
+              isMet
+                  ? Icons.check_rounded
+                  : Icons.radio_button_unchecked_rounded,
               size: 13.sp,
               color: isMet ? AppColors.success : textColor,
             ),

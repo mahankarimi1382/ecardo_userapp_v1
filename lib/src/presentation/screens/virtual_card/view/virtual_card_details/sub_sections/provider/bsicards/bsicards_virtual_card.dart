@@ -59,20 +59,33 @@ class BsicardsVirtualCard extends StatelessWidget {
                     return SvgPicture.network(
                       bgImageUrl,
                       fit: BoxFit.fill,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Opacity(opacity: 0.18, child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain)),
+                      errorBuilder: (context, error, stackTrace) => Opacity(
+                        opacity: 0.18,
+                        child: Image.asset(
+                          PngAssets.cardMap,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     );
                   } else {
                     return Image.network(
                       bgImageUrl,
                       fit: BoxFit.fill,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Opacity(opacity: 0.18, child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain)),
+                      errorBuilder: (context, error, stackTrace) => Opacity(
+                        opacity: 0.18,
+                        child: Image.asset(
+                          PngAssets.cardMap,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     );
                   }
                 }
 
-                return Opacity(opacity: 0.18, child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain));
+                return Opacity(
+                  opacity: 0.18,
+                  child: Image.asset(PngAssets.cardMap, fit: BoxFit.contain),
+                );
               }),
             ),
           ),

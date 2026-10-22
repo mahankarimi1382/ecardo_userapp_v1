@@ -85,8 +85,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     final isDark = theme.brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final tertiaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final tertiaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextTertiary;
     final fieldTextStyle = TextStyle(
       fontSize: 16,
       color: primaryTextColor,
@@ -103,8 +104,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     );
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Stack(
         children: [
@@ -155,28 +157,37 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                             width: 100,
                             height: 100,
                             decoration: BoxDecoration(
-                              color: isDark ? AppColors.darkSurface : AppColors.white,
+                              color: isDark
+                                  ? AppColors.darkSurface
+                                  : AppColors.white,
                               borderRadius: BorderRadius.circular(100),
                               border: !hasSelectedImage && !hasAvatarPath
                                   ? Border.all(
                                       color: isDark
-                                          ? AppColors.lightWarmGray
-                                              .withValues(alpha: 0.20)
+                                          ? AppColors.lightWarmGray.withValues(
+                                              alpha: 0.20,
+                                            )
                                           : AppColors.black.withValues(
                                               alpha: 0.10,
                                             ),
                                     )
-                                  : const Border.fromBorderSide(BorderSide.none),
+                                  : const Border.fromBorderSide(
+                                      BorderSide.none,
+                                    ),
                               image: hasSelectedImage
                                   ? DecorationImage(
                                       image: FileImage(
-                                        imagePickerController.selectedImage.value!,
+                                        imagePickerController
+                                            .selectedImage
+                                            .value!,
                                       ),
                                       fit: BoxFit.cover,
                                     )
                                   : hasAvatarPath
                                   ? DecorationImage(
-                                      image: NetworkImage(userData!.avatarPath!),
+                                      image: NetworkImage(
+                                        userData!.avatarPath!,
+                                      ),
                                       fit: BoxFit.cover,
                                     )
                                   : null,
@@ -256,7 +267,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                           color: isDark ? AppColors.darkGray : AppColors.white,
                           border: Border.all(
                             color: isDark
-                                ? AppColors.lightWarmGray.withValues(alpha: 0.25)
+                                ? AppColors.lightWarmGray.withValues(
+                                    alpha: 0.25,
+                                  )
                                 : AppColors.lightBorder,
                             width: 1,
                           ),
@@ -309,8 +322,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     border: isDark
                         ? Border(
                             top: BorderSide(
-                              color: AppColors.lightWarmGray
-                                  .withValues(alpha: 0.12),
+                              color: AppColors.lightWarmGray.withValues(
+                                alpha: 0.12,
+                              ),
                               width: 1,
                             ),
                           )
@@ -398,16 +412,20 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                         textController:
                                             controller.genderController,
                                         dropdownItems: [
-                                          localization.profileSettingsGenderMale,
+                                          localization
+                                              .profileSettingsGenderMale,
                                           localization
                                               .profileSettingsGenderFemale,
-                                          localization.profileSettingsGenderOther,
+                                          localization
+                                              .profileSettingsGenderOther,
                                         ],
                                         selectedValue: [
-                                          localization.profileSettingsGenderMale,
+                                          localization
+                                              .profileSettingsGenderMale,
                                           localization
                                               .profileSettingsGenderFemale,
-                                          localization.profileSettingsGenderOther,
+                                          localization
+                                              .profileSettingsGenderOther,
                                         ],
                                         selectedItem: controller.gender.value,
                                         bottomSheetHeight: 400,
@@ -451,8 +469,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   colorFilter: ColorFilter.mode(
                                     controller.isDateOfBirthFocused.value
                                         ? (isDark
-                                            ? AppColors.mainSoftBlue
-                                            : AppColors.lightPrimary)
+                                              ? AppColors.mainSoftBlue
+                                              : AppColors.lightPrimary)
                                         : tertiaryTextColor,
                                     BlendMode.srcIn,
                                   ),
@@ -602,7 +620,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   fontSize: 16,
                                   color: hasCountry
                                       ? primaryTextColor
-                                      : tertiaryTextColor.withValues(alpha: 0.4),
+                                      : tertiaryTextColor.withValues(
+                                          alpha: 0.4,
+                                        ),
                                   letterSpacing: 0,
                                   height: 1.1,
                                   fontWeight: FontWeight.w600,
@@ -623,10 +643,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               strokeWidth: 2,
                                               valueColor:
                                                   AlwaysStoppedAnimation<Color>(
-                                                isDark
-                                                    ? AppColors.mainSoftBlue
-                                                    : AppColors.lightPrimary,
-                                              ),
+                                                    isDark
+                                                        ? AppColors.mainSoftBlue
+                                                        : AppColors
+                                                              .lightPrimary,
+                                                  ),
                                             ),
                                           ),
                                         ),
@@ -678,12 +699,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                             .profileSettingsCountryNotFound,
                                         onValueSelected: (value) {
                                           controller.city.value = value;
-                                          controller.cityController.text = value;
+                                          controller.cityController.text =
+                                              value;
                                         },
-                                        selectedValue:
-                                            controller.cityList.toList(),
-                                        dropdownItems:
-                                            controller.cityList.toList(),
+                                        selectedValue: controller.cityList
+                                            .toList(),
+                                        dropdownItems: controller.cityList
+                                            .toList(),
                                         selectedItem:
                                             controller.cityController.text,
                                         textController:
@@ -793,7 +815,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     );
   }
 
-  Widget _buildLanguageTile(BuildContext context, bool isDark, Color primaryTextColor) {
+  Widget _buildLanguageTile(
+    BuildContext context,
+    bool isDark,
+    Color primaryTextColor,
+  ) {
     final currentCode = Localizations.localeOf(context).languageCode;
     final Map<String, Map<String, String>> langs = {
       'fa': {'name': 'فارسی', 'flag': '🇮🇷'},
@@ -811,7 +837,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+          color: isDark
+              ? AppColors.darkSurfaceVariant
+              : AppColors.lightSurfaceVariant,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
           border: Border.all(
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -822,7 +850,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary).withValues(alpha: 0.12),
+                color:
+                    (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        .withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -846,7 +876,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     ),
                     style: TextStyle(
                       fontSize: 11.5.sp,
-                      color: isDark ? AppColors.softGray : AppColors.lightTextTertiary,
+                      color: isDark
+                          ? AppColors.softGray
+                          : AppColors.lightTextTertiary,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -927,25 +959,41 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   final isSelected = item['code'] == currentCode;
                   return ListTile(
                     contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
-                    leading: Text(item['flag']!, style: TextStyle(fontSize: 22.sp)),
+                    leading: Text(
+                      item['flag']!,
+                      style: TextStyle(fontSize: 22.sp),
+                    ),
                     title: Text(
                       item['name']!,
                       style: TextStyle(
                         fontSize: 14.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w500,
                         color: isSelected
-                            ? (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                            : (isDark ? AppColors.warmWhite : AppColors.deepBlack),
+                            ? (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.lightPrimary)
+                            : (isDark
+                                  ? AppColors.warmWhite
+                                  : AppColors.deepBlack),
                       ),
                     ),
                     trailing: isSelected
-                        ? Icon(Icons.check_circle_rounded, color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                        ? Icon(
+                            Icons.check_circle_rounded,
+                            color: isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.lightPrimary,
+                          )
                         : null,
                     onTap: () async {
                       Navigator.pop(ctx);
                       HapticFeedback.selectionClick();
                       if (Get.isRegistered<LocaleThemeService>()) {
-                        await Get.find<LocaleThemeService>().setLanguage(item['code']!);
+                        await Get.find<LocaleThemeService>().setLanguage(
+                          item['code']!,
+                        );
                       } else {
                         Get.updateLocale(Locale(item['code']!));
                       }

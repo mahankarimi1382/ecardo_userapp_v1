@@ -107,7 +107,8 @@ class InternetController extends GetxController {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isLoading.value = false;
@@ -133,7 +134,8 @@ class InternetController extends GetxController {
       debugPrint('❌ fetchPayBillServices() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isPayBillServiceLoading.value = false;
@@ -182,7 +184,8 @@ class InternetController extends GetxController {
       debugPrint('❌ submitPayBill() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isSubmitLoading.value = false;
@@ -315,8 +318,9 @@ class InternetController extends GetxController {
     final int rateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: serviceCurrency,
       siteCurrencyCode: currency,
-      siteCurrencyDecimals:
-          settings.getSetting("site_currency_decimals")?.toString(),
+      siteCurrencyDecimals: settings
+          .getSetting("site_currency_decimals")
+          ?.toString(),
       isCrypto: false,
     );
     rateText.value = serviceRate == serviceRate.roundToDouble()

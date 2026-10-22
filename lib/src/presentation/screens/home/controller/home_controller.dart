@@ -1,4 +1,4 @@
-﻿import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
+import 'package:ecardo_user/src/common/services/locale_theme_service.dart';
 import 'package:ecardo_user/src/common/services/offline_cache_service.dart';
 import 'dart:async';
 import 'dart:io';
@@ -42,10 +42,12 @@ class HomeController extends GetxController {
 
   Wallets? get selectedWallet {
     if (walletsList.isEmpty) return null;
-    if (selectedWalletIndex.value >= 0 && selectedWalletIndex.value < walletsList.length) {
+    if (selectedWalletIndex.value >= 0 &&
+        selectedWalletIndex.value < walletsList.length) {
       return walletsList[selectedWalletIndex.value];
     }
-    return walletsList.firstWhereOrNull((w) => w.isDefault == true) ?? walletsList.first;
+    return walletsList.firstWhereOrNull((w) => w.isDefault == true) ??
+        walletsList.first;
   }
 
   void selectWalletByIndex(int index) {
@@ -66,8 +68,10 @@ class HomeController extends GetxController {
   final Rx<TransactionsModel> transactionsModel = TransactionsModel().obs;
   final RxInt selectedIndex = 0.obs;
   final RxBool isSettingsInitialized = false.obs;
+
   /// When non-null, the dashboard is showing cached/stale data from this timestamp
   final Rxn<DateTime> staleCachedAt = Rxn<DateTime>();
+
   /// v1.0.43 (P-4 pattern — CRITICAL crash fix): the constructor-time
   /// `AppLocalizations.of(Get.context!)!` threw when the controller was
   /// built without a localization context (cold-start timing) — taking the
@@ -83,7 +87,7 @@ class HomeController extends GetxController {
   final RxString selectedMonth = ''.obs;
   final RxString selectedCrypto = ''.obs;
 
-// End Drawer Language Variable
+  // End Drawer Language Variable
   final RxString language = "".obs;
   final languageController = TextEditingController();
 
@@ -142,7 +146,9 @@ class HomeController extends GetxController {
           event is WalletListChangedEvent ||
           event is ProfileUpdatedEvent ||
           event is KycStatusChangedEvent) {
-        debugPrint('⚡ [HomeController] auto-syncing dashboard on ${event.runtimeType}');
+        debugPrint(
+          '⚡ [HomeController] auto-syncing dashboard on ${event.runtimeType}',
+        );
         loadData();
       }
     });
@@ -187,45 +193,45 @@ class HomeController extends GetxController {
     isBiometricEnable.value = savedBiometric ?? false;
   }
 
-Future<void> _setInitialLanguage() async {
-  final savedLocale = await SettingsService.getLanguageLocaleCurrentState();
+  Future<void> _setInitialLanguage() async {
+    final savedLocale = await SettingsService.getLanguageLocaleCurrentState();
 
-  final code = (savedLocale != null &&
-          languageNativeNames.containsKey(savedLocale))
-      ? savedLocale
-      : 'en';
-  final nativeName = languageNativeNames[code]!;
-  language.value = nativeName;
-  languageController.text = nativeName;
-  if (savedLocale == null) {
-    await Get.find<SettingsService>().saveLanguageLocaleCurrentState('en');
-  }
-}
-
-  // Language Switching Method — keyed off the locale CODE
-Future<void> changeLanguage(String languageCode) async {
-  try {
-    final code = languageNativeNames.containsKey(languageCode)
-        ? languageCode
+    final code =
+        (savedLocale != null && languageNativeNames.containsKey(savedLocale))
+        ? savedLocale
         : 'en';
-    final nativeName = languageNativeNames[code] ?? 'English';
+    final nativeName = languageNativeNames[code]!;
     language.value = nativeName;
     languageController.text = nativeName;
-
-    if (Get.isRegistered<LocaleThemeService>()) {
-      await Get.find<LocaleThemeService>().setLanguage(code);
-    } else {
-      await Get.find<SettingsService>().saveLanguageLocaleCurrentState(code);
-      Get.updateLocale(Locale(code));
+    if (savedLocale == null) {
+      await Get.find<SettingsService>().saveLanguageLocaleCurrentState('en');
     }
-  } catch (e, stackTrace) {
-    debugPrint('❌ changeLanguage() error: $e');
-    debugPrint('📍 StackTrace: $stackTrace');
-    ToastHelper().showErrorToast(
-      localization?.homeLanguageChangeFailed ?? 'Failed to change language',
-    );
   }
-}
+
+  // Language Switching Method — keyed off the locale CODE
+  Future<void> changeLanguage(String languageCode) async {
+    try {
+      final code = languageNativeNames.containsKey(languageCode)
+          ? languageCode
+          : 'en';
+      final nativeName = languageNativeNames[code] ?? 'English';
+      language.value = nativeName;
+      languageController.text = nativeName;
+
+      if (Get.isRegistered<LocaleThemeService>()) {
+        await Get.find<LocaleThemeService>().setLanguage(code);
+      } else {
+        await Get.find<SettingsService>().saveLanguageLocaleCurrentState(code);
+        Get.updateLocale(Locale(code));
+      }
+    } catch (e, stackTrace) {
+      debugPrint('❌ changeLanguage() error: $e');
+      debugPrint('📍 StackTrace: $stackTrace');
+      ToastHelper().showErrorToast(
+        localization?.homeLanguageChangeFailed ?? 'Failed to change language',
+      );
+    }
+  }
 
   // Toggle Biometric
   Future<void> toggleBiometric() async {
@@ -256,11 +262,13 @@ Future<void> changeLanguage(String languageCode) async {
       ToastHelper().showSuccessToast(
         isBiometricEnable.value
             ? localization?.homeBiometricEnabledSuccess ?? "Biometric enabled"
-            : localization?.homeBiometricDisabledSuccess ?? "Biometric disabled",
+            : localization?.homeBiometricDisabledSuccess ??
+                  "Biometric disabled",
       );
     } else {
       ToastHelper().showErrorToast(
-        localization?.homeBiometricAuthenticationFailed ?? "Authentication failed",
+        localization?.homeBiometricAuthenticationFailed ??
+            "Authentication failed",
       );
     }
   }
@@ -277,7 +285,13 @@ Future<void> changeLanguage(String languageCode) async {
     } catch (e, stackTrace) {
       debugPrint('❌ fetchDashboard() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ??
+            l10nPickAuto(
+              en: "Something went wrong. Please try again.",
+              fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+            ),
+      );
     } finally {}
   }
 
@@ -318,7 +332,13 @@ Future<void> changeLanguage(String languageCode) async {
           return;
         }
       }
-      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ??
+            l10nPickAuto(
+              en: "Something went wrong. Please try again.",
+              fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+            ),
+      );
     } finally {}
   }
 
@@ -363,7 +383,13 @@ Future<void> changeLanguage(String languageCode) async {
           return; // Don't show error toast if we have cached data
         }
       }
-      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ??
+            l10nPickAuto(
+              en: "Something went wrong. Please try again.",
+              fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+            ),
+      );
     } finally {}
   }
 
@@ -394,12 +420,20 @@ Future<void> changeLanguage(String languageCode) async {
         );
         if (cacheResult.data != null) {
           debugPrint('📦 [OfflineCache] Loading transactions from cache');
-          transactionsModel.value = TransactionsModel.fromJson(cacheResult.data!);
+          transactionsModel.value = TransactionsModel.fromJson(
+            cacheResult.data!,
+          );
           staleCachedAt.value = cacheResult.cachedAt;
           return; // Don't show error toast if we have cached data
         }
       }
-      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: "Something went wrong. Please try again.", fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید."));
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ??
+            l10nPickAuto(
+              en: "Something went wrong. Please try again.",
+              fa: "خطایی رخ داد. لطفاً دوباره تلاش کنید.",
+            ),
+      );
     } finally {}
   }
 
@@ -433,10 +467,7 @@ Future<void> changeLanguage(String languageCode) async {
       await Get.find<TokenService>().clearToken();
       isSignOutLoading.value = false;
       Get.offAllNamed(BaseRoute.signIn);
-      Fluttertoast.showToast(
-        msg: toastMsg,
-        backgroundColor: AppColors.success,
-      );
+      Fluttertoast.showToast(msg: toastMsg, backgroundColor: AppColors.success);
     }
   }
 
@@ -482,7 +513,8 @@ Future<void> changeLanguage(String languageCode) async {
             const SizedBox(height: 10.0),
 
             Text(
-              localization?.homeBiometricNotFoundDescription ?? "Biometric authentication is not available on this device.",
+              localization?.homeBiometricNotFoundDescription ??
+                  "Biometric authentication is not available on this device.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
@@ -515,7 +547,10 @@ Future<void> changeLanguage(String languageCode) async {
       );
       intent.launch();
     } else if (Platform.isIOS) {
-      ToastHelper().showWarningToast(localization?.homeIosBiometricSetup ?? "Set up Face ID / Touch ID in iOS Settings");
+      ToastHelper().showWarningToast(
+        localization?.homeIosBiometricSetup ??
+            "Set up Face ID / Touch ID in iOS Settings",
+      );
     }
   }
 }

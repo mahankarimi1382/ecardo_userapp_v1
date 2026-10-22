@@ -10,8 +10,9 @@ class TransactionsModel {
   TransactionsModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? TransactionsData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? TransactionsData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -125,8 +126,10 @@ class Transactions {
   String get initials {
     final text = (description ?? '').trim();
     if (text.isNotEmpty) {
-      final words =
-          text.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+      final words = text
+          .split(RegExp(r'\s+'))
+          .where((w) => w.isNotEmpty)
+          .toList();
       if (words.length >= 2) {
         final firstChar = words[0].isNotEmpty ? words[0].substring(0, 1) : '';
         final secondChar = words[1].isNotEmpty ? words[1].substring(0, 1) : '';

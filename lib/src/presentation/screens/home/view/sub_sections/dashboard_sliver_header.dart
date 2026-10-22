@@ -177,7 +177,14 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  final uid = home.dashboardModel.value.data?.user?.accountNumber ?? '';
+                                  final uid =
+                                      home
+                                          .dashboardModel
+                                          .value
+                                          .data
+                                          ?.user
+                                          ?.accountNumber ??
+                                      '';
                                   if (uid.isNotEmpty) {
                                     HapticFeedback.lightImpact();
                                     Clipboard.setData(ClipboardData(text: uid));
@@ -192,12 +199,17 @@ class DashboardSliverHeaderDelegate extends SliverPersistentHeaderDelegate {
                                   }
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 7,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.18),
                                     borderRadius: BorderRadius.circular(10),
                                     border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.3),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       width: 0.7,
                                     ),
                                   ),

@@ -46,7 +46,11 @@ const String kFaBalance = 'موجودی در دسترس';
 Widget _host(Widget child, {Locale? locale, TextDirection? direction}) {
   final effective = direction ?? TextDirection.ltr;
   return MaterialApp(
-    locale: locale ?? (effective == TextDirection.rtl ? const Locale('fa') : const Locale('en')),
+    locale:
+        locale ??
+        (effective == TextDirection.rtl
+            ? const Locale('fa')
+            : const Locale('en')),
     supportedLocales: const [
       Locale('en'),
       Locale('fa'),
@@ -174,8 +178,9 @@ void main() {
   });
 
   group('MultiCurrencyFlipCard flip', () {
-    testWidgets('shows exactly one face at any point in the animation',
-        (tester) async {
+    testWidgets('shows exactly one face at any point in the animation', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _host(MultiCurrencyFlipCard(wallet: _wallet(), height: 196)),
       );
@@ -220,11 +225,10 @@ void main() {
   });
 
   group('WalletCardCarousel', () {
-    testWidgets('renders a single wallet without a dots indicator',
-        (tester) async {
-      await tester.pumpWidget(
-        _host(WalletCardCarousel(wallets: [_wallet()])),
-      );
+    testWidgets('renders a single wallet without a dots indicator', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_host(WalletCardCarousel(wallets: [_wallet()])));
       await tester.pumpAndSettle();
 
       expect(find.text('Available Balance'), findsOneWidget);
@@ -235,7 +239,10 @@ void main() {
       await tester.pumpWidget(
         _host(
           WalletCardCarousel(
-            wallets: [_wallet(code: 'USD'), _wallet(code: 'EUR')],
+            wallets: [
+              _wallet(code: 'USD'),
+              _wallet(code: 'EUR'),
+            ],
           ),
         ),
       );
@@ -245,17 +252,16 @@ void main() {
     });
 
     testWidgets('renders nothing for an empty wallet list', (tester) async {
-      await tester.pumpWidget(
-        _host(WalletCardCarousel(wallets: [])),
-      );
+      await tester.pumpWidget(_host(WalletCardCarousel(wallets: [])));
       await tester.pumpAndSettle();
 
       expect(find.text('Available Balance'), findsNothing);
       expect(find.byType(PageView), findsNothing);
     });
 
-    testWidgets('card is sized from the viewport fraction, not raw screen width',
-        (tester) async {
+    testWidgets('card is sized from the viewport fraction, not raw screen width', (
+      tester,
+    ) async {
       // The card was sized at 86% of screen width inside an 88% viewport, so
       // it overhung its page slot and was clipped by the carousel's height box.
       // Assert against the carousel's own slot width rather than a guessed
@@ -268,7 +274,10 @@ void main() {
               child: SizedBox(
                 width: 400,
                 child: WalletCardCarousel(
-                  wallets: [_wallet(code: 'USD'), _wallet(code: 'EUR')],
+                  wallets: [
+                    _wallet(code: 'USD'),
+                    _wallet(code: 'EUR'),
+                  ],
                 ),
               ),
             ),
@@ -277,7 +286,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final carouselWidth = tester.getSize(find.byType(WalletCardCarousel)).width;
+      final carouselWidth = tester
+          .getSize(find.byType(WalletCardCarousel))
+          .width;
       final pageViewWidth = tester.getSize(find.byType(PageView)).width;
 
       // Every built card must fit the slot it is drawn in.

@@ -16,10 +16,12 @@ class GuaranteeApplicationScreen extends StatefulWidget {
   const GuaranteeApplicationScreen({super.key});
 
   @override
-  State<GuaranteeApplicationScreen> createState() => _GuaranteeApplicationScreenState();
+  State<GuaranteeApplicationScreen> createState() =>
+      _GuaranteeApplicationScreenState();
 }
 
-class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen> {
+class _GuaranteeApplicationScreenState
+    extends State<GuaranteeApplicationScreen> {
   final _formKey = GlobalKey<FormState>();
   final GuaranteeController controller = Get.isRegistered<GuaranteeController>()
       ? Get.find<GuaranteeController>()
@@ -32,7 +34,8 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
 
   String _currency = 'IRR';
   int _validityMonths = 12;
-  GuaranteeCollateralType _selectedCollateralType = GuaranteeCollateralType.cash;
+  GuaranteeCollateralType _selectedCollateralType =
+      GuaranteeCollateralType.cash;
 
   void _onAmountChanged() {
     setState(() {});
@@ -134,7 +137,11 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.shield_rounded, color: const Color(0xFF0D9488), size: 22.sp),
+                      Icon(
+                        Icons.shield_rounded,
+                        color: const Color(0xFF0D9488),
+                        size: 22.sp,
+                      ),
                       SizedBox(width: 10.w),
                       Expanded(
                         child: Text(
@@ -145,7 +152,10 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                             ar: 'ضمان حسن التنفيذ (افتراضي)',
                             zh: '履约保函（默认）',
                           ),
-                          style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                            fontSize: 12.5.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
                     ],
@@ -154,7 +164,9 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
               }
 
               return DropdownButtonFormField<GuaranteeInstrumentModel>(
-                initialValue: controller.selectedInstrument.value ?? controller.instruments.first,
+                initialValue:
+                    controller.selectedInstrument.value ??
+                    controller.instruments.first,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -162,12 +174,17 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                     borderRadius: BorderRadius.circular(14.r),
                     borderSide: const BorderSide(color: AppColors.lightBorder),
                   ),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: 12.h,
+                  ),
                 ),
                 items: controller.instruments.map((inst) {
                   return DropdownMenuItem<GuaranteeInstrumentModel>(
                     value: inst,
-                    child: Text('${inst.name} (وجه التزام: ${inst.marginPct}٪)'),
+                    child: Text(
+                      '${inst.name} (وجه التزام: ${inst.marginPct}٪)',
+                    ),
                   );
                 }).toList(),
                 onChanged: (val) {
@@ -277,16 +294,28 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                       prefixIcon: const Icon(Icons.monetization_on_outlined),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14.r),
-                        borderSide: const BorderSide(color: AppColors.lightBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.lightBorder,
+                        ),
                       ),
                     ),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
-                        return l10nPick(context, fa: 'مبلغ الزامی است', en: 'Amount is required');
+                        return l10nPick(
+                          context,
+                          fa: 'مبلغ الزامی است',
+                          en: 'Amount is required',
+                        );
                       }
-                      final numVal = double.tryParse(val.replaceAll(',', '').trim());
+                      final numVal = double.tryParse(
+                        val.replaceAll(',', '').trim(),
+                      );
                       if (numVal == null || numVal <= 0) {
-                        return l10nPick(context, fa: 'مبلغ عددی معتبر وارد کنید', en: 'Enter a valid amount');
+                        return l10nPick(
+                          context,
+                          fa: 'مبلغ عددی معتبر وارد کنید',
+                          en: 'Enter a valid amount',
+                        );
                       }
                       return null;
                     },
@@ -302,9 +331,14 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14.r),
-                        borderSide: const BorderSide(color: AppColors.lightBorder),
+                        borderSide: const BorderSide(
+                          color: AppColors.lightBorder,
+                        ),
                       ),
-                      contentPadding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 12.h),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 12.h,
+                      ),
                     ),
                     items: const [
                       DropdownMenuItem(value: 'IRR', child: Text('IRR')),
@@ -343,7 +377,9 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
                     '$m ${l10nPick(context, fa: 'ماهه', en: 'mo', ar: 'شهر', zh: '月')}',
                     style: TextStyle(
                       fontWeight: selected ? FontWeight.w800 : FontWeight.w500,
-                      color: selected ? Colors.white : AppColors.lightTextPrimary,
+                      color: selected
+                          ? Colors.white
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   selected: selected,
@@ -389,7 +425,11 @@ class _GuaranteeApplicationScreenState extends State<GuaranteeApplicationScreen>
             Obx(() {
               final currentInstrument = controller.selectedInstrument.value;
               final marginPct = currentInstrument?.marginPct ?? 10.0;
-              final parsedAmt = double.tryParse(_amountController.text.replaceAll(',', '').trim()) ?? 0.0;
+              final parsedAmt =
+                  double.tryParse(
+                    _amountController.text.replaceAll(',', '').trim(),
+                  ) ??
+                  0.0;
 
               return GuaranteeCollateralCard(
                 guaranteeAmount: parsedAmt,

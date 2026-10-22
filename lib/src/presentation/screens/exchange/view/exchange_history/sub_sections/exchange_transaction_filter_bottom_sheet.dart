@@ -60,8 +60,9 @@ class _ExchangeTransactionFilterBottomSheetState
                 width: 40,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: ExchangeDesignTokens.textPrimary(context)
-                      .withValues(alpha: 0.2),
+                  color: ExchangeDesignTokens.textPrimary(
+                    context,
+                  ).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
@@ -101,7 +102,7 @@ class _ExchangeTransactionFilterBottomSheetState
                                   final status = controller.statusList[index];
                                   final isSelected =
                                       controller.selectedStatusIndex.value ==
-                                          index;
+                                      index;
 
                                   Color getStatusColor(String status) {
                                     switch (status.toLowerCase()) {
@@ -127,7 +128,8 @@ class _ExchangeTransactionFilterBottomSheetState
                                     onTap: () {
                                       HapticFeedback.selectionClick();
                                       if (controller
-                                              .selectedStatusIndex.value ==
+                                              .selectedStatusIndex
+                                              .value ==
                                           index) {
                                         controller.selectedStatusIndex.value =
                                             -1;
@@ -141,8 +143,8 @@ class _ExchangeTransactionFilterBottomSheetState
                                       alignment: Alignment.center,
                                       padding:
                                           const EdgeInsetsDirectional.symmetric(
-                                        horizontal: AppSpacing.lg,
-                                      ),
+                                            horizontal: AppSpacing.lg,
+                                          ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
                                           AppSpacing.radiusSm,
@@ -150,8 +152,8 @@ class _ExchangeTransactionFilterBottomSheetState
                                         color: isSelected
                                             ? statusColor
                                             : (isDark
-                                                ? AppColors.darkSurfaceVariant
-                                                : AppColors.lightBackground),
+                                                  ? AppColors.darkSurfaceVariant
+                                                  : AppColors.lightBackground),
                                         border: Border.all(
                                           color: isSelected
                                               ? statusColor
@@ -170,8 +172,9 @@ class _ExchangeTransactionFilterBottomSheetState
                                           fontSize: 13,
                                           color: isSelected
                                               ? AppColors.white
-                                              : ExchangeDesignTokens
-                                                  .textTertiary(context),
+                                              : ExchangeDesignTokens.textTertiary(
+                                                  context,
+                                                ),
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),

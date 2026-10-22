@@ -29,13 +29,7 @@ Widget _host(
     home: Directionality(
       textDirection: direction,
       child: Scaffold(
-        body: Center(
-          child: SizedBox(
-            width: 420,
-            height: 750,
-            child: child,
-          ),
-        ),
+        body: Center(child: SizedBox(width: 420, height: 750, child: child)),
       ),
     ),
   );
@@ -65,18 +59,24 @@ void main() {
 
   group('RecentTransactionDetails Polish', () {
     testWidgets('renders category badge with icon and label', (tester) async {
-      await tester.pumpWidget(_host(RecentTransactionDetails(transaction: testTx)));
+      await tester.pumpWidget(
+        _host(RecentTransactionDetails(transaction: testTx)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Deposit'), findsWidgets);
       expect(find.byType(RecentTransactionDetails), findsOneWidget);
     });
 
-    testWidgets('renders localized status Success for en locale', (tester) async {
-      await tester.pumpWidget(_host(
-        RecentTransactionDetails(transaction: testTx),
-        locale: const Locale('en'),
-      ));
+    testWidgets('renders localized status Success for en locale', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(
+          RecentTransactionDetails(transaction: testTx),
+          locale: const Locale('en'),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Success'), findsOneWidget);
@@ -84,19 +84,25 @@ void main() {
     });
 
     testWidgets('renders localized status موفق for fa locale', (tester) async {
-      await tester.pumpWidget(_host(
-        RecentTransactionDetails(transaction: testTx),
-        locale: const Locale('fa'),
-        direction: TextDirection.rtl,
-      ));
+      await tester.pumpWidget(
+        _host(
+          RecentTransactionDetails(transaction: testTx),
+          locale: const Locale('fa'),
+          direction: TextDirection.rtl,
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('موفق'), findsOneWidget);
       expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
     });
 
-    testWidgets('renders transaction ID with quick copy button', (tester) async {
-      await tester.pumpWidget(_host(RecentTransactionDetails(transaction: testTx)));
+    testWidgets('renders transaction ID with quick copy button', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(RecentTransactionDetails(transaction: testTx)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('TXN-98421048'), findsOneWidget);
@@ -114,24 +120,32 @@ void main() {
       await tester.pump(const Duration(seconds: 3));
     });
 
-    testWidgets('formats timestamp properly without dangling dots', (tester) async {
-      await tester.pumpWidget(_host(RecentTransactionDetails(transaction: testTx)));
+    testWidgets('formats timestamp properly without dangling dots', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _host(RecentTransactionDetails(transaction: testTx)),
+      );
       await tester.pumpAndSettle();
 
       // Timestamp renders with clock icon
       expect(find.byIcon(Icons.access_time_rounded), findsOneWidget);
       expect(
-        find.byWidgetPredicate((w) => w is Text && (w.data?.endsWith(' ·') ?? false)),
+        find.byWidgetPredicate(
+          (w) => w is Text && (w.data?.endsWith(' ·') ?? false),
+        ),
         findsNothing,
       );
     });
 
     testWidgets('renders seamlessly in RTL without overflow', (tester) async {
-      await tester.pumpWidget(_host(
-        RecentTransactionDetails(transaction: testTx),
-        locale: const Locale('fa'),
-        direction: TextDirection.rtl,
-      ));
+      await tester.pumpWidget(
+        _host(
+          RecentTransactionDetails(transaction: testTx),
+          locale: const Locale('fa'),
+          direction: TextDirection.rtl,
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(tester.takeException(), isNull);

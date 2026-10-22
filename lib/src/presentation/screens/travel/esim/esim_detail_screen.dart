@@ -51,8 +51,10 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
   }
 
   double _parseTotalDataGb(String dataLabel) {
-    final match = RegExp(r'(\d+(?:\.\d+)?)\s*GB', caseSensitive: false)
-        .firstMatch(dataLabel);
+    final match = RegExp(
+      r'(\d+(?:\.\d+)?)\s*GB',
+      caseSensitive: false,
+    ).firstMatch(dataLabel);
     if (match != null) {
       return double.tryParse(match.group(1)!) ?? 10.0;
     }
@@ -181,7 +183,9 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
                             Container(
                               padding: EdgeInsets.all(8.r),
                               decoration: BoxDecoration(
-                                color: TravelTheme.yellow.withValues(alpha: 0.25),
+                                color: TravelTheme.yellow.withValues(
+                                  alpha: 0.25,
+                                ),
                                 borderRadius: BorderRadius.circular(10.r),
                               ),
                               child: const Icon(
@@ -316,7 +320,10 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.dialpad_rounded, color: TravelTheme.blue),
+                        const Icon(
+                          Icons.dialpad_rounded,
+                          color: TravelTheme.blue,
+                        ),
                         SizedBox(width: 10.w),
                         Expanded(
                           child: Text(
@@ -628,8 +635,9 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
                       duration: const Duration(milliseconds: 200),
                       padding: EdgeInsetsDirectional.symmetric(vertical: 8.h),
                       decoration: BoxDecoration(
-                        color:
-                            _showActiveMode ? Colors.white : Colors.transparent,
+                        color: _showActiveMode
+                            ? Colors.white
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(10.r),
                         boxShadow: _showActiveMode
                             ? [
@@ -684,7 +692,8 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
             EsimDataUsageGauge(
               totalDataGb: _parseTotalDataGb(package.dataLabel),
               usedDataGb: widget.usedDataGb ?? 6.4,
-              daysRemaining: widget.daysRemaining ??
+              daysRemaining:
+                  widget.daysRemaining ??
                   (package.validityDays > 0 ? package.validityDays : 14),
               countryOrRegion: package.destinationCode,
               planName: '${package.destinationCode} · ${package.dataLabel}',
@@ -694,18 +703,21 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
 
             // eSIM Activation Card with QR code & SM-DP+ manual code
             EsimActivationCard(
-              smdpAddress: widget.smdpAddress ??
+              smdpAddress:
+                  widget.smdpAddress ??
                   widget.order?.details['esim_smdp_address'] ??
                   'rsp.truphone.com',
-              activationCode: widget.activationCode ??
+              activationCode:
+                  widget.activationCode ??
                   widget.order?.details['esim_activation_code'] ??
                   'LPA:1\$rsp.truphone.com\$EC-TR-98421-B884',
-              confirmationCode: widget.confirmationCode ??
+              confirmationCode:
+                  widget.confirmationCode ??
                   widget.order?.details['esim_confirmation_code'] ??
                   'None',
               countryOrRegion: package.destinationCode,
-              iccid: widget.order?.details['esim_iccid'] ??
-                  '89014103211118510720',
+              iccid:
+                  widget.order?.details['esim_iccid'] ?? '89014103211118510720',
             ),
             SizedBox(height: 18.h),
           ] else ...[
@@ -739,8 +751,11 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.public_rounded,
-                                size: 16, color: TravelTheme.ink),
+                            const Icon(
+                              Icons.public_rounded,
+                              size: 16,
+                              color: TravelTheme.ink,
+                            ),
                             SizedBox(width: 6.w),
                             Text(
                               package.destinationCode,
@@ -971,7 +986,9 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(color: TravelTheme.blue.withValues(alpha: 0.3)),
+                      border: Border.all(
+                        color: TravelTheme.blue.withValues(alpha: 0.3),
+                      ),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -1007,18 +1024,21 @@ class _EsimDetailScreenState extends State<EsimDetailScreen> {
 
           // Activation Guide & QR Code Card
           EsimActivationCard(
-            smdpAddress: widget.smdpAddress ??
+            smdpAddress:
+                widget.smdpAddress ??
                 widget.order?.details['esim_smdp_address'] ??
                 'rsp.truphone.com',
-            activationCode: widget.activationCode ??
+            activationCode:
+                widget.activationCode ??
                 widget.order?.details['esim_activation_code'] ??
                 'LPA:1\$rsp.truphone.com\$EC-TR-98421-B884',
-            confirmationCode: widget.confirmationCode ??
+            confirmationCode:
+                widget.confirmationCode ??
                 widget.order?.details['esim_confirmation_code'] ??
                 'None',
             countryOrRegion: package.destinationCode,
-            iccid: widget.order?.details['esim_iccid'] ??
-                '89014103211118510720',
+            iccid:
+                widget.order?.details['esim_iccid'] ?? '89014103211118510720',
           ),
           SizedBox(height: 16.h),
 

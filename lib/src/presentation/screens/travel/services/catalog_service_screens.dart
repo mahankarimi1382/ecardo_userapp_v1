@@ -177,11 +177,18 @@ class _CatalogItemCard extends StatelessWidget {
                 Row(
                   children: [
                     if (item.rating.isNotEmpty) ...[
-                      Icon(Icons.star_rounded, size: 15.r, color: TravelTheme.yellow),
+                      Icon(
+                        Icons.star_rounded,
+                        size: 15.r,
+                        color: TravelTheme.yellow,
+                      ),
                       SizedBox(width: 2.w),
                       Text(
                         item.rating,
-                        style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w800),
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
                       SizedBox(width: 10.w),
                     ],
@@ -198,7 +205,11 @@ class _CatalogItemCard extends StatelessWidget {
               ],
             ),
           ),
-          Icon(Icons.chevron_left_rounded, color: TravelTheme.muted, size: 26.r),
+          Icon(
+            Icons.chevron_left_rounded,
+            color: TravelTheme.muted,
+            size: 26.r,
+          ),
         ],
       ),
     );
@@ -219,7 +230,8 @@ class CatalogServiceDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final rows = config.detailRows?.call(item, localization) ?? const [];
-    final currency = ensureTravelController().bootstrap.value?.currency ?? 'IRR';
+    final currency =
+        ensureTravelController().bootstrap.value?.currency ?? 'IRR';
     final amountLabel =
         '${formatMockAmount(item.price)} $currency / '
         '${config.priceUnit(localization)}';
@@ -338,7 +350,10 @@ class CatalogServiceDetailScreen extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: Text(label, style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp)),
+            child: Text(
+              label,
+              style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp),
+            ),
           ),
           Expanded(
             flex: 3,

@@ -139,7 +139,8 @@ class AddNewTicketController extends GetxController {
         ToastHelper().showSuccessToast(
           responseData["message"] is String
               ? responseData["message"]
-              : (localization?.addNewTicketSuccess ?? 'Ticket created successfully'),
+              : (localization?.addNewTicketSuccess ??
+                    'Ticket created successfully'),
         );
         clearForm();
         Get.back();

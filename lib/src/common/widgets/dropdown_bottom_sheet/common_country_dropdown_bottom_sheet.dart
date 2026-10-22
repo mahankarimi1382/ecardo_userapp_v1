@@ -98,73 +98,73 @@ class _CommonCountryDropdownBottomSheetState
           ],
         ),
         child: Column(
-        children: [
-          SizedBox(height: 12),
-          Container(
-            width: 45,
-            height: 6,
-            decoration: BoxDecoration(
-              color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(30),
+          children: [
+            SizedBox(height: 12),
+            Container(
+              width: 45,
+              height: 6,
+              decoration: BoxDecoration(
+                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(30),
+              ),
             ),
-          ),
-          SizedBox(height: 25),
-          Container(
-            margin: EdgeInsetsDirectional.only(
-              start: 18,
-              end: 18,
-              bottom: 20,
-            ),
-            height: 52,
-            child: TextField(
-              controller: _searchController,
-              onChanged: _filterItems,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                filled: true,
-                fillColor: AppColors.transparent,
-                hintText: localization.commonCountryDropdownSearchHint,
-                hintStyle: TextStyle(
-                  color: AppColors.lightTextTertiary,
-                  fontWeight: FontWeight.w500,
+            SizedBox(height: 25),
+            Container(
+              margin: EdgeInsetsDirectional.only(
+                start: 18,
+                end: 18,
+                bottom: 20,
+              ),
+              height: 52,
+              child: TextField(
+                controller: _searchController,
+                onChanged: _filterItems,
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
+                  filled: true,
+                  fillColor: AppColors.transparent,
+                  hintText: localization.commonCountryDropdownSearchHint,
+                  hintStyle: TextStyle(
+                    color: AppColors.lightTextTertiary,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    letterSpacing: 0,
+                    height: 1.1,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: borderColor, width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: borderColor, width: 1.5),
+                  ),
+                  suffixIcon: Padding(
+                    padding: EdgeInsetsDirectional.only(
+                      start: 6,
+                      top: 14,
+                      bottom: 14,
+                    ),
+                    child: Image(
+                      image: AssetImage(PngAssets.searchCommonIcon),
+                      color: AppColors.lightTextPrimary.withValues(alpha: 0.44),
+                    ),
+                  ),
+                ),
+                style: TextStyle(
                   fontSize: 16,
+                  color: AppColors.lightTextPrimary,
                   letterSpacing: 0,
                   height: 1.1,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: borderColor, width: 1.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: borderColor, width: 1.5),
-                ),
-                suffixIcon: Padding(
-                  padding: EdgeInsetsDirectional.only(
-                    start: 6,
-                    top: 14,
-                    bottom: 14,
-                  ),
-                  child: Image(
-                    image: AssetImage(PngAssets.searchCommonIcon),
-                    color: AppColors.lightTextPrimary.withValues(alpha: 0.44),
-                  ),
-                ),
-              ),
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.lightTextPrimary,
-                letterSpacing: 0,
-                height: 1.1,
               ),
             ),
-          ),
-          _filteredItems.isEmpty ? _buildEmptyState() : _buildItemsList(),
-        ],
+            _filteredItems.isEmpty ? _buildEmptyState() : _buildItemsList(),
+          ],
+        ),
       ),
-    ),
     );
   }
 

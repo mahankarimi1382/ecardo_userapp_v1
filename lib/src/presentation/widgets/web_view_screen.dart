@@ -189,16 +189,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
   /// Best-effort scrape of the legacy JSON body — never throws.
   Future<Map<String, dynamic>?> _scrapePageJson() async {
     try {
-      String jsonResponse = await _controller.runJavaScriptReturningResult(
-            "document.body.innerText",
-          ) as String;
+      String jsonResponse =
+          await _controller.runJavaScriptReturningResult(
+                "document.body.innerText",
+              )
+              as String;
 
       jsonResponse = jsonResponse.trim();
       if (jsonResponse.startsWith('"') && jsonResponse.endsWith('"')) {
-        jsonResponse = jsonResponse.substring(
-          1,
-          jsonResponse.length - 1,
-        );
+        jsonResponse = jsonResponse.substring(1, jsonResponse.length - 1);
       }
       jsonResponse = jsonResponse.replaceAll(r'\"', '"');
       final decoded = jsonDecode(jsonResponse);
@@ -209,16 +208,23 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return null;
   }
 
-  void _finish({required bool success, Map<String, dynamic>? data, String? message}) {
+  void _finish({
+    required bool success,
+    Map<String, dynamic>? data,
+    String? message,
+  }) {
     if (success) {
       Get.back(result: {'success': true, 'data': data});
       ToastHelper().showSuccessToast(
-        localization?.webViewScreenPaymentSuccessful ?? 'Payment completed successfully',
+        localization?.webViewScreenPaymentSuccessful ??
+            'Payment completed successfully',
       );
     } else {
       Get.back(result: {'success': false, 'data': data});
       ToastHelper().showErrorToast(
-        message ?? localization?.webViewScreenPaymentFailed ?? 'Payment was not completed',
+        message ??
+            localization?.webViewScreenPaymentFailed ??
+            'Payment was not completed',
       );
     }
   }

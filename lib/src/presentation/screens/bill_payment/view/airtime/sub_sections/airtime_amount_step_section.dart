@@ -26,7 +26,9 @@ class AirtimeAmountStepSection extends StatelessWidget {
     final AirtimeController controller = Get.find();
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final containerBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final inputBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground;
+    final inputBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightBackground;
 
     return Expanded(
       child: Container(
@@ -67,12 +69,13 @@ class AirtimeAmountStepSection extends StatelessWidget {
                       controller.selectedOperatorName.value = op.nameFa;
 
                       // Auto-match service from payBillServiceList if available
-                      final match = controller.payBillServiceList.firstWhereOrNull((s) {
-                        final name = (s.name ?? '').toLowerCase();
-                        return name.contains(op.id) ||
-                            name.contains(op.nameFa) ||
-                            name.contains(op.nameEn.toLowerCase());
-                      });
+                      final match = controller.payBillServiceList
+                          .firstWhereOrNull((s) {
+                            final name = (s.name ?? '').toLowerCase();
+                            return name.contains(op.id) ||
+                                name.contains(op.nameFa) ||
+                                name.contains(op.nameEn.toLowerCase());
+                          });
 
                       if (match != null) {
                         controller.amountController.clear();
@@ -146,7 +149,9 @@ class AirtimeAmountStepSection extends StatelessWidget {
                       },
                       hintText: localization.airtimeCountryHint,
                       controller: controller.countryController,
-                      suffixIconColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                      suffixIconColor: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary,
                       readOnly: true,
                     ),
                   ),
@@ -200,7 +205,9 @@ class AirtimeAmountStepSection extends StatelessWidget {
                       },
                       hintText: localization.airtimeServiceHint,
                       controller: controller.serviceController,
-                      suffixIconColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+                      suffixIconColor: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextTertiary,
                       readOnly: true,
                     ),
                   ),
@@ -215,11 +222,13 @@ class AirtimeAmountStepSection extends StatelessWidget {
                       children: controller.dynamicFieldControllers.entries.map((
                         entry,
                       ) {
-                        final isPhoneField = entry.key.toLowerCase().contains('phone') ||
+                        final isPhoneField =
+                            entry.key.toLowerCase().contains('phone') ||
                             entry.key.toLowerCase().contains('mobile') ||
                             entry.key.contains('موبایل') ||
                             entry.key.contains('شماره') ||
-                            controller.dynamicFieldControllers.keys.first == entry.key;
+                            controller.dynamicFieldControllers.keys.first ==
+                                entry.key;
 
                         return Padding(
                           padding: EdgeInsets.only(bottom: 14.h),
@@ -229,11 +238,14 @@ class AirtimeAmountStepSection extends StatelessWidget {
                             dynamicField: Obx(
                               () => CommonTextInputField(
                                 focusNode: controller.dynamicFieldsFocusNode,
-                                isFocused: controller.isDynamicFieldFocused.value,
+                                isFocused:
+                                    controller.isDynamicFieldFocused.value,
                                 backgroundColor: inputBg,
                                 controller: entry.value,
                                 hintText: isPhoneField ? '0912XXXXXXX' : '',
-                                keyboardType: isPhoneField ? TextInputType.phone : TextInputType.text,
+                                keyboardType: isPhoneField
+                                    ? TextInputType.phone
+                                    : TextInputType.text,
                                 onChanged: (val) {
                                   controller.targetPhoneNumber.value = val;
                                   _detectOperatorFromNumber(controller, val);
@@ -245,18 +257,32 @@ class AirtimeAmountStepSection extends StatelessWidget {
                                             context,
                                             onContactSelected: (name, phone, opId) {
                                               entry.value.text = phone;
-                                              controller.targetPhoneNumberController.text = phone;
-                                              controller.targetPhoneNumber.value = phone;
-                                              controller.selectedOperatorId.value = opId;
+                                              controller
+                                                      .targetPhoneNumberController
+                                                      .text =
+                                                  phone;
+                                              controller
+                                                      .targetPhoneNumber
+                                                      .value =
+                                                  phone;
+                                              controller
+                                                      .selectedOperatorId
+                                                      .value =
+                                                  opId;
                                               final opName = opId == 'mci'
                                                   ? 'همراه اول'
                                                   : opId == 'irancell'
-                                                      ? 'ایرانسل'
-                                                      : opId == 'rightel'
-                                                          ? 'رایتل'
-                                                          : 'شاتل';
-                                              controller.selectedOperatorName.value = opName;
-                                              ToastHelper().showSuccessToast('شماره $name انتخاب شد');
+                                                  ? 'ایرانسل'
+                                                  : opId == 'rightel'
+                                                  ? 'رایتل'
+                                                  : 'شاتل';
+                                              controller
+                                                      .selectedOperatorName
+                                                      .value =
+                                                  opName;
+                                              ToastHelper().showSuccessToast(
+                                                'شماره $name انتخاب شد',
+                                              );
                                             },
                                           );
                                         },
@@ -264,14 +290,19 @@ class AirtimeAmountStepSection extends StatelessWidget {
                                           margin: EdgeInsets.all(8.w),
                                           padding: EdgeInsets.all(6.w),
                                           decoration: BoxDecoration(
-                                            color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                                                .withValues(alpha: 0.12),
+                                            color:
+                                                (isDark
+                                                        ? AppColors.mainSoftBlue
+                                                        : AppColors.deepBlack)
+                                                    .withValues(alpha: 0.12),
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
                                             Icons.contacts_rounded,
                                             size: 18.w,
-                                            color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                                            color: isDark
+                                                ? AppColors.mainSoftBlue
+                                                : AppColors.deepBlack,
                                           ),
                                         ),
                                       )
@@ -304,11 +335,19 @@ class AirtimeAmountStepSection extends StatelessWidget {
                                 ContactPickerBottomSheet.show(
                                   context,
                                   onContactSelected: (name, phone, opId) {
-                                    controller.targetPhoneNumberController.text = phone;
+                                    controller
+                                            .targetPhoneNumberController
+                                            .text =
+                                        phone;
                                     controller.targetPhoneNumber.value = phone;
                                     controller.selectedOperatorId.value = opId;
-                                    _detectOperatorFromNumber(controller, phone);
-                                    ToastHelper().showSuccessToast('شماره $name انتخاب شد');
+                                    _detectOperatorFromNumber(
+                                      controller,
+                                      phone,
+                                    );
+                                    ToastHelper().showSuccessToast(
+                                      'شماره $name انتخاب شد',
+                                    );
                                   },
                                 );
                               },
@@ -316,14 +355,19 @@ class AirtimeAmountStepSection extends StatelessWidget {
                                 margin: EdgeInsets.all(8.w),
                                 padding: EdgeInsets.all(6.w),
                                 decoration: BoxDecoration(
-                                  color: (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
-                                      .withValues(alpha: 0.12),
+                                  color:
+                                      (isDark
+                                              ? AppColors.mainSoftBlue
+                                              : AppColors.deepBlack)
+                                          .withValues(alpha: 0.12),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
                                   Icons.contacts_rounded,
                                   size: 18.w,
-                                  color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                                  color: isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.deepBlack,
                                 ),
                               ),
                             ),
@@ -340,10 +384,15 @@ class AirtimeAmountStepSection extends StatelessWidget {
                     selectedAmount: controller.amountText.value,
                     onAmountSelected: (amountToman, amountRials) {
                       final service = controller.serviceData.value;
-                      final isCurrencyRials = service?.currency?.toLowerCase().contains('rial') ?? false;
+                      final isCurrencyRials =
+                          service?.currency?.toLowerCase().contains('rial') ??
+                          false;
 
-                      final targetAmount = isCurrencyRials ? amountRials : amountToman;
-                      controller.amountController.text = targetAmount.toString();
+                      final targetAmount = isCurrencyRials
+                          ? amountRials
+                          : amountToman;
+                      controller.amountController.text = targetAmount
+                          .toString();
                       controller.amountText.value = targetAmount.toString();
                     },
                   ),
@@ -390,7 +439,9 @@ class AirtimeAmountStepSection extends StatelessWidget {
                             fontSize: 13.sp,
                             color: isDark
                                 ? AppColors.darkTextSecondary
-                                : AppColors.lightTextPrimary.withValues(alpha: 0.50),
+                                : AppColors.lightTextPrimary.withValues(
+                                    alpha: 0.50,
+                                  ),
                           ),
                         ),
                       ),
@@ -426,10 +477,19 @@ class AirtimeAmountStepSection extends StatelessWidget {
     final clean = number.replaceAll(' ', '').trim();
     if (clean.length >= 4) {
       final prefix4 = clean.substring(0, 4);
-      if (prefix4.startsWith('091') || prefix4 == '0990' || prefix4 == '0991' || prefix4 == '0992') {
+      if (prefix4.startsWith('091') ||
+          prefix4 == '0990' ||
+          prefix4 == '0991' ||
+          prefix4 == '0992') {
         controller.selectedOperatorId.value = 'mci';
         controller.selectedOperatorName.value = 'همراه اول';
-      } else if (prefix4.startsWith('093') || prefix4 == '0901' || prefix4 == '0902' || prefix4 == '0903' || prefix4 == '0904' || prefix4 == '0905' || prefix4 == '0941') {
+      } else if (prefix4.startsWith('093') ||
+          prefix4 == '0901' ||
+          prefix4 == '0902' ||
+          prefix4 == '0903' ||
+          prefix4 == '0904' ||
+          prefix4 == '0905' ||
+          prefix4 == '0941') {
         controller.selectedOperatorId.value = 'irancell';
         controller.selectedOperatorName.value = 'ایرانسل';
       } else if (prefix4 == '0920' || prefix4 == '0921' || prefix4 == '0922') {

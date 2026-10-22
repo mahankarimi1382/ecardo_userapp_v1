@@ -26,9 +26,15 @@ class FileTypeSection extends StatelessWidget {
 
   const FileTypeSection({super.key, required this.field});
 
-  void _proceedToNext(BuildContext context, AuthIdVerificationController controller) {
-    final currentFieldIndex = controller.fields.indexWhere((f) => f.name == field.name);
-    if (currentFieldIndex != -1 && currentFieldIndex + 1 < controller.fields.length) {
+  void _proceedToNext(
+    BuildContext context,
+    AuthIdVerificationController controller,
+  ) {
+    final currentFieldIndex = controller.fields.indexWhere(
+      (f) => f.name == field.name,
+    );
+    if (currentFieldIndex != -1 &&
+        currentFieldIndex + 1 < controller.fields.length) {
       final nextField = controller.fields[currentFieldIndex + 1];
       controller.currentFieldIndex.value = currentFieldIndex + 1;
       final type = nextField.type?.toLowerCase();
@@ -52,13 +58,16 @@ class FileTypeSection extends StatelessWidget {
     final AuthIdVerificationController controller = Get.find();
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor =
-        isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final borderCol = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -90,7 +99,9 @@ class FileTypeSection extends StatelessWidget {
 
                     // Header: Document Title & Instructions
                     Padding(
-                      padding: EdgeInsetsDirectional.symmetric(horizontal: 20.w),
+                      padding: EdgeInsetsDirectional.symmetric(
+                        horizontal: 20.w,
+                      ),
                       child: Column(
                         children: [
                           Text(
@@ -104,7 +115,8 @@ class FileTypeSection extends StatelessWidget {
                           ),
                           SizedBox(height: 6.h),
                           Text(
-                            field.instructions ?? localizations.fileTypeNotAvailable,
+                            field.instructions ??
+                                localizations.fileTypeNotAvailable,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
@@ -131,7 +143,9 @@ class FileTypeSection extends StatelessWidget {
                     // Upload Container & Document Alignment Frame
                     Expanded(
                       child: Container(
-                        margin: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
+                        margin: EdgeInsetsDirectional.symmetric(
+                          horizontal: 18.w,
+                        ),
                         padding: EdgeInsetsDirectional.all(18.w),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadiusDirectional.only(
@@ -188,13 +202,17 @@ class FileTypeSection extends StatelessWidget {
                                     text: localizations.fileTypeChooseFile,
                                     width: double.infinity,
                                     onPressed: () async {
-                                      final picked = await controller.pickFile(field.name ?? "");
+                                      final picked = await controller.pickFile(
+                                        field.name ?? "",
+                                      );
                                       if (picked != null) {
                                         if (UploadHelper.exceedsSize(
                                           picked,
                                           UploadHelper.maxKycDocBytes,
                                         )) {
-                                          controller.fieldFiles.remove(field.name ?? "");
+                                          controller.fieldFiles.remove(
+                                            field.name ?? "",
+                                          );
                                           ToastHelper().showErrorToast(
                                             l10nPickAuto(
                                               en: 'File size must not exceed 20MB',
@@ -308,7 +326,9 @@ class FileTypeSection extends StatelessWidget {
           width: double.infinity,
           height: 220.h,
           decoration: BoxDecoration(
-            color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
+            color: isDark
+                ? AppColors.darkBackground
+                : AppColors.lightSurfaceVariant,
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
               color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -318,10 +338,34 @@ class FileTypeSection extends StatelessWidget {
           child: Stack(
             children: [
               // Corner alignment markers
-              _buildCornerBracket(top: 12.h, left: 12.w, isTop: true, isLeft: true, color: guideColor),
-              _buildCornerBracket(top: 12.h, right: 12.w, isTop: true, isLeft: false, color: guideColor),
-              _buildCornerBracket(bottom: 12.h, left: 12.w, isTop: false, isLeft: true, color: guideColor),
-              _buildCornerBracket(bottom: 12.h, right: 12.w, isTop: false, isLeft: false, color: guideColor),
+              _buildCornerBracket(
+                top: 12.h,
+                left: 12.w,
+                isTop: true,
+                isLeft: true,
+                color: guideColor,
+              ),
+              _buildCornerBracket(
+                top: 12.h,
+                right: 12.w,
+                isTop: true,
+                isLeft: false,
+                color: guideColor,
+              ),
+              _buildCornerBracket(
+                bottom: 12.h,
+                left: 12.w,
+                isTop: false,
+                isLeft: true,
+                color: guideColor,
+              ),
+              _buildCornerBracket(
+                bottom: 12.h,
+                right: 12.w,
+                isTop: false,
+                isLeft: false,
+                color: guideColor,
+              ),
 
               Center(
                 child: Column(
@@ -332,7 +376,9 @@ class FileTypeSection extends StatelessWidget {
                       height: 64.w,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: guideColor.withValues(alpha: isDark ? 0.16 : 0.10),
+                        color: guideColor.withValues(
+                          alpha: isDark ? 0.16 : 0.10,
+                        ),
                       ),
                       child: Icon(
                         Icons.cloud_upload_outlined,
@@ -393,15 +439,11 @@ class FileTypeSection extends StatelessWidget {
         height: 18.w,
         decoration: BoxDecoration(
           border: Border(
-            top: isTop
-                ? BorderSide(color: color, width: 3)
-                : BorderSide.none,
+            top: isTop ? BorderSide(color: color, width: 3) : BorderSide.none,
             bottom: !isTop
                 ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
-            left: isLeft
-                ? BorderSide(color: color, width: 3)
-                : BorderSide.none,
+            left: isLeft ? BorderSide(color: color, width: 3) : BorderSide.none,
             right: !isLeft
                 ? BorderSide(color: color, width: 3)
                 : BorderSide.none,
@@ -424,9 +466,13 @@ class FileTypeSection extends StatelessWidget {
     final fileLength = file.lengthSync();
     final sizeInMB = fileLength / (1024 * 1024);
     final sizeString = '${sizeInMB.toStringAsFixed(2)} MB';
-    final isValidSize = !UploadHelper.exceedsSize(file, UploadHelper.maxKycDocBytes);
+    final isValidSize = !UploadHelper.exceedsSize(
+      file,
+      UploadHelper.maxKycDocBytes,
+    );
     final nameLower = file.path.toLowerCase();
-    final isImage = nameLower.endsWith('.jpg') ||
+    final isImage =
+        nameLower.endsWith('.jpg') ||
         nameLower.endsWith('.jpeg') ||
         nameLower.endsWith('.png') ||
         nameLower.endsWith('.webp');
@@ -434,7 +480,9 @@ class FileTypeSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBackground : AppColors.lightSurfaceVariant,
+        color: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightSurfaceVariant,
         borderRadius: BorderRadius.circular(18.r),
         border: Border.all(
           color: guideColor.withValues(alpha: 0.4),
@@ -463,7 +511,8 @@ class FileTypeSection extends StatelessWidget {
                             .resolve(const ImageConfiguration())
                             .addListener(
                               ImageStreamListener((ImageInfo info, bool _) {
-                                final imageHeight = info.image.height.toDouble();
+                                final imageHeight = info.image.height
+                                    .toDouble();
                                 final imageWidth = info.image.width.toDouble();
                                 final screenWidth =
                                     MediaQuery.of(context).size.width - 36;
@@ -487,10 +536,7 @@ class FileTypeSection extends StatelessWidget {
                           SizedBox(
                             height: 180.h,
                             width: double.infinity,
-                            child: Image.file(
-                              file,
-                              fit: BoxFit.cover,
-                            ),
+                            child: Image.file(file, fit: BoxFit.cover),
                           ),
                           Positioned(
                             top: 8.h,
@@ -514,7 +560,11 @@ class FileTypeSection extends StatelessWidget {
                                   ),
                                   SizedBox(width: 4.w),
                                   Text(
-                                    l10nPick(context, en: 'Preview', fa: 'پیش‌نمایش'),
+                                    l10nPick(
+                                      context,
+                                      en: 'Preview',
+                                      fa: 'پیش‌نمایش',
+                                    ),
                                     style: const TextStyle(
                                       color: AppColors.white,
                                       fontSize: 10,
@@ -580,9 +630,7 @@ class FileTypeSection extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
-                    color: (isValidSize
-                            ? AppColors.success
-                            : AppColors.error)
+                    color: (isValidSize ? AppColors.success : AppColors.error)
                         .withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
@@ -628,7 +676,9 @@ class FileTypeSection extends StatelessWidget {
                       ),
                       child: OutlinedButton.icon(
                         onPressed: () async {
-                          final picked = await controller.pickFile(field.name ?? "");
+                          final picked = await controller.pickFile(
+                            field.name ?? "",
+                          );
                           if (picked != null) {
                             if (UploadHelper.exceedsSize(
                               picked,
@@ -656,7 +706,9 @@ class FileTypeSection extends StatelessWidget {
                                 : AppColors.lightBorder,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm,
+                            ),
                           ),
                         ),
                         icon: const Icon(Icons.refresh_rounded, size: 15),

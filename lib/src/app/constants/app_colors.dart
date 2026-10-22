@@ -14,26 +14,40 @@ class AppColors {
   static const Color deepBlack = Color(0xFF161614); /* Primary Background */
   static const Color darkGray = Color(0xFF262625); /* Secondary Background */
   static const Color softGray = Color(0xFF656262); /* Secondary Text / Icons */
-  static const Color warmWhite = Color(0xFFE7E0DE); /* Primary Text / Light Surface */
+  static const Color warmWhite = Color(
+    0xFFE7E0DE,
+  ); /* Primary Text / Light Surface */
   static const Color lightWarmGray = Color(0xFFD5CBC8); /* Borders / Dividers */
-  static const Color mainSoftBlue = Color(0xFFB79CFF); /* Primary Accent / Main Surface (soft violet) */
-  static const Color mutedBlue = Color(0xFF00BFA6); /* Secondary Accent / Cards (brand teal) */
-  static const Color warmBrown = Color(0xFF87624C); /* Financial / Card Elements */
-  static const Color taupeBronze = Color(0xFFB3A9A5); /* Warm Neutral / Metallic */
+  static const Color mainSoftBlue = Color(
+    0xFFB79CFF,
+  ); /* Primary Accent / Main Surface (soft violet) */
+  static const Color mutedBlue = Color(
+    0xFF00BFA6,
+  ); /* Secondary Accent / Cards (brand teal) */
+  static const Color warmBrown = Color(
+    0xFF87624C,
+  ); /* Financial / Card Elements */
+  static const Color taupeBronze = Color(
+    0xFFB3A9A5,
+  ); /* Warm Neutral / Metallic */
 
   // ------------------ BRAND (texture spec) ------------------
   /// Core brand violet — buttons, links, active states, icon tints.
   static const Color brandViolet = Color(0xFF7445FF);
+
   /// Pressed / gradient-end violet.
   static const Color brandVioletDeep = Color(0xFF5A35CC);
+
   /// Tinted container behind violet icons and chips.
   static const Color brandVioletContainer = Color(0xFFF0ECFF);
+
   /// 135° brand gradient for hero cards and primary CTAs.
   static const LinearGradient brandGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [brandViolet, brandVioletDeep],
   );
+
   /// Signature hero-card night gradient (balance / flagship surfaces).
   static const List<Color> heroNightGradient = [
     Color(0xFF1A1F36),
@@ -62,7 +76,9 @@ class AppColors {
   // Text Colors
   static const Color lightTextPrimary = deepBlack;
   static const Color lightTextSecondary = softGray;
-  static const Color lightTextTertiary = Color(0x99161614); // deepBlack with alpha 0.60
+  static const Color lightTextTertiary = Color(
+    0x99161614,
+  ); // deepBlack with alpha 0.60
   static const Color lightTextHint = softGray;
   static const Color lightTextOnPrimary = Color(0xFFFFFFFF);
 
@@ -106,12 +122,20 @@ class AppColors {
   static const Color darkAccent = mainSoftBlue;
   static const Color darkTextPrimary = warmWhite;
   static const Color darkTextSecondary = softGray;
-  static const Color darkTextTertiary = Color(0x8CE7E0DE); // warmWhite with alpha 0.55
+  static const Color darkTextTertiary = Color(
+    0x8CE7E0DE,
+  ); // warmWhite with alpha 0.55
   static const Color darkTextHint = softGray;
   static const Color darkTextOnPrimary = deepBlack;
-  static const Color darkBorder = Color(0x33D5CBC8); // lightWarmGray with alpha 0.20
-  static const Color darkOutline = Color(0x4DD5CBC8); // lightWarmGray with alpha 0.30
-  static const Color darkOutlineVariant = Color(0x26D5CBC8); // lightWarmGray with alpha 0.15
+  static const Color darkBorder = Color(
+    0x33D5CBC8,
+  ); // lightWarmGray with alpha 0.20
+  static const Color darkOutline = Color(
+    0x4DD5CBC8,
+  ); // lightWarmGray with alpha 0.30
+  static const Color darkOutlineVariant = Color(
+    0x26D5CBC8,
+  ); // lightWarmGray with alpha 0.15
   static const Color darkDivider = Color(0x33D5CBC8);
   static const Color darkShadow = Color(0x33000000);
 }

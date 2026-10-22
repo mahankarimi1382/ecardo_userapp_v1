@@ -28,14 +28,20 @@ class BiometricAuthService {
   Future<bool> canAuthenticate() async {
     try {
       if (kIsWeb) return false;
-      final canCheck = await auth.canCheckBiometrics
-          .timeout(const Duration(milliseconds: 300), onTimeout: () => false);
+      final canCheck = await auth.canCheckBiometrics.timeout(
+        const Duration(milliseconds: 300),
+        onTimeout: () => false,
+      );
       if (!canCheck) return false;
-      final supported = await auth.isDeviceSupported()
-          .timeout(const Duration(milliseconds: 300), onTimeout: () => false);
+      final supported = await auth.isDeviceSupported().timeout(
+        const Duration(milliseconds: 300),
+        onTimeout: () => false,
+      );
       if (!supported) return false;
-      final available = await auth.getAvailableBiometrics()
-          .timeout(const Duration(milliseconds: 300), onTimeout: () => []);
+      final available = await auth.getAvailableBiometrics().timeout(
+        const Duration(milliseconds: 300),
+        onTimeout: () => [],
+      );
       return supported && canCheck && available.isNotEmpty;
     } catch (_) {
       return false;
@@ -112,7 +118,8 @@ class BiometricAuthService {
       }
 
       final success = await auth.authenticate(
-        localizedReason: reason ??
+        localizedReason:
+            reason ??
             _localization?.biometricReason ??
             'Authenticate to sign in to eCardo',
         biometricOnly: true,
@@ -150,11 +157,15 @@ class BiometricAuthService {
 
   Future<bool> isBiometricAvailable() async {
     try {
-      final canCheckBiometrics = await auth.canCheckBiometrics
-          .timeout(const Duration(milliseconds: 300), onTimeout: () => false);
+      final canCheckBiometrics = await auth.canCheckBiometrics.timeout(
+        const Duration(milliseconds: 300),
+        onTimeout: () => false,
+      );
       if (!canCheckBiometrics) return false;
-      final availableBiometrics = await auth.getAvailableBiometrics()
-          .timeout(const Duration(milliseconds: 300), onTimeout: () => []);
+      final availableBiometrics = await auth.getAvailableBiometrics().timeout(
+        const Duration(milliseconds: 300),
+        onTimeout: () => [],
+      );
       return canCheckBiometrics && availableBiometrics.isNotEmpty;
     } catch (e) {
       return false;

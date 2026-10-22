@@ -52,7 +52,8 @@ void main() {
         'country_flag': 'https://flagcdn.com/w80/ae.png',
         'visa_type': 'TOURIST_30D',
         'title': '30-Day UAE Tourist Visa (Dubai)',
-        'description': 'Single-entry tourist visa valid for 30 days with travel insurance.',
+        'description':
+            'Single-entry tourist visa valid for 30 days with travel insurance.',
         'gov_fee': '95.00000000',
         'service_fee': '35.00000000',
         'currency': 'USD',
@@ -104,83 +105,82 @@ void main() {
       expect(item.requiredDocs[0].required, isTrue);
     });
 
-    test('VisaRequestModel parses application status and tracking milestones', () {
-      final json = {
-        'id': 12,
-        'case_no': 'ECV-2026-9812',
-        'catalog_id': 2,
-        'user_id': 5,
-        'country_code': 'AE',
-        'country_name': 'United Arab Emirates',
-        'status': 'SUBMITTED',
-        'service_fee': '35.00000000',
-        'gov_fee': '95.00000000',
-        'currency': 'USD',
-        'is_paid': true,
-        'created_at': '2026-10-05T08:00:00Z',
-        'applicant_info': {
-          'full_name': 'Arshia Vafadar',
-          'passport_number': 'A98765432',
-          'phone': '+989123456789',
-        },
-        'events': [
-          {
-            'id': 1,
-            'status': 'SUBMITTED',
-            'note': 'Application received and documents queued for consular review.',
-            'created_at': '2026-10-05T08:05:00Z',
+    test(
+      'VisaRequestModel parses application status and tracking milestones',
+      () {
+        final json = {
+          'id': 12,
+          'case_no': 'ECV-2026-9812',
+          'catalog_id': 2,
+          'user_id': 5,
+          'country_code': 'AE',
+          'country_name': 'United Arab Emirates',
+          'status': 'SUBMITTED',
+          'service_fee': '35.00000000',
+          'gov_fee': '95.00000000',
+          'currency': 'USD',
+          'is_paid': true,
+          'created_at': '2026-10-05T08:00:00Z',
+          'applicant_info': {
+            'full_name': 'Arshia Vafadar',
+            'passport_number': 'A98765432',
+            'phone': '+989123456789',
           },
-        ],
-        'documents': [
-          {
-            'id': 101,
-            'doc_key': 'passport_scan',
-            'file_name': 'passport.jpg',
-            'status': 'PENDING',
-          },
-        ],
-      };
+          'events': [
+            {
+              'id': 1,
+              'status': 'SUBMITTED',
+              'note':
+                  'Application received and documents queued for consular review.',
+              'created_at': '2026-10-05T08:05:00Z',
+            },
+          ],
+          'documents': [
+            {
+              'id': 101,
+              'doc_key': 'passport_scan',
+              'file_name': 'passport.jpg',
+              'status': 'PENDING',
+            },
+          ],
+        };
 
-      final request = VisaRequestModel.fromJson(json);
+        final request = VisaRequestModel.fromJson(json);
 
-      expect(request.id, 12);
-      expect(request.caseNo, 'ECV-2026-9812');
-      expect(request.countryName, 'United Arab Emirates');
-      expect(request.status, 'SUBMITTED');
-      expect(request.totalFee, 130.0);
-      expect(request.applicantName, 'Arshia Vafadar');
-      expect(request.applicantPassport, 'A98765432');
-      expect(request.events.length, 1);
-      expect(request.documents.length, 1);
-      expect(request.documents.first.docKey, 'passport_scan');
-    });
+        expect(request.id, 12);
+        expect(request.caseNo, 'ECV-2026-9812');
+        expect(request.countryName, 'United Arab Emirates');
+        expect(request.status, 'SUBMITTED');
+        expect(request.totalFee, 130.0);
+        expect(request.applicantName, 'Arshia Vafadar');
+        expect(request.applicantPassport, 'A98765432');
+        expect(request.events.length, 1);
+        expect(request.documents.length, 1);
+        expect(request.documents.first.docKey, 'passport_scan');
+      },
+    );
   });
 
   group('Visa Service - VisaCatalogScreen UI Tests', () {
-    testWidgets('renders Visa Catalog Screen header, search, and action without overflow', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const VisaCatalogScreen(),
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+    testWidgets(
+      'renders Visa Catalog Screen header, search, and action without overflow',
+      (tester) async {
+        await tester.pumpWidget(
+          wrapWithTheme(const VisaCatalogScreen(), locale: const Locale('en')),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(VisaCatalogScreen), findsOneWidget);
-      expect(find.text('Visa & Consular Desk'), findsOneWidget);
-    });
+        expect(find.byType(VisaCatalogScreen), findsOneWidget);
+        expect(find.text('Visa & Consular Desk'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders properly in Persian locale (RTL) without overflow', (
       tester,
     ) async {
       await tester.pumpWidget(
-        wrapWithTheme(
-          const VisaCatalogScreen(),
-          locale: const Locale('fa'),
-        ),
+        wrapWithTheme(const VisaCatalogScreen(), locale: const Locale('fa')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));

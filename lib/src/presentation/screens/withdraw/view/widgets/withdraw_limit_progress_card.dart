@@ -27,13 +27,20 @@ class WithdrawLimitProgressCard extends StatelessWidget {
     final accentColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
     final effectiveDailyLimit = dailyLimit > 0 ? dailyLimit : 1000.0;
-    final remainingLimit = (effectiveDailyLimit - usedLimit).clamp(0.0, effectiveDailyLimit);
+    final remainingLimit = (effectiveDailyLimit - usedLimit).clamp(
+      0.0,
+      effectiveDailyLimit,
+    );
     final isOverLimit = enteredAmount > remainingLimit && remainingLimit > 0;
 
     // Ratios for the progress bar
     final usedRatio = (usedLimit / effectiveDailyLimit).clamp(0.0, 1.0);
-    final enteredRatio = (enteredAmount / effectiveDailyLimit).clamp(0.0, (1.0 - usedRatio));
-    final totalProjectedRatio = (usedRatio + (enteredAmount / effectiveDailyLimit)).clamp(0.0, 1.0);
+    final enteredRatio = (enteredAmount / effectiveDailyLimit).clamp(
+      0.0,
+      (1.0 - usedRatio),
+    );
+    final totalProjectedRatio =
+        (usedRatio + (enteredAmount / effectiveDailyLimit)).clamp(0.0, 1.0);
 
     final title = l10nPick(
       context,
@@ -105,14 +112,9 @@ class WithdrawLimitProgressCard extends StatelessWidget {
               ),
               // Daily Limit Total Badge
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 3,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkCard
-                      : AppColors.white,
+                  color: isDark ? AppColors.darkCard : AppColors.white,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                   border: Border.all(
                     color: isDark
@@ -160,8 +162,9 @@ class WithdrawLimitProgressCard extends StatelessWidget {
                       child: Container(
                         decoration: BoxDecoration(
                           color: AppColors.softGray,
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusFull,
+                          ),
                         ),
                       ),
                     ),
@@ -178,8 +181,9 @@ class WithdrawLimitProgressCard extends StatelessWidget {
                                 ? [AppColors.success, AppColors.darkPrimary]
                                 : [AppColors.success, AppColors.lightPrimary],
                           ),
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusFull,
+                          ),
                         ),
                       ),
                     ),
@@ -189,9 +193,7 @@ class WithdrawLimitProgressCard extends StatelessWidget {
                     FractionallySizedBox(
                       alignment: AlignmentDirectional.centerStart,
                       widthFactor: 1.0,
-                      child: Container(
-                        color: AppColors.error,
-                      ),
+                      child: Container(color: AppColors.error),
                     ),
                 ],
               ),
@@ -213,8 +215,8 @@ class WithdrawLimitProgressCard extends StatelessWidget {
                     color: isOverLimit
                         ? AppColors.error
                         : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary),
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary),
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

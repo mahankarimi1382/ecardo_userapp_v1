@@ -86,7 +86,7 @@ class TravelHomeScreen extends StatelessWidget {
             Obx(
               () =>
                   controller.isActivityLoading.value &&
-                  controller.activity.isEmpty
+                      controller.activity.isEmpty
                   ? const TravelShimmerLoading(
                       type: TravelShimmerType.tile,
                       count: 2,
@@ -122,7 +122,9 @@ class TravelHomeScreen extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(AppSpacing.md.r),
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurface : AppColors.white,
+                          color: isDark
+                              ? AppColors.darkSurface
+                              : AppColors.white,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -294,15 +296,18 @@ class _Services extends StatelessWidget {
       );
     }
 
-    final serviceByType = {for (final service in services) service.type: service};
-    final visibleServices = [
-      TravelProductType.flight,
-      TravelProductType.hotel,
-      TravelProductType.esim,
-    ]
-        .map((type) => serviceByType[type])
-        .whereType<TravelServiceConfig>()
-        .toList();
+    final serviceByType = {
+      for (final service in services) service.type: service,
+    };
+    final visibleServices =
+        [
+              TravelProductType.flight,
+              TravelProductType.hotel,
+              TravelProductType.esim,
+            ]
+            .map((type) => serviceByType[type])
+            .whereType<TravelServiceConfig>()
+            .toList();
 
     return Column(
       children: [
@@ -465,7 +470,10 @@ class _Services extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: TravelTheme.isDark(context)
-                      ? const [AppColors.darkSurfaceVariant, AppColors.deepBlack]
+                      ? const [
+                          AppColors.darkSurfaceVariant,
+                          AppColors.deepBlack,
+                        ]
                       : const [AppColors.darkGray, AppColors.deepBlack],
                 ),
                 borderRadius: BorderRadius.circular(14.r),
@@ -582,10 +590,7 @@ class _ServiceTile extends StatelessWidget {
       button: true,
       label: label,
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          minWidth: 44.w,
-          minHeight: 44.h,
-        ),
+        constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
         child: Material(
           color: cardColor,
           shape: RoundedRectangleBorder(
@@ -662,9 +667,7 @@ class _ActivityTile extends StatelessWidget {
             child: Icon(
               activity.isCredit
                   ? Icons.account_balance_wallet_rounded
-                  : travelProductIcon(
-                      activity.type ?? TravelProductType.hotel,
-                    ),
+                  : travelProductIcon(activity.type ?? TravelProductType.hotel),
               color: color,
             ),
           ),
@@ -685,10 +688,7 @@ class _ActivityTile extends StatelessWidget {
                   travelLocalizedKey(localization, activity.subtitleKey),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: TravelTheme.muted,
-                    fontSize: 10.sp,
-                  ),
+                  style: TextStyle(color: TravelTheme.muted, fontSize: 10.sp),
                 ),
               ],
             ),
@@ -709,4 +709,3 @@ class _ActivityTile extends StatelessWidget {
     );
   }
 }
-

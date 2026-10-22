@@ -68,7 +68,13 @@ class ForgotPasswordController extends GetxController {
     } catch (e, stackTrace) {
       debugPrint('❌ submitForgotPassword() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(localization?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'));
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
+      );
     } finally {
       isLoading.value = false;
     }

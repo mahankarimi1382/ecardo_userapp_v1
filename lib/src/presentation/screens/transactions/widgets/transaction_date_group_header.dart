@@ -34,9 +34,7 @@ class TransactionDateGroupHeader extends StatelessWidget {
                 height: 6,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isDark
-                      ? AppColors.mainSoftBlue
-                      : AppColors.deepBlack,
+                  color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),

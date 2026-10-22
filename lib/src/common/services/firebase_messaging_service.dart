@@ -165,8 +165,8 @@ class FirebaseMessagingService {
       }
 
       // Not granted: report the FCM-side status WITHOUT prompting again.
-      final settings =
-          await FirebaseMessaging.instance.getNotificationSettings();
+      final settings = await FirebaseMessaging.instance
+          .getNotificationSettings();
       if (kDebugMode) {
         debugPrint('Notification permission: ${settings.authorizationStatus}');
       }
@@ -403,7 +403,9 @@ class FirebaseMessagingService {
         // payload — attachContext() routes it on the first frame.
         _pendingNotificationData = data;
         if (kDebugMode) {
-          debugPrint('Notification routing deferred until navigator is ready: type=$type');
+          debugPrint(
+            'Notification routing deferred until navigator is ready: type=$type',
+          );
         }
         return;
       }
@@ -417,7 +419,10 @@ class FirebaseMessagingService {
       // uuid. Unknown/missing uuid still navigates (screen handles null).
       if (type == 'remittance_status_changed') {
         final uuid = data['remittance_uuid']?.toString();
-        Get.toNamed(BaseRoute.remittanceDetails, arguments: (uuid == null || uuid.isEmpty) ? null : uuid);
+        Get.toNamed(
+          BaseRoute.remittanceDetails,
+          arguments: (uuid == null || uuid.isEmpty) ? null : uuid,
+        );
         return;
       }
 
@@ -509,14 +514,14 @@ class FirebaseMessagingService {
     final localization = localizationOrNull;
     final title = force
         ? (localization?.updateNotificationTitleForce ??
-            'Required update available')
+              'Required update available')
         : (localization?.updateNotificationTitle ?? 'New version available');
     final body = StringBuffer(
       version == null
           ? (localization?.updateNotificationBodyGeneric ??
-              'A new version of eCardo is available. Tap to update.')
+                'A new version of eCardo is available. Tap to update.')
           : (localization?.updateNotificationBody(version) ??
-              'eCardo v$version is available. Tap to update.'),
+                'eCardo v$version is available. Tap to update.'),
     );
     if (notes != null && notes.isNotEmpty) {
       body
@@ -566,15 +571,19 @@ class FirebaseMessagingService {
     Get.toNamed(BaseRoute.appUpdate);
   }
 
-  void _persistAndBanner(RemoteMessage message, {required bool showSystemTray}) {
-    final title = message.notification?.title ??
+  void _persistAndBanner(
+    RemoteMessage message, {
+    required bool showSystemTray,
+  }) {
+    final title =
+        message.notification?.title ??
         message.data['title']?.toString() ??
         'eCardo';
-    final body = message.notification?.body ??
-        message.data['body']?.toString() ??
-        '';
+    final body =
+        message.notification?.body ?? message.data['body']?.toString() ?? '';
     final type = message.data['type']?.toString() ?? 'general';
-    final financial = type == 'transaction' ||
+    final financial =
+        type == 'transaction' ||
         type == 'transfer' ||
         type == 'deposit' ||
         type == 'withdraw' ||
@@ -590,19 +599,21 @@ class FirebaseMessagingService {
 
     if (Get.isRegistered<NotificationHistoryService>()) {
       // ignore: unawaited_futures
-      Get.find<NotificationHistoryService>().add(
-        title: title,
-        body: body,
-        type: financial
-            ? 'financial'
-            : (type == 'app_update' ? 'update' : 'system'),
-        payload: payload,
-      ).then((_) {
-        if (Get.isRegistered<AppBadgeService>()) {
-          final n = Get.find<NotificationHistoryService>().unreadCount;
-          Get.find<AppBadgeService>().update(n);
-        }
-      });
+      Get.find<NotificationHistoryService>()
+          .add(
+            title: title,
+            body: body,
+            type: financial
+                ? 'financial'
+                : (type == 'app_update' ? 'update' : 'system'),
+            payload: payload,
+          )
+          .then((_) {
+            if (Get.isRegistered<AppBadgeService>()) {
+              final n = Get.find<NotificationHistoryService>().unreadCount;
+              Get.find<AppBadgeService>().update(n);
+            }
+          });
     }
 
     // Foreground: in-app banner only (no system tray noise).
@@ -653,8 +664,8 @@ class FirebaseMessagingService {
       return;
     }
 
-    final txId = data?['transaction_id']?.toString() ??
-        data?['trx_id']?.toString();
+    final txId =
+        data?['transaction_id']?.toString() ?? data?['trx_id']?.toString();
     if (txId != null && txId.isNotEmpty) {
       Get.toNamed(
         BaseRoute.transactions,
@@ -703,5 +714,4 @@ class FirebaseMessagingService {
     );
     _persistAndBanner(fake, showSystemTray: false);
   }
-
 }

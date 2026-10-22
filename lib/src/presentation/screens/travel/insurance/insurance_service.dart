@@ -37,19 +37,20 @@ class InsurancePolicyIssuer {
       6,
       (_) => alphabet[rnd.nextInt(alphabet.length)],
     ).join();
-    final stamp = '${_two(startDate.year % 100)}'
+    final stamp =
+        '${_two(startDate.year % 100)}'
         '${_two(startDate.month)}${_two(startDate.day)}';
     return 'EC-${_zoneShort(zone)}-$stamp-$suffix';
   }
 
   static String _zoneShort(InsuranceDestinationZone zone) => switch (zone) {
-        InsuranceDestinationZone.schengen => 'SNG',
-        InsuranceDestinationZone.worldwide => 'WWO',
-        InsuranceDestinationZone.worldwideExcludingUsa => 'WWE',
-        InsuranceDestinationZone.middleEast => 'MEA',
-        InsuranceDestinationZone.asia => 'ASI',
-        InsuranceDestinationZone.domestic => 'IRN',
-      };
+    InsuranceDestinationZone.schengen => 'SNG',
+    InsuranceDestinationZone.worldwide => 'WWO',
+    InsuranceDestinationZone.worldwideExcludingUsa => 'WWE',
+    InsuranceDestinationZone.middleEast => 'MEA',
+    InsuranceDestinationZone.asia => 'ASI',
+    InsuranceDestinationZone.domestic => 'IRN',
+  };
 
   static String _two(int value) => value.toString().padLeft(2, '0');
 
@@ -64,8 +65,8 @@ class InsuranceIssuanceResult {
   final String? errorFa;
 
   const InsuranceIssuanceResult.success(InsurancePolicy this.policy)
-      : errorEn = null,
-        errorFa = null;
+    : errorEn = null,
+      errorFa = null;
 
   const InsuranceIssuanceResult.failure({
     required String this.errorEn,
@@ -99,11 +100,7 @@ class InsuranceService {
       startDate.month,
       startDate.day,
     );
-    final normalizedEnd = DateTime(
-      endDate.year,
-      endDate.month,
-      endDate.day,
-    );
+    final normalizedEnd = DateTime(endDate.year, endDate.month, endDate.day);
     if (normalizedEnd.isBefore(normalizedStart)) {
       return InsuranceIssuanceResult.failure(
         errorEn: 'The coverage end date must be on or after the start date.',
@@ -126,8 +123,7 @@ class InsuranceService {
         errorFa: 'برای صدور بیمه‌نامه ثبت تاریخ تولد معتبر الزامی است.',
       );
     }
-    if (traveler.age > 90 &&
-        traveler.ageBand == TravelerAgeBand.elderly) {
+    if (traveler.age > 90 && traveler.ageBand == TravelerAgeBand.elderly) {
       return const InsuranceIssuanceResult.failure(
         errorEn:
             'Travelers over 90 require insurer underwriting review. Please contact support.',
@@ -213,9 +209,8 @@ class InsuranceLocalStore {
       return decoded
           .whereType<Map>()
           .map(
-            (entry) => InsurancePolicyCodec.decode(
-              Map<String, dynamic>.from(entry),
-            ),
+            (entry) =>
+                InsurancePolicyCodec.decode(Map<String, dynamic>.from(entry)),
           )
           .whereType<InsurancePolicy>()
           .toList(growable: false);
@@ -262,7 +257,8 @@ class InsuranceLocalStore {
       return decoded
           .whereType<Map>()
           .map(
-            (entry) => InsuranceClaimCodec.decode(Map<String, dynamic>.from(entry)),
+            (entry) =>
+                InsuranceClaimCodec.decode(Map<String, dynamic>.from(entry)),
           )
           .whereType<InsuranceClaim>()
           .toList(growable: false);
@@ -291,32 +287,32 @@ class InsuranceLocalStore {
 /// JSON codecs kept separate so the models stay immutable and const-friendly.
 class InsurancePolicyCodec {
   static Map<String, dynamic> encode(InsurancePolicy policy) => {
-        'id': policy.id,
-        'policy_number': policy.policyNumber,
-        'certificate_number': policy.certificateNumber,
-        'qr_payload': policy.qrVerificationPayload,
-        'traveler': {
-          'full_name_en': policy.traveler.fullNameEn,
-          'passport': policy.traveler.passportNumber,
-          'national_id': policy.traveler.nationalId,
-          'birth_date': policy.traveler.birthDate.toIso8601String(),
-          'phone': policy.traveler.phone,
-          'email': policy.traveler.email,
-        },
-        'zone': policy.destinationZone.code,
-        'country': policy.destinationCountry,
-        'start_date': policy.startDate.toIso8601String(),
-        'end_date': policy.endDate.toIso8601String(),
-        'duration_days': policy.durationDays,
-        'plan_id': policy.plan.id,
-        'tier': policy.tier.name,
-        'addons': policy.addons.map((item) => item.name).toList(),
-        'total_premium': policy.breakdown.totalPremium,
-        'base_medical': policy.breakdown.baseMedicalPremium,
-        'age_surcharge': policy.breakdown.ageSurcharge,
-        'issued_at': policy.issuedAt.toIso8601String(),
-        'status': policy.status,
-      };
+    'id': policy.id,
+    'policy_number': policy.policyNumber,
+    'certificate_number': policy.certificateNumber,
+    'qr_payload': policy.qrVerificationPayload,
+    'traveler': {
+      'full_name_en': policy.traveler.fullNameEn,
+      'passport': policy.traveler.passportNumber,
+      'national_id': policy.traveler.nationalId,
+      'birth_date': policy.traveler.birthDate.toIso8601String(),
+      'phone': policy.traveler.phone,
+      'email': policy.traveler.email,
+    },
+    'zone': policy.destinationZone.code,
+    'country': policy.destinationCountry,
+    'start_date': policy.startDate.toIso8601String(),
+    'end_date': policy.endDate.toIso8601String(),
+    'duration_days': policy.durationDays,
+    'plan_id': policy.plan.id,
+    'tier': policy.tier.name,
+    'addons': policy.addons.map((item) => item.name).toList(),
+    'total_premium': policy.breakdown.totalPremium,
+    'base_medical': policy.breakdown.baseMedicalPremium,
+    'age_surcharge': policy.breakdown.ageSurcharge,
+    'issued_at': policy.issuedAt.toIso8601String(),
+    'status': policy.status,
+  };
 
   static InsurancePolicy? decode(Map<String, dynamic> json) {
     try {
@@ -329,16 +325,19 @@ class InsurancePolicyCodec {
         json['traveler'] as Map? ?? const {},
       );
       final breakdown = InsurancePremiumBreakdown(
-        durationDays: int.tryParse(json['duration_days']?.toString() ?? '') ?? 1,
+        durationDays:
+            int.tryParse(json['duration_days']?.toString() ?? '') ?? 1,
         ageBand: TravelerAgeBand.standard,
         zone: insuranceZoneFromCode(json['zone']?.toString() ?? ''),
         tier: coverageTierFromName(json['tier']?.toString() ?? ''),
         baseMedicalPremium:
             int.tryParse(json['base_medical']?.toString() ?? '') ?? 0,
-        ageSurcharge: int.tryParse(json['age_surcharge']?.toString() ?? '') ?? 0,
+        ageSurcharge:
+            int.tryParse(json['age_surcharge']?.toString() ?? '') ?? 0,
         zoneAdjustment: 0,
         addonCosts: const {},
-        totalPremium: int.tryParse(json['total_premium']?.toString() ?? '') ?? 0,
+        totalPremium:
+            int.tryParse(json['total_premium']?.toString() ?? '') ?? 0,
       );
       return InsurancePolicy(
         id: json['id']?.toString() ?? '',
@@ -360,7 +359,8 @@ class InsurancePolicyCodec {
         startDate:
             DateTime.tryParse(json['start_date']?.toString() ?? '') ??
             DateTime.now(),
-        endDate: DateTime.tryParse(json['end_date']?.toString() ?? '') ??
+        endDate:
+            DateTime.tryParse(json['end_date']?.toString() ?? '') ??
             DateTime.now(),
         durationDays:
             int.tryParse(json['duration_days']?.toString() ?? '') ?? 1,
@@ -371,7 +371,8 @@ class InsurancePolicyCodec {
             .whereType<InsuranceAddon>()
             .toSet(),
         breakdown: breakdown,
-        issuedAt: DateTime.tryParse(json['issued_at']?.toString() ?? '') ??
+        issuedAt:
+            DateTime.tryParse(json['issued_at']?.toString() ?? '') ??
             DateTime.now(),
         status: json['status']?.toString() ?? 'active',
       );
@@ -380,43 +381,45 @@ class InsurancePolicyCodec {
     }
   }
 
-  static InsurancePolicy copyWithStatus(InsurancePolicy policy, String status) =>
-      InsurancePolicy(
-        id: policy.id,
-        policyNumber: policy.policyNumber,
-        certificateNumber: policy.certificateNumber,
-        qrVerificationPayload: policy.qrVerificationPayload,
-        traveler: policy.traveler,
-        destinationZone: policy.destinationZone,
-        destinationCountry: policy.destinationCountry,
-        startDate: policy.startDate,
-        endDate: policy.endDate,
-        durationDays: policy.durationDays,
-        plan: policy.plan,
-        tier: policy.tier,
-        addons: policy.addons,
-        breakdown: policy.breakdown,
-        issuedAt: policy.issuedAt,
-        status: status,
-      );
+  static InsurancePolicy copyWithStatus(
+    InsurancePolicy policy,
+    String status,
+  ) => InsurancePolicy(
+    id: policy.id,
+    policyNumber: policy.policyNumber,
+    certificateNumber: policy.certificateNumber,
+    qrVerificationPayload: policy.qrVerificationPayload,
+    traveler: policy.traveler,
+    destinationZone: policy.destinationZone,
+    destinationCountry: policy.destinationCountry,
+    startDate: policy.startDate,
+    endDate: policy.endDate,
+    durationDays: policy.durationDays,
+    plan: policy.plan,
+    tier: policy.tier,
+    addons: policy.addons,
+    breakdown: policy.breakdown,
+    issuedAt: policy.issuedAt,
+    status: status,
+  );
 }
 
 class InsuranceClaimCodec {
   static Map<String, dynamic> encode(InsuranceClaim claim) => {
-        'claim_id': claim.claimId,
-        'policy_number': claim.policyNumber,
-        'insured_name': claim.insuredName,
-        'incident_type': claim.incidentType.name,
-        'incident_date': claim.incidentDate.toIso8601String(),
-        'location': claim.incidentLocation,
-        'description': claim.description,
-        'estimated_amount': claim.estimatedAmount,
-        'currency': claim.currency,
-        'phone': claim.contactPhone,
-        'submitted_at': claim.submittedAt.toIso8601String(),
-        'status': claim.status.name,
-        'documents': claim.documentNames,
-      };
+    'claim_id': claim.claimId,
+    'policy_number': claim.policyNumber,
+    'insured_name': claim.insuredName,
+    'incident_type': claim.incidentType.name,
+    'incident_date': claim.incidentDate.toIso8601String(),
+    'location': claim.incidentLocation,
+    'description': claim.description,
+    'estimated_amount': claim.estimatedAmount,
+    'currency': claim.currency,
+    'phone': claim.contactPhone,
+    'submitted_at': claim.submittedAt.toIso8601String(),
+    'status': claim.status.name,
+    'documents': claim.documentNames,
+  };
 
   static InsuranceClaim? decode(Map<String, dynamic> json) {
     try {
@@ -509,13 +512,17 @@ class InsuranceDocumentBuilder {
                 pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text('eCardo Insurance & Assistance',
-                        style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                              fontWeight: pw.FontWeight.bold,
-                              fontSize: 18,
-                            )),
-                    pw.Text('Certificate of Travel Medical Insurance',
-                        style: const pw.TextStyle(fontSize: 12)),
+                    pw.Text(
+                      'eCardo Insurance & Assistance',
+                      style: pw.Theme.of(context).defaultTextStyle.copyWith(
+                        fontWeight: pw.FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    pw.Text(
+                      'Certificate of Travel Medical Insurance',
+                      style: const pw.TextStyle(fontSize: 12),
+                    ),
                   ],
                 ),
                 pw.BarcodeWidget(
@@ -532,14 +539,22 @@ class InsuranceDocumentBuilder {
             _row(context, 'Insured Person', policy.traveler.fullNameEn),
             _row(context, 'Passport No.', policy.traveler.passportNumber),
             _row(context, 'National ID', policy.traveler.nationalId),
-            _row(context, 'Date of Birth', line.format(policy.traveler.birthDate)),
-            _row(context, 'Destination Zone', policy.destinationZone.displayNameEn),
+            _row(
+              context,
+              'Date of Birth',
+              line.format(policy.traveler.birthDate),
+            ),
+            _row(
+              context,
+              'Destination Zone',
+              policy.destinationZone.displayNameEn,
+            ),
             _row(context, 'Country of Travel', policy.destinationCountry),
             _row(
               context,
               'Period of Coverage',
               '${line.format(policy.startDate)} - ${line.format(policy.endDate)}'
-              ' (${policy.durationDays} days)',
+                  ' (${policy.durationDays} days)',
             ),
             _row(context, 'Plan', policy.plan.titleEn),
             _row(context, 'Medical Coverage Limit', policy.plan.coverageLimit),
@@ -550,11 +565,7 @@ class InsuranceDocumentBuilder {
                   ? 'None'
                   : policy.addons.map((item) => item.titleEn).join(', '),
             ),
-            _row(
-              context,
-              'Premium',
-              '${policy.breakdown.totalPremium} IRR',
-            ),
+            _row(context, 'Premium', '${policy.breakdown.totalPremium} IRR'),
             pw.SizedBox(height: 18),
             pw.Text(
               'This certificate confirms that the insured person holds a travel '
@@ -568,9 +579,9 @@ class InsuranceDocumentBuilder {
             pw.Text(
               '24/7 International SOS Assistance: +33 1 45 16 65 65',
               style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 10,
-                  ),
+                fontWeight: pw.FontWeight.bold,
+                fontSize: 10,
+              ),
             ),
             pw.SizedBox(height: 6),
             pw.Text(
@@ -585,14 +596,20 @@ class InsuranceDocumentBuilder {
                 pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Text('Issued on: ${line.format(policy.issuedAt)}',
-                        style: const pw.TextStyle(fontSize: 9)),
-                    pw.Text('Status: ${policy.status.toUpperCase()}',
-                        style: const pw.TextStyle(fontSize: 9)),
+                    pw.Text(
+                      'Issued on: ${line.format(policy.issuedAt)}',
+                      style: const pw.TextStyle(fontSize: 9),
+                    ),
+                    pw.Text(
+                      'Status: ${policy.status.toUpperCase()}',
+                      style: const pw.TextStyle(fontSize: 9),
+                    ),
                   ],
                 ),
-                pw.Text('eCardo Fintech Super-App',
-                    style: const pw.TextStyle(fontSize: 9)),
+                pw.Text(
+                  'eCardo Fintech Super-App',
+                  style: const pw.TextStyle(fontSize: 9),
+                ),
               ],
             ),
           ],
@@ -617,9 +634,9 @@ class InsuranceDocumentBuilder {
             child: pw.Text(
               value,
               style: pw.Theme.of(context).defaultTextStyle.copyWith(
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 10,
-                  ),
+                fontWeight: pw.FontWeight.bold,
+                fontSize: 10,
+              ),
             ),
           ),
         ],

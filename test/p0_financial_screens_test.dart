@@ -47,10 +47,7 @@ class _TestMakePaymentController extends MakePaymentController {
     paymentWalletsList.value = [testWallet];
 
     userModel.value = UserModel(
-      data: UserData(
-        passcode: '1234',
-        hasPasscode: true,
-      ),
+      data: UserData(passcode: '1234', hasPasscode: true),
     );
   }
 
@@ -95,10 +92,7 @@ class _TestCashOutController extends CashOutController {
     cashOutWalletsList.value = [testWallet];
 
     userModel.value = UserModel(
-      data: UserData(
-        passcode: '1234',
-        hasPasscode: true,
-      ),
+      data: UserData(passcode: '1234', hasPasscode: true),
     );
   }
 
@@ -161,8 +155,8 @@ void main() {
         const MakePaymentScreen(),
         registrations: [
           () => registerController<MakePaymentController>(
-                _TestMakePaymentController(),
-              ),
+            _TestMakePaymentController(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -180,8 +174,8 @@ void main() {
         dark: true,
         registrations: [
           () => registerController<MakePaymentController>(
-                _TestMakePaymentController(),
-              ),
+            _TestMakePaymentController(),
+          ),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -199,9 +193,7 @@ void main() {
         tester,
         const CashOutScreen(),
         registrations: [
-          () => registerController<CashOutController>(
-                _TestCashOutController(),
-              ),
+          () => registerController<CashOutController>(_TestCashOutController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );
@@ -218,9 +210,7 @@ void main() {
         const CashOutScreen(),
         dark: true,
         registrations: [
-          () => registerController<CashOutController>(
-                _TestCashOutController(),
-              ),
+          () => registerController<CashOutController>(_TestCashOutController()),
           () => registerController<SettingsService>(_TestSettingsService()),
         ],
       );

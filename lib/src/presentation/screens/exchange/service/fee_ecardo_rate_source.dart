@@ -93,26 +93,27 @@ class FeeEcardoRateSource implements ExchangeRateSource {
   final Dio _client;
 
   FeeEcardoRateSource({Dio? client})
-      : _client = client ??
-            Dio(
-              BaseOptions(
-                baseUrl: baseUrl,
-                connectTimeout: const Duration(seconds: 6),
-                receiveTimeout: const Duration(seconds: 10),
-                contentType: Headers.jsonContentType,
-                // Cloudflare on eCardo.ir challenges any client without a
-                // browser-like User-Agent. With Dio's default UA ("Dart/3.x
-                // (dart:io)") the request gets a 403 + JS challenge page.
-                // A full Chrome UA + Accept headers gets through.
-                headers: const {
-                  'Accept': 'application/json, text/plain, */*',
-                  'Accept-Language': 'en-US,en;q=0.9,fa;q=0.8',
-                  'User-Agent':
-                      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                      '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-                },
-              ),
-            );
+    : _client =
+          client ??
+          Dio(
+            BaseOptions(
+              baseUrl: baseUrl,
+              connectTimeout: const Duration(seconds: 6),
+              receiveTimeout: const Duration(seconds: 10),
+              contentType: Headers.jsonContentType,
+              // Cloudflare on eCardo.ir challenges any client without a
+              // browser-like User-Agent. With Dio's default UA ("Dart/3.x
+              // (dart:io)") the request gets a 403 + JS challenge page.
+              // A full Chrome UA + Accept headers gets through.
+              headers: const {
+                'Accept': 'application/json, text/plain, */*',
+                'Accept-Language': 'en-US,en;q=0.9,fa;q=0.8',
+                'User-Agent':
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                    '(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+              },
+            ),
+          );
 
   @override
   String get label => 'fee.ecardo.ir';
@@ -196,7 +197,9 @@ class FeeEcardoRateSource implements ExchangeRateSource {
     // If fee.ecardo.ir primary and fallback both failed, query free PublicLiveRateSource (Binance & ECB)
     try {
       final publicSource = PublicLiveRateSource();
-      final publicRates = await publicSource.fetchRates(currencyCodes: currencyCodes);
+      final publicRates = await publicSource.fetchRates(
+        currencyCodes: currencyCodes,
+      );
       if (publicRates.isNotEmpty) {
         _lastEntries = publicSource.lastEntries;
         return publicRates;
@@ -259,7 +262,8 @@ class FeeEcardoRateSource implements ExchangeRateSource {
       // value), otherwise derive Toman × 10.
       // API publishes keys like USD_to_IRR (mixed case) — try both.
       final upper = key.toUpperCase();
-      final fromConv = _toDouble(conversions['${upper}_to_IRR']) ??
+      final fromConv =
+          _toDouble(conversions['${upper}_to_IRR']) ??
           _toDouble(conversions['${upper}_TO_IRR']);
       final priceIrr = (fromConv != null && fromConv > 0)
           ? fromConv

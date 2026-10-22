@@ -20,7 +20,8 @@ class GuaranteeTrackingScreen extends StatefulWidget {
   const GuaranteeTrackingScreen({super.key});
 
   @override
-  State<GuaranteeTrackingScreen> createState() => _GuaranteeTrackingScreenState();
+  State<GuaranteeTrackingScreen> createState() =>
+      _GuaranteeTrackingScreenState();
 }
 
 class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
@@ -36,29 +37,116 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
 
   String _statusLabel(BuildContext context, String status) {
     switch (status) {
-      case 'DRAFT': return l10nPick(context, fa: 'پیش‌نویس پرونده', en: 'Draft', ar: 'مسودة', zh: '草稿');
-      case 'UNDER_REVIEW': return l10nPick(context, fa: 'در حال بررسی بانک', en: 'Under Bank Review', ar: 'قيد المراجعة', zh: '银行审查中');
-      case 'COMPLEMENT_REQUIRED': return l10nPick(context, fa: 'نیاز به تکمیل مدارک', en: 'Docs Required', ar: 'مطلوب مستندات', zh: '待补交资料');
-      case 'MARGIN_PENDING': return l10nPick(context, fa: 'در انتظار واریز وجه التزام', en: 'Margin Deposit Pending', ar: 'بانتظار التأمين', zh: '待交保证金');
-      case 'IN_ISSUANCE': return l10nPick(context, fa: 'در حال صدور سپام', en: 'Issuing in SEPAM', ar: 'قيد الإصدار', zh: '正在生成SEPAM保函');
-      case 'ISSUED': return l10nPick(context, fa: 'صادر شد (فعال)', en: 'Issued (Active)', ar: 'تم الإصدار', zh: '已正式开立');
-      case 'CLAIMED': return l10nPick(context, fa: 'مطالبه‌شده توسط ذینفع', en: 'Claimed by Beneficiary', ar: 'تمت المطالبة', zh: '受益人已索赔');
-      case 'EXPIRED': return l10nPick(context, fa: 'منقضی‌شده', en: 'Expired', ar: 'منتهي الصلاحية', zh: '已到期');
-      case 'RELEASED': return l10nPick(context, fa: 'تضامین آزاد شد (تسویه)', en: 'Margin Released', ar: 'تم تحرير الضمان', zh: '担保已解质');
-      case 'REJECTED': return l10nPick(context, fa: 'رد شد', en: 'Rejected', ar: 'مرفوض', zh: '已拒绝');
-      case 'CANCELLED': return l10nPick(context, fa: 'لغوشده', en: 'Cancelled', ar: 'ملغي', zh: '已取消');
-      default: return status;
+      case 'DRAFT':
+        return l10nPick(
+          context,
+          fa: 'پیش‌نویس پرونده',
+          en: 'Draft',
+          ar: 'مسودة',
+          zh: '草稿',
+        );
+      case 'UNDER_REVIEW':
+        return l10nPick(
+          context,
+          fa: 'در حال بررسی بانک',
+          en: 'Under Bank Review',
+          ar: 'قيد المراجعة',
+          zh: '银行审查中',
+        );
+      case 'COMPLEMENT_REQUIRED':
+        return l10nPick(
+          context,
+          fa: 'نیاز به تکمیل مدارک',
+          en: 'Docs Required',
+          ar: 'مطلوب مستندات',
+          zh: '待补交资料',
+        );
+      case 'MARGIN_PENDING':
+        return l10nPick(
+          context,
+          fa: 'در انتظار واریز وجه التزام',
+          en: 'Margin Deposit Pending',
+          ar: 'بانتظار التأمين',
+          zh: '待交保证金',
+        );
+      case 'IN_ISSUANCE':
+        return l10nPick(
+          context,
+          fa: 'در حال صدور سپام',
+          en: 'Issuing in SEPAM',
+          ar: 'قيد الإصدار',
+          zh: '正在生成SEPAM保函',
+        );
+      case 'ISSUED':
+        return l10nPick(
+          context,
+          fa: 'صادر شد (فعال)',
+          en: 'Issued (Active)',
+          ar: 'تم الإصدار',
+          zh: '已正式开立',
+        );
+      case 'CLAIMED':
+        return l10nPick(
+          context,
+          fa: 'مطالبه‌شده توسط ذینفع',
+          en: 'Claimed by Beneficiary',
+          ar: 'تمت المطالبة',
+          zh: '受益人已索赔',
+        );
+      case 'EXPIRED':
+        return l10nPick(
+          context,
+          fa: 'منقضی‌شده',
+          en: 'Expired',
+          ar: 'منتهي الصلاحية',
+          zh: '已到期',
+        );
+      case 'RELEASED':
+        return l10nPick(
+          context,
+          fa: 'تضامین آزاد شد (تسویه)',
+          en: 'Margin Released',
+          ar: 'تم تحرير الضمان',
+          zh: '担保已解质',
+        );
+      case 'REJECTED':
+        return l10nPick(
+          context,
+          fa: 'رد شد',
+          en: 'Rejected',
+          ar: 'مرفوض',
+          zh: '已拒绝',
+        );
+      case 'CANCELLED':
+        return l10nPick(
+          context,
+          fa: 'لغوشده',
+          en: 'Cancelled',
+          ar: 'ملغي',
+          zh: '已取消',
+        );
+      default:
+        return status;
     }
   }
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'RELEASED': return AppColors.success;
-      case 'ISSUED': return const Color(0xFF0D9488);
-      case 'CLAIMED': case 'REJECTED': return AppColors.error;
-      case 'MARGIN_PENDING': case 'IN_ISSUANCE': return AppColors.warning;
-      case 'UNDER_REVIEW': case 'COMPLEMENT_REQUIRED': return AppColors.info;
-      default: return Colors.blueGrey;
+      case 'RELEASED':
+        return AppColors.success;
+      case 'ISSUED':
+        return const Color(0xFF0D9488);
+      case 'CLAIMED':
+      case 'REJECTED':
+        return AppColors.error;
+      case 'MARGIN_PENDING':
+      case 'IN_ISSUANCE':
+        return AppColors.warning;
+      case 'UNDER_REVIEW':
+      case 'COMPLEMENT_REQUIRED':
+        return AppColors.info;
+      default:
+        return Colors.blueGrey;
     }
   }
 
@@ -67,7 +155,9 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -90,7 +180,10 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
           onRefresh: controller.fetchMyCases,
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.page.w, vertical: AppSpacing.md.h),
+            padding: EdgeInsetsDirectional.symmetric(
+              horizontal: AppSpacing.page.w,
+              vertical: AppSpacing.md.h,
+            ),
             children: [
               FinancialServiceUnavailableBanner(
                 serviceNameFa: 'ضمانت‌نامه و LC',
@@ -147,7 +240,11 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
     );
   }
 
-  Widget _buildCaseCard(BuildContext context, GuaranteeCaseModel c, bool isDark) {
+  Widget _buildCaseCard(
+    BuildContext context,
+    GuaranteeCaseModel c,
+    bool isDark,
+  ) {
     final statusColor = _statusColor(c.status);
     final statusText = _statusLabel(context, c.status);
 
@@ -184,15 +281,22 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
                   c.instrument?.name ?? '',
                   style: AppTextStyles.titleSmall.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 Container(
-                  padding: EdgeInsetsDirectional.symmetric(horizontal: 10.w, vertical: 3.h),
+                  padding: EdgeInsetsDirectional.symmetric(
+                    horizontal: 10.w,
+                    vertical: 3.h,
+                  ),
                   decoration: BoxDecoration(
                     color: statusColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                    border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: statusColor.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Text(
                     statusText,
@@ -208,7 +312,9 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
             Text(
               '${l10nPick(context, fa: 'شماره پرونده', en: 'Case No.', ar: 'رقم الملف', zh: '案号')}: ${c.caseNo}',
               style: AppTextStyles.bodySmall.copyWith(
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
             Divider(
@@ -222,16 +328,26 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10nPick(context, fa: 'ذینفع', en: 'Beneficiary', ar: 'المستفيد', zh: '受益人'),
+                      l10nPick(
+                        context,
+                        fa: 'ذینفع',
+                        en: 'Beneficiary',
+                        ar: 'المستفيد',
+                        zh: '受益人',
+                      ),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
                       ),
                     ),
                     Text(
                       c.beneficiaryName,
                       style: AppTextStyles.bodySmall.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ],
@@ -240,9 +356,17 @@ class _GuaranteeTrackingScreenState extends State<GuaranteeTrackingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      l10nPick(context, fa: 'مبلغ ضمانت', en: 'Amount', ar: 'المبلغ', zh: '金额'),
+                      l10nPick(
+                        context,
+                        fa: 'مبلغ ضمانت',
+                        en: 'Amount',
+                        ar: 'المبلغ',
+                        zh: '金额',
+                      ),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
                       ),
                     ),
                     Text(

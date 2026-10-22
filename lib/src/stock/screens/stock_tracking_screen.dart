@@ -21,7 +21,8 @@ class StockTrackingScreen extends StatefulWidget {
   State<StockTrackingScreen> createState() => _StockTrackingScreenState();
 }
 
-class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTickerProviderStateMixin {
+class _StockTrackingScreenState extends State<StockTrackingScreen>
+    with SingleTickerProviderStateMixin {
   late final StockController controller;
   late final TabController _tabController;
 
@@ -42,13 +43,20 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
 
   String _statusLabel(BuildContext context, String status) {
     switch (status) {
-      case 'SUBMITTED': return l10nPick(context, fa: 'ثبت شده', en: 'Submitted');
-      case 'PENDING_BROKER': return l10nPick(context, fa: 'در صف کارگزاری', en: 'Pending Broker');
-      case 'EXECUTED': return l10nPick(context, fa: 'اجرا شد', en: 'Executed');
-      case 'PARTIALLY_FILLED': return l10nPick(context, fa: 'اجرای جزئی', en: 'Partial Fill');
-      case 'CANCELLED': return l10nPick(context, fa: 'لغو شده', en: 'Cancelled');
-      case 'REJECTED': return l10nPick(context, fa: 'رد شد', en: 'Rejected');
-      default: return status;
+      case 'SUBMITTED':
+        return l10nPick(context, fa: 'ثبت شده', en: 'Submitted');
+      case 'PENDING_BROKER':
+        return l10nPick(context, fa: 'در صف کارگزاری', en: 'Pending Broker');
+      case 'EXECUTED':
+        return l10nPick(context, fa: 'اجرا شد', en: 'Executed');
+      case 'PARTIALLY_FILLED':
+        return l10nPick(context, fa: 'اجرای جزئی', en: 'Partial Fill');
+      case 'CANCELLED':
+        return l10nPick(context, fa: 'لغو شده', en: 'Cancelled');
+      case 'REJECTED':
+        return l10nPick(context, fa: 'رد شد', en: 'Rejected');
+      default:
+        return status;
     }
   }
 
@@ -107,12 +115,31 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
               indicatorColor: ECardoTokens.brand700(context),
               labelColor: ECardoTokens.brand700(context),
               unselectedLabelColor: ECardoTokens.inkMuted(context),
-              labelStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
+              labelStyle: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w800,
+              ),
               indicatorWeight: 3.h,
               dividerColor: Colors.transparent,
               tabs: [
-                Tab(text: l10nPick(context, fa: 'سفارش‌های من', en: 'My Orders', ar: 'أوامري', zh: '委托明细')),
-                Tab(text: l10nPick(context, fa: 'سبد دارایی (پورتفوی)', en: 'Portfolio', ar: 'المحفظة', zh: '持仓概览')),
+                Tab(
+                  text: l10nPick(
+                    context,
+                    fa: 'سفارش‌های من',
+                    en: 'My Orders',
+                    ar: 'أوامري',
+                    zh: '委托明细',
+                  ),
+                ),
+                Tab(
+                  text: l10nPick(
+                    context,
+                    fa: 'سبد دارایی (پورتفوی)',
+                    en: 'Portfolio',
+                    ar: 'المحفظة',
+                    zh: '持仓概览',
+                  ),
+                ),
               ],
             ),
           ),
@@ -130,8 +157,10 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                       icon: Icons.history_rounded,
                       titleFa: 'هیچ سفارش سهامی ثبت نشده است',
                       titleEn: 'No stock orders recorded',
-                      descFa: 'سفارش‌های خرید و فروش سهام بین‌المللی شما پس از ثبت در این بخش پیگیری می‌شوند.',
-                      descEn: 'Your buy and sell stock orders will appear here once placed.',
+                      descFa:
+                          'سفارش‌های خرید و فروش سهام بین‌المللی شما پس از ثبت در این بخش پیگیری می‌شوند.',
+                      descEn:
+                          'Your buy and sell stock orders will appear here once placed.',
                     );
                   }
 
@@ -144,7 +173,8 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                         vertical: ECardoTokens.space3.h,
                       ),
                       itemCount: ordersList.length,
-                      separatorBuilder: (_, _) => SizedBox(height: ECardoTokens.space3.h),
+                      separatorBuilder: (_, _) =>
+                          SizedBox(height: ECardoTokens.space3.h),
                       itemBuilder: (context, i) {
                         final ord = ordersList[i];
                         return _buildOrderCard(context, ord);
@@ -182,23 +212,39 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                                 begin: AlignmentDirectional.topStart,
                                 end: AlignmentDirectional.bottomEnd,
                               ),
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusXl,
+                              ),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        l10nPick(context, fa: 'ارزش کل دارایی سهام (USD)', en: 'Total Stock Valuation (USD)'),
-                                        style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.inkOnBrandMuted(context)),
+                                        l10nPick(
+                                          context,
+                                          fa: 'ارزش کل دارایی سهام (USD)',
+                                          en: 'Total Stock Valuation (USD)',
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 11.5.sp,
+                                          color: ECardoTokens.inkOnBrandMuted(
+                                            context,
+                                          ),
+                                        ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     SizedBox(width: ECardoTokens.space2.w),
-                                    Icon(Icons.pie_chart_rounded, color: ECardoTokens.sand400(context), size: 18.sp),
+                                    Icon(
+                                      Icons.pie_chart_rounded,
+                                      color: ECardoTokens.sand400(context),
+                                      size: 18.sp,
+                                    ),
                                   ],
                                 ),
                                 SizedBox(height: ECardoTokens.space2.h),
@@ -206,25 +252,37 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                                   children: [
                                     Expanded(
                                       child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.baseline,
                                         textBaseline: TextBaseline.alphabetic,
                                         children: [
                                           Flexible(
                                             child: Text(
                                               '\$${summary?.totalValueUsd.toStringAsFixed(2) ?? '0.00'}',
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w900, color: ECardoTokens.inkOnBrand),
+                                              style: TextStyle(
+                                                fontSize: 22.sp,
+                                                fontWeight: FontWeight.w900,
+                                                color: ECardoTokens.inkOnBrand,
+                                              ),
                                             ),
                                           ),
-                                          SizedBox(width: ECardoTokens.space2.w),
+                                          SizedBox(
+                                            width: ECardoTokens.space2.w,
+                                          ),
                                           Text(
-                                            summary != null && summary.totalUnrealizedPnlUsd >= 0
+                                            summary != null &&
+                                                    summary.totalUnrealizedPnlUsd >=
+                                                        0
                                                 ? '+\$${summary.totalUnrealizedPnlUsd.toStringAsFixed(1)}'
                                                 : '-',
                                             style: TextStyle(
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.w800,
-                                              color: ECardoTokens.inkOnBrandMuted(context),
+                                              color:
+                                                  ECardoTokens.inkOnBrandMuted(
+                                                    context,
+                                                  ),
                                             ),
                                           ),
                                         ],
@@ -232,33 +290,59 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                                     ),
                                     SizedBox(width: ECardoTokens.space2.w),
                                     Container(
-                                      padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space2.w, vertical: 3.h),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: ECardoTokens.space2.w,
+                                        vertical: 3.h,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: ECardoTokens.sand400(context).withValues(alpha: 0.3),
-                                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                                        color: ECardoTokens.sand400(
+                                          context,
+                                        ).withValues(alpha: 0.3),
+                                        borderRadius: BorderRadius.circular(
+                                          ECardoTokens.radiusSm,
+                                        ),
                                       ),
                                       child: Text(
                                         'T+2 Settlement',
-                                        style: TextStyle(fontSize: 9.5.sp, fontWeight: FontWeight.w800, color: ECardoTokens.sand100(context)),
+                                        style: TextStyle(
+                                          fontSize: 9.5.sp,
+                                          fontWeight: FontWeight.w800,
+                                          color: ECardoTokens.sand100(context),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                                 SizedBox(height: ECardoTokens.space3.h),
-                                Divider(height: 18.h, color: ECardoTokens.inkOnBrand.withValues(alpha: 0.1)),
+                                Divider(
+                                  height: 18.h,
+                                  color: ECardoTokens.inkOnBrand.withValues(
+                                    alpha: 0.1,
+                                  ),
+                                ),
                                 SizedBox(height: 6.h),
                                 Row(
                                   children: [
                                     Text(
                                       acc?.accountNumber ?? 'STK-PENDING',
-                                      style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkOnBrandMuted(context)),
+                                      style: TextStyle(
+                                        fontSize: 11.sp,
+                                        color: ECardoTokens.inkOnBrandMuted(
+                                          context,
+                                        ),
+                                      ),
                                     ),
                                     const Spacer(),
                                     Container(
-                                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 3.h,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: ECardoTokens.successBg(context),
-                                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                                        borderRadius: BorderRadius.circular(
+                                          ECardoTokens.radiusSm,
+                                        ),
                                       ),
                                       child: Text(
                                         acc?.riskTier ?? 'BALANCED',
@@ -282,7 +366,11 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                l10nPick(context, fa: 'سهام تحت تملک', en: 'Holdings'),
+                                l10nPick(
+                                  context,
+                                  fa: 'سهام تحت تملک',
+                                  en: 'Holdings',
+                                ),
                                 style: TextStyle(
                                   fontSize: 13.5.sp,
                                   fontWeight: FontWeight.w800,
@@ -291,7 +379,11 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                               ),
                               Text(
                                 '${controller.holdings.length} symbols',
-                                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: ECardoTokens.inkMuted(context)),
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: ECardoTokens.inkMuted(context),
+                                ),
                               ),
                             ],
                           ),
@@ -305,11 +397,15 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                               icon: Icons.pie_chart_outline_rounded,
                               titleFa: 'سبد دارایی خالی است',
                               titleEn: 'Portfolio is currently empty',
-                              descFa: 'پس از اجرای اولین سفارش خرید، سهام به حساب معاملاتی شما اضافه خواهد شد.',
-                              descEn: 'Shares will reflect in your account once purchase orders execute.',
+                              descFa:
+                                  'پس از اجرای اولین سفارش خرید، سهام به حساب معاملاتی شما اضافه خواهد شد.',
+                              descEn:
+                                  'Shares will reflect in your account once purchase orders execute.',
                             ),
                           ] else ...[
-                            ...controller.holdings.map((h) => _buildHoldingCard(context, h)),
+                            ...controller.holdings.map(
+                              (h) => _buildHoldingCard(context, h),
+                            ),
                           ],
 
                           SizedBox(height: ECardoTokens.space6.h),
@@ -319,14 +415,22 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                             padding: EdgeInsets.all(ECardoTokens.space4.r),
                             decoration: BoxDecoration(
                               color: ECardoTokens.surfaceCard(context),
-                              borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-                              border: Border.all(color: ECardoTokens.border(context)),
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusLg,
+                              ),
+                              border: Border.all(
+                                color: ECardoTokens.border(context),
+                              ),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  l10nPick(context, fa: 'توزیع ارز (FX Exposure)', en: 'Currency Distribution'),
+                                  l10nPick(
+                                    context,
+                                    fa: 'توزیع ارز (FX Exposure)',
+                                    en: 'Currency Distribution',
+                                  ),
                                   style: TextStyle(
                                     fontSize: 12.5.sp,
                                     fontWeight: FontWeight.w800,
@@ -335,11 +439,20 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                                 ),
                                 SizedBox(height: ECardoTokens.space3.h),
                                 if (controller.holdings.isNotEmpty) ...[
-                                  _buildCurrencyChip('USD 75%', color: ECardoTokens.brand500(context)),
+                                  _buildCurrencyChip(
+                                    'USD 75%',
+                                    color: ECardoTokens.brand500(context),
+                                  ),
                                   SizedBox(height: ECardoTokens.space2.h),
-                                  _buildCurrencyChip('HKD 20%', color: ECardoTokens.sand600(context)),
+                                  _buildCurrencyChip(
+                                    'HKD 20%',
+                                    color: ECardoTokens.sand600(context),
+                                  ),
                                   SizedBox(height: ECardoTokens.space2.h),
-                                  _buildCurrencyChip('GBP 5%', color: ECardoTokens.info(context)),
+                                  _buildCurrencyChip(
+                                    'GBP 5%',
+                                    color: ECardoTokens.info(context),
+                                  ),
                                 ],
                               ],
                             ),
@@ -361,7 +474,10 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
 
   Widget _buildCurrencyChip(String label, {required Color color}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: ECardoTokens.space2.w, vertical: 5.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: ECardoTokens.space2.w,
+        vertical: 5.h,
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
@@ -369,7 +485,11 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
       ),
       child: Text(
         label,
-        style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w700, color: color),
+        style: TextStyle(
+          fontSize: 10.5.sp,
+          fontWeight: FontWeight.w700,
+          color: color,
+        ),
       ),
     );
   }
@@ -379,8 +499,11 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
     final statusColor = _statusColor(ord.status);
     final statusText = _statusLabel(context, ord.status);
     final settlementDays = ord.settlementDays;
-    final estDate = (ord.createdAt ?? DateTime.now()).add(Duration(days: settlementDays));
-    final dateStr = '${estDate.year}-${estDate.month.toString().padLeft(2, '0')}-${estDate.day.toString().padLeft(2, '0')}';
+    final estDate = (ord.createdAt ?? DateTime.now()).add(
+      Duration(days: settlementDays),
+    );
+    final dateStr =
+        '${estDate.year}-${estDate.month.toString().padLeft(2, '0')}-${estDate.day.toString().padLeft(2, '0')}';
 
     return Container(
       padding: EdgeInsets.all(ECardoTokens.space3.r),
@@ -399,17 +522,28 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: (isBuy ? ECardoTokens.success(context) : ECardoTokens.danger(context)).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                      color:
+                          (isBuy
+                                  ? ECardoTokens.success(context)
+                                  : ECardoTokens.danger(context))
+                              .withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusSm,
+                      ),
                     ),
                     child: Text(
                       ord.side,
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w900,
-                        color: isBuy ? ECardoTokens.success(context) : ECardoTokens.danger(context),
+                        color: isBuy
+                            ? ECardoTokens.success(context)
+                            : ECardoTokens.danger(context),
                       ),
                     ),
                   ),
@@ -434,7 +568,11 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                 ),
                 child: Text(
                   statusText,
-                  style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w800, color: statusColor),
+                  style: TextStyle(
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w800,
+                    color: statusColor,
+                  ),
                 ),
               ),
             ],
@@ -458,12 +596,18 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                   children: [
                     Text(
                       '${ord.qty.toInt()} ${l10nPick(context, fa: 'سهم', en: 'shares')} · \$${ord.price.toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 11.5.sp, color: ECardoTokens.ink(context)),
+                      style: TextStyle(
+                        fontSize: 11.5.sp,
+                        color: ECardoTokens.ink(context),
+                      ),
                     ),
                     if (ord.commissionAmount > 0) ...[
                       Text(
                         'Commission: \$${ord.commissionAmount.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context)),
+                        style: TextStyle(
+                          fontSize: 10.5.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
                       ),
                     ],
                   ],
@@ -474,11 +618,19 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                 children: [
                   Text(
                     '${ord.payAmount.toStringAsFixed(ord.currency == 'IRR' ? 0 : 2)} ${ord.currency}',
-                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w900, color: ECardoTokens.brand700(context)),
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w900,
+                      color: ECardoTokens.brand700(context),
+                    ),
                   ),
                   Text(
                     'T+$settlementDays ($dateStr)',
-                    style: TextStyle(fontSize: 9.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.sand600(context)),
+                    style: TextStyle(
+                      fontSize: 9.5.sp,
+                      fontWeight: FontWeight.w700,
+                      color: ECardoTokens.sand600(context),
+                    ),
                   ),
                 ],
               ),
@@ -491,7 +643,9 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
 
   Widget _buildHoldingCard(BuildContext context, StockHoldingModel h) {
     final isPos = h.unrealizedPnl >= 0;
-    final pnlColor = isPos ? ECardoTokens.success(context) : ECardoTokens.danger(context);
+    final pnlColor = isPos
+        ? ECardoTokens.success(context)
+        : ECardoTokens.danger(context);
     final currentValue = h.currentValue;
 
     return Container(
@@ -516,11 +670,15 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                       height: 32.w,
                       decoration: BoxDecoration(
                         color: ECardoTokens.brand100(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusSm,
+                        ),
                       ),
                       child: Center(
                         child: Text(
-                          h.ticker.substring(0, min(3, h.ticker.length)).toUpperCase(),
+                          h.ticker
+                              .substring(0, min(3, h.ticker.length))
+                              .toUpperCase(),
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w900,
@@ -545,7 +703,10 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                           ),
                           Text(
                             '${h.shares.toInt()} shares · ${h.currency} @ ${h.exchangeCode}',
-                            style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context)),
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              color: ECardoTokens.inkMuted(context),
+                            ),
                           ),
                         ],
                       ),
@@ -584,14 +745,21 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
               Expanded(
                 child: Text(
                   'Avg Cost: \$${h.averageCost.toStringAsFixed(2)}',
-                  style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context)),
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: ECardoTokens.inkMuted(context),
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
               SizedBox(width: ECardoTokens.space2.w),
               Text(
                 'Current: \$${h.currentPrice.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w700,
+                  color: ECardoTokens.ink(context),
+                ),
               ),
             ],
           ),
@@ -601,7 +769,10 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
               Expanded(
                 child: Text(
                   'Realized P&L: \$${h.realizedPnl.toStringAsFixed(2)}',
-                  style: TextStyle(fontSize: 10.5.sp, color: ECardoTokens.inkMuted(context)),
+                  style: TextStyle(
+                    fontSize: 10.5.sp,
+                    color: ECardoTokens.inkMuted(context),
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -609,7 +780,9 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
                 decoration: BoxDecoration(
-                  color: isPos ? ECardoTokens.successBg(context) : ECardoTokens.dangerBg(context),
+                  color: isPos
+                      ? ECardoTokens.successBg(context)
+                      : ECardoTokens.dangerBg(context),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
                 ),
                 child: Text(
@@ -617,7 +790,9 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w800,
-                    color: isPos ? ECardoTokens.success(context) : ECardoTokens.danger(context),
+                    color: isPos
+                        ? ECardoTokens.success(context)
+                        : ECardoTokens.danger(context),
                   ),
                 ),
               ),
@@ -650,11 +825,7 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
         ),
         child: Column(
           children: [
-            Icon(
-              icon,
-              size: 48.sp,
-              color: ECardoTokens.inkMuted(context),
-            ),
+            Icon(icon, size: 48.sp, color: ECardoTokens.inkMuted(context)),
             SizedBox(height: ECardoTokens.space3.h),
             Text(
               l10nPick(context, fa: titleFa, en: titleEn),
@@ -677,7 +848,11 @@ class _StockTrackingScreenState extends State<StockTrackingScreen> with SingleTi
             SizedBox(height: ECardoTokens.space4.h),
             CommonButton(
               height: 42.h,
-              text: l10nPick(context, fa: 'ثبت سفارش سهام جدید', en: 'Place New Stock Order'),
+              text: l10nPick(
+                context,
+                fa: 'ثبت سفارش سهام جدید',
+                en: 'Place New Stock Order',
+              ),
               backgroundColor: ECardoTokens.brand700(context),
               textColor: ECardoTokens.inkOnBrand,
               onPressed: () {

@@ -126,8 +126,9 @@ class _WithdrawAccountSectionState extends State<WithdrawAccountSection>
                           color: accentColor.withValues(
                             alpha: isDark ? 0.20 : 0.12,
                           ),
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusFull),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusFull,
+                          ),
                         ),
                         child: Text(
                           '$count',
@@ -204,17 +205,15 @@ class _WithdrawAccountSectionState extends State<WithdrawAccountSection>
                                   localization.noInternetConnectionRetryButton,
                             )
                           : (controller
-                                      .withdrawAccountModel
-                                      .value
-                                      .data
-                                      ?.accounts
-                                      ?.isEmpty ??
-                                  true)
+                                    .withdrawAccountModel
+                                    .value
+                                    .data
+                                    ?.accounts
+                                    ?.isEmpty ??
+                                true)
                           ? LayoutBuilder(
-                              builder: (context, constraints) =>
-                                  SingleChildScrollView(
-                                physics:
-                                    const AlwaysScrollableScrollPhysics(),
+                              builder: (context, constraints) => SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
                                 child: ConstrainedBox(
                                   constraints: BoxConstraints(
                                     minHeight: constraints.maxHeight,
@@ -248,8 +247,9 @@ class _WithdrawAccountSectionState extends State<WithdrawAccountSection>
                                         onPrimaryAction: () {
                                           HapticFeedback.lightImpact();
                                           Get.find<WithdrawController>()
-                                              .selectedScreen
-                                              .value = 2;
+                                                  .selectedScreen
+                                                  .value =
+                                              2;
                                         },
                                       ),
                                     ),
@@ -264,16 +264,18 @@ class _WithdrawAccountSectionState extends State<WithdrawAccountSection>
                                 horizontal: AppSpacing.md,
                                 vertical: AppSpacing.md,
                               ),
-                              itemCount: (controller
-                                      .withdrawAccountModel
-                                      .value
-                                      .data
-                                      ?.accounts
-                                      ?.length ??
-                                  0) +
+                              itemCount:
+                                  (controller
+                                          .withdrawAccountModel
+                                          .value
+                                          .data
+                                          ?.accounts
+                                          ?.length ??
+                                      0) +
                                   (controller.isPageLoading.value ? 1 : 0),
                               itemBuilder: (context, index) {
-                                final accounts = controller
+                                final accounts =
+                                    controller
                                         .withdrawAccountModel
                                         .value
                                         .data

@@ -174,9 +174,6 @@ class _FakeTravelRepository implements TravelRepository {
     return _order(status: TravelOrderStatus.paymentReceived);
   }
 
-
-
-
   @override
   Future<Map<String, dynamic>> subscribeNotifyMe({
     required String serviceType,

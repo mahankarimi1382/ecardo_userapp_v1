@@ -133,7 +133,8 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
           int? minLevel;
           for (final raw in data) {
             if (raw is! Map) continue;
-            final features = (raw['features'] as List<dynamic>?)
+            final features =
+                (raw['features'] as List<dynamic>?)
                     ?.map((e) => e.toString())
                     .toList() ??
                 const <String>[];
@@ -166,15 +167,22 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
     final hasResolvedLevel = _requiredLevel != null;
     final featureLabel = _featureDisplayLabel(localization, _feature);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     // باگ ۱: دکمه back سیستم (gesture/hardware) در صفحه‌های KYC باید redirect
     // کند. وقتی مسدودی feature-level باشد، Get.back() کافی است؛ وقتی
     // مسدودی app-wide باشد، back به navigation اصلی برمی‌گردد.
     return PopScope(
-      canPop: !_isAppWideBlock && (Navigator.canPop(context) || (Get.key.currentState?.canPop() ?? false)),
+      canPop:
+          !_isAppWideBlock &&
+          (Navigator.canPop(context) ||
+              (Get.key.currentState?.canPop() ?? false)),
       onPopInvokedWithResult: (didPop, _) {
         if (didPop) return;
         if (_isAppWideBlock) {
@@ -188,155 +196,164 @@ class _UpgradeRequiredScreenState extends State<UpgradeRequiredScreen> {
         }
       },
       child: Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
         backgroundColor: bgColor,
-        elevation: 0,
-        leading: _isAppWideBlock
-            // مسدودی سراسری: بازگشت، کاربر را به صفحه‌ای می‌برد که دوباره
-            // ۴۰۳ می‌دهد. به‌جای دکمهٔ بی‌اثر، هیچ ناوبری پیشنهاد نمی‌شود.
-            ? null
-            : BackButton(
-                color: primaryTextColor,
-                onPressed: () {
-                  if (Get.key.currentState?.canPop() ?? false) {
-                    Get.back();
-                  } else {
-                    Get.offAllNamed(BaseRoute.navigation);
-                  }
-                },
-              ),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(
-              28.w,
-              24.h,
-              28.w,
-              AppSpacing.bottomSafe(context, 28.h),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-              // Icon
-              Container(
-                width: 90.w,
-                height: 90.w,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.warning.withValues(alpha: 0.15)
-                      : AppColors.warningContainer,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.lock_outline,
-                  color: AppColors.warning,
-                  size: 44.sp,
-                ),
-              ),
-              SizedBox(height: AppSpacing.xxl),
-
-              // Title
-              Text(
-                localization?.kycUpgradeRequiredTitle ??
-                    'Verification upgrade required',
-                style: AppTextStyles.headlineSmall.copyWith(
-                  fontWeight: FontWeight.w800,
+        appBar: AppBar(
+          backgroundColor: bgColor,
+          elevation: 0,
+          leading: _isAppWideBlock
+              // مسدودی سراسری: بازگشت، کاربر را به صفحه‌ای می‌برد که دوباره
+              // ۴۰۳ می‌دهد. به‌جای دکمهٔ بی‌اثر، هیچ ناوبری پیشنهاد نمی‌شود.
+              ? null
+              : BackButton(
                   color: primaryTextColor,
+                  onPressed: () {
+                    if (Get.key.currentState?.canPop() ?? false) {
+                      Get.back();
+                    } else {
+                      Get.offAllNamed(BaseRoute.navigation);
+                    }
+                  },
                 ),
-                textAlign: TextAlign.center,
+        ),
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(
+                28.w,
+                24.h,
+                28.w,
+                AppSpacing.bottomSafe(context, 28.h),
               ),
-              SizedBox(height: AppSpacing.md),
-
-              // Description
-              if (_resolving && !hasResolvedLevel)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.h),
-                  child: const SizedBox(
-                    width: 28,
-                    height: 28,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                )
-              else
-                Text(
-                  hasResolvedLevel
-                      ? (localization?.kycUpgradeBodyForLevel(
-                            _requiredLevel!,
-                          ) ??
-                          'To use this feature, your identity verification '
-                              'must reach level $_requiredLevel.')
-                      : (localization?.kycUpgradeBodyGeneric ??
-                          'Your current verification level does not allow '
-                              'this action. Please complete or upgrade your '
-                              'identity verification.'),
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: secondaryTextColor,
-                    height: 1.5,
-                  ),
-                ),
-
-              // Feature chip (only when the server told us which feature)
-              if (featureLabel != null) ...[
-                SizedBox(height: AppSpacing.md),
-                Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                        .withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                  ),
-                  child: Text(
-                    featureLabel,
-                    style: AppTextStyles.labelSmall.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Icon
+                  Container(
+                    width: 90.w,
+                    height: 90.w,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.warning.withValues(alpha: 0.15)
+                          : AppColors.warningContainer,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.lock_outline,
+                      color: AppColors.warning,
+                      size: 44.sp,
                     ),
                   ),
-                ),
-              ],
-              SizedBox(height: AppSpacing.xxl),
+                  SizedBox(height: AppSpacing.xxl),
 
-              CommonButton(
-                width: double.infinity,
-                text: l10nPick(
-                  context,
-                  en: 'Upgrade to Level ${_requiredLevel ?? 2}',
-                  fa: 'ارتقا به سطح ${_requiredLevel ?? 2}',
-                  ar: 'الترقية إلى المستوى ${_requiredLevel ?? 2}',
-                  zh: '升级至级别 ${_requiredLevel ?? 2}',
-                ),
-                onPressed: () {
-                  Get.toNamed(
-                    BaseRoute.kycSubmitWizard,
-                    arguments: {'target_level': _requiredLevel ?? 2},
-                  );
-                },
-              ),
-              SizedBox(height: AppSpacing.lg),
-
-              // Secondary button — only when a non-app-wide screen exists to
-              // return to. See _isAppWideBlock.
-              if (!_isAppWideBlock) ...[
-                TextButton(
-                  onPressed: () => Get.back(),
-                  child: Text(
-                    localization?.kycUpgradeLater ?? "I'll do it later",
-                    style: AppTextStyles.labelMedium.copyWith(
-                      color: secondaryTextColor,
+                  // Title
+                  Text(
+                    localization?.kycUpgradeRequiredTitle ??
+                        'Verification upgrade required',
+                    style: AppTextStyles.headlineSmall.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: primaryTextColor,
                     ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ],
-            ],
+                  SizedBox(height: AppSpacing.md),
+
+                  // Description
+                  if (_resolving && !hasResolvedLevel)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      child: const SizedBox(
+                        width: 28,
+                        height: 28,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    )
+                  else
+                    Text(
+                      hasResolvedLevel
+                          ? (localization?.kycUpgradeBodyForLevel(
+                                  _requiredLevel!,
+                                ) ??
+                                'To use this feature, your identity verification '
+                                    'must reach level $_requiredLevel.')
+                          : (localization?.kycUpgradeBodyGeneric ??
+                                'Your current verification level does not allow '
+                                    'this action. Please complete or upgrade your '
+                                    'identity verification.'),
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: secondaryTextColor,
+                        height: 1.5,
+                      ),
+                    ),
+
+                  // Feature chip (only when the server told us which feature)
+                  if (featureLabel != null) ...[
+                    SizedBox(height: AppSpacing.md),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
+                      ),
+                      child: Text(
+                        featureLabel,
+                        style: AppTextStyles.labelSmall.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.lightPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                  SizedBox(height: AppSpacing.xxl),
+
+                  CommonButton(
+                    width: double.infinity,
+                    text: l10nPick(
+                      context,
+                      en: 'Upgrade to Level ${_requiredLevel ?? 2}',
+                      fa: 'ارتقا به سطح ${_requiredLevel ?? 2}',
+                      ar: 'الترقية إلى المستوى ${_requiredLevel ?? 2}',
+                      zh: '升级至级别 ${_requiredLevel ?? 2}',
+                    ),
+                    onPressed: () {
+                      Get.toNamed(
+                        BaseRoute.kycSubmitWizard,
+                        arguments: {'target_level': _requiredLevel ?? 2},
+                      );
+                    },
+                  ),
+                  SizedBox(height: AppSpacing.lg),
+
+                  // Secondary button — only when a non-app-wide screen exists to
+                  // return to. See _isAppWideBlock.
+                  if (!_isAppWideBlock) ...[
+                    TextButton(
+                      onPressed: () => Get.back(),
+                      child: Text(
+                        localization?.kycUpgradeLater ?? "I'll do it later",
+                        style: AppTextStyles.labelMedium.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
-      ),
-    ),
-    ), // end Scaffold
+      ), // end Scaffold
     ); // end PopScope
   }
 

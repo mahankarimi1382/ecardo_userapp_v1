@@ -1,4 +1,3 @@
-
 import 'package:get/get.dart';
 import '../models/tour_model.dart';
 import '../services/tour_service.dart';
@@ -50,12 +49,16 @@ class TourController extends GetxController {
     try {
       final list = await _service.getTours(
         query: searchQuery.value.isEmpty ? null : searchQuery.value,
-        category: selectedCategory.value.isEmpty ? null : selectedCategory.value,
+        category: selectedCategory.value.isEmpty
+            ? null
+            : selectedCategory.value,
       );
       tours.assignAll(list);
       // If list is empty and user wasn't filtering by query/category,
       // it indicates backend /user/tours endpoint is not responding.
-      if (list.isEmpty && searchQuery.value.isEmpty && selectedCategory.value.isEmpty) {
+      if (list.isEmpty &&
+          searchQuery.value.isEmpty &&
+          selectedCategory.value.isEmpty) {
         isServiceUnavailable.value = true;
       }
     } catch (e) {
@@ -112,7 +115,9 @@ class TourController extends GetxController {
   Future<List<TourModel>> submitQuiz() async {
     isMatching.value = true;
     try {
-      final matches = await _service.matchTours(Map<String, dynamic>.from(quizAnswers));
+      final matches = await _service.matchTours(
+        Map<String, dynamic>.from(quizAnswers),
+      );
       matchedTours.assignAll(matches);
       return matches;
     } catch (_) {
@@ -261,4 +266,3 @@ class TourController extends GetxController {
     }
   }
 }
-

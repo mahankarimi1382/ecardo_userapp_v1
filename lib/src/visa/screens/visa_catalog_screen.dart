@@ -41,7 +41,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.h),
         child: SafeArea(
@@ -61,10 +63,18 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                   HapticFeedback.lightImpact();
                   Get.to(() => const VisaListScreen());
                 },
-                tooltip: l10nPick(context, en: 'My Visas', fa: 'درخواست‌های من', ar: 'تأشيراتي', zh: '我的申请'),
+                tooltip: l10nPick(
+                  context,
+                  en: 'My Visas',
+                  fa: 'درخواست‌های من',
+                  ar: 'تأشيراتي',
+                  zh: '我的申请',
+                ),
                 icon: Icon(
                   Icons.history_rounded,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightPrimary,
                 ),
               ),
             ),
@@ -82,7 +92,8 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
           children: [
             // Notice banner if backend error or catalog empty
             Obx(() {
-              if (controller.hasBackendError.value || controller.catalogList.isEmpty) {
+              if (controller.hasBackendError.value ||
+                  controller.catalogList.isEmpty) {
                 return FinancialServiceUnavailableBanner(
                   serviceNameFa: 'ویزا و خدمات کنسولی',
                   serviceNameEn: 'Visa & Consular Service',
@@ -106,7 +117,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                     icon: Icons.menu_book_rounded,
                     titleFa: 'راهنمای انواع ویزا',
                     titleEn: 'Visa Guide',
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightSecondary,
                     onTap: () => Get.to(() => const VisaIntroScreen()),
                   ),
                 ),
@@ -132,7 +145,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.white,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
               ),
               child: TextField(
                 controller: _searchController,
@@ -142,7 +157,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                   });
                 },
                 style: TextStyle(
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                   fontSize: 13.sp,
                 ),
                 decoration: InputDecoration(
@@ -155,11 +172,15 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                   ),
                   hintStyle: TextStyle(
                     fontSize: 12.5.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.softGray,
                   ),
                   prefixIcon: Icon(
                     Icons.search,
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(vertical: 14.h),
@@ -242,7 +263,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.sm.h),
@@ -250,7 +273,8 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
             // Catalog List (4 States)
             Obx(() {
               // 1. Loading Shimmer
-              if (controller.isLoadingCatalog.value && controller.catalogList.isEmpty) {
+              if (controller.isLoadingCatalog.value &&
+                  controller.catalogList.isEmpty) {
                 return _buildCatalogSkeleton(isDark);
               }
 
@@ -262,10 +286,14 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.darkSurface : AppColors.white,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
-                    border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: AppColors.warning.withValues(alpha: 0.3),
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                        color: isDark
+                            ? AppColors.darkShadow
+                            : AppColors.lightShadow,
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -298,7 +326,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.sm.h),
@@ -312,7 +342,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                         ),
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.softGray,
                           fontSize: 11.5.sp,
                           height: 1.5,
                         ),
@@ -329,11 +361,17 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                         ),
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-                            foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                            backgroundColor: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightSecondary,
+                            foregroundColor: isDark
+                                ? AppColors.deepBlack
+                                : AppColors.white,
                             minimumSize: const Size(44, 44),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusMd.r,
+                              ),
                             ),
                             padding: EdgeInsetsDirectional.symmetric(
                               horizontal: AppSpacing.xl.w,
@@ -375,14 +413,20 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.darkSurface : AppColors.white,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
                   ),
                   child: Column(
                     children: [
                       Icon(
                         Icons.travel_explore_rounded,
                         size: 48.r,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.softGray,
                       ),
                       SizedBox(height: AppSpacing.sm.h),
                       Text(
@@ -396,7 +440,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                         style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 13.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       SizedBox(height: AppSpacing.xs.h),
@@ -410,7 +456,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                         ),
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.softGray,
                           fontSize: 11.5.sp,
                         ),
                       ),
@@ -424,7 +472,8 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: items.length,
-                separatorBuilder: (_, _) => SizedBox(height: AppSpacing.cardGap.h),
+                separatorBuilder: (_, _) =>
+                    SizedBox(height: AppSpacing.cardGap.h),
                 itemBuilder: (context, idx) {
                   final item = items[idx];
                   return VisaCatalogCard(
@@ -446,8 +495,12 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
   }
 
   Widget _buildCatalogSkeleton(bool isDark) {
-    final baseColor = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
-    final highlightColor = isDark ? AppColors.darkSurface : AppColors.lightOutlineVariant;
+    final baseColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.lightSurfaceVariant;
+    final highlightColor = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightOutlineVariant;
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -493,7 +546,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
           decoration: BoxDecoration(
             color: isDark ? AppColors.darkSurface : AppColors.white,
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
           ),
           child: Column(
             children: [
@@ -513,7 +568,9 @@ class _VisaCatalogScreenState extends State<VisaCatalogScreen> {
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ],
@@ -545,91 +602,115 @@ class VisaCatalogCard extends StatelessWidget {
       label: semanticsLabel,
       child: VisaCard(
         onTap: onTap,
-      padding: EdgeInsets.all(AppSpacing.lg.r),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          VisaCountryFlag(flagUrl: item.countryFlag, size: 48),
-          SizedBox(width: AppSpacing.md.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        item.countryName,
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm.w, vertical: AppSpacing.xs.h),
-                      decoration: BoxDecoration(
-                        color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                      ),
-                      child: Text(
-                        '${item.processingDaysMin}-${item.processingDaysMax} ${l10nPick(context, en: 'days', fa: 'روز')}',
-                        style: TextStyle(
-                          fontSize: 10.5.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: AppSpacing.xs.h),
-                Text(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                  ),
-                ),
-                SizedBox(height: AppSpacing.sm.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${l10nPick(context, en: 'From', fa: 'شروع از')}: ${formatVisaPrice(item.totalFee, item.currency, context: context)}',
-                      style: TextStyle(
-                        fontSize: 13.5.sp,
-                        fontWeight: FontWeight.w900,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          l10nPick(context, en: 'Details', fa: 'شرایط و مدارک'),
+        padding: EdgeInsets.all(AppSpacing.lg.r),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            VisaCountryFlag(flagUrl: item.countryFlag, size: 48),
+            SizedBox(width: AppSpacing.md.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          item.countryName,
                           style: TextStyle(
-                            fontSize: 11.5.sp,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w800,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
-                        Icon(
-                          Icons.chevron_right_rounded,
-                          size: 16.r,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm.w,
+                          vertical: AppSpacing.xs.h,
                         ),
-                      ],
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.darkSurfaceVariant
+                              : AppColors.lightBackground,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm.r,
+                          ),
+                        ),
+                        child: Text(
+                          '${item.processingDaysMin}-${item.processingDaysMax} ${l10nPick(context, en: 'days', fa: 'روز')}',
+                          style: TextStyle(
+                            fontSize: 10.5.sp,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: AppSpacing.xs.h),
+                  Text(
+                    item.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: AppSpacing.sm.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${l10nPick(context, en: 'From', fa: 'شروع از')}: ${formatVisaPrice(item.totalFee, item.currency, context: context)}',
+                        style: TextStyle(
+                          fontSize: 13.5.sp,
+                          fontWeight: FontWeight.w900,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightSecondary,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            l10nPick(
+                              context,
+                              en: 'Details',
+                              fa: 'شرایط و مدارک',
+                            ),
+                            style: TextStyle(
+                              fontSize: 11.5.sp,
+                              fontWeight: FontWeight.w700,
+                              color: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightSecondary,
+                            ),
+                          ),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            size: 16.r,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightSecondary,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),);
+    );
   }
 }

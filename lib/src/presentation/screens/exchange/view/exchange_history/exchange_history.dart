@@ -103,8 +103,9 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
                         height: 44,
                         decoration: BoxDecoration(
                           color: ExchangeDesignTokens.cardSurface(context),
-                          borderRadius:
-                              BorderRadius.circular(AppSpacing.radiusSm),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusSm,
+                          ),
                           border: Border.all(
                             color: ExchangeDesignTokens.cardBorder(context),
                           ),
@@ -136,7 +137,8 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
               ],
             ),
             Visibility(
-              visible: controller.isTransactionsLoading.value ||
+              visible:
+                  controller.isTransactionsLoading.value ||
                   controller.isPageLoading.value,
               child: Center(
                 child: Padding(
@@ -177,9 +179,7 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
             color: ExchangeDesignTokens.cardSurface(context),
-            border: Border.all(
-              color: ExchangeDesignTokens.cardBorder(context),
-            ),
+            border: Border.all(color: ExchangeDesignTokens.cardBorder(context)),
             boxShadow: ExchangeDesignTokens.cardShadow(context),
           ),
           child: ListView.separated(
@@ -216,8 +216,8 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
                                 decoration: BoxDecoration(
                                   color:
                                       TransactionDynamicColor.getTransactionColor(
-                                    transaction.type,
-                                  ),
+                                        transaction.type,
+                                      ),
                                   borderRadius: BorderRadius.circular(
                                     AppSpacing.radiusLg,
                                   ),
@@ -246,8 +246,10 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
                                               letterSpacing: 0,
                                               fontWeight: FontWeight.w900,
                                               fontSize: 15.5,
-                                              color: ExchangeDesignTokens
-                                                  .textPrimary(context),
+                                              color:
+                                                  ExchangeDesignTokens.textPrimary(
+                                                    context,
+                                                  ),
                                             ),
                                           ),
                                         ),
@@ -268,8 +270,8 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
                                         fontSize: 13,
                                         color:
                                             ExchangeDesignTokens.textTertiary(
-                                          context,
-                                        ),
+                                              context,
+                                            ),
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -416,7 +418,9 @@ class _HistorySkeleton extends StatelessWidget {
                 width: 46,
                 height: 46,
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+                  color: isDark
+                      ? AppColors.darkSurfaceVariant
+                      : AppColors.white,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -428,15 +432,17 @@ class _HistorySkeleton extends StatelessWidget {
                     Container(
                       height: 14,
                       width: 120,
-                      color:
-                          isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+                      color: isDark
+                          ? AppColors.darkSurfaceVariant
+                          : AppColors.white,
                     ),
                     const SizedBox(height: 6),
                     Container(
                       height: 10,
                       width: 80,
-                      color:
-                          isDark ? AppColors.darkSurfaceVariant : AppColors.white,
+                      color: isDark
+                          ? AppColors.darkSurfaceVariant
+                          : AppColors.white,
                     ),
                   ],
                 ),

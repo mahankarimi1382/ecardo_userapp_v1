@@ -39,11 +39,7 @@ Widget _host(
       themeMode: themeMode,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      supportedLocales: const [
-        Locale('en'),
-        Locale('fa'),
-        Locale('ar'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('fa'), Locale('ar')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -52,9 +48,7 @@ Widget _host(
       ],
       home: Directionality(
         textDirection: direction,
-        child: Scaffold(
-          body: child,
-        ),
+        child: Scaffold(body: child),
       ),
     ),
   );
@@ -110,7 +104,9 @@ void main() {
   });
 
   group('TransactionCard widget tests', () {
-    testWidgets('renders credit transaction with + amount and success pill', (tester) async {
+    testWidgets('renders credit transaction with + amount and success pill', (
+      tester,
+    ) async {
       final tx = Transactions(
         tnx: 'TXN1001',
         type: 'Deposit',
@@ -123,9 +119,7 @@ void main() {
         createdAt: '2026-03-15 10:30:00',
       );
 
-      await tester.pumpWidget(_host(
-        TransactionCard(transaction: tx),
-      ));
+      await tester.pumpWidget(_host(TransactionCard(transaction: tx)));
       await tester.pumpAndSettle();
 
       expect(find.text(r'+$150.00'), findsOneWidget);
@@ -133,7 +127,9 @@ void main() {
       expect(find.text('Success'), findsOneWidget);
     });
 
-    testWidgets('renders debit transaction with - amount in Persian RTL', (tester) async {
+    testWidgets('renders debit transaction with - amount in Persian RTL', (
+      tester,
+    ) async {
       final tx = Transactions(
         tnx: 'TXN1002',
         type: 'Withdraw',
@@ -146,11 +142,13 @@ void main() {
         createdAt: '2026-03-15 11:00:00',
       );
 
-      await tester.pumpWidget(_host(
-        TransactionCard(transaction: tx),
-        locale: const Locale('fa'),
-        direction: TextDirection.rtl,
-      ));
+      await tester.pumpWidget(
+        _host(
+          TransactionCard(transaction: tx),
+          locale: const Locale('fa'),
+          direction: TextDirection.rtl,
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text(r'-$80.00'), findsOneWidget);
@@ -167,9 +165,9 @@ void main() {
         Transactions(amount: '150.00', isPlus: true, trxCurrencySymbol: r'$'),
       ];
 
-      await tester.pumpWidget(_host(
-        TransactionSummaryCard(transactions: txList),
-      ));
+      await tester.pumpWidget(
+        _host(TransactionSummaryCard(transactions: txList)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text(r'+$350.00'), findsOneWidget);
@@ -180,9 +178,9 @@ void main() {
 
   group('TransactionDateGroupHeader widget tests', () {
     testWidgets('renders title and item count pill', (tester) async {
-      await tester.pumpWidget(_host(
-        const TransactionDateGroupHeader(title: 'Today', count: 4),
-      ));
+      await tester.pumpWidget(
+        _host(const TransactionDateGroupHeader(title: 'Today', count: 4)),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Today'), findsOneWidget);
@@ -191,15 +189,16 @@ void main() {
   });
 
   group('TransactionShimmerSkeleton widget tests', () {
-    testWidgets('renders shimmer skeleton in Dark Mode without overflow', (tester) async {
+    testWidgets('renders shimmer skeleton in Dark Mode without overflow', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(360, 640);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);
 
-      await tester.pumpWidget(_host(
-        const TransactionShimmerSkeleton(),
-        themeMode: ThemeMode.dark,
-      ));
+      await tester.pumpWidget(
+        _host(const TransactionShimmerSkeleton(), themeMode: ThemeMode.dark),
+      );
       await tester.pump();
 
       expect(find.byType(TransactionShimmerSkeleton), findsOneWidget);
@@ -207,17 +206,18 @@ void main() {
   });
 
   group('TransactionTypeList widget tests', () {
-    testWidgets('renders localized types and updates controller on tap', (tester) async {
+    testWidgets('renders localized types and updates controller on tap', (
+      tester,
+    ) async {
       final controller = Get.find<TransactionsController>();
 
-      await tester.pumpWidget(_host(
-        const SizedBox(
-          height: 40,
-          child: TransactionTypeList(),
+      await tester.pumpWidget(
+        _host(
+          const SizedBox(height: 40, child: TransactionTypeList()),
+          locale: const Locale('fa'),
+          direction: TextDirection.rtl,
         ),
-        locale: const Locale('fa'),
-        direction: TextDirection.rtl,
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('همه'), findsOneWidget);
@@ -234,12 +234,14 @@ void main() {
     testWidgets('renders direction chips and status pills', (tester) async {
       int? updatedDir;
 
-      await tester.pumpWidget(_host(
-        TransactionFilterBottomSheet(
-          initialDirFilter: 0,
-          onDirectionChanged: (val) => updatedDir = val,
+      await tester.pumpWidget(
+        _host(
+          TransactionFilterBottomSheet(
+            initialDirFilter: 0,
+            onDirectionChanged: (val) => updatedDir = val,
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Filter Transactions'), findsOneWidget);

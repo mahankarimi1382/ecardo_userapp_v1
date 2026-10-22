@@ -75,11 +75,11 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                   return MyOrderCard(order: controller.orderList[index]);
                 },
                 separatorBuilder: (_, _) => SizedBox(height: 14.h),
-                itemCount: controller.orderList.length +
+                itemCount:
+                    controller.orderList.length +
                     (controller.isPaginationLoading.value ? 1 : 0),
               ),
       );
     });
   }
 }
-

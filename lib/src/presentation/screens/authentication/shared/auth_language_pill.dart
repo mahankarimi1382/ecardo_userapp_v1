@@ -10,13 +10,13 @@ class AuthLanguagePill extends StatelessWidget {
   const AuthLanguagePill({super.key});
 
   static String _isoCode(String code) => switch (code.toLowerCase()) {
-        'fa' => 'FA',
-        'ar' => 'AR',
-        'zh' => 'ZH',
-        'tr' => 'TR',
-        'ru' => 'RU',
-        _ => 'EN',
-      };
+    'fa' => 'FA',
+    'ar' => 'AR',
+    'zh' => 'ZH',
+    'tr' => 'TR',
+    'ru' => 'RU',
+    _ => 'EN',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +32,9 @@ class AuthLanguagePill extends StatelessWidget {
     final pillBorder = isDark
         ? Colors.white.withValues(alpha: 0.16)
         : AppColors.lightBorder.withValues(alpha: 0.80);
-    final textColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     return Material(
       color: Colors.transparent,
@@ -113,8 +114,9 @@ class AuthLanguagePill extends StatelessWidget {
     final currentCode = Localizations.localeOf(context).languageCode;
 
     final sheetBg = isDark ? const Color(0xFF131826) : AppColors.white;
-    final titleColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final titleColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
 
     final selectedCode = await showModalBottomSheet<String>(
       context: context,
@@ -163,25 +165,29 @@ class AuthLanguagePill extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: c == currentCode
                         ? (isDark
-                            ? const Color(0xFF1E293B)
-                            : const Color(0xFFF1F5F9))
+                              ? const Color(0xFF1E293B)
+                              : const Color(0xFFF1F5F9))
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(14.r),
                     border: Border.all(
                       color: c == currentCode
                           ? (isDark
-                              ? const Color(0xFF38BDF8)
-                              : AppColors.deepBlack)
+                                ? const Color(0xFF38BDF8)
+                                : AppColors.deepBlack)
                           : Colors.transparent,
                       width: 1.2,
                     ),
                   ),
                   child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 2.h),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 2.h,
+                    ),
                     leading: Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 8.w, vertical: 4.h),
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
                         color: isDark
                             ? Colors.white.withValues(alpha: 0.08)

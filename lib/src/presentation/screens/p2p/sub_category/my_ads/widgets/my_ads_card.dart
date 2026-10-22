@@ -35,7 +35,8 @@ class MyAdsCard extends StatelessWidget {
         ? ad.assetFiatPair!
         : '${ad.assetCurrency?.code ?? '-'} / ${ad.fiatCurrency?.code ?? '-'}';
     final totalAmountText = (ad.totalAmount ?? '0').trim();
-    final completedTradeText = '${ad.completedOrders ?? 0} ${localization.p2pOrders}';
+    final completedTradeText =
+        '${ad.completedOrders ?? 0} ${localization.p2pOrders}';
     final statusText = _localizedStatus(ad.status);
     final statusColor = _statusColor(ad.status);
 

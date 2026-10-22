@@ -25,10 +25,12 @@ class ForgotPasswordScreen extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     final cardBg = isDark
         ? AppColors.darkSurface.withValues(alpha: 0.94)
@@ -41,8 +43,9 @@ class ForgotPasswordScreen extends StatelessWidget {
         Get.find<ForgotPasswordController>();
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: AmbientAuthBackground(
         child: Stack(
@@ -59,8 +62,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                         if (!isDark)
                           Positioned.fill(
                             child: ImageFiltered(
-                              imageFilter:
-                                  ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                              imageFilter: ImageFilter.blur(
+                                sigmaX: 20,
+                                sigmaY: 20,
+                              ),
                               child: Image.asset(
                                 PngAssets.splashFrame,
                                 fit: BoxFit.cover,
@@ -153,7 +158,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                                 textInputAction: TextInputAction.done,
                                 onFieldSubmitted: (_) {
                                   if (controller
-                                          .emailController.text.isNotEmpty &&
+                                          .emailController
+                                          .text
+                                          .isNotEmpty &&
                                       !controller.isLoading.value) {
                                     controller.submitForgotPassword();
                                   }
@@ -183,12 +190,14 @@ class ForgotPasswordScreen extends StatelessWidget {
                                       ),
                                       color: controller.isEmailFocused.value
                                           ? (isDark
-                                              ? AppColors.darkAccent
-                                              : AppColors.brandViolet)
+                                                ? AppColors.darkAccent
+                                                : AppColors.brandViolet)
                                           : (isDark
-                                              ? AppColors.darkTextSecondary
-                                              : AppColors.lightTextPrimary)
-                                              .withValues(alpha: 0.44),
+                                                    ? AppColors
+                                                          .darkTextSecondary
+                                                    : AppColors
+                                                          .lightTextPrimary)
+                                                .withValues(alpha: 0.44),
                                     ),
                                   ),
                                 ),

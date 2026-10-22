@@ -80,37 +80,48 @@ void _withError(WalletsController controller) {
 ///
 /// [configure] runs against the registered controller before the screen is pumped,
 /// which is how the error and empty branches of the screen get exercised.
-List<void Function()> _registrations([void Function(WalletsController)? configure]) =>
-    [
-      () {
-        final controller = _TestWalletsController();
-        // Registered under the base type by hand rather than via the helper,
-        // because we need the instance back to seed its state.
-        Get.put<WalletsController>(controller, permanent: true);
-        configure?.call(controller);
-      },
-      () => registerController<SettingsService>(_TestSettingsService()),
-    ];
+List<void Function()> _registrations([
+  void Function(WalletsController)? configure,
+]) => [
+  () {
+    final controller = _TestWalletsController();
+    // Registered under the base type by hand rather than via the helper,
+    // because we need the instance back to seed its state.
+    Get.put<WalletsController>(controller, permanent: true);
+    configure?.call(controller);
+  },
+  () => registerController<SettingsService>(_TestSettingsService()),
+];
 
 void main() {
   tearDown(resetHarness);
 
   testWidgets('wallets — light', (tester) async {
-    await pumpScreen(tester, const WalletsScreen(),
-        registrations: _registrations(_withWallets));
+    await pumpScreen(
+      tester,
+      const WalletsScreen(),
+      registrations: _registrations(_withWallets),
+    );
     await capture(tester, 'wallets__light');
   });
 
   testWidgets('wallets — dark', (tester) async {
-    await pumpScreen(tester, const WalletsScreen(),
-        dark: true, registrations: _registrations(_withWallets));
+    await pumpScreen(
+      tester,
+      const WalletsScreen(),
+      dark: true,
+      registrations: _registrations(_withWallets),
+    );
     await capture(tester, 'wallets__dark');
   });
 
   testWidgets('wallets — RTL', (tester) async {
-    await pumpScreen(tester, const WalletsScreen(),
-        textDirection: TextDirection.rtl,
-        registrations: _registrations(_withWallets));
+    await pumpScreen(
+      tester,
+      const WalletsScreen(),
+      textDirection: TextDirection.rtl,
+      registrations: _registrations(_withWallets),
+    );
     await capture(tester, 'wallets__rtl');
   });
 
@@ -118,8 +129,11 @@ void main() {
   // reaches the card list, so each branch needs its own seed. These cover the
   // design-system components that replaced the hand-rolled states.
   testWidgets('wallets — empty state', (tester) async {
-    await pumpScreen(tester, const WalletsScreen(),
-        registrations: _registrations(_withoutWallets));
+    await pumpScreen(
+      tester,
+      const WalletsScreen(),
+      registrations: _registrations(_withoutWallets),
+    );
     await capture(tester, 'wallets__empty');
 
     expect(find.byType(EcardoEmptyState), findsOneWidget);
@@ -129,15 +143,21 @@ void main() {
   });
 
   testWidgets('wallets — empty state RTL', (tester) async {
-    await pumpScreen(tester, const WalletsScreen(),
-        textDirection: TextDirection.rtl,
-        registrations: _registrations(_withoutWallets));
+    await pumpScreen(
+      tester,
+      const WalletsScreen(),
+      textDirection: TextDirection.rtl,
+      registrations: _registrations(_withoutWallets),
+    );
     await capture(tester, 'wallets__empty_rtl');
   });
 
   testWidgets('wallets — error state', (tester) async {
-    await pumpScreen(tester, const WalletsScreen(),
-        registrations: _registrations(_withError));
+    await pumpScreen(
+      tester,
+      const WalletsScreen(),
+      registrations: _registrations(_withError),
+    );
     await capture(tester, 'wallets__error');
 
     expect(find.byType(EcardoErrorView), findsOneWidget);
@@ -147,8 +167,12 @@ void main() {
   });
 
   testWidgets('wallets — error state dark', (tester) async {
-    await pumpScreen(tester, const WalletsScreen(), dark: true,
-        registrations: _registrations(_withError));
+    await pumpScreen(
+      tester,
+      const WalletsScreen(),
+      dark: true,
+      registrations: _registrations(_withError),
+    );
     await capture(tester, 'wallets__error_dark');
   });
 }

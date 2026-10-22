@@ -20,16 +20,15 @@ import '../models/guarantee_models.dart';
 class GuaranteeCalledScreen extends StatelessWidget {
   final GuaranteeCaseModel guaranteeCase;
 
-  const GuaranteeCalledScreen({
-    super.key,
-    required this.guaranteeCase,
-  });
+  const GuaranteeCalledScreen({super.key, required this.guaranteeCase});
 
   @override
   Widget build(BuildContext context) {
     final claimAmount = guaranteeCase.claimAmount ?? guaranteeCase.amount;
     final marginCovered = guaranteeCase.marginAmount;
-    final remainingPayable = claimAmount > marginCovered ? claimAmount - marginCovered : 0.0;
+    final remainingPayable = claimAmount > marginCovered
+        ? claimAmount - marginCovered
+        : 0.0;
 
     return Scaffold(
       backgroundColor: ECardoTokens.surfaceCanvas(context),
@@ -159,19 +158,31 @@ class GuaranteeCalledScreen extends StatelessWidget {
                   SizedBox(height: ECardoTokens.space3.h),
                   _buildDetailRow(
                     context,
-                    label: l10nPick(context, fa: 'مطالبه‌کننده (ذینفع)', en: 'Called by'),
+                    label: l10nPick(
+                      context,
+                      fa: 'مطالبه‌کننده (ذینفع)',
+                      en: 'Called by',
+                    ),
                     value: guaranteeCase.beneficiaryName,
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildDetailRow(
                     context,
-                    label: l10nPick(context, fa: 'علت مطالبه', en: 'Reason given'),
+                    label: l10nPick(
+                      context,
+                      fa: 'علت مطالبه',
+                      en: 'Reason given',
+                    ),
                     value: guaranteeCase.claimReason ?? 'Goods not delivered',
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildDetailRow(
                     context,
-                    label: l10nPick(context, fa: 'تاریخ ثبت مطالبه', en: 'Called on'),
+                    label: l10nPick(
+                      context,
+                      fa: 'تاریخ ثبت مطالبه',
+                      en: 'Called on',
+                    ),
                     value: '4 Oct 2026',
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
@@ -228,21 +239,33 @@ class GuaranteeCalledScreen extends StatelessWidget {
                 children: [
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'مبلغ کل مطالبه', en: 'Claim amount'),
+                    label: l10nPick(
+                      context,
+                      fa: 'مبلغ کل مطالبه',
+                      en: 'Claim amount',
+                    ),
                     value: '${claimAmount.toStringAsFixed(2)} USD',
                     valueColor: ECardoTokens.ink(context),
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'پوشش از محل مارجین بلوکه‌شده', en: 'Covered by your margin'),
+                    label: l10nPick(
+                      context,
+                      fa: 'پوشش از محل مارجین بلوکه‌شده',
+                      en: 'Covered by your margin',
+                    ),
                     value: '${marginCovered.toStringAsFixed(2)} USD',
                     valueColor: ECardoTokens.brand700(context),
                   ),
                   Divider(color: ECardoTokens.border(context), height: 16.h),
                   _buildCostRow(
                     context,
-                    label: l10nPick(context, fa: 'مبلغی که باید پرداخت کنید', en: 'You must pay'),
+                    label: l10nPick(
+                      context,
+                      fa: 'مبلغی که باید پرداخت کنید',
+                      en: 'You must pay',
+                    ),
                     value: '${remainingPayable.toStringAsFixed(2)} USD',
                     valueColor: ECardoTokens.danger(context),
                     isBold: true,
@@ -272,9 +295,13 @@ class GuaranteeCalledScreen extends StatelessWidget {
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: ECardoTokens.ink(context),
-                      side: BorderSide(color: ECardoTokens.borderStrong(context)),
+                      side: BorderSide(
+                        color: ECardoTokens.borderStrong(context),
+                      ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusLg.r,
+                        ),
                       ),
                     ),
                     onPressed: () {
@@ -309,7 +336,9 @@ class GuaranteeCalledScreen extends StatelessWidget {
                       foregroundColor: ECardoTokens.inkOnBrand,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusLg.r,
+                        ),
                       ),
                     ),
                     onPressed: () {
@@ -342,7 +371,11 @@ class GuaranteeCalledScreen extends StatelessWidget {
   void _showObjectDialog(BuildContext context) {
     final noteController = TextEditingController();
     final oTitle = l10nPick(context, fa: 'ثبت شد', en: 'Submitted');
-    final oMsg = l10nPick(context, fa: 'اعتراض شما ثبت شد و کارشناس ظرف ۳ روز کاری بررسی خواهد کرد.', en: 'Objection submitted for 3-day review.');
+    final oMsg = l10nPick(
+      context,
+      fa: 'اعتراض شما ثبت شد و کارشناس ظرف ۳ روز کاری بررسی خواهد کرد.',
+      en: 'Objection submitted for 3-day review.',
+    );
     final oBg = ECardoTokens.successBg(context);
     final oColor = ECardoTokens.success(context);
 
@@ -358,15 +391,24 @@ class GuaranteeCalledScreen extends StatelessWidget {
                 fa: 'شرح دلایل و عدم نقض قرارداد را بنویسید. بارگذاری مدرک الزامی است.',
                 en: 'State your reasons and attach proof of fulfillment.',
               ),
-              style: TextStyle(fontSize: 12.sp, color: ECardoTokens.inkMuted(context)),
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: ECardoTokens.inkMuted(context),
+              ),
             ),
             SizedBox(height: 8.h),
             TextField(
               controller: noteController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: l10nPick(context, fa: 'توضیحات و مستندات...', en: 'Notes and evidence...'),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.r)),
+                hintText: l10nPick(
+                  context,
+                  fa: 'توضیحات و مستندات...',
+                  en: 'Notes and evidence...',
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
               ),
             ),
           ],
@@ -378,24 +420,27 @@ class GuaranteeCalledScreen extends StatelessWidget {
       confirmTextColor: Colors.white,
       onConfirm: () {
         Get.back();
-        Get.snackbar(
-          oTitle,
-          oMsg,
-          backgroundColor: oBg,
-          colorText: oColor,
-        );
+        Get.snackbar(oTitle, oMsg, backgroundColor: oBg, colorText: oColor);
       },
     );
   }
 
   void _showAcceptPaymentDialog(BuildContext context, double remainingPayable) {
     final aTitle = l10nPick(context, fa: 'تکمیل شد', en: 'Completed');
-    final aMsg = l10nPick(context, fa: 'وجه مطالبه‌شده پرداخت گردید.', en: 'Payment sent to beneficiary.');
+    final aMsg = l10nPick(
+      context,
+      fa: 'وجه مطالبه‌شده پرداخت گردید.',
+      en: 'Payment sent to beneficiary.',
+    );
     final aBg = ECardoTokens.successBg(context);
     final aColor = ECardoTokens.success(context);
 
     Get.defaultDialog(
-      title: l10nPick(context, fa: 'تأیید پرداخت به ذینفع', en: 'Confirm payment to beneficiary'),
+      title: l10nPick(
+        context,
+        fa: 'تأیید پرداخت به ذینفع',
+        en: 'Confirm payment to beneficiary',
+      ),
       middleText: l10nPick(
         context,
         fa: 'آیا مایل به پرداخت مبلغ ${remainingPayable.toStringAsFixed(2)} دلار از کیف پول به همراه مارجین هستید؟',
@@ -407,17 +452,16 @@ class GuaranteeCalledScreen extends StatelessWidget {
       confirmTextColor: Colors.white,
       onConfirm: () {
         Get.back();
-        Get.snackbar(
-          aTitle,
-          aMsg,
-          backgroundColor: aBg,
-          colorText: aColor,
-        );
+        Get.snackbar(aTitle, aMsg, backgroundColor: aBg, colorText: aColor);
       },
     );
   }
 
-  Widget _buildDetailRow(BuildContext context, {required String label, required String value}) {
+  Widget _buildDetailRow(
+    BuildContext context, {
+    required String label,
+    required String value,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -454,7 +498,9 @@ class GuaranteeCalledScreen extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 13.sp,
-            color: isBold ? ECardoTokens.ink(context) : ECardoTokens.inkMuted(context),
+            color: isBold
+                ? ECardoTokens.ink(context)
+                : ECardoTokens.inkMuted(context),
             fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
           ),
         ),

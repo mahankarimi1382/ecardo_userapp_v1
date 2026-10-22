@@ -218,7 +218,8 @@ class GiftCardController extends GetxController {
         isGiftCardError.value = true;
       }
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isGiftCardLoading.value = false;
@@ -282,7 +283,8 @@ class GiftCardController extends GetxController {
       debugPrint('❌ getGiftCardCountry() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {}
   }
@@ -304,7 +306,8 @@ class GiftCardController extends GetxController {
       debugPrint('❌ getGiftCardCategory() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {}
   }
@@ -324,7 +327,8 @@ class GiftCardController extends GetxController {
       debugPrint('❌ getGiftCardProductDetails() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {}
   }
@@ -368,7 +372,8 @@ class GiftCardController extends GetxController {
       debugPrint('❌ postBuyNowGiftCard() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'An error occurred while loading data.',
+        localization?.allControllerLoadError ??
+            'An error occurred while loading data.',
       );
     } finally {
       isBuyNowGiftCardLoading.value = false;
@@ -438,7 +443,8 @@ class GiftCardController extends GetxController {
 
     if (emailController.text.isNotEmpty && !emailController.text.isEmail) {
       ToastHelper().showErrorToast(
-        localization?.giftCardEmailInvalid ?? 'Please enter a valid email address',
+        localization?.giftCardEmailInvalid ??
+            'Please enter a valid email address',
       );
       return false;
     }

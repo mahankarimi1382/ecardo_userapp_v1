@@ -169,43 +169,43 @@ class RemittanceController extends GetxController {
   // ------------------------------ STEP 1: METHODS ------------------------------ //
 
   static List<RemittanceMethod> get defaultMethods => [
-        RemittanceMethod(
-          id: 1,
-          name: 'Bank transfer · China',
-          countryCode: 'CN',
-          receiveCurrencyCode: 'CNY',
-          receiveCurrencyId: 3,
-          status: 1,
-          description: 'Arrives within 24h · CNY',
-        ),
-        RemittanceMethod(
-          id: 2,
-          name: 'Alipay',
-          countryCode: 'CN',
-          receiveCurrencyCode: 'CNY',
-          receiveCurrencyId: 3,
-          status: 1,
-          description: 'Usually within 2h · CNY',
-        ),
-        RemittanceMethod(
-          id: 3,
-          name: 'Iranian bank · SHABA',
-          countryCode: 'IR',
-          receiveCurrencyCode: 'IRT',
-          receiveCurrencyId: 1,
-          status: 0,
-          description: 'IRT payout · Soon',
-        ),
-        RemittanceMethod(
-          id: 4,
-          name: 'USDT wallet',
-          countryCode: 'GLOBAL',
-          receiveCurrencyCode: 'USDT',
-          receiveCurrencyId: 2,
-          status: 0,
-          description: 'TRC20 payout · Soon',
-        ),
-      ];
+    RemittanceMethod(
+      id: 1,
+      name: 'Bank transfer · China',
+      countryCode: 'CN',
+      receiveCurrencyCode: 'CNY',
+      receiveCurrencyId: 3,
+      status: 1,
+      description: 'Arrives within 24h · CNY',
+    ),
+    RemittanceMethod(
+      id: 2,
+      name: 'Alipay',
+      countryCode: 'CN',
+      receiveCurrencyCode: 'CNY',
+      receiveCurrencyId: 3,
+      status: 1,
+      description: 'Usually within 2h · CNY',
+    ),
+    RemittanceMethod(
+      id: 3,
+      name: 'Iranian bank · SHABA',
+      countryCode: 'IR',
+      receiveCurrencyCode: 'IRT',
+      receiveCurrencyId: 1,
+      status: 0,
+      description: 'IRT payout · Soon',
+    ),
+    RemittanceMethod(
+      id: 4,
+      name: 'USDT wallet',
+      countryCode: 'GLOBAL',
+      receiveCurrencyCode: 'USDT',
+      receiveCurrencyId: 2,
+      status: 0,
+      description: 'TRC20 payout · Soon',
+    ),
+  ];
 
   Future<void> fetchMethods() async {
     isMethodsLoading.value = true;
@@ -230,7 +230,10 @@ class RemittanceController extends GetxController {
     } finally {
       isMethodsLoading.value = false;
       if (selectedMethod.value == null && methods.isNotEmpty) {
-        final firstActive = methods.firstWhere((m) => m.isActive, orElse: () => methods.first);
+        final firstActive = methods.firstWhere(
+          (m) => m.isActive,
+          orElse: () => methods.first,
+        );
         selectMethod(firstActive);
       }
     }
@@ -337,10 +340,12 @@ class RemittanceController extends GetxController {
         // here prevents the user from picking BTC/ETH as the send currency
         // and having the backend reject the quote.
         final fiat = (model.data ?? [])
-            .where((c) =>
-                (c.type ?? '').toLowerCase() == 'fiat' &&
-                (c.status ?? '').toLowerCase() != 'false' &&
-                c.id != null)
+            .where(
+              (c) =>
+                  (c.type ?? '').toLowerCase() == 'fiat' &&
+                  (c.status ?? '').toLowerCase() != 'false' &&
+                  c.id != null,
+            )
             .toList();
         sendCurrencies.assignAll(fiat);
 
@@ -392,13 +397,17 @@ class RemittanceController extends GetxController {
 
   Future<bool> requestQuote() async {
     if (selectedMethod.value == null) {
-      ToastHelper().showErrorToast(_l?.remittanceErrSelectPayout ?? 'Please select a payout method');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrSelectPayout ?? 'Please select a payout method',
+      );
       return false;
     }
 
     final amount = double.tryParse(amountController.text.trim());
     if (amount == null || amount <= 0) {
-      ToastHelper().showErrorToast(_l?.remittanceErrInvalidAmount ?? 'Please enter a valid amount');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrInvalidAmount ?? 'Please enter a valid amount',
+      );
       return false;
     }
 
@@ -430,7 +439,9 @@ class RemittanceController extends GetxController {
     }
 
     if (selectedSendCurrencyId.value == 0) {
-      ToastHelper().showErrorToast(_l?.remittanceErrSelectSendCurrency ?? 'Please select a send currency');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrSelectSendCurrency ?? 'Please select a send currency',
+      );
       return false;
     }
 
@@ -458,7 +469,9 @@ class RemittanceController extends GetxController {
         return true;
       }
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrQuoteFailed ?? 'Quote failed');
+      ToastHelper().showErrorToast(
+        response.message ?? _l?.remittanceErrQuoteFailed ?? 'Quote failed',
+      );
     }
     return false;
   }
@@ -494,12 +507,17 @@ class RemittanceController extends GetxController {
   Future<bool> createRemittance() async {
     final quote = currentQuote.value;
     if (quote == null) {
-      ToastHelper().showErrorToast(_l?.remittanceErrRequestQuoteFirst ?? 'Please request a quote first');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrRequestQuoteFirst ?? 'Please request a quote first',
+      );
       return false;
     }
 
     if (quote.isExpired) {
-      ToastHelper().showErrorToast(_l?.remittanceErrQuoteExpired ?? 'Quote expired. Please request a new one.');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrQuoteExpired ??
+            'Quote expired. Please request a new one.',
+      );
       return false;
     }
 
@@ -508,7 +526,9 @@ class RemittanceController extends GetxController {
         senderPhoneController.text.isEmpty ||
         senderIdNumberController.text.isEmpty ||
         selectedSenderCountry.value.isEmpty) {
-      ToastHelper().showErrorToast(_l?.remittanceErrSenderInfo ?? 'Please complete sender information');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrSenderInfo ?? 'Please complete sender information',
+      );
       return false;
     }
 
@@ -516,7 +536,9 @@ class RemittanceController extends GetxController {
     if (receiverNameController.text.isEmpty ||
         receiverPhoneController.text.isEmpty ||
         selectedReceiverCountry.value.isEmpty) {
-      ToastHelper().showErrorToast(_l?.remittanceErrReceiverInfo ?? 'Please complete receiver information');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrReceiverInfo ?? 'Please complete receiver information',
+      );
       return false;
     }
 
@@ -626,7 +648,11 @@ class RemittanceController extends GetxController {
         return true;
       }
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrSubmissionFailed ?? 'Submission failed');
+      ToastHelper().showErrorToast(
+        response.message ??
+            _l?.remittanceErrSubmissionFailed ??
+            'Submission failed',
+      );
     }
     return false;
   }
@@ -657,7 +683,10 @@ class RemittanceController extends GetxController {
       // Image picker covers camera + gallery and is the most reliable
       // across Android versions (no SAF / content-uri complications).
       final picker = ImagePicker();
-      final xFile = await picker.pickImage(source: imageSource, imageQuality: 85);
+      final xFile = await picker.pickImage(
+        source: imageSource,
+        imageQuality: 85,
+      );
       path = xFile?.path;
 
       if (path == null || path.isEmpty) {
@@ -735,12 +764,16 @@ class RemittanceController extends GetxController {
   Future<bool> uploadDocuments() async {
     final remittance = createdRemittance.value;
     if (remittance == null) {
-      ToastHelper().showErrorToast(_l?.remittanceErrNoRemittance ?? 'No remittance to upload to');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrNoRemittance ?? 'No remittance to upload to',
+      );
       return false;
     }
 
     if (pendingAttachments.isEmpty) {
-      ToastHelper().showErrorToast(_l?.remittanceErrAddDocument ?? 'Please add at least one document');
+      ToastHelper().showErrorToast(
+        _l?.remittanceErrAddDocument ?? 'Please add at least one document',
+      );
       return false;
     }
 
@@ -780,10 +813,7 @@ class RemittanceController extends GetxController {
         continue;
       }
       formData.files.add(
-        MapEntry(
-          'files[]',
-          await MultipartFile.fromFile(path),
-        ),
+        MapEntry('files[]', await MultipartFile.fromFile(path)),
       );
       types.add(type);
     }
@@ -817,11 +847,15 @@ class RemittanceController extends GetxController {
     isUploadLoading.value = false;
 
     if (response.status == Status.completed) {
-      ToastHelper().showSuccessToast(_l?.remittanceSuccessUploaded ?? 'Documents uploaded successfully');
+      ToastHelper().showSuccessToast(
+        _l?.remittanceSuccessUploaded ?? 'Documents uploaded successfully',
+      );
       pendingAttachments.clear();
       return true;
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrUploadFailed ?? 'Upload failed');
+      ToastHelper().showErrorToast(
+        response.message ?? _l?.remittanceErrUploadFailed ?? 'Upload failed',
+      );
     }
     return false;
   }
@@ -837,7 +871,8 @@ class RemittanceController extends GetxController {
     // phase3-fix: pass the page — load-more used to re-append page 1
     // (audit A7-P2-7).
     final response = await _networkService.get(
-      endpoint: '${ApiPath.remittanceHistoryEndpoint}?page=${historyCurrentPage.value}',
+      endpoint:
+          '${ApiPath.remittanceHistoryEndpoint}?page=${historyCurrentPage.value}',
     );
     isHistoryLoading.value = false;
 
@@ -886,7 +921,11 @@ class RemittanceController extends GetxController {
         selectedRemittance.value = Remittance.fromJson(data);
       }
     } else if (response.status == Status.error) {
-      ToastHelper().showErrorToast(response.message ?? _l?.remittanceErrLoadDetails ?? 'Failed to load details');
+      ToastHelper().showErrorToast(
+        response.message ??
+            _l?.remittanceErrLoadDetails ??
+            'Failed to load details',
+      );
     }
   }
 
@@ -968,7 +1007,7 @@ class RemittanceController extends GetxController {
           Get.find<SettingsService>().getSetting("site_currency") ?? '',
       siteCurrencyDecimals:
           Get.find<SettingsService>().getSetting("site_currency_decimals") ??
-              '',
+          '',
       // Remittance is fiat-only — sendCurrencies is filtered to fiat in
       // fetchSendCurrencies(), and payout currencies are fiat as well.
       isCrypto: false,

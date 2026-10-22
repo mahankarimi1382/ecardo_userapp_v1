@@ -91,11 +91,15 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                     fillColor: TravelTheme.cardSurfaceFor(context),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.r),
-                      borderSide: BorderSide(color: TravelTheme.borderFor(context)),
+                      borderSide: BorderSide(
+                        color: TravelTheme.borderFor(context),
+                      ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.r),
-                      borderSide: BorderSide(color: TravelTheme.borderFor(context)),
+                      borderSide: BorderSide(
+                        color: TravelTheme.borderFor(context),
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(16.r),
@@ -180,7 +184,8 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                         emptyTitle = localization.allControllerLoadError;
                         emptyDesc = localization.noInternetConnectionMessage;
                         emptyIcon = Icons.cloud_off_rounded;
-                        primaryLabel = localization.noInternetConnectionRetryButton;
+                        primaryLabel =
+                            localization.noInternetConnectionRetryButton;
                         primaryAction = controller.isActivityLoading.value
                             ? null
                             : () => controller.refreshOrders();
@@ -215,8 +220,7 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                             localization.travelNoHotels,
                           TravelProductType.flight =>
                             localization.travelNoFlights,
-                          TravelProductType.esim =>
-                            localization.travelNoEsims,
+                          TravelProductType.esim => localization.travelNoEsims,
                           null => localization.travelNoBookings,
                         };
                         emptyDesc = l10nPick(
@@ -227,7 +231,8 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                         );
                         emptyIcon = switch (widget.initialType) {
                           TravelProductType.hotel => Icons.hotel_outlined,
-                          TravelProductType.flight => Icons.flight_takeoff_rounded,
+                          TravelProductType.flight =>
+                            Icons.flight_takeoff_rounded,
                           TravelProductType.esim => Icons.sim_card_outlined,
                           null => Icons.luggage_outlined,
                         };
@@ -246,8 +251,8 @@ class _TravelOrdersScreenState extends State<TravelOrdersScreen> {
                         glowColor: isError
                             ? AppColors.error
                             : (TravelTheme.isDark(context)
-                                ? AppColors.mainSoftBlue
-                                : AppColors.brandViolet),
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.brandViolet),
                         iconColor: isError ? AppColors.error : null,
                         primaryActionLabel: primaryLabel,
                         onPrimaryAction: primaryAction,
@@ -414,10 +419,14 @@ class _TravelOrderCard extends StatelessWidget {
                       width: 52.r,
                       height: 52.r,
                       decoration: BoxDecoration(
-                        color: prodColor.withValues(alpha: isDark ? 0.22 : 0.12),
+                        color: prodColor.withValues(
+                          alpha: isDark ? 0.22 : 0.12,
+                        ),
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
-                          color: prodColor.withValues(alpha: isDark ? 0.35 : 0.2),
+                          color: prodColor.withValues(
+                            alpha: isDark ? 0.35 : 0.2,
+                          ),
                           width: 1.w,
                         ),
                       ),
@@ -484,7 +493,10 @@ class _TravelOrderCard extends StatelessWidget {
                               ),
                               SizedBox(width: 4.w),
                               Text(
-                                travelOrderStatusText(localization, order.status),
+                                travelOrderStatusText(
+                                  localization,
+                                  order.status,
+                                ),
                                 style: TextStyle(
                                   color: statusColor,
                                   fontSize: 10.sp,
@@ -589,30 +601,28 @@ Color travelOrderStatusColor(TravelOrderStatus status) => switch (status) {
   TravelOrderStatus.failed => AppColors.error,
 };
 
-Color travelOrderStatusContainerColor(
-  TravelOrderStatus status,
-  bool isDark,
-) => switch (status) {
-  TravelOrderStatus.paymentPending ||
-  TravelOrderStatus.paymentProcessing ||
-  TravelOrderStatus.paymentReceived ||
-  TravelOrderStatus.supplierPending ||
-  TravelOrderStatus.cancellationPending ||
-  TravelOrderStatus.refundPending =>
-    isDark ? AppColors.darkSurfaceVariant : AppColors.warningContainer,
-  TravelOrderStatus.confirmed ||
-  TravelOrderStatus.issued ||
-  TravelOrderStatus.active ||
-  TravelOrderStatus.completed =>
-    isDark ? AppColors.darkSecondaryContainer : AppColors.successContainer,
-  TravelOrderStatus.cancelled ||
-  TravelOrderStatus.refunded ||
-  TravelOrderStatus.expired ||
-  TravelOrderStatus.unknown =>
-    isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
-  TravelOrderStatus.failed =>
-    isDark ? AppColors.darkSurfaceVariant : AppColors.errorContainer,
-};
+Color travelOrderStatusContainerColor(TravelOrderStatus status, bool isDark) =>
+    switch (status) {
+      TravelOrderStatus.paymentPending ||
+      TravelOrderStatus.paymentProcessing ||
+      TravelOrderStatus.paymentReceived ||
+      TravelOrderStatus.supplierPending ||
+      TravelOrderStatus.cancellationPending ||
+      TravelOrderStatus.refundPending =>
+        isDark ? AppColors.darkSurfaceVariant : AppColors.warningContainer,
+      TravelOrderStatus.confirmed ||
+      TravelOrderStatus.issued ||
+      TravelOrderStatus.active ||
+      TravelOrderStatus.completed =>
+        isDark ? AppColors.darkSecondaryContainer : AppColors.successContainer,
+      TravelOrderStatus.cancelled ||
+      TravelOrderStatus.refunded ||
+      TravelOrderStatus.expired ||
+      TravelOrderStatus.unknown =>
+        isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
+      TravelOrderStatus.failed =>
+        isDark ? AppColors.darkSurfaceVariant : AppColors.errorContainer,
+    };
 
 IconData travelOrderStatusIcon(TravelOrderStatus status) => switch (status) {
   TravelOrderStatus.paymentPending => Icons.payment_rounded,

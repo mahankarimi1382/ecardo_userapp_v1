@@ -41,7 +41,9 @@ class ActionButtonSection extends StatelessWidget {
                       );
                     }
                   },
-                  backgroundColor: AppColors.mainSoftBlue.withValues(alpha: 0.35),
+                  backgroundColor: AppColors.mainSoftBlue.withValues(
+                    alpha: 0.35,
+                  ),
                 ),
                 _buildButtons(
                   context,
@@ -87,7 +89,9 @@ class ActionButtonSection extends StatelessWidget {
                       );
                     }
                   },
-                  backgroundColor: const Color(0xFF10B981).withValues(alpha: 0.18),
+                  backgroundColor: const Color(
+                    0xFF10B981,
+                  ).withValues(alpha: 0.18),
                 ),
                 _buildButtons(
                   context,
@@ -102,7 +106,9 @@ class ActionButtonSection extends StatelessWidget {
                       );
                     }
                   },
-                  backgroundColor: AppColors.taupeBronze.withValues(alpha: 0.35),
+                  backgroundColor: AppColors.taupeBronze.withValues(
+                    alpha: 0.35,
+                  ),
                 ),
               ],
             ),
@@ -154,7 +160,9 @@ class ActionButtonSection extends StatelessWidget {
                     child: Icon(
                       icon,
                       size: 24,
-                      color: isDark ? AppColors.warmWhite : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.warmWhite
+                          : AppColors.lightPrimary,
                     ),
                   ),
                   const SizedBox(height: 7),
@@ -173,7 +181,9 @@ class ActionButtonSection extends StatelessWidget {
                           fontSize: 12,
                           color: isDark
                               ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary.withValues(alpha: 0.85),
+                              : AppColors.lightTextPrimary.withValues(
+                                  alpha: 0.85,
+                                ),
                         ),
                       ),
                     ),

@@ -138,7 +138,8 @@ class _WithdrawHistoryState extends State<WithdrawHistory>
                       return EcardoErrorView(
                         message: localization.allControllerLoadError,
                         onRetry: loadData,
-                        retryLabel: localization.noInternetConnectionRetryButton,
+                        retryLabel:
+                            localization.noInternetConnectionRetryButton,
                       );
                     }
 
@@ -159,10 +160,7 @@ class _WithdrawHistoryState extends State<WithdrawHistory>
     );
   }
 
-  Widget _buildTransactionsList(
-    AppLocalizations localization,
-    bool isDark,
-  ) {
+  Widget _buildTransactionsList(AppLocalizations localization, bool isDark) {
     final transactions =
         controller.transactionsModel.value.data?.transactions ?? [];
 
@@ -213,9 +211,7 @@ class _WithdrawHistoryState extends State<WithdrawHistory>
         child: ListView.separated(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: _scrollController,
-          padding: const EdgeInsets.symmetric(
-            vertical: AppSpacing.md,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
           itemBuilder: (context, index) {
             final Transactions transaction = transactions[index];
 
@@ -306,10 +302,11 @@ class _WithdrawHistoryState extends State<WithdrawHistory>
                             vertical: 1,
                           ),
                           decoration: BoxDecoration(
-                            color: (transaction.isSuccess
-                                    ? AppColors.success
-                                    : AppColors.warning)
-                                .withValues(alpha: 0.12),
+                            color:
+                                (transaction.isSuccess
+                                        ? AppColors.success
+                                        : AppColors.warning)
+                                    .withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(
                               AppSpacing.radiusXs,
                             ),

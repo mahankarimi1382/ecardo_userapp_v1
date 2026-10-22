@@ -52,9 +52,8 @@ class KycHistoryData {
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    submittedData =
-        json['submitted_data'] != null
-            ? Map<String, dynamic>.from(json['submitted_data'])
-            : null;
+    submittedData = json['submitted_data'] != null
+        ? Map<String, dynamic>.from(json['submitted_data'])
+        : null;
   }
 }

@@ -41,8 +41,7 @@ class VisaCatalogItem {
 
   double get totalFee => serviceFee + govFee;
 
-  String get processingTimeLabel =>
-      '$processingDaysMin - $processingDaysMax';
+  String get processingTimeLabel => '$processingDaysMin - $processingDaysMax';
 
   factory VisaCatalogItem.fromJson(Map<String, dynamic> json) {
     var rawDocs = json['required_docs'];
@@ -71,14 +70,17 @@ class VisaCatalogItem {
       refundPolicy: json['refund_policy'] is Map
           ? Map<String, dynamic>.from(json['refund_policy'])
           : {},
-      needsBiometric: json['needs_biometric'] == true ||
+      needsBiometric:
+          json['needs_biometric'] == true ||
           json['needs_biometric'] == 1 ||
           '${json['needs_biometric']}' == 'true',
-      appealSupported: json['appeal_supported'] == true ||
+      appealSupported:
+          json['appeal_supported'] == true ||
           json['appeal_supported'] == 1 ||
           '${json['appeal_supported']}' == 'true',
       maxRevisions: int.tryParse('${json['max_revisions']}') ?? 3,
-      isActive: json['is_active'] == true ||
+      isActive:
+          json['is_active'] == true ||
           json['is_active'] == 1 ||
           '${json['is_active']}' == 'true',
     );
@@ -106,7 +108,8 @@ class VisaRequiredDoc {
       title: json['title']?.toString() ?? '',
       type: json['type']?.toString() ?? 'FILE',
       instructions: json['instructions']?.toString() ?? '',
-      required: json['required'] == true ||
+      required:
+          json['required'] == true ||
           json['required'] == 1 ||
           '${json['required']}' == 'true',
     );
@@ -180,7 +183,9 @@ class VisaRequestModel {
 
   factory VisaRequestModel.fromJson(Map<String, dynamic> json) {
     final catalog = json['catalog'] is Map ? json['catalog'] : {};
-    final applicant = json['applicant_info'] is Map ? json['applicant_info'] : {};
+    final applicant = json['applicant_info'] is Map
+        ? json['applicant_info']
+        : {};
 
     List<VisaSubmittedDoc> docs = [];
     if (json['documents'] is List) {
@@ -205,36 +210,39 @@ class VisaRequestModel {
           ? json['catalog_id']
           : int.tryParse('${json['catalog_id']}') ?? 0,
       status: json['status']?.toString() ?? 'DRAFT',
-      countryName: catalog['country_name']?.toString() ??
+      countryName:
+          catalog['country_name']?.toString() ??
           json['country_name']?.toString() ??
           '',
-      countryFlag: catalog['country_flag']?.toString() ??
+      countryFlag:
+          catalog['country_flag']?.toString() ??
           json['country_flag']?.toString() ??
           '',
-      visaTitle: catalog['title']?.toString() ??
-          json['visa_title']?.toString() ??
-          '',
-      applicantName: applicant['full_name']?.toString() ??
+      visaTitle:
+          catalog['title']?.toString() ?? json['visa_title']?.toString() ?? '',
+      applicantName:
+          applicant['full_name']?.toString() ??
           json['applicant_name']?.toString() ??
           '',
-      applicantPassport: applicant['passport_number']?.toString() ??
+      applicantPassport:
+          applicant['passport_number']?.toString() ??
           json['passport_number']?.toString() ??
           '',
-      applicantNationality: applicant['nationality']?.toString() ??
+      applicantNationality:
+          applicant['nationality']?.toString() ??
           json['nationality']?.toString() ??
           '',
-      applicantPhone: applicant['phone']?.toString() ??
-          json['phone']?.toString() ??
-          '',
-      applicantEmail: applicant['email']?.toString() ??
-          json['email']?.toString() ??
-          '',
+      applicantPhone:
+          applicant['phone']?.toString() ?? json['phone']?.toString() ?? '',
+      applicantEmail:
+          applicant['email']?.toString() ?? json['email']?.toString() ?? '',
       travelDate: json['travel_date']?.toString(),
       returnDate: json['return_date']?.toString(),
       serviceFee: double.tryParse('${json['service_fee']}') ?? 0.0,
       govFee: double.tryParse('${json['gov_fee']}') ?? 0.0,
       totalPaid: double.tryParse('${json['total_paid']}') ?? 0.0,
-      currency: json['currency']?.toString() ??
+      currency:
+          json['currency']?.toString() ??
           catalog['currency']?.toString() ??
           'USD',
       rejectionReason: json['rejection_reason']?.toString(),

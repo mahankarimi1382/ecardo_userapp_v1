@@ -16,10 +16,7 @@ import 'dining_order_pass_screen.dart';
 class RestaurantDetailScreen extends StatefulWidget {
   final RestaurantModel restaurant;
 
-  const RestaurantDetailScreen({
-    super.key,
-    required this.restaurant,
-  });
+  const RestaurantDetailScreen({super.key, required this.restaurant});
 
   @override
   State<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
@@ -47,7 +44,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
     const amberColor = Color(0xFFD97706);
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
         elevation: 0,
@@ -55,7 +54,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -67,7 +68,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           style: TextStyle(
             fontSize: 15.sp,
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -111,20 +114,29 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
                     if (widget.restaurant.dietaryOptions.isNotEmpty)
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.success.withValues(alpha: 0.12),
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                         child: Text(
                           widget.restaurant.dietaryOptions.first,
-                          style: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w700, color: AppColors.success),
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.success,
+                          ),
                         ),
                       ),
                   ],
@@ -140,7 +152,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
 
           // Bottom Cart Sheet with 12-state UI states
           Obx(() {
-            final list = controller.filteredRestaurants.where((r) => r.id == widget.restaurant.id).toList();
+            final list = controller.filteredRestaurants
+                .where((r) => r.id == widget.restaurant.id)
+                .toList();
             final rest = list.isEmpty ? null : list.first;
 
             if (rest == null) {
@@ -151,10 +165,18 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
               padding: EdgeInsets.all(AppSpacing.lg.r),
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkSurface : AppColors.white,
-                border: Border(top: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder)),
+                border: Border(
+                  top: BorderSide(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
+                ),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                    color: isDark
+                        ? AppColors.darkShadow
+                        : AppColors.lightShadow,
                     blurRadius: 10,
                     offset: const Offset(0, -3),
                   ),
@@ -171,19 +193,27 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            controller.cartCount > 0 ? '${controller.cartCount} آیتم' : 'سبد سفارش خالی است',
+                            controller.cartCount > 0
+                                ? '${controller.cartCount} آیتم'
+                                : 'سبد سفارش خالی است',
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ),
                         Text(
-                          controller.cartCount > 0 ? '${controller.cartSubtotal.toStringAsFixed(0)} ${rest.currency}' : '',
+                          controller.cartCount > 0
+                              ? '${controller.cartSubtotal.toStringAsFixed(0)} ${rest.currency}'
+                              : '',
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       ],
@@ -191,22 +221,35 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                   ),
                   Divider(height: 12.h * 0.5),
                   // Checkout button
-                  controller.cartCount > 0 && !isDark && controller.uiState.value != ExperienceServiceState.processing
+                  controller.cartCount > 0 &&
+                          !isDark &&
+                          controller.uiState.value !=
+                              ExperienceServiceState.processing
                       ? ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(double.infinity, 44.h),
                             backgroundColor: amberColor,
                             foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
                             elevation: 0,
                           ),
-                          child: Text(l10nPick(context, fa: 'تکمیل و پرداخت', en: 'Complete & Pay'),
-                              style: const TextStyle(fontWeight: FontWeight.w800)),
+                          child: Text(
+                            l10nPick(
+                              context,
+                              fa: 'تکمیل و پرداخت',
+                              en: 'Complete & Pay',
+                            ),
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
                           onPressed: () async {
                             HapticFeedback.heavyImpact();
                             final order = await controller.submitOrder();
                             if (order != null && mounted) {
-                              Get.off(() => DiningOrderPassScreen(order: order));
+                              Get.off(
+                                () => DiningOrderPassScreen(order: order),
+                              );
                             }
                           },
                         )
@@ -226,7 +269,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +284,11 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                   color: amberColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Icon(Icons.restaurant_rounded, color: amberColor, size: 24),
+                child: Icon(
+                  Icons.restaurant_rounded,
+                  color: amberColor,
+                  size: 24,
+                ),
               ),
               SizedBox(width: 10.w),
               Expanded(
@@ -251,20 +300,28 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: 2.h),
                     Row(
                       children: [
-                        Icon(Icons.flight_takeoff_rounded, size: 12.sp, color: AppColors.success),
+                        Icon(
+                          Icons.flight_takeoff_rounded,
+                          size: 12.sp,
+                          color: AppColors.success,
+                        ),
                         SizedBox(width: 4.w),
                         Flexible(
                           child: Text(
                             widget.restaurant.city,
                             style: TextStyle(
                               fontSize: 10.5.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -279,20 +336,31 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           SizedBox(height: 8.h),
           Row(
             children: [
-              const Icon(Icons.star_rounded, color: AppColors.warning, size: 16),
+              const Icon(
+                Icons.star_rounded,
+                color: AppColors.warning,
+                size: 16,
+              ),
               SizedBox(width: 4.w),
               Text(
                 '${widget.restaurant.rating}',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
-              Text(' (${widget.restaurant.reviewsCount} نظرات)',
-                  style: TextStyle(
-                      fontSize: 10.sp,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary)),
+              Text(
+                ' (${widget.restaurant.reviewsCount} نظرات)',
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
+                ),
+              ),
             ],
           ),
           SizedBox(height: 6.h),
@@ -300,7 +368,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
             widget.restaurant.terminalLocation,
             style: TextStyle(
               fontSize: 11.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           SizedBox(height: 4.h),
@@ -315,7 +385,11 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                 ),
                 child: Text(
                   m.labelFa,
-                  style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w700, color: amberColor),
+                  style: TextStyle(
+                    fontSize: 9.sp,
+                    fontWeight: FontWeight.w700,
+                    color: amberColor,
+                  ),
                 ),
               );
             }).toList(),
@@ -325,16 +399,26 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
     );
   }
 
-  Widget _buildModeSelector(BuildContext context, bool isDark, Color amberColor) {
+  Widget _buildModeSelector(
+    BuildContext context,
+    bool isDark,
+    Color amberColor,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          l10nPick(context, fa: 'روش سرو سفارش را انتخاب کنید', en: 'Select Ordering Method'),
+          l10nPick(
+            context,
+            fa: 'روش سرو سفارش را انتخاب کنید',
+            en: 'Select Ordering Method',
+          ),
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w700,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         SizedBox(height: 8.h),
@@ -355,12 +439,18 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 6.w),
                   decoration: BoxDecoration(
-                    color: isSelected ? amberColor : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                    color: isSelected
+                        ? amberColor
+                        : (isDark
+                              ? AppColors.darkSurface
+                              : AppColors.lightSurface),
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
                       color: isSelected
                           ? amberColor
-                          : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          : (isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                     ),
                   ),
                   child: Center(
@@ -368,8 +458,14 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       mode.labelFa,
                       style: TextStyle(
                         fontSize: 10.5.sp,
-                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                        color: isSelected ? Colors.white : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                        fontWeight: isSelected
+                            ? FontWeight.w800
+                            : FontWeight.w600,
+                        color: isSelected
+                            ? Colors.white
+                            : (isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -394,7 +490,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
     final inCart = qty > 0;
 
     return Semantics(
-      label: '${item.title} - ${item.price.toStringAsFixed(0)} ${item.currency}',
+      label:
+          '${item.title} - ${item.price.toStringAsFixed(0)} ${item.currency}',
       button: inCart,
       child: Container(
         margin: EdgeInsets.only(bottom: AppSpacing.md.h),
@@ -402,7 +499,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkCard : AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
           boxShadow: inCart
               ? [
                   BoxShadow(
@@ -425,7 +524,10 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                     children: [
                       if (item.isHalal)
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
                           margin: EdgeInsetsDirectional.only(start: 6.w),
                           decoration: BoxDecoration(
                             color: AppColors.success.withValues(alpha: 0.12),
@@ -433,19 +535,30 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                           ),
                           child: Text(
                             'حلال 🥩',
-                            style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w700, color: AppColors.success),
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.success,
+                            ),
                           ),
                         ),
                       if (item.isVegan)
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.success.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
                             'گیاهی 🥗',
-                            style: TextStyle(fontSize: 9.sp, fontWeight: FontWeight.w700, color: AppColors.success),
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.success,
+                            ),
                           ),
                         ),
                     ],
@@ -456,7 +569,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   if (item.description.isNotEmpty) ...[
@@ -465,7 +580,9 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       item.description,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                         height: 1.3,
                       ),
                     ),
@@ -486,14 +603,21 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                   SizedBox(height: 4.h),
                   Row(
                     children: [
-                      Icon(Icons.timer_outlined, size: 12.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary),
+                      Icon(
+                        Icons.timer_outlined,
+                        size: 12.sp,
+                        color: isDark
+                            ? AppColors.darkTextTertiary
+                            : AppColors.lightTextTertiary,
+                      ),
                       SizedBox(width: 4.w),
                       Text(
                         'آماده‌سازی: ~${item.prepMinutes} دقیقه',
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
@@ -515,7 +639,10 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.remove_circle_outline_rounded, size: 16),
+                      icon: const Icon(
+                        Icons.remove_circle_outline_rounded,
+                        size: 16,
+                      ),
                       color: Colors.white,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -533,7 +660,10 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.add_circle_outline_rounded, size: 16),
+                      icon: const Icon(
+                        Icons.add_circle_outline_rounded,
+                        size: 16,
+                      ),
                       color: Colors.white,
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -549,10 +679,16 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
                   minimumSize: Size(96.w, 40.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
                   side: BorderSide(color: amberColor),
                 ),
-                icon: Icon(Icons.add_shopping_cart_rounded, size: 16, color: amberColor),
+                icon: Icon(
+                  Icons.add_shopping_cart_rounded,
+                  size: 16,
+                  color: amberColor,
+                ),
                 label: Text(
                   l10nPick(context, fa: 'افزودن', en: 'Add'),
                   style: TextStyle(fontSize: 11.sp, color: amberColor),

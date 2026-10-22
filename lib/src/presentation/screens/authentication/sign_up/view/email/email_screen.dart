@@ -40,10 +40,12 @@ class _EmailScreenState extends State<EmailScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryTextColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     final cardBg = isDark
         ? AppColors.darkSurface.withValues(alpha: 0.94)
@@ -53,8 +55,9 @@ class _EmailScreenState extends State<EmailScreen> {
         : AppColors.lightBorder.withValues(alpha: 0.7);
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: AmbientAuthBackground(
         child: Stack(
@@ -95,10 +98,13 @@ class _EmailScreenState extends State<EmailScreen> {
                               borderRadius: BorderRadius.circular(16.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: (isDark
-                                          ? AppColors.darkAccent
-                                          : AppColors.brandViolet)
-                                      .withValues(alpha: isDark ? 0.16 : 0.25),
+                                  color:
+                                      (isDark
+                                              ? AppColors.darkAccent
+                                              : AppColors.brandViolet)
+                                          .withValues(
+                                            alpha: isDark ? 0.16 : 0.25,
+                                          ),
                                   blurRadius: 18,
                                 ),
                               ],
@@ -188,7 +194,10 @@ class _EmailScreenState extends State<EmailScreen> {
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.done,
                                   onFieldSubmitted: (_) {
-                                    if (controller.emailController.text.isNotEmpty &&
+                                    if (controller
+                                            .emailController
+                                            .text
+                                            .isNotEmpty &&
                                         !controller.isLoading.value) {
                                       controller.sendVerifyEmail();
                                     }
@@ -199,11 +208,11 @@ class _EmailScreenState extends State<EmailScreen> {
                                     size: 20.sp,
                                     color: controller.isEmailFocused.value
                                         ? (isDark
-                                            ? AppColors.darkAccent
-                                            : AppColors.brandViolet)
+                                              ? AppColors.darkAccent
+                                              : AppColors.brandViolet)
                                         : (isDark
-                                            ? AppColors.darkTextSecondary
-                                            : AppColors.lightTextTertiary),
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextTertiary),
                                   ),
                                 ),
                               ),
@@ -216,7 +225,10 @@ class _EmailScreenState extends State<EmailScreen> {
                               height: 52.h,
                               borderRadius: 16.r,
                               onPressed: () {
-                                if (controller.emailController.text.isNotEmpty) {
+                                if (controller
+                                    .emailController
+                                    .text
+                                    .isNotEmpty) {
                                   controller.sendVerifyEmail();
                                 } else {
                                   ToastHelper().showErrorToast(

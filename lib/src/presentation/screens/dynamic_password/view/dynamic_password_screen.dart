@@ -67,7 +67,9 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
       final accountNumber = home.userModel.value.data?.accountNumber ?? '';
 
       if (accountNumber.isEmpty) {
-        final loc = Get.context == null ? null : AppLocalizations.of(Get.context!);
+        final loc = Get.context == null
+            ? null
+            : AppLocalizations.of(Get.context!);
         ToastHelper().showErrorToast(
           loc?.dynamicPasswordUserNotFound ?? 'Account number not found',
         );
@@ -97,14 +99,14 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         } else {
           ToastHelper().showErrorToast(
             responseData['message'] ??
-                AppLocalizations.of(Get.context!)!
-                    .dynamicPasswordGenerateError,
+                AppLocalizations.of(Get.context!)!.dynamicPasswordGenerateError,
           );
           setState(() => _isLoading = false);
         }
       } else {
         ToastHelper().showErrorToast(
-          response.message ?? AppLocalizations.of(Get.context!)!.dynamicPasswordServerError,
+          response.message ??
+              AppLocalizations.of(Get.context!)!.dynamicPasswordServerError,
         );
         setState(() => _isLoading = false);
       }
@@ -153,9 +155,13 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     final home = Get.isRegistered<HomeController>()
         ? Get.find<HomeController>()
@@ -269,11 +275,17 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
 
               if (_isLoading)
                 CircularProgressIndicator(
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 )
               else if (_otpCode != null && _secondsRemaining > 0) ...[
                 // Active OTP Card with countdown timer ring & tap-to-copy
-                _buildActiveOtpCard(isDark, primaryTextColor, secondaryTextColor),
+                _buildActiveOtpCard(
+                  isDark,
+                  primaryTextColor,
+                  secondaryTextColor,
+                ),
                 const SizedBox(height: AppSpacing.lg),
 
                 // Tokenized Copy code button
@@ -287,7 +299,9 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                   label: Text(
                     AppLocalizations.of(context)!.dynamicPasswordRegenerate,
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -307,10 +321,16 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                      foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                      backgroundColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
+                      foregroundColor: isDark
+                          ? AppColors.deepBlack
+                          : AppColors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                       elevation: 0,
                     ),
@@ -334,7 +354,11 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info_outline_rounded, color: AppColors.warning, size: 20),
+                    const Icon(
+                      Icons.info_outline_rounded,
+                      color: AppColors.warning,
+                      size: 20,
+                    ),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: Text(
@@ -365,11 +389,13 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
     final timerColor = _secondsRemaining <= 10
         ? AppColors.error
         : (_secondsRemaining <= 20
-            ? AppColors.warning
-            : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet));
+              ? AppColors.warning
+              : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet));
 
-    final cardBorderColor = (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-        .withValues(alpha: 0.35);
+    final cardBorderColor =
+        (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet).withValues(
+          alpha: 0.35,
+        );
 
     final timerTrackColor = isDark
         ? AppColors.darkSurfaceVariant
@@ -416,19 +442,25 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                       style: AppTextStyles.headlineLarge.copyWith(
                         fontSize: 38,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet,
                         letterSpacing: 7,
                         fontFamily: 'monospace',
                       ),
                     ),
                     const SizedBox(width: AppSpacing.xs),
                     Icon(
-                      _isCopied ? Icons.check_circle_rounded : Icons.copy_rounded,
+                      _isCopied
+                          ? Icons.check_circle_rounded
+                          : Icons.copy_rounded,
                       size: 18,
                       color: _isCopied
                           ? AppColors.success
-                          : (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                              .withValues(alpha: 0.7),
+                          : (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: 0.7),
                     ),
                   ],
                 ),
@@ -476,18 +508,12 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
                 decoration: BoxDecoration(
                   color: timerColor.withValues(alpha: isDark ? 0.16 : 0.10),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                  border: Border.all(
-                    color: timerColor.withValues(alpha: 0.30),
-                  ),
+                  border: Border.all(color: timerColor.withValues(alpha: 0.30)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.timer_outlined,
-                      size: 15,
-                      color: timerColor,
-                    ),
+                    Icon(Icons.timer_outlined, size: 15, color: timerColor),
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       _formattedTime,
@@ -539,7 +565,8 @@ class _DynamicPasswordScreenState extends State<DynamicPasswordScreen> {
         ),
         label: Text(
           _isCopied
-              ? (AppLocalizations.of(context)?.dynamicPasswordCopied ?? 'Copied')
+              ? (AppLocalizations.of(context)?.dynamicPasswordCopied ??
+                    'Copied')
               : AppLocalizations.of(context)!.dynamicPasswordCopy,
           style: AppTextStyles.labelMedium.copyWith(
             fontWeight: FontWeight.bold,

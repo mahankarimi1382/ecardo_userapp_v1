@@ -41,9 +41,12 @@ class _TourDetailScreenState extends State<TourDetailScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       body: Obx(() {
-        if (controller.isLoadingDetail.value && controller.selectedTour.value == null) {
+        if (controller.isLoadingDetail.value &&
+            controller.selectedTour.value == null) {
           return Center(
             child: CircularProgressIndicator(
               color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
@@ -84,7 +87,9 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   SizedBox(height: AppSpacing.sm.h),
@@ -98,7 +103,9 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                     ),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.softGray,
                       fontSize: 12.sp,
                       height: 1.5,
                     ),
@@ -110,24 +117,38 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                       OutlinedButton.icon(
                         onPressed: () => Get.back(),
                         icon: const Icon(Icons.arrow_back_rounded, size: 16),
-                        label: Text(l10nPick(context, en: 'Back', fa: 'بازگشت')),
+                        label: Text(
+                          l10nPick(context, en: 'Back', fa: 'بازگشت'),
+                        ),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                          side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          foregroundColor: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
+                          side: BorderSide(
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
+                          ),
                         ),
                       ),
                       SizedBox(width: AppSpacing.md.w),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
-                          foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                          backgroundColor: isDark
+                              ? AppColors.darkPrimary
+                              : TravelTheme.blue,
+                          foregroundColor: isDark
+                              ? AppColors.deepBlack
+                              : AppColors.white,
                         ),
                         onPressed: () {
                           HapticFeedback.lightImpact();
                           controller.loadTourDetail(widget.tourId);
                         },
                         icon: const Icon(Icons.refresh_rounded, size: 16),
-                        label: Text(l10nPick(context, en: 'Retry', fa: 'تلاش مجدد')),
+                        label: Text(
+                          l10nPick(context, en: 'Retry', fa: 'تلاش مجدد'),
+                        ),
                       ),
                     ],
                   ),
@@ -143,18 +164,23 @@ class _TourDetailScreenState extends State<TourDetailScreen>
               SliverAppBar(
                 expandedHeight: 250.h,
                 pinned: true,
-                backgroundColor: isDark ? AppColors.darkSurface : AppColors.white,
+                backgroundColor: isDark
+                    ? AppColors.darkSurface
+                    : AppColors.white,
                 leading: Container(
                   margin: EdgeInsets.all(AppSpacing.sm.r),
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.darkSurface : AppColors.white).withValues(alpha: 0.85),
+                    color: (isDark ? AppColors.darkSurface : AppColors.white)
+                        .withValues(alpha: 0.85),
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios_rounded,
                       size: AppSpacing.iconSm.r,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                     onPressed: () => Get.back(),
                   ),
@@ -163,11 +189,13 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                   background: Stack(
                     fit: StackFit.expand,
                     children: [
-                      tour.featuredImage != null && tour.featuredImage!.startsWith('http')
+                      tour.featuredImage != null &&
+                              tour.featuredImage!.startsWith('http')
                           ? Image.network(
                               tour.featuredImage!,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => Container(color: Colors.blueGrey.shade700),
+                              errorBuilder: (_, _, _) =>
+                                  Container(color: Colors.blueGrey.shade700),
                             )
                           : Container(color: Colors.blueGrey.shade700),
                       Container(
@@ -192,24 +220,41 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                             Row(
                               children: [
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.w,
+                                    vertical: 3.h,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: TravelTheme.blue,
-                                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusSm.r,
+                                    ),
                                   ),
                                   child: Text(
                                     '${tour.durationDays} ${l10nPick(context, en: 'Days', fa: 'روز')} / ${tour.durationNights} ${l10nPick(context, en: 'Nights', fa: 'شب')}',
-                                    style: TextStyle(color: AppColors.white, fontSize: 10.5.sp, fontWeight: FontWeight.w800),
+                                    style: TextStyle(
+                                      color: AppColors.white,
+                                      fontSize: 10.5.sp,
+                                      fontWeight: FontWeight.w800,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: AppSpacing.sm.w),
                                 Row(
                                   children: [
-                                    const Icon(Icons.star_rounded, color: Colors.amber, size: 16),
+                                    const Icon(
+                                      Icons.star_rounded,
+                                      color: Colors.amber,
+                                      size: 16,
+                                    ),
                                     SizedBox(width: 3.w),
                                     Text(
                                       '${tour.ratingAvg}',
-                                      style: TextStyle(color: AppColors.white, fontSize: 11.5.sp, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 11.5.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -237,16 +282,49 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                   TabBar(
                     controller: _tabController,
                     isScrollable: true,
-                    labelColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
-                    unselectedLabelColor: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
-                    indicatorColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                    labelColor: isDark
+                        ? AppColors.darkPrimary
+                        : TravelTheme.blue,
+                    unselectedLabelColor: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.softGray,
+                    indicatorColor: isDark
+                        ? AppColors.darkPrimary
+                        : TravelTheme.blue,
                     indicatorWeight: 3,
-                    labelStyle: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
+                    labelStyle: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                     tabs: [
-                      Tab(text: l10nPick(context, en: 'Itinerary Stepper', fa: 'برنامه سفر (استپر)')),
-                      Tab(text: l10nPick(context, en: 'Hotels', fa: 'هتل‌ها و اقامت')),
-                      Tab(text: l10nPick(context, en: 'Activities', fa: 'تفریحات')),
-                      Tab(text: l10nPick(context, en: 'Services', fa: 'خدمات و شرایط')),
+                      Tab(
+                        text: l10nPick(
+                          context,
+                          en: 'Itinerary Stepper',
+                          fa: 'برنامه سفر (استپر)',
+                        ),
+                      ),
+                      Tab(
+                        text: l10nPick(
+                          context,
+                          en: 'Hotels',
+                          fa: 'هتل‌ها و اقامت',
+                        ),
+                      ),
+                      Tab(
+                        text: l10nPick(
+                          context,
+                          en: 'Activities',
+                          fa: 'تفریحات',
+                        ),
+                      ),
+                      Tab(
+                        text: l10nPick(
+                          context,
+                          en: 'Services',
+                          fa: 'خدمات و شرایط',
+                        ),
+                      ),
                     ],
                   ),
                   isDark: isDark,
@@ -260,7 +338,11 @@ class _TourDetailScreenState extends State<TourDetailScreen>
               _ItineraryTab(itinerary: tour.itinerary, isDark: isDark),
               _HotelsTab(hotels: tour.hotels, isDark: isDark),
               _ActivitiesTab(activities: tour.activities, isDark: isDark),
-              _ServicesTab(included: tour.includedServices, excluded: tour.excludedServices, isDark: isDark),
+              _ServicesTab(
+                included: tour.includedServices,
+                excluded: tour.excludedServices,
+                isDark: isDark,
+              ),
             ],
           ),
         );
@@ -293,10 +375,16 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Total from:', fa: 'قیمت پایه هر مسافر:'),
+                        l10nPick(
+                          context,
+                          en: 'Total from:',
+                          fa: 'قیمت پایه هر مسافر:',
+                        ),
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -314,12 +402,21 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                 SizedBox(width: AppSpacing.lg.w),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColors.darkPrimary : TravelTheme.blue,
-                    foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
+                    backgroundColor: isDark
+                        ? AppColors.darkPrimary
+                        : TravelTheme.blue,
+                    foregroundColor: isDark
+                        ? AppColors.deepBlack
+                        : AppColors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusLg.r,
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.xxl.w, vertical: 14.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xxl.w,
+                      vertical: 14.h,
+                    ),
                   ),
                   onPressed: () {
                     HapticFeedback.lightImpact();
@@ -327,7 +424,10 @@ class _TourDetailScreenState extends State<TourDetailScreen>
                   },
                   child: Text(
                     l10nPick(context, en: 'Book Tour', fa: 'شروع رزرو تور'),
-                    style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                      fontSize: 13.5.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],
@@ -340,9 +440,9 @@ class _TourDetailScreenState extends State<TourDetailScreen>
 
   String _formatPrice(double price) {
     return price.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 }
 
@@ -363,13 +463,25 @@ class _ItineraryTab extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.calendar_month_outlined, size: 48.r, color: isDark ? AppColors.darkTextSecondary : AppColors.softGray),
+              Icon(
+                Icons.calendar_month_outlined,
+                size: 48.r,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.softGray,
+              ),
               SizedBox(height: AppSpacing.md.h),
               Text(
-                l10nPick(context, en: 'No itinerary details available', fa: 'برنامه روزانه برای این تور ثبت نشده است'),
+                l10nPick(
+                  context,
+                  en: 'No itinerary details available',
+                  fa: 'برنامه روزانه برای این تور ثبت نشده است',
+                ),
                 style: TextStyle(
                   fontSize: 13.5.sp,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -406,7 +518,11 @@ class _ItineraryTab extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: (isDark ? AppColors.darkPrimary : TravelTheme.blue).withValues(alpha: 0.3),
+                          color:
+                              (isDark
+                                      ? AppColors.darkPrimary
+                                      : TravelTheme.blue)
+                                  .withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),
@@ -445,10 +561,16 @@ class _ItineraryTab extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.darkSurface : AppColors.white,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    border: Border.all(
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
                     boxShadow: [
                       BoxShadow(
-                        color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                        color: isDark
+                            ? AppColors.darkShadow
+                            : AppColors.lightShadow,
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -461,19 +583,26 @@ class _ItineraryTab extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 2.h,
+                            ),
                             decoration: BoxDecoration(
                               color: isDark
                                   ? AppColors.darkPrimaryContainer
                                   : TravelTheme.blue.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusXs.r,
+                              ),
                             ),
                             child: Text(
                               '${l10nPick(context, en: 'DAY', fa: 'روز')} ${day.dayNo}',
                               style: TextStyle(
                                 fontSize: 10.sp,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : TravelTheme.blue,
                               ),
                             ),
                           ),
@@ -481,24 +610,39 @@ class _ItineraryTab extends StatelessWidget {
                             Row(
                               children: day.meals.map((m) {
                                 return Padding(
-                                  padding: EdgeInsetsDirectional.only(start: 4.w),
+                                  padding: EdgeInsetsDirectional.only(
+                                    start: 4.w,
+                                  ),
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 6.w,
+                                      vertical: 2.h,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: isDark ? AppColors.darkSurfaceVariant : Colors.amber.shade50,
-                                      borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
+                                      color: isDark
+                                          ? AppColors.darkSurfaceVariant
+                                          : Colors.amber.shade50,
+                                      borderRadius: BorderRadius.circular(
+                                        AppSpacing.radiusXs.r,
+                                      ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(Icons.restaurant_rounded, size: 10.r, color: Colors.amber.shade800),
+                                        Icon(
+                                          Icons.restaurant_rounded,
+                                          size: 10.r,
+                                          color: Colors.amber.shade800,
+                                        ),
                                         SizedBox(width: 3.w),
                                         Text(
                                           m,
                                           style: TextStyle(
                                             fontSize: 9.5.sp,
                                             fontWeight: FontWeight.w600,
-                                            color: isDark ? AppColors.darkTextPrimary : Colors.amber.shade900,
+                                            color: isDark
+                                                ? AppColors.darkTextPrimary
+                                                : Colors.amber.shade900,
                                           ),
                                         ),
                                       ],
@@ -515,7 +659,9 @@ class _ItineraryTab extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13.5.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       if (day.description.isNotEmpty) ...[
@@ -524,7 +670,9 @@ class _ItineraryTab extends StatelessWidget {
                           day.description,
                           style: TextStyle(
                             fontSize: 11.5.sp,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                             height: 1.4,
                           ),
                         ),
@@ -536,10 +684,17 @@ class _ItineraryTab extends StatelessWidget {
                           runSpacing: 4.h,
                           children: day.activities.map((a) {
                             return Container(
-                              padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 7.w,
+                                vertical: 3.h,
+                              ),
                               decoration: BoxDecoration(
-                                color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                                color: isDark
+                                    ? AppColors.darkSurfaceVariant
+                                    : AppColors.lightBackground,
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusSm.r,
+                                ),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -547,14 +702,18 @@ class _ItineraryTab extends StatelessWidget {
                                   Icon(
                                     Icons.place_rounded,
                                     size: 11.r,
-                                    color: isDark ? AppColors.darkPrimary : TravelTheme.blue,
+                                    color: isDark
+                                        ? AppColors.darkPrimary
+                                        : TravelTheme.blue,
                                   ),
                                   SizedBox(width: 3.w),
                                   Text(
                                     a,
                                     style: TextStyle(
                                       fontSize: 10.sp,
-                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -587,8 +746,16 @@ class _HotelsTab extends StatelessWidget {
     if (hotels.isEmpty) {
       return Center(
         child: Text(
-          l10nPick(context, en: 'No hotels assigned', fa: 'هتلی برای این تور ثبت نشده است'),
-          style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+          l10nPick(
+            context,
+            en: 'No hotels assigned',
+            fa: 'هتلی برای این تور ثبت نشده است',
+          ),
+          style: TextStyle(
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+          ),
         ),
       );
     }
@@ -604,7 +771,9 @@ class _HotelsTab extends StatelessWidget {
           decoration: BoxDecoration(
             color: isDark ? AppColors.darkSurface : AppColors.white,
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
             boxShadow: [
               BoxShadow(
                 color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -624,16 +793,25 @@ class _HotelsTab extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13.5.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 3.h,
+                    ),
                     decoration: BoxDecoration(
                       color: hotel.tier == 'LUX'
                           ? Colors.purple.withValues(alpha: 0.15)
-                          : (hotel.tier == 'STD' ? Colors.blue.withValues(alpha: 0.15) : Colors.green.withValues(alpha: 0.15)),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                          : (hotel.tier == 'STD'
+                                ? Colors.blue.withValues(alpha: 0.15)
+                                : Colors.green.withValues(alpha: 0.15)),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                     child: Text(
                       hotel.tierLabel,
@@ -642,7 +820,9 @@ class _HotelsTab extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                         color: hotel.tier == 'LUX'
                             ? Colors.purple
-                            : (hotel.tier == 'STD' ? Colors.blue : Colors.green),
+                            : (hotel.tier == 'STD'
+                                  ? Colors.blue
+                                  : Colors.green),
                       ),
                     ),
                   ),
@@ -658,7 +838,9 @@ class _HotelsTab extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 11.5.sp,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -669,20 +851,31 @@ class _HotelsTab extends StatelessWidget {
                   spacing: 6.w,
                   runSpacing: 4.h,
                   children: hotel.amenities
-                      .map((a) => Container(
-                            padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
-                            decoration: BoxDecoration(
-                              color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                              borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      .map(
+                        (a) => Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.w,
+                            vertical: 3.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AppColors.darkSurfaceVariant
+                                : AppColors.lightBackground,
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
                             ),
-                            child: Text(
-                              a,
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                              ),
+                          ),
+                          child: Text(
+                            a,
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
-                          ))
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ],
@@ -705,8 +898,16 @@ class _ActivitiesTab extends StatelessWidget {
     if (activities.isEmpty) {
       return Center(
         child: Text(
-          l10nPick(context, en: 'No optional activities', fa: 'تفریح اختیاری برای این تور تعریف نشده است'),
-          style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+          l10nPick(
+            context,
+            en: 'No optional activities',
+            fa: 'تفریح اختیاری برای این تور تعریف نشده است',
+          ),
+          style: TextStyle(
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+          ),
         ),
       );
     }
@@ -722,7 +923,9 @@ class _ActivitiesTab extends StatelessWidget {
           decoration: BoxDecoration(
             color: isDark ? AppColors.darkSurface : AppColors.white,
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
-            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
             boxShadow: [
               BoxShadow(
                 color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
@@ -736,7 +939,8 @@ class _ActivitiesTab extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(AppSpacing.sm.r),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : TravelTheme.blue).withValues(alpha: 0.12),
+                  color: (isDark ? AppColors.darkPrimary : TravelTheme.blue)
+                      .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                 ),
                 child: Icon(
@@ -755,7 +959,9 @@ class _ActivitiesTab extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: 3.h),
@@ -763,19 +969,25 @@ class _ActivitiesTab extends StatelessWidget {
                       '${l10nPick(context, en: 'Day', fa: 'روز')} ${act.dayNo} • ${act.durationHours} ${l10nPick(context, en: 'Hours', fa: 'ساعت')}',
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
                 ),
               ),
               Text(
-                act.price > 0 ? '${act.price.toInt()} IRT' : l10nPick(context, en: 'Free', fa: 'رایگان'),
+                act.price > 0
+                    ? '${act.price.toInt()} IRT'
+                    : l10nPick(context, en: 'Free', fa: 'رایگان'),
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w800,
                   color: act.price > 0
-                      ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                      ? (isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary)
                       : AppColors.success,
                 ),
               ),
@@ -813,29 +1025,41 @@ class _ServicesTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: AppSpacing.sm.h),
-          ...included.map((s) => Padding(
-                padding: EdgeInsets.only(bottom: AppSpacing.xs.h),
-                child: Row(
-                  children: [
-                    const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 16),
-                    SizedBox(width: AppSpacing.sm.w),
-                    Expanded(
-                      child: Text(
-                        s,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
+          ...included.map(
+            (s) => Padding(
+              padding: EdgeInsets.only(bottom: AppSpacing.xs.h),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.success,
+                    size: 16,
+                  ),
+                  SizedBox(width: AppSpacing.sm.w),
+                  Expanded(
+                    child: Text(
+                      s,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
           SizedBox(height: AppSpacing.lg.h),
         ],
         if (excluded.isNotEmpty) ...[
           Text(
-            l10nPick(context, en: 'Excluded Services:', fa: 'خدمات غیرشامل (به عهده مسافر):'),
+            l10nPick(
+              context,
+              en: 'Excluded Services:',
+              fa: 'خدمات غیرشامل (به عهده مسافر):',
+            ),
             style: TextStyle(
               fontSize: 13.5.sp,
               fontWeight: FontWeight.w800,
@@ -843,24 +1067,32 @@ class _ServicesTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: AppSpacing.sm.h),
-          ...excluded.map((s) => Padding(
-                padding: EdgeInsets.only(bottom: AppSpacing.xs.h),
-                child: Row(
-                  children: [
-                    const Icon(Icons.cancel_rounded, color: AppColors.error, size: 16),
-                    SizedBox(width: AppSpacing.sm.w),
-                    Expanded(
-                      child: Text(
-                        s,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        ),
+          ...excluded.map(
+            (s) => Padding(
+              padding: EdgeInsets.only(bottom: AppSpacing.xs.h),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.cancel_rounded,
+                    color: AppColors.error,
+                    size: 16,
+                  ),
+                  SizedBox(width: AppSpacing.sm.w),
+                  Expanded(
+                    child: Text(
+                      s,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ],
     );
@@ -880,7 +1112,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => _tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return Container(
       color: isDark ? AppColors.darkSurface : AppColors.white,
       child: _tabBar,

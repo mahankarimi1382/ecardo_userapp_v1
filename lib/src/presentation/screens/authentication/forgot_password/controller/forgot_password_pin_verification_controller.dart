@@ -81,7 +81,11 @@ class ForgotPasswordPinVerificationController extends GetxController {
       debugPrint('❌ submitResetVerifyOtp() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
+        localizationOrNull?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isLoading.value = false;
@@ -105,7 +109,11 @@ class ForgotPasswordPinVerificationController extends GetxController {
       debugPrint('❌ submitForgotPassword() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
+        localizationOrNull?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isLoading.value = false;

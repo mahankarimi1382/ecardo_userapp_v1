@@ -56,8 +56,9 @@ class CommonAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryTextColor =
-        isDark ? AppColors.warmWhite : AppColors.lightTextPrimary;
+    final primaryTextColor = isDark
+        ? AppColors.warmWhite
+        : AppColors.lightTextPrimary;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

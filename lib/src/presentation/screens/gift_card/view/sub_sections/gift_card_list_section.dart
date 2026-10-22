@@ -83,7 +83,8 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
               return Center(
                 child: EcardoErrorView(
                   title: localization.allControllerLoadError,
-                  message: 'Could not load gift card catalog. Check your connection.',
+                  message:
+                      'Could not load gift card catalog. Check your connection.',
                   retryLabel: localization.noInternetConnectionRetryButton,
                   onRetry: loadData,
                 ),
@@ -96,8 +97,10 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
                 child: EcardoEmptyState(
                   iconData: Icons.card_giftcard_rounded,
                   title: 'No Gift Cards Found',
-                  description: 'No brand gift cards match your filter. Try adjusting your search.',
-                  primaryActionLabel: localization.noInternetConnectionRetryButton,
+                  description:
+                      'No brand gift cards match your filter. Try adjusting your search.',
+                  primaryActionLabel:
+                      localization.noInternetConnectionRetryButton,
                   onPrimaryAction: loadData,
                 ),
               );
@@ -157,9 +160,7 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
       onTap: () {
         HapticFeedback.lightImpact();
         Get.to(
-          () => GiftCardDetailsSection(
-            giftCardId: card.productId.toString(),
-          ),
+          () => GiftCardDetailsSection(giftCardId: card.productId.toString()),
         );
       },
       child: Container(
@@ -228,15 +229,22 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
                     top: AppSpacing.sm,
                     start: AppSpacing.sm,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 7,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                            isDark
+                                ? AppColors.mainSoftBlue
+                                : AppColors.deepBlack,
                             isDark ? AppColors.mutedBlue : AppColors.darkGray,
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
                         boxShadow: const [
                           BoxShadow(
                             color: Color(0x33000000),
@@ -260,7 +268,9 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
                               fontSize: 9,
                               fontWeight: FontWeight.w800,
                               letterSpacing: 0.5,
-                              color: isDark ? AppColors.deepBlack : Colors.white,
+                              color: isDark
+                                  ? AppColors.deepBlack
+                                  : Colors.white,
                             ),
                           ),
                         ],
@@ -307,7 +317,10 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 5,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: isDark
                               ? AppColors.darkSurfaceVariant
@@ -386,7 +399,9 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
                         color: isDark
                             ? AppColors.darkBorder
                             : AppColors.lightBorder,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -397,7 +412,9 @@ class _GiftCardListSectionState extends State<GiftCardListSection> {
                         color: isDark
                             ? AppColors.darkBorder
                             : AppColors.lightBorder,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                       ),
                     ),
                   ],

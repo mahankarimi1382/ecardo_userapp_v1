@@ -69,47 +69,64 @@ void main() {
       expect(controller.isLookingUpRecipient.value, isFalse);
     });
 
-    test('lookupRecipient ignores account numbers under 3 characters', () async {
-      controller.lookedUpRecipient.value = {'name': 'Previous User'};
-      await controller.lookupRecipient('12');
+    test(
+      'lookupRecipient ignores account numbers under 3 characters',
+      () async {
+        controller.lookedUpRecipient.value = {'name': 'Previous User'};
+        await controller.lookupRecipient('12');
 
-      expect(controller.lookedUpRecipient.value, isNull);
-      expect(controller.isLookingUpRecipient.value, isFalse);
-      expect(fakeNetworkService.callCount, equals(0));
-    });
+        expect(controller.lookedUpRecipient.value, isNull);
+        expect(controller.isLookingUpRecipient.value, isFalse);
+        expect(fakeNetworkService.callCount, equals(0));
+      },
+    );
 
-    test('lookupRecipient fetches and populates lookedUpRecipient on success', () async {
-      fakeNetworkService.mockStatus = Status.completed;
-      fakeNetworkService.mockResponseData = {
-        'status': 'success',
-        'data': {
-          'name': 'Ali Vafadar',
-          'account_number': '102345',
-          'avatar': 'https://example.com/avatar.png',
-        },
-      };
+    test(
+      'lookupRecipient fetches and populates lookedUpRecipient on success',
+      () async {
+        fakeNetworkService.mockStatus = Status.completed;
+        fakeNetworkService.mockResponseData = {
+          'status': 'success',
+          'data': {
+            'name': 'Ali Vafadar',
+            'account_number': '102345',
+            'avatar': 'https://example.com/avatar.png',
+          },
+        };
 
-      await controller.lookupRecipient('102345');
+        await controller.lookupRecipient('102345');
 
-      expect(
-        fakeNetworkService.lastEndpoint,
-        equals('${ApiPath.userTransferEndpoint}/lookup-recipient?account_number=102345'),
-      );
-      expect(controller.isLookingUpRecipient.value, isFalse);
-      expect(controller.lookedUpRecipient.value, isNotNull);
-      expect(controller.lookedUpRecipient.value?['name'], equals('Ali Vafadar'));
-      expect(controller.lookedUpRecipient.value?['account_number'], equals('102345'));
-    });
+        expect(
+          fakeNetworkService.lastEndpoint,
+          equals(
+            '${ApiPath.userTransferEndpoint}/lookup-recipient?account_number=102345',
+          ),
+        );
+        expect(controller.isLookingUpRecipient.value, isFalse);
+        expect(controller.lookedUpRecipient.value, isNotNull);
+        expect(
+          controller.lookedUpRecipient.value?['name'],
+          equals('Ali Vafadar'),
+        );
+        expect(
+          controller.lookedUpRecipient.value?['account_number'],
+          equals('102345'),
+        );
+      },
+    );
 
-    test('lookupRecipient clears lookedUpRecipient when endpoint returns error', () async {
-      fakeNetworkService.mockStatus = Status.error;
-      fakeNetworkService.mockResponseData = null;
+    test(
+      'lookupRecipient clears lookedUpRecipient when endpoint returns error',
+      () async {
+        fakeNetworkService.mockStatus = Status.error;
+        fakeNetworkService.mockResponseData = null;
 
-      await controller.lookupRecipient('999999');
+        await controller.lookupRecipient('999999');
 
-      expect(controller.isLookingUpRecipient.value, isFalse);
-      expect(controller.lookedUpRecipient.value, isNull);
-    });
+        expect(controller.isLookingUpRecipient.value, isFalse);
+        expect(controller.lookedUpRecipient.value, isNull);
+      },
+    );
 
     test('clearFields clears lookedUpRecipient', () {
       controller.lookedUpRecipient.value = {'name': 'Some User'};
@@ -144,34 +161,40 @@ void main() {
       expect(result?.nickname, equals('Saved Friend'));
     });
 
-    test('findBeneficiaryByAccount synthesizes beneficiary when matched with lookedUpRecipient', () {
-      controller.beneficiaryModel.value = BeneficiaryModel(
-        data: BeneficiaryData(beneficiaries: []),
-      );
+    test(
+      'findBeneficiaryByAccount synthesizes beneficiary when matched with lookedUpRecipient',
+      () {
+        controller.beneficiaryModel.value = BeneficiaryModel(
+          data: BeneficiaryData(beneficiaries: []),
+        );
 
-      controller.lookedUpRecipient.value = {
-        'account_number': '102345',
-        'name': 'Ali Vafadar',
-        'avatar': 'https://example.com/ali.png',
-      };
+        controller.lookedUpRecipient.value = {
+          'account_number': '102345',
+          'name': 'Ali Vafadar',
+          'avatar': 'https://example.com/ali.png',
+        };
 
-      final result = controller.findBeneficiaryByAccount('102345');
-      expect(result, isNotNull);
-      expect(result?.accountNumber, equals('102345'));
-      expect(result?.nickname, equals('Ali Vafadar'));
-      expect(result?.receiver?.name, equals('Ali Vafadar'));
-      expect(result?.receiver?.avatar, equals('https://example.com/ali.png'));
-    });
+        final result = controller.findBeneficiaryByAccount('102345');
+        expect(result, isNotNull);
+        expect(result?.accountNumber, equals('102345'));
+        expect(result?.nickname, equals('Ali Vafadar'));
+        expect(result?.receiver?.name, equals('Ali Vafadar'));
+        expect(result?.receiver?.avatar, equals('https://example.com/ali.png'));
+      },
+    );
 
-    test('findBeneficiaryByAccount returns null when no saved or lookedUp match', () {
-      controller.beneficiaryModel.value = BeneficiaryModel(
-        data: BeneficiaryData(beneficiaries: []),
-      );
-      controller.lookedUpRecipient.value = null;
+    test(
+      'findBeneficiaryByAccount returns null when no saved or lookedUp match',
+      () {
+        controller.beneficiaryModel.value = BeneficiaryModel(
+          data: BeneficiaryData(beneficiaries: []),
+        );
+        controller.lookedUpRecipient.value = null;
 
-      final result = controller.findBeneficiaryByAccount('000000');
-      expect(result, isNull);
-    });
+        final result = controller.findBeneficiaryByAccount('000000');
+        expect(result, isNull);
+      },
+    );
 
     test('text change triggers debounced lookupRecipient', () async {
       fakeNetworkService.mockStatus = Status.completed;
@@ -190,69 +213,87 @@ void main() {
       await Future.delayed(const Duration(milliseconds: 500));
 
       expect(fakeNetworkService.callCount, equals(1));
-      expect(controller.lookedUpRecipient.value?['name'], equals('Debounced User'));
+      expect(
+        controller.lookedUpRecipient.value?['name'],
+        equals('Debounced User'),
+      );
     });
   });
 
   group('TransferAmountStepSection - Real-Time Lookup UI Tests', () {
-    testWidgets('renders verifying account indicator when isLookingUpRecipient is true', (tester) async {
-      final testController = TransferController();
-      testController.isLookingUpRecipient.value = true;
-      testController.recipientUidController.text = '1023';
+    testWidgets(
+      'renders verifying account indicator when isLookingUpRecipient is true',
+      (tester) async {
+        final testController = TransferController();
+        testController.isLookingUpRecipient.value = true;
+        testController.recipientUidController.text = '1023';
 
-      await pumpScreen(
-        tester,
-        const Scaffold(body: SingleChildScrollView(child: TransferAmountStepSection())),
-        locale: const Locale('fa'),
-        registrations: [
-          () => registerController<TransferController>(testController),
-          () => registerController<SettingsService>(_FakeSettingsService()),
-        ],
-      );
+        await pumpScreen(
+          tester,
+          const Scaffold(
+            body: SingleChildScrollView(child: TransferAmountStepSection()),
+          ),
+          locale: const Locale('fa'),
+          registrations: [
+            () => registerController<TransferController>(testController),
+            () => registerController<SettingsService>(_FakeSettingsService()),
+          ],
+        );
 
-      expect(find.text('در حال استعلام حساب...'), findsOneWidget);
-    });
+        expect(find.text('در حال استعلام حساب...'), findsOneWidget);
+      },
+    );
 
-    testWidgets('renders confirmation chip when lookedUpRecipient is populated', (tester) async {
-      final testController = TransferController();
-      testController.isLookingUpRecipient.value = false;
-      testController.recipientUidController.text = '102345';
-      testController.lookedUpRecipient.value = {
-        'name': 'علی وفادار',
-        'account_number': '102345',
-      };
+    testWidgets(
+      'renders confirmation chip when lookedUpRecipient is populated',
+      (tester) async {
+        final testController = TransferController();
+        testController.isLookingUpRecipient.value = false;
+        testController.recipientUidController.text = '102345';
+        testController.lookedUpRecipient.value = {
+          'name': 'علی وفادار',
+          'account_number': '102345',
+        };
 
-      await pumpScreen(
-        tester,
-        const Scaffold(body: SingleChildScrollView(child: TransferAmountStepSection())),
-        locale: const Locale('fa'),
-        registrations: [
-          () => registerController<TransferController>(testController),
-          () => registerController<SettingsService>(_FakeSettingsService()),
-        ],
-      );
+        await pumpScreen(
+          tester,
+          const Scaffold(
+            body: SingleChildScrollView(child: TransferAmountStepSection()),
+          ),
+          locale: const Locale('fa'),
+          registrations: [
+            () => registerController<TransferController>(testController),
+            () => registerController<SettingsService>(_FakeSettingsService()),
+          ],
+        );
 
-      expect(find.text('حساب مقصد: علی وفادار (102345)'), findsOneWidget);
-      expect(find.byIcon(Icons.verified_rounded), findsOneWidget);
-    });
+        expect(find.text('حساب مقصد: علی وفادار (102345)'), findsOneWidget);
+        expect(find.byIcon(Icons.verified_rounded), findsOneWidget);
+      },
+    );
 
-    testWidgets('renders not found hint when UID length >= 6 and no recipient found', (tester) async {
-      final testController = TransferController();
-      testController.isLookingUpRecipient.value = false;
-      testController.recipientUidController.text = '999999';
-      testController.lookedUpRecipient.value = null;
+    testWidgets(
+      'renders not found hint when UID length >= 6 and no recipient found',
+      (tester) async {
+        final testController = TransferController();
+        testController.isLookingUpRecipient.value = false;
+        testController.recipientUidController.text = '999999';
+        testController.lookedUpRecipient.value = null;
 
-      await pumpScreen(
-        tester,
-        const Scaffold(body: SingleChildScrollView(child: TransferAmountStepSection())),
-        locale: const Locale('fa'),
-        registrations: [
-          () => registerController<TransferController>(testController),
-          () => registerController<SettingsService>(_FakeSettingsService()),
-        ],
-      );
+        await pumpScreen(
+          tester,
+          const Scaffold(
+            body: SingleChildScrollView(child: TransferAmountStepSection()),
+          ),
+          locale: const Locale('fa'),
+          registrations: [
+            () => registerController<TransferController>(testController),
+            () => registerController<SettingsService>(_FakeSettingsService()),
+          ],
+        );
 
-      expect(find.text('کاربری با این شناسه یافت نشد'), findsOneWidget);
-    });
+        expect(find.text('کاربری با این شناسه یافت نشد'), findsOneWidget);
+      },
+    );
   });
 }

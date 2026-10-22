@@ -149,30 +149,30 @@ class ECardoTokens {
 
   // ------------------ Shadows ------------------
   static List<BoxShadow> shadowCard(BuildContext context) => [
-        BoxShadow(
-          color: isDark(context)
-              ? Colors.black.withValues(alpha: 0.3)
-              : const Color(0xFF35276B).withValues(alpha: 0.06),
-          blurRadius: 4,
-          offset: const Offset(0, 1),
-        ),
-      ];
+    BoxShadow(
+      color: isDark(context)
+          ? Colors.black.withValues(alpha: 0.3)
+          : const Color(0xFF35276B).withValues(alpha: 0.06),
+      blurRadius: 4,
+      offset: const Offset(0, 1),
+    ),
+  ];
 
   static List<BoxShadow> shadowSheet(BuildContext context) => [
-        BoxShadow(
-          color: isDark(context)
-              ? Colors.black.withValues(alpha: 0.5)
-              : const Color(0xFF35276B).withValues(alpha: 0.12),
-          blurRadius: 24,
-          offset: const Offset(0, -8),
-        ),
-      ];
+    BoxShadow(
+      color: isDark(context)
+          ? Colors.black.withValues(alpha: 0.5)
+          : const Color(0xFF35276B).withValues(alpha: 0.12),
+      blurRadius: 24,
+      offset: const Offset(0, -8),
+    ),
+  ];
 
   static List<BoxShadow> shadowFab(BuildContext context) => [
-        BoxShadow(
-          color: const Color(0xFF8A6212).withValues(alpha: 0.28),
-          blurRadius: 16,
-          offset: const Offset(0, 6),
-        ),
-      ];
+    BoxShadow(
+      color: const Color(0xFF8A6212).withValues(alpha: 0.28),
+      blurRadius: 16,
+      offset: const Offset(0, 6),
+    ),
+  ];
 }

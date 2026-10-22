@@ -226,7 +226,8 @@ class CipPricingCalculator {
     final privateRamp = needPrivateRampTransfer ? privateRampAddonUsd : 0.0;
     final dutyFree = needDutyFreeEscort ? dutyFreeEscortAddonUsd : 0.0;
 
-    final total = adultBase +
+    final total =
+        adultBase +
         childBase +
         escortBase +
         tierUpgrade +
@@ -257,11 +258,19 @@ class CipPricingCalculator {
     bool needDutyFreeEscort = false,
   }) {
     return {
-      'adults': double.parse((adults * airport.baseAdultPriceUsd).toStringAsFixed(2)),
-      'children': double.parse((children * airport.childPriceUsd).toStringAsFixed(2)),
-      'escorts': double.parse((escorts * airport.escortPriceUsd).toStringAsFixed(2)),
+      'adults': double.parse(
+        (adults * airport.baseAdultPriceUsd).toStringAsFixed(2),
+      ),
+      'children': double.parse(
+        (children * airport.childPriceUsd).toStringAsFixed(2),
+      ),
+      'escorts': double.parse(
+        (escorts * airport.escortPriceUsd).toStringAsFixed(2),
+      ),
       'tier_upgrade': tier == CipLoungeTier.presidential
-          ? double.parse((adults * airport.presidentialUpgradeUsd).toStringAsFixed(2))
+          ? double.parse(
+              (adults * airport.presidentialUpgradeUsd).toStringAsFixed(2),
+            )
           : 0.0,
       'pet_care': needPetCare ? petCareAddonUsd : 0.0,
       'private_ramp': needPrivateRampTransfer ? privateRampAddonUsd : 0.0,
@@ -301,7 +310,8 @@ class CipCancellationCalculator {
         penaltyPercent: 100,
         penaltyAmount: totalPrice,
         refundableAmount: 0.0,
-        policySummary: 'Flight has already departed. Reservation is non-refundable.',
+        policySummary:
+            'Flight has already departed. Reservation is non-refundable.',
       );
     }
 
@@ -311,7 +321,8 @@ class CipCancellationCalculator {
         penaltyPercent: 0,
         penaltyAmount: 0.0,
         refundableAmount: totalPrice,
-        policySummary: 'Free Cancellation (>12h before flight). 100% refund to wallet.',
+        policySummary:
+            'Free Cancellation (>12h before flight). 100% refund to wallet.',
       );
     } else if (difference.inHours >= 4) {
       final penalty = double.parse((totalPrice * 0.50).toStringAsFixed(2));
@@ -321,7 +332,8 @@ class CipCancellationCalculator {
         penaltyPercent: 50,
         penaltyAmount: penalty,
         refundableAmount: refund,
-        policySummary: 'Late cancellation window (4-12h before flight). 50% penalty applies.',
+        policySummary:
+            'Late cancellation window (4-12h before flight). 50% penalty applies.',
       );
     } else {
       return CipCancellationResult(
@@ -329,7 +341,8 @@ class CipCancellationCalculator {
         penaltyPercent: 100,
         penaltyAmount: totalPrice,
         refundableAmount: 0.0,
-        policySummary: 'Critical boarding window (<4h before flight). Non-refundable.',
+        policySummary:
+            'Critical boarding window (<4h before flight). Non-refundable.',
       );
     }
   }
@@ -656,9 +669,7 @@ class _CipLoungeReservationScreenState
   Widget _buildBodyForCurrentState(Map<String, dynamic> airportInfo) {
     switch (_screenState) {
       case CipScreenState.loading:
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return const Center(child: CircularProgressIndicator());
 
       case CipScreenState.skeleton:
         return Padding(
@@ -672,18 +683,22 @@ class _CipLoungeReservationScreenState
       case CipScreenState.empty:
         return TravelEmptyState(
           title: 'No CIP Lounges Available',
-          message: 'Currently no airport lounges are operating for the selected region.',
+          message:
+              'Currently no airport lounges are operating for the selected region.',
           actionText: 'Refresh Catalog',
-          onAction: () => setState(() => _screenState = CipScreenState.defaultView),
+          onAction: () =>
+              setState(() => _screenState = CipScreenState.defaultView),
         );
 
       case CipScreenState.error:
         return TravelErrorState(
           title: 'CIP Service Connection Error',
-          message: widget.errorMessage ??
+          message:
+              widget.errorMessage ??
               'Unable to fetch real-time CIP lounge availability. Please verify connection and retry.',
           retryText: 'Retry',
-          onRetry: () => setState(() => _screenState = CipScreenState.defaultView),
+          onRetry: () =>
+              setState(() => _screenState = CipScreenState.defaultView),
         );
 
       case CipScreenState.completed:
@@ -699,9 +714,7 @@ class _CipLoungeReservationScreenState
             _buildInteractiveForm(airportInfo),
             Container(
               color: AppColors.black.withValues(alpha: 0.35),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+              child: const Center(child: CircularProgressIndicator()),
             ),
           ],
         );
@@ -721,10 +734,7 @@ class _CipLoungeReservationScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Offline Banner (WCAG accessible alert)
-          if (_isOffline) ...[
-            _buildOfflineBanner(),
-            SizedBox(height: 12.h),
-          ],
+          if (_isOffline) ...[_buildOfflineBanner(), SizedBox(height: 12.h)],
 
           // Validation Error Banner
           if (_validationErrors.isNotEmpty ||
@@ -806,7 +816,11 @@ class _CipLoungeReservationScreenState
       ),
       child: Row(
         children: [
-          const Icon(Icons.wifi_off_rounded, color: AppColors.warning, size: 20),
+          const Icon(
+            Icons.wifi_off_rounded,
+            color: AppColors.warning,
+            size: 20,
+          ),
           SizedBox(width: 10.w),
           Expanded(
             child: Text(
@@ -837,7 +851,11 @@ class _CipLoungeReservationScreenState
         children: [
           Row(
             children: [
-              const Icon(Icons.error_outline_rounded, color: AppColors.error, size: 18),
+              const Icon(
+                Icons.error_outline_rounded,
+                color: AppColors.error,
+                size: 18,
+              ),
               SizedBox(width: 8.w),
               Text(
                 'Please correct the following:',
@@ -1055,9 +1073,7 @@ class _CipLoungeReservationScreenState
         constraints: const BoxConstraints(minHeight: 48),
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
         decoration: BoxDecoration(
-          color: isSelected
-              ? primary.withValues(alpha: 0.10)
-              : surface,
+          color: isSelected ? primary.withValues(alpha: 0.10) : surface,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected ? primary : border,
@@ -1070,7 +1086,9 @@ class _CipLoungeReservationScreenState
             Icon(
               icon,
               size: 18.sp,
-              color: isSelected ? primary : TravelTheme.textSecondaryFor(context),
+              color: isSelected
+                  ? primary
+                  : TravelTheme.textSecondaryFor(context),
             ),
             SizedBox(width: 8.w),
             Flexible(
@@ -1079,7 +1097,9 @@ class _CipLoungeReservationScreenState
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                  color: isSelected ? primary : TravelTheme.textPrimaryFor(context),
+                  color: isSelected
+                      ? primary
+                      : TravelTheme.textPrimaryFor(context),
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -1122,7 +1142,10 @@ class _CipLoungeReservationScreenState
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 14.w,
+                vertical: 12.h,
+              ),
             ),
           ),
           SizedBox(height: 14.h),
@@ -1144,7 +1167,10 @@ class _CipLoungeReservationScreenState
                   },
                   child: Container(
                     constraints: const BoxConstraints(minHeight: 48),
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 12.h,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: TravelTheme.borderFor(context)),
                       borderRadius: BorderRadius.circular(12.r),
@@ -1187,7 +1213,10 @@ class _CipLoungeReservationScreenState
                   },
                   child: Container(
                     constraints: const BoxConstraints(minHeight: 48),
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 12.h,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: TravelTheme.borderFor(context)),
                       borderRadius: BorderRadius.circular(12.r),
@@ -1255,9 +1284,15 @@ class _CipLoungeReservationScreenState
 
   Widget _buildGuestsCard() {
     final airport = _airportData[_selectedAirport] ?? _airportData['IKA']!;
-    final basePriceStr = CipPricingCalculator.formatUsd(airport['basePriceUsd']);
-    final childPriceStr = CipPricingCalculator.formatUsd(airport['childPriceUsd']);
-    final escortPriceStr = CipPricingCalculator.formatUsd(airport['escortPriceUsd'] ?? 25.0);
+    final basePriceStr = CipPricingCalculator.formatUsd(
+      airport['basePriceUsd'],
+    );
+    final childPriceStr = CipPricingCalculator.formatUsd(
+      airport['childPriceUsd'],
+    );
+    final escortPriceStr = CipPricingCalculator.formatUsd(
+      airport['escortPriceUsd'] ?? 25.0,
+    );
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -1270,32 +1305,72 @@ class _CipLoungeReservationScreenState
         children: [
           // IMPORTANT: First add button MUST increment Adult count for test compatibility
           _buildCounterRow(
-            label: l10nPick(context, en: 'Adult Guests (12+ yrs)', fa: 'مهمان بزرگسال (۱۲ سال به بالا)', ar: 'ضيوف بالغون (12+ سنة)'),
-            subtitle: l10nPick(context, en: '\$$basePriceStr per person', fa: '$basePriceStr دلار برای هر نفر', ar: '$basePriceStr دولار لكل شخص'),
+            label: l10nPick(
+              context,
+              en: 'Adult Guests (12+ yrs)',
+              fa: 'مهمان بزرگسال (۱۲ سال به بالا)',
+              ar: 'ضيوف بالغون (12+ سنة)',
+            ),
+            subtitle: l10nPick(
+              context,
+              en: '\$$basePriceStr per person',
+              fa: '$basePriceStr دلار برای هر نفر',
+              ar: '$basePriceStr دولار لكل شخص',
+            ),
             value: _adultsCount,
             minValue: 1,
             onChanged: (val) => setState(() => _adultsCount = val),
           ),
           Divider(height: 24.h, color: TravelTheme.borderFor(context)),
           _buildCounterRow(
-            label: l10nPick(context, en: 'Child Guests (2-12 yrs)', fa: 'مهمان کودک (۲ تا ۱۲ سال)', ar: 'ضيوف أطفال (2-12 سنة)'),
-            subtitle: l10nPick(context, en: '\$$childPriceStr per person', fa: '$childPriceStr دلار برای هر نفر', ar: '$childPriceStr دولار لكل شخص'),
+            label: l10nPick(
+              context,
+              en: 'Child Guests (2-12 yrs)',
+              fa: 'مهمان کودک (۲ تا ۱۲ سال)',
+              ar: 'ضيوف أطفال (2-12 سنة)',
+            ),
+            subtitle: l10nPick(
+              context,
+              en: '\$$childPriceStr per person',
+              fa: '$childPriceStr دلار برای هر نفر',
+              ar: '$childPriceStr دولار لكل شخص',
+            ),
             value: _childrenCount,
             minValue: 0,
             onChanged: (val) => setState(() => _childrenCount = val),
           ),
           Divider(height: 24.h, color: TravelTheme.borderFor(context)),
           _buildCounterRow(
-            label: l10nPick(context, en: 'Escort & Welcomer Guests', fa: 'همراه و مشایعت‌کننده', ar: 'المرافقون والمستقبلون'),
-            subtitle: l10nPick(context, en: '\$$escortPriceStr per person (Non-traveling)', fa: '$escortPriceStr دلار برای هر نفر (بدون پرواز)', ar: '$escortPriceStr دولار لكل شخص'),
+            label: l10nPick(
+              context,
+              en: 'Escort & Welcomer Guests',
+              fa: 'همراه و مشایعت‌کننده',
+              ar: 'المرافقون والمستقبلون',
+            ),
+            subtitle: l10nPick(
+              context,
+              en: '\$$escortPriceStr per person (Non-traveling)',
+              fa: '$escortPriceStr دلار برای هر نفر (بدون پرواز)',
+              ar: '$escortPriceStr دولار لكل شخص',
+            ),
             value: _escortsCount,
             minValue: 0,
             onChanged: (val) => setState(() => _escortsCount = val),
           ),
           Divider(height: 24.h, color: TravelTheme.borderFor(context)),
           _buildCounterRow(
-            label: l10nPick(context, en: 'Infant Guests (<2 yrs)', fa: 'نوزاد (زیر ۲ سال)', ar: 'رضيع (أقل من سنتين)'),
-            subtitle: l10nPick(context, en: 'Complimentary (Adds to flight manifest)', fa: 'رایگان (ثبت در مانیفست پرواز)', ar: 'مجاني (يُضاف إلى بيان الرحلة)'),
+            label: l10nPick(
+              context,
+              en: 'Infant Guests (<2 yrs)',
+              fa: 'نوزاد (زیر ۲ سال)',
+              ar: 'رضيع (أقل من سنتين)',
+            ),
+            subtitle: l10nPick(
+              context,
+              en: 'Complimentary (Adds to flight manifest)',
+              fa: 'رایگان (ثبت در مانیفست پرواز)',
+              ar: 'مجاني (يُضاف إلى بيان الرحلة)',
+            ),
             value: _infantsCount,
             minValue: 0,
             onChanged: (val) => setState(() => _infantsCount = val),
@@ -1423,7 +1498,9 @@ class _CipLoungeReservationScreenState
                       Icon(
                         Icons.verified_rounded,
                         size: 16.sp,
-                        color: _tier == CipLoungeTier.executive ? primary : AppColors.softGray,
+                        color: _tier == CipLoungeTier.executive
+                            ? primary
+                            : AppColors.softGray,
                       ),
                       SizedBox(width: 6.w),
                       Expanded(
@@ -1521,11 +1598,23 @@ class _CipLoungeReservationScreenState
   Widget _buildAmenitiesCard() {
     final amenities = [
       {'icon': Icons.security_rounded, 'title': 'Dedicated Passport & Customs'},
-      {'icon': Icons.directions_car_rounded, 'title': 'Private Ramp Transfer to Aircraft'},
-      {'icon': Icons.restaurant_rounded, 'title': 'Chef Buffet & Beverage Service'},
+      {
+        'icon': Icons.directions_car_rounded,
+        'title': 'Private Ramp Transfer to Aircraft',
+      },
+      {
+        'icon': Icons.restaurant_rounded,
+        'title': 'Chef Buffet & Beverage Service',
+      },
       {'icon': Icons.wifi_rounded, 'title': 'High-Speed Wi-Fi & Workstation'},
-      {'icon': Icons.luggage_rounded, 'title': 'Luggage Check-In & Bag Delivery'},
-      {'icon': Icons.child_care_rounded, 'title': 'Kids Play Area & Quiet Suites'},
+      {
+        'icon': Icons.luggage_rounded,
+        'title': 'Luggage Check-In & Bag Delivery',
+      },
+      {
+        'icon': Icons.child_care_rounded,
+        'title': 'Kids Play Area & Quiet Suites',
+      },
     ];
 
     return Container(
@@ -1846,11 +1935,17 @@ class _CipLoungeReservationScreenState
             decoration: BoxDecoration(
               color: AppColors.successContainer,
               borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: AppColors.success.withValues(alpha: 0.4)),
+              border: Border.all(
+                color: AppColors.success.withValues(alpha: 0.4),
+              ),
             ),
             child: Row(
               children: [
-                const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 24),
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: AppColors.success,
+                  size: 24,
+                ),
                 SizedBox(width: 10.w),
                 Expanded(
                   child: Column(
@@ -1930,11 +2025,22 @@ class _CipLoungeReservationScreenState
             ),
             body: Column(
               children: [
-                _buildVoucherRow('Date & Time', DateFormat('yyyy-MM-dd HH:mm').format(reservation.flightDateTime)),
+                _buildVoucherRow(
+                  'Date & Time',
+                  DateFormat(
+                    'yyyy-MM-dd HH:mm',
+                  ).format(reservation.flightDateTime),
+                ),
                 _buildVoucherRow('Terminal', reservation.airport.terminalName),
-                _buildVoucherRow('Guests', '${reservation.adultCount} Adults, ${reservation.childCount} Children, ${reservation.escortCount} Escorts'),
+                _buildVoucherRow(
+                  'Guests',
+                  '${reservation.adultCount} Adults, ${reservation.childCount} Children, ${reservation.escortCount} Escorts',
+                ),
                 if (reservation.needWheelchair)
-                  _buildVoucherRow('Assistance', 'Wheelchair Ramp Service Requested'),
+                  _buildVoucherRow(
+                    'Assistance',
+                    'Wheelchair Ramp Service Requested',
+                  ),
                 if (reservation.needPetCare)
                   _buildVoucherRow('Pet Care', 'Pet Travel Reception Assigned'),
                 _buildVoucherRow('Gate Coordination', reservation.gateInfo),
@@ -1986,10 +2092,15 @@ class _CipLoungeReservationScreenState
             text: 'Save / Share Voucher',
             onPressed: () {
               AppHaptics.selection();
-              ToastHelper().showSuccessToast('Voucher details saved to clipboard');
-              Clipboard.setData(ClipboardData(
-                text: 'CIP Pass: ${reservation.reference}\nAirport: ${reservation.airport.name}\nFlight: ${reservation.flightNumber}\nDate: ${DateFormat('yyyy-MM-dd HH:mm').format(reservation.flightDateTime)}',
-              ));
+              ToastHelper().showSuccessToast(
+                'Voucher details saved to clipboard',
+              );
+              Clipboard.setData(
+                ClipboardData(
+                  text:
+                      'CIP Pass: ${reservation.reference}\nAirport: ${reservation.airport.name}\nFlight: ${reservation.flightNumber}\nDate: ${DateFormat('yyyy-MM-dd HH:mm').format(reservation.flightDateTime)}',
+                ),
+              );
             },
           ),
           SizedBox(height: 10.h),
@@ -2049,7 +2160,11 @@ class _CipLoungeReservationScreenState
                 color: AppColors.errorContainer,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.cancel_outlined, color: AppColors.error, size: 36),
+              child: const Icon(
+                Icons.cancel_outlined,
+                color: AppColors.error,
+                size: 36,
+              ),
             ),
             SizedBox(height: 16.h),
             Text(
@@ -2062,7 +2177,8 @@ class _CipLoungeReservationScreenState
             ),
             SizedBox(height: 8.h),
             Text(
-              result?.policySummary ?? 'Your CIP Lounge reservation has been cancelled.',
+              result?.policySummary ??
+                  'Your CIP Lounge reservation has been cancelled.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12.sp,
@@ -2084,10 +2200,17 @@ class _CipLoungeReservationScreenState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Refunded to Wallet:', style: TextStyle(fontSize: 12.sp)),
+                        Text(
+                          'Refunded to Wallet:',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
                         Text(
                           '\$${CipPricingCalculator.formatUsd(result.refundableAmount)} USD',
-                          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: AppColors.success),
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.success,
+                          ),
                         ),
                       ],
                     ),
@@ -2095,10 +2218,17 @@ class _CipLoungeReservationScreenState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Cancellation Penalty (${result.penaltyPercent}%):', style: TextStyle(fontSize: 12.sp)),
+                        Text(
+                          'Cancellation Penalty (${result.penaltyPercent}%):',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
                         Text(
                           '\$${CipPricingCalculator.formatUsd(result.penaltyAmount)} USD',
-                          style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w800, color: AppColors.error),
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.error,
+                          ),
                         ),
                       ],
                     ),
@@ -2157,8 +2287,10 @@ class _CipLoungeReservationScreenState
         id: reservation.id,
         serviceKey: 'cip',
         title: 'Airport CIP Lounge (${reservation.airport.name})',
-        subtitle: 'Flight ${reservation.flightNumber} • ${DateFormat('yyyy-MM-dd').format(reservation.flightDateTime)}',
-        amountLabel: '\$${CipPricingCalculator.formatUsd(reservation.totalPrice)} USD',
+        subtitle:
+            'Flight ${reservation.flightNumber} • ${DateFormat('yyyy-MM-dd').format(reservation.flightDateTime)}',
+        amountLabel:
+            '\$${CipPricingCalculator.formatUsd(reservation.totalPrice)} USD',
         reference: reservation.reference,
         createdAt: DateTime.now(),
         status: TravelServiceRequestStatus.pending,
@@ -2303,10 +2435,7 @@ class _QrCodeWidget extends StatelessWidget {
   final String data;
   final double size;
 
-  const _QrCodeWidget({
-    required this.data,
-    this.size = 140,
-  });
+  const _QrCodeWidget({required this.data, this.size = 140});
 
   @override
   Widget build(BuildContext context) {

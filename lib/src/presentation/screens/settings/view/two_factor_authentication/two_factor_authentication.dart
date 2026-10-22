@@ -49,8 +49,12 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextTertiary;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -83,7 +87,9 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
               SizedBox(height: AppSpacing.lg),
               Expanded(
                 child: RefreshIndicator(
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.lightPrimary,
                   onRefresh: () => loadData(),
                   child: Obx(() {
                     if (controller.isLoading.value ||
@@ -97,9 +103,12 @@ class _TwoFactorAuthenticationState extends State<TwoFactorAuthentication> {
                         children: [
                           controller.userModel.value.data?.twoFa == true
                               ? const Disable2FaSection()
-                              : controller.userModel.value.data
-                                          ?.google2faSecret ==
-                                      null
+                              : controller
+                                        .userModel
+                                        .value
+                                        .data
+                                        ?.google2faSecret ==
+                                    null
                               ? const Generate2FaSection()
                               : const Enable2FaSection(),
                           SizedBox(height: AppSpacing.bottomSafe(context, 40)),

@@ -9,10 +9,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 class GuaranteeStatusStepper extends StatelessWidget {
   final String currentStatus;
 
-  const GuaranteeStatusStepper({
-    super.key,
-    required this.currentStatus,
-  });
+  const GuaranteeStatusStepper({super.key, required this.currentStatus});
 
   int _currentStepIndex() {
     switch (currentStatus) {
@@ -41,15 +38,34 @@ class GuaranteeStatusStepper extends StatelessWidget {
     final activeStep = _currentStepIndex();
 
     final steps = [
-      {'title': l10nPick(context, fa: 'ثبت پرونده', en: 'Draft'), 'icon': Icons.edit_note_rounded},
-      {'title': l10nPick(context, fa: 'اعتبارسنجی', en: 'Assessment'), 'icon': Icons.fact_check_outlined},
-      {'title': l10nPick(context, fa: 'تودیع وثیقه', en: 'Margin Deposit'), 'icon': Icons.lock_clock_outlined},
-      {'title': l10nPick(context, fa: 'صدور سپام', en: 'Bank / SEPAM'), 'icon': Icons.account_balance_outlined},
-      {'title': l10nPick(context, fa: 'صدور قطعی', en: 'Issued & Active'), 'icon': Icons.verified_rounded},
+      {
+        'title': l10nPick(context, fa: 'ثبت پرونده', en: 'Draft'),
+        'icon': Icons.edit_note_rounded,
+      },
+      {
+        'title': l10nPick(context, fa: 'اعتبارسنجی', en: 'Assessment'),
+        'icon': Icons.fact_check_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'تودیع وثیقه', en: 'Margin Deposit'),
+        'icon': Icons.lock_clock_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'صدور سپام', en: 'Bank / SEPAM'),
+        'icon': Icons.account_balance_outlined,
+      },
+      {
+        'title': l10nPick(context, fa: 'صدور قطعی', en: 'Issued & Active'),
+        'icon': Icons.verified_rounded,
+      },
     ];
 
-    final primaryAccent = isDark ? const Color(0xFF2DD4BF) : const Color(0xFF0D9488);
-    final inactiveColor = isDark ? AppColors.darkOutline : AppColors.lightOutlineVariant;
+    final primaryAccent = isDark
+        ? const Color(0xFF2DD4BF)
+        : const Color(0xFF0D9488);
+    final inactiveColor = isDark
+        ? AppColors.darkOutline
+        : AppColors.lightOutlineVariant;
 
     return Container(
       padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
@@ -69,18 +85,27 @@ class GuaranteeStatusStepper extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  l10nPick(context, fa: 'مراحل صدور ضمانت‌نامه بانکی', en: 'Guarantee Issuance Progress'),
+                  l10nPick(
+                    context,
+                    fa: 'مراحل صدور ضمانت‌نامه بانکی',
+                    en: 'Guarantee Issuance Progress',
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.titleSmall.copyWith(
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
               SizedBox(width: 8.w),
               Container(
-                padding: EdgeInsetsDirectional.symmetric(horizontal: 8.w, vertical: 3.h),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: 8.w,
+                  vertical: 3.h,
+                ),
                 decoration: BoxDecoration(
                   color: primaryAccent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
@@ -126,9 +151,13 @@ class GuaranteeStatusStepper extends StatelessWidget {
                 circleBorder = primaryAccent;
                 iconColor = primaryAccent;
               } else {
-                circleBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8FAFC);
+                circleBg = isDark
+                    ? AppColors.darkSurfaceVariant
+                    : const Color(0xFFF8FAFC);
                 circleBorder = inactiveColor;
-                iconColor = isDark ? AppColors.darkTextTertiary : const Color(0xFF94A3B8);
+                iconColor = isDark
+                    ? AppColors.darkTextTertiary
+                    : const Color(0xFF94A3B8);
               }
 
               return Container(
@@ -137,7 +166,10 @@ class GuaranteeStatusStepper extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: circleBg,
                   shape: BoxShape.circle,
-                  border: Border.all(color: circleBorder, width: isCurrent ? 2 : 1),
+                  border: Border.all(
+                    color: circleBorder,
+                    width: isCurrent ? 2 : 1,
+                  ),
                 ),
                 child: Center(
                   child: Icon(
@@ -156,7 +188,8 @@ class GuaranteeStatusStepper extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  steps[activeStep.clamp(0, steps.length - 1)]['title'] as String,
+                  steps[activeStep.clamp(0, steps.length - 1)]['title']
+                      as String,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.labelSmall.copyWith(
@@ -173,7 +206,9 @@ class GuaranteeStatusStepper extends StatelessWidget {
                     textAlign: TextAlign.end,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.labelSmall.copyWith(
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ),
@@ -189,16 +224,17 @@ class GuaranteeStatusStepper extends StatelessWidget {
 class GuaranteeSkeletonLoader extends StatelessWidget {
   final int itemCount;
 
-  const GuaranteeSkeletonLoader({
-    super.key,
-    this.itemCount = 3,
-  });
+  const GuaranteeSkeletonLoader({super.key, this.itemCount = 3});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final baseColor = isDark ? const Color(0xFF2B2B29) : const Color(0xFFE2E8F0);
-    final highlightColor = isDark ? const Color(0xFF383835) : const Color(0xFFF1F5F9);
+    final baseColor = isDark
+        ? const Color(0xFF2B2B29)
+        : const Color(0xFFE2E8F0);
+    final highlightColor = isDark
+        ? const Color(0xFF383835)
+        : const Color(0xFFF1F5F9);
 
     return Shimmer.fromColors(
       baseColor: baseColor,
@@ -225,7 +261,9 @@ class GuaranteeSkeletonLoader extends StatelessWidget {
                     height: 40.r,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
                     ),
                   ),
                   SizedBox(width: AppSpacing.md.w),
@@ -238,7 +276,9 @@ class GuaranteeSkeletonLoader extends StatelessWidget {
                           height: 16.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                         SizedBox(height: AppSpacing.xs.h),
@@ -247,7 +287,9 @@ class GuaranteeSkeletonLoader extends StatelessWidget {
                           height: 12.h,
                           decoration: BoxDecoration(
                             color: baseColor,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm.r,
+                            ),
                           ),
                         ),
                       ],
@@ -258,7 +300,9 @@ class GuaranteeSkeletonLoader extends StatelessWidget {
                     height: 28.h,
                     decoration: BoxDecoration(
                       color: baseColor,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                   ),
                 ],

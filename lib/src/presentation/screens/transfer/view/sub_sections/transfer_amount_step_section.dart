@@ -40,7 +40,8 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
   @override
   void initState() {
     super.initState();
-    if (uidAccount.isNotEmpty && controller.recipientUidController.text.isEmpty) {
+    if (uidAccount.isNotEmpty &&
+        controller.recipientUidController.text.isEmpty) {
       controller.recipientUidController.text = uidAccount;
     }
 
@@ -80,7 +81,8 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
 
       final enteredUid = controller.recipientUidController.text.trim();
       final beneficiaries =
-          controller.beneficiaryModel.value.data?.beneficiaries ?? <Beneficiaries>[];
+          controller.beneficiaryModel.value.data?.beneficiaries ??
+          <Beneficiaries>[];
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,17 +99,22 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                       focusNode: controller.recipientUidFocusNode,
                       isFocused: controller.isRecipientUidFocused.value,
                       backgroundColor: isDark
-                          ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.4)
+                          ? colorScheme.surfaceContainerHigh.withValues(
+                              alpha: 0.4,
+                            )
                           : colorScheme.surface,
                       hintText: "Enter Recipient UID",
                       controller: controller.recipientUidController,
                       keyboardType: TextInputType.number,
-                      suffixIcon: controller.recipientUidController.text.isNotEmpty
+                      suffixIcon:
+                          controller.recipientUidController.text.isNotEmpty
                           ? IconButton(
                               icon: Icon(
                                 Icons.clear_rounded,
                                 size: 18,
-                                color: colorScheme.onSurface.withValues(alpha: 0.5),
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
                               ),
                               onPressed: () {
                                 controller.recipientUidController.clear();
@@ -138,8 +145,9 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                       ).firstMatch(clean);
 
                       if (uidMatch != null) {
-                        controller.recipientUidController.text =
-                            uidMatch.group(1)!;
+                        controller.recipientUidController.text = uidMatch.group(
+                          1,
+                        )!;
                         setState(() {});
                       } else {
                         ToastHelper().showErrorToast(
@@ -179,7 +187,9 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
             final cleanUid = controller.recipientUidController.text.trim();
             final isLookingUp = controller.isLookingUpRecipient.value;
             final recipientData = controller.lookedUpRecipient.value;
-            final matchedBeneficiary = controller.findBeneficiaryByAccount(cleanUid);
+            final matchedBeneficiary = controller.findBeneficiaryByAccount(
+              cleanUid,
+            );
 
             if (isLookingUp) {
               return Padding(
@@ -192,7 +202,9 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                       height: 14,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.primary),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          colorScheme.primary,
+                        ),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.xs),
@@ -216,18 +228,21 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
             }
 
             if (recipientData != null || matchedBeneficiary != null) {
-              final recipientName = recipientData?['name']?.toString() ??
+              final recipientName =
+                  recipientData?['name']?.toString() ??
                   recipientData?['nickname']?.toString() ??
                   matchedBeneficiary?.nickname ??
                   matchedBeneficiary?.receiver?.name ??
                   cleanUid;
 
-              final recipientAccount = recipientData?['account_number']?.toString() ??
+              final recipientAccount =
+                  recipientData?['account_number']?.toString() ??
                   recipientData?['accountNumber']?.toString() ??
                   matchedBeneficiary?.accountNumber ??
                   cleanUid;
 
-              final avatarUrl = recipientData?['avatar']?.toString() ??
+              final avatarUrl =
+                  recipientData?['avatar']?.toString() ??
                   matchedBeneficiary?.receiver?.avatar;
 
               final labelText = l10nPick(
@@ -250,7 +265,9 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                         : AppColors.successContainer.withValues(alpha: 0.7),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                     border: Border.all(
-                      color: AppColors.success.withValues(alpha: isDark ? 0.4 : 0.3),
+                      color: AppColors.success.withValues(
+                        alpha: isDark ? 0.4 : 0.3,
+                      ),
                       width: 1,
                     ),
                   ),
@@ -344,68 +361,68 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
             ),
           ],
 
-            const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.lg),
 
-            // 2. Big Hero Amount Input Card with Percentage Chips & Fee Pill
-            TransferAmountInputCard(
-              controller: controller.amountController,
-              focusNode: controller.amountFocusNode,
-              wallet: currentWallet,
-              charge: controller.charge.value,
-              totalAmount: controller.totalAmount.value,
-              chargeLoadFailed: controller.chargeLoadFailed.value,
-              decimals: decimals,
-              onPercentageSelected: (fraction) {
-                controller.setPercentage(fraction);
-                setState(() {});
-              },
-              onClear: () {
-                controller.amountController.clear();
-                controller.calculateLiveCharge();
-                setState(() {});
-              },
-            ),
+          // 2. Big Hero Amount Input Card with Percentage Chips & Fee Pill
+          TransferAmountInputCard(
+            controller: controller.amountController,
+            focusNode: controller.amountFocusNode,
+            wallet: currentWallet,
+            charge: controller.charge.value,
+            totalAmount: controller.totalAmount.value,
+            chargeLoadFailed: controller.chargeLoadFailed.value,
+            decimals: decimals,
+            onPercentageSelected: (fraction) {
+              controller.setPercentage(fraction);
+              setState(() {});
+            },
+            onClear: () {
+              controller.amountController.clear();
+              controller.calculateLiveCharge();
+              setState(() {});
+            },
+          ),
 
-            const SizedBox(height: AppSpacing.xxl),
+          const SizedBox(height: AppSpacing.xxl),
 
-            // 3. Action Buttons
-            CommonButton(
-              borderRadius: AppSpacing.radiusLg,
-              width: double.infinity,
-              height: 52,
-              text: localization.transferAmountStepSectionTransferMoneyButton,
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                controller.nextStepWithValidation();
-              },
-            ),
-            const SizedBox(height: AppSpacing.md),
-            CommonButton(
-              backgroundColor: isDark
-                  ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
-                  : colorScheme.primary.withValues(alpha: 0.06),
-              borderWidth: 1.5,
-              borderColor: isDark
-                  ? colorScheme.outlineVariant.withValues(alpha: 0.4)
-                  : colorScheme.primary.withValues(alpha: 0.18),
-              textColor: colorScheme.onSurface,
-              borderRadius: AppSpacing.radiusLg,
-              width: double.infinity,
-              height: 50,
-              text: localization.transferAmountStepSectionSavedBeneficiaryButton,
-              onPressed: () async {
-                HapticFeedback.lightImpact();
-                await controller.fetchBeneficiary();
-                if (mounted) {
-                  Get.bottomSheet(_buildBeneficiary());
-                }
-              },
-            ),
+          // 3. Action Buttons
+          CommonButton(
+            borderRadius: AppSpacing.radiusLg,
+            width: double.infinity,
+            height: 52,
+            text: localization.transferAmountStepSectionTransferMoneyButton,
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              controller.nextStepWithValidation();
+            },
+          ),
+          const SizedBox(height: AppSpacing.md),
+          CommonButton(
+            backgroundColor: isDark
+                ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
+                : colorScheme.primary.withValues(alpha: 0.06),
+            borderWidth: 1.5,
+            borderColor: isDark
+                ? colorScheme.outlineVariant.withValues(alpha: 0.4)
+                : colorScheme.primary.withValues(alpha: 0.18),
+            textColor: colorScheme.onSurface,
+            borderRadius: AppSpacing.radiusLg,
+            width: double.infinity,
+            height: 50,
+            text: localization.transferAmountStepSectionSavedBeneficiaryButton,
+            onPressed: () async {
+              HapticFeedback.lightImpact();
+              await controller.fetchBeneficiary();
+              if (mounted) {
+                Get.bottomSheet(_buildBeneficiary());
+              }
+            },
+          ),
 
-            const SizedBox(height: AppSpacing.xxl),
-            SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
-          ],
-        );
+          const SizedBox(height: AppSpacing.xxl),
+          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+        ],
+      );
     });
   }
 
@@ -428,8 +445,9 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : AppColors.lightShadow)
-                .withValues(alpha: isDark ? 0.4 : 0.08),
+            color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+              alpha: isDark ? 0.4 : 0.08,
+            ),
             blurRadius: 40,
             offset: Offset.zero,
           ),
@@ -486,141 +504,151 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
             const SizedBox(height: AppSpacing.md),
             Obx(
               () => Expanded(
-                child: (controller.beneficiaryModel.value.data?.beneficiaries?.isEmpty ?? true)
+                child:
+                    (controller
+                            .beneficiaryModel
+                            .value
+                            .data
+                            ?.beneficiaries
+                            ?.isEmpty ??
+                        true)
                     ? const NoDataFound()
                     : controller.isBeneficiaryLoading.value
-                        ? const CommonLoading()
-                        : ListView.separated(
-                            separatorBuilder: (_, _) =>
-                                const SizedBox(height: AppSpacing.sm),
-                            itemCount: controller
-                                    .beneficiaryModel
-                                    .value
-                                    .data
-                                    ?.beneficiaries
-                                    ?.length ??
-                                0,
-                            itemBuilder: (context, index) {
-                              final Beneficiaries item = controller
-                                  .beneficiaryModel
-                                  .value
-                                  .data!
-                                  .beneficiaries![index];
-                              final displayName = item.nickname ?? item.receiver?.name ?? 'User';
+                    ? const CommonLoading()
+                    : ListView.separated(
+                        separatorBuilder: (_, _) =>
+                            const SizedBox(height: AppSpacing.sm),
+                        itemCount:
+                            controller
+                                .beneficiaryModel
+                                .value
+                                .data
+                                ?.beneficiaries
+                                ?.length ??
+                            0,
+                        itemBuilder: (context, index) {
+                          final Beneficiaries item = controller
+                              .beneficiaryModel
+                              .value
+                              .data!
+                              .beneficiaries![index];
+                          final displayName =
+                              item.nickname ?? item.receiver?.name ?? 'User';
 
-                              return GestureDetector(
-                                onTap: () {
-                                  HapticFeedback.selectionClick();
-                                  Get.back();
-                                  controller.recipientUidController.text =
-                                      item.accountNumber ?? "";
-                                  setState(() {});
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(AppSpacing.md),
-                                  decoration: BoxDecoration(
-                                    color: isDark
-                                        ? colorScheme.surfaceContainerLowest
-                                        : colorScheme.surfaceContainerLow,
-                                    borderRadius:
-                                        BorderRadius.circular(AppSpacing.radiusLg),
-                                    border: Border.all(
-                                      color: colorScheme.outlineVariant
-                                          .withValues(alpha: isDark ? 0.3 : 0.5),
+                          return GestureDetector(
+                            onTap: () {
+                              HapticFeedback.selectionClick();
+                              Get.back();
+                              controller.recipientUidController.text =
+                                  item.accountNumber ?? "";
+                              setState(() {});
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(AppSpacing.md),
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? colorScheme.surfaceContainerLowest
+                                    : colorScheme.surfaceContainerLow,
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusLg,
+                                ),
+                                border: Border.all(
+                                  color: colorScheme.outlineVariant.withValues(
+                                    alpha: isDark ? 0.3 : 0.5,
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  RecipientMonogramAvatar(
+                                    name: displayName,
+                                    identifier: item.accountNumber,
+                                    avatarUrl: item.receiver?.avatar,
+                                    size: 44,
+                                    isVerified: item.receiver != null,
+                                  ),
+                                  const SizedBox(width: AppSpacing.md),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          displayName,
+                                          style: TextStyle(
+                                            fontFamily: 'Plus Jakarta Sans',
+                                            letterSpacing: 0,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 15,
+                                            color: colorScheme.onSurface,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          "${localization.transferAmountStepSectionUidLabel} ${item.accountNumber}",
+                                          style: TextStyle(
+                                            fontFamily: 'Plus Jakarta Sans',
+                                            letterSpacing: 0,
+                                            fontSize: 12,
+                                            color: colorScheme.onSurface
+                                                .withValues(alpha: 0.6),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
+                                  Row(
                                     children: [
-                                      RecipientMonogramAvatar(
-                                        name: displayName,
-                                        identifier: item.accountNumber,
-                                        avatarUrl: item.receiver?.avatar,
-                                        size: 44,
-                                        isVerified: item.receiver != null,
-                                      ),
-                                      const SizedBox(width: AppSpacing.md),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              displayName,
-                                              style: TextStyle(
-                                                fontFamily: 'Plus Jakarta Sans',
-                                                letterSpacing: 0,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 15,
-                                                color: colorScheme.onSurface,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              "${localization.transferAmountStepSectionUidLabel} ${item.accountNumber}",
-                                              style: TextStyle(
-                                                fontFamily: 'Plus Jakarta Sans',
-                                                letterSpacing: 0,
-                                                fontSize: 12,
-                                                color: colorScheme.onSurface
-                                                    .withValues(alpha: 0.6),
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
+                                      InkWell(
+                                        onTap: () async {
+                                          Get.toNamed(
+                                            BaseRoute.updateBeneficiary,
+                                            arguments: {
+                                              "beneficiary_id": item.id
+                                                  .toString(),
+                                              "account_user": "Beneficiary",
+                                              "beneficiary_data": item,
+                                            },
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(6.0),
+                                          child: Icon(
+                                            Icons.edit_outlined,
+                                            size: 18,
+                                            color: colorScheme.primary,
+                                          ),
                                         ),
                                       ),
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              Get.toNamed(
-                                                BaseRoute.updateBeneficiary,
-                                                arguments: {
-                                                  "beneficiary_id":
-                                                      item.id.toString(),
-                                                  "account_user": "Beneficiary",
-                                                  "beneficiary_data": item,
-                                                },
-                                              );
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(6.0),
-                                              child: Icon(
-                                                Icons.edit_outlined,
-                                                size: 18,
-                                                color: colorScheme.primary,
-                                              ),
+                                      const SizedBox(width: AppSpacing.xs),
+                                      InkWell(
+                                        onTap: () async {
+                                          Get.bottomSheet(
+                                            deleteBeneficiaryBottomSheet(
+                                              beneficiaryId: item.id.toString(),
                                             ),
+                                          );
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(6.0),
+                                          child: Icon(
+                                            Icons.delete_outline_rounded,
+                                            size: 18,
+                                            color: AppColors.error,
                                           ),
-                                          const SizedBox(width: AppSpacing.xs),
-                                          InkWell(
-                                            onTap: () async {
-                                              Get.bottomSheet(
-                                                deleteBeneficiaryBottomSheet(
-                                                  beneficiaryId:
-                                                      item.id.toString(),
-                                                ),
-                                              );
-                                            },
-                                            child: const Padding(
-                                              padding: EdgeInsets.all(6.0),
-                                              child: Icon(
-                                                Icons.delete_outline_rounded,
-                                                size: 18,
-                                                color: AppColors.error,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
               ),
             ),
           ],
@@ -648,8 +676,9 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
         ),
         boxShadow: [
           BoxShadow(
-            color: (isDark ? Colors.black : AppColors.lightShadow)
-                .withValues(alpha: isDark ? 0.4 : 0.08),
+            color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+              alpha: isDark ? 0.4 : 0.08,
+            ),
             blurRadius: 40,
             offset: Offset.zero,
           ),

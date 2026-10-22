@@ -63,17 +63,23 @@ class _AddMoneyReviewStepSectionState extends State<AddMoneyReviewStepSection> {
 
     // Step-up Security 2: Transaction Passcode verification
     final bool isPasscodeEnabled =
-        Get.find<SettingsService>().getSetting("deposit_passcode_status") == "1";
+        Get.find<SettingsService>().getSetting("deposit_passcode_status") ==
+        "1";
 
     String? storedPasscode = controller.userModel.value.data?.passcode;
     bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
     if (storedPasscode == null || storedPasscode.isEmpty) {
       if (Get.isRegistered<HomeController>()) {
-        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
-        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+        storedPasscode =
+            Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??=
+            Get.find<HomeController>().userModel.value.data?.hasPasscode;
       }
     }
-    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+    final hasPasscode = PasscodeHelper.userHasPasscode(
+      storedPasscode,
+      hasPasscodeFlag,
+    );
 
     if (isPasscodeEnabled && hasPasscode) {
       final dynamic verified = await Get.bottomSheet<dynamic>(
@@ -139,7 +145,9 @@ class _AddMoneyReviewStepSectionState extends State<AddMoneyReviewStepSection> {
               ),
               style: TextStyle(
                 fontSize: 12.5,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -178,7 +186,8 @@ class _AddMoneyReviewStepSectionState extends State<AddMoneyReviewStepSection> {
                       context,
                       isDark: isDark,
                       title: localization.addMoneyReviewPaymentMethod,
-                      content: controller.gatewayMethod.value?.formattedName ?? '',
+                      content:
+                          controller.gatewayMethod.value?.formattedName ?? '',
                       contentColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
@@ -258,9 +267,13 @@ class _AddMoneyReviewStepSectionState extends State<AddMoneyReviewStepSection> {
               backgroundColor: isDark
                   ? AppColors.darkSurfaceVariant.withValues(alpha: 0.5)
                   : AppColors.lightSecondaryContainer.withValues(alpha: 0.6),
-              borderColor: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+              borderColor: isDark
+                  ? AppColors.darkBorder
+                  : AppColors.lightOutlineVariant,
               borderWidth: 1.0,
-              textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              textColor: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
 
             const SizedBox(height: AppSpacing.huge),

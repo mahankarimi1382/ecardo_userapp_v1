@@ -38,14 +38,18 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
         title: Text(
           l10nPick(context, en: 'Visa Tracking', fa: 'رهگیری پرونده ویزا'),
           style: TextStyle(
             fontSize: 17.sp,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         centerTitle: true,
@@ -54,7 +58,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             size: AppSpacing.iconSm.r,
           ),
           onPressed: () => Get.back(),
@@ -73,7 +79,8 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
         ],
       ),
       body: Obx(() {
-        if (_controller.isLoadingDetail.value && _controller.currentRequest.value == null) {
+        if (_controller.isLoadingDetail.value &&
+            _controller.currentRequest.value == null) {
           return Center(
             child: CircularProgressIndicator(
               color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
@@ -92,14 +99,22 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                   Icon(
                     Icons.assignment_late_outlined,
                     size: AppSpacing.iconXl.r,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.softGray,
                   ),
                   SizedBox(height: AppSpacing.md.h),
                   Text(
-                    l10nPick(context, en: 'Visa request not found', fa: 'پرونده ویزا یافت نشد'),
+                    l10nPick(
+                      context,
+                      en: 'Visa request not found',
+                      fa: 'پرونده ویزا یافت نشد',
+                    ),
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -125,10 +140,16 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10nPick(context, en: 'Case Reference No.', fa: 'شماره پیگیری پرونده:'),
+                            l10nPick(
+                              context,
+                              en: 'Case Reference No.',
+                              fa: 'شماره پیگیری پرونده:',
+                            ),
                             style: TextStyle(
                               fontSize: 11.sp,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                           SizedBox(height: 2.h),
@@ -141,7 +162,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                                   style: TextStyle(
                                     fontSize: 14.sp,
                                     fontWeight: FontWeight.w900,
-                                    color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                                    color: isDark
+                                        ? AppColors.darkPrimary
+                                        : AppColors.lightSecondary,
                                   ),
                                 ),
                               ),
@@ -149,11 +172,17 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                               InkWell(
                                 onTap: () {
                                   HapticFeedback.lightImpact();
-                                  Clipboard.setData(ClipboardData(text: req.caseNo));
+                                  Clipboard.setData(
+                                    ClipboardData(text: req.caseNo),
+                                  );
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        l10nPick(context, en: 'Case number copied to clipboard', fa: 'شماره پرونده کپی شد'),
+                                        l10nPick(
+                                          context,
+                                          en: 'Case number copied to clipboard',
+                                          fa: 'شماره پرونده کپی شد',
+                                        ),
                                       ),
                                       duration: const Duration(seconds: 2),
                                     ),
@@ -164,7 +193,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                                   child: Icon(
                                     Icons.copy_rounded,
                                     size: AppSpacing.iconXs.r,
-                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                    color: isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary,
                                   ),
                                 ),
                               ),
@@ -177,7 +208,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                   ),
                   Divider(
                     height: AppSpacing.xxl,
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
                   ),
                   Row(
                     children: [
@@ -192,14 +225,18 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                               style: TextStyle(
                                 fontSize: 13.5.sp,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                             Text(
                               req.visaTitle,
                               style: TextStyle(
                                 fontSize: 11.5.sp,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ],
@@ -217,11 +254,17 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  l10nPick(context, en: 'Application Progress', fa: 'وضعیت و مراحل پرونده'),
+                  l10nPick(
+                    context,
+                    en: 'Application Progress',
+                    fa: 'وضعیت و مراحل پرونده',
+                  ),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 Text(
@@ -229,7 +272,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                   style: TextStyle(
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightSecondary,
                   ),
                 ),
               ],
@@ -243,52 +288,83 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
               _alertBanner(
                 context,
                 isDark: isDark,
-                color: isDark ? AppColors.warning.withValues(alpha: 0.15) : AppColors.warningContainer,
+                color: isDark
+                    ? AppColors.warning.withValues(alpha: 0.15)
+                    : AppColors.warningContainer,
                 borderColor: AppColors.warning,
                 icon: Icons.payment_rounded,
                 iconColor: AppColors.warning,
-                title: l10nPick(context, en: 'Payment Required', fa: 'در انتظار پرداخت هزینه'),
+                title: l10nPick(
+                  context,
+                  en: 'Payment Required',
+                  fa: 'در انتظار پرداخت هزینه',
+                ),
                 desc: l10nPick(
                   context,
                   en: 'Please complete the payment so our consultants can begin reviewing your application.',
                   fa: 'جهت شروع بررسی اسناد توسط کارشناسان رسمی، لطفاً هزینه پرونده را پرداخت فرمایید.',
                 ),
-                buttonText: l10nPick(context, en: 'Pay Now', fa: 'پرداخت آنلاین'),
+                buttonText: l10nPick(
+                  context,
+                  en: 'Pay Now',
+                  fa: 'پرداخت آنلاین',
+                ),
                 onTap: () => Get.to(() => VisaPaymentScreen(request: req)),
               )
             else if (req.isApproved)
               _alertBanner(
                 context,
                 isDark: isDark,
-                color: isDark ? AppColors.success.withValues(alpha: 0.15) : AppColors.successContainer,
+                color: isDark
+                    ? AppColors.success.withValues(alpha: 0.15)
+                    : AppColors.successContainer,
                 borderColor: AppColors.success,
                 icon: Icons.verified_rounded,
                 iconColor: AppColors.success,
-                title: l10nPick(context, en: 'Visa Issued!', fa: 'ویزای الکترونیک صادر گردید!'),
+                title: l10nPick(
+                  context,
+                  en: 'Visa Issued!',
+                  fa: 'ویزای الکترونیک صادر گردید!',
+                ),
                 desc: l10nPick(
                   context,
                   en: 'Your official E-Visa has been issued by the authority. Tap to view and download.',
                   fa: 'ویزای الکترونیک شما با موفقیت صادر شد. برای مشاهده و دانلود واچر کلیک کنید.',
                 ),
-                buttonText: l10nPick(context, en: 'View E-Visa', fa: 'مشاهده و دانلود ویزا'),
+                buttonText: l10nPick(
+                  context,
+                  en: 'View E-Visa',
+                  fa: 'مشاهده و دانلود ویزا',
+                ),
                 onTap: () => Get.to(() => VisaResultScreen(request: req)),
               )
             else if (req.isRejected)
               _alertBanner(
                 context,
                 isDark: isDark,
-                color: isDark ? AppColors.error.withValues(alpha: 0.15) : AppColors.errorContainer,
+                color: isDark
+                    ? AppColors.error.withValues(alpha: 0.15)
+                    : AppColors.errorContainer,
                 borderColor: AppColors.error,
                 icon: Icons.cancel_outlined,
                 iconColor: AppColors.error,
-                title: l10nPick(context, en: 'Application Rejected', fa: 'درخواست رد شد'),
-                desc: req.rejectionReason ??
+                title: l10nPick(
+                  context,
+                  en: 'Application Rejected',
+                  fa: 'درخواست رد شد',
+                ),
+                desc:
+                    req.rejectionReason ??
                     l10nPick(
                       context,
                       en: 'Tap to see details and appeal instructions.',
                       fa: 'جهت مشاهده دلایل و شرایط ثبت اعتراض کلیک نمایید.',
                     ),
-                buttonText: l10nPick(context, en: 'View Details', fa: 'مشاهده جزئیات رد'),
+                buttonText: l10nPick(
+                  context,
+                  en: 'View Details',
+                  fa: 'مشاهده جزئیات رد',
+                ),
                 onTap: () => Get.to(() => VisaResultScreen(request: req)),
               ),
             if (req.isAwaitingPayment || req.isApproved || req.isRejected)
@@ -300,22 +376,70 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10nPick(context, en: 'Applicant Details', fa: 'مشخصات متقاضی و مسافر'),
+                    l10nPick(
+                      context,
+                      en: 'Applicant Details',
+                      fa: 'مشخصات متقاضی و مسافر',
+                    ),
                     style: TextStyle(
                       fontSize: 13.5.sp,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   SizedBox(height: AppSpacing.md.h),
-                  _detailRow(context, l10nPick(context, en: 'Full Name:', fa: 'نام و نام خانوادگی:'), req.applicantName, isDark),
-                  _detailRow(context, l10nPick(context, en: 'Passport Number:', fa: 'شماره گذرنامه:'), req.applicantPassport, isDark),
-                  _detailRow(context, l10nPick(context, en: 'Nationality:', fa: 'ملیت:'), req.applicantNationality, isDark),
-                  _detailRow(context, l10nPick(context, en: 'Phone:', fa: 'شماره تماس:'), req.applicantPhone, isDark),
+                  _detailRow(
+                    context,
+                    l10nPick(
+                      context,
+                      en: 'Full Name:',
+                      fa: 'نام و نام خانوادگی:',
+                    ),
+                    req.applicantName,
+                    isDark,
+                  ),
+                  _detailRow(
+                    context,
+                    l10nPick(
+                      context,
+                      en: 'Passport Number:',
+                      fa: 'شماره گذرنامه:',
+                    ),
+                    req.applicantPassport,
+                    isDark,
+                  ),
+                  _detailRow(
+                    context,
+                    l10nPick(context, en: 'Nationality:', fa: 'ملیت:'),
+                    req.applicantNationality,
+                    isDark,
+                  ),
+                  _detailRow(
+                    context,
+                    l10nPick(context, en: 'Phone:', fa: 'شماره تماس:'),
+                    req.applicantPhone,
+                    isDark,
+                  ),
                   if (req.applicantEmail.isNotEmpty)
-                    _detailRow(context, l10nPick(context, en: 'Email:', fa: 'ایمیل:'), req.applicantEmail, isDark),
+                    _detailRow(
+                      context,
+                      l10nPick(context, en: 'Email:', fa: 'ایمیل:'),
+                      req.applicantEmail,
+                      isDark,
+                    ),
                   if (req.travelDate != null)
-                    _detailRow(context, l10nPick(context, en: 'Travel Date:', fa: 'تاریخ تقریبی سفر:'), req.travelDate!, isDark),
+                    _detailRow(
+                      context,
+                      l10nPick(
+                        context,
+                        en: 'Travel Date:',
+                        fa: 'تاریخ تقریبی سفر:',
+                      ),
+                      req.travelDate!,
+                      isDark,
+                    ),
                 ],
               ),
             ),
@@ -330,22 +454,35 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, en: 'Submitted Documents', fa: 'مدارک و ضمائم ارسالی'),
+                        l10nPick(
+                          context,
+                          en: 'Submitted Documents',
+                          fa: 'مدارک و ضمائم ارسالی',
+                        ),
                         style: TextStyle(
                           fontSize: 13.5.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       if (req.isComplementRequired)
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 2.h,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.warning.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6.r),
                           ),
                           child: Text(
-                            l10nPick(context, en: 'Needs Revision', fa: 'نیاز به اصلاح مدارک'),
+                            l10nPick(
+                              context,
+                              en: 'Needs Revision',
+                              fa: 'نیاز به اصلاح مدارک',
+                            ),
                             style: TextStyle(
                               fontSize: 10.5.sp,
                               color: AppColors.warning,
@@ -358,10 +495,16 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                   SizedBox(height: AppSpacing.md.h),
                   if (req.documents.isEmpty)
                     Text(
-                      l10nPick(context, en: 'No documents recorded.', fa: 'هنوز مدرکی برای این پرونده بارگذاری نشده است.'),
+                      l10nPick(
+                        context,
+                        en: 'No documents recorded.',
+                        fa: 'هنوز مدرکی برای این پرونده بارگذاری نشده است.',
+                      ),
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     )
                   else
@@ -375,9 +518,16 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                         onPickFile: () async {
                           final result = await FilePicker.platform.pickFiles(
                             type: FileType.custom,
-                            allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'webp'],
+                            allowedExtensions: [
+                              'jpg',
+                              'jpeg',
+                              'png',
+                              'pdf',
+                              'webp',
+                            ],
                           );
-                          if (result != null && result.files.single.path != null) {
+                          if (result != null &&
+                              result.files.single.path != null) {
                             await _controller.uploadDocumentForCurrent(
                               d.docKey,
                               File(result.files.single.path!),
@@ -398,62 +548,78 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10nPick(context, en: 'Activity Log', fa: 'تاریخچه اقدامات پرونده'),
+                      l10nPick(
+                        context,
+                        en: 'Activity Log',
+                        fa: 'تاریخچه اقدامات پرونده',
+                      ),
                       style: TextStyle(
                         fontSize: 13.5.sp,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: AppSpacing.md.h),
-                    ...req.events.map((evt) => Padding(
-                          padding: EdgeInsets.only(bottom: AppSpacing.sm.h),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(top: 4.h),
-                                width: 8.r,
-                                height: 8.r,
-                                decoration: BoxDecoration(
-                                  color: isDark ? AppColors.darkPrimary : AppColors.lightSecondary,
-                                  shape: BoxShape.circle,
-                                ),
+                    ...req.events.map(
+                      (evt) => Padding(
+                        padding: EdgeInsets.only(bottom: AppSpacing.sm.h),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 4.h),
+                              width: 8.r,
+                              height: 8.r,
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightSecondary,
+                                shape: BoxShape.circle,
                               ),
-                              SizedBox(width: AppSpacing.sm.w),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
+                            ),
+                            SizedBox(width: AppSpacing.sm.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    evt.title,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary,
+                                    ),
+                                  ),
+                                  if (evt.note != null && evt.note!.isNotEmpty)
                                     Text(
-                                      evt.title,
+                                      evt.note!,
                                       style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                        fontSize: 11.sp,
+                                        color: isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextSecondary,
                                       ),
                                     ),
-                                    if (evt.note != null && evt.note!.isNotEmpty)
-                                      Text(
-                                        evt.note!,
-                                        style: TextStyle(
-                                          fontSize: 11.sp,
-                                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                                        ),
-                                      ),
-                                    Text(
-                                      evt.createdAt.split('T').first,
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: isDark ? AppColors.darkTextTertiary : AppColors.softGray,
-                                      ),
+                                  Text(
+                                    evt.createdAt.split('T').first,
+                                    style: TextStyle(
+                                      fontSize: 10.sp,
+                                      color: isDark
+                                          ? AppColors.darkTextTertiary
+                                          : AppColors.softGray,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -470,7 +636,13 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                     final confirm = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: Text(l10nPick(ctx, en: 'Cancel Application', fa: 'لغو پرونده ویزا')),
+                        title: Text(
+                          l10nPick(
+                            ctx,
+                            en: 'Cancel Application',
+                            fa: 'لغو پرونده ویزا',
+                          ),
+                        ),
                         content: Text(
                           l10nPick(
                             ctx,
@@ -486,7 +658,11 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                           TextButton(
                             onPressed: () => Navigator.pop(ctx, true),
                             child: Text(
-                              l10nPick(ctx, en: 'Yes, Cancel', fa: 'بله، لغو شود'),
+                              l10nPick(
+                                ctx,
+                                en: 'Yes, Cancel',
+                                fa: 'بله، لغو شود',
+                              ),
                               style: const TextStyle(color: AppColors.error),
                             ),
                           ),
@@ -500,12 +676,23 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.error,
                     side: const BorderSide(color: AppColors.error, width: 1.2),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusMd.r,
+                      ),
+                    ),
                     padding: EdgeInsets.symmetric(vertical: AppSpacing.md.h),
                   ),
                   child: Text(
-                    l10nPick(context, en: 'Cancel This Application', fa: 'انصراف و لغو این پرونده'),
-                    style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w700),
+                    l10nPick(
+                      context,
+                      en: 'Cancel This Application',
+                      fa: 'انصراف و لغو این پرونده',
+                    ),
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ),
@@ -516,7 +703,12 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
     );
   }
 
-  Widget _detailRow(BuildContext context, String label, String value, bool isDark) {
+  Widget _detailRow(
+    BuildContext context,
+    String label,
+    String value,
+    bool isDark,
+  ) {
     return Padding(
       padding: EdgeInsets.only(bottom: AppSpacing.sm.h),
       child: Row(
@@ -526,7 +718,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
             label,
             style: TextStyle(
               fontSize: 12.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           Text(
@@ -534,7 +728,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
             style: TextStyle(
               fontSize: 12.5.sp,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
         ],
@@ -570,7 +766,11 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
               SizedBox(width: AppSpacing.sm.w),
               Text(
                 title,
-                style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w900, color: iconColor),
+                style: TextStyle(
+                  fontSize: 13.5.sp,
+                  fontWeight: FontWeight.w900,
+                  color: iconColor,
+                ),
               ),
             ],
           ),
@@ -579,7 +779,9 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
             desc,
             style: TextStyle(
               fontSize: 11.5.sp,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
               height: 1.35,
             ),
           ),
@@ -591,13 +793,22 @@ class _VisaDetailScreenState extends State<VisaDetailScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: iconColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r)),
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.sm.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+              ),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg.w,
+                vertical: AppSpacing.sm.h,
+              ),
               elevation: 0,
             ),
             child: Text(
               buttonText,
-              style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: AppColors.white),
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w800,
+                color: AppColors.white,
+              ),
             ),
           ),
         ],

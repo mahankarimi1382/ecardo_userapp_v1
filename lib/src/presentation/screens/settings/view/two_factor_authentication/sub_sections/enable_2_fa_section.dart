@@ -20,7 +20,9 @@ class Enable2FaSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextTertiary;
 
     return Container(
       margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
@@ -109,7 +111,9 @@ class Enable2FaSection extends StatelessWidget {
             () => CommonTextInputField(
               focusNode: controller.enable2FaFocusNode,
               isFocused: controller.isEnable2FaFocused.value,
-              backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+              backgroundColor: isDark
+                  ? AppColors.darkBackground
+                  : AppColors.lightBackground,
               hintText: "••••••",
               controller: controller.enable2FaController,
               keyboardType: TextInputType.number,

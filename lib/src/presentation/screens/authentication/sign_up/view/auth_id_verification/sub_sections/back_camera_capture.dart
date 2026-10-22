@@ -164,7 +164,11 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.no_photography_rounded, size: 56.sp, color: Colors.white70),
+                Icon(
+                  Icons.no_photography_rounded,
+                  size: 56.sp,
+                  color: Colors.white70,
+                ),
                 SizedBox(height: 16.h),
                 Text(
                   l10nPick(
@@ -188,19 +192,36 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
                     ar: 'يلزم إذن الكاميرا لتصوير مستند الهوية.',
                   ),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white70, fontSize: 13, height: 1.4),
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    height: 1.4,
+                  ),
                 ),
                 SizedBox(height: 24.h),
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.lightPrimary,
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 12.h,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
                   ),
                   icon: const Icon(Icons.settings_rounded, color: Colors.white),
                   label: Text(
-                    l10nPick(context, fa: 'باز کردن تنظیمات', en: 'Open Settings', ar: 'فتح الإعدادات'),
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    l10nPick(
+                      context,
+                      fa: 'باز کردن تنظیمات',
+                      en: 'Open Settings',
+                      ar: 'فتح الإعدادات',
+                    ),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   onPressed: () async {
                     await openAppSettings();
@@ -212,12 +233,21 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
                     side: const BorderSide(color: Colors.white54),
-                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 12.h,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
                   ),
                   icon: const Icon(Icons.camera_alt_outlined),
                   label: Text(
-                    l10nPick(context, fa: 'استفاده از دوربین سیستم', en: 'Use System Camera'),
+                    l10nPick(
+                      context,
+                      fa: 'استفاده از دوربین سیستم',
+                      en: 'Use System Camera',
+                    ),
                   ),
                   onPressed: _pickWithSystemCamera,
                 ),
@@ -245,21 +275,35 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
             topActionsBuilder: (state) => AwesomeTopActions(
               state: state,
               padding: const EdgeInsets.all(8.0),
-              children: [
-                AwesomeFlashButton(state: state),
-              ],
+              children: [AwesomeFlashButton(state: state)],
             ),
             bottomActionsBuilder: (state) => AwesomeBottomActions(
               state: state,
               left: IconButton(
-                icon: const Icon(Icons.photo_library_outlined, color: Colors.white, size: 28),
+                icon: const Icon(
+                  Icons.photo_library_outlined,
+                  color: Colors.white,
+                  size: 28,
+                ),
                 onPressed: _pickFromGallery,
-                tooltip: l10nPick(context, en: 'Choose from Gallery', fa: 'انتخاب از گالری'),
+                tooltip: l10nPick(
+                  context,
+                  en: 'Choose from Gallery',
+                  fa: 'انتخاب از گالری',
+                ),
               ),
               right: IconButton(
-                icon: const Icon(Icons.camera_rounded, color: Colors.white, size: 28),
+                icon: const Icon(
+                  Icons.camera_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
                 onPressed: _pickWithSystemCamera,
-                tooltip: l10nPick(context, en: 'System Camera', fa: 'دوربین سیستم'),
+                tooltip: l10nPick(
+                  context,
+                  en: 'System Camera',
+                  fa: 'دوربین سیستم',
+                ),
               ),
             ),
             onMediaCaptureEvent: (event) {
@@ -302,10 +346,7 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
             left: 0,
             right: 0,
             child: const Center(
-              child: RealtimeTipsBanner(
-                isDark: true,
-                autoCycle: true,
-              ),
+              child: RealtimeTipsBanner(isDark: true, autoCycle: true),
             ),
           ),
 
@@ -321,7 +362,11 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
                   backgroundColor: Colors.black54,
                   radius: 20.r,
                   child: IconButton(
-                    icon: const Icon(Icons.close_rounded, color: Colors.white, size: 20),
+                    icon: const Icon(
+                      Icons.close_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -342,8 +387,13 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
                     children: [
                       _buildDocTypeChip(
                         type: KycDocumentType.nationalCard,
-                        label: l10nPick(context, en: 'National ID', fa: 'کارت ملی'),
-                        isSelected: _documentType == KycDocumentType.nationalCard,
+                        label: l10nPick(
+                          context,
+                          en: 'National ID',
+                          fa: 'کارت ملی',
+                        ),
+                        isSelected:
+                            _documentType == KycDocumentType.nationalCard,
                       ),
                       _buildDocTypeChip(
                         type: KycDocumentType.passport,
@@ -377,9 +427,7 @@ class _BackCameraCaptureState extends State<BackCameraCapture> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
         decoration: BoxDecoration(
-          color: isSelected
-              ? const Color(0xFF10B981)
-              : Colors.transparent,
+          color: isSelected ? const Color(0xFF10B981) : Colors.transparent,
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Text(

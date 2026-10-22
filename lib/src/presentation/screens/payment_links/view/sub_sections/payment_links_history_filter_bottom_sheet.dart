@@ -30,9 +30,7 @@ class _PaymentLinksHistoryFilterBottomSheetState
       duration: AppDurations.normal,
       curve: Curves.easeOutQuart,
       height: 280,
-      margin: const EdgeInsetsDirectional.symmetric(
-        horizontal: AppSpacing.md,
-      ),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: const BorderRadiusDirectional.only(

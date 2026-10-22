@@ -156,11 +156,7 @@ void main() {
     });
 
     test('resolves Fiat USD card theme with matte titanium slate', () {
-      final usdWallet = _createWallet(
-        id: 4,
-        code: 'USD',
-        isCrypto: false,
-      );
+      final usdWallet = _createWallet(id: 4, code: 'USD', isCrypto: false);
       final theme = HeroWalletCardTheme.forWallet(usdWallet);
 
       expect(theme.isCrypto, isFalse);
@@ -216,42 +212,45 @@ void main() {
   });
 
   group('HeroWalletCard widget rendering & interaction', () {
-    testWidgets('renders crypto card with high-end typography and live rate ticker',
-        (tester) async {
-      final btcWallet = _createWallet(
-        id: 1,
-        code: 'BTC',
-        name: 'Bitcoin Vault',
-        symbol: '₿',
-        balance: '1.25000000',
-        formattedBalance: '1.25000000',
-        isCrypto: true,
-      );
+    testWidgets(
+      'renders crypto card with high-end typography and live rate ticker',
+      (tester) async {
+        final btcWallet = _createWallet(
+          id: 1,
+          code: 'BTC',
+          name: 'Bitcoin Vault',
+          symbol: '₿',
+          balance: '1.25000000',
+          formattedBalance: '1.25000000',
+          isCrypto: true,
+        );
 
-      await tester.pumpWidget(
-        _buildTestApp(
-          Center(
-            child: SizedBox(
-              width: 380,
-              child: HeroWalletCard(wallet: btcWallet),
+        await tester.pumpWidget(
+          _buildTestApp(
+            Center(
+              child: SizedBox(
+                width: 380,
+                child: HeroWalletCard(wallet: btcWallet),
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('eCardo'), findsOneWidget);
-      expect(find.text('OBSIDIAN GOLD'), findsOneWidget);
-      expect(find.text('BTC'), findsWidgets);
-      expect(find.text('1.25000000'), findsOneWidget);
-      expect(find.text('▲ 2.4%'), findsOneWidget);
-      expect(find.text('Top-up'), findsOneWidget);
-      expect(find.text('Transfer'), findsOneWidget);
-      expect(find.text('Exchange'), findsOneWidget);
-    });
+        expect(find.text('eCardo'), findsOneWidget);
+        expect(find.text('OBSIDIAN GOLD'), findsOneWidget);
+        expect(find.text('BTC'), findsWidgets);
+        expect(find.text('1.25000000'), findsOneWidget);
+        expect(find.text('▲ 2.4%'), findsOneWidget);
+        expect(find.text('Top-up'), findsOneWidget);
+        expect(find.text('Transfer'), findsOneWidget);
+        expect(find.text('Exchange'), findsOneWidget);
+      },
+    );
 
-    testWidgets('renders fiat card with EMV microchip and DEFAULT badge',
-        (tester) async {
+    testWidgets('renders fiat card with EMV microchip and DEFAULT badge', (
+      tester,
+    ) async {
       final usdWallet = _createWallet(
         id: 2,
         code: 'USD',
@@ -279,46 +278,48 @@ void main() {
       expect(find.text('1 USD = 1.00 USD'), findsOneWidget);
     });
 
-    testWidgets('flips card to reveal back face with account number and actions',
-        (tester) async {
-      final wallet = _createWallet(
-        id: 3,
-        code: 'USDT',
-        accountNo: '0x71C...B49F',
-        isCrypto: true,
-      );
+    testWidgets(
+      'flips card to reveal back face with account number and actions',
+      (tester) async {
+        final wallet = _createWallet(
+          id: 3,
+          code: 'USDT',
+          accountNo: '0x71C...B49F',
+          isCrypto: true,
+        );
 
-      await tester.pumpWidget(
-        _buildTestApp(
-          Center(
-            child: SizedBox(
-              width: 380,
-              child: HeroWalletCard(wallet: wallet),
+        await tester.pumpWidget(
+          _buildTestApp(
+            Center(
+              child: SizedBox(
+                width: 380,
+                child: HeroWalletCard(wallet: wallet),
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('HOLOGRAPHIC MESH'), findsOneWidget);
-      expect(find.text('0x71C...B49F'), findsNothing);
+        expect(find.text('HOLOGRAPHIC MESH'), findsOneWidget);
+        expect(find.text('0x71C...B49F'), findsNothing);
 
-      // Tap flip button
-      await tester.tap(find.byIcon(Icons.flip_camera_android_rounded));
-      await tester.pumpAndSettle();
+        // Tap flip button
+        await tester.tap(find.byIcon(Icons.flip_camera_android_rounded));
+        await tester.pumpAndSettle();
 
-      // Back face must be displayed
-      expect(find.text('0x71C...B49F'), findsOneWidget);
-      expect(find.byIcon(Icons.copy_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.flip_to_front_rounded), findsOneWidget);
+        // Back face must be displayed
+        expect(find.text('0x71C...B49F'), findsOneWidget);
+        expect(find.byIcon(Icons.copy_rounded), findsOneWidget);
+        expect(find.byIcon(Icons.flip_to_front_rounded), findsOneWidget);
 
-      // Flip back to front
-      await tester.tap(find.byIcon(Icons.flip_to_front_rounded));
-      await tester.pumpAndSettle();
+        // Flip back to front
+        await tester.tap(find.byIcon(Icons.flip_to_front_rounded));
+        await tester.pumpAndSettle();
 
-      expect(find.text('HOLOGRAPHIC MESH'), findsOneWidget);
-      expect(find.text('0x71C...B49F'), findsNothing);
-    });
+        expect(find.text('HOLOGRAPHIC MESH'), findsOneWidget);
+        expect(find.text('0x71C...B49F'), findsNothing);
+      },
+    );
 
     testWidgets('masks balance when privacy mode is activated', (tester) async {
       final wallet = _createWallet(
@@ -331,10 +332,7 @@ void main() {
       await tester.pumpWidget(
         _buildTestApp(
           Center(
-            child: SizedBox(
-              width: 380,
-              child: HeroWalletCard(wallet: wallet),
-            ),
+            child: SizedBox(width: 380, child: HeroWalletCard(wallet: wallet)),
           ),
         ),
       );
@@ -357,17 +355,15 @@ void main() {
       expect(find.text('3,500.00'), findsOneWidget);
     });
 
-    testWidgets('mirrors transfer arrow and localizes labels in Persian RTL',
-        (tester) async {
+    testWidgets('mirrors transfer arrow and localizes labels in Persian RTL', (
+      tester,
+    ) async {
       final wallet = _createWallet(id: 5, code: 'IRR', symbol: '﷼');
 
       await tester.pumpWidget(
         _buildTestApp(
           Center(
-            child: SizedBox(
-              width: 380,
-              child: HeroWalletCard(wallet: wallet),
-            ),
+            child: SizedBox(width: 380, child: HeroWalletCard(wallet: wallet)),
           ),
           locale: const Locale('fa'),
           textDirection: TextDirection.rtl,
@@ -382,14 +378,18 @@ void main() {
 
       final depositX = tester.getCenter(find.text('واریز')).dx;
       final transferX = tester.getCenter(find.text('انتقال')).dx;
-      expect(depositX, greaterThan(transferX),
-          reason: 'In RTL, Top-up sits to the right of Transfer');
+      expect(
+        depositX,
+        greaterThan(transferX),
+        reason: 'In RTL, Top-up sits to the right of Transfer',
+      );
     });
   });
 
   group('NetWorthBanner widget', () {
-    testWidgets('calculates aggregate net worth and reacts to privacy toggle',
-        (tester) async {
+    testWidgets('calculates aggregate net worth and reacts to privacy toggle', (
+      tester,
+    ) async {
       controller.walletsList.value = [
         _createWallet(
           id: 1,
@@ -410,9 +410,7 @@ void main() {
       ];
 
       await tester.pumpWidget(
-        _buildTestApp(
-          const SingleChildScrollView(child: NetWorthBanner()),
-        ),
+        _buildTestApp(const SingleChildScrollView(child: NetWorthBanner())),
       );
       await tester.pumpAndSettle();
 
@@ -434,42 +432,43 @@ void main() {
       expect(find.text(r'$3,500.00'), findsOneWidget);
     });
 
-    testWidgets('shows wallet breakdown counts and switches filter on pill tap',
-        (tester) async {
-      controller.walletsList.value = [
-        _createWallet(id: 1, code: 'USD', isCrypto: false),
-        _createWallet(id: 2, code: 'EUR', isCrypto: false),
-        _createWallet(id: 3, code: 'BTC', isCrypto: true),
-      ];
+    testWidgets(
+      'shows wallet breakdown counts and switches filter on pill tap',
+      (tester) async {
+        controller.walletsList.value = [
+          _createWallet(id: 1, code: 'USD', isCrypto: false),
+          _createWallet(id: 2, code: 'EUR', isCrypto: false),
+          _createWallet(id: 3, code: 'BTC', isCrypto: true),
+        ];
 
-      await tester.pumpWidget(
-        _buildTestApp(
-          const SingleChildScrollView(child: NetWorthBanner()),
-        ),
-      );
-      await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          _buildTestApp(const SingleChildScrollView(child: NetWorthBanner())),
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('All Wallets'), findsOneWidget);
-      expect(find.text('Fiat'), findsOneWidget);
-      expect(find.text('Crypto'), findsOneWidget);
+        expect(find.text('All Wallets'), findsOneWidget);
+        expect(find.text('Fiat'), findsOneWidget);
+        expect(find.text('Crypto'), findsOneWidget);
 
-      // Tap Crypto breakdown chip
-      await tester.tap(find.text('Crypto'));
-      await tester.pumpAndSettle();
+        // Tap Crypto breakdown chip
+        await tester.tap(find.text('Crypto'));
+        await tester.pumpAndSettle();
 
-      expect(controller.activeFilter.value, WalletFilterType.crypto);
+        expect(controller.activeFilter.value, WalletFilterType.crypto);
 
-      // Tap Fiat breakdown chip
-      await tester.tap(find.text('Fiat'));
-      await tester.pumpAndSettle();
+        // Tap Fiat breakdown chip
+        await tester.tap(find.text('Fiat'));
+        await tester.pumpAndSettle();
 
-      expect(controller.activeFilter.value, WalletFilterType.fiat);
-    });
+        expect(controller.activeFilter.value, WalletFilterType.fiat);
+      },
+    );
   });
 
   group('WalletFilterChips & WalletsCardSection filtering', () {
-    testWidgets('filters wallet cards between All, Fiat, and Crypto',
-        (tester) async {
+    testWidgets('filters wallet cards between All, Fiat, and Crypto', (
+      tester,
+    ) async {
       controller.walletsList.value = [
         _createWallet(id: 1, code: 'USD', name: 'US Dollar', isCrypto: false),
         _createWallet(id: 2, code: 'BTC', name: 'Bitcoin', isCrypto: true),
@@ -480,10 +479,7 @@ void main() {
         _buildTestApp(
           const SingleChildScrollView(
             child: Column(
-              children: [
-                WalletFilterChips(),
-                WalletsCardSection(),
-              ],
+              children: [WalletFilterChips(), WalletsCardSection()],
             ),
           ),
         ),
@@ -523,105 +519,101 @@ void main() {
       expect(find.text('CYBER VIOLET'), findsOneWidget);
     });
 
-    testWidgets('displays contextual empty state when filtered category has 0 cards',
-        (tester) async {
-      // Only fiat wallets exist
-      controller.walletsList.value = [
-        _createWallet(id: 1, code: 'USD', isCrypto: false),
-      ];
+    testWidgets(
+      'displays contextual empty state when filtered category has 0 cards',
+      (tester) async {
+        // Only fiat wallets exist
+        controller.walletsList.value = [
+          _createWallet(id: 1, code: 'USD', isCrypto: false),
+        ];
 
-      await tester.pumpWidget(
-        _buildTestApp(
-          const SingleChildScrollView(
-            child: Column(
-              children: [
-                WalletFilterChips(),
-                WalletsCardSection(),
-              ],
+        await tester.pumpWidget(
+          _buildTestApp(
+            const SingleChildScrollView(
+              child: Column(
+                children: [WalletFilterChips(), WalletsCardSection()],
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      // Tap Crypto chip
-      await tester.tap(find.text('Crypto'));
-      await tester.pumpAndSettle();
+        // Tap Crypto chip
+        await tester.tap(find.text('Crypto'));
+        await tester.pumpAndSettle();
 
-      expect(find.byType(HeroWalletCard), findsNothing);
-      expect(find.text('No Crypto Wallets Found'), findsOneWidget);
-      expect(find.text('Add Crypto Wallet'), findsOneWidget);
-    });
+        expect(find.byType(HeroWalletCard), findsNothing);
+        expect(find.text('No Crypto Wallets Found'), findsOneWidget);
+        expect(find.text('Add Crypto Wallet'), findsOneWidget);
+      },
+    );
   });
 
   group('WalletsScreen states & layout', () {
     testWidgets('renders shimmer loader during isLoading', (tester) async {
       controller.isLoading.value = true;
 
-      await tester.pumpWidget(
-        _buildTestApp(const WalletsScreen()),
-      );
+      await tester.pumpWidget(_buildTestApp(const WalletsScreen()));
       await tester.pump();
 
       expect(find.byType(WalletsScreen), findsOneWidget);
     });
 
-    testWidgets('renders error state with retry button when isError is true',
-        (tester) async {
+    testWidgets('renders error state with retry button when isError is true', (
+      tester,
+    ) async {
       controller.isError.value = true;
 
-      await tester.pumpWidget(
-        _buildTestApp(const WalletsScreen()),
-      );
+      await tester.pumpWidget(_buildTestApp(const WalletsScreen()));
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.cloud_off_rounded), findsOneWidget);
       expect(find.byIcon(Icons.refresh_rounded), findsOneWidget);
     });
 
-    testWidgets('renders creative empty state when wallets list is empty',
-        (tester) async {
+    testWidgets('renders creative empty state when wallets list is empty', (
+      tester,
+    ) async {
       controller.walletsList.clear();
 
-      await tester.pumpWidget(
-        _buildTestApp(const WalletsScreen()),
-      );
+      await tester.pumpWidget(_buildTestApp(const WalletsScreen()));
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.account_balance_wallet_outlined), findsOneWidget);
-    });
-
-    testWidgets('renders populated WalletsScreen with banner, chips, cards and FAB',
-        (tester) async {
-      controller.walletsList.value = [
-        _createWallet(id: 1, code: 'USD', isCrypto: false, isDefault: true),
-        _createWallet(id: 2, code: 'USDT', isCrypto: true),
-      ];
-
-      await tester.pumpWidget(
-        _buildTestApp(const WalletsScreen()),
+      expect(
+        find.byIcon(Icons.account_balance_wallet_outlined),
+        findsOneWidget,
       );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(NetWorthBanner), findsOneWidget);
-      expect(find.byType(WalletFilterChips), findsOneWidget);
-      expect(find.byType(WalletsCardSection), findsOneWidget);
-      expect(find.byType(FloatingActionButton), findsOneWidget);
-      expect(find.text('Add Wallet'), findsOneWidget);
     });
 
-    testWidgets('renders seamlessly in Dark Mode without layout overflow',
-        (tester) async {
+    testWidgets(
+      'renders populated WalletsScreen with banner, chips, cards and FAB',
+      (tester) async {
+        controller.walletsList.value = [
+          _createWallet(id: 1, code: 'USD', isCrypto: false, isDefault: true),
+          _createWallet(id: 2, code: 'USDT', isCrypto: true),
+        ];
+
+        await tester.pumpWidget(_buildTestApp(const WalletsScreen()));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NetWorthBanner), findsOneWidget);
+        expect(find.byType(WalletFilterChips), findsOneWidget);
+        expect(find.byType(WalletsCardSection), findsOneWidget);
+        expect(find.byType(FloatingActionButton), findsOneWidget);
+        expect(find.text('Add Wallet'), findsOneWidget);
+      },
+    );
+
+    testWidgets('renders seamlessly in Dark Mode without layout overflow', (
+      tester,
+    ) async {
       controller.walletsList.value = [
         _createWallet(id: 1, code: 'USD', isCrypto: false),
         _createWallet(id: 2, code: 'BTC', isCrypto: true),
       ];
 
       await tester.pumpWidget(
-        _buildTestApp(
-          const WalletsScreen(),
-          theme: ThemeData.dark(),
-        ),
+        _buildTestApp(const WalletsScreen(), theme: ThemeData.dark()),
       );
       await tester.pumpAndSettle();
 

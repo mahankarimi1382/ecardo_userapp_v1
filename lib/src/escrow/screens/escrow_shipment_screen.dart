@@ -24,7 +24,12 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
   final TextEditingController _urlController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
-  final List<String> _suggestedCarriers = ['تیپاکس (Tipax)', 'پست پیشتاز', 'چاپار (Chapar)', 'باربری اختصاصی'];
+  final List<String> _suggestedCarriers = [
+    'تیپاکس (Tipax)',
+    'پست پیشتاز',
+    'چاپار (Chapar)',
+    'باربری اختصاصی',
+  ];
 
   @override
   void initState() {
@@ -50,7 +55,11 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
     if (carrier.isEmpty || tracking.isEmpty) {
       Get.snackbar(
         l10nPick(context, fa: 'خطا', en: 'Error'),
-        l10nPick(context, fa: 'نام شرکت حمل‌ونقل و شماره بارنامه الزامی است.', en: 'Carrier and tracking number are required.'),
+        l10nPick(
+          context,
+          fa: 'نام شرکت حمل‌ونقل و شماره بارنامه الزامی است.',
+          en: 'Carrier and tracking number are required.',
+        ),
         backgroundColor: AppColors.error,
         colorText: AppColors.white,
       );
@@ -62,8 +71,12 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
       widget.orderId,
       carrier: carrier,
       trackingNumber: tracking,
-      trackingUrl: _urlController.text.trim().isNotEmpty ? _urlController.text.trim() : null,
-      shippingNotes: _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
+      trackingUrl: _urlController.text.trim().isNotEmpty
+          ? _urlController.text.trim()
+          : null,
+      shippingNotes: _notesController.text.trim().isNotEmpty
+          ? _notesController.text.trim()
+          : null,
     );
 
     if (!mounted) return;
@@ -71,7 +84,11 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
       Get.back();
       Get.snackbar(
         l10nPick(context, fa: 'ثبت شد', en: 'Submitted'),
-        l10nPick(context, fa: 'اطلاعات ارسال کالا با موفقیت ثبت شد.', en: 'Shipment details submitted successfully.'),
+        l10nPick(
+          context,
+          fa: 'اطلاعات ارسال کالا با موفقیت ثبت شد.',
+          en: 'Shipment details submitted successfully.',
+        ),
         backgroundColor: AppColors.success,
         colorText: AppColors.white,
       );
@@ -81,18 +98,26 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: isDark
+            ? AppColors.darkSurface
+            : AppColors.lightSurface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
             size: AppSpacing.iconSm.sp,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
           onPressed: () {
             HapticFeedback.lightImpact();
@@ -100,10 +125,16 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
           },
         ),
         title: Text(
-          l10nPick(context, fa: 'ثبت اطلاعات ارسال (Step 4)', en: 'Submit Shipment'),
+          l10nPick(
+            context,
+            fa: 'ثبت اطلاعات ارسال (Step 4)',
+            en: 'Submit Shipment',
+          ),
           style: AppTextStyles.titleMedium.copyWith(
             fontWeight: FontWeight.w900,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
       ),
@@ -116,17 +147,23 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
             Container(
               padding: EdgeInsetsDirectional.all(AppSpacing.md.w),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF2E2211) : const Color(0xFFFEF3C7),
+                color: isDark
+                    ? const Color(0xFF2E2211)
+                    : const Color(0xFFFEF3C7),
                 borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
                 border: Border.all(
-                  color: isDark ? const Color(0xFFFBBF24).withValues(alpha: 0.3) : const Color(0xFFFDE68A),
+                  color: isDark
+                      ? const Color(0xFFFBBF24).withValues(alpha: 0.3)
+                      : const Color(0xFFFDE68A),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.local_shipping_outlined,
-                    color: isDark ? const Color(0xFFFBBF24) : const Color(0xFFB45309),
+                    color: isDark
+                        ? const Color(0xFFFBBF24)
+                        : const Color(0xFFB45309),
                     size: AppSpacing.iconMd.sp,
                   ),
                   SizedBox(width: AppSpacing.sm.w),
@@ -138,7 +175,9 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
                         en: 'Please provide shipping carrier and tracking number to update deal status to In Delivery.',
                       ),
                       style: AppTextStyles.bodySmall.copyWith(
-                        color: isDark ? const Color(0xFFFDE68A) : const Color(0xFF92400E),
+                        color: isDark
+                            ? const Color(0xFFFDE68A)
+                            : const Color(0xFF92400E),
                         height: 1.4,
                       ),
                     ),
@@ -150,10 +189,16 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
 
             // Carrier input & chips
             Text(
-              l10nPick(context, fa: 'شرکت حمل‌ونقل یا شرکت باربری *', en: 'Shipping Carrier *'),
+              l10nPick(
+                context,
+                fa: 'شرکت حمل‌ونقل یا شرکت باربری *',
+                en: 'Shipping Carrier *',
+              ),
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.xs.h),
@@ -173,16 +218,26 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
             _buildTextField(
               isDark: isDark,
               controller: _carrierController,
-              hint: l10nPick(context, fa: 'نام شرکت حمل (مثلا تیپاکس)', en: 'e.g. Tipax, Iran Post'),
+              hint: l10nPick(
+                context,
+                fa: 'نام شرکت حمل (مثلا تیپاکس)',
+                en: 'e.g. Tipax, Iran Post',
+              ),
             ),
             SizedBox(height: AppSpacing.md.h),
 
             // Tracking number
             Text(
-              l10nPick(context, fa: 'شماره پیگیری / شماره بارنامه *', en: 'Tracking / Consignment Number *'),
+              l10nPick(
+                context,
+                fa: 'شماره پیگیری / شماره بارنامه *',
+                en: 'Tracking / Consignment Number *',
+              ),
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.xs.h),
@@ -195,10 +250,16 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
 
             // Tracking URL
             Text(
-              l10nPick(context, fa: 'لینک پیگیری آنلاین (اختیاری)', en: 'Tracking URL (Optional)'),
+              l10nPick(
+                context,
+                fa: 'لینک پیگیری آنلاین (اختیاری)',
+                en: 'Tracking URL (Optional)',
+              ),
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.xs.h),
@@ -211,10 +272,16 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
 
             // Notes
             Text(
-              l10nPick(context, fa: 'توضیحات و نکات تحویل', en: 'Shipping Notes'),
+              l10nPick(
+                context,
+                fa: 'توضیحات و نکات تحویل',
+                en: 'Shipping Notes',
+              ),
               style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             SizedBox(height: AppSpacing.xs.h),
@@ -222,7 +289,11 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
               isDark: isDark,
               controller: _notesController,
               maxLines: 3,
-              hint: l10nPick(context, fa: 'نکاتی مانند لزوم تحویل با ارائه کارت ملی...', en: 'Special delivery instructions...'),
+              hint: l10nPick(
+                context,
+                fa: 'نکاتی مانند لزوم تحویل با ارائه کارت ملی...',
+                en: 'Special delivery instructions...',
+              ),
             ),
             SizedBox(height: AppSpacing.xxl.h),
 
@@ -233,11 +304,17 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryAccent,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                  ),
                 ),
                 onPressed: _handleSubmit,
                 child: Text(
-                  l10nPick(context, fa: 'ثبت و اعلام ارسال به خریدار', en: 'Submit & Notify Buyer'),
+                  l10nPick(
+                    context,
+                    fa: 'ثبت و اعلام ارسال به خریدار',
+                    en: 'Submit & Notify Buyer',
+                  ),
                   style: AppTextStyles.labelLarge.copyWith(
                     fontWeight: FontWeight.bold,
                     color: isDark ? AppColors.deepBlack : AppColors.white,
@@ -262,9 +339,13 @@ class _EscrowShipmentScreenState extends State<EscrowShipmentScreen> {
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hint,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+        ),
         filled: true,
-        fillColor: isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF8FAFC),
+        fillColor: isDark
+            ? AppColors.darkSurfaceVariant
+            : const Color(0xFFF8FAFC),
       ),
     );
   }

@@ -84,8 +84,9 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -111,8 +112,8 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                         ],
                       )
                     : controller.selectedScreen.value == 1
-                        ? const GiftCardHistorySection()
-                        : const SizedBox.shrink(),
+                    ? const GiftCardHistorySection()
+                    : const SizedBox.shrink(),
               ),
             ),
           ],
@@ -221,8 +222,10 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                     );
                   },
                 ),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 12.h,
+                ),
                 border: InputBorder.none,
               ),
             ),
@@ -264,7 +267,8 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                     )
                   : (category?.name ?? '');
               final isSelected = isAll
-                  ? (selectedCategory.id == null || selectedCategory.name == null)
+                  ? (selectedCategory.id == null ||
+                        selectedCategory.name == null)
                   : (selectedCategory.id == category?.id);
 
               return Semantics(
@@ -287,11 +291,15 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                     controller.getGiftCardProducts(isRefresh: true);
                   },
                   child: Container(
-                    constraints:
-                        BoxConstraints(minHeight: 44.h, minWidth: 44.w),
+                    constraints: BoxConstraints(
+                      minHeight: 44.h,
+                      minWidth: 44.w,
+                    ),
                     alignment: Alignment.center,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
                     decoration: BoxDecoration(
                       gradient: isSelected
                           ? const LinearGradient(
@@ -311,8 +319,8 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                         color: isSelected
                             ? AppColors.brandViolet
                             : (isDark
-                                ? AppColors.darkBorder
-                                : AppColors.lightBorder),
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                         width: 1.2,
                       ),
                       boxShadow: isSelected
@@ -331,13 +339,14 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                       name,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         color: isSelected
                             ? AppColors.white
                             : (isDark
-                                ? AppColors.darkTextSecondary
-                                : AppColors.lightTextSecondary),
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary),
                       ),
                     ),
                   ),
@@ -475,9 +484,7 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
         onTap: () {
           HapticFeedback.lightImpact();
           Get.to(
-            () => GiftCardDetailsSection(
-              giftCardId: card.productId.toString(),
-            ),
+            () => GiftCardDetailsSection(giftCardId: card.productId.toString()),
           );
         },
         child: Container(
@@ -551,7 +558,9 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                       start: 10.w,
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 8.w, vertical: 3.h),
+                          horizontal: 8.w,
+                          vertical: 3.h,
+                        ),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
                             colors: [
@@ -562,8 +571,9 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                           borderRadius: BorderRadius.circular(12.r),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  AppColors.brandViolet.withValues(alpha: 0.35),
+                              color: AppColors.brandViolet.withValues(
+                                alpha: 0.35,
+                              ),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),

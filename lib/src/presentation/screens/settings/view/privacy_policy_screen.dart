@@ -183,9 +183,13 @@ class PrivacyPolicyScreen extends StatelessWidget {
     ];
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
@@ -217,8 +221,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 color: cardBg,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                 border: Border.all(
-                  color: (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
-                      .withValues(alpha: 0.2),
+                  color:
+                      (isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary)
+                          .withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -270,7 +275,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                           height: 1.6,
                           color: isDark
                               ? AppColors.warmWhite.withValues(alpha: 0.85)
-                              : AppColors.lightTextPrimary.withValues(alpha: 0.85),
+                              : AppColors.lightTextPrimary.withValues(
+                                  alpha: 0.85,
+                                ),
                         ),
                       ),
                     ],

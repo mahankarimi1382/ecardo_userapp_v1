@@ -58,16 +58,46 @@ void main() {
           home: Builder(
             builder: (context) {
               expect(TravelTheme.isDark(context), isFalse);
-              expect(TravelTheme.backgroundFor(context), equals(AppColors.lightBackground));
-              expect(TravelTheme.cardSurfaceFor(context), equals(AppColors.lightCard));
-              expect(TravelTheme.surfaceFor(context), equals(AppColors.lightSurface));
-              expect(TravelTheme.textPrimaryFor(context), equals(AppColors.lightTextPrimary));
-              expect(TravelTheme.textSecondaryFor(context), equals(AppColors.lightTextSecondary));
-              expect(TravelTheme.textMutedFor(context), equals(AppColors.lightTextSecondary));
-              expect(TravelTheme.borderFor(context), equals(AppColors.lightBorder));
-              expect(TravelTheme.primaryFor(context), equals(AppColors.deepBlack));
-              expect(TravelTheme.accentFor(context), equals(AppColors.mainSoftBlue));
-              expect(TravelTheme.shadowFor(context), equals(TravelTheme.shadow));
+              expect(
+                TravelTheme.backgroundFor(context),
+                equals(AppColors.lightBackground),
+              );
+              expect(
+                TravelTheme.cardSurfaceFor(context),
+                equals(AppColors.lightCard),
+              );
+              expect(
+                TravelTheme.surfaceFor(context),
+                equals(AppColors.lightSurface),
+              );
+              expect(
+                TravelTheme.textPrimaryFor(context),
+                equals(AppColors.lightTextPrimary),
+              );
+              expect(
+                TravelTheme.textSecondaryFor(context),
+                equals(AppColors.lightTextSecondary),
+              );
+              expect(
+                TravelTheme.textMutedFor(context),
+                equals(AppColors.lightTextSecondary),
+              );
+              expect(
+                TravelTheme.borderFor(context),
+                equals(AppColors.lightBorder),
+              );
+              expect(
+                TravelTheme.primaryFor(context),
+                equals(AppColors.deepBlack),
+              );
+              expect(
+                TravelTheme.accentFor(context),
+                equals(AppColors.mainSoftBlue),
+              );
+              expect(
+                TravelTheme.shadowFor(context),
+                equals(TravelTheme.shadow),
+              );
               return const SizedBox();
             },
           ),
@@ -88,14 +118,38 @@ void main() {
           home: Builder(
             builder: (context) {
               expect(TravelTheme.isDark(context), isTrue);
-              expect(TravelTheme.backgroundFor(context), equals(AppColors.darkBackground));
-              expect(TravelTheme.cardSurfaceFor(context), equals(AppColors.darkSurface));
-              expect(TravelTheme.surfaceFor(context), equals(AppColors.darkSurface));
-              expect(TravelTheme.textPrimaryFor(context), equals(AppColors.darkTextPrimary));
-              expect(TravelTheme.textSecondaryFor(context), equals(AppColors.darkTextSecondary));
-              expect(TravelTheme.textMutedFor(context), equals(AppColors.darkTextSecondary));
-              expect(TravelTheme.primaryFor(context), equals(AppColors.darkPrimary));
-              expect(TravelTheme.accentFor(context), equals(AppColors.mainSoftBlue));
+              expect(
+                TravelTheme.backgroundFor(context),
+                equals(AppColors.darkBackground),
+              );
+              expect(
+                TravelTheme.cardSurfaceFor(context),
+                equals(AppColors.darkSurface),
+              );
+              expect(
+                TravelTheme.surfaceFor(context),
+                equals(AppColors.darkSurface),
+              );
+              expect(
+                TravelTheme.textPrimaryFor(context),
+                equals(AppColors.darkTextPrimary),
+              );
+              expect(
+                TravelTheme.textSecondaryFor(context),
+                equals(AppColors.darkTextSecondary),
+              );
+              expect(
+                TravelTheme.textMutedFor(context),
+                equals(AppColors.darkTextSecondary),
+              );
+              expect(
+                TravelTheme.primaryFor(context),
+                equals(AppColors.darkPrimary),
+              );
+              expect(
+                TravelTheme.accentFor(context),
+                equals(AppColors.mainSoftBlue),
+              );
               expect(TravelTheme.shadowFor(context).isNotEmpty, isTrue);
               return const SizedBox();
             },

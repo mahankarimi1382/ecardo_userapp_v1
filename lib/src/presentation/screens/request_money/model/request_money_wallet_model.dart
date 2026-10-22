@@ -8,10 +8,9 @@ class RequestMoneyWalletModel {
   RequestMoneyWalletModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null
-            ? RequestMoneyWalletData.fromJson(json['data'])
-            : null;
+    data = json['data'] != null
+        ? RequestMoneyWalletData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -73,10 +72,9 @@ class Wallets {
     isDefault = json['is_default'];
     isCrypto = json['is_crypto'];
     currencyId = json['currency_id'];
-    requestMoneyLimit =
-        json['request_money_limit'] != null
-            ? RequestMoneyLimit.fromJson(json['request_money_limit'])
-            : null;
+    requestMoneyLimit = json['request_money_limit'] != null
+        ? RequestMoneyLimit.fromJson(json['request_money_limit'])
+        : null;
     conversionRate = json['conversion_rate'];
   }
 }

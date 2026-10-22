@@ -56,10 +56,7 @@ class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
                                   AppColors.darkSurfaceVariant,
                                   AppColors.darkBackground,
                                 ]
-                              : [
-                                  AppColors.white,
-                                  AppColors.lightBackground,
-                                ],
+                              : [AppColors.white, AppColors.lightBackground],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: const [0.3, 0.5],

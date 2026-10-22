@@ -44,9 +44,7 @@ class NetWorthBanner extends StatelessWidget {
                   ],
           ),
           border: Border.all(
-            color: isDark
-                ? const Color(0x33D5CBC8)
-                : const Color(0x26161614),
+            color: isDark ? const Color(0x33D5CBC8) : const Color(0x26161614),
             width: 1.0,
           ),
           boxShadow: [
@@ -71,10 +69,11 @@ class NetWorthBanner extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: (isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.deepBlack)
-                            .withValues(alpha: 0.12),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.deepBlack)
+                                .withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
@@ -224,7 +223,8 @@ class NetWorthBanner extends StatelessWidget {
                       zh: '所有钱包',
                     ),
                     count: totalWallets,
-                    isSelected: controller.activeFilter.value == WalletFilterType.all,
+                    isSelected:
+                        controller.activeFilter.value == WalletFilterType.all,
                     onTap: () {
                       HapticFeedback.selectionClick();
                       controller.setFilter(WalletFilterType.all);
@@ -244,7 +244,8 @@ class NetWorthBanner extends StatelessWidget {
                       zh: '法定货币',
                     ),
                     count: fiatCount,
-                    isSelected: controller.activeFilter.value == WalletFilterType.fiat,
+                    isSelected:
+                        controller.activeFilter.value == WalletFilterType.fiat,
                     onTap: () {
                       HapticFeedback.selectionClick();
                       controller.setFilter(WalletFilterType.fiat);
@@ -264,7 +265,9 @@ class NetWorthBanner extends StatelessWidget {
                       zh: '加密货币',
                     ),
                     count: cryptoCount,
-                    isSelected: controller.activeFilter.value == WalletFilterType.crypto,
+                    isSelected:
+                        controller.activeFilter.value ==
+                        WalletFilterType.crypto,
                     onTap: () {
                       HapticFeedback.selectionClick();
                       controller.setFilter(WalletFilterType.crypto);
@@ -309,12 +312,16 @@ class NetWorthBanner extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected
                 ? activeBg
-                : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.04)),
+                : (isDark
+                      ? Colors.white.withValues(alpha: 0.05)
+                      : Colors.black.withValues(alpha: 0.04)),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected
                   ? activeBorder
-                  : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.06)),
+                  : (isDark
+                        ? Colors.white.withValues(alpha: 0.08)
+                        : Colors.black.withValues(alpha: 0.06)),
               width: 0.9,
             ),
           ),
@@ -328,7 +335,9 @@ class NetWorthBanner extends StatelessWidget {
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected
                       ? activeTextColor
-                      : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                      : (isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
                 ),
               ),
               const SizedBox(width: 5),
@@ -337,7 +346,9 @@ class NetWorthBanner extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? activeTextColor.withValues(alpha: 0.18)
-                      : (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.07)),
+                      : (isDark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.black.withValues(alpha: 0.07)),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -347,7 +358,9 @@ class NetWorthBanner extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                     color: isSelected
                         ? activeTextColor
-                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                        : (isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary),
                   ),
                 ),
               ),

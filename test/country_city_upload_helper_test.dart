@@ -29,7 +29,10 @@ void main() {
     });
 
     test('Returns correct cities by country name fallback', () {
-      final cities = CountryCityHelper.getCities('', countryName: 'Iran, Islamic Republic of');
+      final cities = CountryCityHelper.getCities(
+        '',
+        countryName: 'Iran, Islamic Republic of',
+      );
       expect(cities, isNotEmpty);
       expect(cities, contains('Tehran'));
     });
@@ -43,18 +46,42 @@ void main() {
 
   group('UploadHelper Tests', () {
     test('extractFileName handles unix and windows paths', () {
-      expect(UploadHelper.extractFileName('/home/user/images/avatar.jpg'), equals('avatar.jpg'));
-      expect(UploadHelper.extractFileName(r'C:\Users\Lenovo\Pictures\photo.png'), equals('photo.png'));
-      expect(UploadHelper.extractFileName('simple_name.webp'), equals('simple_name.webp'));
+      expect(
+        UploadHelper.extractFileName('/home/user/images/avatar.jpg'),
+        equals('avatar.jpg'),
+      );
+      expect(
+        UploadHelper.extractFileName(r'C:\Users\Lenovo\Pictures\photo.png'),
+        equals('photo.png'),
+      );
+      expect(
+        UploadHelper.extractFileName('simple_name.webp'),
+        equals('simple_name.webp'),
+      );
       expect(UploadHelper.extractFileName(''), equals('file.jpg'));
     });
 
     test('getMediaType returns correct mime type', () {
-      expect(UploadHelper.getMediaType('avatar.jpg').mimeType, equals('image/jpeg'));
-      expect(UploadHelper.getMediaType('photo.png').mimeType, equals('image/png'));
-      expect(UploadHelper.getMediaType('doc.pdf').mimeType, equals('application/pdf'));
-      expect(UploadHelper.getMediaType('image.webp').mimeType, equals('image/webp'));
-      expect(UploadHelper.getMediaType('unknown.xyz').mimeType, equals('application/octet-stream'));
+      expect(
+        UploadHelper.getMediaType('avatar.jpg').mimeType,
+        equals('image/jpeg'),
+      );
+      expect(
+        UploadHelper.getMediaType('photo.png').mimeType,
+        equals('image/png'),
+      );
+      expect(
+        UploadHelper.getMediaType('doc.pdf').mimeType,
+        equals('application/pdf'),
+      );
+      expect(
+        UploadHelper.getMediaType('image.webp').mimeType,
+        equals('image/webp'),
+      );
+      expect(
+        UploadHelper.getMediaType('unknown.xyz').mimeType,
+        equals('application/octet-stream'),
+      );
     });
   });
 }

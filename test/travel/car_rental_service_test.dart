@@ -125,89 +125,87 @@ void main() {
       expect(car.insuranceTiers, isEmpty);
     });
 
-    test('RentalBookingModel parses rental lifecycle and escrow deposit status', () {
-      final json = {
-        'id': 101,
-        'booking_no': 'RNB-2026-8801',
-        'pickup_at': '2026-11-01 10:00:00',
-        'return_at': '2026-11-04 10:00:00',
-        'rental_total': 255.0,
-        'insurance_tier': 'FULL',
-        'extras_total': 36.0,
-        'status': 'CONFIRMED',
-        'deposit': {
-          'id': 9,
-          'amount': 300.0,
-          'currency': 'USD',
-          'status': 'LOCKED',
-          'released_amount': 0.0,
-          'consumed_amount': 0.0,
-        },
-        'car': {
-          'id': 1,
-          'owner_type': 'FLEET',
-          'title': 'Peugeot 207 Automatic',
-          'category': 'ECONOMY',
-          'daily_price': 85.0,
-          'deposit_amount': 300.0,
-          'daily_km_limit': 200,
-          'extra_km_rate': 0.3,
-          'min_age': 21,
-          'min_license_years': 1,
-          'is_active': true,
-          'insurance_tiers': [],
-          'photos': [],
-          'features': [],
-        },
-        'events': [
-          {
-            'id': 1,
-            'actor_role': 'RENTER',
-            'reason': 'Booking submitted',
-            'created_at': '2026-11-01 10:00:00',
+    test(
+      'RentalBookingModel parses rental lifecycle and escrow deposit status',
+      () {
+        final json = {
+          'id': 101,
+          'booking_no': 'RNB-2026-8801',
+          'pickup_at': '2026-11-01 10:00:00',
+          'return_at': '2026-11-04 10:00:00',
+          'rental_total': 255.0,
+          'insurance_tier': 'FULL',
+          'extras_total': 36.0,
+          'status': 'CONFIRMED',
+          'deposit': {
+            'id': 9,
+            'amount': 300.0,
+            'currency': 'USD',
+            'status': 'LOCKED',
+            'released_amount': 0.0,
+            'consumed_amount': 0.0,
           },
-        ],
-      };
+          'car': {
+            'id': 1,
+            'owner_type': 'FLEET',
+            'title': 'Peugeot 207 Automatic',
+            'category': 'ECONOMY',
+            'daily_price': 85.0,
+            'deposit_amount': 300.0,
+            'daily_km_limit': 200,
+            'extra_km_rate': 0.3,
+            'min_age': 21,
+            'min_license_years': 1,
+            'is_active': true,
+            'insurance_tiers': [],
+            'photos': [],
+            'features': [],
+          },
+          'events': [
+            {
+              'id': 1,
+              'actor_role': 'RENTER',
+              'reason': 'Booking submitted',
+              'created_at': '2026-11-01 10:00:00',
+            },
+          ],
+        };
 
-      final booking = RentalBookingModel.fromJson(json);
+        final booking = RentalBookingModel.fromJson(json);
 
-      expect(booking.id, 101);
-      expect(booking.bookingNo, 'RNB-2026-8801');
-      expect(booking.insuranceTier, 'FULL');
-      expect(booking.rentalTotal, 255.0);
-      expect(booking.extrasTotal, 36.0);
-      expect(booking.grandTotal, 291.0);
-      expect(booking.status, 'CONFIRMED');
-      expect(booking.deposit?.amount, 300.0);
-      expect(booking.deposit?.status, 'LOCKED');
-      expect(booking.events.length, 1);
-    });
+        expect(booking.id, 101);
+        expect(booking.bookingNo, 'RNB-2026-8801');
+        expect(booking.insuranceTier, 'FULL');
+        expect(booking.rentalTotal, 255.0);
+        expect(booking.extrasTotal, 36.0);
+        expect(booking.grandTotal, 291.0);
+        expect(booking.status, 'CONFIRMED');
+        expect(booking.deposit?.amount, 300.0);
+        expect(booking.deposit?.status, 'LOCKED');
+        expect(booking.events.length, 1);
+      },
+    );
   });
 
   group('Car Rental Service - RentalHomeScreen UI Tests', () {
-    testWidgets('renders RentalHomeScreen categories, search, and banner without overflow', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const RentalHomeScreen(),
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+    testWidgets(
+      'renders RentalHomeScreen categories, search, and banner without overflow',
+      (tester) async {
+        await tester.pumpWidget(
+          wrapWithTheme(const RentalHomeScreen(), locale: const Locale('en')),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(RentalHomeScreen), findsOneWidget);
-    });
+        expect(find.byType(RentalHomeScreen), findsOneWidget);
+      },
+    );
 
     testWidgets('renders properly in Persian locale (RTL) without overflow', (
       tester,
     ) async {
       await tester.pumpWidget(
-        wrapWithTheme(
-          const RentalHomeScreen(),
-          locale: const Locale('fa'),
-        ),
+        wrapWithTheme(const RentalHomeScreen(), locale: const Locale('fa')),
       );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 300));

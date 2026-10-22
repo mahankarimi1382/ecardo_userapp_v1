@@ -25,10 +25,9 @@ class GiftHistoryData {
         gifts!.add(Gifts.fromJson(v));
       });
     }
-    pagination =
-        json['pagination'] != null
-            ? Pagination.fromJson(json['pagination'])
-            : null;
+    pagination = json['pagination'] != null
+        ? Pagination.fromJson(json['pagination'])
+        : null;
   }
 }
 
@@ -74,8 +73,9 @@ class Gifts {
     isRedeemed = json['is_redeemed'];
     type = json['type'];
     isCrypto = json['is_crypto'];
-    creator =
-        json['creator'] != null ? Creator.fromJson(json['creator']) : null;
+    creator = json['creator'] != null
+        ? Creator.fromJson(json['creator'])
+        : null;
     createdAt = json['created_at'];
     claimedAt = json['claimed_at'];
   }

@@ -40,9 +40,8 @@ class _CreateGiftSuccessStepSectionState
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: walletCode,
       siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      ) ?? '2',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
       isCrypto: wallet?.isCrypto ?? false,
     );
 
@@ -53,16 +52,21 @@ class _CreateGiftSuccessStepSectionState
 
       final giftData = controller.successCreateGiftData.value?["gift"];
       final rawCode = giftData?["code"]?.toString().trim() ?? '';
-      final amount = double.tryParse(giftData?["amount"]?.toString() ?? '') ?? 0.0;
-      final charge = double.tryParse(giftData?["charge"]?.toString() ?? '') ?? 0.0;
-      final finalAmount = double.tryParse(giftData?["final_amount"]?.toString() ?? '') ?? 0.0;
+      final amount =
+          double.tryParse(giftData?["amount"]?.toString() ?? '') ?? 0.0;
+      final charge =
+          double.tryParse(giftData?["charge"]?.toString() ?? '') ?? 0.0;
+      final finalAmount =
+          double.tryParse(giftData?["final_amount"]?.toString() ?? '') ?? 0.0;
       final currency = giftData?["currency"]?.toString() ?? walletCode;
 
       String formattedDate = '';
       final rawCreatedAt = giftData?["created_at"]?.toString();
       if (rawCreatedAt != null && rawCreatedAt.isNotEmpty) {
         try {
-          formattedDate = DateFormat("dd MMM yyyy, hh:mm a").format(DateTime.parse(rawCreatedAt));
+          formattedDate = DateFormat(
+            "dd MMM yyyy, hh:mm a",
+          ).format(DateTime.parse(rawCreatedAt));
         } catch (_) {
           formattedDate = rawCreatedAt;
         }
@@ -96,7 +100,9 @@ class _CreateGiftSuccessStepSectionState
                       style: TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 22,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ],
@@ -109,12 +115,19 @@ class _CreateGiftSuccessStepSectionState
               if (rawCode.isNotEmpty) ...[
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.lg),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                    vertical: AppSpacing.lg,
+                  ),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.brandVioletContainer.withValues(alpha: 0.6),
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.brandVioletContainer.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                     border: Border.all(
-                      color: isDark ? AppColors.brandVioletDeep : AppColors.brandViolet.withValues(alpha: 0.4),
+                      color: isDark
+                          ? AppColors.brandVioletDeep
+                          : AppColors.brandViolet.withValues(alpha: 0.4),
                       width: 1.2,
                     ),
                   ),
@@ -134,7 +147,9 @@ class _CreateGiftSuccessStepSectionState
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 1.2,
-                          color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                          color: isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.brandViolet,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.sm),
@@ -145,12 +160,16 @@ class _CreateGiftSuccessStepSectionState
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 2.0,
-                          color: isDark ? AppColors.warmWhite : AppColors.brandVioletDeep,
+                          color: isDark
+                              ? AppColors.warmWhite
+                              : AppColors.brandVioletDeep,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.md),
                       InkWell(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm,
+                        ),
                         onTap: () {
                           HapticFeedback.lightImpact();
                           Clipboard.setData(ClipboardData(text: rawCode));
@@ -167,12 +186,21 @@ class _CreateGiftSuccessStepSectionState
                           );
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.xs + 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.md,
+                            vertical: AppSpacing.xs + 2,
+                          ),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurface : AppColors.white,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                            color: isDark
+                                ? AppColors.darkSurface
+                                : AppColors.white,
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm,
+                            ),
                             border: Border.all(
-                              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
                             ),
                           ),
                           child: Row(
@@ -181,7 +209,9 @@ class _CreateGiftSuccessStepSectionState
                               Icon(
                                 Icons.copy_rounded,
                                 size: 14,
-                                color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                                color: isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet,
                               ),
                               const SizedBox(width: AppSpacing.xs),
                               Text(
@@ -197,7 +227,9 @@ class _CreateGiftSuccessStepSectionState
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                                  color: isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.brandViolet,
                                 ),
                               ),
                             ],
@@ -218,43 +250,67 @@ class _CreateGiftSuccessStepSectionState
                   color: isDark ? AppColors.darkSurface : AppColors.white,
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Column(
                   children: [
                     _buildSummaryRow(
                       title: localizations.createGiftSuccessAmount,
-                      content: "${amount.toStringAsFixed(calculateDecimals)} $currency",
-                      contentColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      content:
+                          "${amount.toStringAsFixed(calculateDecimals)} $currency",
+                      contentColor: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       isDark: isDark,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    Divider(
+                      height: 1,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
                     const SizedBox(height: AppSpacing.md),
                     _buildSummaryRow(
                       title: localizations.createGiftSuccessCharge,
-                      content: "${charge.toStringAsFixed(calculateDecimals)} $currency",
+                      content:
+                          "${charge.toStringAsFixed(calculateDecimals)} $currency",
                       contentColor: AppColors.error,
                       isDark: isDark,
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    Divider(
+                      height: 1,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
+                    ),
                     const SizedBox(height: AppSpacing.md),
                     _buildSummaryRow(
                       title: localizations.createGiftSuccessFinalAmount,
-                      content: "${finalAmount.toStringAsFixed(calculateDecimals)} $currency",
+                      content:
+                          "${finalAmount.toStringAsFixed(calculateDecimals)} $currency",
                       contentColor: AppColors.success,
                       isDark: isDark,
                     ),
                     if (formattedDate.isNotEmpty) ...[
                       const SizedBox(height: AppSpacing.md),
-                      Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                      Divider(
+                        height: 1,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
+                      ),
                       const SizedBox(height: AppSpacing.md),
                       _buildSummaryRow(
                         title: localizations.createGiftSuccessCreatedAt,
                         content: formattedDate,
-                        contentColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        contentColor: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                         isDark: isDark,
                       ),
                     ],
@@ -282,9 +338,15 @@ class _CreateGiftSuccessStepSectionState
                 },
                 width: double.infinity,
                 text: localizations.createGiftSuccessBackHome,
-                backgroundColor: isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant,
-                borderColor: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                backgroundColor: isDark
+                    ? AppColors.darkSurfaceVariant
+                    : AppColors.lightSurfaceVariant,
+                borderColor: isDark
+                    ? AppColors.darkBorder
+                    : AppColors.lightBorder,
+                textColor: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
               const SizedBox(height: AppSpacing.xxl),
             ],
@@ -308,7 +370,9 @@ class _CreateGiftSuccessStepSectionState
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 14,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ),
         Text(

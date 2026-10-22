@@ -36,11 +36,11 @@ class LightTheme {
         : const ['Vazirmatn', 'NotoSansRU'];
 
     final baseText = Typography.material2021().black.apply(
-          fontFamily: primaryFont,
-          fontFamilyFallback: fallbackFonts,
-          bodyColor: AppColors.deepBlack,
-          displayColor: AppColors.deepBlack,
-        );
+      fontFamily: primaryFont,
+      fontFamilyFallback: fallbackFonts,
+      bodyColor: AppColors.deepBlack,
+      displayColor: AppColors.deepBlack,
+    );
 
     return ThemeData(
       useMaterial3: true,
@@ -93,7 +93,10 @@ class LightTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-          borderSide: const BorderSide(color: AppColors.lightPrimary, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.lightPrimary,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -211,9 +214,15 @@ class LightTheme {
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: AppColors.lightPrimary, size: AppSpacing.iconMd);
+            return const IconThemeData(
+              color: AppColors.lightPrimary,
+              size: AppSpacing.iconMd,
+            );
           }
-          return const IconThemeData(color: AppColors.softGray, size: AppSpacing.iconMd);
+          return const IconThemeData(
+            color: AppColors.softGray,
+            size: AppSpacing.iconMd,
+          );
         }),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -226,7 +235,9 @@ class LightTheme {
         unselectedItemColor: AppColors.softGray,
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: AppColors.lightPrimaryContainer.withValues(alpha: 0.55),
+        backgroundColor: AppColors.lightPrimaryContainer.withValues(
+          alpha: 0.55,
+        ),
         selectedColor: AppColors.lightPrimary,
         labelStyle: const TextStyle(color: AppColors.deepBlack),
         side: const BorderSide(color: AppColors.lightWarmGray),

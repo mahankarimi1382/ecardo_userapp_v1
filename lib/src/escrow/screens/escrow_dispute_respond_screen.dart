@@ -26,10 +26,12 @@ class EscrowDisputeRespondScreen extends StatefulWidget {
   });
 
   @override
-  State<EscrowDisputeRespondScreen> createState() => _EscrowDisputeRespondScreenState();
+  State<EscrowDisputeRespondScreen> createState() =>
+      _EscrowDisputeRespondScreenState();
 }
 
-class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen> {
+class _EscrowDisputeRespondScreenState
+    extends State<EscrowDisputeRespondScreen> {
   final _answerController = TextEditingController();
   int _selectedPositionIndex = 0;
   String? _uploadedEvidence = 'Mill-certificate.pdf';
@@ -58,24 +60,24 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
   void _submitResponse() {
     HapticFeedback.mediumImpact();
     final rTitle = l10nPick(context, fa: 'پاسخ ارسال شد', en: 'Response sent');
-    final rMsg = l10nPick(context, fa: 'دفاعیه و مدارک شما جهت داوری ثبت گردید.', en: 'Your response and evidence recorded for review.');
+    final rMsg = l10nPick(
+      context,
+      fa: 'دفاعیه و مدارک شما جهت داوری ثبت گردید.',
+      en: 'Your response and evidence recorded for review.',
+    );
     final rBg = ECardoTokens.successBg(context);
     final rColor = ECardoTokens.success(context);
 
     Get.back();
-    Get.snackbar(
-      rTitle,
-      rMsg,
-      backgroundColor: rBg,
-      colorText: rColor,
-    );
+    Get.snackbar(rTitle, rMsg, backgroundColor: rBg, colorText: rColor);
   }
 
   @override
   Widget build(BuildContext context) {
     final d = widget.dispute ?? widget.order.dispute;
     final buyerClaimReason = d?.type ?? 'Not as described';
-    final buyerRequestedRefund = d?.requestedOutcome ?? 'Full refund · 860.00 USD';
+    final buyerRequestedRefund =
+        d?.requestedOutcome ?? 'Full refund · 860.00 USD';
 
     return Scaffold(
       backgroundColor: ECardoTokens.surfaceCanvas(context),
@@ -121,7 +123,11 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.timer_outlined, color: ECardoTokens.danger(context), size: 20.sp),
+                      Icon(
+                        Icons.timer_outlined,
+                        color: ECardoTokens.danger(context),
+                        size: 20.sp,
+                      ),
                       SizedBox(width: ECardoTokens.space2.w),
                       Text(
                         l10nPick(
@@ -201,7 +207,11 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
                   SizedBox(height: 6.h),
                   Row(
                     children: [
-                      Icon(Icons.photo_outlined, size: 16.sp, color: ECardoTokens.brand500(context)),
+                      Icon(
+                        Icons.photo_outlined,
+                        size: 16.sp,
+                        color: ECardoTokens.brand500(context),
+                      ),
                       SizedBox(width: 6.w),
                       Text(
                         'Received-roll-1.jpg',
@@ -218,8 +228,15 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        l10nPick(context, fa: 'درخواست خریدار', en: 'Buyer asks for'),
-                        style: TextStyle(fontSize: 12.5.sp, color: ECardoTokens.inkMuted(context)),
+                        l10nPick(
+                          context,
+                          fa: 'درخواست خریدار',
+                          en: 'Buyer asks for',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.5.sp,
+                          color: ECardoTokens.inkMuted(context),
+                        ),
                       ),
                       Text(
                         buyerRequestedRefund,
@@ -266,29 +283,48 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 14.w,
+                      vertical: 12.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: isSelected ? ECardoTokens.surfaceSunken(context) : ECardoTokens.surfaceCard(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd.r),
+                      color: isSelected
+                          ? ECardoTokens.surfaceSunken(context)
+                          : ECardoTokens.surfaceCard(context),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd.r,
+                      ),
                       border: Border.all(
-                        color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.border(context),
+                        color: isSelected
+                            ? ECardoTokens.brand900(context)
+                            : ECardoTokens.border(context),
                         width: isSelected ? 1.8 : 1.0,
                       ),
                     ),
                     child: Row(
                       children: [
                         Icon(
-                          isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                          isSelected
+                              ? Icons.radio_button_checked_rounded
+                              : Icons.radio_button_off_rounded,
                           size: 18.sp,
-                          color: isSelected ? ECardoTokens.brand900(context) : ECardoTokens.inkMuted(context),
+                          color: isSelected
+                              ? ECardoTokens.brand900(context)
+                              : ECardoTokens.inkMuted(context),
                         ),
                         SizedBox(width: 10.w),
                         Expanded(
                           child: Text(
-                            l10nPick(context, fa: _positions[index]['fa']!, en: _positions[index]['en']!),
+                            l10nPick(
+                              context,
+                              fa: _positions[index]['fa']!,
+                              en: _positions[index]['en']!,
+                            ),
                             style: TextStyle(
                               fontSize: 13.sp,
-                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
                               color: ECardoTokens.ink(context),
                             ),
                           ),
@@ -305,7 +341,11 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
             // ------------------ Answer Notes ------------------
             Text(
               l10nPick(context, fa: 'شرح توضیحات و دفاعیه', en: 'Your answer'),
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w700,
+                color: ECardoTokens.ink(context),
+              ),
             ),
             SizedBox(height: ECardoTokens.space2.h),
 
@@ -319,14 +359,22 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
               child: TextField(
                 controller: _answerController,
                 maxLines: 3,
-                style: TextStyle(fontSize: 13.sp, color: ECardoTokens.ink(context)),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: ECardoTokens.ink(context),
+                ),
                 decoration: InputDecoration(
                   hintText: l10nPick(
                     context,
                     fa: 'دلایل صحت کالا یا شرایط پذیرش را شرح دهید...',
                     en: 'Goods were tested and certified according to standard specifications.',
                   ),
-                  hintStyle: TextStyle(fontSize: 12.sp, color: ECardoTokens.inkMuted(context).withValues(alpha: 0.6)),
+                  hintStyle: TextStyle(
+                    fontSize: 12.sp,
+                    color: ECardoTokens.inkMuted(
+                      context,
+                    ).withValues(alpha: 0.6),
+                  ),
                   border: InputBorder.none,
                 ),
               ),
@@ -339,18 +387,36 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  l10nPick(context, fa: 'مستندات دفاعیه فروشنده', en: 'Your evidence'),
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+                  l10nPick(
+                    context,
+                    fa: 'مستندات دفاعیه فروشنده',
+                    en: 'Your evidence',
+                  ),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w700,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                   decoration: BoxDecoration(
                     color: ECardoTokens.dangerBg(context),
-                    borderRadius: BorderRadius.circular(ECardoTokens.radiusSm.r),
+                    borderRadius: BorderRadius.circular(
+                      ECardoTokens.radiusSm.r,
+                    ),
                   ),
                   child: Text(
-                    l10nPick(context, fa: 'حداقل ۱ فایل الزامی', en: 'at least one file required'),
-                    style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w700, color: ECardoTokens.danger(context)),
+                    l10nPick(
+                      context,
+                      fa: 'حداقل ۱ فایل الزامی',
+                      en: 'at least one file required',
+                    ),
+                    style: TextStyle(
+                      fontSize: 10.5.sp,
+                      fontWeight: FontWeight.w700,
+                      color: ECardoTokens.danger(context),
+                    ),
                   ),
                 ),
               ],
@@ -366,20 +432,34 @@ class _EscrowDisputeRespondScreenState extends State<EscrowDisputeRespondScreen>
               ),
               child: Row(
                 children: [
-                  Icon(Icons.picture_as_pdf_rounded, color: ECardoTokens.brand500(context), size: 22.sp),
+                  Icon(
+                    Icons.picture_as_pdf_rounded,
+                    color: ECardoTokens.brand500(context),
+                    size: 22.sp,
+                  ),
                   SizedBox(width: 10.w),
                   Expanded(
                     child: Text(
                       _uploadedEvidence ?? 'Mill-certificate.pdf',
-                      style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600, color: ECardoTokens.ink(context)),
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w600,
+                        color: ECardoTokens.ink(context),
+                      ),
                     ),
                   ),
                   TextButton(
                     onPressed: () {
                       HapticFeedback.lightImpact();
-                      setState(() => _uploadedEvidence = 'Evidence-doc-${DateTime.now().millisecond}.pdf');
+                      setState(
+                        () => _uploadedEvidence =
+                            'Evidence-doc-${DateTime.now().millisecond}.pdf',
+                      );
                     },
-                    child: Text(l10nPick(context, fa: 'تغییر', en: 'Change'), style: TextStyle(color: ECardoTokens.brand500(context))),
+                    child: Text(
+                      l10nPick(context, fa: 'تغییر', en: 'Change'),
+                      style: TextStyle(color: ECardoTokens.brand500(context)),
+                    ),
                   ),
                 ],
               ),

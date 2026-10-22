@@ -67,7 +67,8 @@ class MoneyDisplayText extends StatelessWidget {
         textAlign: textAlign,
         maxLines: maxLines,
         overflow: overflow,
-        style: integerStyle ??
+        style:
+            integerStyle ??
             TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 18,
@@ -88,10 +89,10 @@ class MoneyDisplayText extends StatelessWidget {
     final decimalPart = parts.length > 1 ? decimalSeparator + parts[1] : '';
 
     final baseColor = integerColor ?? Theme.of(context).colorScheme.onSurface;
-    final fadedColor =
-        decimalColor ?? baseColor.withValues(alpha: 0.55);
+    final fadedColor = decimalColor ?? baseColor.withValues(alpha: 0.55);
 
-    final iStyle = integerStyle ??
+    final iStyle =
+        integerStyle ??
         TextStyle(
           fontWeight: FontWeight.w900,
           fontSize: 22,
@@ -99,7 +100,8 @@ class MoneyDisplayText extends StatelessWidget {
           letterSpacing: 0,
           fontFeatures: const [FontFeature.tabularFigures()],
         );
-    final dStyle = decimalStyle ??
+    final dStyle =
+        decimalStyle ??
         TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: 16,
@@ -107,7 +109,8 @@ class MoneyDisplayText extends StatelessWidget {
           letterSpacing: 0,
           fontFeatures: const [FontFeature.tabularFigures()],
         );
-    final cStyle = currencyStyle ??
+    final cStyle =
+        currencyStyle ??
         TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 14,
@@ -125,7 +128,8 @@ class MoneyDisplayText extends StatelessWidget {
         text: TextSpan(
           children: [
             TextSpan(text: integerPart, style: iStyle),
-            if (decimalPart.isNotEmpty) TextSpan(text: decimalPart, style: dStyle),
+            if (decimalPart.isNotEmpty)
+              TextSpan(text: decimalPart, style: dStyle),
             if (currencyCode != null && currencyCode!.isNotEmpty) ...[
               const TextSpan(text: ' '),
               TextSpan(text: currencyCode, style: cStyle),

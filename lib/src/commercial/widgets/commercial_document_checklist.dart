@@ -28,13 +28,37 @@ enum DocumentVerificationStatus {
   String label(BuildContext context) {
     switch (this) {
       case DocumentVerificationStatus.verified:
-        return l10nPick(context, en: 'Verified', fa: 'تاییدشده', ar: 'تم التحقق', zh: '已验证');
+        return l10nPick(
+          context,
+          en: 'Verified',
+          fa: 'تاییدشده',
+          ar: 'تم التحقق',
+          zh: '已验证',
+        );
       case DocumentVerificationStatus.underReview:
-        return l10nPick(context, en: 'Under Review', fa: 'در حال بررسی', ar: 'قيد المراجعة', zh: '审核中');
+        return l10nPick(
+          context,
+          en: 'Under Review',
+          fa: 'در حال بررسی',
+          ar: 'قيد المراجعة',
+          zh: '审核中',
+        );
       case DocumentVerificationStatus.required:
-        return l10nPick(context, en: 'Required', fa: 'الزامی', ar: 'مطلوب', zh: '必需');
+        return l10nPick(
+          context,
+          en: 'Required',
+          fa: 'الزامی',
+          ar: 'مطلوب',
+          zh: '必需',
+        );
       case DocumentVerificationStatus.rejected:
-        return l10nPick(context, en: 'Rejected', fa: 'رد شده', ar: 'مرفوض', zh: '已拒绝');
+        return l10nPick(
+          context,
+          en: 'Rejected',
+          fa: 'رد شده',
+          ar: 'مرفوض',
+          zh: '已拒绝',
+        );
     }
   }
 
@@ -85,9 +109,12 @@ class CommercialDocumentChecklist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final verifiedCount =
-        documents.where((d) => d.status == DocumentVerificationStatus.verified).length;
-    final progress = documents.isNotEmpty ? verifiedCount / documents.length : 0.0;
+    final verifiedCount = documents
+        .where((d) => d.status == DocumentVerificationStatus.verified)
+        .length;
+    final progress = documents.isNotEmpty
+        ? verifiedCount / documents.length
+        : 0.0;
 
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg.w),
@@ -126,7 +153,9 @@ class CommercialDocumentChecklist extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -136,7 +165,9 @@ class CommercialDocumentChecklist extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                 ),
               ),
             ],
@@ -150,7 +181,9 @@ class CommercialDocumentChecklist extends StatelessWidget {
               backgroundColor: isDark
                   ? AppColors.darkSurfaceVariant
                   : AppColors.lightBorder.withValues(alpha: 0.5),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.success),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.success,
+              ),
             ),
           ),
           SizedBox(height: AppSpacing.lg.h),
@@ -176,7 +209,11 @@ class CommercialDocumentChecklist extends StatelessWidget {
     );
   }
 
-  Widget _buildDocTile(BuildContext context, CommercialDocumentItem doc, bool isDark) {
+  Widget _buildDocTile(
+    BuildContext context,
+    CommercialDocumentItem doc,
+    bool isDark,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -201,24 +238,41 @@ class CommercialDocumentChecklist extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ),
                   if (doc.isMandatory)
                     Container(
                       margin: EdgeInsetsDirectional.only(start: 6.w),
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 2.h,
+                      ),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
+                        color:
+                            (isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                       child: Text(
-                        l10nPick(context, en: 'Mandatory', fa: 'الزامی', ar: 'إلزامي', zh: '必填'),
+                        l10nPick(
+                          context,
+                          en: 'Mandatory',
+                          fa: 'الزامی',
+                          ar: 'إلزامي',
+                          zh: '必填',
+                        ),
                         style: TextStyle(
                           fontSize: 9.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
                         ),
                       ),
                     ),
@@ -229,7 +283,9 @@ class CommercialDocumentChecklist extends StatelessWidget {
                 doc.description,
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                 ),
               ),
               if (doc.rejectionReason != null) ...[
@@ -263,7 +319,13 @@ class CommercialDocumentChecklist extends StatelessWidget {
             HapticFeedback.selectionClick();
             if (doc.status == DocumentVerificationStatus.verified) {
               ToastHelper().showSuccessToast(
-                l10nPick(context, en: 'Document already verified', fa: 'مدرک تایید شده است', ar: 'تم التحقق من الوثيقة', zh: '文件已验证'),
+                l10nPick(
+                  context,
+                  en: 'Document already verified',
+                  fa: 'مدرک تایید شده است',
+                  ar: 'تم التحقق من الوثيقة',
+                  zh: '文件已验证',
+                ),
               );
               return;
             }
@@ -272,7 +334,8 @@ class CommercialDocumentChecklist extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: doc.status == DocumentVerificationStatus.verified
                 ? AppColors.success.withValues(alpha: 0.12)
-                : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.10),
+                : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                      .withValues(alpha: 0.10),
             foregroundColor: doc.status == DocumentVerificationStatus.verified
                 ? AppColors.success
                 : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary),

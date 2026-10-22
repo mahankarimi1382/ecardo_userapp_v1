@@ -131,26 +131,32 @@ void main() {
       expect(result.limitValue, 1000.0);
     });
 
-    test('validates insufficientBalance when amount exceeds available balance', () {
-      final smallBalanceWallet = Wallets(
-        id: 1,
-        name: 'USD Wallet',
-        code: 'USD',
-        balance: '50.00',
-        exchangeLimit: ExchangeLimit(min: '10', max: '1000'),
-      );
+    test(
+      'validates insufficientBalance when amount exceeds available balance',
+      () {
+        final smallBalanceWallet = Wallets(
+          id: 1,
+          name: 'USD Wallet',
+          code: 'USD',
+          balance: '50.00',
+          exchangeLimit: ExchangeLimit(min: '10', max: '1000'),
+        );
 
-      final result = service.validateAmountStep(
-        fromWallet: smallBalanceWallet,
-        toWallet: toWallet,
-        amountText: '75',
-        decimals: 2,
-      );
+        final result = service.validateAmountStep(
+          fromWallet: smallBalanceWallet,
+          toWallet: toWallet,
+          amountText: '75',
+          decimals: 2,
+        );
 
-      expect(result.isValid, false);
-      expect(result.errorType, ExchangeValidationErrorType.insufficientBalance);
-      expect(result.limitValue, 50.0);
-    });
+        expect(result.isValid, false);
+        expect(
+          result.errorType,
+          ExchangeValidationErrorType.insufficientBalance,
+        );
+        expect(result.limitValue, 50.0);
+      },
+    );
 
     test('validates successfully when all boundaries pass', () {
       final result = service.validateAmountStep(
@@ -165,22 +171,73 @@ void main() {
     });
 
     test('isAmountValid returns correct boolean for inputs', () {
-      expect(service.isAmountValid(fromWallet: null, toWallet: toWallet, amountText: '50'), false);
-      expect(service.isAmountValid(fromWallet: fromWallet, toWallet: null, amountText: '50'), false);
-      expect(service.isAmountValid(fromWallet: fromWallet, toWallet: toWallet, amountText: '0'), false);
-      expect(service.isAmountValid(fromWallet: fromWallet, toWallet: toWallet, amountText: '5'), false);
-      expect(service.isAmountValid(fromWallet: fromWallet, toWallet: toWallet, amountText: '2000'), false);
-      expect(service.isAmountValid(fromWallet: fromWallet, toWallet: toWallet, amountText: '50'), true);
+      expect(
+        service.isAmountValid(
+          fromWallet: null,
+          toWallet: toWallet,
+          amountText: '50',
+        ),
+        false,
+      );
+      expect(
+        service.isAmountValid(
+          fromWallet: fromWallet,
+          toWallet: null,
+          amountText: '50',
+        ),
+        false,
+      );
+      expect(
+        service.isAmountValid(
+          fromWallet: fromWallet,
+          toWallet: toWallet,
+          amountText: '0',
+        ),
+        false,
+      );
+      expect(
+        service.isAmountValid(
+          fromWallet: fromWallet,
+          toWallet: toWallet,
+          amountText: '5',
+        ),
+        false,
+      );
+      expect(
+        service.isAmountValid(
+          fromWallet: fromWallet,
+          toWallet: toWallet,
+          amountText: '2000',
+        ),
+        false,
+      );
+      expect(
+        service.isAmountValid(
+          fromWallet: fromWallet,
+          toWallet: toWallet,
+          amountText: '50',
+        ),
+        true,
+      );
     });
 
-    test('calculatePercentageCharge calculates charge and total without floating drift', () {
-      final calc = service.calculatePercentageCharge(amount: 100.0, percent: 2.5);
-      expect(calc.charge, 2.5);
-      expect(calc.totalAmount, 102.5);
-    });
+    test(
+      'calculatePercentageCharge calculates charge and total without floating drift',
+      () {
+        final calc = service.calculatePercentageCharge(
+          amount: 100.0,
+          percent: 2.5,
+        );
+        expect(calc.charge, 2.5);
+        expect(calc.totalAmount, 102.5);
+      },
+    );
 
     test('calculateTotalWithFixedCharge adds fixed fee accurately', () {
-      final calc = service.calculateTotalWithFixedCharge(amount: 100.0, fixedCharge: 1.75);
+      final calc = service.calculateTotalWithFixedCharge(
+        amount: 100.0,
+        fixedCharge: 1.75,
+      );
       expect(calc.charge, 1.75);
       expect(calc.totalAmount, 101.75);
     });
@@ -191,16 +248,27 @@ void main() {
       expect(service.calculateMaxSpendable(balance: 0.0, fee: 1.0), 0.0);
     });
 
-    test('calculateQuickAmountString formats correctly for fiat and crypto', () {
-      expect(
-        service.calculateQuickAmountString(balance: 100.0, percent: 0.5, isCrypto: false),
-        '50.00',
-      );
-      expect(
-        service.calculateQuickAmountString(balance: 1.0, percent: 0.25, isCrypto: true),
-        '0.25000000',
-      );
-    });
+    test(
+      'calculateQuickAmountString formats correctly for fiat and crypto',
+      () {
+        expect(
+          service.calculateQuickAmountString(
+            balance: 100.0,
+            percent: 0.5,
+            isCrypto: false,
+          ),
+          '50.00',
+        );
+        expect(
+          service.calculateQuickAmountString(
+            balance: 1.0,
+            percent: 0.25,
+            isCrypto: true,
+          ),
+          '0.25000000',
+        );
+      },
+    );
   });
 
   group('ExchangeRateManager', () {
@@ -225,16 +293,19 @@ void main() {
       expect(manager.normalizeApiCode('IRR'), 'IRR');
     });
 
-    test('calculateCrossRate computes correct 1 FROM = X TO rate based on IRR values', () {
-      // 1 USD = 700,000 IRR, 1 EUR = 770,000 IRR -> 1 USD = (700000 / 770000) EUR ≈ 0.90909091
-      final crossRate = manager.calculateCrossRate(700000, 770000);
-      expect(crossRate, isNotNull);
-      expect(crossRate!, closeTo(0.90909091, 0.0001));
+    test(
+      'calculateCrossRate computes correct 1 FROM = X TO rate based on IRR values',
+      () {
+        // 1 USD = 700,000 IRR, 1 EUR = 770,000 IRR -> 1 USD = (700000 / 770000) EUR ≈ 0.90909091
+        final crossRate = manager.calculateCrossRate(700000, 770000);
+        expect(crossRate, isNotNull);
+        expect(crossRate!, closeTo(0.90909091, 0.0001));
 
-      expect(manager.calculateCrossRate(0, 100), isNull);
-      expect(manager.calculateCrossRate(100, 0), isNull);
-      expect(manager.calculateCrossRate(null, 100), isNull);
-    });
+        expect(manager.calculateCrossRate(0, 100), isNull);
+        expect(manager.calculateCrossRate(100, 0), isNull);
+        expect(manager.calculateCrossRate(null, 100), isNull);
+      },
+    );
 
     test('bumpLiveRate tracks previousRate and updates rateDirection', () {
       expect(manager.previousRate.value, 0.0);
@@ -316,15 +387,18 @@ void main() {
       expect(expired, true);
     });
 
-    test('acknowledgeRateChange updates locked rate and clears stale status', () {
-      manager.isReviewRateStale.value = true;
-      manager.currentRate.value = 1.05;
+    test(
+      'acknowledgeRateChange updates locked rate and clears stale status',
+      () {
+        manager.isReviewRateStale.value = true;
+        manager.currentRate.value = 1.05;
 
-      manager.acknowledgeRateChange();
+        manager.acknowledgeRateChange();
 
-      expect(manager.isReviewRateStale.value, false);
-      expect(manager.lockedReviewRate, 1.05);
-    });
+        expect(manager.isReviewRateStale.value, false);
+        expect(manager.lockedReviewRate, 1.05);
+      },
+    );
 
     test('clearReviewLock resets review state', () {
       manager.lockRateForReview(1.10);

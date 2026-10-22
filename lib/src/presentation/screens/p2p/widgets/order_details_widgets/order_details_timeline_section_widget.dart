@@ -100,7 +100,11 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
       },
       {
         'title': l10nPick(context, en: 'Released', fa: 'آزادسازی ارز'),
-        'subtitle': l10nPick(context, en: 'Crypto in wallet', fa: 'دریافت رمزارز'),
+        'subtitle': l10nPick(
+          context,
+          en: 'Crypto in wallet',
+          fa: 'دریافت رمزارز',
+        ),
         'state': step3State,
       },
     ];
@@ -132,12 +136,18 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
               ),
               SizedBox(width: 6.w),
               Text(
-                l10nPick(context, en: 'Escrow Stepper', fa: 'مراحل تسویه امانی'),
+                l10nPick(
+                  context,
+                  en: 'Escrow Stepper',
+                  fa: 'مراحل تسویه امانی',
+                ),
                 style: TextStyle(
                   letterSpacing: 0,
                   fontWeight: FontWeight.w800,
                   fontSize: 13.sp,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ],
@@ -175,7 +185,8 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
     required int index,
     required String title,
     required String subtitle,
-    required int state, // 2 = completed, 1 = active, 0 = pending, -1 = cancelled
+    required int
+    state, // 2 = completed, 1 = active, 0 = pending, -1 = cancelled
     required bool isDark,
   }) {
     final activeColor = isDark ? AppColors.darkPrimary : AppColors.brandViolet;
@@ -188,7 +199,11 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
       // Completed
       nodeBg = AppColors.success;
       nodeBorder = AppColors.success;
-      nodeContent = Icon(Icons.check_rounded, size: 14.r, color: AppColors.white);
+      nodeContent = Icon(
+        Icons.check_rounded,
+        size: 14.r,
+        color: AppColors.white,
+      );
     } else if (state == 1) {
       // Active current step
       nodeBg = activeColor.withValues(alpha: isDark ? 0.25 : 0.15);
@@ -196,19 +211,22 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
       nodeContent = Container(
         width: 8.r,
         height: 8.r,
-        decoration: BoxDecoration(
-          color: activeColor,
-          shape: BoxShape.circle,
-        ),
+        decoration: BoxDecoration(color: activeColor, shape: BoxShape.circle),
       );
     } else if (state == -1) {
       // Cancelled
       nodeBg = AppColors.error.withValues(alpha: 0.15);
       nodeBorder = AppColors.error;
-      nodeContent = Icon(Icons.close_rounded, size: 14.r, color: AppColors.error);
+      nodeContent = Icon(
+        Icons.close_rounded,
+        size: 14.r,
+        color: AppColors.error,
+      );
     } else {
       // Pending
-      nodeBg = isDark ? AppColors.darkSurfaceVariant : AppColors.lightSurfaceVariant;
+      nodeBg = isDark
+          ? AppColors.darkSurfaceVariant
+          : AppColors.lightSurfaceVariant;
       nodeBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
       nodeContent = Text(
         '$index',
@@ -253,8 +271,10 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
             color: state == 1
                 ? (isDark ? AppColors.darkPrimary : AppColors.brandViolet)
                 : state == 2
-                    ? AppColors.success
-                    : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                ? AppColors.success
+                : (isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary),
           ),
         ),
         SizedBox(height: 2.h),
@@ -292,8 +312,12 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
   Widget _buildOrderSummaryCard(BuildContext context, bool isDark) {
     final localization = AppLocalizations.of(context)!;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     return Container(
@@ -331,7 +355,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+                    color: isDark
+                        ? AppColors.darkSurfaceVariant
+                        : AppColors.lightBackground,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
                   ),
                   child: Text(
@@ -342,7 +368,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                       letterSpacing: 0,
                       fontWeight: FontWeight.w700,
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.brandViolet,
                     ),
                   ),
                 ),
@@ -426,16 +454,24 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
   /// 3. Prominent Bank Account Details Card to Pay To
   Widget _buildProminentBankDetailsCard(BuildContext context, bool isDark) {
     final localization = AppLocalizations.of(context)!;
-    final cardBg = isDark ? AppColors.darkSurface : AppColors.lightSurfaceVariant;
+    final cardBg = isDark
+        ? AppColors.darkSurface
+        : AppColors.lightSurfaceVariant;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
-    final methodName = data.recipientPaymentMethod?.name ??
+    final methodName =
+        data.recipientPaymentMethod?.name ??
         data.paymentMethod?.name ??
         localization.p2pPaymentMethod;
 
-    final fields = data.recipientPaymentMethod?.fields ?? <order_details.Field>[];
+    final fields =
+        data.recipientPaymentMethod?.fields ?? <order_details.Field>[];
     final totalPayAmount = data.totalFiatAmount ?? data.fiatAmount ?? '--';
 
     return Container(
@@ -446,7 +482,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
         border: Border.all(color: borderColor, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: AppColors.brandViolet.withValues(alpha: isDark ? 0.12 : 0.07),
+            color: AppColors.brandViolet.withValues(
+              alpha: isDark ? 0.12 : 0.07,
+            ),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -459,7 +497,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkPrimaryContainer : AppColors.brandVioletContainer,
+              color: isDark
+                  ? AppColors.darkPrimaryContainer
+                  : AppColors.brandVioletContainer,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(AppSpacing.radiusXl.r),
                 topRight: Radius.circular(AppSpacing.radiusXl.r),
@@ -480,19 +520,27 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                       letterSpacing: 0,
                       fontWeight: FontWeight.w800,
                       fontSize: 13.5.sp,
-                      color: isDark ? AppColors.darkPrimary : AppColors.brandViolet,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.brandViolet,
                     ),
                   ),
                 ),
                 if (_canChangePaymentMethod(data, controller)) ...[
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => _openPaymentMethodChangeSheet(controller, data),
+                    onTap: () =>
+                        _openPaymentMethodChangeSheet(controller, data),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.brandViolet.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm.r,
+                        ),
                       ),
                       child: Text(
                         localization.p2pChange,
@@ -518,12 +566,17 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                 // Prominent Amount To Pay
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 12.w,
+                    vertical: 10.h,
+                  ),
                   decoration: BoxDecoration(
                     color: isDark ? AppColors.darkSurface : AppColors.white,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                     ),
                   ),
                   child: Row(
@@ -534,7 +587,11 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10nPick(context, en: 'Total Amount to Pay', fa: 'مبلغ قابل پرداخت'),
+                              l10nPick(
+                                context,
+                                en: 'Total Amount to Pay',
+                                fa: 'مبلغ قابل پرداخت',
+                              ),
                               style: TextStyle(
                                 letterSpacing: 0,
                                 fontSize: 11.5.sp,
@@ -572,15 +629,17 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                       en: 'No bank account details specified.',
                       fa: 'اطلاعات حساب بانکی ثبت نشده است.',
                     ),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: textSecondary,
-                    ),
+                    style: TextStyle(fontSize: 12.sp, color: textSecondary),
                   ),
                 ] else ...[
                   for (final field in fields) ...[
                     if (_isImageField(field))
-                      _buildImagePreviewRow(field.name ?? '--', field.value ?? '', isDark, context)
+                      _buildImagePreviewRow(
+                        field.name ?? '--',
+                        field.value ?? '',
+                        isDark,
+                        context,
+                      )
                     else
                       _buildBankFieldTile(
                         title: field.name ?? '--',
@@ -601,10 +660,14 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                   width: double.infinity,
                   padding: EdgeInsets.all(10.w),
                   decoration: BoxDecoration(
-                    color: AppColors.warning.withValues(alpha: isDark ? 0.15 : 0.08),
+                    color: AppColors.warning.withValues(
+                      alpha: isDark ? 0.15 : 0.08,
+                    ),
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                     border: Border.all(
-                      color: AppColors.warning.withValues(alpha: isDark ? 0.4 : 0.25),
+                      color: AppColors.warning.withValues(
+                        alpha: isDark ? 0.4 : 0.25,
+                      ),
                     ),
                   ),
                   child: Row(
@@ -627,7 +690,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                             letterSpacing: 0,
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? AppColors.warningContainer : AppColors.warmBrown,
+                            color: isDark
+                                ? AppColors.warningContainer
+                                : AppColors.warmBrown,
                             height: 1.4,
                           ),
                         ),
@@ -651,7 +716,8 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
     required bool isDark,
     required BuildContext context,
   }) {
-    final isFormattedCard = title.toLowerCase().contains('card') ||
+    final isFormattedCard =
+        title.toLowerCase().contains('card') ||
         title.toLowerCase().contains('کارت') ||
         title.toLowerCase().contains('شماره کارت');
 
@@ -742,7 +808,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
             letterSpacing: 0,
             fontSize: 12.sp,
             fontWeight: FontWeight.w600,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ),
         GestureDetector(
@@ -793,7 +861,11 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                 alignment: AlignmentDirectional.centerEnd,
                 child: GestureDetector(
                   onTap: Get.back,
-                  child: Icon(Icons.close_rounded, size: 22.r, color: AppColors.deepBlack),
+                  child: Icon(
+                    Icons.close_rounded,
+                    size: 22.r,
+                    color: AppColors.deepBlack,
+                  ),
                 ),
               ),
               SizedBox(height: 6.h),
@@ -807,7 +879,9 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
                       height: 120.h,
                       alignment: Alignment.center,
                       child: Text(
-                        AppLocalizations.of(Get.context!)?.p2pUnableToLoadImage ??
+                        AppLocalizations.of(
+                              Get.context!,
+                            )?.p2pUnableToLoadImage ??
                             'Unable to load image',
                         style: TextStyle(
                           fontSize: 13.sp,
@@ -858,7 +932,7 @@ class OrderDetailsTimelineSectionWidget extends StatelessWidget {
         bottomSheetHeight: 420.h,
         notFoundText:
             AppLocalizations.of(Get.context!)?.p2pNoPaymentMethodFound ??
-                'No payment method found',
+            'No payment method found',
         onValueSelected: (value) async {
           final selectedValue = value.toString();
           AdPaymentOption? selectedOption;

@@ -66,9 +66,8 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
       return widget.activationCode;
     }
     final conf = widget.confirmationCode?.trim();
-    final hasConf = conf != null &&
-        conf.isNotEmpty &&
-        conf.toLowerCase() != 'none';
+    final hasConf =
+        conf != null && conf.isNotEmpty && conf.toLowerCase() != 'none';
     if (hasConf) {
       return 'LPA:1\$${widget.smdpAddress}\$${widget.activationCode}\$$conf';
     }
@@ -116,10 +115,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                   ar: 'تم نسخ $label إلى الحافظة',
                   zh: '$label 已复制到剪贴板',
                 ),
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w700),
               ),
             ),
           ],
@@ -195,7 +191,9 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                     border: Border.all(color: TravelTheme.borderFor(ctx)),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+                        color: Colors.black.withValues(
+                          alpha: isDark ? 0.2 : 0.05,
+                        ),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),
@@ -234,12 +232,15 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
   @override
   Widget build(BuildContext context) {
     final qrSvg = _generateQrSvg(size: 190);
-    final hasConfCode = widget.confirmationCode != null &&
+    final hasConfCode =
+        widget.confirmationCode != null &&
         widget.confirmationCode!.trim().isNotEmpty &&
         widget.confirmationCode!.trim().toLowerCase() != 'none';
     final isDark = TravelTheme.isDark(context);
     final cardBg = TravelTheme.cardSurfaceFor(context);
-    final trackBg = isDark ? AppColors.darkSurfaceVariant : const Color(0xFFF0F2F5);
+    final trackBg = isDark
+        ? AppColors.darkSurfaceVariant
+        : const Color(0xFFF0F2F5);
 
     return Container(
       decoration: BoxDecoration(
@@ -346,11 +347,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SvgPicture.string(
-                          qrSvg,
-                          width: 180.r,
-                          height: 180.r,
-                        ),
+                        SvgPicture.string(qrSvg, width: 180.r, height: 180.r),
                         SizedBox(height: 8.h),
                         Row(
                           mainAxisSize: MainAxisSize.min,
@@ -535,9 +532,7 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
   }) {
     final isSelected = _selectedPlatformIndex == index;
     final isDark = TravelTheme.isDark(context);
-    final selectedBg = isDark
-        ? AppColors.darkSurfaceVariant
-        : Colors.white;
+    final selectedBg = isDark ? AppColors.darkSurfaceVariant : Colors.white;
     return Semantics(
       selected: isSelected,
       button: true,
@@ -658,11 +653,8 @@ class _EsimActivationCardState extends State<EsimActivationCard> {
                 : (isDark ? AppColors.darkSurfaceVariant : Colors.white),
             borderRadius: BorderRadius.circular(10.r),
             child: InkWell(
-              onTap: () => _copyToClipboard(
-                text: value,
-                key: fieldKey,
-                label: label,
-              ),
+              onTap: () =>
+                  _copyToClipboard(text: value, key: fieldKey, label: label),
               borderRadius: BorderRadius.circular(10.r),
               child: Container(
                 padding: EdgeInsetsDirectional.symmetric(

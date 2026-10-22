@@ -78,19 +78,19 @@ class EquityProjectItem {
       fa: s.contains('clean') || s.contains('energy')
           ? 'انرژی پاک و زیرساخت'
           : s.contains('agri')
-              ? 'کشاورزی و زنجیره تأمین'
-              : 'فین‌تک و پرداخت',
+          ? 'کشاورزی و زنجیره تأمین'
+          : 'فین‌تک و پرداخت',
       en: sector,
       ar: s.contains('clean') || s.contains('energy')
           ? 'الطاقة النظيفة والبنية التحتية'
           : s.contains('agri')
-              ? 'الزراعة وسلسلة الإمداد'
-              : 'التكنولوجيا المالية والمدفوعات',
+          ? 'الزراعة وسلسلة الإمداد'
+          : 'التكنولوجيا المالية والمدفوعات',
       zh: s.contains('clean') || s.contains('energy')
           ? '清洁能源与基础设施'
           : s.contains('agri')
-              ? '农业与供应链'
-              : '金融科技与支付',
+          ? '农业与供应链'
+          : '金融科技与支付',
     );
   }
 }
@@ -130,16 +130,30 @@ class EquityProjectCard extends StatelessWidget {
         children: [
           // Header with sector badge & yield highlight (ROI Chip)
           Padding(
-            padding: EdgeInsets.fromLTRB(AppSpacing.lg.w, AppSpacing.lg.h, AppSpacing.lg.w, AppSpacing.sm.h),
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.lg.w,
+              AppSpacing.lg.h,
+              AppSpacing.lg.w,
+              AppSpacing.sm.h,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      color:
+                          (isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
+                              .withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
                     child: Text(
                       project.localizedSector(context),
@@ -148,7 +162,9 @@ class EquityProjectCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     ),
                   ),
@@ -157,10 +173,15 @@ class EquityProjectCard extends StatelessWidget {
                 // Glowing ROI Chip
                 Flexible(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 4.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.success.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                       border: Border.all(
                         color: AppColors.success.withValues(alpha: 0.3),
                       ),
@@ -168,7 +189,11 @@ class EquityProjectCard extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.trending_up_rounded, color: AppColors.success, size: 14.sp),
+                        Icon(
+                          Icons.trending_up_rounded,
+                          color: AppColors.success,
+                          size: 14.sp,
+                        ),
                         SizedBox(width: 4.w),
                         Flexible(
                           child: Text(
@@ -203,7 +228,9 @@ class EquityProjectCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     height: 1.3,
                   ),
                 ),
@@ -213,7 +240,9 @@ class EquityProjectCard extends StatelessWidget {
                     Icon(
                       Icons.location_on_outlined,
                       size: 13.sp,
-                      color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                      color: isDark
+                          ? AppColors.darkTextTertiary
+                          : AppColors.lightTextTertiary,
                     ),
                     SizedBox(width: 4.w),
                     Expanded(
@@ -223,7 +252,9 @@ class EquityProjectCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -260,7 +291,9 @@ class EquityProjectCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
                         ),
                       ),
                     ),
@@ -283,7 +316,9 @@ class EquityProjectCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
                         ),
                       ),
                     ),
@@ -316,7 +351,9 @@ class EquityProjectCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
@@ -330,7 +367,9 @@ class EquityProjectCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11.sp,
                           fontWeight: FontWeight.w600,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ),
@@ -350,7 +389,10 @@ class EquityProjectCard extends StatelessWidget {
 
           // Bottom Bar: Min Ticket & Invest Button
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.md.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg.w,
+              vertical: AppSpacing.md.h,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -370,7 +412,9 @@ class EquityProjectCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 10.sp,
-                          color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                          color: isDark
+                              ? AppColors.darkTextTertiary
+                              : AppColors.lightTextTertiary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -384,7 +428,9 @@ class EquityProjectCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13.sp,
                             fontWeight: FontWeight.w800,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       ),
@@ -398,12 +444,21 @@ class EquityProjectCard extends StatelessWidget {
                     onInvestTap();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                    foregroundColor: isDark ? AppColors.deepBlack : Colors.white,
+                    backgroundColor: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
+                    foregroundColor: isDark
+                        ? AppColors.deepBlack
+                        : Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg.w, vertical: AppSpacing.sm.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg.w,
+                      vertical: AppSpacing.sm.h,
+                    ),
                     elevation: 0,
                   ),
                   child: Text(
@@ -417,7 +472,10 @@ class EquityProjectCard extends StatelessWidget {
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],

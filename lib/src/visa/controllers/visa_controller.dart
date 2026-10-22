@@ -127,9 +127,11 @@ class VisaController extends GetxController {
   /// Filtered requests list
   List<VisaRequestModel> get filteredRequests {
     return myRequests.where((req) {
-      final matchStatus = selectedFilterStatus.value == 'ALL' ||
+      final matchStatus =
+          selectedFilterStatus.value == 'ALL' ||
           req.status.toUpperCase() == selectedFilterStatus.value.toUpperCase();
-      final matchCountry = selectedFilterCountry.value == 'ALL' ||
+      final matchCountry =
+          selectedFilterCountry.value == 'ALL' ||
           req.countryName.contains(selectedFilterCountry.value);
       return matchStatus && matchCountry;
     }).toList();

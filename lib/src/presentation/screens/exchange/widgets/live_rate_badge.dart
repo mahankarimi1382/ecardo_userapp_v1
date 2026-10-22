@@ -67,9 +67,10 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
       vsync: this,
       duration: const Duration(milliseconds: 1400),
     );
-    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.45).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeOut),
-    );
+    _pulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.45,
+    ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
     _pulseController.repeat(reverse: true);
   }
 
@@ -86,16 +87,18 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
 
   @override
   Widget build(BuildContext context) {
-    final textScale =
-        MediaQuery.textScalerOf(context).scale(1.0).clamp(0.85, 1.15);
+    final textScale = MediaQuery.textScalerOf(
+      context,
+    ).scale(1.0).clamp(0.85, 1.15);
 
     final dotColor = widget.isDisconnected
         ? AppColors.grey
         : widget.isStale
-            ? AppColors.warning
-            : AppColors.success;
+        ? AppColors.warning
+        : AppColors.success;
 
-    final showChangePill = !widget.isDisconnected &&
+    final showChangePill =
+        !widget.isDisconnected &&
         !widget.isStale &&
         widget.changePercent != null;
 
@@ -107,9 +110,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
       decoration: BoxDecoration(
         color: ExchangeDesignTokens.cardSurface(context),
         borderRadius: BorderRadius.circular(AppSpacing.radius),
-        border: Border.all(
-          color: ExchangeDesignTokens.cardBorder(context),
-        ),
+        border: Border.all(color: ExchangeDesignTokens.cardBorder(context)),
         boxShadow: ExchangeDesignTokens.cardShadow(context),
       ),
       child: Row(
@@ -158,9 +159,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
                             color: ExchangeDesignTokens.textPrimary(context),
                             letterSpacing: 0,
                             fontFamily: 'Plus Jakarta Sans',
-                            fontFeatures: const [
-                              FontFeature.tabularFigures(),
-                            ],
+                            fontFeatures: const [FontFeature.tabularFigures()],
                           ),
                         ),
                       ),
@@ -259,9 +258,9 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 11,
-              color: ExchangeDesignTokens.textTertiary(context).withValues(
-                alpha: 0.85,
-              ),
+              color: ExchangeDesignTokens.textTertiary(
+                context,
+              ).withValues(alpha: 0.85),
               fontWeight: FontWeight.w500,
               fontFamily: 'Plus Jakarta Sans',
             ),
@@ -270,20 +269,12 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
         if (widget.lastUpdatedAt != null) ...[
           const SizedBox(width: AppSpacing.xs + 2),
           Text(
-            '${_t(
-              context,
-              en: 'Updated',
-              fa: 'به‌روزرسانی',
-              ar: 'تحديث',
-              tr: 'Güncellendi',
-              ru: 'Обновлено',
-              zh: '已更新',
-            )} · ${_formatTimestamp(widget.lastUpdatedAt!)}',
+            '${_t(context, en: 'Updated', fa: 'به‌روزرسانی', ar: 'تحديث', tr: 'Güncellendi', ru: 'Обновлено', zh: '已更新')} · ${_formatTimestamp(widget.lastUpdatedAt!)}',
             style: TextStyle(
               fontSize: 10,
-              color: ExchangeDesignTokens.textTertiary(context).withValues(
-                alpha: 0.7,
-              ),
+              color: ExchangeDesignTokens.textTertiary(
+                context,
+              ).withValues(alpha: 0.7),
               fontFamily: 'Plus Jakarta Sans',
             ),
           ),
@@ -306,10 +297,7 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
               borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               onTap: _handleManualRefresh,
               child: Container(
-                constraints: const BoxConstraints(
-                  minWidth: 44,
-                  minHeight: 28,
-                ),
+                constraints: const BoxConstraints(minWidth: 44, minHeight: 28),
                 padding: const EdgeInsetsDirectional.symmetric(
                   horizontal: AppSpacing.sm,
                   vertical: AppSpacing.xs,
@@ -381,8 +369,9 @@ class _LiveRateBadgeState extends State<LiveRateBadge>
   }
 
   String _namesLine() {
-    final from =
-        widget.fromNameEn.isNotEmpty ? widget.fromNameEn : widget.fromCode;
+    final from = widget.fromNameEn.isNotEmpty
+        ? widget.fromNameEn
+        : widget.fromCode;
     final to = widget.toNameEn.isNotEmpty ? widget.toNameEn : widget.toCode;
     return '$from → $to';
   }
@@ -431,10 +420,7 @@ class _ChangePill extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-        border: Border.all(
-          color: color.withValues(alpha: 0.25),
-          width: 0.8,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.25), width: 0.8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -489,10 +475,7 @@ class _PulsingDot extends StatelessWidget {
             Container(
               width: 8,
               height: 8,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-              ),
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             ),
           ],
         ),
@@ -527,10 +510,7 @@ class _PulsingDot extends StatelessWidget {
               Container(
                 width: 8,
                 height: 8,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               ),
             ],
           ),

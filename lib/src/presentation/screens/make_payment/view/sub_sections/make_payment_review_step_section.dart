@@ -60,19 +60,24 @@ class _MakePaymentReviewStepSectionState
 
     final bool isPasscodeEnabled =
         Get.find<SettingsService>().getSetting(
-              "make_payment_passcode_status",
-            ) ==
-            "1";
+          "make_payment_passcode_status",
+        ) ==
+        "1";
 
     String? storedPasscode = controller.userModel.value.data?.passcode;
     bool? hasPasscodeFlag = controller.userModel.value.data?.hasPasscode;
     if (storedPasscode == null || storedPasscode.isEmpty) {
       if (Get.isRegistered<HomeController>()) {
-        storedPasscode = Get.find<HomeController>().userModel.value.data?.passcode;
-        hasPasscodeFlag ??= Get.find<HomeController>().userModel.value.data?.hasPasscode;
+        storedPasscode =
+            Get.find<HomeController>().userModel.value.data?.passcode;
+        hasPasscodeFlag ??=
+            Get.find<HomeController>().userModel.value.data?.hasPasscode;
       }
     }
-    final hasPasscode = PasscodeHelper.userHasPasscode(storedPasscode, hasPasscodeFlag);
+    final hasPasscode = PasscodeHelper.userHasPasscode(
+      storedPasscode,
+      hasPasscodeFlag,
+    );
 
     if (isPasscodeEnabled && hasPasscode) {
       final dynamic verified = await Get.bottomSheet<dynamic>(
@@ -159,8 +164,8 @@ class _MakePaymentReviewStepSectionState
                         .makePaymentReviewStepSectionMerchantAccount,
                     content: controller.merchantMidController.text,
                     contentColor: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                   _buildDivider(isDark),
                   Obx(

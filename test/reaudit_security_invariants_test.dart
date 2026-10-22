@@ -81,9 +81,13 @@ class _TestAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     if (onFetch != null) return onFetch!(options);
-    return ResponseBody.fromString('{"status":true}', 200, headers: {
-      Headers.contentTypeHeader: [Headers.jsonContentType],
-    });
+    return ResponseBody.fromString(
+      '{"status":true}',
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
   }
 
   @override
@@ -98,19 +102,19 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('PonnamKarthik/fluttertoast'),
-      (MethodCall methodCall) async => true,
-    );
+          const MethodChannel('PonnamKarthik/fluttertoast'),
+          (MethodCall methodCall) async => true,
+        );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-      const MethodChannel('dev.fluttercommunity.plus/package_info'),
-      (MethodCall methodCall) async => <String, dynamic>{
-        'appName': 'ecardo',
-        'packageName': 'ir.ecardo.user',
-        'version': '1.0.171',
-        'buildNumber': '171',
-      },
-    );
+          const MethodChannel('dev.fluttercommunity.plus/package_info'),
+          (MethodCall methodCall) async => <String, dynamic>{
+            'appName': 'ecardo',
+            'packageName': 'ir.ecardo.user',
+            'version': '1.0.171',
+            'buildNumber': '171',
+          },
+        );
   });
 
   group('Re-Audit P0-01 — Offline Request Queue Safety', () {
@@ -133,26 +137,36 @@ void main() {
   });
 
   group('Re-Audit P0-02 & P1-02 — Idempotency Safety on 5xx & Header Naming', () {
-    test('NetworkService attaches both Idempotency-Key and X-Idempotency-Key', () async {
-      Get.put(TokenService(secureStorage: _MockSecureStorage()));
-      final networkService = Get.put(NetworkService());
-      final adapter = _TestAdapter();
-      networkService.dio.httpClientAdapter = adapter;
+    test(
+      'NetworkService attaches both Idempotency-Key and X-Idempotency-Key',
+      () async {
+        Get.put(TokenService(secureStorage: _MockSecureStorage()));
+        final networkService = Get.put(NetworkService());
+        final adapter = _TestAdapter();
+        networkService.dio.httpClientAdapter = adapter;
 
-      adapter.onFetch = (options) async {
-        expect(options.headers['Idempotency-Key'], isNotNull);
-        expect(options.headers['X-Idempotency-Key'], isNotNull);
-        expect(options.headers['Idempotency-Key'], equals(options.headers['X-Idempotency-Key']));
-        return ResponseBody.fromString('{"status":true}', 200, headers: {
-          Headers.contentTypeHeader: [Headers.jsonContentType],
-        });
-      };
+        adapter.onFetch = (options) async {
+          expect(options.headers['Idempotency-Key'], isNotNull);
+          expect(options.headers['X-Idempotency-Key'], isNotNull);
+          expect(
+            options.headers['Idempotency-Key'],
+            equals(options.headers['X-Idempotency-Key']),
+          );
+          return ResponseBody.fromString(
+            '{"status":true}',
+            200,
+            headers: {
+              Headers.contentTypeHeader: [Headers.jsonContentType],
+            },
+          );
+        };
 
-      await networkService.post(
-        endpoint: '/user/transfer',
-        data: {'amount': 100},
-      );
-    });
+        await networkService.post(
+          endpoint: '/user/transfer',
+          data: {'amount': 100},
+        );
+      },
+    );
 
     test('Idempotency key is retained on HTTP 500 server error', () async {
       Get.put(TokenService(secureStorage: _MockSecureStorage()));
@@ -201,148 +215,186 @@ void main() {
       expect(callCount, equals(2));
     });
 
-    test('Idempotency key is released on deterministic HTTP 422 client error (FIN-IDEM-05)', () async {
-      Get.put(TokenService(secureStorage: _MockSecureStorage()));
-      final networkService = Get.put(NetworkService());
-      final adapter = _TestAdapter();
-      networkService.dio.httpClientAdapter = adapter;
+    test(
+      'Idempotency key is released on deterministic HTTP 422 client error (FIN-IDEM-05)',
+      () async {
+        Get.put(TokenService(secureStorage: _MockSecureStorage()));
+        final networkService = Get.put(NetworkService());
+        final adapter = _TestAdapter();
+        networkService.dio.httpClientAdapter = adapter;
 
-      int callCount = 0;
-      String? key1;
-      String? key2;
+        int callCount = 0;
+        String? key1;
+        String? key2;
 
-      adapter.onFetch = (options) async {
-        callCount++;
-        if (callCount == 1) {
-          key1 = options.headers['Idempotency-Key'];
-          return ResponseBody.fromString(
-            jsonEncode({'status': false, 'message': 'Unprocessable Entity'}),
-            422,
-            headers: {
-              Headers.contentTypeHeader: [Headers.jsonContentType],
-            },
-          );
-        } else {
-          key2 = options.headers['Idempotency-Key'];
-          return ResponseBody.fromString(
-            jsonEncode({'status': true, 'message': 'Success'}),
-            200,
-            headers: {
-              Headers.contentTypeHeader: [Headers.jsonContentType],
-            },
-          );
-        }
-      };
+        adapter.onFetch = (options) async {
+          callCount++;
+          if (callCount == 1) {
+            key1 = options.headers['Idempotency-Key'];
+            return ResponseBody.fromString(
+              jsonEncode({'status': false, 'message': 'Unprocessable Entity'}),
+              422,
+              headers: {
+                Headers.contentTypeHeader: [Headers.jsonContentType],
+              },
+            );
+          } else {
+            key2 = options.headers['Idempotency-Key'];
+            return ResponseBody.fromString(
+              jsonEncode({'status': true, 'message': 'Success'}),
+              200,
+              headers: {
+                Headers.contentTypeHeader: [Headers.jsonContentType],
+              },
+            );
+          }
+        };
 
-      // 422 response
-      await networkService.post(
-        endpoint: '/user/transfer',
-        data: {'amount': 999999},
-      );
-      expect(networkService.inflightIdempotencyCount, equals(0),
-          reason: '422 client error must immediately release the key');
+        // 422 response
+        await networkService.post(
+          endpoint: '/user/transfer',
+          data: {'amount': 999999},
+        );
+        expect(
+          networkService.inflightIdempotencyCount,
+          equals(0),
+          reason: '422 client error must immediately release the key',
+        );
 
-      // Next request gets fresh key
-      await networkService.post(
-        endpoint: '/user/transfer',
-        data: {'amount': 999999},
-      );
-      expect(callCount, equals(2));
-      expect(key1, isNotNull);
-      expect(key2, isNotNull);
-      expect(key1, isNot(equals(key2)),
-          reason: 'Key must not be retained after 422; next call mints a fresh key');
-    });
+        // Next request gets fresh key
+        await networkService.post(
+          endpoint: '/user/transfer',
+          data: {'amount': 999999},
+        );
+        expect(callCount, equals(2));
+        expect(key1, isNotNull);
+        expect(key2, isNotNull);
+        expect(
+          key1,
+          isNot(equals(key2)),
+          reason:
+              'Key must not be retained after 422; next call mints a fresh key',
+        );
+      },
+    );
 
-    test('Deterministic canonical SHA-256 payload fingerprinting with recursive key sorting (FIN-IDEM-04)', () {
-      Get.put(TokenService(secureStorage: _MockSecureStorage()));
-      final networkService = Get.put(NetworkService());
+    test(
+      'Deterministic canonical SHA-256 payload fingerprinting with recursive key sorting (FIN-IDEM-04)',
+      () {
+        Get.put(TokenService(secureStorage: _MockSecureStorage()));
+        final networkService = Get.put(NetworkService());
 
-      // 1. Recursive sorting of Map keys
-      final payloadA = {
-        'b': 2,
-        'a': 1,
-        'details': {'z': 100, 'm': 50},
-      };
-      final payloadB = {
-        'details': {'m': 50, 'z': 100},
-        'a': 1,
-        'b': 2,
-      };
+        // 1. Recursive sorting of Map keys
+        final payloadA = {
+          'b': 2,
+          'a': 1,
+          'details': {'z': 100, 'm': 50},
+        };
+        final payloadB = {
+          'details': {'m': 50, 'z': 100},
+          'a': 1,
+          'b': 2,
+        };
 
-      final fpA = networkService.payloadFingerprint(payloadA);
-      final fpB = networkService.payloadFingerprint(payloadB);
+        final fpA = networkService.payloadFingerprint(payloadA);
+        final fpB = networkService.payloadFingerprint(payloadB);
 
-      expect(fpA, equals(fpB), reason: 'Map key order must not alter SHA-256 fingerprint');
-      expect(RegExp(r'^[0-9a-f]{64}$').hasMatch(fpA), isTrue,
-          reason: 'Fingerprint must be a 64-character lowercase hex string');
+        expect(
+          fpA,
+          equals(fpB),
+          reason: 'Map key order must not alter SHA-256 fingerprint',
+        );
+        expect(
+          RegExp(r'^[0-9a-f]{64}$').hasMatch(fpA),
+          isTrue,
+          reason: 'Fingerprint must be a 64-character lowercase hex string',
+        );
 
-      // Verify exact SHA-256 value of canonical JSON
-      final canonicalJson = '{"a":1,"b":2,"details":{"m":50,"z":100}}';
-      final expectedSha = sha256.convert(utf8.encode(canonicalJson)).toString();
-      expect(fpA, equals(expectedSha));
+        // Verify exact SHA-256 value of canonical JSON
+        final canonicalJson = '{"a":1,"b":2,"details":{"m":50,"z":100}}';
+        final expectedSha = sha256
+            .convert(utf8.encode(canonicalJson))
+            .toString();
+        expect(fpA, equals(expectedSha));
 
-      // 2. Collision-free
-      final fpDiff = networkService.payloadFingerprint({'amount': 999});
-      expect(fpA, isNot(equals(fpDiff)));
-    });
+        // 2. Collision-free
+        final fpDiff = networkService.payloadFingerprint({'amount': 999});
+        expect(fpA, isNot(equals(fpDiff)));
+      },
+    );
 
-    test('Idempotency key format conforms to METHOD:NORMALIZED_PATH:IDENTITY (FIN-IDEM-06)', () {
-      Get.put(TokenService(secureStorage: _MockSecureStorage()));
-      final networkService = Get.put(NetworkService());
+    test(
+      'Idempotency key format conforms to METHOD:NORMALIZED_PATH:IDENTITY (FIN-IDEM-06)',
+      () {
+        Get.put(TokenService(secureStorage: _MockSecureStorage()));
+        final networkService = Get.put(NetworkService());
 
-      final req = RequestOptions(
-        method: 'post',
-        path: '//user///transfer//',
-        data: {'amount': 500},
-      );
+        final req = RequestOptions(
+          method: 'post',
+          path: '//user///transfer//',
+          data: {'amount': 500},
+        );
 
-      final mapKey = networkService.getIdempotencyMapKey(req);
-      final parts = mapKey.split(':');
+        final mapKey = networkService.getIdempotencyMapKey(req);
+        final parts = mapKey.split(':');
 
-      expect(parts.length, equals(3));
-      expect(parts[0], equals('POST'));
-      expect(parts[1], equals('/user/transfer'));
-      expect(RegExp(r'^[0-9a-f]{64}$').hasMatch(parts[2]), isTrue);
-    });
+        expect(parts.length, equals(3));
+        expect(parts[0], equals('POST'));
+        expect(parts[1], equals('/user/transfer'));
+        expect(RegExp(r'^[0-9a-f]{64}$').hasMatch(parts[2]), isTrue);
+      },
+    );
   });
 
   group('Re-Audit P1-03 — TokenService Cleanup & Logout', () {
-    test('clearToken wipes both secure storage and legacy SharedPreferences', () async {
-      SharedPreferences.setMockInitialValues({'access_token': 'legacy_secret_123'});
-      final mockSecure = _MockSecureStorage();
-      await mockSecure.write(key: TokenService.accessTokenKey, value: 'secure_secret_456');
+    test(
+      'clearToken wipes both secure storage and legacy SharedPreferences',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          'access_token': 'legacy_secret_123',
+        });
+        final mockSecure = _MockSecureStorage();
+        await mockSecure.write(
+          key: TokenService.accessTokenKey,
+          value: 'secure_secret_456',
+        );
 
-      final tokenService = TokenService(secureStorage: mockSecure);
-      await tokenService.loadAccessToken();
-      expect(tokenService.accessToken.value, equals('secure_secret_456'));
+        final tokenService = TokenService(secureStorage: mockSecure);
+        await tokenService.loadAccessToken();
+        expect(tokenService.accessToken.value, equals('secure_secret_456'));
 
-      final cleared = await tokenService.clearToken();
-      expect(cleared, isTrue);
-      expect(tokenService.accessToken.value, isNull);
+        final cleared = await tokenService.clearToken();
+        expect(cleared, isTrue);
+        expect(tokenService.accessToken.value, isNull);
 
-      final secureToken = await mockSecure.read(key: TokenService.accessTokenKey);
-      expect(secureToken, isNull);
+        final secureToken = await mockSecure.read(
+          key: TokenService.accessTokenKey,
+        );
+        expect(secureToken, isNull);
 
-      final prefs = await SharedPreferences.getInstance();
-      expect(prefs.containsKey('access_token'), isFalse);
-    });
+        final prefs = await SharedPreferences.getInstance();
+        expect(prefs.containsKey('access_token'), isFalse);
+      },
+    );
   });
 
   group('Re-Audit P2-02 — AppLockService Persistent Failed Attempts Reset', () {
-    test('resetFailedAttempts resets reactive count and persists 0 to storage', () async {
-      final mockSecure = _MockSecureStorage();
-      await mockSecure.write(key: 'app_lock_failed_count', value: '4');
+    test(
+      'resetFailedAttempts resets reactive count and persists 0 to storage',
+      () async {
+        final mockSecure = _MockSecureStorage();
+        await mockSecure.write(key: 'app_lock_failed_count', value: '4');
 
-      final appLock = AppLockService(secureStorage: mockSecure);
-      await appLock.init();
-      expect(appLock.failedAttempts.value, equals(4));
+        final appLock = AppLockService(secureStorage: mockSecure);
+        await appLock.init();
+        expect(appLock.failedAttempts.value, equals(4));
 
-      await appLock.resetFailedAttempts();
-      expect(appLock.failedAttempts.value, equals(0));
+        await appLock.resetFailedAttempts();
+        expect(appLock.failedAttempts.value, equals(0));
 
-      final persisted = await mockSecure.read(key: 'app_lock_failed_count');
-      expect(persisted, equals('0'));
-    });
+        final persisted = await mockSecure.read(key: 'app_lock_failed_count');
+        expect(persisted, equals('0'));
+      },
+    );
   });
 }

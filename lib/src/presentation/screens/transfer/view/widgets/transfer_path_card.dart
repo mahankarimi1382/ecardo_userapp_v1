@@ -68,7 +68,8 @@ class TransferPathCard extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          senderWallet?.symbol ?? (senderWallet?.code ?? 'W').substring(0, 1),
+                          senderWallet?.symbol ??
+                              (senderWallet?.code ?? 'W').substring(0, 1),
                           style: const TextStyle(
                             fontFamily: 'Plus Jakarta Sans',
                             fontSize: 18,
@@ -125,8 +126,12 @@ class TransferPathCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: colorScheme.primary.withValues(alpha: isDark ? 0.2 : 0.1),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                        color: colorScheme.primary.withValues(
+                          alpha: isDark ? 0.2 : 0.1,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusFull,
+                        ),
                         border: Border.all(
                           color: colorScheme.primary.withValues(alpha: 0.4),
                           width: 1,
@@ -150,7 +155,9 @@ class TransferPathCard extends StatelessWidget {
                           width: 20,
                           height: 2,
                           decoration: BoxDecoration(
-                            color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+                            color: colorScheme.outlineVariant.withValues(
+                              alpha: 0.6,
+                            ),
                             borderRadius: BorderRadius.circular(1),
                           ),
                         ),
@@ -162,7 +169,9 @@ class TransferPathCard extends StatelessWidget {
                             color: colorScheme.primary,
                             boxShadow: [
                               BoxShadow(
-                                color: colorScheme.primary.withValues(alpha: 0.35),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.35,
+                                ),
                                 blurRadius: 8,
                                 spreadRadius: 1,
                               ),
@@ -178,7 +187,9 @@ class TransferPathCard extends StatelessWidget {
                           width: 20,
                           height: 2,
                           decoration: BoxDecoration(
-                            color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+                            color: colorScheme.outlineVariant.withValues(
+                              alpha: 0.6,
+                            ),
                             borderRadius: BorderRadius.circular(1),
                           ),
                         ),

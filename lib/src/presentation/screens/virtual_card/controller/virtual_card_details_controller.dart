@@ -49,10 +49,7 @@ class VirtualCardDetailsController extends GetxController {
     ToastHelper().showSuccessToast(message);
   }
 
-  void updateSpendingLimits({
-    required double daily,
-    required double monthly,
-  }) {
+  void updateSpendingLimits({required double daily, required double monthly}) {
     dailySpendLimit.value = daily;
     monthlySpendLimit.value = monthly;
     HapticFeedback.lightImpact();
@@ -66,12 +63,11 @@ class VirtualCardDetailsController extends GetxController {
 
   void syncFreezeState(VirtualCardDetailsData? card) {
     if (card == null) return;
-    final statusStr = (card.lifecycleStatus ??
-            card.virtualStatus ??
-            card.status ??
-            '')
-        .toLowerCase();
-    isCardFrozen.value = statusStr == 'frozen' ||
+    final statusStr =
+        (card.lifecycleStatus ?? card.virtualStatus ?? card.status ?? '')
+            .toLowerCase();
+    isCardFrozen.value =
+        statusStr == 'frozen' ||
         statusStr == 'inactive' ||
         statusStr == 'blocked';
   }
@@ -100,6 +96,7 @@ class VirtualCardDetailsController extends GetxController {
       showCvv.value = false;
     });
   }
+
   // BUG-07 (P-4 pattern): resolve per call — the constructor-time capture
   // froze the locale at controller creation and crashed when context was null.
   AppLocalizations? get localization =>
@@ -186,7 +183,8 @@ class VirtualCardDetailsController extends GetxController {
       debugPrint('❌ fetchVirtualCardDetailsBsiCardProvider() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'Failed to load card provider details',
+        localization?.allControllerLoadError ??
+            'Failed to load card provider details',
       );
     } finally {
       isLoading.value = false;
@@ -299,28 +297,37 @@ class VirtualCardDetailsController extends GetxController {
     final amount = int.tryParse(amountController.text.replaceAll(',', ''));
     if (amount == null || amount <= 0) {
       ToastHelper().showErrorToast(
-        localization?.cardDetailsAmountGreaterThanZero ?? 'Amount must be greater than zero',
+        localization?.cardDetailsAmountGreaterThanZero ??
+            'Amount must be greater than zero',
       );
       return;
     }
     if (funding.minimumTopup > 0 && amount < funding.minimumTopup) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.vcMinTopup(funding.minimumTopup, card?.currency ?? ''),
+        AppLocalizations.of(
+          Get.context!,
+        )!.vcMinTopup(funding.minimumTopup, card?.currency ?? ''),
       );
       return;
     }
     if (funding.maximumTopup > 0 && amount > funding.maximumTopup) {
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.vcMaxTopup(funding.maximumTopup, card?.currency ?? ''),
+        AppLocalizations.of(
+          Get.context!,
+        )!.vcMaxTopup(funding.maximumTopup, card?.currency ?? ''),
       );
       return;
     }
     if (fundingSource == 'irr_wallet' && walletId == null) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcSelectIrrWallet);
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.vcSelectIrrWallet,
+      );
       return;
     }
     if (fundingSource == 'gateway' && gatewayMethodId == null) {
-      ToastHelper().showErrorToast(AppLocalizations.of(Get.context!)!.vcSelectGateway);
+      ToastHelper().showErrorToast(
+        AppLocalizations.of(Get.context!)!.vcSelectGateway,
+      );
       return;
     }
 
@@ -370,7 +377,8 @@ class VirtualCardDetailsController extends GetxController {
       }
 
       ToastHelper().showSuccessToast(
-        response.data!['message']?.toString() ?? AppLocalizations.of(Get.context!)!.vcTopupSubmitted,
+        response.data!['message']?.toString() ??
+            AppLocalizations.of(Get.context!)!.vcTopupSubmitted,
       );
       amountController.clear();
       Get.back();
@@ -380,7 +388,8 @@ class VirtualCardDetailsController extends GetxController {
       debugPrint('❌ cardBalanceTopUpFromContract() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'Failed to complete card top up',
+        localization?.allControllerLoadError ??
+            'Failed to complete card top up',
       );
     } finally {
       isCardBalanceTopUpLoading.value = false;
@@ -451,11 +460,7 @@ class VirtualCardDetailsController extends GetxController {
     totalAmount.value = baseAmount.value + calculatedCharge.value;
   }
 
-  static double _calculateCharge(
-    double amount,
-    String? type,
-    num charge,
-  ) {
+  static double _calculateCharge(double amount, String? type, num charge) {
     if (type == 'percentage') {
       return amount * charge.toDouble() / 100;
     }
@@ -471,17 +476,16 @@ class VirtualCardDetailsController extends GetxController {
     // v1.0.24: settings can be missing or unparseable (unloaded splash / bad
     // server value) — safe-parse with sane defaults instead of crashing on
     // `double.tryParse(...)!` / `int.parse(...)`.
-    final int decimals = int.tryParse(
+    final int decimals =
+        int.tryParse(
           settingsService.getSetting("site_currency_decimals") ?? '',
         ) ??
         2;
-    final double minimumTopup = double.tryParse(
-          settingsService.getSetting("min_card_topup") ?? '',
-        ) ??
+    final double minimumTopup =
+        double.tryParse(settingsService.getSetting("min_card_topup") ?? '') ??
         1.0;
-    final double maximumTopup = double.tryParse(
-          settingsService.getSetting("max_card_topup") ?? '',
-        ) ??
+    final double maximumTopup =
+        double.tryParse(settingsService.getSetting("max_card_topup") ?? '') ??
         0.0;
 
     // Validate Amount
@@ -495,7 +499,8 @@ class VirtualCardDetailsController extends GetxController {
     final amount = double.tryParse(amountController.text) ?? 0.0;
     if (amount <= 0) {
       ToastHelper().showErrorToast(
-        localization?.cardDetailsAmountGreaterThanZero ?? 'Amount must be greater than zero',
+        localization?.cardDetailsAmountGreaterThanZero ??
+            'Amount must be greater than zero',
       );
       return false;
     }
@@ -522,7 +527,8 @@ class VirtualCardDetailsController extends GetxController {
 
     // v1.0.24: client-side balance guard — the main wallet must cover the
     // top-up amount before we hit the API (mirrors exchange_controller).
-    final double walletBalance = double.tryParse(
+    final double walletBalance =
+        double.tryParse(
           Get.find<HomeController>().userModel.value.data?.balance ?? '',
         ) ??
         0.0;

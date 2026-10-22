@@ -8,7 +8,8 @@ import '../models/dining_models.dart';
 
 class DiningController extends GetxController {
   // UI State Machine
-  final Rx<ExperienceServiceState> uiState = ExperienceServiceState.defaultState.obs;
+  final Rx<ExperienceServiceState> uiState =
+      ExperienceServiceState.defaultState.obs;
   final RxString errorMessage = ''.obs;
   final RxString validationError = ''.obs;
   final RxBool isOffline = false.obs;
@@ -29,7 +30,8 @@ class DiningController extends GetxController {
   // Active Cart State
   final RxList<DiningOrderItem> cartItems = <DiningOrderItem>[].obs;
   final Rx<RestaurantModel?> cartRestaurant = Rx<RestaurantModel?>(null);
-  final Rx<DiningServiceMode> orderMode = DiningServiceMode.airportGatePickup.obs;
+  final Rx<DiningServiceMode> orderMode =
+      DiningServiceMode.airportGatePickup.obs;
   final RxString gateOrFlightNumber = ''.obs;
   final RxString targetPickupTime = ''.obs;
 
@@ -52,15 +54,20 @@ class DiningController extends GetxController {
 
   void _initConnectivity() {
     // DATA: REAL connectivity check
-    Connectivity().checkConnectivity().then((result) {
-      final offline = result.contains(ConnectivityResult.none);
-      isOffline.value = offline;
-      if (offline && uiState.value == ExperienceServiceState.defaultState) {
-        uiState.value = ExperienceServiceState.offline;
-      }
-    }).catchError((_) {});
+    Connectivity()
+        .checkConnectivity()
+        .then((result) {
+          final offline = result.contains(ConnectivityResult.none);
+          isOffline.value = offline;
+          if (offline && uiState.value == ExperienceServiceState.defaultState) {
+            uiState.value = ExperienceServiceState.offline;
+          }
+        })
+        .catchError((_) {});
 
-    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((
+      results,
+    ) {
       final offline = results.contains(ConnectivityResult.none);
       isOffline.value = offline;
       if (offline) {
@@ -85,7 +92,8 @@ class DiningController extends GetxController {
           schemaVersion: '1.0',
           id: 'rest-01',
           name: 'کافه رستوران پرشین لانژ (Persian Sky Lounge & Dining)',
-          terminalLocation: 'فرودگاه امام خمینی (IKA) — سالن ترانزیت، مجاور گیت ۱۸',
+          terminalLocation:
+              'فرودگاه امام خمینی (IKA) — سالن ترانزیت، مجاور گیت ۱۸',
           city: 'تهران (IKA)',
           cuisineType: 'ایرانی و بین‌المللی',
           rating: 4.8,
@@ -197,7 +205,8 @@ class DiningController extends GetxController {
           schemaVersion: '1.0',
           id: 'rest-03',
           name: 'کافه کباب استانبول (Bosphorus Gourmet Grill)',
-          terminalLocation: 'فرودگاه جدید استانبول (IST) — گیت‌های پرواز بین‌المللی F',
+          terminalLocation:
+              'فرودگاه جدید استانبول (IST) — گیت‌های پرواز بین‌المللی F',
           city: 'استانبول (IST)',
           cuisineType: 'ترکی و عثمانی',
           rating: 4.9,
@@ -241,8 +250,9 @@ class DiningController extends GetxController {
 
       allRestaurants.assignAll(mockData);
       applyFilters();
-      uiState.value =
-          filteredRestaurants.isEmpty ? ExperienceServiceState.empty : ExperienceServiceState.success;
+      uiState.value = filteredRestaurants.isEmpty
+          ? ExperienceServiceState.empty
+          : ExperienceServiceState.success;
     } catch (e) {
       errorMessage.value = 'خطا در بارگذاری رستوران‌ها: $e';
       uiState.value = ExperienceServiceState.error;
@@ -258,10 +268,13 @@ class DiningController extends GetxController {
   void applyFilters() {
     final query = searchQuery.value.trim().toLowerCase();
     final results = allRestaurants.where((rest) {
-      final matchesHub = selectedHub.value == 'ALL' || rest.city.contains(selectedHub.value);
+      final matchesHub =
+          selectedHub.value == 'ALL' || rest.city.contains(selectedHub.value);
       final matchesMode =
-          selectedMode.value == null || rest.availableModes.contains(selectedMode.value);
-      final matchesQuery = query.isEmpty ||
+          selectedMode.value == null ||
+          rest.availableModes.contains(selectedMode.value);
+      final matchesQuery =
+          query.isEmpty ||
           rest.name.toLowerCase().contains(query) ||
           rest.cuisineType.toLowerCase().contains(query) ||
           rest.menu.any((m) => m.title.toLowerCase().contains(query));
@@ -297,7 +310,8 @@ class DiningController extends GetxController {
 
   // ---- Cart operations ----
   void addToCart(RestaurantModel restaurant, MenuItemModel item) {
-    if (cartRestaurant.value != null && cartRestaurant.value!.id != restaurant.id) {
+    if (cartRestaurant.value != null &&
+        cartRestaurant.value!.id != restaurant.id) {
       cartItems.clear();
     }
     cartRestaurant.value = restaurant;
@@ -341,8 +355,11 @@ class DiningController extends GetxController {
 
   double get cartSubtotal => cartItems.fold(0.0, (sum, i) => sum + i.subtotal);
   int get cartCount => cartItems.fold(0, (sum, i) => sum + i.quantity);
-  int get cartPrepMinutes =>
-      cartItems.isEmpty ? 0 : cartItems.map((i) => i.item.prepMinutes).reduce((a, b) => a > b ? a : b);
+  int get cartPrepMinutes => cartItems.isEmpty
+      ? 0
+      : cartItems
+            .map((i) => i.item.prepMinutes)
+            .reduce((a, b) => a > b ? a : b);
 
   String? validateOrder() {
     final rest = cartRestaurant.value;
@@ -378,7 +395,8 @@ class DiningController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 1300));
 
       final rest = cartRestaurant.value!;
-      final orderId = 'MEAL-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+      final orderId =
+          'MEAL-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
       final order = DiningOrderModel(
         schemaVersion: '1.0',
         orderId: orderId,
@@ -386,7 +404,9 @@ class DiningController extends GetxController {
         restaurantName: rest.name,
         terminalLocation: rest.terminalLocation,
         mode: orderMode.value,
-        gateOrTable: gateOrFlightNumber.value.trim().isEmpty ? null : gateOrFlightNumber.value,
+        gateOrTable: gateOrFlightNumber.value.trim().isEmpty
+            ? null
+            : gateOrFlightNumber.value,
         pickupTime: targetPickupTime.value,
         items: List.from(cartItems),
         totalAmount: cartSubtotal,
@@ -402,7 +422,9 @@ class DiningController extends GetxController {
       cartRestaurant.value = null;
 
       uiState.value = ExperienceServiceState.completed;
-      ToastHelper().showSuccessToast('سفارش غذا با موفقیت ثبت شد و در حال آماده‌سازی است');
+      ToastHelper().showSuccessToast(
+        'سفارش غذا با موفقیت ثبت شد و در حال آماده‌سازی است',
+      );
       return order;
     } catch (e) {
       errorMessage.value = 'خطا در ثبت سفارش: $e';
@@ -418,7 +440,9 @@ class DiningController extends GetxController {
 
     final order = myOrders[idx];
     if (!order.canCancel) {
-      ToastHelper().showErrorToast('این سفارش قابل لغو نیست (آماده‌سازی تکمیل شده است).');
+      ToastHelper().showErrorToast(
+        'این سفارش قابل لغو نیست (آماده‌سازی تکمیل شده است).',
+      );
       return false;
     }
 
@@ -502,7 +526,8 @@ class DiningController extends GetxController {
         totalAmount: 32.0,
         currency: 'USD',
         status: 'cancelled',
-        cancellationReason: 'پرواز زودتر کنسل شد — جریمه ۵۰٪ آماده‌سازی آشپزخانه',
+        cancellationReason:
+            'پرواز زودتر کنسل شد — جریمه ۵۰٪ آماده‌سازی آشپزخانه',
         penaltyAmount: 16.0,
         refundedAmount: 16.0,
         orderedAt: DateTime.now().subtract(const Duration(hours: 6)),

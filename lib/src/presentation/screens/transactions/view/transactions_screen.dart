@@ -87,7 +87,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       });
       await controller.fetchTransactions();
       final data = controller.transactionsModel.value.data;
-      if (data == null && controller.transactionsModel.value.status == 'error') {
+      if (data == null &&
+          controller.transactionsModel.value.status == 'error') {
         setState(() {
           _hasError = true;
           _errorMessage = controller.transactionsModel.value.message;
@@ -139,7 +140,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         await controller.fetchTransactions();
       }
       final data = controller.transactionsModel.value.data;
-      if (data == null && controller.transactionsModel.value.status == 'error') {
+      if (data == null &&
+          controller.transactionsModel.value.status == 'error') {
         setState(() {
           _hasError = true;
           _errorMessage = controller.transactionsModel.value.message;
@@ -169,7 +171,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Obx(() {
         return Column(
@@ -195,9 +199,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               ),
 
             // Main Content Area
-            Expanded(
-              child: _buildBody(context, isDark),
-            ),
+            Expanded(child: _buildBody(context, isDark)),
           ],
         );
       }),
@@ -207,7 +209,12 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   Widget _buildFilterButton(BuildContext context, bool isDark) {
     return Semantics(
       button: true,
-      label: l10nPick(context, en: 'Filter Transactions', fa: 'فیلتر تراکنش‌ها', ar: 'تصفية المعاملات'),
+      label: l10nPick(
+        context,
+        en: 'Filter Transactions',
+        fa: 'فیلتر تراکنش‌ها',
+        ar: 'تصفية المعاملات',
+      ),
       child: GestureDetector(
         onTap: () {
           HapticFeedback.lightImpact();
@@ -242,7 +249,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                 PngAssets.commonFilterIcon,
                 width: AppSpacing.iconSm,
                 height: AppSpacing.iconSm,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
                 excludeFromSemantics: true,
               ),
               if (_hasAnyFilter)
@@ -254,7 +263,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                     height: 7,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.deepBlack,
                     ),
                   ),
                 ),
@@ -286,7 +297,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               fa: 'خطا در بارگذاری تراکنش‌ها',
               ar: 'تعذر تحميل المعاملات',
             ),
-            message: _errorMessage ??
+            message:
+                _errorMessage ??
                 l10nPick(
                   context,
                   en: 'Could not connect to the transaction service. Please verify your connection and try again.',
@@ -294,7 +306,12 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   ar: 'تعذر الاتصال بخدمة المعاملات. يرجى التحقق من الاتصال والمحاولة مرة أخرى.',
                 ),
             onRetry: () => loadData(),
-            retryLabel: l10nPick(context, en: 'Try Again', fa: 'تلاش مجدد', ar: 'إعادة المحاولة'),
+            retryLabel: l10nPick(
+              context,
+              en: 'Try Again',
+              fa: 'تلاش مجدد',
+              ar: 'إعادة المحاولة',
+            ),
           ),
         ),
       );
@@ -303,12 +320,16 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     // Filter transactions by direction (harmonized with server query & client safety)
     final all = controller.transactionsModel.value.data?.transactions ?? [];
     final transactions = all.where((tx) {
-      final dir = controller.direction.value != 0 ? controller.direction.value : _dirFilter;
+      final dir = controller.direction.value != 0
+          ? controller.direction.value
+          : _dirFilter;
       if (dir == 1) return tx.isPlus == true;
       if (dir == 2) return tx.isPlus != true;
       if (dir == 3) {
         final t = (tx.type ?? '').toLowerCase();
-        return t.contains('send') || t.contains('receive') || t.contains('transfer');
+        return t.contains('send') ||
+            t.contains('receive') ||
+            t.contains('transfer');
       }
       return true;
     }).toList();
@@ -352,8 +373,18 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                 ? Icons.filter_alt_off_outlined
                 : Icons.receipt_long_outlined,
             primaryActionLabel: _hasAnyFilter
-                ? l10nPick(context, en: 'Reset Filters', fa: 'بازنشانی فیلترها', ar: 'إعادة ضبط الفلاتر')
-                : l10nPick(context, en: 'Refresh History', fa: 'بروزرسانی', ar: 'تحديث السجل'),
+                ? l10nPick(
+                    context,
+                    en: 'Reset Filters',
+                    fa: 'بازنشانی فیلترها',
+                    ar: 'إعادة ضبط الفلاتر',
+                  )
+                : l10nPick(
+                    context,
+                    en: 'Refresh History',
+                    fa: 'بروزرسانی',
+                    ar: 'تحديث السجل',
+                  ),
             onPrimaryAction: () {
               if (_hasAnyFilter) {
                 setState(() => _dirFilter = 0);
@@ -386,17 +417,12 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
           // B. Transaction Type Chips (Horizontal Pill Bar)
           const SliverToBoxAdapter(
-            child: SizedBox(
-              height: 38,
-              child: TransactionTypeList(),
-            ),
+            child: SizedBox(height: 38, child: TransactionTypeList()),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
 
           // C. Direction Filter Segmented Pills
-          SliverToBoxAdapter(
-            child: _buildDirectionPills(context, isDark),
-          ),
+          SliverToBoxAdapter(child: _buildDirectionPills(context, isDark)),
 
           // D. Active Filter Notification Banner
           if (_hasAnyFilter)
@@ -419,7 +445,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                     height: 22,
                     child: CircularProgressIndicator(
                       strokeWidth: 2.2,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.deepBlack,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.deepBlack,
                     ),
                   ),
                 ),
@@ -499,7 +527,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             onTap: () {
               HapticFeedback.selectionClick();
-              if (controller.direction.value == value && _dirFilter == value) return;
+              if (controller.direction.value == value && _dirFilter == value)
+                return;
               setState(() => _dirFilter = value);
               controller.direction.value = value;
               controller.fetchDynamicTransactions();
@@ -556,7 +585,9 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               : AppColors.lightSecondaryContainer.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.lightOutlineVariant,
+            color: isDark
+                ? AppColors.darkBorder
+                : AppColors.lightOutlineVariant,
             width: 0.8,
           ),
         ),
@@ -725,19 +756,41 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           if (locale == 'fa' || locale == 'ar') {
             final j = Jalali.fromDateTime(dt);
             const monthNames = [
-              'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
-              'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+              'فروردین',
+              'اردیبهشت',
+              'خرداد',
+              'تیر',
+              'مرداد',
+              'شهریور',
+              'مهر',
+              'آبان',
+              'آذر',
+              'دی',
+              'بهمن',
+              'اسفند',
             ];
-            final monthName =
-                (j.month >= 1 && j.month <= 12) ? monthNames[j.month - 1] : '${j.month}';
+            final monthName = (j.month >= 1 && j.month <= 12)
+                ? monthNames[j.month - 1]
+                : '${j.month}';
             groupTitle = '${j.day} $monthName ${j.year}';
           } else {
             const monthNames = [
-              'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+              'Jan',
+              'Feb',
+              'Mar',
+              'Apr',
+              'May',
+              'Jun',
+              'Jul',
+              'Aug',
+              'Sep',
+              'Oct',
+              'Nov',
+              'Dec',
             ];
-            final monthName =
-                (dt.month >= 1 && dt.month <= 12) ? monthNames[dt.month - 1] : '${dt.month}';
+            final monthName = (dt.month >= 1 && dt.month <= 12)
+                ? monthNames[dt.month - 1]
+                : '${dt.month}';
             groupTitle = '${dt.day} $monthName ${dt.year}';
           }
         }

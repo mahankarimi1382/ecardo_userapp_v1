@@ -16,10 +16,7 @@ import '../../local/widgets/experience_ui_components.dart';
 class BoatVoucherScreen extends StatefulWidget {
   final BoatBookingModel booking;
 
-  const BoatVoucherScreen({
-    super.key,
-    required this.booking,
-  });
+  const BoatVoucherScreen({super.key, required this.booking});
 
   @override
   State<BoatVoucherScreen> createState() => _BoatVoucherScreenState();
@@ -40,11 +37,7 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
 
   String _generateQrSvg() {
     final barcode = Barcode.qrCode();
-    return barcode.toSvg(
-      currentBooking.qrPayload,
-      width: 140,
-      height: 140,
-    );
+    return barcode.toSvg(currentBooking.qrPayload, width: 140, height: 140);
   }
 
   Future<void> _handleCancelBooking() async {
@@ -55,7 +48,10 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
       title: currentBooking.boatTitle,
       calculation: calc,
       onConfirmCancellation: (reason) async {
-        final success = await controller.cancelBooking(currentBooking.bookingId, reason: reason);
+        final success = await controller.cancelBooking(
+          currentBooking.bookingId,
+          reason: reason,
+        );
         if (success) {
           final updated = controller.myBookings.firstWhereOrNull(
             (b) => b.bookingId == currentBooking.bookingId,
@@ -84,7 +80,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
     final isCancelled = currentBooking.isCancelled;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : const Color(0xFFF0F4F8),
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : const Color(0xFFF0F4F8),
       appBar: AppBar(
         backgroundColor: oceanNavy,
         elevation: 0,
@@ -144,8 +142,13 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                         Expanded(
                           child: Row(
                             children: [
-                              Icon(Icons.directions_boat_rounded,
-                                  color: isCancelled ? AppColors.white : oceanCyan, size: 22.sp),
+                              Icon(
+                                Icons.directions_boat_rounded,
+                                color: isCancelled
+                                    ? AppColors.white
+                                    : oceanCyan,
+                                size: 22.sp,
+                              ),
                               SizedBox(width: 8.w),
                               Flexible(
                                 child: Text(
@@ -164,21 +167,29 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                         ),
                         SizedBox(width: 8.w),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: isCancelled
                                 ? AppColors.error.withValues(alpha: 0.2)
                                 : AppColors.success.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12.r),
                             border: Border.all(
-                                color: isCancelled ? AppColors.error : AppColors.success),
+                              color: isCancelled
+                                  ? AppColors.error
+                                  : AppColors.success,
+                            ),
                           ),
                           child: Text(
                             isCancelled ? 'لغو شده (استرداد وجه)' : 'رزرو قطعی',
                             style: TextStyle(
                               fontSize: 10.5.sp,
                               fontWeight: FontWeight.w800,
-                              color: isCancelled ? Colors.white : AppColors.success,
+                              color: isCancelled
+                                  ? Colors.white
+                                  : AppColors.success,
                             ),
                           ),
                         ),
@@ -197,7 +208,11 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                     SizedBox(height: 6.h),
                     Row(
                       children: [
-                        Icon(Icons.place_rounded, size: 14.sp, color: Colors.white70),
+                        Icon(
+                          Icons.place_rounded,
+                          size: 14.sp,
+                          color: Colors.white70,
+                        ),
                         SizedBox(width: 4.w),
                         Expanded(
                           child: Text(
@@ -225,8 +240,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                     (i) => Expanded(
                       child: Container(
                         height: 2,
-                        color:
-                            i % 2 == 0 ? Colors.transparent : AppColors.white.withValues(alpha: 0.4),
+                        color: i % 2 == 0
+                            ? Colors.transparent
+                            : AppColors.white.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -243,7 +259,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                      color: isDark
+                          ? AppColors.darkShadow
+                          : AppColors.lightShadow,
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                     ),
@@ -257,7 +275,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                         Expanded(
                           child: _buildDetailTile(
                             'تاریخ گشت',
-                            DateFormat('yyyy/MM/dd').format(currentBooking.date),
+                            DateFormat(
+                              'yyyy/MM/dd',
+                            ).format(currentBooking.date),
                             Icons.calendar_today_rounded,
                             isDark,
                           ),
@@ -308,19 +328,24 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                         ),
                         Expanded(
                           child: _buildDetailTile(
-                            isCancelled ? 'مبلغ استرداد شده' : 'مبلغ کل پرداخت‌شده',
+                            isCancelled
+                                ? 'مبلغ استرداد شده'
+                                : 'مبلغ کل پرداخت‌شده',
                             isCancelled
                                 ? '+${currentBooking.refundedAmount.toStringAsFixed(0)} ${currentBooking.refundDestinationWalletCurrency}'
                                 : '${currentBooking.totalAmount.toStringAsFixed(0)} ${currentBooking.currency}',
                             Icons.account_balance_wallet_outlined,
                             isDark,
-                            valueColor: isCancelled ? AppColors.info : AppColors.success,
+                            valueColor: isCancelled
+                                ? AppColors.info
+                                : AppColors.success,
                           ),
                         ),
                       ],
                     ),
 
-                    if (isCancelled && currentBooking.cancellationReason != null) ...[
+                    if (isCancelled &&
+                        currentBooking.cancellationReason != null) ...[
                       SizedBox(height: 14.h),
                       Container(
                         width: double.infinity,
@@ -328,7 +353,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.error.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8.r),
-                          border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                          border: Border.all(
+                            color: AppColors.error.withValues(alpha: 0.3),
+                          ),
                         ),
                         child: Text(
                           'توضیحات لغو: ${currentBooking.cancellationReason}',
@@ -366,7 +393,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 1.2,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -375,7 +404,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 11.sp,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
 
@@ -391,7 +422,10 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                             ),
-                            icon: const Icon(Icons.phone_in_talk_rounded, size: 18),
+                            icon: const Icon(
+                              Icons.phone_in_talk_rounded,
+                              size: 18,
+                            ),
                             label: const Text('تماس با کاپیتان'),
                             onPressed: () {
                               HapticFeedback.lightImpact();
@@ -413,9 +447,15 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                             ),
-                            icon: const Icon(Icons.directions_rounded, size: 18, color: Colors.white),
-                            label: const Text('مسیریابی اسکله',
-                                style: TextStyle(color: Colors.white)),
+                            icon: const Icon(
+                              Icons.directions_rounded,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              'مسیریابی اسکله',
+                              style: TextStyle(color: Colors.white),
+                            ),
                             onPressed: () {
                               HapticFeedback.lightImpact();
                               Get.snackbar(
@@ -453,19 +493,27 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.warning.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                  border: Border.all(color: AppColors.warning.withValues(alpha: 0.4)),
+                  border: Border.all(
+                    color: AppColors.warning.withValues(alpha: 0.4),
+                  ),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.shield_outlined, color: AppColors.warning, size: 20.sp),
+                    Icon(
+                      Icons.shield_outlined,
+                      color: AppColors.warning,
+                      size: 20.sp,
+                    ),
                     SizedBox(width: 10.w),
                     Expanded(
                       child: Text(
                         'لطفاً حداقل ۲۰ دقیقه قبل از ساعت حرکت در اسکله حاضر باشید. پوشیدن جلیقه نجات در طول حضور در آب‌های آزاد برای کلیه سرنشینان الزامی است.',
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                           height: 1.4,
                         ),
                       ),
@@ -495,7 +543,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
             Icon(
               icon,
               size: 14.sp,
-              color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+              color: isDark
+                  ? AppColors.darkTextTertiary
+                  : AppColors.lightTextTertiary,
             ),
             SizedBox(width: 4.w),
             Flexible(
@@ -503,7 +553,9 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                 label,
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+                  color: isDark
+                      ? AppColors.darkTextTertiary
+                      : AppColors.lightTextTertiary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -517,8 +569,11 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
           style: TextStyle(
             fontSize: 13.sp,
             fontWeight: FontWeight.w800,
-            color: valueColor ??
-                (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            color:
+                valueColor ??
+                (isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary),
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

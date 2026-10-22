@@ -8,8 +8,9 @@ class PaymentWalletModel {
   PaymentWalletModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data =
-        json['data'] != null ? PaymentWalletData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? PaymentWalletData.fromJson(json['data'])
+        : null;
   }
 }
 
@@ -71,10 +72,9 @@ class Wallets {
     isDefault = json['is_default'];
     isCrypto = json['is_crypto'];
     currencyId = json['currency_id'];
-    paymentLimit =
-        json['payment_limit'] != null
-            ? PaymentLimit.fromJson(json['payment_limit'])
-            : null;
+    paymentLimit = json['payment_limit'] != null
+        ? PaymentLimit.fromJson(json['payment_limit'])
+        : null;
     conversionRate = json['conversion_rate'];
   }
 }

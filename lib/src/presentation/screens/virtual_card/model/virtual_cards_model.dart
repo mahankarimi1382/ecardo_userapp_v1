@@ -86,10 +86,12 @@ class VirtualCardsData {
     cardNumber = json['card_number']?.toString();
     displayNumber = json['display_number']?.toString();
     cvc = json['cvc']?.toString();
-    expirationMonth =
-        num.tryParse(json['expiration_month']?.toString() ?? '')?.toInt();
-    expirationYear =
-        num.tryParse(json['expiration_year']?.toString() ?? '')?.toInt();
+    expirationMonth = num.tryParse(
+      json['expiration_month']?.toString() ?? '',
+    )?.toInt();
+    expirationYear = num.tryParse(
+      json['expiration_year']?.toString() ?? '',
+    )?.toInt();
     lastFourDigits = json['last_four_digits'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -97,9 +99,7 @@ class VirtualCardsData {
         ? CardHolder.fromJson(json['card_holder'])
         : null;
     display = json['display'] is Map
-        ? CardDisplay.fromJson(
-            (json['display'] as Map).cast<String, dynamic>(),
-          )
+        ? CardDisplay.fromJson((json['display'] as Map).cast<String, dynamic>())
         : null;
     capabilities = json['capabilities'] is Map
         ? CardCapabilities.fromJson(
@@ -107,9 +107,7 @@ class VirtualCardsData {
           )
         : null;
     actions = json['actions'] is Map
-        ? CardActions.fromJson(
-            (json['actions'] as Map).cast<String, dynamic>(),
-          )
+        ? CardActions.fromJson((json['actions'] as Map).cast<String, dynamic>())
         : null;
   }
 }

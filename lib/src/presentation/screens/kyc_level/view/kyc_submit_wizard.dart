@@ -67,9 +67,13 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor = isDark
+        ? AppColors.darkBackground
+        : AppColors.lightBackground;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextSecondary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextSecondary;
 
     return PopScope(
       canPop: _currentStep == 0 && Navigator.canPop(context),
@@ -83,10 +87,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           backgroundColor: bgColor,
           elevation: 0,
           centerTitle: true,
-          leading: BackButton(
-            color: primaryTextColor,
-            onPressed: _handleBack,
-          ),
+          leading: BackButton(color: primaryTextColor, onPressed: _handleBack),
           title: Text(
             localization?.kycSubmitWizardTitleForLevel(_targetLevel) ??
                 'Verification — level $_targetLevel',
@@ -113,7 +114,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             return Center(
               child: Text(
                 localization?.kycSubmitWizardInvalidLevel ?? 'Invalid level',
-                style: AppTextStyles.bodyMedium.copyWith(color: secondaryTextColor),
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: secondaryTextColor,
+                ),
               ),
             );
           }
@@ -127,14 +130,19 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
               if (controller.rejectionData.value?.message != null &&
                   controller.rejectionData.value!.message!.trim().isNotEmpty)
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: AppSpacing.sm),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: AppSpacing.sm,
+                  ),
                   padding: EdgeInsets.all(AppSpacing.md),
                   decoration: BoxDecoration(
                     color: isDark
                         ? AppColors.error.withValues(alpha: 0.15)
                         : AppColors.errorContainer,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    border: Border.all(color: AppColors.error.withValues(alpha: 0.4)),
+                    border: Border.all(
+                      color: AppColors.error.withValues(alpha: 0.4),
+                    ),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +180,10 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
               // Stepper Progress indicator
               if (hasDocs)
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: AppSpacing.md),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 18.w,
+                    vertical: AppSpacing.md,
+                  ),
                   child: Row(
                     children: List.generate(docs.length * 2 - 1, (index) {
                       if (index.isOdd) {
@@ -181,8 +192,12 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                             height: 2,
                             margin: const EdgeInsets.symmetric(horizontal: 4),
                             color: _currentStep > index ~/ 2
-                                ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
-                                : (isDark ? AppColors.darkDivider : AppColors.lightBorder),
+                                ? (isDark
+                                      ? AppColors.mainSoftBlue
+                                      : AppColors.brandViolet)
+                                : (isDark
+                                      ? AppColors.darkDivider
+                                      : AppColors.lightBorder),
                           ),
                         );
                       }
@@ -247,7 +262,8 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
       if (uploadedFile.existsSync()) {
         fileSize = uploadedFile.lengthSync();
         final lower = filePath.toLowerCase();
-        isImage = lower.endsWith('.jpg') ||
+        isImage =
+            lower.endsWith('.jpg') ||
             lower.endsWith('.jpeg') ||
             lower.endsWith('.png') ||
             lower.endsWith('.webp');
@@ -315,13 +331,15 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
         if (!isUploaded)
           Semantics(
             button: true,
-            label: localization?.kycSubmitWizardTapToUpload ??
+            label:
+                localization?.kycSubmitWizardTapToUpload ??
                 l10nPick(
                   context,
                   en: 'Tap to capture or upload $docLabel',
                   fa: 'برای تصویربرداری یا بارگذاری $docLabel لمس کنید',
                 ),
-            hint: localization?.kycSubmitWizardFileFormat ??
+            hint:
+                localization?.kycSubmitWizardFileFormat ??
                 'JPG, PNG, PDF — Max 20MB',
             child: Material(
               color: AppColors.transparent,
@@ -336,10 +354,14 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                   height: 200.h,
                   constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    color: isDark
+                        ? AppColors.darkSurface
+                        : AppColors.lightSurface,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.lightBorder,
                       width: 1.5,
                     ),
                     boxShadow: !isDark
@@ -460,10 +482,11 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                               height: 56.w,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: (isDark
-                                        ? AppColors.mainSoftBlue
-                                        : AppColors.brandViolet)
-                                    .withValues(alpha: 0.12),
+                                color:
+                                    (isDark
+                                            ? AppColors.mainSoftBlue
+                                            : AppColors.brandViolet)
+                                        .withValues(alpha: 0.12),
                               ),
                               child: Icon(
                                 Icons.cloud_upload_outlined,
@@ -530,10 +553,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                           child: Stack(
                             fit: StackFit.expand,
                             children: [
-                              Image.file(
-                                uploadedFile,
-                                fit: BoxFit.cover,
-                              ),
+                              Image.file(uploadedFile, fit: BoxFit.cover),
                               Positioned(
                                 top: 8,
                                 right: 8,
@@ -543,7 +563,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                                     vertical: 4.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.black.withValues(alpha: 0.7),
+                                    color: AppColors.black.withValues(
+                                      alpha: 0.7,
+                                    ),
                                     borderRadius: BorderRadius.circular(
                                       AppSpacing.radiusSm,
                                     ),
@@ -639,8 +661,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                                     : AppColors.lightBorder,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppSpacing.radiusMd),
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusMd,
+                                ),
                               ),
                             ),
                             icon: const Icon(Icons.refresh_rounded, size: 16),
@@ -811,11 +834,7 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
   Widget _buildTipRow(IconData icon, String text, bool isDark) {
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 13.sp,
-          color: AppColors.success,
-        ),
+        Icon(icon, size: 13.sp, color: AppColors.success),
         SizedBox(width: 6.w),
         Expanded(
           child: Text(
@@ -849,16 +868,19 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           ),
         ),
         SizedBox(height: AppSpacing.lg),
-        ...docs.map((doc) => _ReviewItem(
-              label: KycDocLabels.label(localization, doc),
-              fileName: _documents[doc]?.split('/').last ??
-                  localization?.kycSubmitWizardNotUploaded ??
-                  'Not uploaded',
-              isUploaded: _documents.containsKey(doc),
-              isDark: isDark,
-              primaryTextColor: primaryTextColor,
-              secondaryTextColor: secondaryTextColor,
-            )),
+        ...docs.map(
+          (doc) => _ReviewItem(
+            label: KycDocLabels.label(localization, doc),
+            fileName:
+                _documents[doc]?.split('/').last ??
+                localization?.kycSubmitWizardNotUploaded ??
+                'Not uploaded',
+            isUploaded: _documents.containsKey(doc),
+            isDark: isDark,
+            primaryTextColor: primaryTextColor,
+            secondaryTextColor: secondaryTextColor,
+          ),
+        ),
         SizedBox(height: AppSpacing.xl),
         Container(
           padding: EdgeInsets.all(AppSpacing.md),
@@ -873,13 +895,19 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
           ),
           child: Row(
             children: [
-              Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20.sp),
+              Icon(
+                Icons.warning_amber_rounded,
+                color: AppColors.warning,
+                size: 20.sp,
+              ),
               SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   localization?.kycSubmitWizardReviewNote ??
                       'After submission your documents are reviewed by an admin. This usually takes 1–2 business days.',
-                  style: AppTextStyles.bodySmall.copyWith(color: primaryTextColor),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: primaryTextColor,
+                  ),
                 ),
               ),
             ],
@@ -895,10 +923,12 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     bool isDark,
   ) {
     final isLastStep = _currentStep >= docs.length;
-    final currentDoc =
-        (!isLastStep && _currentStep < docs.length) ? docs[_currentStep] : null;
+    final currentDoc = (!isLastStep && _currentStep < docs.length)
+        ? docs[_currentStep]
+        : null;
     final canProceed =
-        isLastStep || (currentDoc != null && _documents.containsKey(currentDoc));
+        isLastStep ||
+        (currentDoc != null && _documents.containsKey(currentDoc));
 
     return Container(
       padding: EdgeInsets.all(AppSpacing.lg),
@@ -923,14 +953,16 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
             child: ElevatedButton(
               onPressed: canProceed
                   ? (isLastStep
-                      ? _submit
-                      : () {
-                          HapticFeedback.lightImpact();
-                          setState(() => _currentStep++);
-                        })
+                        ? _submit
+                        : () {
+                            HapticFeedback.lightImpact();
+                            setState(() => _currentStep++);
+                          })
                   : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                backgroundColor: isDark
+                    ? AppColors.mainSoftBlue
+                    : AppColors.brandViolet,
                 foregroundColor: isDark ? AppColors.deepBlack : AppColors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -947,7 +979,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                             width: 18,
                             height: 18,
                             child: CircularProgressIndicator(
-                              color: isDark ? AppColors.deepBlack : AppColors.white,
+                              color: isDark
+                                  ? AppColors.deepBlack
+                                  : AppColors.white,
                               strokeWidth: 2,
                             ),
                           ),
@@ -957,7 +991,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                               '${(controller.uploadProgress.value * 100).toInt()}%',
                               style: AppTextStyles.labelMedium.copyWith(
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.deepBlack : AppColors.white,
+                                color: isDark
+                                    ? AppColors.deepBlack
+                                    : AppColors.white,
                               ),
                             ),
                           ],
@@ -965,8 +1001,10 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                       )
                     : Text(
                         isLastStep
-                            ? (localization?.kycSubmitWizardSubmit ?? 'Submit documents')
-                            : (localization?.kycSubmitWizardContinue ?? 'Continue'),
+                            ? (localization?.kycSubmitWizardSubmit ??
+                                  'Submit documents')
+                            : (localization?.kycSubmitWizardContinue ??
+                                  'Continue'),
                         style: AppTextStyles.labelMedium.copyWith(
                           fontWeight: FontWeight.w700,
                           color: isDark ? AppColors.deepBlack : AppColors.white,
@@ -980,17 +1018,26 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
     );
   }
 
-  Future<void> _pickDocument(String docKey, bool isDark, Color primaryTextColor) async {
+  Future<void> _pickDocument(
+    String docKey,
+    bool isDark,
+    Color primaryTextColor,
+  ) async {
     final localization = AppLocalizations.of(context);
     final String? source = await showModalBottomSheet<String>(
       context: context,
       backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radiusXl),
+        ),
       ),
       builder: (ctx) => SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: AppSpacing.md),
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: AppSpacing.md,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1023,18 +1070,22 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: 48.h),
                   child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 2.h,
+                    ),
                     leading: Container(
                       width: 44.w,
                       height: 44.h,
                       decoration: BoxDecoration(
-                        color: (isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.brandViolet)
-                            .withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusMd),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                       child: Icon(
                         Icons.camera_alt_outlined,
@@ -1046,7 +1097,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                     ),
                     title: Text(
                       l10nPickAuto(
-                          en: 'Take a Photo (Camera)', fa: 'عکس‌برداری با دوربین'),
+                        en: 'Take a Photo (Camera)',
+                        fa: 'عکس‌برداری با دوربین',
+                      ),
                       style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: primaryTextColor,
@@ -1066,18 +1119,22 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: 48.h),
                   child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 2.h,
+                    ),
                     leading: Container(
                       width: 44.w,
                       height: 44.h,
                       decoration: BoxDecoration(
-                        color: (isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.brandViolet)
-                            .withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusMd),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                       child: Icon(
                         Icons.photo_library_outlined,
@@ -1089,7 +1146,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                     ),
                     title: Text(
                       l10nPickAuto(
-                          en: 'Choose from Gallery', fa: 'انتخاب تصویر از گالری'),
+                        en: 'Choose from Gallery',
+                        fa: 'انتخاب تصویر از گالری',
+                      ),
                       style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: primaryTextColor,
@@ -1109,18 +1168,22 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: 48.h),
                   child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 2.h,
+                    ),
                     leading: Container(
                       width: 44.w,
                       height: 44.h,
                       decoration: BoxDecoration(
-                        color: (isDark
-                                ? AppColors.mainSoftBlue
-                                : AppColors.brandViolet)
-                            .withValues(alpha: 0.12),
-                        borderRadius:
-                            BorderRadius.circular(AppSpacing.radiusMd),
+                        color:
+                            (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.brandViolet)
+                                .withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
                       ),
                       child: Icon(
                         Icons.picture_as_pdf_outlined,
@@ -1132,7 +1195,9 @@ class _KycSubmitWizardState extends State<KycSubmitWizard> {
                     ),
                     title: Text(
                       l10nPickAuto(
-                          en: 'Choose PDF Document', fa: 'انتخاب سند با فرمت PDF'),
+                        en: 'Choose PDF Document',
+                        fa: 'انتخاب سند با فرمت PDF',
+                      ),
                       style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: primaryTextColor,
@@ -1286,7 +1351,9 @@ class _ReviewItem extends StatelessWidget {
         ? Icons.error_outline_rounded
         : (isPdf ? Icons.picture_as_pdf_rounded : Icons.check_circle_rounded);
     final iconColor = isUploaded
-        ? (isPdf ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet) : AppColors.success)
+        ? (isPdf
+              ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+              : AppColors.success)
         : AppColors.error;
 
     return Semantics(
@@ -1298,7 +1365,9 @@ class _ReviewItem extends StatelessWidget {
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           border: Border.all(
-            color: isUploaded ? AppColors.success.withValues(alpha: 0.4) : AppColors.error,
+            color: isUploaded
+                ? AppColors.success.withValues(alpha: 0.4)
+                : AppColors.error,
           ),
         ),
         child: Row(

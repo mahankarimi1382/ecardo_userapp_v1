@@ -127,7 +127,8 @@ class LocalExperienceItemModel {
   }
 
   bool hasCapacityFor(int adults, int children) =>
-      (adults + children) <= remainingCapacity && (adults + children) >= minGuests;
+      (adults + children) <= remainingCapacity &&
+      (adults + children) >= minGuests;
 
   /// perPerson → (adult*price + child*childPrice) ; perGroup → flat price.
   double calculateTotal({required int adults, int children = 0}) {
@@ -141,34 +142,34 @@ class LocalExperienceItemModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'id': id,
-        'title': title,
-        'subtitle': subtitle,
-        'provider_name': providerName,
-        'city': city,
-        'type': type.wireName,
-        'price': price,
-        'child_price': childPrice,
-        'currency': currency,
-        'pricing_type': pricingType.wireName,
-        'duration_label': durationLabel,
-        'duration_minutes': durationMinutes,
-        'languages': languages,
-        'rating': rating,
-        'reviews_count': reviewsCount,
-        'highlights': highlights,
-        'meeting_point': meetingPoint,
-        'description': description,
-        'images': images,
-        'min_guests': minGuests,
-        'max_guests': maxGuests,
-        'remaining_capacity': remainingCapacity,
-        'available_time_slots': availableTimeSlots,
-        'skip_the_line': skipTheLine,
-        'free_cancellation': freeCancellation,
-        'cancellation_policy': cancellationPolicy.toJson(),
-      };
+    'schema_version': schemaVersion,
+    'id': id,
+    'title': title,
+    'subtitle': subtitle,
+    'provider_name': providerName,
+    'city': city,
+    'type': type.wireName,
+    'price': price,
+    'child_price': childPrice,
+    'currency': currency,
+    'pricing_type': pricingType.wireName,
+    'duration_label': durationLabel,
+    'duration_minutes': durationMinutes,
+    'languages': languages,
+    'rating': rating,
+    'reviews_count': reviewsCount,
+    'highlights': highlights,
+    'meeting_point': meetingPoint,
+    'description': description,
+    'images': images,
+    'min_guests': minGuests,
+    'max_guests': maxGuests,
+    'remaining_capacity': remainingCapacity,
+    'available_time_slots': availableTimeSlots,
+    'skip_the_line': skipTheLine,
+    'free_cancellation': freeCancellation,
+    'cancellation_policy': cancellationPolicy.toJson(),
+  };
 
   factory LocalExperienceItemModel.fromJson(Map<String, dynamic> json) {
     return LocalExperienceItemModel(
@@ -182,22 +183,35 @@ class LocalExperienceItemModel {
       price: (json['price'] as num?)?.toDouble() ?? 0.0,
       childPrice: (json['child_price'] as num?)?.toDouble() ?? 0.0,
       currency: json['currency'] as String? ?? 'USD',
-      pricingType: ExperiencePricingType.fromWireName(json['pricing_type'] as String?),
+      pricingType: ExperiencePricingType.fromWireName(
+        json['pricing_type'] as String?,
+      ),
       durationLabel: json['duration_label'] as String? ?? '',
       durationMinutes: json['duration_minutes'] as int? ?? 240,
       languages:
-          (json['languages'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+          (json['languages'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
       rating: (json['rating'] as num?)?.toDouble() ?? 4.8,
       reviewsCount: json['reviews_count'] as int? ?? 0,
       highlights:
-          (json['highlights'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+          (json['highlights'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
       meetingPoint: json['meeting_point'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      images: (json['images'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      images:
+          (json['images'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
       minGuests: json['min_guests'] as int? ?? 1,
       maxGuests: json['max_guests'] as int? ?? 12,
       remainingCapacity: json['remaining_capacity'] as int? ?? 8,
-      availableTimeSlots: (json['available_time_slots'] as List<dynamic>?)
+      availableTimeSlots:
+          (json['available_time_slots'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const ['09:00', '11:00', '14:00'],
@@ -205,7 +219,8 @@ class LocalExperienceItemModel {
       freeCancellation: json['free_cancellation'] as bool? ?? true,
       cancellationPolicy: json['cancellation_policy'] != null
           ? ExperienceCancellationPolicy.fromJson(
-              Map<String, dynamic>.from(json['cancellation_policy'] as Map))
+              Map<String, dynamic>.from(json['cancellation_policy'] as Map),
+            )
           : const ExperienceCancellationPolicy(lateCancelPenaltyPercent: 0.0),
     );
   }
@@ -266,15 +281,18 @@ class LocalBookingModel {
     ),
     String? voucherCode,
     String? qrPayload,
-  })  : refundDestinationWalletCurrency = refundDestinationWalletCurrency ?? currency,
-        voucherCode = voucherCode ?? bookingId,
-        qrPayload = qrPayload ?? 'ECARDO-LOCAL-PASS-$bookingId-$serviceId-$status';
+  }) : refundDestinationWalletCurrency =
+           refundDestinationWalletCurrency ?? currency,
+       voucherCode = voucherCode ?? bookingId,
+       qrPayload =
+           qrPayload ?? 'ECARDO-LOCAL-PASS-$bookingId-$serviceId-$status';
 
   bool get isCancelled => status == 'cancelled' || status == 'refunded';
   bool get canCancel => !isCancelled && status != 'completed';
 
-  DateTime get scheduledDateTime =>
-      serviceDate.add(Duration(hours: int.tryParse(serviceTime.split(':').first) ?? 9));
+  DateTime get scheduledDateTime => serviceDate.add(
+    Duration(hours: int.tryParse(serviceTime.split(':').first) ?? 9),
+  );
 
   ExperienceRefundCalculation calculateCancellationRefund({DateTime? atTime}) {
     return cancellationPolicy.calculateRefund(
@@ -319,31 +337,31 @@ class LocalBookingModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'schema_version': schemaVersion,
-        'booking_id': bookingId,
-        'service_id': serviceId,
-        'service_title': serviceTitle,
-        'provider_name': providerName,
-        'city': city,
-        'service_date': serviceDate.toIso8601String(),
-        'service_time': serviceTime,
-        'guests_count': guestsCount,
-        'children_count': childrenCount,
-        'total_amount': totalAmount,
-        'penalty_amount': penaltyAmount,
-        'refunded_amount': refundedAmount,
-        'currency': currency,
-        'refund_destination_wallet_currency': refundDestinationWalletCurrency,
-        'meeting_point': meetingPoint,
-        'provider_phone': providerPhone,
-        'status': status,
-        if (cancellationReason != null) 'cancellation_reason': cancellationReason,
-        'booked_at': bookedAt.toIso8601String(),
-        if (cancelledAt != null) 'cancelled_at': cancelledAt!.toIso8601String(),
-        'cancellation_policy': cancellationPolicy.toJson(),
-        'voucher_code': voucherCode,
-        'qr_payload': qrPayload,
-      };
+    'schema_version': schemaVersion,
+    'booking_id': bookingId,
+    'service_id': serviceId,
+    'service_title': serviceTitle,
+    'provider_name': providerName,
+    'city': city,
+    'service_date': serviceDate.toIso8601String(),
+    'service_time': serviceTime,
+    'guests_count': guestsCount,
+    'children_count': childrenCount,
+    'total_amount': totalAmount,
+    'penalty_amount': penaltyAmount,
+    'refunded_amount': refundedAmount,
+    'currency': currency,
+    'refund_destination_wallet_currency': refundDestinationWalletCurrency,
+    'meeting_point': meetingPoint,
+    'provider_phone': providerPhone,
+    'status': status,
+    if (cancellationReason != null) 'cancellation_reason': cancellationReason,
+    'booked_at': bookedAt.toIso8601String(),
+    if (cancelledAt != null) 'cancelled_at': cancelledAt!.toIso8601String(),
+    'cancellation_policy': cancellationPolicy.toJson(),
+    'voucher_code': voucherCode,
+    'qr_payload': qrPayload,
+  };
 
   factory LocalBookingModel.fromJson(Map<String, dynamic> json) {
     return LocalBookingModel(
@@ -377,7 +395,8 @@ class LocalBookingModel {
           : null,
       cancellationPolicy: json['cancellation_policy'] != null
           ? ExperienceCancellationPolicy.fromJson(
-              Map<String, dynamic>.from(json['cancellation_policy'] as Map))
+              Map<String, dynamic>.from(json['cancellation_policy'] as Map),
+            )
           : const ExperienceCancellationPolicy(lateCancelPenaltyPercent: 0.0),
       voucherCode: json['voucher_code'] as String?,
       qrPayload: json['qr_payload'] as String?,

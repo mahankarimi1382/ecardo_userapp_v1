@@ -26,12 +26,12 @@ class _TestSettingsService extends SettingsService {
 }
 
 List<void Function()> _authRegistrations() => [
-      () => registerController<SettingsService>(_TestSettingsService()),
-      () => registerController<SignInController>(_TestSignInController()),
-      () => registerController<EmailOtpLoginController>(
-            _TestEmailOtpLoginController(),
-          ),
-    ];
+  () => registerController<SettingsService>(_TestSettingsService()),
+  () => registerController<SignInController>(_TestSignInController()),
+  () => registerController<EmailOtpLoginController>(
+    _TestEmailOtpLoginController(),
+  ),
+];
 
 void main() {
   tearDown(resetHarness);

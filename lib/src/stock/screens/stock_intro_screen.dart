@@ -91,13 +91,12 @@ class StockIntroScreen extends StatelessWidget {
               padding: EdgeInsets.all(ECardoTokens.space4.r),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    ECardoTokens.warningBg(context),
-                    Colors.transparent,
-                  ],
+                  colors: [ECardoTokens.warningBg(context), Colors.transparent],
                 ),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusLg),
-                border: Border.all(color: ECardoTokens.warning(context).withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: ECardoTokens.warning(context).withValues(alpha: 0.3),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,10 +106,16 @@ class StockIntroScreen extends StatelessWidget {
                       Container(
                         padding: EdgeInsets.all(ECardoTokens.space2.r),
                         decoration: BoxDecoration(
-                          color: ECardoTokens.warning(context).withValues(alpha: 0.2),
+                          color: ECardoTokens.warning(
+                            context,
+                          ).withValues(alpha: 0.2),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.psychology_alt_rounded, color: ECardoTokens.warning(context), size: 20.sp),
+                        child: Icon(
+                          Icons.psychology_alt_rounded,
+                          color: ECardoTokens.warning(context),
+                          size: 20.sp,
+                        ),
                       ),
                       SizedBox(width: ECardoTokens.space3.w),
                       Expanded(
@@ -194,7 +199,11 @@ class StockIntroScreen extends StatelessWidget {
                   color: ECardoTokens.sand100(context),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.show_chart_rounded, color: ECardoTokens.sand600(context), size: 22.sp),
+                child: Icon(
+                  Icons.show_chart_rounded,
+                  color: ECardoTokens.sand600(context),
+                  size: 22.sp,
+                ),
               ),
               SizedBox(width: ECardoTokens.space3.w),
               Expanded(
@@ -235,14 +244,23 @@ class StockIntroScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, {required String titleFa, required String titleEn, required IconData icon}) {
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required String titleFa,
+    required String titleEn,
+    required IconData icon,
+  }) {
     return Row(
       children: [
         Icon(icon, color: ECardoTokens.brand500(context), size: 18.sp),
         SizedBox(width: ECardoTokens.space2.w),
         Text(
           l10nPick(context, fa: titleFa, en: titleEn),
-          style: TextStyle(fontSize: 13.5.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context)),
+          style: TextStyle(
+            fontSize: 13.5.sp,
+            fontWeight: FontWeight.w800,
+            color: ECardoTokens.ink(context),
+          ),
         ),
       ],
     );
@@ -260,7 +278,12 @@ class StockIntroScreen extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.8, crossAxisSpacing: 12, mainAxisSpacing: 12),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 1.8,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
       itemCount: markets.length,
       itemBuilder: (context, i) {
         final m = markets[i];
@@ -283,7 +306,12 @@ class StockIntroScreen extends StatelessWidget {
                 ),
                 child: Text(
                   m['code']!,
-                  style: TextStyle(fontSize: 10.5.sp, fontWeight: FontWeight.w900, fontFamily: 'monospace', color: ECardoTokens.brand700(context)),
+                  style: TextStyle(
+                    fontSize: 10.5.sp,
+                    fontWeight: FontWeight.w900,
+                    fontFamily: 'monospace',
+                    color: ECardoTokens.brand700(context),
+                  ),
                 ),
               ),
               SizedBox(width: 4.w),
@@ -298,7 +326,11 @@ class StockIntroScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.end,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 11.sp, fontWeight: FontWeight.w700, color: ECardoTokens.ink(context)),
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    fontWeight: FontWeight.w700,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
               ),
             ],
@@ -316,8 +348,10 @@ class StockIntroScreen extends StatelessWidget {
           icon: Icons.currency_exchange_rounded,
           titleFa: 'تسویه چندارزی آنی',
           titleEn: 'Instant Multi-Currency FX',
-          descFa: 'پرداخت به ریال (IRR)، تتر (USDT) یا دلار (USD) با نرخ برابری لحظه‌ای و بدون کارمزد تبدیل پنهان.',
-          descEn: 'Pay in IRR, USDT, or USD with transparent real-time FX rate snapshot and zero hidden spreads.',
+          descFa:
+              'پرداخت به ریال (IRR)، تتر (USDT) یا دلار (USD) با نرخ برابری لحظه‌ای و بدون کارمزد تبدیل پنهان.',
+          descEn:
+              'Pay in IRR, USDT, or USD with transparent real-time FX rate snapshot and zero hidden spreads.',
         ),
         SizedBox(height: ECardoTokens.space2.h),
         _buildFeatureTile(
@@ -325,8 +359,10 @@ class StockIntroScreen extends StatelessWidget {
           icon: Icons.tune_rounded,
           titleFa: 'انواع سفارش معاملاتی',
           titleEn: 'Market · Limit · Stop-Loss',
-          descFa: 'اجرای فوری به قیمت فعلی بازار، سفارش معین با قیمت هدف، یا حد ضرر خودکار برای مدیریت ریسک.',
-          descEn: 'Execute immediately at best market price, set disciplined limit orders, or place stop-loss for risk management.',
+          descFa:
+              'اجرای فوری به قیمت فعلی بازار، سفارش معین با قیمت هدف، یا حد ضرر خودکار برای مدیریت ریسک.',
+          descEn:
+              'Execute immediately at best market price, set disciplined limit orders, or place stop-loss for risk management.',
         ),
         SizedBox(height: ECardoTokens.space2.h),
         _buildFeatureTile(
@@ -334,8 +370,10 @@ class StockIntroScreen extends StatelessWidget {
           icon: Icons.pie_chart_rounded,
           titleFa: 'پایش لحظه‌ای دارایی',
           titleEn: 'Real-Time Portfolio Tracking',
-          descFa: 'نمایش تفکیکی سود و زیان محقق‌شده و غیرمحقق، ارزش روز holdings، و گزارش کامل معاملات.',
-          descEn: 'Granular asset breakdown showing realized/unrealized P&L, current valuations, and complete trade history.',
+          descFa:
+              'نمایش تفکیکی سود و زیان محقق‌شده و غیرمحقق، ارزش روز holdings، و گزارش کامل معاملات.',
+          descEn:
+              'Granular asset breakdown showing realized/unrealized P&L, current valuations, and complete trade history.',
         ),
         SizedBox(height: ECardoTokens.space2.h),
         _buildFeatureTile(
@@ -343,8 +381,10 @@ class StockIntroScreen extends StatelessWidget {
           icon: Icons.shield_rounded,
           titleFa: 'سنجش ریسک و مدیریت سرمایه',
           titleEn: 'Investor Protection & Risk Governance',
-          descFa: 'آزمونی جامع ۶ سوالی متناسب با سطح تحمل نوسان شما؛ اهرم‌های مجاز (1:1 تا 1:2) براساس امتثال.',
-          descEn: 'Comprehensive 6-question assessment tailored to your volatility tolerance; leverage tiers from conservative (1:1) to aggressive (1:2).',
+          descFa:
+              'آزمونی جامع ۶ سوالی متناسب با سطح تحمل نوسان شما؛ اهرم‌های مجاز (1:1 تا 1:2) براساس امتثال.',
+          descEn:
+              'Comprehensive 6-question assessment tailored to your volatility tolerance; leverage tiers from conservative (1:1) to aggressive (1:2).',
         ),
       ],
     );
@@ -375,7 +415,11 @@ class StockIntroScreen extends StatelessWidget {
               color: ECardoTokens.brand100(context),
               borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
             ),
-            child: Icon(icon, color: ECardoTokens.brand500(context), size: 18.sp),
+            child: Icon(
+              icon,
+              color: ECardoTokens.brand500(context),
+              size: 18.sp,
+            ),
           ),
           SizedBox(width: ECardoTokens.space3.w),
           Expanded(
@@ -384,12 +428,20 @@ class StockIntroScreen extends StatelessWidget {
               children: [
                 Text(
                   l10nPick(context, fa: titleFa, en: titleEn),
-                  style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context)),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w800,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   l10nPick(context, fa: descFa, en: descEn),
-                  style: TextStyle(fontSize: 11.sp, color: ECardoTokens.inkMuted(context), height: 1.4),
+                  style: TextStyle(
+                    fontSize: 11.sp,
+                    color: ECardoTokens.inkMuted(context),
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
@@ -418,13 +470,25 @@ class StockIntroScreen extends StatelessWidget {
                   color: ECardoTokens.infoBg(context),
                   borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                 ),
-                child: Icon(Icons.schedule_rounded, color: ECardoTokens.info(context), size: 18.sp),
+                child: Icon(
+                  Icons.schedule_rounded,
+                  color: ECardoTokens.info(context),
+                  size: 18.sp,
+                ),
               ),
               SizedBox(width: ECardoTokens.space2.w),
               Expanded(
                 child: Text(
-                  l10nPick(context, fa: 'قانون تسویه حساب T+2', en: 'T+2 Settlement Rule'),
-                  style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context)),
+                  l10nPick(
+                    context,
+                    fa: 'قانون تسویه حساب T+2',
+                    en: 'T+2 Settlement Rule',
+                  ),
+                  style: TextStyle(
+                    fontSize: 12.5.sp,
+                    fontWeight: FontWeight.w800,
+                    color: ECardoTokens.ink(context),
+                  ),
                 ),
               ),
             ],
@@ -467,28 +531,70 @@ class StockIntroScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.access_time_rounded, color: ECardoTokens.brand500(context), size: 18.sp),
+              Icon(
+                Icons.access_time_rounded,
+                color: ECardoTokens.brand500(context),
+                size: 18.sp,
+              ),
               SizedBox(width: ECardoTokens.space2.w),
               Text(
-                l10nPick(context, fa: 'ساعات فعالیت بازارها', en: 'Market Operating Hours'),
-                style: TextStyle(fontSize: 12.5.sp, fontWeight: FontWeight.w800, color: ECardoTokens.ink(context)),
+                l10nPick(
+                  context,
+                  fa: 'ساعات فعالیت بازارها',
+                  en: 'Market Operating Hours',
+                ),
+                style: TextStyle(
+                  fontSize: 12.5.sp,
+                  fontWeight: FontWeight.w800,
+                  color: ECardoTokens.ink(context),
+                ),
               ),
             ],
           ),
           SizedBox(height: ECardoTokens.space3.h),
-          _buildHourRow(context, 'NYSE / NASDAQ (USA)', 'Monday–Friday, 09:30–16:00 EST', 'دوشنبه الی جمعه, ۰۹:۳۰-۱۶:۰۰ به وقت نیویورک', '周一至周五 09:30–16:00 美东时间'),
+          _buildHourRow(
+            context,
+            'NYSE / NASDAQ (USA)',
+            'Monday–Friday, 09:30–16:00 EST',
+            'دوشنبه الی جمعه, ۰۹:۳۰-۱۶:۰۰ به وقت نیویورک',
+            '周一至周五 09:30–16:00 美东时间',
+          ),
           Divider(height: 18.h, color: ECardoTokens.border(context)),
-          _buildHourRow(context, 'LSE (UK)', 'Monday–Friday, 08:00–16:30 GMT', 'دوشنبه الی جمعه, ۰۸:۰۰-۱۶:۳۰ به وقت گرینویچ', '周一至周五 08:00–16:30 伦敦时间'),
+          _buildHourRow(
+            context,
+            'LSE (UK)',
+            'Monday–Friday, 08:00–16:30 GMT',
+            'دوشنبه الی جمعه, ۰۸:۰۰-۱۶:۳۰ به وقت گرینویچ',
+            '周一至周五 08:00–16:30 伦敦时间',
+          ),
           Divider(height: 18.h, color: ECardoTokens.border(context)),
-          _buildHourRow(context, 'HKEX (Hong Kong)', 'Monday–Friday, 09:30–16:00 HKT', 'دوشنبه الی جمعه, ۰۹:۳۰-۱۶:۰۰ به وقت هنگ‌کنگ', '周一至周五 09:30–16:00 香港时间'),
+          _buildHourRow(
+            context,
+            'HKEX (Hong Kong)',
+            'Monday–Friday, 09:30–16:00 HKT',
+            'دوشنبه الی جمعه, ۰۹:۳۰-۱۶:۰۰ به وقت هنگ‌کنگ',
+            '周一至周五 09:30–16:00 香港时间',
+          ),
           Divider(height: 18.h, color: ECardoTokens.border(context)),
-          _buildHourRow(context, 'TSE (Japan)', 'Monday–Friday, 09:00–11:30, 12:30–15:30 JST', 'دوشنبه الی جمعه, ۰۹:۰۰-۱۲:۰۰ و ۱۳:۰۰-۱۶:۰۰ به وقت توکیو', '周一至周五 09:00–11:30 和 12:30–15:30 东京时间'),
+          _buildHourRow(
+            context,
+            'TSE (Japan)',
+            'Monday–Friday, 09:00–11:30, 12:30–15:30 JST',
+            'دوشنبه الی جمعه, ۰۹:۰۰-۱۲:۰۰ و ۱۳:۰۰-۱۶:۰۰ به وقت توکیو',
+            '周一至周五 09:00–11:30 和 12:30–15:30 东京时间',
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildHourRow(BuildContext context, String label, String hoursEn, String hoursFa, String hoursZh) {
+  Widget _buildHourRow(
+    BuildContext context,
+    String label,
+    String hoursEn,
+    String hoursFa,
+    String hoursZh,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

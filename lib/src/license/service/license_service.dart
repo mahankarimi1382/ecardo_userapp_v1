@@ -9,14 +9,20 @@ class LicenseService extends getx.GetxService {
   final NetworkService _network = getx.Get.find<NetworkService>();
 
   /// Fetch license product catalog with optional category and search query
-  Future<List<LicenseProductItem>> getCatalog({String? category, String? search}) async {
+  Future<List<LicenseProductItem>> getCatalog({
+    String? category,
+    String? search,
+  }) async {
     String ep = '/user/licenses/catalog';
     final qp = <String>[];
     if (category != null && category != 'all') qp.add('category=$category');
-    if (search != null && search.isNotEmpty) qp.add('search=${Uri.encodeComponent(search)}');
+    if (search != null && search.isNotEmpty)
+      qp.add('search=${Uri.encodeComponent(search)}');
     if (qp.isNotEmpty) ep += '?${qp.join('&')}';
 
-    final ApiResponse<Map<String, dynamic>> res = await _network.get(endpoint: ep);
+    final ApiResponse<Map<String, dynamic>> res = await _network.get(
+      endpoint: ep,
+    );
     if (res.status == Status.completed && res.data != null) {
       final list = res.data!['data']?['products'] as List? ?? [];
       return list.map((item) => LicenseProductItem.fromJson(item)).toList();
@@ -46,11 +52,7 @@ class LicenseService extends getx.GetxService {
   }) async {
     final ApiResponse<Map<String, dynamic>> res = await _network.post(
       endpoint: '/user/licenses/orders',
-      data: {
-        'product_id': productId,
-        'tier_id': tierId,
-        'quantity': quantity,
-      },
+      data: {'product_id': productId, 'tier_id': tierId, 'quantity': quantity},
     );
 
     if (res.status == Status.completed && res.data != null) {

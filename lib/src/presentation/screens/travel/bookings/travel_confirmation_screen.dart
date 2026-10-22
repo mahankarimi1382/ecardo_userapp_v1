@@ -278,21 +278,28 @@ class TravelConfirmationScreen extends StatelessWidget {
                       height: 1.6,
                     ),
                   ),
-                  if (order.details['esim_iccid']?.trim().isNotEmpty == true) ...[
+                  if (order.details['esim_iccid']?.trim().isNotEmpty ==
+                      true) ...[
                     SizedBox(height: 12.h),
                     SelectableText(
                       'ICCID: ${order.details['esim_iccid']}',
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ],
-                  if (order.details['esim_sm_dp']?.trim().isNotEmpty == true) ...[
+                  if (order.details['esim_sm_dp']?.trim().isNotEmpty ==
+                      true) ...[
                     SizedBox(height: 6.h),
                     SelectableText(
                       'SM-DP+: ${order.details['esim_sm_dp']}',
-                      style: TextStyle(color: TravelTheme.muted, fontSize: 12.sp),
+                      style: TextStyle(
+                        color: TravelTheme.muted,
+                        fontSize: 12.sp,
+                      ),
                     ),
                   ],
-                  if (order.details['esim_activation_code']?.trim().isNotEmpty ==
+                  if (order.details['esim_activation_code']
+                          ?.trim()
+                          .isNotEmpty ==
                       true) ...[
                     SizedBox(height: 10.h),
                     SelectableText(
@@ -312,9 +319,7 @@ class TravelConfirmationScreen extends StatelessWidget {
                           if (!context.mounted) return;
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(
-                                localization.dynamicPasswordCopied,
-                              ),
+                              content: Text(localization.dynamicPasswordCopied),
                             ),
                           );
                         },
@@ -483,9 +488,7 @@ String travelVoucherData(TravelOrder order) {
   final lpa = order.details['esim_qr_payload']?.trim().isNotEmpty == true
       ? order.details['esim_qr_payload']!.trim()
       : order.details['esim_activation_code']?.trim();
-  if (order.type == TravelProductType.esim &&
-      lpa != null &&
-      lpa.isNotEmpty) {
+  if (order.type == TravelProductType.esim && lpa != null && lpa.isNotEmpty) {
     return lpa;
   }
   return [
@@ -595,17 +598,14 @@ Future<void> _showRefundRequestDialog(
                 ),
                 SizedBox(height: 10.h),
               ],
-              Text(
-                () {
-                  final amt =
-                      '${eligibility.refundable.amount} ${eligibility.refundable.currency}';
-                  final code = Localizations.localeOf(context).languageCode;
-                  if (code == 'fa') return 'برآورد مبلغ قابل استرداد: $amt';
-                  if (code == 'ar') return 'المبلغ المتوقع للاسترداد: $amt';
-                  return 'Estimated refund: $amt';
-                }(),
-                style: const TextStyle(fontWeight: FontWeight.w700),
-              ),
+              Text(() {
+                final amt =
+                    '${eligibility.refundable.amount} ${eligibility.refundable.currency}';
+                final code = Localizations.localeOf(context).languageCode;
+                if (code == 'fa') return 'برآورد مبلغ قابل استرداد: $amt';
+                if (code == 'ar') return 'المبلغ المتوقع للاسترداد: $amt';
+                return 'Estimated refund: $amt';
+              }(), style: const TextStyle(fontWeight: FontWeight.w700)),
               if (eligibility.requiresSupplierReview) ...[
                 SizedBox(height: 6.h),
                 Text(
@@ -884,7 +884,6 @@ class _ConfirmationRow extends StatelessWidget {
   }
 }
 
-
 class _OrderTimelineSection extends StatefulWidget {
   final TravelOrder order;
   const _OrderTimelineSection({required this.order});
@@ -911,10 +910,13 @@ class _OrderTimelineSectionState extends State<_OrderTimelineSection> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
             padding: EdgeInsets.symmetric(vertical: 12),
-            child: Center(child: SizedBox(
-              width: 24, height: 24,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )),
+            child: Center(
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
           );
         }
         if (timeline == null || timeline.events.isEmpty) {
@@ -924,15 +926,12 @@ class _OrderTimelineSectionState extends State<_OrderTimelineSection> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                () {
-                  final code = Localizations.localeOf(context).languageCode;
-                  if (code == 'fa') return 'وضعیت سفارش';
-                  if (code == 'ar') return 'حالة الطلب';
-                  return 'Order timeline';
-                }(),
-                style: const TextStyle(fontWeight: FontWeight.w900),
-              ),
+              Text(() {
+                final code = Localizations.localeOf(context).languageCode;
+                if (code == 'fa') return 'وضعیت سفارش';
+                if (code == 'ar') return 'حالة الطلب';
+                return 'Order timeline';
+              }(), style: const TextStyle(fontWeight: FontWeight.w900)),
               const SizedBox(height: 12),
               ...timeline.events.map((e) {
                 return Padding(
@@ -940,17 +939,33 @@ class _OrderTimelineSectionState extends State<_OrderTimelineSection> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.circle, size: 10, color: TravelTheme.purple),
+                      const Icon(
+                        Icons.circle,
+                        size: 10,
+                        color: TravelTheme.purple,
+                      ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(e.message, style: const TextStyle(fontWeight: FontWeight.w600)),
+                            Text(
+                              e.message,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             if (e.timestamp != null)
                               Text(
-                                e.timestamp!.toLocal().toString().split('.').first,
-                                style: TextStyle(color: TravelTheme.muted, fontSize: 11),
+                                e.timestamp!
+                                    .toLocal()
+                                    .toString()
+                                    .split('.')
+                                    .first,
+                                style: TextStyle(
+                                  color: TravelTheme.muted,
+                                  fontSize: 11,
+                                ),
                               ),
                           ],
                         ),

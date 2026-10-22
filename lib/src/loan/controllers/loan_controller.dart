@@ -77,8 +77,9 @@ class LoanController extends GetxController {
     int gracePeriodMonths = 0,
   }) {
     if (principal <= 0 || tenureMonths <= 0) return 0.0;
-    final graceMonths =
-        gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1)).toInt();
+    final graceMonths = gracePeriodMonths
+        .clamp(0, math.max(0, tenureMonths - 1))
+        .toInt();
     final amortizingMonths = math.max(1, tenureMonths - graceMonths);
 
     if (annualInterestRatePct <= 0) return principal / amortizingMonths;
@@ -100,8 +101,9 @@ class LoanController extends GetxController {
     if (principal <= 0 || tenureMonths <= 0) return 0.0;
     // `int.clamp` is declared on `num`, so it returns `num`, not `int`.
     // Without this the value fails to satisfy the `int` parameter below.
-    final graceMonths =
-        gracePeriodMonths.clamp(0, math.max(0, tenureMonths - 1)).toInt();
+    final graceMonths = gracePeriodMonths
+        .clamp(0, math.max(0, tenureMonths - 1))
+        .toInt();
     final monthlyRate = (annualInterestRatePct / 100.0) / 12.0;
     final graceInterest = graceMonths * (principal * monthlyRate);
 
@@ -112,7 +114,9 @@ class LoanController extends GetxController {
       gracePeriodMonths: graceMonths,
     );
     final amortizingMonths = math.max(1, tenureMonths - graceMonths);
-    return principal + graceInterest + math.max(0.0, (emi * amortizingMonths) - principal);
+    return principal +
+        graceInterest +
+        math.max(0.0, (emi * amortizingMonths) - principal);
   }
 
   /// Fetch product catalog
@@ -146,185 +150,185 @@ class LoanController extends GetxController {
 
   /// Default loan products according to Loans & Credit specification
   static List<LoanProductModel> get defaultProducts => const [
-        LoanProductModel(
-          id: 1,
-          name: 'Crypto-backed loan',
-          audience: 'PERSONAL',
-          minAmount: 500,
-          maxAmount: 100000,
-          tenureOptions: [3, 6, 12, 24],
-          interestRatePct: 14.0,
-          requiredCollateralType: 'USDT',
-          feePct: 1.0,
-          lateFeeDailyPct: 0.067,
-          lateFeeCapPct: 2.0,
-          slaTag: 'Fastest',
-          tagline: 'Lock USDT, borrow USD · no credit check',
-          collateralRatioPct: 150.0,
-          requiredKycTier: 1,
-        ),
-        LoanProductModel(
-          id: 2,
-          name: 'Business loan',
-          audience: 'BUSINESS',
-          minAmount: 1000,
-          maxAmount: 50000,
-          tenureOptions: [6, 12, 24],
-          interestRatePct: 20.0,
-          requiredCollateralType: null,
-          feePct: 1.0,
-          lateFeeDailyPct: 0.067,
-          lateFeeCapPct: 2.0,
-          slaTag: '5 working days',
-          tagline: 'For registered companies · documents needed',
-          collateralRatioPct: 0.0,
-          requiredKycTier: 3,
-        ),
-        LoanProductModel(
-          id: 3,
-          name: 'Personal micro-loan',
-          audience: 'PERSONAL',
-          minAmount: 100,
-          maxAmount: 5000,
-          tenureOptions: [3, 6, 12],
-          interestRatePct: 24.0,
-          requiredCollateralType: null,
-          feePct: 1.0,
-          lateFeeDailyPct: 0.067,
-          lateFeeCapPct: 2.0,
-          slaTag: '2 working days',
-          tagline: 'For KYC tier 2 and above',
-          collateralRatioPct: 0.0,
-          requiredKycTier: 2,
-        ),
-      ];
+    LoanProductModel(
+      id: 1,
+      name: 'Crypto-backed loan',
+      audience: 'PERSONAL',
+      minAmount: 500,
+      maxAmount: 100000,
+      tenureOptions: [3, 6, 12, 24],
+      interestRatePct: 14.0,
+      requiredCollateralType: 'USDT',
+      feePct: 1.0,
+      lateFeeDailyPct: 0.067,
+      lateFeeCapPct: 2.0,
+      slaTag: 'Fastest',
+      tagline: 'Lock USDT, borrow USD · no credit check',
+      collateralRatioPct: 150.0,
+      requiredKycTier: 1,
+    ),
+    LoanProductModel(
+      id: 2,
+      name: 'Business loan',
+      audience: 'BUSINESS',
+      minAmount: 1000,
+      maxAmount: 50000,
+      tenureOptions: [6, 12, 24],
+      interestRatePct: 20.0,
+      requiredCollateralType: null,
+      feePct: 1.0,
+      lateFeeDailyPct: 0.067,
+      lateFeeCapPct: 2.0,
+      slaTag: '5 working days',
+      tagline: 'For registered companies · documents needed',
+      collateralRatioPct: 0.0,
+      requiredKycTier: 3,
+    ),
+    LoanProductModel(
+      id: 3,
+      name: 'Personal micro-loan',
+      audience: 'PERSONAL',
+      minAmount: 100,
+      maxAmount: 5000,
+      tenureOptions: [3, 6, 12],
+      interestRatePct: 24.0,
+      requiredCollateralType: null,
+      feePct: 1.0,
+      lateFeeDailyPct: 0.067,
+      lateFeeCapPct: 2.0,
+      slaTag: '2 working days',
+      tagline: 'For KYC tier 2 and above',
+      collateralRatioPct: 0.0,
+      requiredKycTier: 2,
+    ),
+  ];
 
   /// Sample active loan case LN-2208 according to loan_detail.html
   static LoanCaseModel get sampleActiveLoan => LoanCaseModel(
-        id: 2208,
-        caseNo: 'LN-2208',
-        borrowerId: 101,
-        product: defaultProducts.first,
-        requestedAmount: 10000.0,
-        tenureMonths: 6,
-        status: 'ACTIVE',
-        customCoveragePct: 219.0,
-        customCollateralValueUsd: 15000.0,
-        collaterals: const [
-          LoanCollateralModel(
-            id: 1,
-            type: 'CRYPTO',
-            asset: 'USDT',
-            amount: 15000.0,
-            status: 'LOCKED',
-          ),
-        ],
-        installments: [
-          LoanInstallmentModel(
-            id: 1,
-            seq: 1,
-            dueDate: DateTime(2026, 8, 12),
-            amount: 1140.0,
-            principalPart: 1000.0,
-            interestPart: 140.0,
-            paidAmount: 1140.0,
-            lateFeeAccrued: 0.0,
-            status: 'PAID',
-          ),
-          LoanInstallmentModel(
-            id: 2,
-            seq: 2,
-            dueDate: DateTime(2026, 9, 12),
-            amount: 1140.0,
-            principalPart: 1000.0,
-            interestPart: 140.0,
-            paidAmount: 1140.0,
-            lateFeeAccrued: 0.0,
-            status: 'PAID',
-          ),
-          LoanInstallmentModel(
-            id: 3,
-            seq: 3,
-            dueDate: DateTime(2026, 10, 12),
-            amount: 1140.0,
-            principalPart: 1000.0,
-            interestPart: 140.0,
-            paidAmount: 0.0,
-            lateFeeAccrued: 0.0,
-            status: 'PENDING',
-          ),
-          LoanInstallmentModel(
-            id: 4,
-            seq: 4,
-            dueDate: DateTime(2026, 11, 12),
-            amount: 1140.0,
-            principalPart: 1000.0,
-            interestPart: 140.0,
-            paidAmount: 0.0,
-            lateFeeAccrued: 0.0,
-            status: 'PENDING',
-          ),
-          LoanInstallmentModel(
-            id: 5,
-            seq: 5,
-            dueDate: DateTime(2026, 12, 12),
-            amount: 1140.0,
-            principalPart: 1000.0,
-            interestPart: 140.0,
-            paidAmount: 0.0,
-            lateFeeAccrued: 0.0,
-            status: 'PENDING',
-          ),
-          LoanInstallmentModel(
-            id: 6,
-            seq: 6,
-            dueDate: DateTime(2027, 1, 12),
-            amount: 1140.0,
-            principalPart: 1000.0,
-            interestPart: 140.0,
-            paidAmount: 0.0,
-            lateFeeAccrued: 0.0,
-            status: 'PENDING',
-          ),
-        ],
-        events: const [],
-      );
+    id: 2208,
+    caseNo: 'LN-2208',
+    borrowerId: 101,
+    product: defaultProducts.first,
+    requestedAmount: 10000.0,
+    tenureMonths: 6,
+    status: 'ACTIVE',
+    customCoveragePct: 219.0,
+    customCollateralValueUsd: 15000.0,
+    collaterals: const [
+      LoanCollateralModel(
+        id: 1,
+        type: 'CRYPTO',
+        asset: 'USDT',
+        amount: 15000.0,
+        status: 'LOCKED',
+      ),
+    ],
+    installments: [
+      LoanInstallmentModel(
+        id: 1,
+        seq: 1,
+        dueDate: DateTime(2026, 8, 12),
+        amount: 1140.0,
+        principalPart: 1000.0,
+        interestPart: 140.0,
+        paidAmount: 1140.0,
+        lateFeeAccrued: 0.0,
+        status: 'PAID',
+      ),
+      LoanInstallmentModel(
+        id: 2,
+        seq: 2,
+        dueDate: DateTime(2026, 9, 12),
+        amount: 1140.0,
+        principalPart: 1000.0,
+        interestPart: 140.0,
+        paidAmount: 1140.0,
+        lateFeeAccrued: 0.0,
+        status: 'PAID',
+      ),
+      LoanInstallmentModel(
+        id: 3,
+        seq: 3,
+        dueDate: DateTime(2026, 10, 12),
+        amount: 1140.0,
+        principalPart: 1000.0,
+        interestPart: 140.0,
+        paidAmount: 0.0,
+        lateFeeAccrued: 0.0,
+        status: 'PENDING',
+      ),
+      LoanInstallmentModel(
+        id: 4,
+        seq: 4,
+        dueDate: DateTime(2026, 11, 12),
+        amount: 1140.0,
+        principalPart: 1000.0,
+        interestPart: 140.0,
+        paidAmount: 0.0,
+        lateFeeAccrued: 0.0,
+        status: 'PENDING',
+      ),
+      LoanInstallmentModel(
+        id: 5,
+        seq: 5,
+        dueDate: DateTime(2026, 12, 12),
+        amount: 1140.0,
+        principalPart: 1000.0,
+        interestPart: 140.0,
+        paidAmount: 0.0,
+        lateFeeAccrued: 0.0,
+        status: 'PENDING',
+      ),
+      LoanInstallmentModel(
+        id: 6,
+        seq: 6,
+        dueDate: DateTime(2027, 1, 12),
+        amount: 1140.0,
+        principalPart: 1000.0,
+        interestPart: 140.0,
+        paidAmount: 0.0,
+        lateFeeAccrued: 0.0,
+        status: 'PENDING',
+      ),
+    ],
+    events: const [],
+  );
 
   /// Sample warning loan case LN-2209 according to collateral_warning.html
   static LoanCaseModel get sampleWarningLoan => LoanCaseModel(
-        id: 2209,
-        caseNo: 'LN-2209',
-        borrowerId: 101,
-        product: defaultProducts.first,
-        requestedAmount: 10000.0,
-        tenureMonths: 6,
-        status: 'ACTIVE',
-        customCoveragePct: 118.0,
-        customCollateralValueUsd: 8071.0,
-        collaterals: const [
-          LoanCollateralModel(
-            id: 2,
-            type: 'CRYPTO',
-            asset: 'USDT',
-            amount: 8071.0,
-            status: 'LOCKED',
-          ),
-        ],
-        installments: [
-          LoanInstallmentModel(
-            id: 11,
-            seq: 1,
-            dueDate: DateTime(2026, 10, 12),
-            amount: 6840.0,
-            principalPart: 6840.0,
-            interestPart: 0.0,
-            paidAmount: 0.0,
-            lateFeeAccrued: 0.0,
-            status: 'PENDING',
-          ),
-        ],
-        events: const [],
-      );
+    id: 2209,
+    caseNo: 'LN-2209',
+    borrowerId: 101,
+    product: defaultProducts.first,
+    requestedAmount: 10000.0,
+    tenureMonths: 6,
+    status: 'ACTIVE',
+    customCoveragePct: 118.0,
+    customCollateralValueUsd: 8071.0,
+    collaterals: const [
+      LoanCollateralModel(
+        id: 2,
+        type: 'CRYPTO',
+        asset: 'USDT',
+        amount: 8071.0,
+        status: 'LOCKED',
+      ),
+    ],
+    installments: [
+      LoanInstallmentModel(
+        id: 11,
+        seq: 1,
+        dueDate: DateTime(2026, 10, 12),
+        amount: 6840.0,
+        principalPart: 6840.0,
+        interestPart: 0.0,
+        paidAmount: 0.0,
+        lateFeeAccrued: 0.0,
+        status: 'PENDING',
+      ),
+    ],
+    events: const [],
+  );
 
   /// Fetch user's loan cases
   Future<void> fetchMyCases() async {
@@ -348,7 +352,8 @@ class LoanController extends GetxController {
     try {
       isLoadingDetail.value = true;
       final res = await _api.getCase(id);
-      selectedCase.value = res ?? (id == 2209 ? sampleWarningLoan : sampleActiveLoan);
+      selectedCase.value =
+          res ?? (id == 2209 ? sampleWarningLoan : sampleActiveLoan);
     } catch (_) {
       selectedCase.value = id == 2209 ? sampleWarningLoan : sampleActiveLoan;
     } finally {
@@ -406,7 +411,8 @@ class LoanController extends GetxController {
           // Demo fallback simulation
           final newCase = LoanCaseModel(
             id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-            caseNo: 'LN-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
+            caseNo:
+                'LN-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
             borrowerId: 101,
             product: product,
             requestedAmount: amount,
@@ -446,7 +452,11 @@ class LoanController extends GetxController {
   }
 
   /// Post cash collateral
-  Future<bool> postCashCollateral(int caseId, double amount, String asset) async {
+  Future<bool> postCashCollateral(
+    int caseId,
+    double amount,
+    String asset,
+  ) async {
     try {
       final ok = await _api.postCashCollateral(caseId, amount, asset);
       if (ok) await fetchCase(caseId);
@@ -458,7 +468,11 @@ class LoanController extends GetxController {
   }
 
   /// Post crypto collateral
-  Future<bool> postCryptoCollateral(int caseId, double amount, String asset) async {
+  Future<bool> postCryptoCollateral(
+    int caseId,
+    double amount,
+    String asset,
+  ) async {
     try {
       final ok = await _api.postCryptoCollateral(caseId, amount, asset);
       if (ok) await fetchCase(caseId);
@@ -519,7 +533,10 @@ class LoanController extends GetxController {
         return inst;
       }).toList();
 
-      final newOutstanding = (c.outstandingAmount - paidThisTime).clamp(0.0, double.infinity);
+      final newOutstanding = (c.outstandingAmount - paidThisTime).clamp(
+        0.0,
+        double.infinity,
+      );
       final hasUnpaid = updatedInstallments.any((i) => i.status != 'PAID');
       selectedCase.value = LoanCaseModel(
         id: c.id,

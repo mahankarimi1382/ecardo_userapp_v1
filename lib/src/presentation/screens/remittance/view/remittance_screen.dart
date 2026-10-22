@@ -28,14 +28,20 @@ class RemittanceScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: isDark
+            ? AppColors.darkSurface
+            : AppColors.lightSurface,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
         leading: BackButton(
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          color: isDark
+              ? AppColors.darkTextPrimary
+              : AppColors.lightTextPrimary,
           onPressed: () {
             if (controller.currentStep.value > 0) {
               controller.previousStep();
@@ -44,10 +50,24 @@ class RemittanceScreen extends StatelessWidget {
             }
           },
         ),
-        title: Text(l.remittanceTitle, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)),
+        title: Text(
+          l.remittanceTitle,
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
+          ),
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.track_changes, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            icon: Icon(
+              Icons.track_changes,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+            ),
             tooltip: l10nPick(
               context,
               en: 'Track remittance',
@@ -60,7 +80,12 @@ class RemittanceScreen extends StatelessWidget {
             onPressed: () => Get.toNamed(BaseRoute.remittanceTrack),
           ),
           IconButton(
-            icon: Icon(Icons.history, color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+            icon: Icon(
+              Icons.history,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
+            ),
             onPressed: () => Get.toNamed(BaseRoute.remittanceHistory),
           ),
         ],
@@ -71,39 +96,56 @@ class RemittanceScreen extends StatelessWidget {
         // Previously the entire body (including the AppBar) was replaced
         // by a CircularProgressIndicator, leaving the user with no way
         // to press Back / History.
-        return Column(children: [
-          RemittanceStepper(currentStep: controller.currentStep.value),
-          Expanded(
-            child: controller.isMethodsLoading.value
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 16.w, vertical: 12.h),
-                    child: _buildStep(controller),
-                  ),
-          ),
-          _buildBottomButton(context, controller, l),
-        ]);
+        return Column(
+          children: [
+            RemittanceStepper(currentStep: controller.currentStep.value),
+            Expanded(
+              child: controller.isMethodsLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 12.h,
+                      ),
+                      child: _buildStep(controller),
+                    ),
+            ),
+            _buildBottomButton(context, controller, l),
+          ],
+        );
       }),
     );
   }
 
   Widget _buildStep(RemittanceController c) {
     switch (c.currentStep.value) {
-      case 0: return const RemittanceMethodSection();
-      case 1: return const RemittanceSenderSection();
-      case 2: return const RemittanceReceiverSection();
-      case 3: return const RemittanceReviewSection();
-      case 4: return const RemittanceSuccessSection();
-      default: return const SizedBox.shrink();
+      case 0:
+        return const RemittanceMethodSection();
+      case 1:
+        return const RemittanceSenderSection();
+      case 2:
+        return const RemittanceReceiverSection();
+      case 3:
+        return const RemittanceReviewSection();
+      case 4:
+        return const RemittanceSuccessSection();
+      default:
+        return const SizedBox.shrink();
     }
   }
 
-  Widget _buildBottomButton(BuildContext context, RemittanceController c, AppLocalizations l) {
+  Widget _buildBottomButton(
+    BuildContext context,
+    RemittanceController c,
+    AppLocalizations l,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Obx(() {
       final step = c.currentStep.value;
-      final loading = c.isQuoteLoading.value || c.isSubmitLoading.value || c.isUploadLoading.value;
+      final loading =
+          c.isQuoteLoading.value ||
+          c.isSubmitLoading.value ||
+          c.isUploadLoading.value;
       String text;
       VoidCallback? onPressed;
 
@@ -129,7 +171,11 @@ class RemittanceScreen extends StatelessWidget {
                 c.selectedSenderCountry.value.isNotEmpty) {
               c.nextStep();
             } else {
-              Get.snackbar(l.remittanceError, l.remittanceErrCompleteSender, snackPosition: SnackPosition.BOTTOM);
+              Get.snackbar(
+                l.remittanceError,
+                l.remittanceErrCompleteSender,
+                snackPosition: SnackPosition.BOTTOM,
+              );
             }
           };
           break;
@@ -143,15 +189,20 @@ class RemittanceScreen extends StatelessWidget {
           break;
         case 3:
           text = l.remittanceSubmitRequest;
-          onPressed = loading ? null : () async {
-            if (await c.createRemittance()) c.nextStep();
-          };
+          onPressed = loading
+              ? null
+              : () async {
+                  if (await c.createRemittance()) c.nextStep();
+                };
           break;
         case 4:
           text = loading ? l.remittanceUploading : l.remittanceUploadDocuments;
-          onPressed = loading ? null : () async {
-            if (await c.uploadDocuments()) Get.offAllNamed(BaseRoute.navigation);
-          };
+          onPressed = loading
+              ? null
+              : () async {
+                  if (await c.uploadDocuments())
+                    Get.offAllNamed(BaseRoute.navigation);
+                };
           break;
         default:
           text = l.remittanceContinue;
@@ -164,7 +215,9 @@ class RemittanceScreen extends StatelessWidget {
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           boxShadow: [
             BoxShadow(
-              color: (isDark ? Colors.black : AppColors.black).withValues(alpha: isDark ? 0.25 : 0.05),
+              color: (isDark ? Colors.black : AppColors.black).withValues(
+                alpha: isDark ? 0.25 : 0.05,
+              ),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -177,14 +230,31 @@ class RemittanceScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onPressed,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.brandViolet : AppColors.lightPrimary,
+                backgroundColor: isDark
+                    ? AppColors.brandViolet
+                    : AppColors.lightPrimary,
                 foregroundColor: AppColors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 elevation: 0,
               ),
               child: loading && step != 4
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                  : Text(text, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w700)),
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      text,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
             ),
           ),
         ),

@@ -28,7 +28,8 @@ class ApiResponseHandler {
     if (body == null) return false;
     final status = body!['status'];
     if (status is String) {
-      return status.toLowerCase() == 'success' || status.toLowerCase() == 'true';
+      return status.toLowerCase() == 'success' ||
+          status.toLowerCase() == 'true';
     }
     if (status is bool) return status;
     return false;

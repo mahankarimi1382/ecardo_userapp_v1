@@ -45,12 +45,18 @@ class P2pBuySellAdScreen extends StatelessWidget {
     final themeColor = isSellMode ? rubyRed : emeraldGreen;
 
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: const CommonDefaultAppBar(),
       body: Obx(() {
         if (controller.isPageLoading.value && controller.adData.value == null) {
@@ -80,16 +86,20 @@ class P2pBuySellAdScreen extends StatelessWidget {
         final traderName = (ad.advertiser?.fullName?.trim().isNotEmpty ?? false)
             ? ad.advertiser!.fullName!
             : (ad.advertiser?.username ?? '--');
-        final avatarText = (ad.advertiser?.avatarText?.trim().isNotEmpty ?? false)
+        final avatarText =
+            (ad.advertiser?.avatarText?.trim().isNotEmpty ?? false)
             ? ad.advertiser!.avatarText!
-            : (traderName.isNotEmpty ? traderName.substring(0, 1).toUpperCase() : 'T');
+            : (traderName.isNotEmpty
+                  ? traderName.substring(0, 1).toUpperCase()
+                  : 'T');
         final isVerified = ad.advertiser?.isVerifiedTrader ?? false;
 
         return Column(
           children: [
             SizedBox(height: 16.h),
             CommonAppBar(
-              title: '${isSellMode ? localization.p2pSell : localization.p2pBuy} $titleCode',
+              title:
+                  '${isSellMode ? localization.p2pSell : localization.p2pBuy} $titleCode',
               isBackLogicApply: true,
               backLogicFunction: Get.back,
             ),
@@ -106,11 +116,15 @@ class P2pBuySellAdScreen extends StatelessWidget {
                       padding: EdgeInsets.all(14.w),
                       decoration: BoxDecoration(
                         color: cardBg,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg.r,
+                        ),
                         border: Border.all(color: borderColor),
                         boxShadow: [
                           BoxShadow(
-                            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                            color: isDark
+                                ? AppColors.darkShadow
+                                : AppColors.lightShadow,
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
@@ -145,7 +159,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                           SizedBox(height: 10.h),
                           Divider(
                             height: 1,
-                            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                            color: isDark
+                                ? AppColors.darkDivider
+                                : AppColors.lightDivider,
                           ),
                           SizedBox(height: 10.h),
                           Row(
@@ -182,11 +198,15 @@ class P2pBuySellAdScreen extends StatelessWidget {
                       padding: EdgeInsets.all(16.w),
                       decoration: BoxDecoration(
                         color: cardBg,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXl.r,
+                        ),
                         border: Border.all(color: borderColor),
                         boxShadow: [
                           BoxShadow(
-                            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
+                            color: isDark
+                                ? AppColors.darkShadow
+                                : AppColors.lightShadow,
                             blurRadius: 12,
                             offset: const Offset(0, 3),
                           ),
@@ -198,7 +218,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                           // Pay Field with "All / Max" Quick Fill Button
                           _buildAmountFieldWithMax(
                             context: context,
-                            title: isSellMode ? localization.p2pYouSell : localization.p2pYouPay,
+                            title: isSellMode
+                                ? localization.p2pYouSell
+                                : localization.p2pYouPay,
                             controller: controller.payController,
                             suffixText: controller.primaryCode,
                             suffixSymbol: controller.primarySymbol,
@@ -209,8 +231,13 @@ class P2pBuySellAdScreen extends StatelessWidget {
                               final max = controller.maxOrderLimit;
                               if (max != null && max > 0) {
                                 HapticFeedback.selectionClick();
-                                controller.payController.text = max.toStringAsFixed(max.truncateToDouble() == max ? 0 : 2);
-                                controller.onPayAmountChanged(controller.payController.text);
+                                controller.payController.text = max
+                                    .toStringAsFixed(
+                                      max.truncateToDouble() == max ? 0 : 2,
+                                    );
+                                controller.onPayAmountChanged(
+                                  controller.payController.text,
+                                );
                               }
                             },
                           ),
@@ -247,10 +274,16 @@ class P2pBuySellAdScreen extends StatelessWidget {
                               height: 48.h,
                               padding: EdgeInsets.symmetric(horizontal: 14.w),
                               decoration: BoxDecoration(
-                                color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
-                                borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                                color: isDark
+                                    ? AppColors.darkSurfaceVariant
+                                    : AppColors.lightBackground,
+                                borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusMd.r,
+                                ),
                                 border: Border.all(
-                                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                                  color: isDark
+                                      ? AppColors.darkBorder
+                                      : AppColors.lightBorder,
                                 ),
                               ),
                               child: Row(
@@ -263,7 +296,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                                   SizedBox(width: 8.w),
                                   Expanded(
                                     child: Obx(() {
-                                      if (controller.isPaymentMethodsLoading.value) {
+                                      if (controller
+                                          .isPaymentMethodsLoading
+                                          .value) {
                                         return Text(
                                           localization.p2pLoadingPaymentMethods,
                                           style: TextStyle(
@@ -275,7 +310,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                                         );
                                       }
                                       return Text(
-                                        controller.selectedPaymentOption?.label ??
+                                        controller
+                                                .selectedPaymentOption
+                                                ?.label ??
                                             localization.p2pSelectPaymentMethod,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -308,7 +345,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                       padding: EdgeInsets.all(14.w),
                       decoration: BoxDecoration(
                         color: cardBg,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg.r,
+                        ),
                         border: Border.all(color: borderColor),
                       ),
                       child: Column(
@@ -326,7 +365,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                           SizedBox(height: 8.h),
                           Divider(
                             height: 1,
-                            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                            color: isDark
+                                ? AppColors.darkDivider
+                                : AppColors.lightDivider,
                           ),
                           SizedBox(height: 10.h),
                           ...descriptionItems.map(
@@ -372,7 +413,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                       padding: EdgeInsets.all(14.w),
                       decoration: BoxDecoration(
                         color: cardBg,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg.r,
+                        ),
                         border: Border.all(color: borderColor),
                       ),
                       child: Column(
@@ -386,8 +429,14 @@ class P2pBuySellAdScreen extends StatelessWidget {
                                   shape: BoxShape.circle,
                                   gradient: LinearGradient(
                                     colors: isDark
-                                        ? const [Color(0xFF312E81), Color(0xFF4338CA)]
-                                        : const [Color(0xFF1E293B), Color(0xFF334155)],
+                                        ? const [
+                                            Color(0xFF312E81),
+                                            Color(0xFF4338CA),
+                                          ]
+                                        : const [
+                                            Color(0xFF1E293B),
+                                            Color(0xFF334155),
+                                          ],
                                   ),
                                 ),
                                 child: Center(
@@ -420,12 +469,20 @@ class P2pBuySellAdScreen extends StatelessWidget {
                                     if (isVerified) ...[
                                       SizedBox(width: 6.w),
                                       Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.w,
+                                          vertical: 1.5.h,
+                                        ),
                                         decoration: BoxDecoration(
                                           gradient: const LinearGradient(
-                                            colors: [Color(0xFFFFB800), Color(0xFFF59E0B)],
+                                            colors: [
+                                              Color(0xFFFFB800),
+                                              Color(0xFFF59E0B),
+                                            ],
                                           ),
-                                          borderRadius: BorderRadius.circular(3.r),
+                                          borderRadius: BorderRadius.circular(
+                                            3.r,
+                                          ),
                                         ),
                                         child: Text(
                                           'PRO',
@@ -445,7 +502,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                           SizedBox(height: 10.h),
                           Divider(
                             height: 1,
-                            color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                            color: isDark
+                                ? AppColors.darkDivider
+                                : AppColors.lightDivider,
                           ),
                           SizedBox(height: 10.h),
                           _buildTraderMetaRow(
@@ -484,7 +543,9 @@ class P2pBuySellAdScreen extends StatelessWidget {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: themeColor,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusMd.r,
+                            ),
                             boxShadow: [
                               BoxShadow(
                                 color: themeColor.withValues(alpha: 0.35),
@@ -538,14 +599,20 @@ class P2pBuySellAdScreen extends StatelessWidget {
     required void Function(String value) onChanged,
     VoidCallback? onMaxTap,
   }) {
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final textSecondary = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextSecondary;
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceVariant : AppColors.lightBackground,
+        color: isDark
+            ? AppColors.darkSurfaceVariant
+            : AppColors.lightBackground,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,

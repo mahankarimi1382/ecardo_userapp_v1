@@ -69,7 +69,9 @@ class BillPaymentHistoryDetails extends StatelessWidget {
                     _detail(
                       localization.billPaymentDetailsMethod,
                       bill.method,
-                      color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.lightPrimary,
                       isDark: isDark,
                     ),
 
@@ -95,7 +97,12 @@ class BillPaymentHistoryDetails extends StatelessWidget {
     );
   }
 
-  Widget _detail(String label, String? value, {Color? color, required bool isDark}) {
+  Widget _detail(
+    String label,
+    String? value, {
+    Color? color,
+    required bool isDark,
+  }) {
     return _buildDetailRow(
       label: label,
       isDark: isDark,
@@ -104,13 +111,19 @@ class BillPaymentHistoryDetails extends StatelessWidget {
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w900,
-          color: color ?? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+          color:
+              color ??
+              (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
         ),
       ),
     );
   }
 
-  Widget _buildDetailRow({required String label, required Widget value, required bool isDark}) {
+  Widget _buildDetailRow({
+    required String label,
+    required Widget value,
+    required bool isDark,
+  }) {
     return Padding(
       padding: const EdgeInsetsDirectional.only(bottom: 20),
       child: Row(
@@ -121,7 +134,9 @@ class BillPaymentHistoryDetails extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextTertiary,
             ),
           ),
           Flexible(child: value),
@@ -138,7 +153,11 @@ class BillPaymentHistoryDetails extends StatelessWidget {
           width: 40,
           height: 5,
           decoration: BoxDecoration(
-            color: (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary).withValues(alpha: 0.2),
+            color:
+                (isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary)
+                    .withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(30),
           ),
         ),
@@ -148,11 +167,17 @@ class BillPaymentHistoryDetails extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color: isDark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 16),
-        Divider(color: isDark ? AppColors.darkDivider : AppColors.lightTextPrimary.withValues(alpha: 0.1)),
+        Divider(
+          color: isDark
+              ? AppColors.darkDivider
+              : AppColors.lightTextPrimary.withValues(alpha: 0.1),
+        ),
         const SizedBox(height: 16),
       ],
     );
@@ -167,7 +192,10 @@ class BillPaymentHistoryDetails extends StatelessWidget {
         color: AppColors.success.withValues(alpha: 0.05),
       ),
       child: Text(
-        StatusLabelHelper.localize(AppLocalizations.of(Get.context!)!, status ?? ""),
+        StatusLabelHelper.localize(
+          AppLocalizations.of(Get.context!)!,
+          status ?? "",
+        ),
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w900,

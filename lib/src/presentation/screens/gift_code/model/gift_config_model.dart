@@ -18,8 +18,9 @@ class GiftConfigData {
   GiftConfigData({this.settings});
 
   GiftConfigData.fromJson(Map<String, dynamic> json) {
-    settings =
-        json['settings'] != null ? Settings.fromJson(json['settings']) : null;
+    settings = json['settings'] != null
+        ? Settings.fromJson(json['settings'])
+        : null;
   }
 }
 

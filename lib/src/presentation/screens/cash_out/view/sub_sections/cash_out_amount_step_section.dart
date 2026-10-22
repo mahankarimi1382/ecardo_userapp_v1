@@ -47,7 +47,11 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
         Future.delayed(AppDurations.normal, () async {
           await controller.fetchBeneficiary();
           if (mounted) {
-            Get.bottomSheet(_buildBeneficiary(Theme.of(context).brightness == Brightness.dark));
+            Get.bottomSheet(
+              _buildBeneficiary(
+                Theme.of(context).brightness == Brightness.dark,
+              ),
+            );
           }
           createBeneficiaryController.shouldReopenBottomSheet.value = false;
         });
@@ -123,8 +127,9 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                           ).firstMatch(clean);
 
                           if (aidMatch != null) {
-                            controller.agentAidController.text =
-                                aidMatch.group(1)!;
+                            controller.agentAidController.text = aidMatch.group(
+                              1,
+                            )!;
                           } else {
                             ToastHelper().showErrorToast(
                               localizations.cashOutQrInvalidPrefix,
@@ -155,9 +160,7 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                         ),
                         child: Image.asset(
                           PngAssets.commonScannerIcon,
-                          color: isDark
-                              ? AppColors.deepBlack
-                              : AppColors.white,
+                          color: isDark ? AppColors.deepBlack : AppColors.white,
                         ),
                       ),
                     ),
@@ -173,10 +176,14 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                 decoration: BoxDecoration(
                   color: isDark
                       ? AppColors.darkSurfaceVariant.withValues(alpha: 0.5)
-                      : AppColors.lightSecondaryContainer.withValues(alpha: 0.35),
+                      : AppColors.lightSecondaryContainer.withValues(
+                          alpha: 0.35,
+                        ),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Column(
@@ -200,8 +207,12 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                             ),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? AppColors.darkPrimary.withValues(alpha: 0.15)
-                                  : AppColors.lightPrimary.withValues(alpha: 0.08),
+                                  ? AppColors.darkPrimary.withValues(
+                                      alpha: 0.15,
+                                    )
+                                  : AppColors.lightPrimary.withValues(
+                                      alpha: 0.08,
+                                    ),
                               borderRadius: BorderRadius.circular(
                                 AppSpacing.radiusSm,
                               ),
@@ -232,7 +243,8 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                     const SizedBox(height: AppSpacing.sm),
                     Obx(() {
                       final wallet = controller.wallet.value;
-                      final balance = double.tryParse(wallet?.balance ?? '0') ?? 0.0;
+                      final balance =
+                          double.tryParse(wallet?.balance ?? '0') ?? 0.0;
                       return QuickAmountSelector(
                         textController: controller.amountController,
                         availableBalance: balance > 0 ? balance : 1000.0,
@@ -250,7 +262,8 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
 
               Obx(
                 () => Visibility(
-                  visible: controller.cashOutWalletsList.isNotEmpty &&
+                  visible:
+                      controller.cashOutWalletsList.isNotEmpty &&
                       controller.wallet.value?.cashoutLimit != null,
                   child: Padding(
                     padding: const EdgeInsetsDirectional.only(
@@ -276,16 +289,23 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
 
               // Dynamic Cash-Out Limit Progress Card
               Obx(() {
-                final enteredAmount = double.tryParse(
-                      controller.amountController.text.trim(),
-                    ) ??
+                final enteredAmount =
+                    double.tryParse(controller.amountController.text.trim()) ??
                     0.0;
                 final currency = controller.wallet.value?.code ?? 'USD';
-                final rawDaily = double.tryParse(
-                      controller.cashOutConfig.value.data?.settings?.dailyLimit ?? '0',
+                final rawDaily =
+                    double.tryParse(
+                      controller
+                              .cashOutConfig
+                              .value
+                              .data
+                              ?.settings
+                              ?.dailyLimit ??
+                          '0',
                     ) ??
                     0.0;
-                final maxLimit = double.tryParse(
+                final maxLimit =
+                    double.tryParse(
                       controller.wallet.value?.cashoutLimit?.max ?? '0',
                     ) ??
                     1000.0;
@@ -304,9 +324,8 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
 
               // Live Fee & Net Payout Breakdown Card
               Obx(() {
-                final requested = double.tryParse(
-                      controller.amountController.text.trim(),
-                    ) ??
+                final requested =
+                    double.tryParse(controller.amountController.text.trim()) ??
                     0.0;
                 final currency = controller.wallet.value?.code ?? 'USD';
                 final fee = controller.charge.value;
@@ -377,9 +396,7 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
       width: double.infinity,
       duration: AppDurations.normal,
       curve: Curves.easeOutQuart,
-      margin: const EdgeInsetsDirectional.symmetric(
-        horizontal: AppSpacing.md,
-      ),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: const BorderRadiusDirectional.only(
@@ -487,11 +504,13 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
 
                 return ListView.separated(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(height: AppSpacing.sm),
                   itemCount: beneficiaries.length,
                   itemBuilder: (context, index) {
                     final Beneficiaries item = beneficiaries[index];
-                    final displayName = item.nickname ?? item.receiver?.name ?? "Agent";
+                    final displayName =
+                        item.nickname ?? item.receiver?.name ?? "Agent";
 
                     return InkWell(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -625,8 +644,8 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                       color: isMax
                           ? accentColor.withValues(alpha: 0.5)
                           : (isDark
-                              ? AppColors.darkBorder
-                              : AppColors.lightBorder),
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder),
                     ),
                   ),
                   child: Center(
@@ -638,8 +657,8 @@ class _CashOutAmountStepSectionState extends State<CashOutAmountStepSection> {
                         color: isMax
                             ? accentColor
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary),
                         letterSpacing: 0,
                       ),
                     ),

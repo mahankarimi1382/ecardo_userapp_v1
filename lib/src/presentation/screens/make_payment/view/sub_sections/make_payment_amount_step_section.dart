@@ -100,8 +100,9 @@ class _MakePaymentAmountStepSectionState
                     ).firstMatch(clean);
 
                     if (midMatch != null) {
-                      controller.merchantMidController.text =
-                          midMatch.group(1)!;
+                      controller.merchantMidController.text = midMatch.group(
+                        1,
+                      )!;
                     } else {
                       ToastHelper().showErrorToast(
                         localization
@@ -118,9 +119,7 @@ class _MakePaymentAmountStepSectionState
                     color: isDark
                         ? AppColors.darkPrimary
                         : AppColors.lightPrimary,
-                    borderRadius: BorderRadius.circular(
-                      AppSpacing.radiusLg,
-                    ),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                     boxShadow: [
                       BoxShadow(
                         color: isDark
@@ -200,9 +199,7 @@ class _MakePaymentAmountStepSectionState
                     hintText: "0.00",
                     controller: controller.amountController,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      AmountInputFormatter(maxDecimals: 8),
-                    ],
+                    inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
                   ),
                 ),
               ),
@@ -225,7 +222,8 @@ class _MakePaymentAmountStepSectionState
 
         Obx(
           () => Visibility(
-            visible: controller.paymentWalletsList.isNotEmpty &&
+            visible:
+                controller.paymentWalletsList.isNotEmpty &&
                 controller.wallet.value?.paymentLimit != null,
             child: Padding(
               padding: const EdgeInsetsDirectional.only(
@@ -296,9 +294,7 @@ class _MakePaymentAmountStepSectionState
       width: double.infinity,
       duration: AppDurations.normal,
       curve: Curves.easeOutQuart,
-      margin: const EdgeInsetsDirectional.symmetric(
-        horizontal: AppSpacing.md,
-      ),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: const BorderRadiusDirectional.only(
@@ -388,8 +384,8 @@ class _MakePaymentAmountStepSectionState
                 if (beneficiaries.isEmpty) {
                   return Center(
                     child: EcardoEmptyState(
-                      title:
-                          localization.makePaymentAmountStepSectionMerchantsTitle,
+                      title: localization
+                          .makePaymentAmountStepSectionMerchantsTitle,
                       description: localization.noDataFound,
                       iconData: Icons.storefront_rounded,
                       primaryActionLabel:
@@ -408,7 +404,8 @@ class _MakePaymentAmountStepSectionState
 
                 return ListView.separated(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(height: AppSpacing.sm),
                   itemCount: beneficiaries.length,
                   itemBuilder: (context, index) {
                     final Beneficiaries item = beneficiaries[index];

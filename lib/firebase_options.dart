@@ -53,5 +53,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'ecardo-app.firebasestorage.app',
     iosBundleId: 'com.ecardo.user',
   );
-
 }

@@ -87,8 +87,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
     final brandColor = ECardoTokens.brand700(context);
 
     return Semantics(
-      label:
-          'Cancellation & Refund Timeline - $brandColor',
+      label: 'Cancellation & Refund Timeline - $brandColor',
       child: Container(
         decoration: BoxDecoration(
           color: cardBg,
@@ -150,17 +149,21 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                   ),
                   if (showViewDetailsButton)
                     ConstrainedBox(
-                      constraints: BoxConstraints(minWidth: 44.w, minHeight: 44.h),
+                      constraints: BoxConstraints(
+                        minWidth: 44.w,
+                        minHeight: 44.h,
+                      ),
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         iconSize: 14.sp,
                         color: brandColor,
-                        onPressed: onTap ??
+                        onPressed:
+                            onTap ??
                             () => showCancellationPolicyTimelineModal(
-                                  context,
-                                  checkInDate: checkInDate,
-                                  customPolicySummary: customPolicySummary,
-                                ),
+                              context,
+                              checkInDate: checkInDate,
+                              customPolicySummary: customPolicySummary,
+                            ),
                         icon: Icon(
                           Icons.arrow_forward_ios_rounded,
                           size: 14.sp,
@@ -203,9 +206,7 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: ECardoTokens.brand100(context),
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
-                border: Border.all(
-                  color: brandColor.withValues(alpha: 0.15),
-                ),
+                border: Border.all(color: brandColor.withValues(alpha: 0.15)),
               ),
               child: Row(
                 children: [
@@ -229,12 +230,13 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: onTap ??
+                    onPressed:
+                        onTap ??
                         () => showCancellationPolicyTimelineModal(
-                              context,
-                              checkInDate: checkInDate,
-                              customPolicySummary: customPolicySummary,
-                            ),
+                          context,
+                          checkInDate: checkInDate,
+                          customPolicySummary: customPolicySummary,
+                        ),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       minimumSize: Size.zero,
@@ -271,20 +273,14 @@ class CancellationPolicyTimelineCard extends StatelessWidget {
             ? stage.primaryColor.withValues(alpha: 0.18)
             : stage.containerColor,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(
-          color: stage.primaryColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: stage.primaryColor.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(
-                stage.icon,
-                size: 13.sp,
-                color: stage.primaryColor,
-              ),
+              Icon(stage.icon, size: 13.sp, color: stage.primaryColor),
               SizedBox(width: 4.w),
               Flexible(
                 child: Text(
@@ -374,7 +370,9 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                     padding: EdgeInsets.all(8.r),
                     decoration: BoxDecoration(
                       color: ECardoTokens.brand100(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                     ),
                     child: Icon(
                       Icons.timeline_rounded,
@@ -417,7 +415,9 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                       color: ECardoTokens.isDark(context)
                           ? ECardoTokens.surfaceSunken(context)
                           : ECardoTokens.surfaceCanvas(context),
-                      borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                      borderRadius: BorderRadius.circular(
+                        ECardoTokens.radiusMd,
+                      ),
                       border: Border.all(
                         color: borderColor.withValues(alpha: 0.7),
                       ),
@@ -483,7 +483,9 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                       padding: EdgeInsets.all(12.r),
                       decoration: BoxDecoration(
                         color: ECardoTokens.brand100(context),
-                        borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
+                        borderRadius: BorderRadius.circular(
+                          ECardoTokens.radiusMd,
+                        ),
                         border: Border.all(
                           color: brandColor.withValues(alpha: 0.2),
                         ),
@@ -492,7 +494,9 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isRtl ? 'یادداشت هتل' : 'Hotel Specific Policy Note',
+                            isRtl
+                                ? 'یادداشت هتل'
+                                : 'Hotel Specific Policy Note',
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w700,
@@ -583,10 +587,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
                       ? stage.primaryColor.withValues(alpha: 0.18)
                       : stage.containerColor,
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: stage.primaryColor,
-                    width: 2.w,
-                  ),
+                  border: Border.all(color: stage.primaryColor, width: 2.w),
                 ),
                 child: Center(
                   child: Icon(
@@ -619,9 +620,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
               margin: EdgeInsets.only(bottom: isLast ? 0 : 16.h),
               padding: EdgeInsets.all(14.r),
               decoration: BoxDecoration(
-                color: isDark
-                    ? ECardoTokens.surfaceSunken(context)
-                    : cardBg,
+                color: isDark ? ECardoTokens.surfaceSunken(context) : cardBg,
                 borderRadius: BorderRadius.circular(ECardoTokens.radiusMd),
                 border: Border.all(
                   color: stage.primaryColor.withValues(alpha: 0.25),
@@ -727,9 +726,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
             : ECardoTokens.infoBg(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
         border: Border.all(
-          color: isDark
-              ? borderColor
-              : brandColor.withValues(alpha: 0.25),
+          color: isDark ? borderColor : brandColor.withValues(alpha: 0.25),
         ),
       ),
       child: Column(
@@ -789,7 +786,9 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
           _buildRuleItem(
             context: context,
             icon: Icons.sync_alt_rounded,
-            title: isRtl ? 'قابلیت استفاده مجدد یا برداشت' : 'Reusable or Withdrawable',
+            title: isRtl
+                ? 'قابلیت استفاده مجدد یا برداشت'
+                : 'Reusable or Withdrawable',
             description: isRtl
                 ? 'موجودی کیف پول بلافاصله برای رزرو پرواز، هتل یا بسته eSIM دیگر در دسترس است و امکان تسویه بانکی نیز وجود دارد.'
                 : 'Wallet balance can immediately book replacement flights, hotels, eSIM or be cashed out.',
@@ -810,11 +809,7 @@ class CancellationPolicyTimelineModal extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 16.sp,
-          color: ECardoTokens.brand700(context),
-        ),
+        Icon(icon, size: 16.sp, color: ECardoTokens.brand700(context)),
         SizedBox(width: 8.w),
         Expanded(
           child: Column(

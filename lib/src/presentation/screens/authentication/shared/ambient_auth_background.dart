@@ -7,10 +7,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 class AmbientAuthBackground extends StatelessWidget {
   final Widget child;
 
-  const AmbientAuthBackground({
-    super.key,
-    required this.child,
-  });
+  const AmbientAuthBackground({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +23,7 @@ class AmbientAuthBackground extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: isDark
-                    ? [
-                        AppColors.darkBackground,
-                        ...AppColors.heroNightGradient,
-                      ]
+                    ? [AppColors.darkBackground, ...AppColors.heroNightGradient]
                     : const [
                         AppColors.lightBackground,
                         AppColors.lightSurfaceVariant,
@@ -59,7 +53,9 @@ class AmbientAuthBackground extends StatelessWidget {
                         ]
                       : [
                           AppColors.mainSoftBlue.withValues(alpha: 0.25),
-                          AppColors.brandVioletContainer.withValues(alpha: 0.12),
+                          AppColors.brandVioletContainer.withValues(
+                            alpha: 0.12,
+                          ),
                           AppColors.transparent,
                         ],
                   stops: const [0.0, 0.45, 1.0],
@@ -88,7 +84,9 @@ class AmbientAuthBackground extends StatelessWidget {
                         ]
                       : [
                           AppColors.lightOutlineVariant.withValues(alpha: 0.40),
-                          AppColors.brandVioletContainer.withValues(alpha: 0.15),
+                          AppColors.brandVioletContainer.withValues(
+                            alpha: 0.15,
+                          ),
                           AppColors.transparent,
                         ],
                   stops: const [0.0, 0.50, 1.0],
@@ -101,9 +99,7 @@ class AmbientAuthBackground extends StatelessWidget {
         // Center subtle mesh aura
         Positioned.fill(
           child: IgnorePointer(
-            child: CustomPaint(
-              painter: _SubtleGridPainter(isDark: isDark),
-            ),
+            child: CustomPaint(painter: _SubtleGridPainter(isDark: isDark)),
           ),
         ),
 
@@ -123,8 +119,9 @@ class _SubtleGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = (isDark ? AppColors.white : AppColors.deepBlack)
-          .withValues(alpha: isDark ? 0.022 : 0.015)
+      ..color = (isDark ? AppColors.white : AppColors.deepBlack).withValues(
+        alpha: isDark ? 0.022 : 0.015,
+      )
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 

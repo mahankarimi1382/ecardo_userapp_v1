@@ -17,7 +17,11 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
-  Widget wrapWithTheme(Widget child, {bool isDark = false, Locale locale = const Locale('fa')}) {
+  Widget wrapWithTheme(
+    Widget child, {
+    bool isDark = false,
+    Locale locale = const Locale('fa'),
+  }) {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       builder: (context, _) => MaterialApp(
@@ -35,7 +39,9 @@ void main() {
   }
 
   group('Escrow Module Modernization Tests', () {
-    testWidgets('EscrowStatusBadge renders badges in light and dark mode', (tester) async {
+    testWidgets('EscrowStatusBadge renders badges in light and dark mode', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
@@ -81,35 +87,40 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('EscrowMilestoneStepper displays 6 steps and calculates progress correctly', (tester) async {
-      phoneSurface(tester);
+    testWidgets(
+      'EscrowMilestoneStepper displays 6 steps and calculates progress correctly',
+      (tester) async {
+        phoneSurface(tester);
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const SingleChildScrollView(
-            child: Column(
-              children: [
-                EscrowMilestoneStepper(currentStatus: 'DRAFT'),
-                SizedBox(height: 20),
-                EscrowMilestoneStepper(currentStatus: 'FUNDS_HELD'),
-                SizedBox(height: 20),
-                EscrowMilestoneStepper(currentStatus: 'COMPLETED'),
-              ],
+        await tester.pumpWidget(
+          wrapWithTheme(
+            const SingleChildScrollView(
+              child: Column(
+                children: [
+                  EscrowMilestoneStepper(currentStatus: 'DRAFT'),
+                  SizedBox(height: 20),
+                  EscrowMilestoneStepper(currentStatus: 'FUNDS_HELD'),
+                  SizedBox(height: 20),
+                  EscrowMilestoneStepper(currentStatus: 'COMPLETED'),
+                ],
+              ),
             ),
+            locale: const Locale('fa'),
           ),
-          locale: const Locale('fa'),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      expect(find.text('مراحل انجام معامله امانی'), findsNWidgets(3));
-      expect(find.text('1 / 6'), findsOneWidget);
-      expect(find.text('3 / 6'), findsOneWidget);
-      expect(find.text('6 / 6'), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
+        expect(find.text('مراحل انجام معامله امانی'), findsNWidgets(3));
+        expect(find.text('1 / 6'), findsOneWidget);
+        expect(find.text('3 / 6'), findsOneWidget);
+        expect(find.text('6 / 6'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
 
-    testWidgets('EscrowCounterpartyAvatar renders monogram and role', (tester) async {
+    testWidgets('EscrowCounterpartyAvatar renders monogram and role', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
@@ -144,20 +155,22 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('EscrowSkeletonLoader renders without layout overflow', (tester) async {
+    testWidgets('EscrowSkeletonLoader renders without layout overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
-        wrapWithTheme(
-          const EscrowSkeletonLoader(itemCount: 2),
-        ),
+        wrapWithTheme(const EscrowSkeletonLoader(itemCount: 2)),
       );
       await tester.pump();
 
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('EscrowTimelineWidget renders chronological events', (tester) async {
+    testWidgets('EscrowTimelineWidget renders chronological events', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       final events = [
@@ -196,7 +209,9 @@ void main() {
   });
 
   group('Guarantee Module Modernization Tests', () {
-    testWidgets('GuaranteeStatusStepper displays progress through 5 steps', (tester) async {
+    testWidgets('GuaranteeStatusStepper displays progress through 5 steps', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
@@ -224,13 +239,13 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('GuaranteeSkeletonLoader renders cleanly without overflow', (tester) async {
+    testWidgets('GuaranteeSkeletonLoader renders cleanly without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
-        wrapWithTheme(
-          const GuaranteeSkeletonLoader(itemCount: 3),
-        ),
+        wrapWithTheme(const GuaranteeSkeletonLoader(itemCount: 3)),
       );
       await tester.pump();
 
@@ -239,7 +254,9 @@ void main() {
   });
 
   group('Loan Module Modernization Tests', () {
-    testWidgets('LoanStatusStepper renders 5 milestones and active steps', (tester) async {
+    testWidgets('LoanStatusStepper renders 5 milestones and active steps', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
@@ -267,20 +284,22 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('LoanSkeletonLoader renders cleanly without overflow', (tester) async {
+    testWidgets('LoanSkeletonLoader renders cleanly without overflow', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       await tester.pumpWidget(
-        wrapWithTheme(
-          const LoanSkeletonLoader(itemCount: 2),
-        ),
+        wrapWithTheme(const LoanSkeletonLoader(itemCount: 2)),
       );
       await tester.pump();
 
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('LoanCalculatorSlider calculates live metrics on interaction', (tester) async {
+    testWidgets('LoanCalculatorSlider calculates live metrics on interaction', (
+      tester,
+    ) async {
       phoneSurface(tester);
 
       double? currentMonthly;

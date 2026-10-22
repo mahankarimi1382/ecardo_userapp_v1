@@ -19,15 +19,18 @@ class MyInvestmentsScreen extends StatelessWidget {
         : Get.put(CommercialController());
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryAccent =
-        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryAccent = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor:
-            isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: isDark
+            ? AppColors.darkSurface
+            : AppColors.lightSurface,
         elevation: 0,
         leading: IconButton(
           icon: Icon(
@@ -97,7 +100,8 @@ class MyInvestmentsScreen extends StatelessWidget {
               )
             else
               ...investments.map(
-                (inv) => _buildInvestmentCard(context, inv, isDark, primaryAccent),
+                (inv) =>
+                    _buildInvestmentCard(context, inv, isDark, primaryAccent),
               ),
           ],
         );
@@ -329,7 +333,11 @@ class MyInvestmentsScreen extends StatelessWidget {
                   minimumSize: Size.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                icon: Icon(Icons.verified_outlined, size: 14.sp, color: primaryAccent),
+                icon: Icon(
+                  Icons.verified_outlined,
+                  size: 14.sp,
+                  color: primaryAccent,
+                ),
                 label: Text(
                   'مشاهده گواهی سهم',
                   style: TextStyle(
@@ -378,7 +386,8 @@ class MyInvestmentsScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w700,
-            color: color ??
+            color:
+                color ??
                 (isDark
                     ? AppColors.darkTextPrimary
                     : AppColors.lightTextPrimary),

@@ -56,7 +56,11 @@ class SignUpStatusController extends GetxController {
       debugPrint('❌ fetchUserKyc() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
+        localizationOrNull?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isKycLoading.value = false;
@@ -80,7 +84,11 @@ class SignUpStatusController extends GetxController {
       debugPrint('❌ fetchUser() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ?? l10nPickAuto(en: 'Something went wrong. Please try again.', fa: 'خطایی رخ داد. دوباره تلاش کنید.'),
+        localizationOrNull?.allControllerLoadError ??
+            l10nPickAuto(
+              en: 'Something went wrong. Please try again.',
+              fa: 'خطایی رخ داد. دوباره تلاش کنید.',
+            ),
       );
     } finally {
       isLoading.value = false;
@@ -133,10 +141,7 @@ class SignUpStatusController extends GetxController {
       // must NEVER trap or prevent the user from reaching the main navigation dashboard.
       unawaited(
         Get.find<NetworkService>()
-            .post(
-              endpoint: ApiPath.getSetupFcm,
-              data: requestBody,
-            )
+            .post(endpoint: ApiPath.getSetupFcm, data: requestBody)
             .catchError((e) {
               debugPrint('⚠️ Non-blocking FCM token registration notice: $e');
               return ApiResponse<Map<String, dynamic>>(status: Status.error);

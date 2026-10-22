@@ -663,8 +663,8 @@ class _FlightResultsScreenState extends State<FlightResultsScreen> {
                         final dateStr = dep == null
                             ? null
                             : '${dep.year.toString().padLeft(4, '0')}-'
-                                '${dep.month.toString().padLeft(2, '0')}-'
-                                '${dep.day.toString().padLeft(2, '0')}';
+                                  '${dep.month.toString().padLeft(2, '0')}-'
+                                  '${dep.day.toString().padLeft(2, '0')}';
                         final ok = await controller.subscribeNotifyMe(
                           serviceType: 'flight',
                           origin: search.origin,
@@ -677,7 +677,8 @@ class _FlightResultsScreenState extends State<FlightResultsScreen> {
                           ok ? 'OK' : 'Error',
                           ok
                               ? 'We will notify you when matching flights are available.'
-                              : (controller.checkoutError.value ?? 'Request failed'),
+                              : (controller.checkoutError.value ??
+                                    'Request failed'),
                         );
                       },
               ),
@@ -847,9 +848,14 @@ class _FlightOfferCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
                 ),
                 child: offer.imageUrl.isEmpty
-                    ? Icon(Icons.flight_rounded, color: TravelTheme.primaryFor(context))
+                    ? Icon(
+                        Icons.flight_rounded,
+                        color: TravelTheme.primaryFor(context),
+                      )
                     : ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd.r),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd.r,
+                        ),
                         child: Image.network(
                           offer.imageUrl,
                           fit: BoxFit.contain,
@@ -907,7 +913,9 @@ class _FlightOfferCard extends StatelessWidget {
                     isCompared
                         ? Icons.library_add_check_rounded
                         : Icons.library_add_outlined,
-                    color: isCompared ? TravelTheme.primaryFor(context) : TravelTheme.textSecondaryFor(context),
+                    color: isCompared
+                        ? TravelTheme.primaryFor(context)
+                        : TravelTheme.textSecondaryFor(context),
                   ),
                 ),
             ],
@@ -932,7 +940,11 @@ class _FlightOfferCard extends StatelessWidget {
                           fontSize: 10.sp,
                         ),
                       ),
-                      Divider(color: TravelTheme.primaryFor(context).withValues(alpha: 0.4)),
+                      Divider(
+                        color: TravelTheme.primaryFor(
+                          context,
+                        ).withValues(alpha: 0.4),
+                      ),
                       Text(
                         localization.travelDirect,
                         style: TextStyle(
@@ -1120,7 +1132,8 @@ class _FlightSearchSummary extends StatelessWidget {
             Text(
               [
                 formattedDeparture,
-                if (search.isRoundTrip && formattedReturn.isNotEmpty) formattedReturn,
+                if (search.isRoundTrip && formattedReturn.isNotEmpty)
+                  formattedReturn,
               ].join(' → '),
               style: TextStyle(color: TravelTheme.muted),
             ),
@@ -1444,14 +1457,12 @@ class _FlightResultsEmptyState extends StatelessWidget {
           FilledButton.icon(
             onPressed: onNotify,
             icon: const Icon(Icons.notifications_active_outlined),
-            label: Text(
-              () {
-                final code = Localizations.localeOf(context).languageCode;
-                if (code == 'fa') return 'موجود شد خبرم کن';
-                if (code == 'ar') return 'أعلمني عند التوفر';
-                return 'Notify me when available';
-              }(),
-            ),
+            label: Text(() {
+              final code = Localizations.localeOf(context).languageCode;
+              if (code == 'fa') return 'موجود شد خبرم کن';
+              if (code == 'ar') return 'أعلمني عند التوفر';
+              return 'Notify me when available';
+            }()),
           ),
         ],
       ],
@@ -1471,7 +1482,10 @@ class _FlightTime extends StatelessWidget {
     return Column(
       children: [
         Text(time, style: const TextStyle(fontWeight: FontWeight.w900)),
-        Text(code, style: TextStyle(color: TravelTheme.textSecondaryFor(context))),
+        Text(
+          code,
+          style: TextStyle(color: TravelTheme.textSecondaryFor(context)),
+        ),
         if (city.isNotEmpty)
           SizedBox(
             width: 92.w,
@@ -1524,7 +1538,10 @@ class _FlightDetailsScreenState extends State<FlightDetailsScreen> {
                 currentTotal.amount,
             currency: currentTotal.currency,
           );
-    final seatExtraFee = selectedSeats.fold(0.0, (sum, s) => sum + s.extraPrice);
+    final seatExtraFee = selectedSeats.fold(
+      0.0,
+      (sum, s) => sum + s.extraPrice,
+    );
     final total = TravelMoney(
       amount: baseTotal.amount + seatExtraFee,
       currency: baseTotal.currency,
@@ -1726,14 +1743,18 @@ class _FlightDetailsScreenState extends State<FlightDetailsScreen> {
           SizedBox(height: 10.h),
           _FlightSeatSelectionCard(
             selectedSeats: selectedSeats,
-            passengerCount: (bookingDetails.adultCount + bookingDetails.childCount) > 0
+            passengerCount:
+                (bookingDetails.adultCount + bookingDetails.childCount) > 0
                 ? (bookingDetails.adultCount + bookingDetails.childCount)
                 : 1,
             onTap: () async {
-              final cabin = (_flightValue(offer, 'cabin_class').toLowerCase() == 'business')
+              final cabin =
+                  (_flightValue(offer, 'cabin_class').toLowerCase() ==
+                      'business')
                   ? SeatCabinClass.business
                   : SeatCabinClass.economy;
-              final maxSeats = (bookingDetails.adultCount + bookingDetails.childCount) > 0
+              final maxSeats =
+                  (bookingDetails.adultCount + bookingDetails.childCount) > 0
                   ? (bookingDetails.adultCount + bookingDetails.childCount)
                   : 1;
               final result = await showSeatSelectionBottomSheet(
@@ -1741,9 +1762,13 @@ class _FlightDetailsScreenState extends State<FlightDetailsScreen> {
                 vehicleType: SeatVehicleType.aircraft,
                 initialCabinClass: cabin,
                 maxSelectedSeats: maxSeats,
-                initiallySelectedSeatIds: selectedSeats.map((s) => s.id).toList(),
-                title: '${_flightValue(offer, 'airline_name')} ${_flightValue(offer, 'flight_number')}',
-                subtitle: '${_flightValue(offer, 'origin')} → ${_flightValue(offer, 'destination')}',
+                initiallySelectedSeatIds: selectedSeats
+                    .map((s) => s.id)
+                    .toList(),
+                title:
+                    '${_flightValue(offer, 'airline_name')} ${_flightValue(offer, 'flight_number')}',
+                subtitle:
+                    '${_flightValue(offer, 'origin')} → ${_flightValue(offer, 'destination')}',
                 currency: offer.total.currency,
               );
               if (result != null && mounted) {
@@ -1777,7 +1802,10 @@ class _FlightDetailsScreenState extends State<FlightDetailsScreen> {
                     ),
                     value: travelMoney(
                       context,
-                      TravelMoney(amount: seatExtraFee, currency: total.currency),
+                      TravelMoney(
+                        amount: seatExtraFee,
+                        currency: total.currency,
+                      ),
                     ),
                   ),
                   const Divider(),
@@ -2182,12 +2210,7 @@ class _FlightSeatSelectionCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Text(
-                l10nPick(
-                  context,
-                  en: 'Select',
-                  fa: 'انتخاب',
-                  ar: 'اختيار',
-                ),
+                l10nPick(context, en: 'Select', fa: 'انتخاب', ar: 'اختيار'),
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -2245,7 +2268,9 @@ class _FlightSeatSelectionCard extends StatelessWidget {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                 decoration: BoxDecoration(
-                  color: AppColors.lightPrimaryContainer.withValues(alpha: 0.25),
+                  color: AppColors.lightPrimaryContainer.withValues(
+                    alpha: 0.25,
+                  ),
                   borderRadius: BorderRadius.circular(8.r),
                   border: Border.all(
                     color: AppColors.mutedBlue.withValues(alpha: 0.4),
@@ -2293,4 +2318,3 @@ class _FlightSeatSelectionCard extends StatelessWidget {
     );
   }
 }
-

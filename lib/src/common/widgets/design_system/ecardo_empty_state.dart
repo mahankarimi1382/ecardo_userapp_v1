@@ -62,10 +62,7 @@ class _EcardoEmptyStateState extends State<EcardoEmptyState>
     );
 
     _pulseAnimation = Tween<double>(begin: 0.88, end: 1.08).animate(
-      CurvedAnimation(
-        parent: _pulseController,
-        curve: Curves.easeInOutSine,
-      ),
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOutSine),
     );
 
     if (widget.animateGlow) {
@@ -126,12 +123,14 @@ class _EcardoEmptyStateState extends State<EcardoEmptyState>
             ),
 
             // 4. CTA Action Buttons
-            if (widget.primaryActionLabel != null && widget.onPrimaryAction != null) ...[
+            if (widget.primaryActionLabel != null &&
+                widget.onPrimaryAction != null) ...[
               const SizedBox(height: AppSpacing.xl),
               _buildPrimaryButton(context, isDark),
             ],
 
-            if (widget.secondaryActionLabel != null && widget.onSecondaryAction != null) ...[
+            if (widget.secondaryActionLabel != null &&
+                widget.onSecondaryAction != null) ...[
               const SizedBox(height: AppSpacing.sm),
               _buildSecondaryButton(context, isDark),
             ],
@@ -204,12 +203,16 @@ class _EcardoEmptyStateState extends State<EcardoEmptyState>
                 ],
               ),
               child: Center(
-                child: widget.icon ??
+                child:
+                    widget.icon ??
                     Icon(
                       widget.iconData,
                       size: 32,
-                      color: widget.iconColor ??
-                          (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack),
+                      color:
+                          widget.iconColor ??
+                          (isDark
+                              ? AppColors.mainSoftBlue
+                              : AppColors.deepBlack),
                     ),
               ),
             ),
@@ -234,7 +237,9 @@ class _EcardoEmptyStateState extends State<EcardoEmptyState>
       label: widget.secondaryActionLabel!,
       onPressed: widget.onSecondaryAction!,
       backgroundColor: Colors.transparent,
-      textColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+      textColor: isDark
+          ? AppColors.darkTextPrimary
+          : AppColors.lightTextPrimary,
       isPrimary: false,
     );
   }
@@ -272,9 +277,10 @@ class _TactileButtonState extends State<_TactileButton>
       duration: const Duration(milliseconds: 90),
       reverseDuration: const Duration(milliseconds: 180),
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scale = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override

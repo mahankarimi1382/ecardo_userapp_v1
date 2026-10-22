@@ -61,21 +61,18 @@ class HotelRoomSelectionCard extends StatelessWidget {
     final textSecondary = ECardoTokens.inkMuted(context);
 
     return Semantics(
-      label: '$roomName, ${isBreakfastIncluded ? (isRtl ? 'با صبحانه' : 'Breakfast included') : ''}',
+      label:
+          '$roomName, ${isBreakfastIncluded ? (isRtl ? 'با صبحانه' : 'Breakfast included') : ''}',
       selected: _selected,
       enabled: enabled,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeInOut,
         decoration: BoxDecoration(
-          color: _selected
-              ? ECardoTokens.brand100(context)
-              : cardBg,
+          color: _selected ? ECardoTokens.brand100(context) : cardBg,
           borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
           border: Border.all(
-            color: _selected
-                ? brandColor
-                : borderColor,
+            color: _selected ? brandColor : borderColor,
             width: _selected ? 2.0.w : 1.0.w,
           ),
           boxShadow: _selected
@@ -146,7 +143,11 @@ class HotelRoomSelectionCard extends StatelessWidget {
                         ),
                         SizedBox(width: 10.w),
                         // Interactive Radio Indicator
-                        _buildRadioIndicator(context, brandColor, textSecondary),
+                        _buildRadioIndicator(
+                          context,
+                          brandColor,
+                          textSecondary,
+                        ),
                       ],
                     ),
 
@@ -162,7 +163,11 @@ class HotelRoomSelectionCard extends StatelessWidget {
 
                         // Free Cancellation Badge
                         if (cancellationBadge.isNotEmpty)
-                          _buildCancellationBadge(context, cancellationBadge, isRtl),
+                          _buildCancellationBadge(
+                            context,
+                            cancellationBadge,
+                            isRtl,
+                          ),
                       ],
                     ),
 
@@ -212,11 +217,10 @@ class HotelRoomSelectionCard extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: ECardoTokens.surfaceSunken(context),
-                              borderRadius:
-                                  BorderRadius.circular(ECardoTokens.radiusSm),
-                              border: Border.all(
-                                color: borderColor,
+                              borderRadius: BorderRadius.circular(
+                                ECardoTokens.radiusSm,
                               ),
+                              border: Border.all(color: borderColor),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -243,10 +247,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                     ],
 
                     SizedBox(height: 14.h),
-                    Divider(
-                      color: borderColor,
-                      height: 1.h,
-                    ),
+                    Divider(color: borderColor, height: 1.h),
                     SizedBox(height: 14.h),
 
                     // Price Section & Selection Action
@@ -264,7 +265,8 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                     ? Alignment.centerRight
                                     : Alignment.centerLeft,
                                 child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
                                     Directionality(
@@ -352,7 +354,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                       ),
                                       onPressed: enabled
                                           ? () =>
-                                              onQuantityChanged!(quantity - 1)
+                                                onQuantityChanged!(quantity - 1)
                                           : null,
                                       icon: Icon(
                                         Icons.remove_rounded,
@@ -381,7 +383,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                       ),
                                       onPressed: enabled && quantity < 10
                                           ? () =>
-                                              onQuantityChanged!(quantity + 1)
+                                                onQuantityChanged!(quantity + 1)
                                           : null,
                                       icon: Icon(
                                         Icons.add_rounded,
@@ -399,8 +401,10 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                 color: _selected
                                     ? ECardoTokens.success(context)
                                     : (enabled
-                                        ? brandColor
-                                        : ECardoTokens.surfaceSunken(context)),
+                                          ? brandColor
+                                          : ECardoTokens.surfaceSunken(
+                                              context,
+                                            )),
                                 borderRadius: BorderRadius.circular(
                                   ECardoTokens.radiusMd,
                                 ),
@@ -408,7 +412,9 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                     ECardoTokens.radiusMd,
                                   ),
-                                  onTap: enabled ? _handleToggleSelection : null,
+                                  onTap: enabled
+                                      ? _handleToggleSelection
+                                      : null,
                                   child: Container(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 14.w,
@@ -420,17 +426,20 @@ class HotelRoomSelectionCard extends StatelessWidget {
                                         Icon(
                                           _selected
                                               ? Icons.check_circle_rounded
-                                              : Icons.add_circle_outline_rounded,
+                                              : Icons
+                                                    .add_circle_outline_rounded,
                                           size: 16.sp,
                                           color: ECardoTokens.inkOnBrand,
                                         ),
                                         SizedBox(width: 6.w),
                                         Text(
                                           _selected
-                                              ? (isRtl ? 'انتخاب شد' : 'Selected')
+                                              ? (isRtl
+                                                    ? 'انتخاب شد'
+                                                    : 'Selected')
                                               : (isRtl
-                                                  ? 'انتخاب اتاق'
-                                                  : 'Select Room'),
+                                                    ? 'انتخاب اتاق'
+                                                    : 'Select Room'),
                                           style: TextStyle(
                                             color: ECardoTokens.inkOnBrand,
                                             fontWeight: FontWeight.w800,
@@ -689,10 +698,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: ECardoTokens.surfaceSunken(context),
         borderRadius: BorderRadius.circular(ECardoTokens.radiusSm),
-        border: Border.all(
-          color: ECardoTokens.border(context),
-          width: 1.w,
-        ),
+        border: Border.all(color: ECardoTokens.border(context), width: 1.w),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -771,11 +777,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            size: 13.sp,
-            color: ECardoTokens.brand700(context),
-          ),
+          Icon(icon, size: 13.sp, color: ECardoTokens.brand700(context)),
           SizedBox(width: 4.w),
           Text(
             label,
@@ -834,7 +836,8 @@ class HotelRoomSelectionCard extends StatelessWidget {
   }
 
   String _extractRoomSize(BuildContext context) {
-    final raw = room['room_size'] ??
+    final raw =
+        room['room_size'] ??
         room['size'] ??
         room['area'] ??
         room['sqm'] ??
@@ -847,14 +850,16 @@ class HotelRoomSelectionCard extends StatelessWidget {
       return '$str m²';
     }
 
-    final title =
-        (room['room_name'] ?? room['name'] ?? '').toString().toLowerCase();
+    final title = (room['room_name'] ?? room['name'] ?? '')
+        .toString()
+        .toLowerCase();
     if (title.contains('presidential') || title.contains('royal')) {
       return '75 m²';
     }
     if (title.contains('suite') || title.contains('سوئیت')) return '52 m²';
     if (title.contains('deluxe') || title.contains('دلوکس')) return '38 m²';
-    if (title.contains('executive') || title.contains('امپریال')) return '42 m²';
+    if (title.contains('executive') || title.contains('امپریال'))
+      return '42 m²';
     if (title.contains('superior')) return '34 m²';
     return '30 m²';
   }
@@ -872,8 +877,9 @@ class HotelRoomSelectionCard extends StatelessWidget {
       return [raw.trim()];
     }
 
-    final title =
-        (room['room_name'] ?? room['name'] ?? '').toString().toLowerCase();
+    final title = (room['room_name'] ?? room['name'] ?? '')
+        .toString()
+        .toLowerCase();
     if (title.contains('twin') ||
         title.contains('تویین') ||
         title.contains('دو تخته')) {
@@ -896,7 +902,8 @@ class HotelRoomSelectionCard extends StatelessWidget {
 
   String _extractCapacity(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
-    final raw = room['capacity'] ??
+    final raw =
+        room['capacity'] ??
         room['occupancy'] ??
         room['max_guests'] ??
         room['adults'];
@@ -908,8 +915,9 @@ class HotelRoomSelectionCard extends StatelessWidget {
       }
       return str;
     }
-    final title =
-        (room['room_name'] ?? room['name'] ?? '').toString().toLowerCase();
+    final title = (room['room_name'] ?? room['name'] ?? '')
+        .toString()
+        .toLowerCase();
     if (title.contains('family') || title.contains('خانوادگی')) {
       return isRtl ? '۴ بزرگسال، ۱ کودک' : '4 Adults, 1 Child';
     }
@@ -926,13 +934,14 @@ class HotelRoomSelectionCard extends StatelessWidget {
     final boolVal = room['breakfast_included'] ?? room['breakfast'];
     if (boolVal is bool) return boolVal;
 
-    final mealPlan = (room['meal_plan'] ??
-            room['board'] ??
-            room['board_type'] ??
-            room['cancellation_rules'] ??
-            '')
-        .toString()
-        .toLowerCase();
+    final mealPlan =
+        (room['meal_plan'] ??
+                room['board'] ??
+                room['board_type'] ??
+                room['cancellation_rules'] ??
+                '')
+            .toString()
+            .toLowerCase();
     if (mealPlan.contains('breakfast') ||
         mealPlan.contains('صبحانه') ||
         mealPlan.contains('bb') ||
@@ -940,8 +949,9 @@ class HotelRoomSelectionCard extends StatelessWidget {
       return true;
     }
 
-    final title =
-        (room['room_name'] ?? room['name'] ?? '').toString().toLowerCase();
+    final title = (room['room_name'] ?? room['name'] ?? '')
+        .toString()
+        .toLowerCase();
     if (title.contains('breakfast') || title.contains('صبحانه')) {
       return true;
     }
@@ -951,12 +961,13 @@ class HotelRoomSelectionCard extends StatelessWidget {
 
   String _extractCancellationPolicy(BuildContext context) {
     final isRtl = Directionality.of(context) == TextDirection.rtl;
-    final policy = (room['cancellation_policy'] ??
-            room['free_cancellation'] ??
-            room['cancellation'] ??
-            '')
-        .toString()
-        .trim();
+    final policy =
+        (room['cancellation_policy'] ??
+                room['free_cancellation'] ??
+                room['cancellation'] ??
+                '')
+            .toString()
+            .trim();
     if (policy.isNotEmpty) {
       if (policy.toLowerCase().contains('non-refundable') ||
           policy.contains('غیرقابل استرداد')) {
@@ -986,8 +997,9 @@ class HotelRoomSelectionCard extends StatelessWidget {
       if (list.isNotEmpty) return list;
     }
 
-    final title =
-        (room['room_name'] ?? room['name'] ?? '').toString().toLowerCase();
+    final title = (room['room_name'] ?? room['name'] ?? '')
+        .toString()
+        .toLowerCase();
     if (title.contains('suite') || title.contains('سوئیت')) {
       return isRtl
           ? ['دید به شهر', 'بالکن اختصاصی', 'وان جکوزی', 'وای‌فای پرسرعت']
@@ -1009,8 +1021,7 @@ class HotelRoomSelectionCard extends StatelessWidget {
   }
 
   double _extractPricePerNight() {
-    final raw =
-        room['price'] ?? room['unit_price'] ?? room['price_per_night'];
+    final raw = room['price'] ?? room['unit_price'] ?? room['price_per_night'];
     return double.tryParse(raw?.toString() ?? '') ?? 0.0;
   }
 

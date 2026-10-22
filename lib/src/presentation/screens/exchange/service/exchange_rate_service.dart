@@ -22,7 +22,7 @@ import 'fee_ecardo_rate_source.dart';
 ///     it owns its own Dio instance via [ExchangeRateSource].
 class ExchangeRateService extends GetxService {
   ExchangeRateService({ExchangeRateSource? source})
-      : _source = source ?? FeeEcardoRateSource();
+    : _source = source ?? FeeEcardoRateSource();
 
   final ExchangeRateSource _source;
 

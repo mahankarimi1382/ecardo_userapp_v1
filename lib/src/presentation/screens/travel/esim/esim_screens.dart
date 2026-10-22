@@ -257,7 +257,8 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                             ),
                             InkWell(
                               onTap: () {
-                                final activePkg = controller.esimPackages.isNotEmpty
+                                final activePkg =
+                                    controller.esimPackages.isNotEmpty
                                     ? controller.esimPackages.first
                                     : const TravelEsimPackage(
                                         id: 'active-esim-1',
@@ -316,8 +317,7 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                           usedDataGb: 6.4,
                           daysRemaining: 14,
                           countryOrRegion: 'Turkey & Europe',
-                          planName:
-                              'Active eSIM · 10.0 GB High-Speed Roaming',
+                          planName: 'Active eSIM · 10.0 GB High-Speed Roaming',
                           onTopUpTap: () {
                             if (controller.esimPackages.isNotEmpty) {
                               Get.to(
@@ -381,7 +381,10 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(item['flag'] ?? '', style: TextStyle(fontSize: 14.sp)),
+                                Text(
+                                  item['flag'] ?? '',
+                                  style: TextStyle(fontSize: 14.sp),
+                                ),
                                 SizedBox(width: 6.w),
                                 Text(
                                   l10nPick(
@@ -472,7 +475,11 @@ class _EsimPackagesScreenState extends State<EsimPackagesScreen> {
                       ),
                       child: Column(
                         children: [
-                          const Icon(Icons.cloud_off_rounded, color: Colors.orange, size: 36),
+                          const Icon(
+                            Icons.cloud_off_rounded,
+                            color: Colors.orange,
+                            size: 36,
+                          ),
                           SizedBox(height: 8.h),
                           Text(
                             l10nPick(

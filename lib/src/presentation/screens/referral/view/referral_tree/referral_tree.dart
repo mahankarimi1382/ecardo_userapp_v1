@@ -45,7 +45,12 @@ Future<void> _copyReferralLink(BuildContext context) async {
     code = Get.find<ReferralController>().referralModel.value.data?.code;
   }
   if ((code == null || code.isEmpty) && Get.isRegistered<HomeController>()) {
-    code = Get.find<HomeController>().dashboardModel.value.data?.referral?.referralCode;
+    code = Get.find<HomeController>()
+        .dashboardModel
+        .value
+        .data
+        ?.referral
+        ?.referralCode;
   }
   if (code == null || code.isEmpty) {
     try {
@@ -88,7 +93,9 @@ class _ReferralTreeState extends State<ReferralTree> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor: isDark
+          ? AppColors.darkBackground
+          : AppColors.lightBackground,
       appBar: CommonDefaultAppBar(),
       body: Column(
         children: [
@@ -106,7 +113,9 @@ class _ReferralTreeState extends State<ReferralTree> {
               child: IconButton(
                 icon: Icon(
                   Icons.link_rounded,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.brandViolet,
                 ),
                 tooltip: _refL(
                   context,
@@ -146,14 +155,20 @@ class _ReferralTreeState extends State<ReferralTree> {
               final rootData = controller.referralTreeModel.value.data;
 
               // 3. Empty State with helpful illustration, localized microcopy, and copy-link CTA
-              if (rootData == null || rootData.children == null || rootData.children!.isEmpty) {
+              if (rootData == null ||
+                  rootData.children == null ||
+                  rootData.children!.isEmpty) {
                 return Center(
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: EcardoEmptyState(
                       iconData: Icons.account_tree_outlined,
-                      iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
-                      glowColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
+                      iconColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
+                      glowColor: isDark
+                          ? AppColors.mainSoftBlue
+                          : AppColors.brandViolet,
                       title: _refL(
                         context,
                         en: 'Referral Tree Is Empty',
@@ -173,7 +188,8 @@ class _ReferralTreeState extends State<ReferralTree> {
                         ar: 'نسخ رابط الإحالة',
                       ),
                       onPrimaryAction: () => _copyReferralLink(context),
-                      secondaryActionLabel: localization.noInternetConnectionRetryButton,
+                      secondaryActionLabel:
+                          localization.noInternetConnectionRetryButton,
                       onSecondaryAction: controller.fetchReferralTree,
                     ),
                   ),

@@ -21,18 +21,19 @@ class PublicLiveRateSource implements ExchangeRateSource {
   final Dio _dio;
 
   PublicLiveRateSource({Dio? dio})
-      : _dio = dio ??
-            Dio(
-              BaseOptions(
-                connectTimeout: const Duration(milliseconds: 2500),
-                receiveTimeout: const Duration(milliseconds: 3000),
-                headers: const {
-                  'Accept': 'application/json',
-                  'User-Agent':
-                      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-                },
-              ),
-            );
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
+              connectTimeout: const Duration(milliseconds: 2500),
+              receiveTimeout: const Duration(milliseconds: 3000),
+              headers: const {
+                'Accept': 'application/json',
+                'User-Agent':
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+              },
+            ),
+          );
 
   @override
   String get label => 'public-live-rates (Binance & ECB)';
@@ -98,7 +99,8 @@ class PublicLiveRateSource implements ExchangeRateSource {
       }
 
       double rateIrr = 0.0;
-      double? changePct; // Null when public source does not provide 24h ticker delta
+      double?
+      changePct; // Null when public source does not provide 24h ticker delta
 
       if (upper == 'USDT' || upper == 'USDT_IRT') {
         rateIrr = usdToIrr;

@@ -12,18 +12,17 @@ import 'package:ecardo_user/src/presentation/widgets/web_view_dynamic.dart';
 class TermsPrivacyDialog {
   const TermsPrivacyDialog._();
 
-  static Future<bool?> show(
-    BuildContext context, {
-    VoidCallback? onAccept,
-  }) {
+  static Future<bool?> show(BuildContext context, {VoidCallback? onAccept}) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
     final sheetBg = isDark ? const Color(0xFF111827) : AppColors.white;
-    final titleColor =
-        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final subtitleColor =
-        isDark ? AppColors.darkTextSecondary : AppColors.lightTextTertiary;
+    final titleColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final subtitleColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
 
     return showModalBottomSheet<bool>(
       context: context,
@@ -271,54 +270,54 @@ Widget _buildPillarRow(
   required String desc,
   required bool isDark,
 }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: EdgeInsets.only(top: 2.h),
-          padding: EdgeInsets.all(6.w),
-          decoration: BoxDecoration(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.06)
-                : const Color(0xFFF1F5F9),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Icon(
-            icon,
-            size: 16.sp,
-            color: isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack,
-          ),
+  return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        margin: EdgeInsets.only(top: 2.h),
+        padding: EdgeInsets.all(6.w),
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.06)
+              : const Color(0xFFF1F5F9),
+          borderRadius: BorderRadius.circular(8.r),
         ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w800,
-                  color: isDark
-                      ? AppColors.darkTextPrimary
-                      : AppColors.lightTextPrimary,
-                ),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                desc,
-                style: TextStyle(
-                  fontSize: 11.5.sp,
-                  fontWeight: FontWeight.w500,
-                  color: isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextTertiary,
-                  height: 1.35,
-                ),
-              ),
-            ],
-          ),
+        child: Icon(
+          icon,
+          size: 16.sp,
+          color: isDark ? const Color(0xFF38BDF8) : AppColors.deepBlack,
         ),
-      ],
-    );
-  }
+      ),
+      SizedBox(width: 12.w),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w800,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              desc,
+              style: TextStyle(
+                fontSize: 11.5.sp,
+                fontWeight: FontWeight.w500,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextTertiary,
+                height: 1.35,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}

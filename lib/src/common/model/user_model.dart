@@ -133,7 +133,9 @@ class UserData {
     providerId = json['provider_id'];
     balance = json['balance'];
     passcode = json['passcode']?.toString();
-    hasPasscode = json['has_passcode'] == true || (passcode != null && passcode != '0' && passcode != '');
+    hasPasscode =
+        json['has_passcode'] == true ||
+        (passcode != null && passcode != '0' && passcode != '');
     country = json['country'];
     gender = json['gender'];
     dateOfBirth = json['date_of_birth'];
@@ -199,7 +201,14 @@ class Addons {
   bool? travelSim;
   bool? travelFlight;
 
-  Addons({this.virtualCards, this.giftCards, this.p2pTrading, this.travel, this.travelSim, this.travelFlight});
+  Addons({
+    this.virtualCards,
+    this.giftCards,
+    this.p2pTrading,
+    this.travel,
+    this.travelSim,
+    this.travelFlight,
+  });
 
   Addons.fromJson(Map<String, dynamic> json) {
     virtualCards = json['virtual_cards'];

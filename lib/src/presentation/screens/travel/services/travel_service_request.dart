@@ -93,9 +93,8 @@ class TravelServiceRequestStore {
       return decoded
           .whereType<Map>()
           .map(
-            (entry) => TravelServiceRequest.fromJson(
-              Map<String, dynamic>.from(entry),
-            ),
+            (entry) =>
+                TravelServiceRequest.fromJson(Map<String, dynamic>.from(entry)),
           )
           .toList();
     } catch (_) {

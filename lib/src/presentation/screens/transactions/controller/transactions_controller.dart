@@ -52,7 +52,8 @@ class TransactionsController extends GetxController {
   // Status and Type filters
   final RxString status = "".obs;
   final RxString selectedType = "".obs;
-  final RxInt direction = 0.obs; // 0: All, 1: Incoming, 2: Outgoing, 3: Transfer
+  final RxInt direction =
+      0.obs; // 0: All, 1: Incoming, 2: Outgoing, 3: Transfer
 
   // Pagination
   final RxInt currentPage = 1.obs;
@@ -91,7 +92,8 @@ class TransactionsController extends GetxController {
       queryParams.add('status=${Uri.encodeComponent(status.value)}');
     }
 
-    if (selectedType.value.isNotEmpty && selectedType.value.toLowerCase() != 'all') {
+    if (selectedType.value.isNotEmpty &&
+        selectedType.value.toLowerCase() != 'all') {
       queryParams.add('type=${Uri.encodeComponent(selectedType.value)}');
     }
 

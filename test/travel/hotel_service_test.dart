@@ -12,19 +12,15 @@ import 'package:ecardo_user/src/presentation/screens/travel/hotels/hotel_screens
 
 class _MockHotelTravelRepository implements TravelRepository {
   @override
-  Future<TravelBootstrap> getBootstrap() async => const TravelBootstrap(
-        currency: 'USD',
-        locale: 'en',
-        services: [],
-      );
+  Future<TravelBootstrap> getBootstrap() async =>
+      const TravelBootstrap(currency: 'USD', locale: 'en', services: []);
 
   @override
   Future<List<TravelSuggestion>> getSuggestions(
     TravelProductType type, {
     String query = '',
     int limit = 20,
-  }) async =>
-      const [];
+  }) async => const [];
 
   @override
   Future<List<TravelOffer>> searchHotels(TravelHotelSearch search) async =>
@@ -41,18 +37,19 @@ class _MockHotelTravelRepository implements TravelRepository {
   Future<TravelOffer> getOfferDetails(
     TravelProductType type,
     String offerId,
-  ) async =>
-      throw UnimplementedError();
+  ) async => throw UnimplementedError();
 
   @override
-  Future<List<TravelEsimPackage>> getEsimPackages(String destinationCode) async =>
-      const [];
+  Future<List<TravelEsimPackage>> getEsimPackages(
+    String destinationCode,
+  ) async => const [];
 
   @override
   Future<List<TravelTraveler>> getTravelers() async => const [];
 
   @override
-  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) async => traveler;
+  Future<TravelTraveler> saveTraveler(TravelTraveler traveler) async =>
+      traveler;
 
   @override
   Future<TravelTravelerProfile> getTravelerProfile() async =>
@@ -75,15 +72,13 @@ class _MockHotelTravelRepository implements TravelRepository {
     required TravelMoney expectedTotal,
     required String idempotencyKey,
     required TravelBookingDetails bookingDetails,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelOrder> payReservation({
     required TravelReservation reservation,
     required String idempotencyKey,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelOrder> requestRefund({
@@ -92,21 +87,19 @@ class _MockHotelTravelRepository implements TravelRepository {
     String? customerNote,
     required String eligibilityVersion,
     required String idempotencyKey,
-  }) async =>
-      throw UnimplementedError();
+  }) async => throw UnimplementedError();
 
   @override
   Future<TravelCancellationEligibility> getCancellationEligibility(
     TravelOrder order,
-  ) async =>
-      TravelCancellationEligibility(
-        eligible: false,
-        penalty: const TravelMoney(amount: 0, currency: 'USD'),
-        refundable: order.total,
-        refundDestination: 'original_wallet',
-        requiresSupplierReview: false,
-        version: '1',
-      );
+  ) async => TravelCancellationEligibility(
+    eligible: false,
+    penalty: const TravelMoney(amount: 0, currency: 'USD'),
+    refundable: order.total,
+    refundDestination: 'original_wallet',
+    requiresSupplierReview: false,
+    version: '1',
+  );
 
   @override
   Future<TravelOrderTimeline> getOrderEvents(TravelOrder order) async =>
@@ -122,8 +115,7 @@ class _MockHotelTravelRepository implements TravelRepository {
     String? origin,
     String? destination,
     String? travelDate,
-  }) async =>
-      {'id': 'notify-test', 'status': 'active'};
+  }) async => {'id': 'notify-test', 'status': 'active'};
 }
 
 void main() {
@@ -152,7 +144,9 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     Get.reset();
-    final controller = TravelController(repository: _MockHotelTravelRepository());
+    final controller = TravelController(
+      repository: _MockHotelTravelRepository(),
+    );
     Get.put<TravelController>(controller);
   });
 
@@ -271,10 +265,7 @@ void main() {
           rating: 4.2,
           featureKeys: ['WiFi'],
           metadata: {},
-          attributes: {
-            'stars': 4,
-            'property_type': 'City Hotel',
-          },
+          attributes: {'stars': 4, 'property_type': 'City Hotel'},
           product: {
             'amenities': ['Gym'],
           },
@@ -286,29 +277,30 @@ void main() {
       expect(options.maximumPrice, 250);
       expect(options.stars, {4, 5});
       expect(options.features, containsAll(['Pool', 'Spa', 'WiFi', 'Gym']));
-      expect(options.propertyTypes, containsAll(['Luxury Hotel', 'City Hotel']));
+      expect(
+        options.propertyTypes,
+        containsAll(['Luxury Hotel', 'City Hotel']),
+      );
     });
   });
 
   group('Hotel Service - HotelSearchScreen UI Tests', () {
-    testWidgets('renders search card, inputs, and search button without overflow', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const HotelSearchScreen(),
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+    testWidgets(
+      'renders search card, inputs, and search button without overflow',
+      (tester) async {
+        await tester.pumpWidget(
+          wrapWithTheme(const HotelSearchScreen(), locale: const Locale('en')),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(HotelSearchScreen), findsOneWidget);
-      expect(find.byIcon(Icons.location_on_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.date_range_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.group_outlined), findsOneWidget);
-      expect(find.text('Search hotels'), findsOneWidget);
-    });
+        expect(find.byType(HotelSearchScreen), findsOneWidget);
+        expect(find.byIcon(Icons.location_on_outlined), findsOneWidget);
+        expect(find.byIcon(Icons.date_range_outlined), findsOneWidget);
+        expect(find.byIcon(Icons.group_outlined), findsOneWidget);
+        expect(find.text('Search hotels'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders properly in Dark Theme without overflow', (
       tester,
@@ -329,61 +321,56 @@ void main() {
   });
 
   group('Hotel Service - HotelResultsScreen UI Tests', () {
-    testWidgets('renders offer card badges, rating, cancellation and taxes without overflow', (
-      tester,
-    ) async {
-      tester.view.physicalSize = const Size(1200, 2400);
-      tester.view.devicePixelRatio = 1;
-      addTearDown(tester.view.reset);
+    testWidgets(
+      'renders offer card badges, rating, cancellation and taxes without overflow',
+      (tester) async {
+        tester.view.physicalSize = const Size(1200, 2400);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
 
-      final controller = Get.find<TravelController>();
-      controller.isLoading.value = false;
-      controller.lastHotelSearch.value = TravelHotelSearch(
-        city: 'Tehran',
-        checkInDate: DateTime.now().add(const Duration(days: 10)),
-        checkOutDate: DateTime.now().add(const Duration(days: 12)),
-        roomCount: 1,
-        adultCount: 2,
-        childCount: 0,
-      );
-      controller.hotelOffers.value = [
-        const TravelOffer(
-          id: 'hotel-101',
-          type: TravelProductType.hotel,
-          titleKey: 'travelMockHotelEspinas',
-          subtitleKey: 'travelMockHotelEspinasLocation',
-          badgeKey: 'travelLuxury',
-          total: TravelMoney(amount: 200, currency: 'USD'),
-          rating: 4.8,
-          featureKeys: ['travelFeatureBreakfast'],
-          metadata: {},
-          attributes: {
-            'stars': 5,
-            'free_cancellation': true,
-          },
-          product: {
-            'amenities': ['Breakfast Included'],
-          },
-        ),
-      ];
+        final controller = Get.find<TravelController>();
+        controller.isLoading.value = false;
+        controller.lastHotelSearch.value = TravelHotelSearch(
+          city: 'Tehran',
+          checkInDate: DateTime.now().add(const Duration(days: 10)),
+          checkOutDate: DateTime.now().add(const Duration(days: 12)),
+          roomCount: 1,
+          adultCount: 2,
+          childCount: 0,
+        );
+        controller.hotelOffers.value = [
+          const TravelOffer(
+            id: 'hotel-101',
+            type: TravelProductType.hotel,
+            titleKey: 'travelMockHotelEspinas',
+            subtitleKey: 'travelMockHotelEspinasLocation',
+            badgeKey: 'travelLuxury',
+            total: TravelMoney(amount: 200, currency: 'USD'),
+            rating: 4.8,
+            featureKeys: ['travelFeatureBreakfast'],
+            metadata: {},
+            attributes: {'stars': 5, 'free_cancellation': true},
+            product: {
+              'amenities': ['Breakfast Included'],
+            },
+          ),
+        ];
 
-      await tester.pumpWidget(
-        wrapWithTheme(
-          const HotelResultsScreen(),
-          locale: const Locale('en'),
-        ),
-      );
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 300));
+        await tester.pumpWidget(
+          wrapWithTheme(const HotelResultsScreen(), locale: const Locale('en')),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(HotelResultsScreen), findsOneWidget);
-      expect(find.text('Espinas Palace Hotel'), findsOneWidget);
-      expect(find.text('Saadat Abad, Tehran'), findsOneWidget);
-      expect(find.text('4.8'), findsOneWidget);
-      expect(find.text('Free Cancellation'), findsOneWidget);
-      expect(find.text('Taxes & fees included'), findsOneWidget);
-      expect(find.text('View details'), findsOneWidget);
-    });
+        expect(find.byType(HotelResultsScreen), findsOneWidget);
+        expect(find.text('Espinas Palace Hotel'), findsOneWidget);
+        expect(find.text('Saadat Abad, Tehran'), findsOneWidget);
+        expect(find.text('4.8'), findsOneWidget);
+        expect(find.text('Free Cancellation'), findsOneWidget);
+        expect(find.text('Taxes & fees included'), findsOneWidget);
+        expect(find.text('View details'), findsOneWidget);
+      },
+    );
 
     testWidgets('renders properly in Dark Mode without overflow', (
       tester,
@@ -413,10 +400,7 @@ void main() {
           rating: 4.8,
           featureKeys: ['travelFeatureBreakfast'],
           metadata: {},
-          attributes: {
-            'stars': 5,
-            'free_cancellation': true,
-          },
+          attributes: {'stars': 5, 'free_cancellation': true},
           product: {
             'amenities': ['Breakfast Included'],
           },

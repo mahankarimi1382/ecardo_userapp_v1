@@ -30,7 +30,9 @@ class GiftCodeHeaderSection extends StatelessWidget {
       children: [
         Image.asset(
           PngAssets.headerFrame,
-          color: isDark ? AppColors.darkSurfaceVariant.withValues(alpha: 0.3) : null,
+          color: isDark
+              ? AppColors.darkSurfaceVariant.withValues(alpha: 0.3)
+              : null,
           errorBuilder: (_, _, _) => const SizedBox(height: 140),
         ),
         Column(
@@ -63,14 +65,22 @@ class GiftCodeHeaderSection extends StatelessWidget {
                         },
                         child: Container(
                           padding: const EdgeInsets.all(AppSpacing.sm),
-                          margin: const EdgeInsetsDirectional.only(end: AppSpacing.lg),
+                          margin: const EdgeInsetsDirectional.only(
+                            end: AppSpacing.lg,
+                          ),
                           width: 42,
                           height: 42,
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkCard : AppColors.white,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                            color: isDark
+                                ? AppColors.darkCard
+                                : AppColors.white,
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusSm,
+                            ),
                             border: Border.all(
-                              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
                             ),
                           ),
                           child: Image.asset(
@@ -80,15 +90,20 @@ class GiftCodeHeaderSection extends StatelessWidget {
                         ),
                       )
                     : Padding(
-                        padding: const EdgeInsetsDirectional.only(end: AppSpacing.lg),
+                        padding: const EdgeInsetsDirectional.only(
+                          end: AppSpacing.lg,
+                        ),
                         child: IconButton(
                           visualDensity: VisualDensity.compact,
                           padding: EdgeInsets.zero,
                           tooltip: 'Options',
-                          onPressed: () => _buildHistoryNavigation(context, isDark),
+                          onPressed: () =>
+                              _buildHistoryNavigation(context, isDark),
                           icon: Icon(
                             Icons.more_vert,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       ),
@@ -96,7 +111,9 @@ class GiftCodeHeaderSection extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.xxl),
             Padding(
-              padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.lg),
+              padding: const EdgeInsetsDirectional.symmetric(
+                horizontal: AppSpacing.lg,
+              ),
               child: Obx(
                 () => Row(
                   children: [
@@ -110,13 +127,17 @@ class GiftCodeHeaderSection extends StatelessWidget {
                         text: localizations.giftCodeHeaderGiftRedeem,
                         fontSize: 15,
                         backgroundColor: controller.selectedScreen.value == 0
-                            ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
+                            ? (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.deepBlack)
                             : (isDark ? AppColors.darkCard : AppColors.white),
                         textColor: controller.selectedScreen.value == 0
                             ? (isDark ? AppColors.deepBlack : AppColors.white)
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary.withValues(
+                                      alpha: 0.8,
+                                    )),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.lg),
@@ -130,13 +151,17 @@ class GiftCodeHeaderSection extends StatelessWidget {
                         text: localizations.giftCodeHeaderMyGift,
                         fontSize: 15,
                         backgroundColor: controller.selectedScreen.value != 0
-                            ? (isDark ? AppColors.mainSoftBlue : AppColors.deepBlack)
+                            ? (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.deepBlack)
                             : (isDark ? AppColors.darkCard : AppColors.white),
                         textColor: controller.selectedScreen.value != 0
                             ? (isDark ? AppColors.deepBlack : AppColors.white)
                             : (isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary.withValues(alpha: 0.8)),
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary.withValues(
+                                      alpha: 0.8,
+                                    )),
                       ),
                     ),
                   ],
@@ -188,18 +213,24 @@ class GiftCodeHeaderSection extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Icons.receipt_long_rounded,
-                  color: isDark ? AppColors.mainSoftBlue : AppColors.lightPrimary,
+                  color: isDark
+                      ? AppColors.mainSoftBlue
+                      : AppColors.lightPrimary,
                 ),
                 title: Text(
                   localizations.giftCodeHeaderGiftRedeemHistory,
                   style: AppTextStyles.titleSmall.copyWith(
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 trailing: Icon(
                   Icons.chevron_right_rounded,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.softGray,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.softGray,
                 ),
                 onTap: () {
                   Get.back();

@@ -13,10 +13,28 @@ class AmountInputFormatter extends TextInputFormatter {
   final int maxDecimals;
 
   static const List<String> _faDigits = [
-    '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹',
+    '۰',
+    '۱',
+    '۲',
+    '۳',
+    '۴',
+    '۵',
+    '۶',
+    '۷',
+    '۸',
+    '۹',
   ];
   static const List<String> _arDigits = [
-    '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩',
+    '٠',
+    '١',
+    '٢',
+    '٣',
+    '٤',
+    '٥',
+    '٦',
+    '٧',
+    '٨',
+    '٩',
   ];
 
   /// Normalizes user input to a plain Latin numeric string.

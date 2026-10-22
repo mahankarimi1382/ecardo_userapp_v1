@@ -19,7 +19,9 @@ class Disable2FaSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? AppColors.darkSurface : AppColors.white;
     final primaryTextColor = isDark ? AppColors.warmWhite : AppColors.deepBlack;
-    final secondaryTextColor = isDark ? AppColors.softGray : AppColors.lightTextTertiary;
+    final secondaryTextColor = isDark
+        ? AppColors.softGray
+        : AppColors.lightTextTertiary;
 
     return Container(
       margin: const EdgeInsetsDirectional.symmetric(horizontal: 16),
@@ -76,8 +78,12 @@ class Disable2FaSection extends StatelessWidget {
               obscureText: true,
               controller: controller.disable2FaController,
               keyboardType: TextInputType.visiblePassword,
-              backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-              textStyle: AppTextStyles.bodyMedium.copyWith(color: primaryTextColor),
+              backgroundColor: isDark
+                  ? AppColors.darkBackground
+                  : AppColors.lightBackground,
+              textStyle: AppTextStyles.bodyMedium.copyWith(
+                color: primaryTextColor,
+              ),
             ),
           ),
           SizedBox(height: AppSpacing.xl),
