@@ -142,8 +142,8 @@ void main() {
         // Currency is IRT -> DynamicDecimalsHelper.isZeroDecimal('IRT') is true
         expect(DynamicDecimalsHelper.isZeroDecimal('IRT'), isTrue);
 
-        // Principal display is formatted with thousands separator and zero decimals
-        expect(find.textContaining('IRT 20,000,000'), findsOneWidget);
+        // Principal display is formatted with thousands/M suffix and zero decimals
+        expect(find.textContaining('IRT 20M'), findsOneWidget);
 
         // Monthly return: (20,000,000 * 0.24) / 12 = 400,000 (zero decimal)
         expect(find.textContaining('+IRT 400,000'), findsOneWidget);

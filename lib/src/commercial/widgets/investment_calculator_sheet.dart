@@ -217,7 +217,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             fit: BoxFit.scaleDown,
                             alignment: AlignmentDirectional.centerEnd,
                             child: Text(
-                              '$currency ${_formatExactNumber(_investAmount)}',
+                              '$currency ${_formatNumber(_investAmount)}',
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w900,
@@ -265,22 +265,32 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            '${l10nPick(context, en: 'Min', fa: 'حداقل', ar: 'الحد الأدنى', zh: '最小')}: $currency ${_formatNumber(minAmount)}',
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: isDark
-                                  ? AppColors.darkTextTertiary
-                                  : AppColors.lightTextTertiary,
+                          Expanded(
+                            child: Text(
+                              '${l10nPick(context, en: 'Min', fa: 'حداقل', ar: 'الحد الأدنى', zh: '最小')}: $currency ${_formatNumber(minAmount)}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: isDark
+                                    ? AppColors.darkTextTertiary
+                                    : AppColors.lightTextTertiary,
+                              ),
                             ),
                           ),
-                          Text(
-                            '${l10nPick(context, en: 'Max', fa: 'حداکثر', ar: 'الحد الأقصى', zh: '最大')}: $currency ${_formatNumber(maxAmount)}',
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: isDark
-                                  ? AppColors.darkTextTertiary
-                                  : AppColors.lightTextTertiary,
+                          SizedBox(width: AppSpacing.sm.w),
+                          Expanded(
+                            child: Text(
+                              '${l10nPick(context, en: 'Max', fa: 'حداکثر', ar: 'الحد الأقصى', zh: '最大')}: $currency ${_formatNumber(maxAmount)}',
+                              maxLines: 1,
+                              textAlign: TextAlign.end,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: isDark
+                                    ? AppColors.darkTextTertiary
+                                    : AppColors.lightTextTertiary,
+                              ),
                             ),
                           ),
                         ],
@@ -491,8 +501,6 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
   }
 
   String _formatNumber(double amount) {
-    final isZeroDec =
-        DynamicDecimalsHelper.isZeroDecimal(widget.project.currency);
     if (amount >= 1000000000) {
       final b = amount / 1000000000;
       return '${b % 1 == 0 ? b.toInt() : b.toStringAsFixed(1)}B';
@@ -505,6 +513,6 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
       final k = amount / 1000;
       return '${k % 1 == 0 ? k.toInt() : k.toStringAsFixed(1)}K';
     }
-    return isZeroDec ? amount.round().toString() : amount.toStringAsFixed(0);
+    return amount.toStringAsFixed(0);
   }
 }
