@@ -1,0 +1,31 @@
+﻿screen_id,route_name,scenario_id,platform,device_or_viewport,locale,theme,state_id,before_path,after_path,redaction_checked,comparison_result,reviewer,notes
+ROUTE-001,SplashScreen,SCN-AUTH-01,Android/iOS,390x844,en,light,initial,evidence/ROUTE-001_before.png,test/test_output/screens/welcome__light.png,true,MATCH,Integrator,Branded splash & walkthrough
+ROUTE-001,SplashScreen,SCN-AUTH-01,Android/iOS,390x844,en,dark,initial,evidence/ROUTE-001_before.png,test/test_output/screens/welcome__dark.png,true,MATCH,Integrator,Dark mode splash
+ROUTE-004,SignInScreen,SCN-AUTH-02,Android/iOS,390x844,en,light,initial,evidence/ROUTE-004_before.png,test/test_output/screens/signin__light.png,true,MATCH,Integrator,Sign-in card & inputs
+ROUTE-004,SignInScreen,SCN-AUTH-02,Android/iOS,390x844,fa,rtl,initial,evidence/ROUTE-004_before.png,test/test_output/screens/signin__rtl.png,true,MATCH,Integrator,Persian RTL sign-in layout
+ROUTE-008,VerifyEmailScreen,SCN-AUTH-03,Android/iOS,390x844,en,light,initial,evidence/ROUTE-008_before.png,test/test_output/screens/verify_email__light.png,true,MATCH,Integrator,60s OTP countdown & inputs
+ROUTE-008,VerifyEmailScreen,SCN-AUTH-03,Android/iOS,390x844,en,dark,initial,evidence/ROUTE-008_before.png,test/test_output/screens/verify_email__dark.png,true,MATCH,Integrator,Dark mode OTP screen
+ROUTE-012,NavigationScreen,SCN-HOME-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-012_before.png,test/test_output/screens/home__light.png,true,MATCH,Integrator,8-tile quick service grid & UID pill
+ROUTE-012,NavigationScreen,SCN-HOME-01,Android/iOS,390x844,en,dark,success,evidence/ROUTE-012_before.png,test/test_output/screens/home__dark.png,true,MATCH,Integrator,Dark mode dashboard
+ROUTE-013,WalletsScreen,SCN-WLT-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-013_before.png,test/test_output/screens/wallets__light.png,true,MATCH,Integrator,Balance hero & multi-currency carousel
+ROUTE-013,WalletsScreen,SCN-WLT-01,Android/iOS,390x844,en,dark,success,evidence/ROUTE-013_before.png,test/test_output/screens/wallets__dark.png,true,MATCH,Integrator,Dark mode wallets screen
+ROUTE-013,WalletsScreen,SCN-WLT-02,Android/iOS,390x844,fa,rtl,success,evidence/ROUTE-013_before.png,test/test_output/screens/wallets__rtl.png,true,MATCH,Integrator,RTL Persian wallets layout
+ROUTE-013,WalletsScreen,SCN-WLT-03,Android/iOS,390x844,en,light,empty,evidence/ROUTE-013_before.png,test/test_output/screens/wallets__empty.png,true,MATCH,Integrator,Empty state wallet placeholder
+ROUTE-013,WalletsScreen,SCN-WLT-04,Android/iOS,390x844,en,light,api_error,evidence/ROUTE-013_before.png,test/test_output/screens/wallets__error.png,true,MATCH,Integrator,Error state with retry action
+ROUTE-015,QrCodeScreen,SCN-QR-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-015_before.png,test/test_output/screens/qr_code__light.png,true,MATCH,Integrator,QR payment code generator
+ROUTE-017,MakePaymentScreen,SCN-PAY-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-017_before.png,test/test_output/screens/make_payment_review__light.png,true,MATCH,Integrator,Modern payment review with TransferPathCard
+ROUTE-017,MakePaymentScreen,SCN-PAY-01,Android/iOS,390x844,en,dark,success,evidence/ROUTE-017_before.png,test/test_output/screens/make_payment_review__dark.png,true,MATCH,Integrator,Dark mode payment review card
+ROUTE-020,TransferScreen,SCN-TX-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-020_before.png,test/test_output/screens/transfer_review_step__light.png,true,MATCH,Integrator,Transfer review with debounce slider
+ROUTE-020,TransferScreen,SCN-TX-01,Android/iOS,390x844,en,dark,success,evidence/ROUTE-020_before.png,test/test_output/screens/transfer_review_step__dark.png,true,MATCH,Integrator,Dark mode transfer review step
+ROUTE-020,TransferScreen,SCN-TX-02,Android/iOS,390x844,en,light,success,evidence/ROUTE-020_before.png,test/test_output/screens/transfer_success_step__light.png,true,MATCH,Integrator,Digital receipt with reference copy
+ROUTE-021,CashOutScreen,SCN-CO-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-021_before.png,test/test_output/screens/cash_out_review__light.png,true,MATCH,Integrator,Cash-out withdrawal review step
+ROUTE-021,CashOutScreen,SCN-CO-01,Android/iOS,390x844,en,dark,success,evidence/ROUTE-021_before.png,test/test_output/screens/cash_out_review__dark.png,true,MATCH,Integrator,Dark mode cash-out review step
+ROUTE-023,ExchangeScreen,SCN-FX-01,Android/iOS,390x844,en,light,initial,evidence/ROUTE-023_before.png,test/test_output/screens/exchange__amount__light.png,true,MATCH,Integrator,Dynamic rate exchange swap card
+ROUTE-023,ExchangeScreen,SCN-FX-01,Android/iOS,390x844,en,dark,initial,evidence/ROUTE-023_before.png,test/test_output/screens/exchange__amount__dark.png,true,MATCH,Integrator,Dark mode exchange screen
+ROUTE-106,VirtualCardScreen,SCN-CRD-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-106_before.png,test/test_output/screens/virtual_card__light.png,true,MATCH,Integrator,3D interactive flip & step-up reveal
+ROUTE-106,VirtualCardScreen,SCN-CRD-01,Android/iOS,390x844,en,dark,success,evidence/ROUTE-106_before.png,test/test_output/screens/virtual_card__dark.png,true,MATCH,Integrator,Dark mode virtual card
+ROUTE-047,TravelOrdersScreen,SCN-TRV-01,Android/iOS,390x844,en,light,success,evidence/ROUTE-047_before.png,test/test_output/screens/travel_orders__light.png,true,MATCH,Integrator,Travel bookings & eTrip vouchers
+ROUTE-108,FlightSearchScreen,SCN-TRV-02,Android/iOS,390x844,en,light,initial,evidence/ROUTE-108_before.png,test/test_output/screens/flight_search__light.png,true,MATCH,Integrator,Bidi flight route indicator & inputs
+ROUTE-108,FlightSearchScreen,SCN-TRV-02,Android/iOS,390x844,en,dark,initial,evidence/ROUTE-108_before.png,test/test_output/screens/flight_search__dark.png,true,MATCH,Integrator,Dark mode flight search
+ROUTE-037,KycHistoryScreen,SCN-KYC-01,Android/iOS,390x844,en,light,initial,evidence/ROUTE-037_before.png,test/test_output/screens/kyc_submit_wizard__light.png,true,MATCH,Integrator,KYC Tier 1-3 upgrade card
+ROUTE-037,KycHistoryScreen,SCN-KYC-01,Android/iOS,390x844,en,dark,initial,evidence/ROUTE-037_before.png,test/test_output/screens/kyc_submit_wizard__dark.png,true,MATCH,Integrator,Dark mode KYC card

@@ -1,0 +1,855 @@
+﻿source_file,line,call,literal_path_candidate,context,review_status
+lib/src/app/navigation/navigation_screen.dart,275,Get.to,,final scannedCode = await Get.to(() => const QrScannerScreen());,REVIEW_REQUIRED
+lib/src/app/navigation/navigation_screen.dart,285,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/app/navigation/navigation_screen.dart,296,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/app/navigation/navigation_screen.dart,307,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/app/navigation/navigation_screen.dart,314,Get.toNamed,,"Get.toNamed(BaseRoute.transfer, arguments: {""uid_account"": code});",REVIEW_REQUIRED
+lib/src/app/navigation/navigation_screen.dart,343,Get.toNamed,,Get.toNamed(BaseRoute.qrCode);,REVIEW_REQUIRED
+lib/src/app/navigation/navigation_screen.dart,351,Get.toNamed,,Get.toNamed(BaseRoute.services);,REVIEW_REQUIRED
+lib/src/app/routes/route_return.dart,16,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/app/routes/route_return.dart,19,Get.offNamed,,Get.offNamed(route ?? fallbackRoute);,REVIEW_REQUIRED
+lib/src/app/routes/routes.dart,41,Get.off,/personal_info_route,// Get.off(() => const SetPasscodeScreen()) directly.,REVIEW_REQUIRED
+lib/src/app/routes/routes_handler.dart,291,Get.to,,// is opened directly via `Get.to(() => ReplayTicket(ticketUid: ...))` from,REVIEW_REQUIRED
+lib/src/app/routes/routes_handler.dart,293,Get.toNamed,,// Get.toNamed(BaseRoute.replayTicket) silently fell through to,REVIEW_REQUIRED
+lib/src/commercial/screens/commercial_projects_screen.dart,125,Get.to,,Get.to(() => const MyInvestmentsScreen());,REVIEW_REQUIRED
+lib/src/commercial/screens/commercial_projects_screen.dart,361,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/commercial/screens/equity_invest_checkout_screen.dart,93,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/commercial/screens/equity_invest_checkout_screen.dart,742,Get.back,,Get.back(); // Back to project detail,REVIEW_REQUIRED
+lib/src/commercial/screens/equity_project_detail_screen.dart,72,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/commercial/screens/equity_project_detail_screen.dart,769,Get.to,,Get.to(() => EquityInvestCheckoutScreen(project: detail.base));,REVIEW_REQUIRED
+lib/src/commercial/screens/my_investments_screen.dart,45,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/commercial/widgets/investment_calculator_sheet.dart,439,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/common/services/app_update_helper.dart,48,Get.toNamed,,Get.toNamed(BaseRoute.appUpdate);,REVIEW_REQUIRED
+lib/src/common/services/app_update_helper.dart,53,Get.toNamed,,Get.toNamed(BaseRoute.appUpdate);,REVIEW_REQUIRED
+lib/src/common/services/app_update_helper.dart,81,Get.toNamed,,Get.toNamed(BaseRoute.appUpdate);,REVIEW_REQUIRED
+lib/src/common/services/app_update_helper.dart,117,Get.toNamed,,Get.toNamed(BaseRoute.appUpdate);,REVIEW_REQUIRED
+lib/src/common/services/app_update_helper.dart,152,Navigator.pop,,"onPressed: () => Navigator.pop(ctx),",REVIEW_REQUIRED
+lib/src/common/services/app_update_helper.dart,160,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/services/app_update_helper.dart,161,Get.offAllNamed,,Get.offAllNamed('/');,REVIEW_REQUIRED
+lib/src/common/services/connectivity_watch_service.dart,146,Get.offAllNamed,,Get.offAllNamed(BaseRoute.noInternetConnection);,REVIEW_REQUIRED
+lib/src/common/services/connectivity_watch_service.dart,172,Get.offAllNamed,,Get.offAllNamed(BaseRoute.splash);,REVIEW_REQUIRED
+lib/src/common/services/demo_account_service.dart,425,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/common/services/demo_account_service.dart,441,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/common/services/demo_account_service.dart,2359,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,328,push,,/// push (foreground) or tap. Best-effort: when the controller is not,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,422,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,429,Get.toNamed,,Get.toNamed(target);,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,571,Get.toNamed,,Get.toNamed(BaseRoute.appUpdate);,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,652,Get.toNamed,,Get.toNamed(BaseRoute.notifications);,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,670,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,677,Get.toNamed,,Get.toNamed(BaseRoute.transactions);,REVIEW_REQUIRED
+lib/src/common/services/firebase_messaging_service.dart,680,Get.toNamed,,Get.toNamed(BaseRoute.notifications);,REVIEW_REQUIRED
+lib/src/common/services/kyc_error_handler.dart,176,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/common/services/locale_theme_service.dart,108,Get.offAllNamed,,Get.offAllNamed(BaseRoute.localeTransition);,REVIEW_REQUIRED
+lib/src/common/services/locale_theme_service.dart,126,Get.offAllNamed,,Get.offAllNamed(BaseRoute.root);,REVIEW_REQUIRED
+lib/src/common/services/locale_theme_service.dart,128,Get.offAllNamed,,"Get.offAllNamed(target, arguments: args, parameters: params);",REVIEW_REQUIRED
+lib/src/common/services/locale_theme_service.dart,130,Get.offAllNamed,,"Get.offAllNamed(target, arguments: args);",REVIEW_REQUIRED
+lib/src/common/services/permission_flow_service.dart,297,Navigator.pop,,"onPressed: () => Navigator.pop(ctx, true),",REVIEW_REQUIRED
+lib/src/common/services/permission_flow_service.dart,309,Navigator.pop,,"onPressed: () => Navigator.pop(ctx, false),",REVIEW_REQUIRED
+lib/src/common/services/permission_flow_service.dart,377,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/common/services/permission_flow_service.dart,401,Navigator.pop,,"onPressed: () => Navigator.pop(ctx),",REVIEW_REQUIRED
+lib/src/common/services/session_manager.dart,89,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/common/services/session_manager.dart,173,Get.back,,Get.back(); // close dialog,REVIEW_REQUIRED
+lib/src/common/services/session_manager.dart,175,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/common/services/session_timeout_service.dart,54,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/common/widgets/app_bar/common_app_bar.dart,48,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/common/widgets/app_bar/common_app_bar.dart,50,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/widgets/app_bar/common_app_bar.dart,52,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/common/widgets/design_system/ecardo_balance_hero.dart,186,Navigator.pop,,Navigator.pop(sheetContext);,REVIEW_REQUIRED
+lib/src/common/widgets/design_system/ecardo_digital_receipt.dart,951,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_country_dropdown_bottom_sheet.dart,302,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart,133,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart,358,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_three.dart,143,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_three.dart,332,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet_two.dart,242,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart,87,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart,195,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/multiple_image_picker_dropdown_bottom_sheet.dart,76,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/multiple_image_picker_dropdown_bottom_sheet.dart,122,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/common/widgets/dropdown_bottom_sheet/multiple_image_picker_dropdown_bottom_sheet.dart,163,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_create_screen.dart,113,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_create_screen.dart,114,Get.to,,"Get.to(() => EscrowDetailScreen(orderId: order.id, initialOrder: order));",REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_detail_screen.dart,400,Get.to,,"Get.to(() => EscrowInspectionScreen(order: o)),",REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_detail_screen.dart,431,Get.to,,"Get.to(() => EscrowDisputeReviewScreen(order: o)),",REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_detail_screen.dart,490,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_dispute_decision_screen.dart,321,Get.offAll,,Get.offAll(() => const EscrowListScreen());,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_dispute_respond_screen.dart,71,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_dispute_review_screen.dart,314,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_dispute_review_screen.dart,462,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_dispute_review_screen.dart,463,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_dispute_screen.dart,118,Get.back,,Get.back(); // close dispute form,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_dispute_screen.dart,120,Get.to,,Get.to(() => EscrowDisputeReviewScreen(order: widget.order!));,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_inspection_screen.dart,323,Get.to,,Get.to(() => EscrowDisputeScreen(order: order));,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_inspection_screen.dart,377,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_inspection_screen.dart,379,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_list_screen.dart,203,Get.to,,Get.to(() => const EscrowCreateScreen());,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_list_screen.dart,232,Get.to,,Get.to(() => EscrowInspectionScreen(order: o));,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_list_screen.dart,234,Get.to,,Get.to(() => EscrowDisputeReviewScreen(order: o));,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_list_screen.dart,236,Get.to,,"Get.to(() => EscrowDetailScreen(orderId: o.id, initialOrder: o));",REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_payment_screen.dart,37,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_payment_screen.dart,78,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_shipment_screen.dart,84,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/escrow/screens/escrow_shipment_screen.dart,124,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_application_screen.dart,74,Get.to,,Get.to(() => const GuaranteeConfirmScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_called_screen.dart,422,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_called_screen.dart,454,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_confirm_screen.dart,92,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_confirm_screen.dart,93,Get.off,,Get.off(() => const GuaranteeTrackingScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_confirm_screen.dart,110,Get.off,,Get.off(() => const GuaranteeTrackingScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_detail_screen.dart,142,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_detail_screen.dart,160,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_detail_screen.dart,276,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_detail_screen.dart,294,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_detail_screen.dart,439,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_detail_screen.dart,461,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_home_screen.dart,89,Get.to,,Get.to(() => const GuaranteeTrackingScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_home_screen.dart,144,Get.to,,Get.to(() => const GuaranteeApplicationScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_home_screen.dart,383,Get.to,,Get.to(() => const GuaranteeApplicationScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_home_screen.dart,437,Get.to,,Get.to(() => const GuaranteeApplicationScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_home_screen.dart,486,Get.to,,Get.to(() => GuaranteeCalledScreen(guaranteeCase: c));,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_home_screen.dart,488,Get.to,,"Get.to(() => GuaranteeDetailScreen(caseId: c.id, initialCase: c));",REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_intro_screen.dart,74,Get.to,,Get.to(() => const GuaranteeApplicationScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_tracking_screen.dart,229,Get.to,,Get.to(() => const GuaranteeApplicationScreen());,REVIEW_REQUIRED
+lib/src/guarantee/screens/guarantee_tracking_screen.dart,254,Get.to,,Get.to(() => GuaranteeDetailScreen(caseId: c.id));,REVIEW_REQUIRED
+lib/src/guarantee/widgets/guarantee_collateral_card.dart,997,Get.toNamed,,Get.toNamed(BaseRoute.addMoney);,REVIEW_REQUIRED
+lib/src/helper/smart_back_helper.dart,13,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/helper/smart_back_helper.dart,15,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/helper/smart_back_helper.dart,17,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/license/view/license_delivery_screen.dart,320,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/license/view/license_delivery_screen.dart,349,Get.to,,Get.to(() => LicenseDisputeScreen(order: widget.order));,REVIEW_REQUIRED
+lib/src/license/view/license_detail_screen.dart,456,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/license/view/license_dispute_screen.dart,366,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/license/view/license_intro_screen.dart,53,Get.to,,"onPressed: () => Get.to(() => const LicenseMyLicensesScreen()),",REVIEW_REQUIRED
+lib/src/license/view/license_intro_screen.dart,75,Get.to,,"onPressed: () => Get.to(() => const LicenseStoreScreen()),",REVIEW_REQUIRED
+lib/src/license/view/license_my_licenses_screen.dart,97,Get.to,,Get.to(() => const LicenseStoreScreen());,REVIEW_REQUIRED
+lib/src/license/view/license_my_licenses_screen.dart,323,Get.to,,Get.to(() => const LicenseStoreScreen());,REVIEW_REQUIRED
+lib/src/license/view/license_payment_screen.dart,552,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/license/view/license_payment_screen.dart,701,Get.off,,Get.off(,REVIEW_REQUIRED
+lib/src/license/view/license_store_screen.dart,71,Get.to,,Get.to(() => const LicenseMyLicensesScreen());,REVIEW_REQUIRED
+lib/src/license/view/license_store_screen.dart,174,Get.to,,Get.to(() => const LicenseIntroScreen());,REVIEW_REQUIRED
+lib/src/license/view/license_store_screen.dart,245,Get.to,,Get.to(() => const LicenseMyLicensesScreen());,REVIEW_REQUIRED
+lib/src/license/view/license_store_screen.dart,719,Get.to,,Get.to(() => LicenseDetailScreen(product: product));,REVIEW_REQUIRED
+lib/src/loan/screens/loan_application_screen.dart,794,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/loan/screens/loan_collateral_warning_screen.dart,336,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/loan/screens/loan_collateral_warning_screen.dart,477,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/loan/screens/loan_confirm_screen.dart,121,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/loan/screens/loan_confirm_screen.dart,142,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/loan/screens/loan_confirm_screen.dart,143,Get.off,,Get.off(() => const LoanTrackingScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_confirm_screen.dart,160,Get.off,,Get.off(() => const LoanTrackingScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_detail_screen.dart,220,Get.to,,onTap: () => Get.to(,REVIEW_REQUIRED
+lib/src/loan/screens/loan_detail_screen.dart,502,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/loan/screens/loan_detail_screen.dart,585,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/loan/screens/loan_home_screen.dart,94,Get.to,,Get.to(() => const LoanTrackingScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_home_screen.dart,168,Get.to,,Get.to(() => const LoanTrackingScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_home_screen.dart,193,Get.to,,Get.to(() => LoanDetailScreen(caseId: activeCase.id));,REVIEW_REQUIRED
+lib/src/loan/screens/loan_home_screen.dart,197,Get.to,,Get.to(() => LoanDetailScreen(caseId: activeCase.id));,REVIEW_REQUIRED
+lib/src/loan/screens/loan_home_screen.dart,201,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/loan/screens/loan_home_screen.dart,289,Get.to,,Get.to(() => const LoanApplicationScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_home_screen.dart,344,Get.to,,Get.to(() => const LoanApplicationScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_intro_screen.dart,81,Get.to,,Get.to(() => const LoanApplicationScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_tracking_screen.dart,246,Get.to,,Get.to(() => const LoanApplicationScreen());,REVIEW_REQUIRED
+lib/src/loan/screens/loan_tracking_screen.dart,275,Get.to,,Get.to(() => LoanDetailScreen(caseId: c.id));,REVIEW_REQUIRED
+lib/src/loan/screens/loan_tracking_screen.dart,405,Get.to,,Get.to(() => LoanDetailScreen(caseId: c.id));,REVIEW_REQUIRED
+lib/src/network/service/network_service.dart,1581,Get.offAllNamed,,// `Get.offAllNamed(noInternetConnection)` — background dashboard,REVIEW_REQUIRED
+lib/src/network/service/network_service.dart,1765,Get.offAllNamed,,getx.Get.offAllNamed(BaseRoute.maintenanceMode);,REVIEW_REQUIRED
+lib/src/presentation/screens/add_money/view/add_money_history/add_money_history.dart,181,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/add_money/view/add_money_history/sub_sections/add_money_transaction_filter_bottom_sheet.dart,199,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/add_money/view/add_money_screen.dart,101,Get.toNamed,,Get.toNamed(BaseRoute.addMoneyHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,103,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,106,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,195,Get.back,,"onPressed: () => Get.back(result: false),",REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,212,Get.back,,"onPressed: () => Get.back(result: true),",REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,370,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,677,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,1066,Get.back,,if (context.mounted) Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,1172,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/app_update/view/app_update_screen.dart,1351,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/forgot_password/controller/forgot_password_controller.dart,61,Get.offNamed,,Get.offNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/forgot_password/controller/forgot_password_pin_verification_controller.dart,73,Get.offNamed,,Get.offNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/forgot_password/controller/reset_password_controller.dart,79,Get.offNamed,,Get.offNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/forgot_password/view/forgot_password_screen.dart,241,Get.offNamed,,Get.offNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/forgot_password/view/sub_sections/reset_password.dart,370,Get.offNamed,,Get.offNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/shared/auth_language_pill.dart,225,Navigator.pop,,"onTap: () => Navigator.pop(ctx, c),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/shared/terms_privacy_dialog.dart,198,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/shared/terms_privacy_dialog.dart,199,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/shared/terms_privacy_dialog.dart,250,Navigator.pop,,"Navigator.pop(ctx, true);",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/email_otp_login_controller.dart,154,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,141,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,144,Get.toNamed,,"Get.toNamed(BaseRoute.signUpStatus, arguments: {""is_login_state"": true});",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,354,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,481,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,482,Get.toNamed,,Get.toNamed(BaseRoute.email);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,507,Get.toNamed,,Get.toNamed(BaseRoute.twoFactorAuth);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,632,Get.back,,"onPressed: () => Get.back(result: false),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/sign_in_controller.dart,646,Get.back,,"onPressed: () => Get.back(result: true),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/two_factor_auth_controller.dart,129,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/controller/two_factor_auth_controller.dart,131,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/view/sign_in_screen.dart,660,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.forgotPassword),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/view/sign_in_screen.dart,1126,Get.toNamed,,Get.toNamed(BaseRoute.email);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/view/sign_in_screen.dart,1153,Get.back,,"onCancel: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/view/sub_sections/email_otp_login_screen.dart,162,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_in/view/sub_sections/two_factor_auth.dart,200,Get.offNamed,,Get.offNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/auth_id_verification_controller.dart,113,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/email_controller.dart,78,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/email_controller.dart,86,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/personal_info_controller.dart,249,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/set_passcode_controller.dart,110,Get.offAllNamed,,Get.offAllNamed(route);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/set_passcode_controller.dart,112,Get.offNamed,,"Get.offNamed(route, arguments: args);",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/set_up_password_controller.dart,72,Get.offNamed,,Get.offNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/sign_up_status_controller.dart,154,Get.offAllNamed,,Get.offAllNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/controller/verify_email_controller.dart,71,Get.offNamed,,Get.offNamed(BaseRoute.signUpStatus);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/auth_id_verification_screen.dart,52,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/auth_id_verification_screen.dart,54,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/auth_id_verification_screen.dart,56,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/back_camera_capture.dart,78,Navigator.pop,,Navigator.pop(ctx); // Return to camera,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/back_camera_capture.dart,81,Navigator.pop,,Navigator.pop(ctx); // Close sheet,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/back_camera_capture.dart,158,Navigator.pop,,"onPressed: () => Navigator.pop(context),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/back_camera_capture.dart,370,Navigator.pop,,"onPressed: () => Navigator.pop(context),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,44,Get.to,,Get.to(() => CameraTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,46,Get.to,,Get.to(() => FileTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,48,Get.to,,Get.to(() => FrontCameraTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,50,Get.to,,Get.to(() => const KycSubmissionSection());,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,53,Get.to,,Get.to(() => const KycSubmissionSection());,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,61,Get.to,,final file = await Get.to<File?>(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,134,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,136,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,138,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/camera_type_section.dart,324,Navigator.pop,,"Navigator.pop(context, file);",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,42,Get.to,,Get.to(() => CameraTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,44,Get.to,,Get.to(() => FileTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,46,Get.to,,Get.to(() => FrontCameraTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,48,Get.to,,Get.to(() => const KycSubmissionSection());,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,51,Get.to,,Get.to(() => const KycSubmissionSection());,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,89,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,91,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,93,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/file_type_section.dart,248,Navigator.pop,,"Navigator.pop(context, file);",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_capture.dart,77,Navigator.pop,,Navigator.pop(ctx); // Return to camera,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_capture.dart,80,Navigator.pop,,Navigator.pop(ctx); // Close sheet,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_capture.dart,158,Navigator.pop,,"onPressed: () => Navigator.pop(context),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_capture.dart,366,Navigator.pop,,"onPressed: () => Navigator.pop(context),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,44,Get.to,,Get.to(() => CameraTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,46,Get.to,,Get.to(() => FileTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,48,Get.to,,Get.to(() => FrontCameraTypeSection(field: nextField));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,50,Get.to,,Get.to(() => const KycSubmissionSection());,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,53,Get.to,,Get.to(() => const KycSubmissionSection());,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,61,Get.to,,final file = await Get.to<File?>(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,134,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,136,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,138,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/front_camera_type_section.dart,331,Navigator.pop,,"Navigator.pop(context, file);",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,48,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,72,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,74,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,76,Get.offAllNamed,,Get.offAllNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,295,Get.to,,return await Get.to(() => CameraTypeSection(field: field));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,297,Get.to,,return await Get.to(() => FileTypeSection(field: field));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,299,Get.to,,return await Get.to(() => FrontCameraTypeSection(field: field));,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,570,Get.to,,final result = await Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/auth_id_verification/sub_sections/kyc_submission_section.dart,578,Get.to,,final result = await Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/email/email_screen.dart,84,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/email/email_screen.dart,261,Get.toNamed,,Get.toNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart,44,Get.offAllNamed,,Get.offAllNamed(route);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart,46,Get.offNamed,,"Get.offNamed(route, arguments: args);",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/set_up_password/set_up_password_screen.dart,113,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/sign_up_status/sign_up_status_screen.dart,141,Get.toNamed,,Get.toNamed(BaseRoute.personalInfo);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/sign_up_status/sign_up_status_screen.dart,143,Get.toNamed,,Get.toNamed(BaseRoute.setUpPassword);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/sign_up_status/sign_up_status_screen.dart,412,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/sign_up_status/sign_up_status_screen.dart,450,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/sign_up_status/sign_up_status_screen.dart,451,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/sign_up_status/sign_up_status_screen.dart,637,Get.back,,"onCancel: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/sign_up/view/verify_email/verify_email_screen.dart,99,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,43,Get.offAllNamed,,Get.offAllNamed(BaseRoute.noInternetConnection);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,76,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,101,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,107,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,120,Get.offNamed,,Get.offNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,122,Get.offNamed,,Get.offNamed(BaseRoute.welcome);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,129,Get.offNamed,,Get.offNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,131,Get.offNamed,,Get.offNamed(BaseRoute.welcome);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,250,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,252,Get.offNamed,,Get.offNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,297,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/splash/controller/splash_controller.dart,314,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/welcome/view/welcome_screen.dart,78,Get.back,,"onCancel: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/welcome/view/welcome_screen.dart,387,Get.toNamed,,"Get.toNamed(BaseRoute.email),",REVIEW_REQUIRED
+lib/src/presentation/screens/authentication/welcome/view/welcome_screen.dart,456,Get.toNamed,,"Get.toNamed(BaseRoute.signIn),",REVIEW_REQUIRED
+lib/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart,39,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/beneficiary/controller/update_beneficiary_controller.dart,49,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/beneficiary/view/beneficiary_screen.dart,119,Get.toNamed,,await Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/beneficiary/view/beneficiary_screen.dart,128,Get.toNamed,,await Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/beneficiary/view/beneficiary_screen.dart,227,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/beneficiary/view/beneficiary_screen.dart,244,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/beneficiary/view/beneficiary_screen.dart,532,Get.back,,Get.back(result: item);,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_history/bill_payment_history.dart,201,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,122,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,219,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,220,Get.toNamed,,Get.toNamed(BaseRoute.toll);,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,230,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,231,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,247,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,248,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,374,Get.toNamed,,Get.toNamed(BaseRoute.billPaymentHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/bill_payment_screen.dart,610,Get.toNamed,,Get.toNamed(category.navigate);,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/sub_sections/bill_payment_result_step_section.dart,199,Get.toNamed,,Get.toNamed(BaseRoute.billPaymentHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/widgets/contact_picker_bottom_sheet.dart,256,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/widgets/contact_picker_bottom_sheet.dart,434,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/bill_payment/view/widgets/recent_favorite_bills_strip.dart,198,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/cash_out_history/cash_out_history.dart,181,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/cash_out_history/sub_sections/cash_out_transaction_filter_bottom_sheet.dart,197,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/cash_out_screen.dart,217,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/cash_out_screen.dart,219,Get.toNamed,,Get.toNamed(BaseRoute.cashOutHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/sub_sections/cash_out_amount_step_section.dart,118,Get.to,,final scannedCode = await Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/sub_sections/cash_out_amount_step_section.dart,450,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/sub_sections/cash_out_amount_step_section.dart,451,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/sub_sections/cash_out_amount_step_section.dart,495,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/sub_sections/cash_out_amount_step_section.dart,496,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/sub_sections/cash_out_amount_step_section.dart,519,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/cash_out/view/sub_sections/cash_out_success_step_section.dart,223,Get.toNamed,,Get.toNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/controller/device_sessions_controller.dart,503,Navigator.pop,,"Navigator.pop(ctx, true);",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/controller/device_sessions_controller.dart,524,Navigator.pop,,"onPressed: () => Navigator.pop(ctx, false),",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/controller/device_sessions_controller.dart,724,Navigator.pop,,"Navigator.pop(ctx, true);",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/controller/device_sessions_controller.dart,745,Navigator.pop,,"onPressed: () => Navigator.pop(ctx, false),",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/view/device_sessions_security_screen.dart,119,Navigator.pop,,"onTap: () => Navigator.pop(ctx, e.key),",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/view/device_sessions_security_screen.dart,178,Get.back,,"onPressed: () => Get.back(result: false),",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/view/device_sessions_security_screen.dart,191,Get.back,,"onPressed: () => Get.back(result: true),",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/view/device_sessions_security_screen.dart,314,Get.back,,"onPressed: () => Get.back(result: false),",REVIEW_REQUIRED
+lib/src/presentation/screens/device_sessions_security/view/device_sessions_security_screen.dart,327,Get.back,,"onPressed: () => Get.back(result: true),",REVIEW_REQUIRED
+lib/src/presentation/screens/dynamic_password/view/dynamic_password_screen.dart,211,Get.back,,"onPrimaryAction: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/exchange/view/exchange_history/sub_sections/exchange_transaction_filter_bottom_sheet.dart,199,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/exchange/view/exchange_history/sub_sections/exchange_transaction_filter_bottom_sheet.dart,214,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/exchange/view/exchange_screen.dart,213,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/exchange/view/exchange_screen.dart,215,Get.toNamed,,Get.toNamed(BaseRoute.exchangeHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/exchange/widgets/wallet_selector_sheet.dart,118,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/exchange/widgets/wallet_selector_sheet.dart,209,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/controller/gift_card_controller.dart,367,Get.off,,Get.off(GiftCardSuccessSection());,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/gift_card_screen.dart,486,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/sub_sections/gift_card_details_section.dart,131,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/sub_sections/gift_card_filter_bottom_sheet.dart,230,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/sub_sections/gift_card_header_section.dart,40,Get.back,,"backLogicFunction: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/sub_sections/gift_card_history_filter_bottom_sheet.dart,80,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/sub_sections/gift_card_list_section.dart,162,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/sub_sections/gift_card_review_details_section.dart,206,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/gift_card/view/sub_sections/gift_card_success_section.dart,203,Get.toNamed,,Get.toNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/gift_code_screen.dart,125,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/gift_redeem_history/sub_sections/gift_redeem_transaction_filter_bottom_sheet.dart,78,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/gift_redeem_history/sub_sections/gift_redeem_transaction_filter_bottom_sheet.dart,89,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/sub_sections/create_gift_success_step_section.dart,335,Get.toNamed,,Get.toNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/sub_sections/gift_code_header_section.dart,57,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/sub_sections/gift_code_header_section.dart,236,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/sub_sections/gift_code_header_section.dart,237,Get.toNamed,,Get.toNamed(BaseRoute.giftRedeemHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/gift_code/view/sub_sections/gift_history_filter_bottom_sheet.dart,78,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/controller/home_controller.dart,469,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/home_screen.dart,234,Get.back,,"onCancel: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/action_button_section.dart,37,Get.toNamed,,Get.toNamed(BaseRoute.transfer);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/action_button_section.dart,54,Get.toNamed,,Get.toNamed(BaseRoute.exchange);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/action_button_section.dart,77,Get.toNamed,,Get.toNamed(BaseRoute.addMoney);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/action_button_section.dart,102,Get.toNamed,,Get.toNamed(BaseRoute.withdraw);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/balance_hero_section.dart,138,Get.toNamed,,Get.toNamed(BaseRoute.transfer);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/balance_hero_section.dart,151,Get.toNamed,,Get.toNamed(BaseRoute.exchange);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/balance_hero_section.dart,172,Get.toNamed,,Get.toNamed(BaseRoute.addMoney);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/balance_hero_section.dart,193,Get.toNamed,,Get.toNamed(BaseRoute.withdraw);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/dashboard_sliver_header.dart,141,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.profileSettings),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/dashboard_sliver_header.dart,341,Get.toNamed,,"onPressed: () => Get.toNamed(BaseRoute.notifications),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/dashboard_sliver_header.dart,379,Get.toNamed,,Get.toNamed(BaseRoute.supportTickets);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,251,Get.back,,Get.back(); // close drawer,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,338,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,413,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,442,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,447,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,448,Get.toNamed,,Get.toNamed(BaseRoute.supportTickets);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,466,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,467,Get.toNamed,,Get.toNamed(navigate);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,488,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,503,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,515,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,715,Get.back,,"TextButton(onPressed: () => Get.back(), child: Text(loc.commonClose)),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,718,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/drawer_section.dart,719,Get.toNamed,,Get.toNamed(BaseRoute.idVerification);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/end_drawer_section.dart,152,Get.toNamed,,Get.toNamed(BaseRoute.profileSettings);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/end_drawer_section.dart,159,Get.toNamed,,Get.toNamed(BaseRoute.changePassword);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/end_drawer_section.dart,166,Get.toNamed,,Get.toNamed(BaseRoute.notifications);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/end_drawer_section.dart,177,Get.toNamed,,Get.toNamed(BaseRoute.supportTickets);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/end_drawer_section.dart,306,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drawer/end_drawer_section.dart,352,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart,123,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart,135,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart,147,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart,150,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart,161,Get.toNamed,,Get.toNamed(BaseRoute.supportTickets);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart,32,Get.toNamed,,Get.toNamed(BaseRoute.wallets);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/my_wallet_section.dart,37,Get.toNamed,,EmptyView.wallets(onCta: () => Get.toNamed(BaseRoute.wallets)),REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/recent_transactions_section.dart,92,Get.toNamed,,Get.toNamed(BaseRoute.transactions);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/recent_transactions_section.dart,128,Get.toNamed,,"onCta: () => Get.toNamed(BaseRoute.transfer),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/referral_stats_section.dart,47,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.referral),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/service_tiles.dart,117,Get.to,,"Get.to(tile.pageBuilder!(), arguments: tile.argumentsBuilder?.call());",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/service_tiles.dart,119,Get.toNamed,,"Get.toNamed(tile.route, arguments: tile.argumentsBuilder?.call());",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/service_tiles.dart,123,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,91,Get.toNamed,,Get.toNamed(BaseRoute.services);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,196,Get.toNamed,,Get.toNamed(BaseRoute.services);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,213,Get.toNamed,,Get.toNamed(BaseRoute.billPayment);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,233,Get.toNamed,,Get.toNamed(BaseRoute.giftCard);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,250,Get.toNamed,,Get.toNamed(BaseRoute.services);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,275,Get.toNamed,,Get.toNamed(BaseRoute.transfer);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,292,Get.toNamed,,Get.toNamed(BaseRoute.exchange);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,312,Get.toNamed,,Get.toNamed(BaseRoute.virtualCard);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/services_entry_section.dart,329,Get.toNamed,,Get.toNamed(BaseRoute.services);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/sign_up_bonus_pop_up.dart,113,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/user_profile_section.dart,356,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.idVerification),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/wallet_details/wallet_details.dart,89,Get.toNamed,,Get.toNamed(BaseRoute.transactions);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/wallet_details/wallet_details.dart,173,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/wallet_details/wallet_details.dart,363,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/wallet_details/wallet_details.dart,387,Get.toNamed,,Get.toNamed(BaseRoute.withdraw);,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/wallet_details/wallet_details.dart,419,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/home/view/sub_sections/wallet_details/wallet_details.dart,442,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_level_roadmap.dart,86,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_level_roadmap.dart,269,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_level_roadmap.dart,1126,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart,57,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart,59,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart,61,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart,1108,Navigator.pop,,"onTap: () => Navigator.pop(ctx, 'camera'),",REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart,1157,Navigator.pop,,"onTap: () => Navigator.pop(ctx, 'gallery'),",REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart,1206,Navigator.pop,,"onTap: () => Navigator.pop(ctx, 'pdf'),",REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/kyc_submit_wizard.dart,1280,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,179,Get.back,,// کند. وقتی مسدودی feature-level باشد، Get.back() کافی است؛ وقتی,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,189,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,192,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,194,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,211,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,213,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,330,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/upgrade_required_screen.dart,342,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/kyc_level/view/widgets/kyc_tier_upgrade_card.dart,1281,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/make_payment_history/make_payment_history.dart,181,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/make_payment_history/sub_sections/make_payment_transaction_filter_bottom_sheet.dart,197,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/make_payment_screen.dart,97,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart,91,Get.to,,final scannedCode = await Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart,348,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart,349,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart,395,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart,396,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart,419,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_success_step_section.dart,205,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/not_found/view/not_found_screen.dart,91,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/not_found/view/not_found_screen.dart,97,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/controller/p2p_buy_ad_controller.dart,405,Get.to,,Get.to(() => P2pOrderDetailsScreen(orderId: orderId));,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/controller/p2p_controller.dart,283,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/controller/p2p_controller.dart,287,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/create_ad/controller/create_ad_controller.dart,548,Get.off,,Get.off(() => CreateAdSuccessScreen(adData: model.data));,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/create_ad/widgets/create_ad_success_section.dart,134,Get.offAllNamed,,onPressed: () => Get.offAllNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_ads/widgets/edit_my_ad_bottom_sheet.dart,568,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_ads/widgets/my_ads_card.dart,301,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_ads/widgets/my_ads_filter_bottom_sheet.dart,398,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_ads/widgets/my_ads_filter_bottom_sheet.dart,421,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_order/chat/view/order_chat_screen.dart,387,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_order/chat/view/order_chat_screen.dart,397,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_order/widgets/my_order_card.dart,186,Get.to,,Get.to(() => P2pOrderDetailsScreen(orderId: orderId));,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_order/widgets/my_order_card.dart,202,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_order/widgets/my_order_filter_bottom_sheet.dart,289,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/my_order/widgets/my_order_filter_bottom_sheet.dart,305,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/payment_account/view/payment_account_screen.dart,207,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/payment_account/widgets/payment_account_filter_bottom_sheet.dart,239,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/sub_category/payment_account/widgets/payment_account_filter_bottom_sheet.dart,254,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/view/p2p_screen.dart,1030,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/view/p2p_screen.dart,1298,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/view/p2p_view.dart,1004,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/view/p2p_view.dart,1218,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/view/sub_sections/my_ads_sub_section.dart,66,Get.toNamed,,"Get.toNamed(BaseRoute.p2pTrading, arguments: {'initial_tab': 4});",REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_action_buttons_widget.dart,544,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_action_buttons_widget.dart,799,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_action_buttons_widget.dart,825,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_action_buttons_widget.dart,834,Get.to,,"Get.to(() => P2pAppealOrderScreen(data: data, controller: controller));",REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/order_details_widgets/order_details_timeline_section_widget.dart,949,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/p2p_ad_card.dart,393,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/p2p_appeal_order_screen.dart,101,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/p2p/widgets/p2p_order_details_screen.dart,85,Get.to,,onTap: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/payment_links/view/sub_sections/payment_links_header_section.dart,32,Get.back,,"backLogicFunction: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/payment_links/view/sub_sections/payment_links_history_filter_bottom_sheet.dart,86,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/referral/view/referral_screen.dart,411,Get.toNamed,,Get.toNamed(BaseRoute.referralTree);,REVIEW_REQUIRED
+lib/src/presentation/screens/referral/view/referral_screen.dart,884,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/referral/view/referral_screen.dart,885,Get.toNamed,,Get.toNamed(BaseRoute.referredFriends);,REVIEW_REQUIRED
+lib/src/presentation/screens/referral/view/referral_screen.dart,912,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/referral/view/referral_screen.dart,913,Get.toNamed,,Get.toNamed(BaseRoute.referralTree);,REVIEW_REQUIRED
+lib/src/presentation/screens/referral/view/referred_friends/referred_friends.dart,145,Get.toNamed,,Get.toNamed(BaseRoute.referralTree);,REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/remittance_history/remittance_history.dart,67,Get.toNamed,,"onPressed: () => Get.toNamed(BaseRoute.remittance),",REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/remittance_history/remittance_history.dart,108,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/remittance_screen.dart,49,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/remittance_screen.dart,80,Get.toNamed,,"onPressed: () => Get.toNamed(BaseRoute.remittanceTrack),",REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/remittance_screen.dart,89,Get.toNamed,,"onPressed: () => Get.toNamed(BaseRoute.remittanceHistory),",REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/remittance_screen.dart,204,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/sub_sections/remittance_success_section.dart,370,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/sub_sections/remittance_success_section.dart,379,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/sub_sections/remittance_success_section.dart,389,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/remittance/view/sub_sections/remittance_success_section.dart,399,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/received_request/sub_sections/accept_request_dropdown.dart,183,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/received_request/sub_sections/accept_request_dropdown.dart,208,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/received_request/sub_sections/received_request_details.dart,194,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/request_money_history/request_money_history.dart,170,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/request_money_history/sub_sections/request_money_history_details.dart,195,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/sub_sections/request_money_amount_step_section.dart,82,Get.to,,final scannedCode = await Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/sub_sections/request_money_header_section.dart,179,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/sub_sections/request_money_header_section.dart,181,Get.toNamed,,Get.toNamed(BaseRoute.requestMoneyHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/request_money/view/sub_sections/request_money_success_step_section.dart,189,Get.toNamed,,Get.toNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/services/view/services_screen.dart,1786,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/controller/add_new_ticket_controller.dart,146,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/controller/profile_settings_controller.dart,382,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/controller/transaction_pin_controller.dart,113,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/controller/transaction_pin_controller.dart,159,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/controller/transaction_pin_controller.dart,191,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart,223,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/controller/two_factor_authentication_controller.dart,256,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/id_verification.dart,30,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/id_verification.dart,32,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/id_verification.dart,34,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/id_verification.dart,66,Get.toNamed,,"onPressed: () => Get.toNamed(BaseRoute.kycHistory),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/id_verification.dart,103,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/kyc_history/kyc_history.dart,32,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/kyc_history/kyc_history.dart,34,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/kyc_history/kyc_history.dart,36,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/id_verification/kyc_history/kyc_history.dart,325,Get.toNamed,,"onPrimaryAction: () => Get.toNamed(BaseRoute.idVerification),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/lock_screen.dart,112,Get.offAllNamed,,Get.offAllNamed(BaseRoute.signIn);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/lock_screen.dart,144,Get.back,,"onPressed: () => Get.back(result: false),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/lock_screen.dart,148,Get.back,,"onPressed: () => Get.back(result: true),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/notifications/notifications.dart,1246,Get.toNamed,,Get.toNamed(link);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/notifications/notifications.dart,1276,Get.toNamed,,Get.toNamed(BaseRoute.supportTickets);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/notifications/notifications.dart,1294,Get.toNamed,,Get.toNamed(BaseRoute.virtualCard);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/notifications/notifications.dart,1320,Get.toNamed,,Get.toNamed(BaseRoute.kycHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/notifications/notifications.dart,1416,Get.toNamed,,Get.toNamed(BaseRoute.transactions);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/profile_settings/profile_settings.dart,991,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,285,Get.back,,"onPressed: () => Get.back(result: false),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,300,Get.back,,"onPressed: () => Get.back(result: true),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,388,Get.back,,"onPressed: () => Get.back(result: false),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,402,Get.back,,"onPressed: () => Get.back(result: true),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,549,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.profileSettings),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,566,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.idVerification),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,645,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.changePassword),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,719,Get.toNamed,,"Get.toNamed(BaseRoute.twoFactorAuthentication),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,743,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.dynamicPassword),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,769,Get.toNamed,,"Get.toNamed(BaseRoute.deviceSessionsSecurity),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,1154,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.notifications),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,1190,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.permissionsSettings),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,1400,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.supportTickets),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,1437,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.privacyPolicy),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,1463,Get.toNamed,,Get.toNamed(BaseRoute.appUpdate);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,2483,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,2484,Get.to,,Get.to(() => const TransactionPinScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,2594,Navigator.pop,,"onTap: () => Navigator.pop(ctx, item.value),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,2784,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,2785,Get.toNamed,,Get.toNamed(BaseRoute.privacyPolicy);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/settings_screen.dart,2819,Navigator.pop,,"onPressed: () => Navigator.pop(ctx),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/support_tickets/replay_ticket/replay_ticket.dart,1565,Get.toNamed,,Get.toNamed(BaseRoute.addNewTicket);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/support_tickets/support_tickets.dart,530,Get.toNamed,,Get.toNamed(BaseRoute.addNewTicket);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/support_tickets/support_tickets.dart,624,Get.toNamed,,Get.toNamed(BaseRoute.addNewTicket);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/support_tickets/support_tickets.dart,690,Get.toNamed,,Get.toNamed(BaseRoute.addNewTicket);,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/support_tickets/support_tickets.dart,1163,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/change_passcode_bottom_sheet.dart,81,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_passcode_bottom_sheet.dart,83,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/transactions/view/sub_sections/bottom_sheet/transaction_filter_bottom_sheet.dart,137,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transactions/view/sub_sections/bottom_sheet/transaction_filter_bottom_sheet.dart,244,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart,136,Get.to,,final scannedCode = await Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart,485,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart,486,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart,541,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart,607,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart,754,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart,765,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_review_step_section.dart,385,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_review_step_section.dart,386,Get.to,,await Get.to(() => const TransactionPinScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/sub_sections/transfer_success_step_section.dart,258,Get.toNamed,,Get.toNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_history/sub_sections/transfer_transaction_filter_bottom_sheet.dart,179,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_history/sub_sections/transfer_transaction_filter_bottom_sheet.dart,190,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_received_history/sub_sections/transfer_received_transaction_filter_bottom_sheet.dart,179,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_received_history/sub_sections/transfer_received_transaction_filter_bottom_sheet.dart,190,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_screen.dart,80,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_screen.dart,135,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_screen.dart,265,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_screen.dart,266,Get.toNamed,,Get.toNamed(BaseRoute.transferHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_screen.dart,273,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/transfer/view/transfer_screen.dart,274,Get.toNamed,,Get.toNamed(BaseRoute.transferReceivedHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/account/travel_account_screen.dart,82,Get.to,,onTap: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/account/travel_account_screen.dart,92,Get.to,,onTap: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/account/travel_account_screen.dart,102,Get.to,,onTap: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/account/travel_account_screen.dart,111,Get.to,,"onTap: () => Get.to(() => const TravelOrdersScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/account/travel_account_screen.dart,117,Get.toNamed,,"onTap: () => Get.toNamed(BaseRoute.profileSettings),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/account/travel_account_screen.dart,123,Get.to,,"onTap: () => Get.to(() => const TravelHistoryScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/account/travel_account_screen.dart,129,Get.toNamed,,onTap: () => Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart,77,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart,354,Get.to,,Get.to(() => BoatDetailScreen(boat: boat));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart,511,Get.to,,Get.to(() => BoatDetailScreen(boat: boat));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart,631,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_catalog_screen.dart,632,Get.to,,Get.to(() => BoatVoucherScreen(booking: booking));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_detail_screen.dart,77,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_detail_screen.dart,1258,Get.off,,Get.off(() => BoatVoucherScreen(booking: booking));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/boat/screens/boat_voucher_screen.dart,97,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_checkout_screen.dart,373,Get.toNamed,,? () => Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_checkout_screen.dart,384,Get.off,,Get.off(() => TravelConfirmationScreen(order: order));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_checkout_screen.dart,394,Get.toNamed,,await Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_checkout_screen.dart,999,Get.toNamed,,? () => Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_checkout_screen.dart,1004,Get.toNamed,,await Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_checkout_screen.dart,1030,Get.toNamed,,await Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_confirmation_screen.dart,117,Get.off,,"onPressed: () => Get.off(() => const TravelOrdersScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/bookings/travel_orders_screen.dart,413,Get.to,,"onTap: () => Get.to(() => TravelConfirmationScreen(order: order)),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart,64,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart,321,Get.to,,Get.to(() => RestaurantDetailScreen(restaurant: rest));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart,496,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart,630,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/dining_catalog_screen.dart,631,Get.to,,Get.to(() => DiningOrderPassScreen(order: order));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/dining_order_pass_screen.dart,103,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/restaurant_detail_screen.dart,63,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/dining/screens/restaurant_detail_screen.dart,250,Get.off,,Get.off(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_detail_screen.dart,150,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_detail_screen.dart,388,Navigator.pop,,"onPressed: () => Navigator.pop(ctx),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_detail_screen.dart,541,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_screens.dart,44,Get.to,,"onPressed: () => Get.to(() => const EsimPackagesScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_screens.dart,273,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_screens.dart,323,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_screens.dart,565,Get.to,,Get.to(() => EsimDetailScreen(package: package));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/esim_screens.dart,683,Get.to,,Get.to(() => EsimDetailScreen(package: package));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/esim/widgets/esim_activation_card.dart,180,Navigator.pop,,"onPressed: () => Navigator.pop(ctx),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_detail_screen.dart,69,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_detail_screen.dart,1383,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_detail_screen.dart,1470,Navigator.pop,,"onPressed: () => Navigator.pop(sheetContext),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_list_screen.dart,273,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_list_screen.dart,761,Get.to,,Get.to(() => FlightDetailScreen(offer: offer));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_list_screen.dart,1086,Get.to,,Get.to(() => FlightDetailScreen(offer: offer));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_list_screen.dart,1399,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_list_screen.dart,1473,Navigator.pop,,"onPressed: () => Navigator.pop(sheetContext),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_screens.dart,328,Get.to,,Get.to(() => const FlightResultsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_screens.dart,453,Get.to,,Get.to(() => const FlightDetailsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_screens.dart,536,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_screens.dart,710,Get.to,,Get.to(() => const FlightDetailsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_screens.dart,772,Get.to,,Get.to(() => const FlightDetailsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_screens.dart,1571,Get.off,,Get.off(() => const FlightResultsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_screens.dart,1580,Get.to,,: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_search_screen.dart,1363,Get.to,,Get.to(() => const FlightListScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_search_screen.dart,1699,Navigator.pop,,Navigator.pop(sheetContext);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_search_screen.dart,1715,Navigator.pop,,Navigator.pop(sheetContext);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_search_screen.dart,1730,Navigator.pop,,Navigator.pop(sheetContext);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_search_screen.dart,1844,Navigator.pop,,"onPressed: () => Navigator.pop(context),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/flights/flight_search_screen.dart,2759,Navigator.pop,,"onPressed: () => Navigator.pop(context),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,41,Get.to,,"onPressed: () => Get.to(() => const TravelAccountScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,83,Get.to,,"onAction: () => Get.to(() => const TravelOrdersScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,116,Get.toNamed,,onTap: () => Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,345,Get.to,,"onTap: () => Get.to(() => const TourListScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,361,Get.to,,"onTap: () => Get.to(() => const VisaCatalogScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,384,Get.to,,"onTap: () => Get.to(() => const TrainSearchScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,400,Get.to,,"onTap: () => Get.to(() => const RentalHomeScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,416,Get.to,,"onTap: () => Get.to(() => const TaxiSearchScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,432,Get.to,,"onTap: () => Get.to(() => const TravelInsuranceScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,448,Get.to,,"onTap: () => Get.to(() => const SimTopUpScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,466,Get.to,,"onTap: () => Get.to(() => const CipLoungeReservationScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,550,Get.to,,Get.to(() => const HotelSearchScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,553,Get.to,,Get.to(() => const FlightSearchScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/home/travel_home_screen.dart,556,Get.to,,Get.to(() => const EsimIntroScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_detail_screen.dart,236,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_detail_screen.dart,631,Get.to,,onTapDetails: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_detail_screen.dart,758,push,,Navigator.of(context).push(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_list_screen.dart,79,push,,final next = await Navigator.of(context).push<HotelFilterState>(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_list_screen.dart,423,Get.to,,Get.to(() => const HotelDetailScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_screens.dart,181,Get.to,,Get.to(() => const HotelResultsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_screens.dart,688,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_screens.dart,890,push,,final next = await Navigator.of(context).push<HotelFilterState>(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_screens.dart,1144,Get.to,,Get.to(() => const HotelDetailsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_screens.dart,2166,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_screens.dart,2389,Get.to,,onTapDetails: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_screens.dart,2461,Get.off,,Get.off(() => const HotelDetailsScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_search_components.dart,50,push,,return Navigator.of(context).push<TravelSuggestion>(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_search_components.dart,461,push,,return Navigator.of(context).push<DateTimeRange>(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_search_screen.dart,181,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_search_screen.dart,1151,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/hotel_voucher_screen.dart,733,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/hotels/room_selection_screen.dart,465,push,,Navigator.of(context).push(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/insurance/insurance_screens.dart,316,Get.off,,Get.off(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/insurance/insurance_screens.dart,355,Get.to,,"onPressed: () => Get.to(() => const InsuranceClaimScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/insurance/insurance_screens.dart,1672,Navigator.pop,,"onPressed: () => Navigator.pop(dialogCtx),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/insurance/insurance_screens.dart,1689,Navigator.pop,,Navigator.pop(dialogCtx);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/insurance/insurance_screens.dart,1801,Get.to,,onPressed: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_catalog_screen.dart,72,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_catalog_screen.dart,384,Get.to,,Get.to(() => LocalDetailScreen(experience: exp));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_catalog_screen.dart,521,Get.to,,Get.to(() => LocalDetailScreen(experience: exp));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_catalog_screen.dart,653,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_catalog_screen.dart,654,Get.to,,Get.to(() => LocalVoucherScreen(booking: b));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_detail_screen.dart,73,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_detail_screen.dart,223,Get.off,,Get.off(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/screens/local_voucher_screen.dart,47,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/widgets/experience_ui_components.dart,527,Navigator.pop,,"onPressed: () => Navigator.pop(ctx, false),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/local/widgets/experience_ui_components.dart,544,Navigator.pop,,"Navigator.pop(ctx, true);",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/catalog_service_screens.dart,54,Get.to,,"onPressed: () => Get.to(() => const TravelServiceRequestsScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/catalog_service_screens.dart,113,Get.to,,onTap: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/catalog_service_screens.dart,248,Get.to,,onPressed: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/cip_lounge_screen.dart,2325,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/quick_service_screens.dart,206,Get.to,,onPressed: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/quick_service_screens.dart,318,Get.to,,onPressed: () => Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/quick_service_screens.dart,359,Get.to,,"onPressed: () => Get.to(() => const TravelServiceRequestsScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/service_form_screen.dart,104,Get.off,,Get.off(() => TravelServiceRequestSuccessScreen(request: request));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/service_form_screen.dart,310,Get.off,,"onPressed: () => Get.off(() => const TravelServiceRequestsScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/services/service_form_screen.dart,317,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/shared/travel_widgets.dart,192,Get.offAllNamed,,"onTap: () => Get.offAllNamed(BaseRoute.navigation),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/shared/travel_widgets.dart,202,Get.offNamed,,Get.offNamed(route);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/sim/sim_topup_screen.dart,171,Get.off,,Get.off(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/sim/sim_topup_screen.dart,526,Get.offAllNamed,,"onPressed: () => Get.offAllNamed(BaseRoute.travel),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_detail_screen.dart,88,Get.back,,"onRetry: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_detail_screen.dart,174,Get.off,,Get.off(() => TaxiVoucherScreen(booking: booking));,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_search_screen.dart,45,Get.to,,"onPressed: () => Get.to(() => const TravelServiceRequestsScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_search_screen.dart,88,Get.to,,Get.to(() => const TaxiVehiclesScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_vehicles_screen.dart,159,Get.to,,Get.to(() => const TaxiDetailScreen());,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_vehicles_screen.dart,381,Get.back,,"onAction: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_voucher_screen.dart,131,Get.offAllNamed,,Get.offAllNamed(BaseRoute.travel);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_widgets.dart,1060,Navigator.pop,,if (context.mounted) Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_widgets.dart,1211,Navigator.pop,,"onPressed: () => Navigator.pop(context),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/taxi/taxi_widgets.dart,1235,Navigator.pop,,Navigator.pop(context);,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_confirmation_screen.dart,126,Get.offAllNamed,,"onPressed: () => Get.offAllNamed(BaseRoute.travel),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_confirmation_screen.dart,207,Get.offAllNamed,,"onPressed: () => Get.offAllNamed(BaseRoute.travel),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_screens.dart,85,Navigator.pop,,"onTap: () => Navigator.pop(context, city),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_screens.dart,136,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_screens.dart,389,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_screens.dart,514,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_screens.dart,608,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_screens.dart,740,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/trains/train_screens.dart,824,Get.to,,Get.to(,REVIEW_REQUIRED
+lib/src/presentation/screens/travel/visa/visa_screens.dart,29,Get.to,,"onPressed: () => Get.to(() => const TravelServiceRequestsScreen()),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/visa/visa_screens.dart,86,Get.to,,"Get.to(() => VisaRequestFormScreen(country: country)),",REVIEW_REQUIRED
+lib/src/presentation/screens/travel/visa/visa_screens.dart,245,Get.off,,Get.off(() => TravelServiceRequestSuccessScreen(request: request));,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart,475,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/controller/create_virtual_card_controller.dart,732,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart,250,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart,384,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/get_card_info/get_card_info.dart,41,Get.offNamed,,"Get.offNamed(BaseRoute.createVirtualCard),",REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/generic/generic_card_provider.dart,67,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart,74,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart,109,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart,561,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_details/virtual_card_details.dart,754,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart,43,Get.back,,/// dead `Get.back()` (the reported broken back button).,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart,146,Get.toNamed,,"onPrimaryAction: () => Get.toNamed(BaseRoute.getCardInfo),",REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart,308,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart,396,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart,420,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/virtual_card/view/virtual_card_screen.dart,514,Get.toNamed,,Get.toNamed(BaseRoute.getCardInfo);,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/controller/create_new_wallet_controller.dart,116,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/create_new_wallet/create_new_wallet.dart,103,Get.back,,"onPrimaryAction: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/delete_wallet_bottom_sheet.dart,89,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/delete_wallet_bottom_sheet.dart,100,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/wallets_card_section.dart,650,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/wallets_card_section.dart,1093,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/wallets_card_section.dart,1137,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/wallets_card_section.dart,1165,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/wallets_card_section.dart,1459,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/sub_sections/wallets_card_section.dart,1557,Get.toNamed,,"onPressed: () => Get.toNamed(BaseRoute.createNewWallet),",REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/wallets_screen.dart,48,Get.toNamed,,Get.toNamed(BaseRoute.createNewWallet);,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/wallets_screen.dart,88,Get.toNamed,,Get.toNamed(BaseRoute.createNewWallet);,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/wallets_screen.dart,322,Get.toNamed,,Get.toNamed(BaseRoute.createNewWallet);,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/view/wallets_screen.dart,327,Get.toNamed,,Get.toNamed(BaseRoute.addMoney);,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/widgets/multi_currency_flip_card.dart,438,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/widgets/multi_currency_flip_card.dart,991,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/widgets/multi_currency_flip_card.dart,1019,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/widgets/multi_currency_flip_card.dart,1042,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/wallets/widgets/multi_currency_flip_card.dart,1067,Get.toNamed,,Get.toNamed(,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/delete_account_dropdown_section.dart,92,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/delete_account_dropdown_section.dart,105,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/withdraw_account_filter_bottom_sheet.dart,84,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/withdraw_amount_step_section.dart,142,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/withdraw_amount_step_section.dart,181,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/withdraw_amount_step_section.dart,205,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/withdraw_header_section.dart,216,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/withdraw_header_section.dart,218,Get.toNamed,,Get.toNamed(BaseRoute.withdrawHistory);,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/sub_sections/withdraw_success_step_section.dart,319,Get.toNamed,,Get.toNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/withdraw_history/sub_sections/withdraw_transaction_filter_bottom_sheet.dart,197,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/screens/withdraw/view/withdraw_history/withdraw_history.dart,181,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/widgets/dynamic_attachment_preview.dart,61,Get.back,,"onTap: () => Get.back(),",REVIEW_REQUIRED
+lib/src/presentation/widgets/no_internet_connection.dart,48,Get.offAllNamed,,Get.offAllNamed(BaseRoute.splash);,REVIEW_REQUIRED
+lib/src/presentation/widgets/no_internet_connection.dart,55,Get.offAllNamed,,Get.offAllNamed(BaseRoute.navigation);,REVIEW_REQUIRED
+lib/src/presentation/widgets/qr_scanner_screen.dart,94,Get.back,,Get.back(result: code);,REVIEW_REQUIRED
+lib/src/presentation/widgets/qr_scanner_screen.dart,167,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/widgets/qr_scanner_screen.dart,278,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/widgets/qr_scanner_screen.dart,436,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/widgets/verify_passcode_bottom_sheet.dart,98,Get.back,,Get.back(result: code);,REVIEW_REQUIRED
+lib/src/presentation/widgets/verify_passcode_bottom_sheet.dart,205,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/widgets/web_view_dynamic.dart,66,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/presentation/widgets/web_view_screen.dart,217,Get.back,,"Get.back(result: {'success': true, 'data': data});",REVIEW_REQUIRED
+lib/src/presentation/widgets/web_view_screen.dart,223,Get.back,,"Get.back(result: {'success': false, 'data': data});",REVIEW_REQUIRED
+lib/src/presentation/widgets/web_view_screen.dart,238,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/remitv2/screens/remittance_track_screen.dart,190,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/remitv2/screens/remittance_track_screen.dart,202,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/remitv2/screens/remittance_track_screen.dart,278,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/remitv2/screens/remittance_track_screen.dart,536,Get.toNamed,,Get.toNamed(BaseRoute.remittance);,REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,125,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,157,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,316,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,342,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,541,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,567,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,755,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,783,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/rental/screens/rental_detail_screen.dart,868,Get.to,,Get.to(() => RentalVoucherScreen(booking: b));,REVIEW_REQUIRED
+lib/src/rental/screens/rental_home_screen.dart,373,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/rental/screens/rental_home_screen.dart,834,Get.toNamed,,"Get.toNamed(BaseRoute.rentalDetail, arguments: b.id);",REVIEW_REQUIRED
+lib/src/rental/screens/rental_voucher_screen.dart,57,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/rental/screens/rental_voucher_screen.dart,119,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/stock/screens/stock_confirm_screen.dart,150,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/stock/screens/stock_confirm_screen.dart,151,Get.off,,Get.off(() => const StockTrackingScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_confirm_screen.dart,168,Get.off,,Get.off(() => const StockTrackingScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_home_screen.dart,207,Navigator.pop,,"onPressed: () => Navigator.pop(ctx),",REVIEW_REQUIRED
+lib/src/stock/screens/stock_home_screen.dart,240,Navigator.pop,,Navigator.pop(ctx);,REVIEW_REQUIRED
+lib/src/stock/screens/stock_home_screen.dart,325,Get.to,,Get.to(() => const StockTrackingScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_home_screen.dart,628,Get.to,,Get.to(() => const StockOrderScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_home_screen.dart,642,Get.to,,Get.to(() => const StockTrackingScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_home_screen.dart,656,Get.to,,Get.to(() => const StockIntroScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_home_screen.dart,1218,Get.to,,Get.to(() => const StockOrderScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_intro_screen.dart,48,Get.to,,"onPressed: () => Get.to(() => const StockOrderScreen()),",REVIEW_REQUIRED
+lib/src/stock/screens/stock_order_screen.dart,71,Get.to,,Get.to(() => const StockOrderConfirmScreen());,REVIEW_REQUIRED
+lib/src/stock/screens/stock_tracking_screen.dart,860,Get.to,,Get.to(() => const StockOrderScreen());,REVIEW_REQUIRED
+lib/src/tour/screens/tour_book_screen.dart,120,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_book_screen.dart,821,Get.to,,Get.to(() => TourPaymentScreen(bookingId: booking.id));,REVIEW_REQUIRED
+lib/src/tour/screens/tour_detail_screen.dart,118,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_detail_screen.dart,185,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_detail_screen.dart,423,Get.to,,Get.to(() => TourBookScreen(tour: tour));,REVIEW_REQUIRED
+lib/src/tour/screens/tour_list_screen.dart,103,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_list_screen.dart,121,Get.to,,Get.to(() => const TourMyBookingsScreen());,REVIEW_REQUIRED
+lib/src/tour/screens/tour_list_screen.dart,139,Get.to,,Get.to(() => const TourMatchScreen());,REVIEW_REQUIRED
+lib/src/tour/screens/tour_list_screen.dart,469,Get.to,,Get.to(() => TourDetailScreen(tourId: tour.id));,REVIEW_REQUIRED
+lib/src/tour/screens/tour_match_screen.dart,291,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/tour/screens/tour_match_screen.dart,552,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_match_screen.dart,651,Get.to,,Get.to(() => TourDetailScreen(tourId: tour.id));,REVIEW_REQUIRED
+lib/src/tour/screens/tour_my_bookings_screen.dart,80,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_my_bookings_screen.dart,203,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/tour/screens/tour_my_bookings_screen.dart,232,Get.to,,Get.to(() => TourVoucherScreen(booking: booking));,REVIEW_REQUIRED
+lib/src/tour/screens/tour_my_bookings_screen.dart,329,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_my_bookings_screen.dart,342,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/tour/screens/tour_my_bookings_screen.dart,380,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_my_bookings_screen.dart,393,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/tour/screens/tour_payment_screen.dart,71,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_payment_screen.dart,645,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/tour/screens/tour_payment_screen.dart,646,Get.off,,Get.off(() => const TourMyBookingsScreen());,REVIEW_REQUIRED
+lib/src/tour/screens/tour_payment_screen.dart,661,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/tour/screens/tour_payment_screen.dart,662,Get.off,,Get.off(() => TourVoucherScreen(booking: updated));,REVIEW_REQUIRED
+lib/src/tour/screens/tour_voucher_screen.dart,36,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/tour/screens/tour_voucher_screen.dart,42,Get.offAll,,"onPressed: () => Get.offAll(() => const TourListScreen()),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_application_screen.dart,54,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_application_screen.dart,425,Get.to,,Get.to(() => VisaPaymentScreen(request: req));,REVIEW_REQUIRED
+lib/src/visa/screens/visa_catalog_screen.dart,64,Get.to,,Get.to(() => const VisaListScreen());,REVIEW_REQUIRED
+lib/src/visa/screens/visa_catalog_screen.dart,123,Get.to,,"onTap: () => Get.to(() => const VisaIntroScreen()),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_catalog_screen.dart,135,Get.to,,"onTap: () => Get.to(() => const VisaListScreen()),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_catalog_screen.dart,484,Get.to,,Get.to(() => VisaRequirementsScreen(item: item));,REVIEW_REQUIRED
+lib/src/visa/screens/visa_detail_screen.dart,66,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_detail_screen.dart,312,Get.to,,"onTap: () => Get.to(() => VisaPaymentScreen(request: req)),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_detail_screen.dart,339,Get.to,,"onTap: () => Get.to(() => VisaResultScreen(request: req)),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_detail_screen.dart,368,Get.to,,"onTap: () => Get.to(() => VisaResultScreen(request: req)),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_detail_screen.dart,655,Navigator.pop,,"onPressed: () => Navigator.pop(ctx, false),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_detail_screen.dart,659,Navigator.pop,,"onPressed: () => Navigator.pop(ctx, true),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_intro_screen.dart,55,Get.to,,Get.to(() => const VisaListScreen());,REVIEW_REQUIRED
+lib/src/visa/screens/visa_intro_screen.dart,80,Get.to,,Get.to(() => const VisaCatalogScreen());,REVIEW_REQUIRED
+lib/src/visa/screens/visa_list_screen.dart,71,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_list_screen.dart,229,Get.back,,Get.back();,REVIEW_REQUIRED
+lib/src/visa/screens/visa_list_screen.dart,252,Get.to,,Get.to(() => VisaDetailScreen(caseNo: req.caseNo));,REVIEW_REQUIRED
+lib/src/visa/screens/visa_payment_screen.dart,52,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_payment_screen.dart,487,Get.off,,Get.off(() => VisaDetailScreen(caseNo: request.caseNo));,REVIEW_REQUIRED
+lib/src/visa/screens/visa_requirements_screen.dart,47,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+lib/src/visa/screens/visa_requirements_screen.dart,353,Get.to,,Get.to(() => VisaApplicationScreen(catalog: item));,REVIEW_REQUIRED
+lib/src/visa/screens/visa_result_screen.dart,64,Get.back,,"onPressed: () => Get.back(),",REVIEW_REQUIRED
+test/notifications_interactive_test.dart,128,Get.back,,Get.back();,REVIEW_REQUIRED
+test/notifications_interactive_test.dart,159,Get.back,,Get.back();,REVIEW_REQUIRED
+test/notifications_interactive_test.dart,223,Get.back,,Get.back();,REVIEW_REQUIRED
+test/notifications_interactive_test.dart,254,Get.back,,Get.back();,REVIEW_REQUIRED

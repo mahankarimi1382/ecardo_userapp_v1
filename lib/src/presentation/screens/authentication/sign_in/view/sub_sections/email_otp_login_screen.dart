@@ -294,28 +294,49 @@ class EmailOtpLoginScreen extends StatelessWidget {
         SizedBox(height: 16.h),
         Center(
           child: Obx(
-            () => GestureDetector(
-              onTap: () {
-                if (controller.countdown.value == 0) {
-                  controller.requestCode();
-                }
-              },
-              child: Text(
-                controller.countdown.value > 0
-                    ? '${pick(en: 'Resend available in', fa: 'ارسال مجدد تا', ar: 'إعادة الإرسال بعد', zh: '重新发送倒计时')} ${controller.countdown.value}s'
-                    : pick(
-                        en: 'Resend code',
-                        fa: 'ارسال مجدد کد',
-                        ar: 'إعادة إرسال الرمز',
-                        zh: '重新发送验证码',
+            () => Semantics(
+              button: true,
+              enabled: controller.countdown.value == 0,
+              label: pick(
+                en: 'Resend code',
+                fa: 'ارسال مجدد کد',
+                ar: 'إعادة إرسال الرمز',
+                zh: '重新发送验证码',
+              ),
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: controller.countdown.value > 0 ? 0.45 : 1.0,
+                child: GestureDetector(
+                  onTap: () {
+                    if (controller.countdown.value == 0) {
+                      controller.requestCode();
+                    }
+                  },
+                  child: Container(
+                    constraints: BoxConstraints(
+                      minHeight: 48.h,
+                      minWidth: 48.w,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      controller.countdown.value > 0
+                          ? '${pick(en: 'Resend available in', fa: 'ارسال مجدد تا', ar: 'إعادة الإرسال بعد', zh: '重新发送倒计时')} ${controller.countdown.value}s'
+                          : pick(
+                              en: 'Resend code',
+                              fa: 'ارسال مجدد کد',
+                              ar: 'إعادة إرسال الرمز',
+                              zh: '重新发送验证码',
+                            ),
+                      style: TextStyle(
+                        letterSpacing: 0,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14.sp,
+                        color: controller.countdown.value == 0
+                            ? AppColors.lightPrimary
+                            : AppColors.lightTextTertiary,
                       ),
-                style: TextStyle(
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14.sp,
-                  color: controller.countdown.value == 0
-                      ? AppColors.lightPrimary
-                      : AppColors.lightTextTertiary,
+                    ),
+                  ),
                 ),
               ),
             ),

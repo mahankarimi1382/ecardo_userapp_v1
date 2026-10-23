@@ -1,0 +1,6 @@
+﻿agent,responsibility,allowed_scope,protected_scope,handoff_artifacts,parallel_test_rule
+Integrator,"Final ownership, triage, merging and final serial validation",approved cross-module integration and docs,no destructive git; never deploy,"INPUT_RECONCILIATION, issue register, final reports",Only Integrator runs final Flutter tests serially
+Agent A — API Contracts,DTO/API models/settings/errors,"explicitly assigned feature files, contract docs",shared global/theme files; other agent-owned files,"CONTRACT_REGISTRY, API_ERROR_CATALOG, schema tests proposal",No flutter test while work is parallel
+Agent B — Financial Safety,"money flow, retry, authorization and privacy review",explicitly assigned financial flow files and tests,"backend assumptions, shared files, unrelated feature files","risk findings, targeted fixes, regression tests",No flutter test while work is parallel
+Agent C — Screen/Flow,navigation/state/error/empty/offline integration,owned screens/controllers after contract approval,locked design system/theme files unless authorized,screen issues and focused changes,No flutter test while work is parallel
+Agent D — QA Evidence,"test design, fixtures, evidence validation",owned test/evidence files,app implementation unless specifically assigned,"TEST_EVIDENCE, coverage, blockers",No parallel flutter test; Integrator runs suite serially

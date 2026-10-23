@@ -1,0 +1,1 @@
+evidence_id,claim_id,artifact_path,artifact_type,source_sha,command_or_scenario,exit_code,timestamp_utc,redactions_applied,result_summary,limitations,reviewer,status

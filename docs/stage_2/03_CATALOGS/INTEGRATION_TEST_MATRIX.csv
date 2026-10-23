@@ -1,0 +1,41 @@
+﻿test_id,risk_or_contract,scenario,expected_result,test_level,required_fixture,status,evidence_ref,owner
+T2-001,CTR-001,Session expires before sensitive operation,Request blocked or refreshes according to backend contract; no success UI,unit/integration,synthetic expired session,NOT_RUN,,Agent D
+T2-002,CTR-001,Logout then open authenticated deep link,Authorization rechecked; no protected data leaks,integration,test user + fake link,NOT_RUN,,Agent D
+T2-003,CTR-002,KYC status unknown/unavailable,Sensitive action follows server policy and shows truthful state,unit/integration,unknown KYC enum,NOT_RUN,,Agent D
+T2-004,CTR-004,Balance response empty/stale/out-of-date,Freshness and unavailable states are explicit; no invented balance,unit/widget,timestamp fixtures,NOT_RUN,,Agent D
+T2-005,CTR-004,Currency uses non-default decimal scale,Amount uses contract-defined precision,unit,synthetic currencies,NOT_RUN,,Agent D
+T2-006,CTR-005,Transaction list has repeated item across pages,No duplicate row; ordering stable,unit,two cursor pages,NOT_RUN,,Agent D
+T2-007,CTR-005,Transaction status enum is unknown,"UI shows safe unknown/pending-like state, not false success",unit,unknown enum response,NOT_RUN,,Agent D
+T2-008,CTR-006,Transfer quote expires before confirm,Confirmation is blocked and quote refresh requested per contract,unit/integration,expired quote,NOT_RUN,,Agent D
+T2-009,CTR-006,Insufficient funds/limit exceeded,Server error mapped safely; no success state,integration,mock 422/limit errors,NOT_RUN,,Agent D
+T2-010,CTR-007,Rapid double tap on confirm,At most one client submission; backend protections verified separately,widget/integration,mock endpoint counter,NOT_RUN,,Agent D
+T2-011,CTR-007,"Timeout after submission, response lost",Client does not blindly submit again; status reconciliation shown,integration,timeout after mock commit,NOT_RUN,,Agent D
+T2-012,CTR-007,Backend responds pending,UI displays pending and refreshes according to contract,integration,pending transaction fixture,NOT_RUN,,Agent D
+T2-013,CTR-007,Backend responds unknown new status,Unknown is not coerced into success/failure incorrectly,unit,new enum string,NOT_RUN,,Agent D
+T2-014,CTR-008,FX pair direction inverted in response/display,Rate and received amount align with backend contract,unit,known rate fixtures,NOT_RUN,,Agent D
+T2-015,CTR-008,Rounding edge around smallest amount,Documented rounding rule applied exactly once,unit,boundary amount fixtures,NOT_RUN,,Agent D
+T2-016,CTR-009,Passcode setting absent or null,Sensitive operation remains safe and user receives actionable state,unit/integration,missing/null settings,NOT_RUN,,Agent D
+T2-017,CTR-009,Settings endpoint unavailable,No unsafe allow-by-default; behavior per approved policy,integration,settings 5xx fixture,NOT_RUN,,Agent D
+T2-018,CTR-010,Fee differs from prior quote,Expired/stale quote handled; user sees verified fee before confirm,integration,fee changed fixture,NOT_RUN,,Agent D
+T2-019,CTR-011,Card control returns pending,Card UI reconciles with server state instead of local optimism,integration,pending card op,NOT_RUN,,Agent D
+T2-020,CTR-012,Unsupported blockchain network or address format,Operation blocked with safe error; no broadcast,unit/integration,invalid network/address,NOT_RUN,,Agent D
+T2-021,CTR-013,External fee estimate unavailable,No fabricated fee or silent fallback; flow blocked/re-quoted per contract,unit/integration,fee endpoint unavailable,NOT_RUN,,Agent D
+T2-022,CTR-014,Bill already paid or duplicate submit,Duplicate effect prevented and backend truth shown,integration,already-paid fixture,NOT_RUN,,Agent D
+T2-023,CTR-015,QR intent expired/tampered,Invalid intent rejected before financial action,unit/integration,expired/tampered QR,NOT_RUN,,Agent D
+T2-024,CTR-016,Notification deep link with logged-out user,Auth checked and params validated before protected navigation,integration,fake notification,NOT_RUN,,Agent D
+T2-025,CTR-017,Feature/config value has unexpected type,No unsafe permissive default; parsing failure observable,unit,malformed config JSON,NOT_RUN,,Agent D
+T2-026,CTR-018,Malformed or empty API error response,Normalized safe fallback; no crash or sensitive body dump,unit,malformed error fixtures,NOT_RUN,,Agent D
+T2-027,CTR-018,401/403/429/5xx and timeout,Each maps to expected control flow and safe UI copy,unit/integration,HTTP fixtures,NOT_RUN,,Agent D
+T2-028,CTR-019,Cursor reset after filters change,No stale page items mixed with new filter results,unit,mock cursor sequence,NOT_RUN,,Agent D
+T2-029,CTR-020,Money display in all supported locales,"Currency, sign, grouping, decimals and RTL match rules",widget/golden,synthetic monetary values,NOT_RUN,,Agent D
+T2-030,CTR-020,Negative/refund amount display,Sign and semantic label unambiguous,unit/widget,refund fixture,NOT_RUN,,Agent D
+T2-031,RISK-007,Logs include thrown HTTP exception,Secret and PII fields redacted,unit,fake secrets/PII markers,NOT_RUN,,Agent D
+T2-032,RISK-014,Confirm control stays pending after submit starts,Action cannot be accidentally resubmitted; timeout recovery remains possible,widget,mock delayed future,NOT_RUN,,Agent D
+T2-033,RISK-015,Back/cancel after submit began,State is reconciled and user cannot mistake cancellation for transaction reversal,integration,delayed mock mutation,NOT_RUN,,Agent D
+T2-034,RISK-019,Logout and switch account,Private cached state cleared and new account data isolated,integration,two synthetic users,NOT_RUN,,Agent D
+T2-035,RISK-023,QR payload changes amount/recipient client-side,Trusted server intent governs the final reviewed data,integration,tampered QR payload,NOT_RUN,,Agent D
+T2-036,RISK-024,Tap each primary CTA on in-scope screens,Every action navigates/executes its documented behavior or is visibly disabled,widget/integration,route and CTA inventory,NOT_RUN,,Agent D
+T2-037,RISK-025,Receipt component uses pending/failed/reversed status,Visible status matches the authoritative transaction model,widget/golden,status fixtures,NOT_RUN,,Agent D
+T2-038,General,Offline before read-only fetch,Clear offline/loading/retry state with no crash,integration,network mock unavailable,NOT_RUN,,Agent D
+T2-039,General,Network drops immediately after financial submit,Unknown/pending reconciliation path appears; no blind repeat,integration,mock server commit then disconnect,NOT_RUN,,Agent D
+T2-040,General,App resumes after process/background interruption,Sensitive flow refreshes/reconciles before allowing next action,integration,lifecycle test harness,NOT_RUN,,Agent D

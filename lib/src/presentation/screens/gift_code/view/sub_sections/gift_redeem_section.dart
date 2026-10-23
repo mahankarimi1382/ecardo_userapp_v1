@@ -73,19 +73,24 @@ class _GiftRedeemSectionState extends State<GiftRedeemSection> {
                 ),
               ),
               const SizedBox(height: AppSpacing.xxxl),
-              CommonButton(
-                onPressed: () async {
-                  HapticFeedback.lightImpact();
-                  if (controller.giftCodeController.text.isNotEmpty) {
-                    await controller.giftCodeRedeem();
-                  } else {
-                    ToastHelper().showErrorToast(
-                      localizations.giftRedeemValidation,
-                    );
-                  }
-                },
-                width: double.infinity,
-                text: localizations.giftRedeemButton,
+              Obx(
+                () => CommonButton(
+                  isLoading: controller.isGiftRedeemLoading.value,
+                  onPressed: controller.isGiftRedeemLoading.value
+                      ? null
+                      : () async {
+                          HapticFeedback.lightImpact();
+                          if (controller.giftCodeController.text.isNotEmpty) {
+                            await controller.giftCodeRedeem();
+                          } else {
+                            ToastHelper().showErrorToast(
+                              localizations.giftRedeemValidation,
+                            );
+                          }
+                        },
+                  width: double.infinity,
+                  text: localizations.giftRedeemButton,
+                ),
               ),
               const SizedBox(height: AppSpacing.huge),
             ],

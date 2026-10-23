@@ -1,0 +1,21 @@
+﻿state_id,state_name,ui_pattern,acceptance_safety_rule,route_id_to_fill,tested_by,evidence_link,status
+initial,initial/pending bootstrap,"Show branded shell, no fake balances",No invented balance or success,TODO,TODO,TODO,TODO
+loading,loading,Skeleton/progress; disable repeated submit,Keep action idempotent,TODO,TODO,TODO,TODO
+loaded,loaded/current,Render authoritative content,Timestamp if data freshness relevant,TODO,TODO,TODO,TODO
+stale,stale cache,Label last updated and refresh path,Do not present stale value as current,TODO,TODO,TODO,TODO
+empty,empty state,Explain why empty and actionable next step,Only show real action,TODO,TODO,TODO,TODO
+partial,partial data,Label unavailable sections,Do not synthesize missing fee/status,TODO,TODO,TODO,TODO
+offline,offline,Explain connectivity and what remains available,Never queue sensitive financial payload by default,TODO,TODO,TODO,TODO
+field_error,validation error,Inline field error and focus,No raw backend stack trace,TODO,TODO,TODO,TODO
+unauthorized,401/session expired,"Secure reauthentication, controlled return",Clear or protect sensitive draft,TODO,TODO,TODO,TODO
+forbidden,403/ineligible,Explain eligibility and recovery,No client-side bypass,TODO,TODO,TODO,TODO
+conflict,409/conflict,Refresh/reconcile the existing operation,No blind resubmit,TODO,TODO,TODO,TODO
+rate_limited,429/rate limit,Respect server cooldown,Do not resend OTP/requests aggressively,TODO,TODO,TODO,TODO
+domain_422,domain validation/422,Map machine-readable code to tailored copy,Wrong passcode must not trigger infinite prompt loop,TODO,TODO,TODO,TODO
+unknown,timeout/5xx unknown,Show pending/unknown and status lookup,Never label success/failure without authority,TODO,TODO,TODO,TODO
+pending,submitted/pending,"Show reference, timestamps and next update behavior",Not green success,TODO,TODO,TODO,TODO
+success,confirmed success,Receipt from backend reference/status,No UI-only success,TODO,TODO,TODO,TODO
+failed,failed terminal state,Actionable message and safe retry if allowed,Retry only if backend says safe,TODO,TODO,TODO,TODO
+reversed,reversed/refunded,Show reversal/refund status and reference,Do not hide original transaction,TODO,TODO,TODO,TODO
+unsupported,provider/network unavailable,Explain unsupported or maintenance,No fallback provider/chain guess,TODO,TODO,TODO,TODO
+permission,permission denied,Explain reason and alternative route,No repeated permission prompts,TODO,TODO,TODO,TODO

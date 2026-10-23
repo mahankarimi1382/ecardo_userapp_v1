@@ -50,6 +50,7 @@ class CommonVirtualCardView extends StatefulWidget {
   final bool showFlipIndicator;
   final VoidCallback? onCopyCardNumber;
   final ValueChanged<bool>? onFlip;
+  final Future<bool> Function()? onRevealCvv;
 
   const CommonVirtualCardView({
     super.key,
@@ -76,6 +77,7 @@ class CommonVirtualCardView extends StatefulWidget {
     this.showFlipIndicator = true,
     this.onCopyCardNumber,
     this.onFlip,
+    this.onRevealCvv,
   });
 
   @override
@@ -732,11 +734,26 @@ class _CommonVirtualCardViewState extends State<CommonVirtualCardView>
                                 ),
                               )
                             : GestureDetector(
-                                onTap: () {
+                                onTap: () async {
                                   HapticFeedback.lightImpact();
-                                  setState(() {
-                                    _isCvvRevealed = !_isCvvRevealed;
-                                  });
+                                  if (_isCvvRevealed) {
+                                    setState(() => _isCvvRevealed = false);
+                                    return;
+                                  }
+                                  if (widget.onRevealCvv != null) {
+                                    final ok = await widget.onRevealCvv!();
+                                    if (ok && mounted) {
+                                      setState(() => _isCvvRevealed = true);
+                                      Future.delayed(const Duration(seconds: 10), () {
+                                        if (mounted) setState(() => _isCvvRevealed = false);
+                                      });
+                                    }
+                                  } else {
+                                    setState(() => _isCvvRevealed = true);
+                                    Future.delayed(const Duration(seconds: 10), () {
+                                      if (mounted) setState(() => _isCvvRevealed = false);
+                                    });
+                                  }
                                 },
                                 child: Icon(
                                   _isCvvRevealed

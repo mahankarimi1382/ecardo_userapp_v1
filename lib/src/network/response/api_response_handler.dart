@@ -23,20 +23,89 @@ class ApiResponseHandler {
 
   ApiResponseHandler(this.body);
 
-  /// True if the API call was successful (status == 'success' or HTTP 2xx).
+  /// True if the API call was successful (status == 'success' or HTTP 2xx)
+  /// and not in an explicit business rejected, failed, or reconciling state.
   bool get isSuccess {
     if (body == null) return false;
     final status = body!['status'];
+    final bool statusOk;
     if (status is String) {
-      return status.toLowerCase() == 'success' ||
+      statusOk = status.toLowerCase() == 'success' ||
           status.toLowerCase() == 'true';
+    } else if (status is bool) {
+      statusOk = status;
+    } else {
+      statusOk = false;
     }
-    if (status is bool) return status;
-    return false;
+    // Contract 04: HTTP success with business rejected/unknown is not a transaction success
+    if (statusOk && (isRejected || isReconciling)) {
+      return false;
+    }
+    return statusOk;
   }
 
-  /// True if the API call failed.
+  /// True if the API call failed (HTTP level or business rejected/unknown).
   bool get isError => !isSuccess;
+
+  /// Business status string extracted from payload (e.g. 'success', 'pending', 'rejected', 'requires_action', 'unknown').
+  String? get businessStatus {
+    if (body == null) return null;
+    final dataObj = body!['data'];
+    if (dataObj is Map && dataObj['status'] != null) {
+      return dataObj['status'].toString().toLowerCase().trim();
+    }
+    if (body!['business_status'] != null) {
+      return body!['business_status'].toString().toLowerCase().trim();
+    }
+    final metaObj = meta;
+    if (metaObj != null) {
+      if (metaObj['business_status'] != null) {
+        return metaObj['business_status'].toString().toLowerCase().trim();
+      }
+      if (metaObj['status'] != null) {
+        return metaObj['status'].toString().toLowerCase().trim();
+      }
+    }
+    final topStatus = body!['status'];
+    if (topStatus != null) {
+      return topStatus.toString().toLowerCase().trim();
+    }
+    return null;
+  }
+
+  /// True if the business transaction is in an asynchronous pending / processing state.
+  bool get isPending {
+    final s = businessStatus;
+    return s == 'pending' || s == 'processing' || s == 'in_review';
+  }
+
+  /// True if the business transaction was explicitly rejected or failed by the business domain.
+  bool get isRejected {
+    final s = businessStatus;
+    return s == 'rejected' ||
+        s == 'failed' ||
+        s == 'declined' ||
+        s == 'cancelled';
+  }
+
+  /// True if the business transaction requires additional user action (e.g. OTP, 2FA, KYC upgrade).
+  bool get requiresAction {
+    final s = businessStatus;
+    return s == 'requires_action' ||
+        s == 'action_required' ||
+        s == 'otp_required' ||
+        s == 'kyc_required';
+  }
+
+  /// True if the business transaction status is unknown or reconciling.
+  bool get isReconciling {
+    final s = businessStatus;
+    return s == 'unknown' || s == 'reconciling' || s == 'ambiguous';
+  }
+
+  /// True if the transaction is confirmed successful (not pending, not requires_action, not reconciling).
+  bool get isConfirmedSuccess =>
+      isSuccess && !isPending && !requiresAction && !isRejected && !isReconciling;
 
   /// The user-facing message.
   String get message {
@@ -82,19 +151,41 @@ class ApiResponseHandler {
   ///   1. `{"email": ["Email is required", "..."], "password": ["..."]}`
   ///   2. `["Error 1", "Error 2"]`
   ///   3. "Single error string"
+  ///   4. Nested maps: `{"address": {"street": ["Street is required"]}}`
   String? get firstError {
+    return _extractFirstError(errors);
+  }
+
+  /// Flattens validation errors into a `Map<String, String>` of fieldName -> firstErrorMessage.
+  Map<String, String> get fieldErrors {
+    final result = <String, String>{};
     final errs = errors;
     if (errs is Map) {
-      for (final v in errs.values) {
-        if (v is List && v.isNotEmpty) {
-          return v.first?.toString();
+      for (final entry in errs.entries) {
+        final key = entry.key.toString();
+        final firstMsg = _extractFirstError(entry.value);
+        if (firstMsg != null && firstMsg.isNotEmpty) {
+          result[key] = firstMsg;
         }
-        if (v is String && v.isNotEmpty) return v;
       }
-    } else if (errs is List && errs.isNotEmpty) {
-      return errs.first?.toString();
-    } else if (errs is String && errs.isNotEmpty) {
-      return errs;
+    }
+    return result;
+  }
+
+  static String? _extractFirstError(dynamic errs) {
+    if (errs == null) return null;
+    if (errs is String && errs.isNotEmpty) return errs;
+    if (errs is List && errs.isNotEmpty) {
+      for (final item in errs) {
+        final extracted = _extractFirstError(item);
+        if (extracted != null && extracted.isNotEmpty) return extracted;
+      }
+    }
+    if (errs is Map && errs.isNotEmpty) {
+      for (final val in errs.values) {
+        final extracted = _extractFirstError(val);
+        if (extracted != null && extracted.isNotEmpty) return extracted;
+      }
     }
     return null;
   }

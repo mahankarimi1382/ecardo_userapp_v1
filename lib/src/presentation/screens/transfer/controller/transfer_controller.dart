@@ -23,6 +23,8 @@ import 'package:ecardo_user/src/presentation/screens/transfer/model/transfer_wal
 
 class TransferController extends GetxController {
   final RxBool isLoading = false.obs;
+  final RxBool hasError = false.obs;
+  final RxString errorMessage = ''.obs;
   final RxBool isTransferConfigLoading = false.obs;
   final RxBool isTransferAmountLoading = false.obs;
   final RxBool isBeneficiaryLoading = false.obs;
@@ -38,7 +40,14 @@ class TransferController extends GetxController {
   final Rxn<Map<String, dynamic>> successTransferData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
+  AppLocalizations get localization {
+    final ctx = Get.context;
+    if (ctx != null) {
+      final loc = AppLocalizations.of(ctx);
+      if (loc != null) return loc;
+    }
+    return lookupAppLocalizations(const Locale('en'));
+  }
 
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> transferWalletsList = <Wallets>[].obs;
@@ -47,6 +56,7 @@ class TransferController extends GetxController {
       Rxn<Map<String, dynamic>>();
   final RxBool isLookingUpRecipient = false.obs;
   Timer? _recipientLookupDebounce;
+  bool _isAdvancingStep = false;
 
   final RxBool isRecipientUidFocused = false.obs;
   final FocusNode recipientUidFocusNode = FocusNode();
@@ -100,17 +110,23 @@ class TransferController extends GetxController {
   }
 
   Future<void> nextStepWithValidation() async {
-    if (currentStep.value == 0) {
-      if (!validateAmountStep()) {
-        return;
+    if (_isAdvancingStep || isTransferConfigLoading.isTrue) return;
+    _isAdvancingStep = true;
+    try {
+      if (currentStep.value == 0) {
+        if (!validateAmountStep()) {
+          return;
+        }
       }
-    }
 
-    if (currentStep.value < steps.length - 1) {
-      currentStep.value++;
-      await fetchTransferConfig();
-    } else {
-      currentStep.value = 0;
+      if (currentStep.value < steps.length - 1) {
+        currentStep.value++;
+        await fetchTransferConfig();
+      } else {
+        currentStep.value = 0;
+      }
+    } finally {
+      _isAdvancingStep = false;
     }
   }
 
@@ -172,7 +188,9 @@ class TransferController extends GetxController {
     );
 
     final targetAmount = balance * fraction;
-    amountController.text = targetAmount.toStringAsFixed(decimals);
+    amountController.text = decimals == 0
+        ? targetAmount.round().toString()
+        : targetAmount.toStringAsFixed(decimals);
     calculateLiveCharge();
   }
 
@@ -411,12 +429,13 @@ class TransferController extends GetxController {
     isTransferAmountLoading.value = true;
     final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
+    final currentWallet = wallet.value;
     final Map<String, dynamic> requestBody = {
       'account_number': recipientUidController.text.trim(),
       'amount': amountController.text.trim(),
-      'wallet_id': wallet.value!.isDefault!
+      'wallet_id': currentWallet?.isDefault == true
           ? "default"
-          : wallet.value!.id.toString(),
+          : (currentWallet?.id?.toString() ?? "default"),
     };
     if (passcode != null && PasscodeHelper.isValidFormat(passcode)) {
       requestBody['passcode'] = PasscodeHelper.normalize(passcode);
@@ -519,6 +538,8 @@ class TransferController extends GetxController {
 
   Future<void> fetchTransferWallets() async {
     isLoading.value = true;
+    hasError.value = false;
+    errorMessage.value = '';
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: "${ApiPath.walletsEndpoint}?transfer",
@@ -540,8 +561,15 @@ class TransferController extends GetxController {
         } else {
           wallet.value = null;
         }
+      } else {
+        hasError.value = true;
+        errorMessage.value =
+            response.message ?? localization.allControllerLoadError;
       }
     } catch (e, stackTrace) {
+      hasError.value = true;
+      final info = NetworkErrorHelper.from(e);
+      errorMessage.value = info.message;
       debugPrint('❌ fetchTransferWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -578,5 +606,7 @@ class TransferController extends GetxController {
     totalAmount.value = 0.0;
     recipientUidController.clear();
     lookedUpRecipient.value = null;
+    hasError.value = false;
+    errorMessage.value = '';
   }
 }

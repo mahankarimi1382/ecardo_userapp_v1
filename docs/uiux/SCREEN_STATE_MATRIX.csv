@@ -1,0 +1,13 @@
+﻿screen_id,route_name,state_id,state_meaning,required_behavior,implementation_status,test_id,evidence_ref,notes
+GLOBAL,All Screens,initial,صفحه قبل از دریافت داده,ورودی و اقدام معتبر است یا placeholder مشخص دارد,DONE,TEST-INIT-01,EVD-001,Initialized with clean mock models
+GLOBAL,All Screens,loading,در حال دریافت یا پردازش,نشانگر مناسب؛ جلوگیری از submit ناخواسته,DONE,TEST-LOAD-01,EVD-001,TxFlowShimmerSkeleton & TxHistoryShimmerSkeleton
+GLOBAL,All Screens,success,نتیجهٔ موفق معتبر,فقط از پاسخ authoritative؛ داده و status واقعی,DONE,TEST-SUCC-01,EVD-001,EcardoDigitalReceipt with authoritative status
+GLOBAL,All Screens,empty,داده‌ای برای نمایش وجود ندارد,متن توضیحی و CTA واقعی در صورت امکان,DONE,TEST-EMPT-01,EVD-COMP-05,EcardoEmptyState with actionable refresh/browse CTA
+GLOBAL,All Screens,validation_error,ورودی نامعتبر,خطا نزدیک field؛ semantics و focus مناسب,DONE,TEST-VAL-01,EVD-001,fieldErrors parsed and mapped to inputs
+GLOBAL,All Screens,api_error,خطای سرویس,پیام قابل‌فهم و recovery معتبر,DONE,TEST-ERR-01,EVD-COMP-06,EcardoErrorView with friendly sanitized message
+GLOBAL,All Screens,offline,عدم اتصال,حفظ draft امن و retry کنترل‌شده,DONE,TEST-OFF-01,EVD-COMP-06,EcardoErrorView with wifi-off icon and safe draft retention
+GLOBAL,All Screens,pending,عملیات هنوز نهایی نیست,بدون ادعای موفقیت یا شکست زودهنگام,DONE,TEST-PEND-01,EVD-001,isPending status evaluated explicitly
+GLOBAL,All Screens,unknown_result,پاسخ نامعلوم پس از timeout,استعلام وضعیت؛ retry با idempotency policy,DONE,TEST-UNK-01,EVD-001,ApiResponse.unknown and Status.unknown transition
+GLOBAL,All Screens,unauthorized,عدم مجوز/پایان session,مسیر امن re-auth; مخفی‌سازی داده حساس,DONE,TEST-AUTH-01,EVD-003,Single-flight token refresh & SessionManager logout
+GLOBAL,All Screens,disabled,اقدام غیرمجاز یا unavailable,علت غیرفعال‌بودن قابل‌درک,DONE,TEST-DIS-01,EVD-COMP-03,Swipe button disabled when rate is stale
+GLOBAL,All Screens,partial_failure,بخشی از عملیات fail شده,نتیجهٔ جزءبه‌جزء دقیق و recovery,DONE,TEST-PART-01,EVD-004,Itemized fee breakdown highlights failed items

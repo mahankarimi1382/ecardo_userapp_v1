@@ -199,24 +199,36 @@ class _VerifyPasscodeBottomSheetState extends State<VerifyPasscodeBottomSheet> {
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    Get.back();
-                  },
-                  child: Container(
-                    width: 30.r,
-                    height: 30.r,
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.darkSurface
-                          : AppColors.lightBackground,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.close_rounded,
-                      size: 18.r,
-                      color: subtextColor,
+                Semantics(
+                  button: true,
+                  label: l10nPick(context, en: 'Close', fa: 'بستن'),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      Get.back();
+                    },
+                    child: Container(
+                      constraints: BoxConstraints(
+                        minWidth: 48.w,
+                        minHeight: 48.h,
+                      ),
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: 30.r,
+                        height: 30.r,
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.darkSurface
+                              : AppColors.lightBackground,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 18.r,
+                          color: subtextColor,
+                        ),
+                      ),
                     ),
                   ),
                 ),

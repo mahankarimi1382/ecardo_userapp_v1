@@ -1,22 +1,26 @@
-import 'package:ecardo_user/src/app/routes/routes.dart';
-import 'package:ecardo_user/src/helper/l10n_pick.dart';
-import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/routes/routes.dart';
+import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
+import 'package:ecardo_user/src/helper/digit_normalization_formatter.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/shared/ambient_auth_background.dart';
+import 'package:ecardo_user/src/presentation/screens/authentication/shared/auth_language_pill.dart';
 import 'package:ecardo_user/src/presentation/screens/authentication/sign_up/controller/set_passcode_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/device_sessions_security/view/widgets/visual_pin_dots_indicator.dart';
 
 /// First-stage mandatory transaction passcode (exactly 4 digits).
-/// Cannot be skipped; passcode cannot be disabled later.
+/// Modernized with M3 tokens, AmbientAuthBackground, VisualPinDotsIndicator,
+/// haptic feedback, and accessible touch targets.
 class SetPasscodeScreen extends StatefulWidget {
   const SetPasscodeScreen({super.key});
 
@@ -33,11 +37,26 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
     controller = Get.isRegistered<SetPasscodeController>()
         ? Get.find<SetPasscodeController>()
         : Get.put(SetPasscodeController());
+
+    controller.passcodeController.addListener(_onInputChanged);
+    controller.confirmController.addListener(_onInputChanged);
+  }
+
+  void _onInputChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    controller.passcodeController.removeListener(_onInputChanged);
+    controller.confirmController.removeListener(_onInputChanged);
+    super.dispose();
   }
 
   static final _digitLimit = [const DigitNormalizationFormatter(maxLength: 4)];
 
   void _skip() {
+    HapticFeedback.lightImpact();
     final route = controller.nextRoute;
     final args = controller.nextArgs;
     if (route == BaseRoute.navigation) {
@@ -50,6 +69,35 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final primaryTextColor = isDark
+        ? AppColors.darkTextPrimary
+        : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.lightTextTertiary;
+
+    final accentColor = isDark
+        ? AppColors.darkAccent
+        : AppColors.brandViolet;
+
+    final cardBg = isDark
+        ? AppColors.darkSurface.withValues(alpha: 0.94)
+        : AppColors.white.withValues(alpha: 0.96);
+    final cardBorder = isDark
+        ? AppColors.white.withValues(alpha: 0.12)
+        : AppColors.lightBorder.withValues(alpha: 0.7);
+
+    final passcodeText = controller.passcodeController.text;
+    final confirmText = controller.confirmController.text;
+    final isMismatch = passcodeText.length == 4 &&
+        confirmText.length == 4 &&
+        passcodeText != confirmText;
+    final isMatch = passcodeText.length == 4 &&
+        confirmText.length == 4 &&
+        passcodeText == confirmText;
 
     return PopScope(
       canPop: true,
@@ -58,187 +106,287 @@ class _SetPasscodeScreenState extends State<SetPasscodeScreen> {
         _skip();
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.lightBackground,
-          elevation: 0,
-          leading: BackButton(
-            color: AppColors.lightTextPrimary,
-            onPressed: _skip,
-          ),
-          actions: [
-            TextButton(
-              onPressed: _skip,
-              child: Text(
-                l10nPick(
-                  context,
-                  en: 'Later',
-                  fa: 'بعداً',
-                  ar: 'لاحقاً',
-                  zh: '稍后',
-                ),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.lightPrimary,
-                ),
-              ),
-            ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 0.28.sh,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned.fill(
-                          child: ImageFiltered(
-                            imageFilter: ImageFilter.blur(
-                              sigmaX: 20,
-                              sigmaY: 20,
-                            ),
-                            child: Image.asset(
-                              PngAssets.splashFrame,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+        backgroundColor: isDark
+            ? AppColors.darkBackground
+            : AppColors.lightBackground,
+        appBar: const CommonDefaultAppBar(),
+        body: AmbientAuthBackground(
+          child: Stack(
+            children: [
+              SafeArea(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      // Top Navigation Bar
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20.w,
+                          vertical: 8.h,
                         ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Image.asset(
-                              PngAssets.appLogo,
-                              fit: BoxFit.contain,
-                              width: 155.w,
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              loc.generatePasscodeTitle,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                letterSpacing: 0,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 22.sp,
-                                color: AppColors.lightTextPrimary,
-                              ),
-                            ),
-                            SizedBox(height: 6.h),
-                            Padding(
-                              padding: EdgeInsetsDirectional.symmetric(
-                                horizontal: 24.w,
-                              ),
-                              child: Text(
-                                loc.generatePasscodeSectionDescription,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13.sp,
-                                  color: AppColors.lightTextTertiary,
+                            Semantics(
+                              button: true,
+                              label: 'Back',
+                              child: IconButton(
+                                tooltip: 'Back',
+                                onPressed: _skip,
+                                icon: Icon(
+                                  Icons.arrow_back_ios_new_rounded,
+                                  size: 20.sp,
+                                  color: primaryTextColor,
                                 ),
                               ),
                             ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 6.h,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16.r),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: accentColor.withValues(
+                                      alpha: isDark ? 0.16 : 0.25,
+                                    ),
+                                    blurRadius: 18,
+                                  ),
+                                ],
+                              ),
+                              child: Image.asset(
+                                PngAssets.appLogo,
+                                fit: BoxFit.contain,
+                                height: 30.h,
+                              ),
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Semantics(
+                                  button: true,
+                                  label: l10nPick(
+                                    context,
+                                    en: 'Later',
+                                    fa: 'بعداً',
+                                    ar: 'لاحقاً',
+                                    zh: '稍后',
+                                  ),
+                                  child: TextButton(
+                                    onPressed: _skip,
+                                    style: TextButton.styleFrom(
+                                      minimumSize: Size(48.w, 48.h),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12.w,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      l10nPick(
+                                        context,
+                                        en: 'Later',
+                                        fa: 'بعداً',
+                                        ar: 'لاحقاً',
+                                        zh: '稍后',
+                                      ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14.sp,
+                                        color: accentColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const AuthLanguagePill(),
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    constraints: BoxConstraints(minHeight: 0.72.sh),
-                    margin: EdgeInsetsDirectional.symmetric(horizontal: 18.w),
-                    padding: EdgeInsetsDirectional.only(
-                      top: 24.h,
-                      start: 18.w,
-                      end: 18.w,
-                      bottom: 30.h,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadiusDirectional.only(
-                        topStart: Radius.circular(30.r),
-                        topEnd: Radius.circular(30.r),
                       ),
-                      color: AppColors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          offset: const Offset(0, 0),
-                          blurRadius: 40.r,
-                          color: AppColors.black.withValues(alpha: 0.06),
+
+                      SizedBox(height: 16.h),
+
+                      // Title & Subtitle
+                      Text(
+                        loc.generatePasscodeTitle,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          letterSpacing: -0.5,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 24.sp,
+                          color: primaryTextColor,
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        CommonRequiredLabelAndDynamicField(
-                          labelText: loc.generatePasscodeLabelPasscode,
-                          isLabelRequired: true,
-                          dynamicField: Obx(
-                            () => CommonTextInputField(
-                              hintText: '****',
-                              controller: controller.passcodeController,
-                              focusNode: controller.passcodeFocusNode,
-                              isFocused: controller.isPasscodeFocused.value,
-                              keyboardType: TextInputType.number,
-                              obscureText: true,
-                              inputFormatters: _digitLimit,
-                            ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24.w),
+                        child: Text(
+                          loc.generatePasscodeSectionDescription,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13.5.sp,
+                            color: secondaryTextColor,
                           ),
                         ),
-                        SizedBox(height: 16.h),
-                        CommonRequiredLabelAndDynamicField(
-                          labelText: loc.generatePasscodeLabelConfirmPasscode,
-                          isLabelRequired: true,
-                          dynamicField: Obx(
-                            () => CommonTextInputField(
-                              hintText: '****',
-                              controller: controller.confirmController,
-                              focusNode: controller.confirmFocusNode,
-                              isFocused: controller.isConfirmFocused.value,
-                              keyboardType: TextInputType.number,
-                              obscureText: true,
-                              inputFormatters: _digitLimit,
+                      ),
+
+                      SizedBox(height: 24.h),
+
+                      // Form Glass Card
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 480),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 18.w),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.w,
+                            vertical: 24.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: cardBg,
+                            borderRadius: BorderRadius.circular(28.r),
+                            border: Border.all(
+                              color: cardBorder,
+                              width: 1.2,
                             ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.black.withValues(
+                                  alpha: isDark ? 0.35 : 0.08,
+                                ),
+                                blurRadius: 32,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              // Passcode Field
+                              CommonRequiredLabelAndDynamicField(
+                                labelText: loc.generatePasscodeLabelPasscode,
+                                isLabelRequired: true,
+                                dynamicField: Obx(
+                                  () => CommonTextInputField(
+                                    hintText: '••••',
+                                    controller: controller.passcodeController,
+                                    focusNode: controller.passcodeFocusNode,
+                                    isFocused: controller.isPasscodeFocused.value,
+                                    keyboardType: TextInputType.number,
+                                    obscureText: true,
+                                    inputFormatters: _digitLimit,
+                                  ),
+                                ),
+                              ),
+
+                              // Visual 4-Dot Indicator for Passcode
+                              SizedBox(height: 10.h),
+                              VisualPinDotsIndicator(
+                                length: 4,
+                                filledCount: passcodeText.length,
+                                isDark: isDark,
+                                dotSize: 12.r,
+                                spacing: 12.w,
+                              ),
+
+                              SizedBox(height: 20.h),
+
+                              // Confirm Passcode Field
+                              CommonRequiredLabelAndDynamicField(
+                                labelText:
+                                    loc.generatePasscodeLabelConfirmPasscode,
+                                isLabelRequired: true,
+                                dynamicField: Obx(
+                                  () => CommonTextInputField(
+                                    hintText: '••••',
+                                    controller: controller.confirmController,
+                                    focusNode: controller.confirmFocusNode,
+                                    isFocused: controller.isConfirmFocused.value,
+                                    keyboardType: TextInputType.number,
+                                    obscureText: true,
+                                    inputFormatters: _digitLimit,
+                                  ),
+                                ),
+                              ),
+
+                              // Visual 4-Dot Indicator for Confirm
+                              SizedBox(height: 10.h),
+                              VisualPinDotsIndicator(
+                                length: 4,
+                                filledCount: confirmText.length,
+                                isDark: isDark,
+                                isError: isMismatch,
+                                isSuccess: isMatch,
+                                dotSize: 12.r,
+                                spacing: 12.w,
+                              ),
+
+                              SizedBox(height: 28.h),
+
+                              // Submit Button
+                              CommonButton(
+                                height: 52.h,
+                                borderRadius: 16.r,
+                                onPressed: () {
+                                  HapticFeedback.mediumImpact();
+                                  controller.submit();
+                                },
+                                width: double.infinity,
+                                text: loc.generatePasscodeButtonConfirm,
+                              ),
+
+                              SizedBox(height: 16.h),
+
+                              // Skip Button with Accessible Touch Target
+                              Semantics(
+                                button: true,
+                                label: l10nPick(
+                                  context,
+                                  en: 'Skip for now',
+                                  fa: 'فعلاً رد شو',
+                                  ar: 'تخطي الآن',
+                                  zh: '暂时跳过',
+                                ),
+                                child: TextButton(
+                                  onPressed: _skip,
+                                  style: TextButton.styleFrom(
+                                    minimumSize: Size(double.infinity, 48.h),
+                                  ),
+                                  child: Text(
+                                    l10nPick(
+                                      context,
+                                      en: 'Skip for now',
+                                      fa: 'فعلاً رد شو',
+                                      ar: 'تخطي الآن',
+                                      zh: '暂时跳过',
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: secondaryTextColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 32.h),
-                        CommonButton(
-                          onPressed: controller.submit,
-                          width: double.infinity,
-                          text: loc.generatePasscodeButtonConfirm,
-                        ),
-                        SizedBox(height: 16.h),
-                        TextButton(
-                          onPressed: _skip,
-                          child: Text(
-                            l10nPick(
-                              context,
-                              en: 'Skip for now',
-                              fa: 'فعلاً رد شو',
-                              ar: 'تخطي الآن',
-                              zh: '暂时跳过',
-                            ),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.lightTextTertiary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 32.h),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-            Obx(
-              () => Visibility(
-                visible: controller.isLoading.value,
-                child: const CommonLoading(),
+
+              Obx(
+                () => Visibility(
+                  visible: controller.isLoading.value,
+                  child: const CommonLoading(),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

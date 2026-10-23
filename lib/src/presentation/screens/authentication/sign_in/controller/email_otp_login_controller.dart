@@ -174,7 +174,7 @@ class EmailOtpLoginController extends GetxController {
   }
 
   void _startTimer() {
-    countdown.value = 45;
+    countdown.value = 60;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown.value > 0) {

@@ -1,0 +1,16 @@
+﻿screen_id,route_name,check_id,area,acceptance,status,evidence_ref,notes
+,,AX-01,Semantics,All controls have meaningful label/role/value,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-02,Focus,Logical focus order and no keyboard trap,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-03,Targets,Interactive targets suitable for touch use,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-04,Contrast,Text and non-text contrast checked,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-05,Text scale,Critical content usable at large text scale,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-06,RTL,"RTL alignment, back icons, directional elements checked",TODO,,Apply per screen or mark N/A with a reason.
+,,AX-07,LTR,LTR layouts do not inherit broken RTL assumptions,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-08,Localization,No accidental hardcoded user-facing strings,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-09,Money/date,Locale-aware currency/date/number formatting,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-10,Motion,Reduced-motion preference respected,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-11,Errors,Validation/errors announced and focus is useful,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-12,Status,Financial status not conveyed by color alone,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-13,Keyboard,Insets/scrolling work with on-screen keyboard,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-14,Network,Offline and retry actions accessible,TODO,,Apply per screen or mark N/A with a reason.
+,,AX-15,Privacy,No secrets/PII in screenshots or labels,TODO,,Apply per screen or mark N/A with a reason.

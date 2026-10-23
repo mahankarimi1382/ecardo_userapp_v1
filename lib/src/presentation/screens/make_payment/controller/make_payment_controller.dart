@@ -9,6 +9,7 @@ import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:ecardo_user/src/helper/money_math_helper.dart';
 import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -21,6 +22,8 @@ import 'package:ecardo_user/src/presentation/screens/make_payment/model/payment_
 
 class MakePaymentController extends GetxController {
   final RxBool isLoading = false.obs;
+  final RxBool hasError = false.obs;
+  final RxString errorMessage = ''.obs;
   final RxBool isPaymentSettingsLoading = false.obs;
   final RxBool isMakePaymentLoading = false.obs;
   final RxBool isBeneficiaryLoading = false.obs;
@@ -33,7 +36,14 @@ class MakePaymentController extends GetxController {
   final Rxn<Map<String, dynamic>> successPaymentData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  AppLocalizations get localization => AppLocalizations.of(Get.context!)!;
+  AppLocalizations get localization {
+    final ctx = Get.context;
+    if (ctx != null) {
+      final loc = AppLocalizations.of(ctx);
+      if (loc != null) return loc;
+    }
+    return lookupAppLocalizations(const Locale('en'));
+  }
 
   final Rxn<Wallets> wallet = Rxn<Wallets>();
   final RxList<Wallets> paymentWalletsList = <Wallets>[].obs;
@@ -49,18 +59,21 @@ class MakePaymentController extends GetxController {
   final FocusNode amountFocusNode = FocusNode();
 
   final List<String> steps = ['Amount', 'Review', 'Success'];
+  bool _isAdvancingStep = false;
 
   @override
   void onInit() {
     super.onInit();
     merchantFocusNode.addListener(_handleMerchantFocusChange);
     amountFocusNode.addListener(_handleAmountFocusChange);
+    amountController.addListener(_handleAmountTextChange);
   }
 
   @override
   void onClose() {
     merchantFocusNode.removeListener(_handleMerchantFocusChange);
     amountFocusNode.removeListener(_handleAmountFocusChange);
+    amountController.removeListener(_handleAmountTextChange);
     merchantFocusNode.dispose();
     amountFocusNode.dispose();
     super.onClose();
@@ -74,18 +87,30 @@ class MakePaymentController extends GetxController {
     isAmountFocused.value = amountFocusNode.hasFocus;
   }
 
-  Future<void> nextStepWithValidation() async {
-    if (currentStep.value == 0) {
-      if (!validateAmountStep()) {
-        return;
-      }
+  void _handleAmountTextChange() {
+    if (paymentSettings.value.data?.userCharge != null) {
+      _calculateCharge();
     }
+  }
 
-    if (currentStep.value < steps.length - 1) {
-      currentStep.value++;
-      await fetchPaymentSettings();
-    } else {
-      currentStep.value = 0;
+  Future<void> nextStepWithValidation() async {
+    if (_isAdvancingStep || isPaymentSettingsLoading.isTrue) return;
+    _isAdvancingStep = true;
+    try {
+      if (currentStep.value == 0) {
+        if (!validateAmountStep()) {
+          return;
+        }
+      }
+
+      if (currentStep.value < steps.length - 1) {
+        currentStep.value++;
+        await fetchPaymentSettings();
+      } else {
+        currentStep.value = 0;
+      }
+    } finally {
+      _isAdvancingStep = false;
     }
   }
 
@@ -124,6 +149,8 @@ class MakePaymentController extends GetxController {
     }
   }
 
+  Future<void> calculateLiveCharge() async => _calculateCharge();
+
   Future<void> _calculateCharge() async {
     final amount = double.tryParse(amountController.text) ?? 0.0;
     final userChargeStr = paymentSettings.value.data?.userCharge ?? "0";
@@ -132,21 +159,57 @@ class MakePaymentController extends GetxController {
 
     if (userChargeType == "percentage") {
       final percent = double.tryParse(userChargeStr) ?? 0.0;
-      charge.value = amount * percent / 100;
-      totalAmount.value = amount + charge.value;
+      final calculatedCharge = MoneyMathHelper.calculatePercentCharge(
+        amount,
+        percent,
+      );
+      charge.value = calculatedCharge;
+      totalAmount.value = MoneyMathHelper.add(amount, calculatedCharge);
     } else {
       await getChargeConverter();
     }
     isPaymentSettingsLoading.value = false;
   }
 
+  void setPercentage(double fraction) {
+    final currentWallet = wallet.value;
+    if (currentWallet == null) return;
+    final balanceStr = currentWallet.balance ?? '0';
+    final balance = double.tryParse(balanceStr) ?? 0.0;
+    if (balance <= 0) return;
+
+    final siteCurrency =
+        Get.find<SettingsService>().getSetting("site_currency") ?? 'USD';
+    final siteDecimals =
+        Get.find<SettingsService>().getSetting("site_currency_decimals") ?? '2';
+    final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: currentWallet.code ?? 'USD',
+      siteCurrencyCode: siteCurrency,
+      siteCurrencyDecimals: siteDecimals,
+      isCrypto: currentWallet.isCrypto ?? false,
+    );
+
+    final targetAmount = balance * fraction;
+    amountController.text = decimals == 0
+        ? targetAmount.round().toString()
+        : targetAmount.toStringAsFixed(decimals);
+    _calculateCharge();
+  }
+
   Future<void> getChargeConverter() async {
+    final chargeSetting = paymentSettings.value.data?.userCharge;
+    final walletCode = wallet.value?.code;
+    if (chargeSetting == null || walletCode == null) {
+      charge.value = 0.0;
+      totalAmount.value = double.tryParse(amountController.text) ?? 0.0;
+      return;
+    }
     chargeLoadFailed.value = false;
     try {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.getConverterEndpoint(
-          amount: paymentSettings.value.data!.userCharge!,
-          currencyCode: wallet.value!.code!,
+          amount: chargeSetting,
+          currencyCode: walletCode,
         ),
       );
       if (response.status == Status.completed) {
@@ -175,11 +238,12 @@ class MakePaymentController extends GetxController {
     isMakePaymentLoading.value = true;
     final wasPasscodeProvided = passcode != null && passcode.isNotEmpty;
 
+    final currentWallet = wallet.value;
     final Map<String, dynamic> requestBody = {
       'merchant_number': merchantMidController.text.trim(),
-      'wallet_id': wallet.value!.isDefault == true
+      'wallet_id': currentWallet?.isDefault == true
           ? "default"
-          : wallet.value!.id,
+          : (currentWallet?.id?.toString() ?? "default"),
       'amount': amountController.text.trim(),
     };
     if (passcode != null && PasscodeHelper.isValidFormat(passcode)) {
@@ -288,8 +352,8 @@ class MakePaymentController extends GetxController {
       ToastHelper().showErrorToast(localization.allControllerLoadError);
       return false;
     }
-    final walletData = wallet.value;
-    if (walletData == null || (walletData.name ?? '').isEmpty) {
+    final currentWallet = wallet.value;
+    if (currentWallet == null || (currentWallet.name ?? '').isEmpty) {
       ToastHelper().showErrorToast(
         localization.makePaymentValidationSelectWallet,
       );
@@ -310,23 +374,17 @@ class MakePaymentController extends GetxController {
       return false;
     }
 
+    final walletCode = currentWallet.code ?? '';
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: wallet.value!.code!,
+      currencyCode: walletCode,
       siteCurrencyCode:
           Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
       siteCurrencyDecimals:
           Get.find<SettingsService>().getSetting("site_currency_decimals") ??
           '2',
-      isCrypto: wallet.value?.isCrypto ?? false,
+      isCrypto: currentWallet.isCrypto ?? false,
     );
 
-    final currentWallet = wallet.value;
-    if (currentWallet == null) {
-      ToastHelper().showErrorToast(localization.transferValidationSelectWallet);
-      return false;
-    }
-
-    final walletCode = currentWallet.code ?? '';
     final double enteredAmount =
         double.tryParse(amountController.text.trim()) ?? 0.0;
     final double min =
@@ -372,6 +430,9 @@ class MakePaymentController extends GetxController {
   }
 
   Future<void> fetchWallets() async {
+    isLoading.value = true;
+    hasError.value = false;
+    errorMessage.value = '';
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: "${ApiPath.walletsEndpoint}?payment",
@@ -386,12 +447,21 @@ class MakePaymentController extends GetxController {
         } else {
           wallet.value = null;
         }
+      } else {
+        hasError.value = true;
+        errorMessage.value =
+            response.message ?? localization.allControllerLoadError;
       }
     } catch (e, stackTrace) {
+      hasError.value = true;
+      final info = NetworkErrorHelper.from(e);
+      errorMessage.value = info.message;
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
-    } finally {}
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> fetchBeneficiary() async {
@@ -421,5 +491,7 @@ class MakePaymentController extends GetxController {
     charge.value = 0.0;
     totalAmount.value = 0.0;
     merchantMidController.clear();
+    hasError.value = false;
+    errorMessage.value = '';
   }
 }

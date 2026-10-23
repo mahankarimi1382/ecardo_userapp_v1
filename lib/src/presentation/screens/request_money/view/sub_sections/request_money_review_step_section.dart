@@ -4,16 +4,17 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_icon_button.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/settings/view/transaction_pin/transaction_pin_screen.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_path_card.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 
 class RequestMoneyReviewStepSection extends StatefulWidget {
@@ -30,8 +31,10 @@ class _RequestMoneyReviewStepSectionState
       GlobalKey<EcardoSwipeButtonState>();
 
   Future<void> _handleConfirmRequest(BuildContext context) async {
-    HapticFeedback.lightImpact();
     final RequestMoneyController controller = Get.find();
+    if (controller.isRequestMoneyLoading.value) return;
+
+    HapticFeedback.lightImpact();
 
     final bioReason = l10nPick(
       context,
@@ -41,6 +44,31 @@ class _RequestMoneyReviewStepSectionState
       tr: 'Para talebini onaylamak için doğrulama yapın',
       ru: 'Подтвердите личность для запроса средств',
       zh: '请进行身份验证以确认收款请求',
+    );
+
+    final dialogTitle = l10nPick(
+      context,
+      fa: 'تعیین رمز تأیید (رمز دوم)',
+      en: 'Set Transaction PIN',
+      ar: 'تعيين رمز الأمان (PIN)',
+    );
+    final dialogMiddle = l10nPick(
+      context,
+      fa: 'برای امنیت حساب و انجام تراکنش‌های درخواست پول، ابتدا باید رمز تراکنش خود را تعیین فرمایید.',
+      en: 'For security, you must set a 4 to 6 digit transaction PIN before requesting money.',
+      ar: 'للأمان، يجب تعيين رمز أمان التحويل أولاً قبل إتمام العملية.',
+    );
+    final dialogConfirm = l10nPick(
+      context,
+      fa: 'تعیین رمز اکنون',
+      en: 'Set PIN Now',
+      ar: 'تعيين الرمز الآن',
+    );
+    final dialogCancel = l10nPick(
+      context,
+      fa: 'انصراف',
+      en: 'Cancel',
+      ar: 'إلغاء',
     );
 
     // Step-up Security: Try biometric first if available
@@ -79,6 +107,28 @@ class _RequestMoneyReviewStepSectionState
       hasPasscodeFlag,
     );
 
+    if (isPasscodeEnabled && !hasPasscode) {
+      HapticFeedback.mediumImpact();
+      Get.defaultDialog(
+        title: dialogTitle,
+        middleText: dialogMiddle,
+        textConfirm: dialogConfirm,
+        textCancel: dialogCancel,
+        buttonColor: AppColors.lightPrimary,
+        confirmTextColor: Colors.white,
+        onConfirm: () async {
+          Get.back();
+          await Get.to(() => const TransactionPinScreen());
+          await controller.fetchUser();
+          if (Get.isRegistered<HomeController>()) {
+            await Get.find<HomeController>().fetchUser();
+          }
+        },
+      );
+      _swipeKey.currentState?.reset();
+      return;
+    }
+
     if (isPasscodeEnabled && hasPasscode) {
       final dynamic verified = await Get.bottomSheet<dynamic>(
         const VerifyPasscodeBottomSheet(),
@@ -99,84 +149,211 @@ class _RequestMoneyReviewStepSectionState
     final RequestMoneyController controller = Get.find();
     final settingsService = Get.find<SettingsService>();
     final localization = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final currentWallet = controller.wallet.value;
+    final walletCode = currentWallet?.code ?? 'USD';
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: controller.wallet.value!.code!,
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      )!,
-      isCrypto: controller.wallet.value!.isCrypto!,
+      currencyCode: walletCode,
+      siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
+      isCrypto: currentWallet?.isCrypto ?? false,
     );
 
+    final amountNum =
+        double.tryParse(controller.requestAmountController.text) ?? 0.0;
+    final formattedAmount = amountNum.toStringAsFixed(calculateDecimals);
+    final recipientUid = controller.recipientUidController.text.trim();
+    final noteText = controller.noteController.text.trim();
+
     return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: AppSpacing.xs),
             Text(
               localization.requestMoneyReviewStepSectionTitle,
               style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w700,
-                fontSize: 20,
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.lightTextPrimary,
+                fontFamily: 'Plus Jakarta Sans',
+                letterSpacing: -0.2,
+                fontWeight: FontWeight.w800,
+                fontSize: 22,
+                color: colorScheme.onSurface,
               ),
             ),
+            const SizedBox(height: AppSpacing.md),
+
+            // 1. Standardized Visual Transfer Route Card (Payer UID --> My Wallet)
+            TransferPathCard(
+              senderWallet: null,
+              customSenderName: 'Payer',
+              customSenderCode: '',
+              customSenderSymbol: 'P',
+              recipientName: currentWallet?.name ?? 'Wallet',
+              recipientUid: walletCode,
+              fromLabel: l10nPick(
+                context,
+                en: 'Requested From',
+                fa: 'درخواست از',
+                ar: 'طلب من',
+              ),
+              toLabel: l10nPick(
+                context,
+                en: 'Receiving Wallet',
+                fa: 'کیف پول مقصد',
+                ar: 'محفظة الاستلام',
+              ),
+              identifierLabel: 'UID',
+              formattedAmount: formattedAmount,
+              currencyCode: walletCode,
+            ),
+
             const SizedBox(height: AppSpacing.lg),
 
-            // Glassmorphic review card
+            // 2. Glassmorphic Review Card
             EcardoGlassCard(
-              variant: EcardoGlassVariant.standard,
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              variant: EcardoGlassVariant.frosted,
+              interactive: false,
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Column(
                 children: [
-                  Obx(
-                    () => _buildReviewDynamicContent(
-                      context,
-                      isDark: isDark,
-                      title: localization.requestMoneyReviewStepSectionAmount,
-                      content:
-                          "${(double.tryParse(controller.requestAmountController.text) ?? 0.0).toStringAsFixed(calculateDecimals)} ${controller.wallet.value!.code!}",
-                      contentColor: AppColors.success,
-                      isTotal: true,
-                    ),
-                  ),
-                  _buildDivider(isDark),
-                  Obx(
-                    () => _buildReviewDynamicContent(
-                      context,
-                      isDark: isDark,
-                      title:
-                          localization.requestMoneyReviewStepSectionWalletName,
-                      content: controller.wallet.value!.name!,
-                      contentColor: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  _buildDivider(isDark),
-                  _buildReviewDynamicContent(
+                  _buildSummaryRow(
                     context,
-                    isDark: isDark,
-                    title:
-                        localization.requestMoneyReviewStepSectionRecipientUid,
-                    content: controller.recipientUidController.text,
+                    title: localization.requestMoneyReviewStepSectionAmount,
+                    content: "$formattedAmount $walletCode",
                     contentColor: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
+                        ? AppColors.mainSoftBlue
+                        : AppColors.deepBlack,
+                    isBold: true,
+                  ),
+                  _buildDivider(colorScheme),
+                  _buildSummaryRow(
+                    context,
+                    title: localization.requestMoneyReviewStepSectionWalletName,
+                    content: currentWallet?.name ?? '—',
+                    contentColor: colorScheme.onSurface,
+                  ),
+                  _buildDivider(colorScheme),
+                  _buildSummaryRow(
+                    context,
+                    title: localization.requestMoneyReviewStepSectionRecipientUid,
+                    content: recipientUid,
+                    contentColor: colorScheme.onSurface,
+                  ),
+                  if (noteText.isNotEmpty) ...[
+                    _buildDivider(colorScheme),
+                    _buildSummaryRow(
+                      context,
+                      title: l10nPick(
+                        context,
+                        en: 'Note',
+                        fa: 'یادداشت',
+                        ar: 'ملاحظة',
+                      ),
+                      content: noteText,
+                      contentColor: colorScheme.onSurface.withValues(alpha: 0.75),
+                    ),
+                  ],
+                  _buildDivider(colorScheme),
+                  _buildSummaryRow(
+                    context,
+                    title: l10nPick(
+                      context,
+                      en: 'Settlement',
+                      fa: 'نوع تسویه',
+                      ar: 'التسوية',
+                      tr: 'Takas',
+                      ru: 'Расчет',
+                      zh: '结算',
+                    ),
+                    content: l10nPick(
+                      context,
+                      en: 'Upon Payer Approval ⚡',
+                      fa: 'پس از تایید پرداخت‌کننده ⚡',
+                      ar: 'عند موافقة الدافع ⚡',
+                      tr: 'Ödeyen Onayından Sonra ⚡',
+                      ru: 'После подтверждения плательщиком ⚡',
+                      zh: '付款人确认后 ⚡',
+                    ),
+                    contentColor: AppColors.success,
+                  ),
+                  _buildDivider(colorScheme),
+                  _buildSummaryRow(
+                    context,
+                    title: l10nPick(
+                      context,
+                      en: 'Total Requested',
+                      fa: 'مبلغ کل درخواستی',
+                      ar: 'إجمالي المبلغ المطلوب',
+                    ),
+                    content: "$formattedAmount $walletCode",
+                    contentColor: colorScheme.primary,
+                    isHero: true,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpacing.xxxl),
 
-            // Modern Interactive Swipe Button with Step-up Security
+            const SizedBox(height: AppSpacing.md),
+
+            // Security Pill
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.4)
+                      : colorScheme.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                  border: Border.all(
+                    color: colorScheme.outlineVariant.withValues(alpha: 0.35),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.shield_outlined,
+                      size: 13,
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Protected by eCardo Secure Passcode',
+                        fa: 'محافظت‌شده با رمز امنیتی eCardo',
+                        ar: 'محمي برمز المرور الآمن لـ eCardo',
+                        tr: 'eCardo Güvenli Parola ile Korunuyor',
+                        ru: 'Защищено безопасным паролем eCardo',
+                        zh: '受 eCardo 安全密码保护',
+                      ),
+                      style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface.withValues(alpha: 0.65),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: AppSpacing.xl),
+
+            // 3. Modern Interactive Swipe Button with Step-up Security
             Obx(
               () => EcardoSwipeButton(
                 key: _swipeKey,
@@ -189,34 +366,40 @@ class _RequestMoneyReviewStepSectionState
                   ru: 'Проведите для подтверждения запроса',
                   zh: '滑动以确认请求',
                 ),
+                loadingText: l10nPick(
+                  context,
+                  en: 'Processing...',
+                  fa: 'در حال پردازش...',
+                  ar: 'جارٍ المعالجة...',
+                  tr: 'İşleniyor...',
+                  ru: 'Обработка...',
+                  zh: '处理中...',
+                ),
+                successText: l10nPick(
+                  context,
+                  en: 'Request Sent',
+                  fa: 'درخواست ارسال شد',
+                  ar: 'تم إرسال الطلب',
+                  tr: 'Talep Gönderildi',
+                  ru: 'Запрос отправлен',
+                  zh: '请求已发送',
+                ),
                 isLoading: controller.isRequestMoneyLoading.value,
                 onSwipeComplete: () => _handleConfirmRequest(context),
               ),
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.md),
 
             // Secondary Back Button
-            CommonIconButton(
-              backgroundColor: isDark
-                  ? AppColors.darkSurfaceVariant
-                  : AppColors.lightPrimary.withValues(alpha: 0.04),
+            CommonButton(
+              backgroundColor: Colors.transparent,
               borderWidth: 1.5,
-              borderColor: isDark
-                  ? AppColors.darkBorder
-                  : AppColors.lightPrimary.withValues(alpha: 0.30),
+              borderColor: colorScheme.outlineVariant.withValues(alpha: 0.5),
+              textColor: colorScheme.onSurface.withValues(alpha: 0.8),
+              borderRadius: AppSpacing.radiusLg,
               width: double.infinity,
-              height: 52,
+              height: 48,
               text: localization.requestMoneyReviewStepSectionBackButton,
-              icon: PngAssets.reviewArrowBackCommonIcon,
-              iconWidth: 18,
-              iconHeight: 18,
-              iconAndTextSpace: AppSpacing.sm,
-              iconColor: isDark
-                  ? AppColors.darkTextPrimary
-                  : AppColors.lightTextPrimary,
-              textColor: isDark
-                  ? AppColors.darkTextPrimary
-                  : AppColors.lightTextPrimary,
               onPressed: () {
                 HapticFeedback.lightImpact();
                 controller.currentStep.value = 0;
@@ -229,57 +412,61 @@ class _RequestMoneyReviewStepSectionState
     );
   }
 
-  static Widget _buildDivider(bool isDark) {
+  Widget _buildDivider(ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
       child: Divider(
         height: 1,
-        color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+        color: colorScheme.outlineVariant.withValues(alpha: 0.25),
       ),
     );
   }
 
-  static Widget _buildReviewDynamicContent(
+  Widget _buildSummaryRow(
     BuildContext context, {
-    required bool isDark,
     required String title,
     required String content,
     required Color contentColor,
-    bool isTotal = false,
+    bool isBold = false,
+    bool isHero = false,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            title,
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontFamily: 'Plus Jakarta Sans',
+            letterSpacing: 0,
+            fontWeight: isHero ? FontWeight.w800 : FontWeight.w600,
+            fontSize: isHero ? 16 : 14,
+            color: colorScheme.onSurface.withValues(alpha: isHero ? 0.9 : 0.6),
+          ),
+        ),
+        Flexible(
+          child: Text(
+            content,
+            textAlign: TextAlign.end,
             style: TextStyle(
+              fontFamily: 'Plus Jakarta Sans',
               letterSpacing: 0,
-              fontWeight: isTotal ? FontWeight.w800 : FontWeight.w600,
-              fontSize: isTotal ? 16 : 14,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
+              fontWeight: isHero
+                  ? FontWeight.w900
+                  : isBold
+                  ? FontWeight.w800
+                  : FontWeight.w700,
+              fontSize: isHero ? 17 : 14,
+              color: contentColor,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Text(
-              content,
-              style: TextStyle(
-                letterSpacing: 0,
-                fontWeight: isTotal ? FontWeight.w900 : FontWeight.w700,
-                fontSize: isTotal ? 17 : 15,
-                color: contentColor,
-              ),
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

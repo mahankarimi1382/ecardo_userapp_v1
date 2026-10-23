@@ -1,0 +1,640 @@
+﻿source_file,line,string_candidate,context,review_status
+lib/src/app/app.dart,73,/not-found,"name: '/not-found',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,4,/splash_route,"static const String splash = ""/splash_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,9,/locale_transition_route,"static const String localeTransition = ""/locale_transition_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,11,/no_internet_connection,static const noInternetConnection = '/no_internet_connection';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,13,/welcome_route,"static const String welcome = ""/welcome_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,15,/sign_in_route,"static const String signIn = ""/sign_in_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,18,/email_otp_login_route,"static const String emailOtpLogin = ""/email_otp_login_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,20,/two_factor_auth_route,"static const String twoFactorAuth = ""/two_factor_auth_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,22,/email_route,"static const String email = ""/email_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,24,/wallet_details_route,"static const String walletsDetails = ""/wallet_details_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,26,/verify_email_route,"static const String verifyEmail = ""/verify_email_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,28,/forgot_password_route,"static const String forgotPassword = ""/forgot_password_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,31,/forgot_password_pin_verification_route,"""/forgot_password_pin_verification_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,33,/reset_password_route,"static const String resetPassword = ""/reset_password_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,35,/navigation_route,"static const String navigation = ""/navigation_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,37,/set_up_password_route,"static const String setUpPassword = ""/set_up_password_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,43,/personal_info_route,"static const String personalInfo = ""/personal_info_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,45,/auth_id_verification_route,"static const String authIdVerification = ""/auth_id_verification_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,47,/wallets_route,"static const String wallets = ""/wallets_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,49,/create_new_wallet_route,"static const String createNewWallet = ""/create_new_wallet_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,51,/qr_code_route,"static const String qrCode = ""/qr_code_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,53,/sign_up_status_route,"static const String signUpStatus = ""/sign_up_status_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,55,/add_money_route,"static const String addMoney = ""/add_money_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,57,/make_payment_route,"static const String makePayment = ""/make_payment_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,59,/request_money_route,"static const String requestMoney = ""/request_money_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,61,/gift_code_route,"static const String giftCode = ""/gift_code_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,63,/transfer_route,"static const String transfer = ""/transfer_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,65,/cash_out_route,"static const String cashOut = ""/cash_out_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,67,/withdraw_route,"static const String withdraw = ""/withdraw_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,69,/exchange_route,"static const String exchange = ""/exchange_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,71,/transactions_route,"static const String transactions = ""/transactions_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,75,/services_route,"static const String services = ""/services_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,77,/referral_route,"static const String referral = ""/referral_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,79,/referred_friends_route,"static const String referredFriends = ""/referred_friends_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,81,/referral_tree_route,"static const String referralTree = ""/referral_tree_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,83,/profile_settings_route,"static const String profileSettings = ""/profile_settings_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,84,/permissions_settings_route,"static const String permissionsSettings = ""/permissions_settings_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,85,/privacy_policy_route,"static const String privacyPolicy = ""/privacy_policy_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,87,/device_sessions_security_route,"""/device_sessions_security_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,89,/change_password_route,"static const String changePassword = ""/change_password_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,92,/two_factor_authentication_route,"""/two_factor_authentication_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,94,/notifications_route,"static const String notifications = ""/notifications_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,96,/support_tickets_route,"static const String supportTickets = ""/support_tickets_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,98,/kyc_history_route,"static const String kycHistory = ""/kyc_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,100,/add_new_ticket_route,"static const String addNewTicket = ""/add_new_ticket_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,102,/replay_ticket_route,"static const String replayTicket = ""/replay_ticket_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,104,/gift_history_route,"static const String giftHistory = ""/gift_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,106,/id_verification_route,"static const String idVerification = ""/id_verification_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,108,/add_money_history_route,"static const String addMoneyHistory = ""/add_money_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,110,/make_payment_history_route,"static const String makePaymentHistory = ""/make_payment_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,112,/transfer_history_route,"static const String transferHistory = ""/transfer_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,115,/transfer_received_history_route,"""/transfer_received_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,117,/cash_out_history_route,"static const String cashOutHistory = ""/cash_out_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,119,/withdraw_history_route,"static const String withdrawHistory = ""/withdraw_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,121,/exchange_history_route,"static const String exchangeHistory = ""/exchange_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,123,/request_money_history_route,"static const String requestMoneyHistory = ""/request_money_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,125,/gift_redeem_history_route,"static const String giftRedeemHistory = ""/gift_redeem_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,127,/create_beneficiary_route,"static const String createBeneficiary = ""/create_beneficiary_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,129,/update_beneficiary_route,"static const String updateBeneficiary = ""/update_beneficiary_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,131,/bill_payment_route,"static const String billPayment = ""/bill_payment_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,133,/airtime_route,"static const String airtime = ""/airtime_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,135,/electricity_route,"static const String electricity = ""/electricity_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,137,/internet_route,"static const String internet = ""/internet_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,139,/data_bundle_route,"static const String dataBundle = ""/data_bundle_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,141,/cable_route,"static const String cable = ""/cable_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,143,/toll_route,"static const String toll = ""/toll_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,145,/virtual_card_route,"static const String virtualCard = ""/virtual_card_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,147,/create_virtual_card_route,"static const String createVirtualCard = ""/create_virtual_card_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,149,/virtual_card_details_route,"static const String virtualCardDetails = ""/virtual_card_details_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,151,/bill_payment_history_route,"static const String billPaymentHistory = ""/bill_payment_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,153,/get_card_info_route,"static const String getCardInfo = ""/get_card_info_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,156,/virtual_card_transaction_route,"""/virtual_card_transaction_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,158,/payment_links_route,"static const String paymentLinks = ""/payment_links_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,160,/gift_card_route,"static const String giftCard = ""/gift_card_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,162,/maintenance_mode_route,"static const String maintenanceMode = ""/maintenance_mode_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,164,/p2p_trading_route,"static const String p2pTrading = ""/p2p_trading_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,165,/travel_route,"static const String travel = ""/travel_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,166,/travel_history_route,"static const String travelHistory = ""/travel_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,167,/travel_account_route,"static const String travelAccount = ""/travel_account_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,168,/dynamic_password_route,"static const String dynamicPassword = ""/dynamic_password_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,170,/remittance_route,"static const String remittance = ""/remittance_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,171,/remittance_history_route,"static const String remittanceHistory = ""/remittance_history_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,172,/remittance_details_route,"static const String remittanceDetails = ""/remittance_details_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,174,/kyc_submit_wizard_route,"static const String kycSubmitWizard = ""/kyc_submit_wizard_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,175,/upgrade_required_route,"static const String upgradeRequired = ""/upgrade_required_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,177,/app_update_route,"static const String appUpdate = ""/app_update_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,180,/tour_home_route,"static const String tourHome = ""/tour_home_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,181,/tour_detail_route,"static const String tourDetail = ""/tour_detail_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,182,/tour_match_route,"static const String tourMatch = ""/tour_match_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,183,/tour_my_bookings_route,"static const String tourMyBookings = ""/tour_my_bookings_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,184,/tour_book_route,"static const String tourBook = ""/tour_book_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,185,/tour_payment_route,"static const String tourPayment = ""/tour_payment_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,186,/tour_voucher_route,"static const String tourVoucher = ""/tour_voucher_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,189,/escrow_home_route,"static const String escrowHome = ""/escrow_home_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,190,/escrow_detail_route,"static const String escrowDetail = ""/escrow_detail_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,191,/escrow_create_route,"static const String escrowCreate = ""/escrow_create_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,192,/escrow_payment_route,"static const String escrowPayment = ""/escrow_payment_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,193,/escrow_shipment_route,"static const String escrowShipment = ""/escrow_shipment_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,194,/escrow_dispute_route,"static const String escrowDispute = ""/escrow_dispute_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,196,/visa_home_route,"static const String visaHome = ""/visa_home_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,197,/visa_detail_route,"static const String visaDetail = ""/visa_detail_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,198,/visa_list_route,"static const String visaList = ""/visa_list_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,201,/stock_home_route,"static const String stockHome = ""/stock_home_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,202,/loan_home_route,"static const String loanHome = ""/loan_home_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,203,/loan_detail_route,"static const String loanDetail = ""/loan_detail_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,204,/rental_home_route,"static const String rentalHome = ""/rental_home_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,205,/rental_voucher_route,"static const String rentalVoucher = ""/rental_voucher_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,206,/guarantee_home_route,"static const String guaranteeHome = ""/guarantee_home_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,207,/rental_detail_route,"static const String rentalDetail = ""/rental_detail_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,208,/guarantee_detail_route,"static const String guaranteeDetail = ""/guarantee_detail_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,209,/remittance_track_route,"static const String remittanceTrack = ""/remittance_track_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,211,/license_store_route,"static const String licenseStore = ""/license_store_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,212,/license_my_licenses_route,"static const String licenseMyLicenses = ""/license_my_licenses_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,215,/loan_intro_route,"static const String loanIntro = ""/loan_intro_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,216,/loan_application_route,"static const String loanApplication = ""/loan_application_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,217,/loan_confirm_route,"static const String loanConfirm = ""/loan_confirm_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,218,/loan_tracking_route,"static const String loanTracking = ""/loan_tracking_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,220,/guarantee_intro_route,"static const String guaranteeIntro = ""/guarantee_intro_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,221,/guarantee_application_route,"static const String guaranteeApplication = ""/guarantee_application_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,222,/guarantee_confirm_route,"static const String guaranteeConfirm = ""/guarantee_confirm_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,223,/guarantee_tracking_route,"static const String guaranteeTracking = ""/guarantee_tracking_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,225,/stock_intro_route,"static const String stockIntro = ""/stock_intro_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,226,/stock_order_route,"static const String stockOrder = ""/stock_order_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,227,/stock_confirm_route,"static const String stockConfirm = ""/stock_confirm_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,228,/stock_tracking_route,"static const String stockTracking = ""/stock_tracking_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,230,/visa_intro_route,"static const String visaIntro = ""/visa_intro_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,231,/license_intro_route,"static const String licenseIntro = ""/license_intro_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,232,/commercial_projects_route,"static const String commercialProjects = ""/commercial_projects_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,234,/commercial_project_detail_route,"""/commercial_project_detail_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,236,/commercial_invest_checkout_route,"""/commercial_invest_checkout_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,238,/commercial_my_investments_route,"""/commercial_my_investments_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,241,/boat_catalog_route,"static const String boatCatalog = ""/boat_catalog_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,242,/boat_voucher_route,"static const String boatVoucher = ""/boat_voucher_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,245,/local_catalog_route,"static const String localCatalog = ""/local_catalog_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,246,/local_voucher_route,"static const String localVoucher = ""/local_voucher_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,249,/dining_catalog_route,"static const String diningCatalog = ""/dining_catalog_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/app/routes/routes.dart,250,/dining_order_pass_route,"static const String diningOrderPass = ""/dining_order_pass_route"";",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,69,/api/user/dashboard,"/// Normalizes any endpoint variant (e.g. '/api/user/dashboard', 'https://ecardo.ir/api/app-version',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,70,/user/dashboard,"/// 'get-settings-v2?cb=123') to canonical path like '/user/dashboard', '/app-version', '/get-settings-v2'.",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,70,/app-version,"/// 'get-settings-v2?cb=123') to canonical path like '/user/dashboard', '/app-version', '/get-settings-v2'.",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,70,/get-settings-v2,"/// 'get-settings-v2?cb=123') to canonical path like '/user/dashboard', '/app-version', '/get-settings-v2'.",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,79,/api/,if (path.startsWith('/api/')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,83,/api,} else if (path == '/api' || path == 'api') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,578,/auth/user/get,if (cleanEndpoint == '/auth/user/get' || cleanEndpoint == '/user/profile') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,578,/user/profile,if (cleanEndpoint == '/auth/user/get' || cleanEndpoint == '/user/profile') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,630,/user/wallets,if (cleanEndpoint == '/user/wallets') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,657,/user/dashboard,if (cleanEndpoint == '/user/dashboard') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,683,/user/transactions,if (cleanEndpoint == '/user/transactions') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,740,/app-version,if (cleanEndpoint == '/app-version') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,755,/get-settings,if (cleanEndpoint == '/get-settings' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,756,/get-settings-v2,cleanEndpoint == '/get-settings-v2') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,785,/get-currencies,if (cleanEndpoint == '/get-currencies') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,872,/get-countries,if (cleanEndpoint == '/get-countries') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,924,/get-languages,if (cleanEndpoint == '/get-languages') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,982,/get-notifications,if (cleanEndpoint == '/get-notifications') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1003,/mark-as-read-notification,if (cleanEndpoint == '/mark-as-read-notification') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1012,/user/qrcode,if (cleanEndpoint == '/user/qrcode') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1024,/user/beneficiaries,if (cleanEndpoint == '/user/beneficiaries') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1033,/user/passcode/status,if (cleanEndpoint == '/user/passcode/status' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1034,/user/passcode,cleanEndpoint == '/user/passcode') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1043,/user/kyc-level/levels,if (cleanEndpoint == '/user/kyc-level/levels' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1044,/user/kyc-level/badge,cleanEndpoint == '/user/kyc-level/badge' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1045,/user/kyc-level/status,cleanEndpoint == '/user/kyc-level/status') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1063,/user/referral/info,if (cleanEndpoint == '/user/referral/info' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1064,/user/referral/direct,cleanEndpoint == '/user/referral/direct' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1065,/user/referral/tree,cleanEndpoint == '/user/referral/tree') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1079,/user/add-money,if (cleanEndpoint == '/user/add-money') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1109,/user/payment/settings,if (cleanEndpoint == '/user/payment/settings' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1110,/user/payment/history,cleanEndpoint == '/user/payment/history') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1123,/user/transfer/config,if (cleanEndpoint == '/user/transfer/config' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1124,/user/transfer/history,cleanEndpoint == '/user/transfer/history') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1138,/user/exchange/config,if (cleanEndpoint == '/user/exchange/config' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1139,/user/exchange/history,cleanEndpoint == '/user/exchange/history') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1153,/user/cashout/config,if (cleanEndpoint == '/user/cashout/config' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1154,/user/cashout/history,cleanEndpoint == '/user/cashout/history') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1168,/user/gifts/config,if (cleanEndpoint == '/user/gifts/config' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1169,/user/gifts/history,cleanEndpoint == '/user/gifts/history' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1170,/user/gifts/redeem/history,cleanEndpoint == '/user/gifts/redeem/history') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1184,/user/withdraw-accounts,if (cleanEndpoint == '/user/withdraw-accounts' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1185,/user/withdraw-accounts/methods/list,cleanEndpoint == '/user/withdraw-accounts/methods/list') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1205,/user/card-products,if (cleanEndpoint == '/user/card-products' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1206,/user/card-orders,cleanEndpoint == '/user/card-orders' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1207,/user/cardholders,cleanEndpoint == '/user/cardholders' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1208,/get-card-providers,cleanEndpoint == '/get-card-providers') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1237,/user/pay-bill/services,if (cleanEndpoint == '/user/pay-bill/services' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1238,/user/pay-bill/history,cleanEndpoint == '/user/pay-bill/history' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1239,/get-bill-countries,cleanEndpoint == '/get-bill-countries') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1244,/user/pay-bill,if (method == 'POST' && cleanEndpoint == '/user/pay-bill') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1292,/user/p2p/marketplace,if (cleanEndpoint == '/user/p2p/marketplace' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1293,/user/p2p/payment-accounts,cleanEndpoint == '/user/p2p/payment-accounts' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1294,/user/p2p/payment-methods,cleanEndpoint == '/user/p2p/payment-methods' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1295,/user/p2p/ads,cleanEndpoint == '/user/p2p/ads' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1296,/user/p2p/orders,cleanEndpoint == '/user/p2p/orders') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1301,/user/remittance/methods,if (cleanEndpoint == '/user/remittance/methods' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1302,/user/remittance/history,cleanEndpoint == '/user/remittance/history' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1303,/user/remittance/quote,cleanEndpoint == '/user/remittance/quote') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1308,/user/gift-cards/products,if (cleanEndpoint == '/user/gift-cards/products' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1309,/user/gift-cards/categories,cleanEndpoint == '/user/gift-cards/categories' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1310,/user/gift-cards/purchased-history,cleanEndpoint == '/user/gift-cards/purchased-history') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1330,/user/exchange,if (method == 'POST' && cleanEndpoint == '/user/exchange') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1395,/user/transfer,if (method == 'POST' && cleanEndpoint == '/user/transfer') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1445,/auth/user/refresh,if (cleanEndpoint == '/auth/user/refresh') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1454,/user/cards,if (cleanEndpoint == '/user/cards' || cleanEndpoint == '/epay/cards') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1454,/epay/cards,if (cleanEndpoint == '/user/cards' || cleanEndpoint == '/epay/cards') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1485,/user/cards/transactions,if (cleanEndpoint == '/user/cards/transactions') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1513,/loan/products,if (cleanEndpoint == '/loan/products') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1545,/loan/my,if (cleanEndpoint == '/loan/my') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1554,/loan/cases/,if (cleanEndpoint.startsWith('/loan/cases/')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1567,/loan/apply,if (cleanEndpoint == '/loan/apply') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1580,/guarantee/instruments,if (cleanEndpoint == '/guarantee/instruments') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1612,/guarantee/my,if (cleanEndpoint == '/guarantee/my') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1621,/guarantee/cases,if (cleanEndpoint.startsWith('/guarantee/cases')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1635,/user/licenses/catalog,if (cleanEndpoint == '/user/licenses/catalog') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1670,/user/licenses/catalog/,if (cleanEndpoint.startsWith('/user/licenses/catalog/')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1685,/user/licenses/my-licenses,if (cleanEndpoint == '/user/licenses/my-licenses') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1706,/user/licenses/orders,if (cleanEndpoint == '/user/licenses/orders' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1707,/user/licenses/orders/,cleanEndpoint.contains('/user/licenses/orders/')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1720,/visa/catalog,if (cleanEndpoint == '/visa/catalog') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1752,/user/visa/requests,if (cleanEndpoint == '/user/visa/requests') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1781,/user/tours,if (cleanEndpoint == '/user/tours') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1818,/user/tours/match,if (cleanEndpoint == '/user/tours/match') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1835,/rental/cars,if (cleanEndpoint == '/rental/cars') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1871,/rental/my,if (cleanEndpoint == '/rental/my') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1898,/stock/markets,if (cleanEndpoint == '/stock/markets') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1902,/stock/account,if (cleanEndpoint == '/stock/account') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1915,/stock/order,if (method == 'POST' && cleanEndpoint == '/stock/order') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1930,/user/escrow,if (cleanEndpoint == '/user/escrow' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1931,/user/escrow/,cleanEndpoint.startsWith('/user/escrow/')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1946,/user/ticket,if (cleanEndpoint == '/user/ticket' ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/demo_account_service.dart,1947,/user/ticket/,cleanEndpoint.startsWith('/user/ticket/')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/offline_request_queue.dart,81,//,trimmed.startsWith('//') ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/offline_request_queue.dart,127,/setup-fcm,if (path == '/setup-fcm') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/offline_request_queue.dart,131,/mark-as-read-notification,if (path == '/mark-as-read-notification') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/offline_request_queue.dart,135,/user/settings/profile,if (path == '/user/settings/profile') {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/common/services/offline_request_queue.dart,233,/setup-fcm,endpoint != null && normalizePath(endpoint) == '/setup-fcm';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/escrow/services/escrow_service.dart,11,/user/escrow/config,final response = await _network.get(endpoint: '/user/escrow/config');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/escrow/services/escrow_service.dart,67,/user/escrow,"endpoint: '/user/escrow',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/guarantee/screens/guarantee_detail_screen.dart,185,/docs/contract_scan.pdf,final fileRefCtrl = TextEditingController(text: '/docs/contract_scan.pdf');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/guarantee/services/guarantee_service.dart,13,/guarantee/instruments,final response = await _network.get(endpoint: '/guarantee/instruments');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/guarantee/services/guarantee_service.dart,57,/guarantee/my,final response = await _network.get(endpoint: '/guarantee/my');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/guarantee/services/guarantee_service.dart,94,/guarantee/cases,"endpoint: '/guarantee/cases',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/controller/license_controller.dart,59,/user/licenses/catalog,String ep = '/user/licenses/catalog';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/controller/license_controller.dart,126,/user/licenses/orders,"endpoint: '/user/licenses/orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/controller/license_controller.dart,257,/user/licenses/my-licenses,"endpoint: '/user/licenses/my-licenses',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/controller/license_controller.dart,276,/user/licenses/my-orders,"endpoint: '/user/licenses/my-orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/service/license_service.dart,16,/user/licenses/catalog,String ep = '/user/licenses/catalog';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/service/license_service.dart,54,/user/licenses/orders,"endpoint: '/user/licenses/orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/service/license_service.dart,79,/user/licenses/my-licenses,"endpoint: '/user/licenses/my-licenses',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/service/license_service.dart,91,/user/licenses/my-orders,"endpoint: '/user/licenses/my-orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/license/service/license_service.dart,107,/user/licenses/disputes,"endpoint: '/user/licenses/disputes',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/loan/services/loan_service.dart,13,/loan/products,final response = await _network.get(endpoint: '/loan/products');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/loan/services/loan_service.dart,31,/loan/my,final response = await _network.get(endpoint: '/loan/my');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/loan/services/loan_service.dart,67,/loan/apply,"endpoint: '/loan/apply',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,6,/get-countries,static const String countriesEndpoint = '/get-countries';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,7,/get-settings,static const String getSettingsEndpoint = '/get-settings';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,10,/get-settings-v2,static const String getSettingsEndpointV2 = '/get-settings-v2';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,11,/get-languages,static const String languagesEndpoint = '/get-languages';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,12,/terms-conditions,static const String termsAndConditionsEndpoint = '/terms-conditions';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,13,/setup-fcm,static const String getSetupFcm = '/setup-fcm';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,37,/auth/user/login,static const String loginEndpoint = '/auth/user/login';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,38,/auth/user/2fa/verify,static const String twoFaEndpoint = '/auth/user/2fa/verify';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,39,/get-register-fields/user,static const String getRegisterFieldsEndpoint = '/get-register-fields/user';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,40,/auth/user/register,static const String registerEndpoint = '/auth/user/register';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,41,/auth/user/send-verify-email,static const String verifyEmailEndpoint = '/auth/user/send-verify-email';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,43,/auth/user/validate-verify-email,'/auth/user/validate-verify-email';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,44,/auth/user/forgot-password,static const String forgotPasswordEndpoint = '/auth/user/forgot-password';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,45,/auth/user/personal-info-update,static const String personalInfoEndpoint = '/auth/user/personal-info-update';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,46,/auth/user/reset-verify-otp,static const String resetVerifyOtpEndpoint = '/auth/user/reset-verify-otp';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,47,/auth/user/reset-password,static const String resetPasswordEndpoint = '/auth/user/reset-password';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,48,/auth/user/logout,static const String logoutEndpoint = '/auth/user/logout';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,49,/user/kyc/rejected-data,static const String kycRejectedEndpoint = '/user/kyc/rejected-data';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,52,/auth/user/login-otp/request,static const String loginOtpRequestEndpoint = '/auth/user/login-otp/request';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,53,/auth/user/login-otp/verify,static const String loginOtpVerifyEndpoint = '/auth/user/login-otp/verify';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,56,/epay/cards,static const String epayCardsEndpoint = '/epay/cards';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,57,/epay/cards/issue,static const String epayIssueEndpoint = '/epay/cards/issue';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,58,/epay/cards/topup,static const String epayTopupEndpoint = '/epay/cards/topup';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,61,/user/dashboard,static const String dashboardEndpoint = '/user/dashboard';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,62,/auth/user/get,static const String userEndpoint = '/auth/user/get';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,65,/user/wallets,static const String walletsEndpoint = '/user/wallets';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,66,/get-currencies,static const String currenciesEndpoint = '/get-currencies';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,69,/user/transactions,static const String transactionsEndpoint = '/user/transactions';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,72,/user/qrcode,static const String qrCodeEndpoint = '/user/qrcode';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,75,/user/add-money,static const String getGatewayMethodsEndpoint = '/user/add-money';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,76,/user/add-money,static const String postAddMoneyEndpoint = '/user/add-money';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,79,/user/transactions,static const String addMoneyHistoryEndpoint = '/user/transactions';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,82,/user/payment/settings,static const String paymentSettingsEndpoint = '/user/payment/settings';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,83,/user/payment/make,static const String makePaymentEndpoint = '/user/payment/make';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,84,/user/payment/history,static const String paymentHistoryEndpoint = '/user/payment/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,87,/pay/generate-otp,static const String generateDynamicPasswordOtpEndpoint = '/pay/generate-otp';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,90,/user/request-money,static const String requestMoneyEndpoint = '/user/request-money';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,92,/user/request-money/history,'/user/request-money/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,93,/user/request-money/history,static const String receivedRequestEndpoint = '/user/request-money/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,96,/user/cashout/config,static const String cashOutConfigEndpoint = '/user/cashout/config';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,97,/user/cashout,static const String userCashOutEndpoint = '/user/cashout';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,98,/user/cashout/history,static const String userCashOutHistoryEndpoint = '/user/cashout/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,101,/user/withdraw-accounts,static const String withdrawAccountEndpoint = '/user/withdraw-accounts';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,102,/user/withdraw,static const String withdrawEndpoint = '/user/withdraw';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,103,/user/transactions,static const String withdrawHistoryEndpoint = '/user/transactions';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,105,/user/withdraw-accounts/methods/list,'/user/withdraw-accounts/methods/list';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,106,/user/withdraw-accounts,static const String withdrawAccountCreateEndpoint = '/user/withdraw-accounts';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,109,/user/transfer/config,static const String transferConfigEndpoint = '/user/transfer/config';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,110,/user/transfer,static const String userTransferEndpoint = '/user/transfer';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,111,/user/transfer/history,static const String transferHistoryEndpoint = '/user/transfer/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,114,/user/gifts/redeem,static const String giftRedeemEndpoint = '/user/gifts/redeem';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,115,/user/gifts/config,static const String giftConfigEndpoint = '/user/gifts/config';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,116,/user/gifts,static const String createGiftEndpoint = '/user/gifts';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,117,/user/gifts/history,static const String giftHistoryEndpoint = '/user/gifts/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,118,/user/gifts/redeem/history,static const String giftRedeemHistoryEndpoint = '/user/gifts/redeem/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,121,/user/exchange/config,static const String exchangeConfigEndpoint = '/user/exchange/config';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,122,/user/exchange,static const String exchangeWalletEndpoint = '/user/exchange';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,123,/user/exchange/history,static const String exchangeHistoryEndpoint = '/user/exchange/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,126,/user/settings/profile,static const String updateProfileEndpoint = '/user/settings/profile';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,129,/user/settings/change-password,static const String changePasswordEndpoint = '/user/settings/change-password';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,132,/user/kyc,static const String userKycEndpoint = '/user/kyc';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,133,/user/kyc/history,static const String kycHistoryEndpoint = '/user/kyc/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,136,/user/referral/info,static const String referralInfoEndpoint = '/user/referral/info';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,137,/user/referral/direct,static const String referralFriendsEndpoint = '/user/referral/direct';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,138,/user/referral/tree,static const String referralTreeEndpoint = '/user/referral/tree';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,142,/user/settings/2fa/generate,'/user/settings/2fa/generate';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,143,/user/settings/2fa/enable,static const String enableTwoFaEndpoint = '/user/settings/2fa/enable';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,144,/user/settings/2fa/disable,static const String disableTwoFaEndpoint = '/user/settings/2fa/disable';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,147,/user/passcode,static const String passcodeActiveEndpoint = '/user/passcode';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,148,/user/passcode/status,static const String passcodeStatusEndpoint = '/user/passcode/status';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,149,/user/passcode/change,static const String changePasscodeEndpoint = '/user/passcode/change';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,150,/user/passcode/disable,static const String disablePasscodeEndpoint = '/user/passcode/disable';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,151,/user/passcode/verify,static const String verifyPasscodeEndpoint = '/user/passcode/verify';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,155,/mark-as-read-notification,'/mark-as-read-notification';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,156,/get-notifications,static const String getNotificationsEndpoint = '/get-notifications';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,159,/user/ticket,static const String supportTicketsEndpoint = '/user/ticket';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,162,/user/beneficiaries,static const String beneficiaryEndpoint = '/user/beneficiaries';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,165,/get-bill-countries,static const String getBillCountriesEndpoint = '/get-bill-countries';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,166,/user/pay-bill/services,static const String getPayBillServicesEndpoint = '/user/pay-bill/services';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,167,/user/pay-bill,static const String payBillEndpoint = '/user/pay-bill';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,168,/user/pay-bill/history,static const String payBillHistoryEndpoint = '/user/pay-bill/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,171,/user/cards,static const String getVirtualCardsEndpoint = '/user/cards';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,172,/user/card-products,static const String getCardProductsEndpoint = '/user/card-products';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,173,/user/card-orders,static const String postCardOrdersEndpoint = '/user/card-orders';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,174,/user/card-orders,static const String getCardOrdersEndpoint = '/user/card-orders';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,176,/user/bsicards/cards/details,'/user/bsicards/cards/details';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,177,/user/cards/update-status,static const String postUpdateStatusEndpoint = '/user/cards/update-status';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,179,/user/cards/balance/topup,'/user/cards/balance/topup';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,180,/get-card-providers,static const String getCardProvidersEndpoint = '/get-card-providers';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,181,/user/cardholders,static const String getCardHoldersEndpoint = '/user/cardholders';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,182,/user/cards/transactions,static const String getCardTransactionEndpoint = '/user/cards/transactions';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,192,/api,if (path == '/api') return '/';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,193,/api/,if (path.startsWith('/api/')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,202,/user/payment-links/history,static const String paymentLinksEndpoint = '/user/payment-links/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,203,/user/payment-links/create,static const String createPaymentLinksEndpoint = '/user/payment-links/create';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,206,/user/gift-cards/products,static const String getGiftCardProductsEndpoint = '/user/gift-cards/products';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,208,/user/gift-cards/product-details,'/user/gift-cards/product-details';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,210,/user/gift-cards/product/order,'/user/gift-cards/product/order';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,212,/user/gift-cards/countries,'/user/gift-cards/countries';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,214,/user/gift-cards/categories,'/user/gift-cards/categories';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,216,/user/gift-cards/purchased-history,'/user/gift-cards/purchased-history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,219,/user/p2p/marketplace,static const String p2pMarketPlaceEndpoint = '/user/p2p/marketplace';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,220,/user/p2p/payment-accounts,static const String paymentAccountEndpoint = '/user/p2p/payment-accounts';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,221,/user/p2p/payment-methods,static const String paymentMethodEndpoint = '/user/p2p/payment-methods';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,223,/user/p2p/ads/highest-order-price,'/user/p2p/ads/highest-order-price';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,224,/user/p2p/ads,static const String createAdEndpoint = '/user/p2p/ads';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,225,/user/p2p/ads,static const String getAdsEndpoint = '/user/p2p/ads';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,230,/user/p2p/orders,static String getMyOrdersEndPoint = '/user/p2p/orders';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,231,/user/p2p/ads/eligibility,static String adsEligibilityEndPoint = '/user/p2p/ads/eligibility';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,255,/user/p2p/verified-trader-application/status,'/user/p2p/verified-trader-application/status';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,257,/user/p2p/verified-trader-application/apply,'/user/p2p/verified-trader-application/apply';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,260,/user/remittance/methods,static const String remittanceMethodsEndpoint = '/user/remittance/methods';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,261,/user/remittance/quote,static const String remittanceQuoteEndpoint = '/user/remittance/quote';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,262,/user/remittance/store,static const String remittanceStoreEndpoint = '/user/remittance/store';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,263,/user/remittance/history,static const String remittanceHistoryEndpoint = '/user/remittance/history';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,270,/user/kyc-level/levels,static const String kycLevelLevelsEndpoint = '/user/kyc-level/levels';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,271,/user/kyc-level/badge,static const String kycLevelBadgeEndpoint = '/user/kyc-level/badge';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,272,/user/kyc-level/status,static const String kycLevelStatusEndpoint = '/user/kyc-level/status';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,273,/user/kyc-level/submit,static const String kycLevelSubmitEndpoint = '/user/kyc-level/submit';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/api/api_path.dart,276,/auth/user/refresh,static const String tokenRefreshEndpoint = '/auth/user/refresh';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,55,/user/pay-bill,"'/user/pay-bill',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,56,/user/transfer,"'/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,57,/user/cashout,"'/user/cashout',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,58,/user/gifts,"'/user/gifts',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,59,/user/withdraw,"'/user/withdraw',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,60,/user/exchange,"'/user/exchange',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,61,/user/payment/make,"'/user/payment/make',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,62,/user/request-money,"'/user/request-money',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,63,/user/gifts/redeem,"'/user/gifts/redeem',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,67,/user/remittance/store,"'/user/remittance/store',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,69,/user/loans/apply,"'/user/loans/apply',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,70,/user/loans/repay,"'/user/loans/repay',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,71,/user/loans/early-repayment,"'/user/loans/early-repayment',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,72,/user/escrow/store,"'/user/escrow/store',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,73,/user/escrow/pay,"'/user/escrow/pay',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,74,/user/escrow/release,"'/user/escrow/release',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,75,/user/stocks/order,"'/user/stocks/order',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,76,/user/guarantee/apply,"'/user/guarantee/apply',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,77,/user/guarantee/deposit-margin,"'/user/guarantee/deposit-margin',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,78,/user/virtual-card/create,"'/user/virtual-card/create',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,79,/user/virtual-card/fund,"'/user/virtual-card/fund',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,80,/user/p2p/create-order,"'/user/p2p/create-order',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,81,/user/p2p/release-order,"'/user/p2p/release-order',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,82,/user/p2p/pay-order,"'/user/p2p/pay-order',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,83,/user/travel/book,"'/user/travel/book',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,84,/user/travel/order,"'/user/travel/order',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,85,/user/visa/requests,"'/user/visa/requests',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,86,/user/card-orders,"'/user/card-orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,87,/user/virtual-card/topup,"'/user/virtual-card/topup',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,88,/user/virtual-card/balance-topup,"'/user/virtual-card/balance-topup',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,89,/user/add-money,"'/user/add-money',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,90,/user/rentals/book,"'/user/rentals/book',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,91,/user/tours/book,"'/user/tours/book',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,92,/user/licenses/order,"'/user/licenses/order',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,343,/auth/user/login,path.contains('/auth/user/login') ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,344,/auth/user/login-otp,path.contains('/auth/user/login-otp') ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,345,/auth/user/register,path.contains('/auth/user/register') ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,346,/auth/user/refresh,path.contains('/auth/user/refresh') ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,347,/setup-fcm,path.contains('/setup-fcm');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,1172,/path/to/file,"/// 'file': await MultipartFile.fromFile('/path/to/file'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,1175,/api/upload,"/// endpoint: '/api/upload',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,1686,/login,response.requestOptions.path.contains('/login') ||,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/network/service/network_service.dart,1687,/register,response.requestOptions.path.contains('/register');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/exchange/service/fee_ecardo_rate_source.dart,153,/api/v1/rates,final response = await _client.get<dynamic>('/api/v1/rates');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/exchange/service/fee_ecardo_rate_source.dart,182,/rates,final fallback = await _client.get<dynamic>('/rates');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/p2p/sub_category/payment_account/controller/edit_payment_account_controller.dart,102,/public,"finalValue = uri.path.replaceFirst('/public', '');",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/remittance/controller/remittance_controller.dart,794,/data/.../img.jpg,"// `pendingAttachments` items look like: {'path': '/data/.../img.jpg', 'type': 'kyc'}",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/settings/model/notifications_model.dart,47,/support_tickets_route,// (route name like '/support_tickets_route' or a full URL) instead of,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/settings/view/notifications/notifications.dart,1237,/support_tickets_route,// guessing. Accepts either a bare route name ('/support_tickets_route'),STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,37,/travel/bootstrap,"'/travel/bootstrap',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,230,/orders,final response = await _authorizedGet('/orders');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,296,/me/traveler-profile,final response = await _authorizedGet('/me/traveler-profile');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,307,/me/traveler-profile,"'/me/traveler-profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,350,/catalog-orders,"isCatalogOffer ? '/catalog-orders' : '/offer-orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,350,/offer-orders,"isCatalogOffer ? '/catalog-orders' : '/offer-orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,665,/auth/exchange,"'/auth/exchange',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,985,/me/traveler-profile,"'/me/traveler-profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,1005,/me/traveler-profile,"'/me/traveler-profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/core/data/travel_api_repository.dart,1272,/notify-me,"'/notify-me',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/taxi/taxi_api_service.dart,242,/ride/vehicle-types,? '/ride/vehicle-types',STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/taxi/taxi_api_service.dart,267,/ride/places,final response = await transport.get('/ride/places');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/taxi/taxi_api_service.dart,298,/ride/geo,"final response = await transport.get('/ride/geo', query: {'q': clean});",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/taxi/taxi_api_service.dart,358,/ride/quote,"final response = await transport.post('/ride/quote', payload);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/taxi/taxi_api_service.dart,455,/ride/requests,"final response = await transport.post('/ride/requests', payload);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/taxi/taxi_api_service.dart,529,/ride/history,final response = await transport.get('/ride/history');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/travel/taxi/taxi_api_service.dart,596,/ride/support,"final response = await transport.post('/ride/support', ticket.toJson());",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/screens/withdraw/controller/edit_withdraw_account_controller.dart,115,/public,"finalValue = uri.path.replaceFirst('/public', '');",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/widgets/web_view_dynamic.dart,27,/api,"String finalUrl = widget.dynamicUrl.replaceFirst('/api', '');",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/widgets/web_view_screen.dart,4,/success,"// قبل از این نسخه، صفحه فقط URL بازگشتی را برای ""/success"" اسکرپ می‌کرد و",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/widgets/web_view_screen.dart,70,/success,if (url.contains('/success')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/widgets/web_view_screen.dart,72,/cancel,} else if (url.contains('/cancel') || url.contains('/failed')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/widgets/web_view_screen.dart,72,/failed,} else if (url.contains('/cancel') || url.contains('/failed')) {,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/presentation/widgets/web_view_screen.dart,73,/failed,// wallet-modules v1.0.122: also intercept '/failed' — the sandbox,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/remitv2/remit_v2_service.dart,18,/remittance-v2/corridors,? '/remittance-v2/corridors',STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/remitv2/remit_v2_service.dart,39,/remittance-v2/validate,"endpoint: '/remittance-v2/validate',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/remitv2/remit_v2_service.dart,70,/remittance-v2/disputes,"endpoint: '/remittance-v2/disputes',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/rental/services/rental_service.dart,22,/rental/cars,final ep = qp.isEmpty ? '/rental/cars' : '/rental/cars?${qp.join('&')}';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/rental/services/rental_service.dart,48,/rental/my,final response = await _network.get(endpoint: '/rental/my');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/rental/services/rental_service.dart,84,/rental/bookings,"endpoint: '/rental/bookings',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/stock/services/stock_service.dart,11,/stock/risk-quiz,final response = await _network.get(endpoint: '/stock/risk-quiz');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/stock/services/stock_service.dart,26,/stock/risk-quiz,"endpoint: '/stock/risk-quiz',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/stock/services/stock_service.dart,37,/stock/account,final response = await _network.get(endpoint: '/stock/account');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/stock/services/stock_service.dart,49,/stock/markets,final response = await _network.get(endpoint: '/stock/markets');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/stock/services/stock_service.dart,91,/stock/orders,"endpoint: '/stock/orders',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/stock/services/stock_service.dart,114,/stock/portfolio,final response = await _network.get(endpoint: '/stock/portfolio');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/tour/services/tour_service.dart,54,/user/tours/match,"endpoint: '/user/tours/match',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/tour/services/tour_service.dart,74,/user/tours/book,"endpoint: '/user/tours/book',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/visa/services/visa_service.dart,12,/visa/catalog,final response = await _network.get(endpoint: '/visa/catalog');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/visa/services/visa_service.dart,36,/user/visa/requests,final response = await _network.get(endpoint: '/user/visa/requests');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+lib/src/visa/services/visa_service.dart,97,/user/visa/requests,"endpoint: '/user/visa/requests',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/country_city_upload_helper_test.dart,50,/home/user/images/avatar.jpg,"UploadHelper.extractFileName('/home/user/images/avatar.jpg'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,25,/user/dashboard,"DemoAccountService.normalizeEndpoint('/user/dashboard'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,26,/user/dashboard,"equals('/user/dashboard'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,30,/user/dashboard,"equals('/user/dashboard'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,33,/api/user/dashboard,"DemoAccountService.normalizeEndpoint('/api/user/dashboard'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,34,/user/dashboard,"equals('/user/dashboard'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,38,/user/dashboard,"equals('/user/dashboard'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,44,/user/dashboard,"equals('/user/dashboard'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,50,/app-version,"equals('/app-version'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,53,/api/app-version,"DemoAccountService.normalizeEndpoint('/api/app-version'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,54,/app-version,"equals('/app-version'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,57,/app-version,"DemoAccountService.normalizeEndpoint('/app-version'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,58,/app-version,"equals('/app-version'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,62,/api/get-settings-v2?cb=17482348,"'/api/get-settings-v2?cb=17482348',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,64,/get-settings-v2,"equals('/get-settings-v2'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,67,/api/get-currencies,"DemoAccountService.normalizeEndpoint('/api/get-currencies'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,68,/get-currencies,"equals('/get-currencies'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,71,/get-currencies,"DemoAccountService.normalizeEndpoint('/get-currencies'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,72,/get-currencies,"equals('/get-currencies'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,87,/user/dashboard,"endpoint: '/user/dashboard',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,97,/user/wallets,"endpoint: '/user/wallets',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,110,/user/transactions,"endpoint: '/user/transactions',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,121,/api/app-version,"'/api/app-version',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,122,/app-version,"'/app-version',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,137,/api/get-settings-v2,"'/api/get-settings-v2',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,138,/get-settings-v2,"'/get-settings-v2',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,139,/get-settings-v2?cb=99281,"'/get-settings-v2?cb=99281',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,140,/get-settings,"'/get-settings',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,157,/api/get-currencies,"for (final ep in ['/api/get-currencies', '/get-currencies']) {",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,157,/get-currencies,"for (final ep in ['/api/get-currencies', '/get-currencies']) {",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,171,/api/get-countries,"endpoint: '/api/get-countries',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,179,/get-languages,"endpoint: '/get-languages',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,189,/some/future/endpoint,"endpoint: '/some/future/endpoint',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,199,/user/some-action,"endpoint: '/user/some-action',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,224,/user/dashboard,final resp = await networkService.get(endpoint: '/user/dashboard');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,238,/user/wallets,final resp = await networkService.get(endpoint: '/user/wallets');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,252,/get-settings-v2?cb=123,"endpoint: '/get-settings-v2?cb=123',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,267,/auth/user/login-otp/request,"endpoint: '/auth/user/login-otp/request',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_network_interception_test.dart,283,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_release_gate_test.dart,121,/auth/user/get,"endpoint: '/auth/user/get',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/demo_mode_release_gate_test.dart,125,/loan/apply,"endpoint: '/loan/apply',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/e2e_all_modules_integration_test.dart,88,/user/exchange,"endpoint: '/user/exchange',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/e2e_all_modules_integration_test.dart,117,/user/pay-bill,"endpoint: '/user/pay-bill',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/e2e_all_modules_integration_test.dart,227,/user/kyc-level/levels,"endpoint: '/user/kyc-level/levels',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/e2e_all_modules_integration_test.dart,235,/user/ticket,"endpoint: '/user/ticket',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/e2e_all_modules_integration_test.dart,244,/user/ticket,"endpoint: '/user/ticket',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/fintech_state_reconciliation_qc_test.dart,168,/transfer,"requestOptions: RequestOptions(path: '/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/fintech_state_reconciliation_qc_test.dart,172,/exchange,"requestOptions: RequestOptions(path: '/exchange'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/fintech_state_reconciliation_qc_test.dart,176,/cashout,"requestOptions: RequestOptions(path: '/cashout'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/fintech_state_reconciliation_qc_test.dart,180,/transfer,"requestOptions: RequestOptions(path: '/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/fintech_state_reconciliation_qc_test.dart,203,/test,"requestOptions: RequestOptions(path: '/test'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/locale_language_switch_qc_test.dart,70,/test-start,const startRoute = '/test-start';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,100,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'POST'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,104,/mark-as-read-notification,"queue.isQueueable('/mark-as-read-notification', method: 'POST'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,110,/user/settings/profile,"queue.isQueueable('/user/settings/profile', method: 'POST'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,114,/user/settings/profile,"queue.isQueueable('/user/settings/profile', method: 'PUT'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,119,/change-language/fa,"expect(queue.isQueueable('/change-language/fa', method: 'GET'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,120,/change-language/en,"expect(queue.isQueueable('/change-language/en', method: 'POST'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,122,/change-language/ar-SA,"queue.isQueueable('/change-language/ar-SA', method: 'GET'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,131,/setup-fcm/,"expect(queue.isQueueable('/setup-fcm/', method: 'POST'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,134,/user/settings/profile/,"queue.isQueueable('/user/settings/profile/', method: 'PUT'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,142,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'GET'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,143,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'PUT'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,144,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'DELETE'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,145,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'PATCH'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,149,/mark-as-read-notification,"queue.isQueueable('/mark-as-read-notification', method: 'GET'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,153,/mark-as-read-notification,"queue.isQueueable('/mark-as-read-notification', method: 'PUT'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,159,/user/settings/profile,"queue.isQueueable('/user/settings/profile', method: 'GET'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,163,/user/settings/profile,"queue.isQueueable('/user/settings/profile', method: 'DELETE'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,167,/user/settings/profile,"queue.isQueueable('/user/settings/profile', method: 'PATCH'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,172,/change-language/fa,"expect(queue.isQueueable('/change-language/fa', method: 'PUT'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,174,/change-language/fa,"queue.isQueueable('/change-language/fa', method: 'DELETE'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,179,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'HEAD'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,180,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'OPTIONS'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,181,/setup-fcm,"expect(queue.isQueueable('/setup-fcm', method: 'TRACE'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,194,//evil.com/setup-fcm,"queue.isQueueable('//evil.com/setup-fcm', method: 'POST'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,212,/setup-fcm?token=leak,"queue.isQueueable('/setup-fcm?token=leak', method: 'POST'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,220,/change-language/fa?v=1,"queue.isQueueable('/change-language/fa?v=1', method: 'GET'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,224,/setup-fcm/../auth/login,"queue.isQueueable('/setup-fcm/../auth/login', method: 'POST'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,231,/user/settings/change-password,"expect(queue.isQueueable('/user/settings/change-password'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,232,/auth/login,"expect(queue.isQueueable('/auth/login'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,233,/auth/user/register,"expect(queue.isQueueable('/auth/user/register'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,234,/user/kyc/submit,"expect(queue.isQueueable('/user/kyc/submit'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,235,/auth/reset-password,"expect(queue.isQueueable('/auth/reset-password'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,236,/user/settings/passcode,"expect(queue.isQueueable('/user/settings/passcode'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,237,/user/transfer,"expect(queue.isQueueable('/user/transfer'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,238,/user/wallets,"expect(queue.isQueueable('/user/wallets'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,239,/user/withdraw,"expect(queue.isQueueable('/user/withdraw'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,240,/change-language,"expect(queue.isQueueable('/change-language'), isFalse); // missing {code}",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,241,/change-language/,"expect(queue.isQueueable('/change-language/'), isFalse); // empty code",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,242,/change-language/fa/extra,"expect(queue.isQueueable('/change-language/fa/extra'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,243,/unknown/path,"expect(queue.isQueueable('/unknown/path'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,276,/user/settings/profile,"'/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,404,/user/settings/profile,"'/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,412,/user/settings/profile,"'/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,433,/setup-fcm,"endpoint: '/setup-fcm',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,438,/setup-fcm,"queue.isQueueable('/setup-fcm', method: 'POST', data: fcmData),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,445,/setup-fcm,"queue.isQueueable('/setup-fcm', method: 'POST', data: fcmWithPin),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,452,/user/settings/profile,"'/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,467,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,476,/user/settings/profile,"endpoint: '/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,498,/setup-fcm,"endpoint: '/setup-fcm',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,507,/setup-fcm,"expect(queue.pending.first['endpoint'], equals('/setup-fcm'));",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,512,/user/settings/profile,"endpoint: '/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,528,/mark-as-read-notification,"endpoint: '/mark-as-read-notification',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,540,/mark-as-read-notification,"endpoint: '/mark-as-read-notification',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,554,/mark-as-read-notification,"endpoint: '/mark-as-read-notification',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,571,/mark-as-read-notification,"'endpoint': '/mark-as-read-notification',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,583,/mark-as-read-notification,"'endpoint': '/mark-as-read-notification',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,626,/setup-fcm,"endpoint: '/setup-fcm',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,644,/setup-fcm,"expect(queue.deadLetterQueue.first['endpoint'], equals('/setup-fcm'));",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,654,/setup-fcm,"expect(dlqList.first['endpoint'], equals('/setup-fcm'));",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,679,/setup-fcm,"endpoint: '/setup-fcm',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,689,/user/settings/profile,"endpoint: '/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,693,/change-language/fa,"await queue.enqueue(method: 'GET', endpoint: '/change-language/fa');",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,705,/setup-fcm,"'/setup-fcm',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,706,/user/settings/profile,"'/user/settings/profile',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,707,/change-language/fa,"'/change-language/fa',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,734,/mark-as-read-notification,"endpoint: '/mark-as-read-notification',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/offline_request_queue_test.dart,739,/mark-as-read-notification,"endpoint: '/mark-as-read-notification',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,123,/user/settings/change-password,"expect(queue.isQueueable('/user/settings/change-password'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,124,/auth/login,"expect(queue.isQueueable('/auth/login'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,125,/auth/user/register,"expect(queue.isQueueable('/auth/user/register'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,126,/user/kyc/submit,"expect(queue.isQueueable('/user/kyc/submit'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,127,/auth/reset-password,"expect(queue.isQueueable('/auth/reset-password'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,128,/user/settings/passcode,"expect(queue.isQueueable('/user/settings/passcode'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,129,/user/transfer,"expect(queue.isQueueable('/user/transfer'), isFalse);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,132,/user/settings/profile,"expect(queue.isQueueable('/user/settings/profile'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,133,/setup-fcm,"expect(queue.isQueueable('/setup-fcm'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,134,/change-language/fa,"expect(queue.isQueueable('/change-language/fa'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,135,/mark-as-read-notification,"expect(queue.isQueueable('/mark-as-read-notification'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,165,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,205,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,211,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,255,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,266,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,334,//user///transfer//,"path: '//user///transfer//',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/reaudit_security_invariants_test.dart,343,/user/transfer,"expect(parts[1], equals('/user/transfer'));",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/support_ticket_replay_test.dart,351,/storage/guide.pdf,"url: '/storage/guide.pdf',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/travel/travel_safe_error_test.dart,19,/travel/bootstrap,"requestOptions: RequestOptions(path: '/travel/bootstrap'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/travel/travel_safe_error_test.dart,21,/travel/bootstrap,"requestOptions: RequestOptions(path: '/travel/bootstrap'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/travel/travel_safe_error_test.dart,36,/travel,"requestOptions: RequestOptions(path: '/travel'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/travel/travel_safe_error_test.dart,38,/travel,"requestOptions: RequestOptions(path: '/travel'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/upload_helper_test.dart,8,/tmp/my_photo.jpg,"expect(UploadHelper.extractFileName('/tmp/my_photo.jpg'), 'my_photo.jpg');",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_a_session_pin_test.dart,656,/api/test-endpoint,await networkService.get(endpoint: '/api/test-endpoint');,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,118,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,135,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,157,/user/transfer,"requestOptions: RequestOptions(path: '/user/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,162,/user/transfer,"requestOptions: RequestOptions(path: '/user/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,167,/user/transfer,"requestOptions: RequestOptions(path: '/user/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,176,/user/transfer,final testEndpoint = '/user/transfer';,STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,256,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,270,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,300,/user/pay-bill,"endpoint: '/user/pay-bill',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,311,/user/pay-bill,"endpoint: '/user/pay-bill',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,342,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,362,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,391,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,411,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,454,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,474,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,508,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,537,/user/transfer,"'/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,563,/user/transfer,"'/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,589,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,749,//user///transfer//,"path: '//user///transfer//',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,758,/user/transfer,"expect(parts1[1], equals('/user/transfer'));",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,764,/user/transfer?b=2&a=1&c=3,"path: '/user/transfer?b=2&a=1&c=3',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,770,/user/transfer?a=1&b=2&c=3,"expect(mapKeyWithQuery.contains('/user/transfer?a=1&b=2&c=3'), isTrue);",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,775,/user/transfer,"path: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,796,/user/transfer,"endpoint: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,1015,/user/transfer,"requestOptions: RequestOptions(path: '/user/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,1025,/user/transfer,"requestOptions: RequestOptions(path: '/user/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,1035,/user/transfer,"requestOptions: RequestOptions(path: '/user/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,1045,/user/transfer,"requestOptions: RequestOptions(path: '/user/transfer'),",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE
+test/workstream_b_idempotency_logging_test.dart,1126,/user/transfer,"path: '/user/transfer',",STRING_CANDIDATE_NOT_CONFIRMED_ROUTE

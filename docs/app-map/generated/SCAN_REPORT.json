@@ -1,0 +1,17 @@
+{
+  "root": "C:\\Users\\Lenovo\\Desktop\\Ecardo\\ecardo_userapp_v1",
+  "output": "C:\\Users\\Lenovo\\Desktop\\Ecardo\\ecardo_userapp_v1\\docs\\app-map\\generated",
+  "dart_file_count": 911,
+  "getpage_route_candidates": 146,
+  "navigation_call_candidates": 854,
+  "dart_symbol_candidates": 1179,
+  "http_endpoint_candidates": 2,
+  "route_string_candidates": 639,
+  "limitations": [
+    "Regex-based, not a Dart AST or route registry integration.",
+    "Dynamic routes/variables, generated navigation, runtime feature gates and native deep links need manual/runtime reconciliation.",
+    "Class name heuristics can miss or over-report screen/service types.",
+    "HTTP path detection only catches selected literal patterns.",
+    "These counts are not app coverage percentages."
+  ]
+}

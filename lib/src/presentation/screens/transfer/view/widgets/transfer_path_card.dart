@@ -9,22 +9,36 @@ import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/trans
 /// Sender Wallet  --> [Transfer Path with Arrow & Amount] --> Recipient
 class TransferPathCard extends StatelessWidget {
   final Wallets? senderWallet;
+  final String? customSenderName;
+  final String? customSenderCode;
+  final String? customSenderSymbol;
   final String recipientName;
   final String recipientUid;
   final String? recipientAvatar;
   final bool isRecipientVerified;
   final String formattedAmount;
   final String currencyCode;
+  final String? fromLabel;
+  final String? toLabel;
+  final String? identifierLabel;
+  final IconData? pathIcon;
 
   const TransferPathCard({
     super.key,
-    required this.senderWallet,
+    this.senderWallet,
+    this.customSenderName,
+    this.customSenderCode,
+    this.customSenderSymbol,
     required this.recipientName,
     required this.recipientUid,
     this.recipientAvatar,
     this.isRecipientVerified = false,
     required this.formattedAmount,
     required this.currencyCode,
+    this.fromLabel,
+    this.toLabel,
+    this.identifierLabel,
+    this.pathIcon,
   });
 
   @override
@@ -32,6 +46,16 @@ class TransferPathCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+
+    final sName = customSenderName ?? senderWallet?.name ?? 'Wallet';
+    final sCode = customSenderCode ?? senderWallet?.code ?? '';
+    final sSymbol = customSenderSymbol ??
+        senderWallet?.symbol ??
+        (sCode.isNotEmpty ? sCode.substring(0, 1) : 'W');
+    final fromText = fromLabel ?? 'From';
+    final toText = toLabel ?? 'To';
+    final idLabel = identifierLabel ?? 'UID';
+    final iconData = pathIcon ?? Icons.east_rounded;
 
     return EcardoGlassCard(
       variant: EcardoGlassVariant.frosted,
@@ -68,8 +92,7 @@ class TransferPathCard extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          senderWallet?.symbol ??
-                              (senderWallet?.code ?? 'W').substring(0, 1),
+                          sSymbol,
                           style: const TextStyle(
                             fontFamily: 'Plus Jakarta Sans',
                             fontSize: 18,
@@ -81,7 +104,7 @@ class TransferPathCard extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'From',
+                      fromText,
                       style: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 11,
@@ -91,7 +114,7 @@ class TransferPathCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      senderWallet?.name ?? 'Wallet',
+                      sName,
                       style: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 13,
@@ -102,15 +125,16 @@ class TransferPathCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                      senderWallet?.code ?? '',
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.primary,
+                    if (sCode.isNotEmpty)
+                      Text(
+                        sCode,
+                        style: TextStyle(
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.primary,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -178,7 +202,7 @@ class TransferPathCard extends StatelessWidget {
                             ],
                           ),
                           child: Icon(
-                            Icons.east_rounded,
+                            iconData,
                             size: 16,
                             color: colorScheme.onPrimary,
                           ),
@@ -212,7 +236,7 @@ class TransferPathCard extends StatelessWidget {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'To',
+                      toText,
                       style: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 11,
@@ -233,17 +257,18 @@ class TransferPathCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                      'UID: $recipientUid',
-                      style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    if (recipientUid.isNotEmpty)
+                      Text(
+                        '$idLabel: $recipientUid',
+                        style: TextStyle(
+                          fontFamily: 'Plus Jakarta Sans',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
                   ],
                 ),
               ),

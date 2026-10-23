@@ -109,6 +109,59 @@ class IrrCardOrderSection extends StatelessWidget {
           _FundingSourceSection(product: product, controller: controller),
           if (product.capabilities?.canRequestPhysical == true) ...[
             SizedBox(height: 16.h),
+            Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: AppColors.mainSoftBlue.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(
+                  color: AppColors.mainSoftBlue.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 36.r,
+                    height: 36.r,
+                    decoration: BoxDecoration(
+                      color: AppColors.mainSoftBlue.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.credit_card_rounded,
+                      color: AppColors.deepBlack,
+                      size: 20,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Physical Card Delivery',
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.lightTextPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          'Embossed NFC contactless debit card shipped directly to your registered address.',
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            color: AppColors.lightTextSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10.h),
             CommonRequiredLabelAndDynamicField(
               labelText:
                   'Request physical card '
@@ -333,40 +386,46 @@ class _FundingSourceTabs extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: CommonButton(
-              borderRadius: 12,
-              height: 42,
-              width: double.infinity,
-              fontSize: 11,
-              text: 'IRR Wallet',
-              backgroundColor: controller.fundingSource.value == 'irr_wallet'
-                  ? AppColors.lightPrimary
-                  : AppColors.white,
-              textColor: controller.fundingSource.value == 'irr_wallet'
-                  ? AppColors.white
-                  : AppColors.lightTextPrimary.withValues(alpha: 0.8),
-              onPressed: () {
-                controller.selectFundingSource('irr_wallet');
-              },
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: 48.h, minWidth: 48.w),
+              child: CommonButton(
+                borderRadius: 12,
+                height: 48,
+                width: double.infinity,
+                fontSize: 12,
+                text: 'IRR Wallet',
+                backgroundColor: controller.fundingSource.value == 'irr_wallet'
+                    ? AppColors.lightPrimary
+                    : AppColors.white,
+                textColor: controller.fundingSource.value == 'irr_wallet'
+                    ? AppColors.white
+                    : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+                onPressed: () {
+                  controller.selectFundingSource('irr_wallet');
+                },
+              ),
             ),
           ),
           SizedBox(width: 10.w),
           Expanded(
-            child: CommonButton(
-              borderRadius: 12,
-              height: 42,
-              width: double.infinity,
-              fontSize: 11,
-              text: 'Payment Gateway',
-              backgroundColor: controller.fundingSource.value == 'gateway'
-                  ? AppColors.lightPrimary
-                  : AppColors.white,
-              textColor: controller.fundingSource.value == 'gateway'
-                  ? AppColors.white
-                  : AppColors.lightTextPrimary.withValues(alpha: 0.8),
-              onPressed: () {
-                controller.selectFundingSource('gateway');
-              },
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: 48.h, minWidth: 48.w),
+              child: CommonButton(
+                borderRadius: 12,
+                height: 48,
+                width: double.infinity,
+                fontSize: 12,
+                text: 'Payment Gateway',
+                backgroundColor: controller.fundingSource.value == 'gateway'
+                    ? AppColors.lightPrimary
+                    : AppColors.white,
+                textColor: controller.fundingSource.value == 'gateway'
+                    ? AppColors.white
+                    : AppColors.lightTextPrimary.withValues(alpha: 0.8),
+                onPressed: () {
+                  controller.selectFundingSource('gateway');
+                },
+              ),
             ),
           ),
         ],
@@ -386,30 +445,36 @@ class _BooleanChoice extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: CommonButton(
-            height: 42,
-            borderRadius: 12,
-            text: 'No',
-            backgroundColor: value ? AppColors.white : AppColors.lightPrimary,
-            textColor: value ? AppColors.lightTextPrimary : AppColors.white,
-            borderColor: value
-                ? AppColors.lightTextPrimary.withValues(alpha: 0.15)
-                : null,
-            onPressed: () => onChanged(false),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 48.h, minWidth: 48.w),
+            child: CommonButton(
+              height: 48,
+              borderRadius: 12,
+              text: 'No',
+              backgroundColor: value ? AppColors.white : AppColors.lightPrimary,
+              textColor: value ? AppColors.lightTextPrimary : AppColors.white,
+              borderColor: value
+                  ? AppColors.lightTextPrimary.withValues(alpha: 0.15)
+                  : null,
+              onPressed: () => onChanged(false),
+            ),
           ),
         ),
         SizedBox(width: 10.w),
         Expanded(
-          child: CommonButton(
-            height: 42,
-            borderRadius: 12,
-            text: 'Yes',
-            backgroundColor: value ? AppColors.lightPrimary : AppColors.white,
-            textColor: value ? AppColors.white : AppColors.lightTextPrimary,
-            borderColor: value
-                ? null
-                : AppColors.lightTextPrimary.withValues(alpha: 0.15),
-            onPressed: () => onChanged(true),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 48.h, minWidth: 48.w),
+            child: CommonButton(
+              height: 48,
+              borderRadius: 12,
+              text: 'Yes',
+              backgroundColor: value ? AppColors.lightPrimary : AppColors.white,
+              textColor: value ? AppColors.white : AppColors.lightTextPrimary,
+              borderColor: value
+                  ? null
+                  : AppColors.lightTextPrimary.withValues(alpha: 0.15),
+              onPressed: () => onChanged(true),
+            ),
           ),
         ),
       ],

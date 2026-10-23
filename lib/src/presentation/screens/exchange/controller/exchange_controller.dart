@@ -8,6 +8,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/model/converter_model.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/app_event_bus.dart';
+import 'package:ecardo_user/src/common/services/connectivity_watch_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -65,6 +66,8 @@ class ExchangeController extends GetxController {
   final RxBool isExchangeWalletLoading = false.obs;
   final RxBool isCalculateExchangeRateLoading = false.obs;
   final RxBool walletLoadError = false.obs;
+  final RxBool isOffline = false.obs;
+  final RxString walletErrorMessage = ''.obs;
 
   // ------------------ step state ------------------
   final RxInt currentStep = 0.obs;
@@ -134,6 +137,13 @@ class ExchangeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    if (Get.isRegistered<ConnectivityWatchService>()) {
+      final conn = Get.find<ConnectivityWatchService>();
+      isOffline.value = conn.isOffline.value;
+      ever(conn.isOffline, (bool offline) {
+        isOffline.value = offline;
+      });
+    }
     loadData();
     amountFocusNode.addListener(_handleAmountFocusChange);
 
@@ -455,11 +465,12 @@ class ExchangeController extends GetxController {
     }
 
     if (lastError != null || response == null) {
+      final err = lastError ?? Exception('Failed to load wallets');
+      final errInfo = NetworkErrorHelper.from(err);
+      isOffline.value = (errInfo.kind == NetworkErrorKind.offline);
       walletLoadError.value = true;
-      ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ??
-            'Something went wrong. Please try again.',
-      );
+      walletErrorMessage.value = errInfo.message;
+      ToastHelper().showErrorToast(errInfo.message);
       return;
     }
 
@@ -469,7 +480,9 @@ class ExchangeController extends GetxController {
       final wallets = exchangeWalletsModel.data?.wallets ?? [];
       fromExchangeWalletsList.assignAll(wallets);
       toExchangeWalletsList.assignAll(wallets);
-      walletLoadError.value = fromExchangeWalletsList.isEmpty;
+      walletLoadError.value = false;
+      walletErrorMessage.value = '';
+      isOffline.value = false;
 
       if (fromExchangeWalletsList.isNotEmpty &&
           toExchangeWalletsList.isNotEmpty) {
@@ -511,13 +524,17 @@ class ExchangeController extends GetxController {
 
         calculateExchange();
       } else {
-        walletLoadError.value = true;
+        // Legitimate empty state (no wallets exist)
+        fromWallet.value = null;
+        toWallet.value = null;
+        walletLoadError.value = false;
       }
     } else {
       walletLoadError.value = true;
+      walletErrorMessage.value = localizationOrNull?.allControllerLoadError ??
+          'Something went wrong. Please try again.';
       ToastHelper().showErrorToast(
-        localizationOrNull?.allControllerLoadError ??
-            'Something went wrong. Please try again.',
+        walletErrorMessage.value,
       );
     }
   }
@@ -607,7 +624,13 @@ class ExchangeController extends GetxController {
       liveToAmount.value = 0.0;
       return;
     }
-    liveToAmount.value = amount * rate;
+    final rawCalc = amount * rate;
+    final toCode = toWallet.value?.code ?? '';
+    if (DynamicDecimalsHelper.isZeroDecimal(toCode)) {
+      liveToAmount.value = rawCalc.roundToDouble();
+    } else {
+      liveToAmount.value = rawCalc;
+    }
   }
 
   void setAmountPercent(double percent) {
@@ -615,10 +638,13 @@ class ExchangeController extends GetxController {
     if (from == null) return;
     final balance = double.tryParse(from.balance ?? '0') ?? 0.0;
     if (balance <= 0) return;
+    final isZeroDec = DynamicDecimalsHelper.isZeroDecimal(from.code ?? '');
     final amount = _validationService.calculateQuickAmountString(
       balance: balance,
       percent: percent,
       isCrypto: from.isCrypto == true,
+      isZeroDecimal: isZeroDec,
+      currencyCode: from.code,
     );
     amountController.text = amount;
     amountController.selection = TextSelection.fromPosition(
@@ -809,5 +835,34 @@ class ExchangeController extends GetxController {
       toWallet: to,
       amountText: text,
     );
+  }
+
+  /// Dynamic precision helper: returns number of decimals to scale to.
+  /// Fractional rates (e.g. 1 IRT -> USD = 0.00001053) scale to 6-8 decimals.
+  /// Zero-decimal currencies (e.g. 1 USD -> 95,000 IRT) use 0 decimals when rate >= 1.0.
+  static int getDynamicRateDecimals(double rate, {String? targetCurrencyCode}) {
+    if (targetCurrencyCode != null &&
+        DynamicDecimalsHelper.isZeroDecimal(targetCurrencyCode) &&
+        rate >= 1.0) {
+      return 0;
+    }
+    if (rate <= 0.0) return 2;
+    final absRate = rate.abs();
+    if (absRate < 0.00001) return 8;
+    if (absRate < 0.0001) return 7;
+    if (absRate < 0.001) return 6;
+    if (absRate < 0.01) return 5;
+    if (absRate < 1.0) return 4;
+    return 4;
+  }
+
+  /// Formats a rate with dynamic precision without scientific notation.
+  static String formatDynamicRate(double rate, {String? targetCurrencyCode}) {
+    if (rate <= 0.0) return '0.00';
+    final decimals = getDynamicRateDecimals(
+      rate,
+      targetCurrencyCode: targetCurrencyCode,
+    );
+    return rate.toStringAsFixed(decimals);
   }
 }

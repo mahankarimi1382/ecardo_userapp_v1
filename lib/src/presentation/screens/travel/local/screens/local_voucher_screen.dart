@@ -4,10 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import '../../shared/travel_widgets.dart';
 import '../models/local_experience_models.dart';
 
 class LocalVoucherScreen extends StatelessWidget {
@@ -244,7 +245,11 @@ class LocalVoucherScreen extends StatelessWidget {
                         Expanded(
                           child: _buildDetailTile(
                             'مبلغ پرداخت‌شده',
-                            '${booking.totalAmount.toStringAsFixed(0)} ${booking.currency}',
+                            formatTravelPrice(
+                              context,
+                              amount: booking.totalAmount,
+                              currency: booking.currency,
+                            ),
                             Icons.account_balance_wallet_outlined,
                             isDark,
                             valueColor: AppColors.success,

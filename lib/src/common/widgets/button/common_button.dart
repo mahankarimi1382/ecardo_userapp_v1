@@ -188,9 +188,9 @@ class CommonButton extends StatelessWidget {
                       onPressed!();
                     }),
         child: Container(
-          padding: EdgeInsetsGeometry.symmetric(horizontal: 8.w, vertical: 4.h),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           width: width == double.infinity ? double.infinity : width?.w,
-          height: height?.h,
+          constraints: BoxConstraints(minHeight: (height ?? 48).h),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(borderRadius.r),

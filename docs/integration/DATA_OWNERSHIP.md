@@ -1,0 +1,12 @@
+# Data Ownership & Sources of Truth (eCardo Architecture)
+
+All entries are derived from source code analysis, database models, and active Dio API adapters.
+
+| Data Item | Candidate Authority | Cache Allowed? | Freshness / TTL | Client May Calculate? | Reconciliation Rule | Evidence Ref |
+|---|---|---|---|---|---|---|
+| **User Authorization & Session** | Backend OAuth / JWT service | Yes (SecureStorage) | Access Token (15 min), Refresh Token (30 days) | No permission escalation in client | Expired token triggers single-flight `/auth/user/refresh`; on 401 fail, force logout | `TokenService`, `SessionManager`, `workstream_f_security_i18n_perf_test.dart` |
+| **Balance & Available Funds** | Backend Ledger / Core Banking | Yes (InMemory Rx) | 30 seconds or until invalidation event | Display formatting only (zero-decimal Toman) | Pull-to-refresh or mutating transaction event (`AppEventBus.emit(BalanceChangedEvent)`) triggers re-fetch | `EcardoBalanceHero`, `WalletsController`, `dynamic_decimals_helper.dart` |
+| **Fee & FX Quote Expiry** | Backend Quote Engine (`FeeEcardoRateSource`) | Yes (Temporary) | 60 seconds (rate lock countdown) | No; client estimates only for preview; quote ID authoritative | Rate drift > 0.01% or 60s expiration invalidates quote, prompts user to re-quote | `ExchangeRateManager`, `exchange_flow_resilience_test.dart` |
+| **Transaction Lifecycle & Status** | Backend Transaction Service | No (Always remote) | N/A | Status mapping only (`isPending`, `isRejected`, `isConfirmedSuccess`) | Network timeout on mutating requests sets state to `Status.unknown / Reconciling`; status lookup query required | `ApiResponseHandler`, `NetworkService`, `workstream_b_api_resilience_test.dart` |
+| **Card & KYC State** | Backend Card/KYC Engine | Yes (Reactive State) | 60 seconds | UI display and step-up auth trigger only | Local freeze state rolls back immediately if remote update fails; server response authoritative | `VirtualCardDetailsController`, `KycLevelController`, `kyc_tier_upgrade_card_test.dart` |
+| **App Settings & Security Gates** | Backend Policy Engine + Device Keystore | Yes (EncryptedSharedPreferences) | Session duration | Client enforces local biometric/PIN challenge; backend enforces permissions | Passcode brute-force lockout terminates session after 5 failed attempts | `AppLockService`, `SettingsService`, `passcode_resilience_state_machine_test.dart` |

@@ -6,6 +6,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -59,11 +60,134 @@ class _ExchangeAmountStepSectionState extends State<ExchangeAmountStepSection> {
     final loc = AppLocalizations.of(context)!;
 
     return Obx(() {
-      if (controller.walletLoadError.value ||
-          (!controller.isLoading.value &&
-              controller.fromExchangeWalletsList.isEmpty)) {
-        return _WalletLoadErrorCard(onRetry: () => controller.loadData());
+      // 1. Offline State
+      if (controller.isOffline.value) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.page,
+              vertical: AppSpacing.huge,
+            ),
+            child: EcardoErrorView(
+              key: const ValueKey('exchange_offline_state'),
+              iconData: Icons.wifi_off_rounded,
+              title: l10nPick(
+                context,
+                en: 'No Internet Connection',
+                fa: 'عدم دسترسی به اینترنت',
+                ar: 'لا يوجد اتصال بالإنترنت',
+                tr: 'İnternet Bağlantısı Yok',
+                ru: 'Нет подключения к интернету',
+                zh: '无网络连接',
+              ),
+              message: l10nPick(
+                context,
+                en: 'Please check your internet connection and try again.',
+                fa: 'لطفاً اتصال اینترنت خود را بررسی کرده و دوباره تلاش کنید.',
+                ar: 'يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.',
+                tr: 'Lütfen internet bağlantınızı kontrol edip tekrar deneyin.',
+                ru: 'Пожалуйста, проверьте подключение к интернету и повторите попытку.',
+                zh: '请检查您的网络连接并重试。',
+              ),
+              retryLabel: l10nPick(
+                context,
+                en: 'Retry',
+                fa: 'تلاش مجدد',
+                ar: 'إعادة المحاولة',
+                tr: 'Tekrar Dene',
+                ru: 'Повторить',
+                zh: '重试',
+              ),
+              onRetry: () => controller.loadData(),
+            ),
+          ),
+        );
       }
+
+      // 2. Error State
+      if (controller.walletLoadError.value) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.page,
+              vertical: AppSpacing.huge,
+            ),
+            child: EcardoErrorView(
+              key: const ValueKey('exchange_error_state'),
+              iconData: Icons.error_outline_rounded,
+              title: l10nPick(
+                context,
+                en: 'Unable to Load Wallets',
+                fa: 'خطا در بارگذاری کیف‌ها',
+                ar: 'تعذر تحميل المحافظ',
+                tr: 'Cüzdanlar Yüklenemedi',
+                ru: 'Не удалось загрузить кошельки',
+                zh: '无法加载钱包',
+              ),
+              message: controller.walletErrorMessage.value.isNotEmpty
+                  ? controller.walletErrorMessage.value
+                  : l10nPick(
+                      context,
+                      en: 'Could not load your wallets. Please try again.',
+                      fa: 'بارگذاری کیف‌های شما با خطا مواجه شد. لطفاً دوباره تلاش کنید.',
+                      ar: 'تعذر تحميل محافظك. يُرجى المحاولة مرة أخرى.',
+                      tr: 'Cüzdanlarınız yüklenemedi. Lütfen tekrar deneyin.',
+                      ru: 'Не удалось загрузить ваши кошельки. Пожалуйста, попробуйте снова.',
+                      zh: '无法加载您的钱包，请重试。',
+                    ),
+              retryLabel: l10nPick(
+                context,
+                en: 'Try again',
+                fa: 'تلاش مجدد',
+                ar: 'إعادة المحاولة',
+                tr: 'Tekrar Dene',
+                ru: 'Повторить',
+                zh: '重试',
+              ),
+              onRetry: () => controller.loadData(),
+            ),
+          ),
+        );
+      }
+
+      // 3. Empty State (no wallets available, not an error)
+      if (!controller.isLoading.value &&
+          controller.fromExchangeWalletsList.isEmpty) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.page,
+              vertical: AppSpacing.huge,
+            ),
+            child: EcardoEmptyState(
+              key: const ValueKey('exchange_empty_state'),
+              iconData: Icons.account_balance_wallet_outlined,
+              title: loc.exchangeWalletsNotFound,
+              description: l10nPick(
+                context,
+                en: 'No wallets are available for currency exchange.',
+                fa: 'هیچ کیف پولی برای تبدیل ارز در دسترس نیست.',
+                ar: 'لا توجد محافظ متاحة للتبديل.',
+                tr: 'Döviz değişimi için cüzdan bulunamadı.',
+                ru: 'Нет доступных кошельков для обмена валюты.',
+                zh: '没有可用于兑换的钱包。',
+              ),
+              primaryActionLabel: l10nPick(
+                context,
+                en: 'Refresh',
+                fa: 'بارگذاری مجدد',
+                ar: 'تحديث',
+                tr: 'Yenile',
+                ru: 'Обновить',
+                zh: '刷新',
+              ),
+              onPrimaryAction: () => controller.loadData(),
+            ),
+          ),
+        );
+      }
+
+      // 4. Normal State
       return _normalContent(loc);
     });
   }
@@ -502,80 +626,6 @@ class _FeeAndLimitsSummary extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Error Card shown when wallet list could not be retrieved.
-/// Allows recovery with Retry CTA.
-class _WalletLoadErrorCard extends StatelessWidget {
-  const _WalletLoadErrorCard({required this.onRetry});
-
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    String pick({
-      required String en,
-      required String fa,
-      String? ar,
-      String? zh,
-    }) => l10nPick(context, en: en, fa: fa, ar: ar, zh: zh);
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xxl,
-          vertical: AppSpacing.huge,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: AppColors.errorContainer,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.error_outline_rounded,
-                size: 34,
-                color: AppColors.error,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            Text(
-              pick(
-                en: 'Could not load your wallets',
-                fa: 'بارگذاری کیف‌ها ناموفق بود',
-                ar: 'فشل تحميل المحافظ',
-                zh: '钱包加载失败',
-              ),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
-                color: ExchangeDesignTokens.textPrimary(context),
-              ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            CommonButton(
-              onPressed: () {
-                HapticFeedback.lightImpact();
-                onRetry();
-              },
-              width: 180,
-              text: pick(
-                en: 'Try again',
-                fa: 'تلاش مجدد',
-                ar: 'إعادة المحاولة',
-                zh: '重试',
-              ),
             ),
           ],
         ),

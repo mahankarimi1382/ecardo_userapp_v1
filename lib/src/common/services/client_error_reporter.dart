@@ -83,14 +83,48 @@ class ClientErrorReporter {
       await _dio.post(
         _endpoint,
         data: {
-          'message': message,
-          'stack': stack,
+          'message': _sanitizeReportText(message),
+          'stack': _sanitizeReportText(stack),
           'screen': screen,
-          'app_version': '1.0.100',
+          'app_version': '1.0.171',
         },
       );
     } catch (_) {
       // گزارش‌دهی نباید خودش خطا بسازد — ساکت رد می‌شود.
     }
+  }
+
+  static String _sanitizeReportText(String input) {
+    if (input.isEmpty) return input;
+    var sanitized = input;
+    // Redact Bearer tokens
+    sanitized = sanitized.replaceAll(
+      RegExp(r'Bearer\s+[A-Za-z0-9\-_\.]+', caseSensitive: false),
+      'Bearer <redacted>',
+    );
+    // Redact JWT tokens
+    sanitized = sanitized.replaceAll(
+      RegExp(r'eyJ[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+'),
+      '<jwt-redacted>',
+    );
+    // Redact passwords, pins, passcodes, cvv, secrets
+    sanitized = sanitized.replaceAll(
+      RegExp(
+        r'''("?(?:password|passcode|pin|cvv|secret|current_password|new_password)"?\s*[:=]\s*"?)[^"',\s\}]+("?)''',
+        caseSensitive: false,
+      ),
+      r'$1<redacted>$2',
+    );
+    // Redact 16-digit payment card numbers
+    sanitized = sanitized.replaceAll(
+      RegExp(r'\b(?:\d{4}[ -]?){3}\d{4}\b'),
+      '**** **** **** <redacted>',
+    );
+    // Redact Iranian Sheba numbers
+    sanitized = sanitized.replaceAll(
+      RegExp(r'\b[iI][rR]\d{2}(?:[ -]?\d{4}){5}[ -]?\d{2}\b'),
+      'IR** **** **** <redacted>',
+    );
+    return sanitized;
   }
 }

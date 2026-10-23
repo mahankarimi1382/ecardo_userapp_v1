@@ -10,6 +10,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 
 import '../core/models/travel_models.dart';
 import '../shared/travel_theme.dart';
@@ -180,6 +181,8 @@ class TravelConfirmationScreen extends StatelessWidget {
           ),
           SizedBox(height: 26.h),
           TravelCard(
+            useGlass: true,
+            glassVariant: EcardoGlassVariant.subtle,
             child: Column(
               children: [
                 Icon(
@@ -355,6 +358,8 @@ class TravelVoucherCard extends StatelessWidget {
     final localization = AppLocalizations.of(context)!;
     final entries = travelVoucherEntries(context, order);
     return TravelCard(
+      useGlass: true,
+      glassVariant: EcardoGlassVariant.frosted,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

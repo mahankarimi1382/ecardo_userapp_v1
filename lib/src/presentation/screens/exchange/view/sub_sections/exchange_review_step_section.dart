@@ -76,6 +76,19 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
       final isStale = controller.isReviewRateStale.value;
       final isDark = ExchangeDesignTokens.isDark(context);
 
+      final formattedReviewRate = ExchangeController.formatDynamicRate(
+        controller.exchangeReviewRate.value,
+        targetCurrencyCode: toCode,
+      );
+
+      final int effectiveToDecimals = DynamicDecimalsHelper.isZeroDecimal(toCode)
+          ? 0
+          : (toDecimals < 4 &&
+                  controller.exchangeAmount.value > 0 &&
+                  controller.exchangeAmount.value < 0.01
+              ? 6
+              : toDecimals);
+
       return SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Padding(
@@ -96,17 +109,10 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
               const SizedBox(height: AppSpacing.md),
 
               // Live locked-rate card with countdown timer & 24h trend sparkline
-              Container(
-                width: double.infinity,
+              EcardoGlassCard(
+                variant: EcardoGlassVariant.frosted,
+                interactive: false,
                 padding: const EdgeInsets.all(AppSpacing.md + 2),
-                decoration: BoxDecoration(
-                  color: ExchangeDesignTokens.cardSurface(context),
-                  borderRadius: BorderRadius.circular(AppSpacing.radius),
-                  border: Border.all(
-                    color: ExchangeDesignTokens.cardBorder(context),
-                  ),
-                  boxShadow: ExchangeDesignTokens.cardShadow(context),
-                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -150,7 +156,7 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                               Directionality(
                                 textDirection: TextDirection.ltr,
                                 child: Text(
-                                  '1 ${controller.fromWallet.value!.code} = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} ${controller.toWallet.value!.code}',
+                                  '1 ${controller.fromWallet.value!.code} = $formattedReviewRate ${controller.toWallet.value!.code}',
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w800,
@@ -272,16 +278,10 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
               if (isStale) const SizedBox(height: AppSpacing.lg),
 
               // Glassmorphic review summary card
-              Container(
+              EcardoGlassCard(
+                variant: EcardoGlassVariant.frosted,
+                interactive: false,
                 padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
-                decoration: BoxDecoration(
-                  color: ExchangeDesignTokens.cardSurface(context),
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-                  border: Border.all(
-                    color: ExchangeDesignTokens.cardBorder(context),
-                  ),
-                  boxShadow: ExchangeDesignTokens.cardShadow(context),
-                ),
                 child: Column(
                   children: [
                     _ReviewRow(
@@ -329,13 +329,13 @@ class _ExchangeReviewStepSectionState extends State<ExchangeReviewStepSection> {
                     _ReviewRow(
                       title: loc.exchangeReviewExchangeRate,
                       text:
-                          '1 $fromCode = ${controller.exchangeReviewRate.value.toStringAsFixed(toDecimals)} $toCode',
+                          '1 $fromCode = $formattedReviewRate $toCode',
                     ),
                     _divider(context),
                     _ReviewRow(
                       title: loc.exchangeReviewExchangeAmount,
                       amount: controller.exchangeAmount.value,
-                      decimals: toDecimals,
+                      decimals: effectiveToDecimals,
                       currencyCode: toCode,
                       amountColor: AppColors.success,
                       emphasize: true,

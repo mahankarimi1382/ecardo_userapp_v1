@@ -7,6 +7,7 @@ import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_single_date_picker.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
@@ -921,47 +922,16 @@ class _FlightOfferCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: AppSpacing.xl.h),
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: Row(
-              children: [
-                _FlightTime(
-                  code: origin,
-                  city: _flightValue(offer, 'origin_name'),
-                  time: _flightTime(departure),
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        duration,
-                        style: TextStyle(
-                          color: TravelTheme.textSecondaryFor(context),
-                          fontSize: 10.sp,
-                        ),
-                      ),
-                      Divider(
-                        color: TravelTheme.primaryFor(
-                          context,
-                        ).withValues(alpha: 0.4),
-                      ),
-                      Text(
-                        localization.travelDirect,
-                        style: TextStyle(
-                          color: TravelTheme.textSecondaryFor(context),
-                          fontSize: 9.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                _FlightTime(
-                  code: destination,
-                  city: _flightValue(offer, 'destination_name'),
-                  time: _flightTime(arrival),
-                ),
-              ],
-            ),
+          TravelFlightRouteIndicator(
+            originCode: origin,
+            originCity: _flightValue(offer, 'origin_name'),
+            departureTime: _flightTime(departure),
+            destinationCode: destination,
+            destinationCity: _flightValue(offer, 'destination_name'),
+            arrivalTime: _flightTime(arrival),
+            duration: duration,
+            stopsLabel: localization.travelDirect,
+            isDirect: true,
           ),
           SizedBox(height: 16.h),
           Align(
@@ -2153,6 +2123,8 @@ class _FlightSeatSelectionCard extends StatelessWidget {
 
     if (selectedSeats.isEmpty) {
       return TravelCard(
+        useGlass: true,
+        glassVariant: EcardoGlassVariant.subtle,
         onTap: onTap,
         child: Row(
           children: [
@@ -2224,6 +2196,8 @@ class _FlightSeatSelectionCard extends StatelessWidget {
     }
 
     return TravelCard(
+      useGlass: true,
+      glassVariant: EcardoGlassVariant.subtle,
       onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

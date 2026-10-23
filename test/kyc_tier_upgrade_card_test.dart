@@ -10,6 +10,11 @@ void main() {
     int currentTier = 1,
     int? initialSelectedTier,
     void Function(int)? onUpgradeTap,
+    KycTierStatus? statusOverride,
+    String? statusBadgeOverride,
+    double? uploadProgress,
+    String? uploadProgressLabel,
+    VoidCallback? onCancelUpload,
   }) {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
@@ -28,6 +33,11 @@ void main() {
               currentTier: currentTier,
               initialSelectedTier: initialSelectedTier,
               onUpgradeTap: onUpgradeTap,
+              statusOverride: statusOverride,
+              statusBadgeOverride: statusBadgeOverride,
+              uploadProgress: uploadProgress,
+              uploadProgressLabel: uploadProgressLabel,
+              onCancelUpload: onCancelUpload,
             ),
           ),
         ),
@@ -121,4 +131,106 @@ void main() {
 
     expect(tappedTier, equals(2));
   });
+
+  testWidgets(
+    'renders clear status badges for Pending, Verified, Rejected, Action Required',
+    (WidgetTester tester) async {
+      // 1. Pending Review status badge
+      await tester.pumpWidget(
+        buildTestWidget(
+          currentTier: 2,
+          statusOverride: KycTierStatus.pending,
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Pending Review'), findsOneWidget);
+      expect(find.byIcon(Icons.hourglass_top_rounded), findsWidgets);
+
+      // 2. Verified status badge
+      await tester.pumpWidget(
+        buildTestWidget(
+          currentTier: 2,
+          statusOverride: KycTierStatus.verified,
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Verified'), findsOneWidget);
+      expect(find.byIcon(Icons.verified_rounded), findsWidgets);
+
+      // 3. Rejected status badge
+      await tester.pumpWidget(
+        buildTestWidget(
+          currentTier: 1,
+          statusOverride: KycTierStatus.rejected,
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Rejected'), findsOneWidget);
+      expect(find.byIcon(Icons.cancel_rounded), findsWidgets);
+
+      // 4. Action Required status badge
+      await tester.pumpWidget(
+        buildTestWidget(
+          currentTier: 1,
+          statusOverride: KycTierStatus.actionRequired,
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Action Required'), findsOneWidget);
+      expect(find.byIcon(Icons.warning_amber_rounded), findsWidgets);
+    },
+  );
+
+  testWidgets('renders Required Documents list for selected tier', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      buildTestWidget(currentTier: 1, initialSelectedTier: 2),
+    );
+    await tester.pump();
+
+    // Verify Required Documents card and items for Tier 2
+    expect(find.text('Required Documents'), findsOneWidget);
+    expect(
+      find.textContaining('Government National ID or Passport'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Live Liveness Selfie Capture'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+    'renders upload progress indicator with percentage and cancel action',
+    (WidgetTester tester) async {
+      bool cancelTapped = false;
+
+      await tester.pumpWidget(
+        buildTestWidget(
+          currentTier: 1,
+          uploadProgress: 0.65,
+          uploadProgressLabel: 'Uploading National ID (Front)...',
+          onCancelUpload: () {
+            cancelTapped = true;
+          },
+        ),
+      );
+      await tester.pump();
+
+      // Check upload progress indicators
+      expect(find.text('65%'), findsOneWidget);
+      expect(find.text('Uploading National ID (Front)...'), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      expect(find.byIcon(Icons.cloud_upload_rounded), findsOneWidget);
+
+      // Tap cancel button
+      final cancelBtn = find.byIcon(Icons.close_rounded);
+      expect(cancelBtn, findsOneWidget);
+      await tester.tap(cancelBtn);
+      await tester.pump();
+
+      expect(cancelTapped, isTrue);
+    },
+  );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
@@ -20,161 +21,165 @@ class AcceptRequestDropdown extends StatelessWidget {
     final ReceivedRequestController controller = Get.find();
     final SettingsService settingsService = Get.find();
     final localization = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
-    // M-8 — `finalAmount` is a backend-provided string; the previous
-    // `double.tryParse(x!)!` chain crashed when it was null or non-numeric.
-    // Safe-parse with a 0.0 fallback — valid values render as before.
     final double finalAmountValue =
         double.tryParse(request.finalAmount ?? '') ?? 0.0;
+    final currencyCode = request.currency ?? 'USD';
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: request.currency!,
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      )!,
-      isCrypto: request.isCrypto!,
+      currencyCode: currencyCode,
+      siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
+      isCrypto: request.isCrypto ?? false,
     );
 
     return AnimatedContainer(
       width: double.infinity,
-      duration: const Duration(milliseconds: 300),
+      duration: AppDurations.normal,
       curve: Curves.easeOutQuart,
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 18),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? colorScheme.surfaceContainerHigh : colorScheme.surface,
         borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
+            color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+              alpha: isDark ? 0.4 : 0.08,
+            ),
             blurRadius: 40,
-            spreadRadius: 0,
             offset: Offset.zero,
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(horizontal: 24),
+        padding: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.page,
+        ),
         child: Column(
           children: [
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Container(
               width: 40,
-              height: 5,
+              height: 4,
               decoration: BoxDecoration(
-                color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(30),
+                color: colorScheme.onSurface.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
               ),
             ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(height: 40),
-                    Image.asset(PngAssets.acceptRequestCommonIcon, width: 70),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.xxl),
+                    Image.asset(PngAssets.acceptRequestCommonIcon, width: 68),
+                    const SizedBox(height: AppSpacing.lg),
                     Text(
                       localization.acceptRequestDropdownTitle,
                       style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
                         letterSpacing: 0,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                         fontSize: 22,
-                        color: AppColors.lightTextPrimary,
+                        color: colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.xs),
                     Text(
                       localization.acceptRequestDropdownMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                        fontFamily: 'Plus Jakarta Sans',
                         letterSpacing: 0,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15,
-                        color: AppColors.lightTextTertiary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
-                    const SizedBox(height: 18),
-                    Container(
-                      width: double.infinity,
+                    const SizedBox(height: AppSpacing.lg),
+                    Divider(
                       height: 1,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.white,
-                            AppColors.lightTextPrimary.withValues(alpha: 0.1),
-                            AppColors.white,
-                          ],
-                        ),
+                      color: colorScheme.outlineVariant.withValues(
+                        alpha: isDark ? 0.25 : 0.4,
                       ),
                     ),
-                    const SizedBox(height: 18),
+                    const SizedBox(height: AppSpacing.lg),
                     _buildDynamicContent(
                       context,
                       title: localization.acceptRequestDropdownPayableAmount,
                       content:
-                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} $currencyCode",
                       contentColor: AppColors.success,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSpacing.md),
                     _buildDynamicContent(
                       context,
                       title: localization.acceptRequestDropdownPayWallet,
-                      content: request.requesterWalletCurrencyName!,
-                      contentColor: AppColors.lightTextPrimary,
+                      content: request.requesterWalletCurrencyName ?? currencyCode,
+                      contentColor: colorScheme.onSurface,
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSpacing.xl),
                     Container(
                       width: double.infinity,
-                      padding: EdgeInsetsDirectional.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.md,
                       ),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: AppColors.warning.withValues(alpha: 0.16),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusMd,
+                        ),
+                        color: AppColors.warning.withValues(alpha: 0.12),
+                        border: Border.all(
+                          color: AppColors.warning.withValues(alpha: 0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Column(
                         children: [
                           Text(
                             localization.acceptRequestDropdownRequesterNote,
                             style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
                               letterSpacing: 0,
-                              fontSize: 15,
-                              color: AppColors.lightTextPrimary.withValues(
-                                alpha: 0.80,
+                              fontSize: 14,
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.85,
                               ),
                               fontWeight: FontWeight.w700,
                             ),
                           ),
+                          const SizedBox(height: 2),
                           Text(
                             request.note ??
                                 localization.acceptRequestDropdownNoteNotFound,
                             textAlign: TextAlign.center,
                             style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
                               letterSpacing: 0,
-                              fontSize: 15,
-                              color: AppColors.lightTextPrimary.withValues(
-                                alpha: 0.80,
+                              fontSize: 14,
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.75,
                               ),
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSpacing.xxl),
                     CommonButton(
-                      width: 120,
-
+                      width: 140,
+                      height: 48,
+                      borderRadius: AppSpacing.radiusLg,
                       text: localization.acceptRequestDropdownAcceptButton,
                       onPressed: () async {
-                        // phase1-fix (P0-8): ACCEPT moves money out of the
-                        // user's wallet — gate it with the passcode sheet
-                        // when the server flag is enabled (same pattern as
-                        // request_money_review_step_section.dart).
                         final bool isPasscodeEnabled =
                             settingsService.getSetting(
                               "request_money_accept_passcode_status",
@@ -198,16 +203,17 @@ class AcceptRequestDropdown extends StatelessWidget {
                         );
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: AppSpacing.sm),
                     CommonButton(
-                      width: 120,
-
+                      width: 140,
+                      height: 44,
+                      borderRadius: AppSpacing.radiusLg,
                       text: localization.acceptRequestDropdownCancelButton,
-                      backgroundColor: AppColors.transparent,
-                      textColor: AppColors.lightTextTertiary,
+                      backgroundColor: Colors.transparent,
+                      textColor: colorScheme.onSurface.withValues(alpha: 0.7),
                       onPressed: () => Get.back(),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: AppSpacing.xxl),
                   ],
                 ),
               ),
@@ -224,31 +230,30 @@ class AcceptRequestDropdown extends StatelessWidget {
     required String content,
     required Color contentColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
           style: TextStyle(
+            fontFamily: 'Plus Jakarta Sans',
             letterSpacing: 0,
-            fontWeight: FontWeight.w700,
-            fontSize: 15,
-            color: AppColors.lightTextPrimary.withValues(alpha: 0.60),
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: colorScheme.onSurface.withValues(alpha: 0.65),
           ),
         ),
-        Expanded(
-          child: Text(
-            content,
-            style: TextStyle(
-              letterSpacing: 0,
-              fontWeight: FontWeight.w900,
-              fontSize: 15,
-              color: contentColor,
-            ),
-            maxLines: 5,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.end,
+        Text(
+          content,
+          style: TextStyle(
+            fontFamily: 'Plus Jakarta Sans',
+            letterSpacing: 0,
+            fontWeight: FontWeight.w800,
+            fontSize: 15,
+            color: contentColor,
           ),
         ),
       ],

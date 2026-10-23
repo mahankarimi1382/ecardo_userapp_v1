@@ -13,6 +13,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import '../core/models/travel_models.dart';
 import '../shared/travel_widgets.dart';
 
@@ -458,14 +459,10 @@ class _HotelVoucherScreenState extends State<HotelVoucherScreen> {
             SizedBox(height: 16.h),
 
             // Express QR Code Card
-            Container(
+            EcardoGlassCard(
+              variant: EcardoGlassVariant.frosted,
+              borderRadius: ECardoTokens.radiusXl,
               padding: EdgeInsets.all(ECardoTokens.space5.r),
-              decoration: BoxDecoration(
-                color: ECardoTokens.surfaceCard(context),
-                borderRadius: BorderRadius.circular(ECardoTokens.radiusXl),
-                border: Border.all(color: ECardoTokens.border(context)),
-                boxShadow: ECardoTokens.shadowCard(context),
-              ),
               child: Column(
                 children: [
                   Text(

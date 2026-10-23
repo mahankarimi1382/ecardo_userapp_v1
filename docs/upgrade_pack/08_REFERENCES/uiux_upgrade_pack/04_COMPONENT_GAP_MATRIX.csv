@@ -1,0 +1,24 @@
+﻿component,layer,current_candidate,audit_action,priority,status
+Color tokens,Foundation,AppColors,Audit actual usage / semantics,P0,TODO
+Spacing/radius/type tokens,Foundation,AppSpacing/AppTextStyles,Remove hardcoded new values,P0,TODO
+Primary/secondary/destructive buttons,Component,FullWidthButton + actual DS,"States, disabled, loading, semantics",P0,TODO
+Amount input,Pattern,Audit current implementation,Currency precision/locale/keyboard/focus,P0,TODO
+Currency selector,Pattern,Existing screens,No ambiguous pair; searchable if needed,P0,TODO
+Fee breakdown,Pattern,Ecardo receipt/patterns,Principal/network/provider/platform/total clear,P0,TODO
+Transaction status,Component,EcardoReceiptStatus,Pending/unknown/reversed states,P0,TODO
+Passcode prompt,Pattern,Existing bottom sheet,Missing/wrong/locked differentiated,P0,TODO
+Wallet/account card,Component,EcardoBalanceHero etc.,available/held/stale/privacy,P1,TODO
+Transaction list row,Component,Audit current rows,amount/status/date/semantics consistent,P1,TODO
+Receipt,Component,EcardoDigitalReceipt,"Backend truth, privacy share",P1,TODO
+Empty state,Component,EcardoEmptyState,Actions only with actual callback,P1,TODO
+Error state,Component,EcardoErrorView,Retry semantics and diagnostics privacy,P1,TODO
+Skeleton,Component,Audit existing,No indefinite animation; semantics,P2,TODO
+Banner/notice,Component,Audit existing,severity+icon+text,P1,TODO
+Dialog/bottom sheet,Pattern,Audit shared widgets,keyboard/safe-area/dismissal,P1,TODO
+Input validation,Pattern,Audit form components,field-level and server field errors,P1,TODO
+Wallet network/address display,Specialized pattern,Crypto deposit components,"server assignment, chain, copy/QR gating",P0,TODO
+Chart,Component,fl_chart if already used,accessible labels/no-data state,P2,TODO
+Language selector,Pattern,Existing settings,"6 languages, persistence, RTL",P1,TODO
+Snackbar/toast,Component,existing notification helpers,mounted context and no critical message loss,P1,TODO
+Navigation item,Component,actual navigation,"active/focus semantics, deep link",P1,TODO
+Accessibility wrappers,Foundation,Flutter Semantics,screen reader and minimum targets,P1,TODO

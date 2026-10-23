@@ -5,13 +5,14 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
-import 'package:ecardo_user/src/common/widgets/input_field/quick_amount_selector.dart';
-import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_amount_input_card.dart';
 import 'package:ecardo_user/src/presentation/widgets/qr_scanner_screen.dart';
 
 class RequestMoneyAmountStepSection extends StatefulWidget {
@@ -29,33 +30,30 @@ class _RequestMoneyAmountStepSectionState
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
-    return Container(
-      padding: const EdgeInsetsDirectional.only(
-        start: AppSpacing.page,
-        end: AppSpacing.page,
-        bottom: AppSpacing.xxl,
-        top: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkCard : AppColors.lightCard,
-        borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(AppSpacing.radiusXl),
-          topEnd: Radius.circular(AppSpacing.radiusXl),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? AppColors.darkShadow : AppColors.lightShadow,
-            blurRadius: AppSpacing.lg,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Column(
+    final siteCurrency =
+        Get.find<SettingsService>().getSetting("site_currency") ?? 'USD';
+    final siteDecimals =
+        Get.find<SettingsService>().getSetting("site_currency_decimals") ?? '2';
+
+    return Obx(() {
+      final currentWallet = controller.wallet.value;
+      final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+        currencyCode: currentWallet?.code ?? 'USD',
+        siteCurrencyCode: siteCurrency,
+        siteCurrencyDecimals: siteDecimals,
+        isCrypto: currentWallet?.isCrypto ?? false,
+      );
+
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.sm),
+
+          // 1. Recipient UID Input Field with QR Scanner
           CommonRequiredLabelAndDynamicField(
             labelText: localization.requestMoneyAmountStepSectionRecipientId,
             isLabelRequired: true,
@@ -67,14 +65,36 @@ class _RequestMoneyAmountStepSectionState
                       focusNode: controller.recipientUidFocusNode,
                       isFocused: controller.isRecipientUidFocused.value,
                       borderRadius: AppSpacing.radiusLg,
-                      backgroundColor: AppColors.transparent,
-                      hintText: "",
+                      backgroundColor: isDark
+                          ? colorScheme.surfaceContainerHigh.withValues(
+                              alpha: 0.4,
+                            )
+                          : colorScheme.surface,
+                      hintText: "Enter Recipient UID",
                       controller: controller.recipientUidController,
                       keyboardType: TextInputType.number,
+                      suffixIcon:
+                          controller.recipientUidController.text.isNotEmpty
+                          ? IconButton(
+                              icon: Icon(
+                                Icons.clear_rounded,
+                                size: 18,
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
+                              onPressed: () {
+                                controller.recipientUidController.clear();
+                                setState(() {});
+                              },
+                            )
+                          : null,
+                      onChanged: (_) => setState(() {}),
                     ),
                   ),
                 ),
-                const SizedBox(width: AppSpacing.md),
+                const SizedBox(width: AppSpacing.sm),
+                // QR Scanner button
                 InkWell(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                   onTap: () async {
@@ -94,6 +114,7 @@ class _RequestMoneyAmountStepSectionState
                         controller.recipientUidController.text = uidMatch.group(
                           1,
                         )!;
+                        setState(() {});
                       } else {
                         ToastHelper().showErrorToast(
                           localization
@@ -107,23 +128,19 @@ class _RequestMoneyAmountStepSectionState
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.darkPrimary
-                          : AppColors.lightPrimary,
+                      color: colorScheme.primary,
                       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                       boxShadow: [
                         BoxShadow(
-                          color: isDark
-                              ? AppColors.darkShadow
-                              : AppColors.lightShadow,
-                          blurRadius: AppSpacing.sm,
-                          offset: const Offset(0, 2),
+                          color: colorScheme.primary.withValues(alpha: 0.35),
+                          blurRadius: 8,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
                     child: Image.asset(
                       PngAssets.commonScannerIcon,
-                      color: isDark ? AppColors.deepBlack : AppColors.white,
+                      color: colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -132,111 +149,56 @@ class _RequestMoneyAmountStepSectionState
           ),
           const SizedBox(height: AppSpacing.lg),
 
-          // Amount Hero Card with Currency Badge and Quick Amount Chips
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(AppSpacing.md),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? AppColors.darkSurfaceVariant.withValues(alpha: 0.5)
-                  : AppColors.lightSecondaryContainer.withValues(alpha: 0.35),
-              borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-              border: Border.all(
-                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CommonRequiredLabelAndDynamicField(
-                  labelText:
-                      localization.requestMoneyAmountStepSectionRequestAmount,
-                  isLabelRequired: true,
-                  dynamicField: Obx(
-                    () => CommonTextInputField(
-                      focusNode: controller.requestAmountFocusNode,
-                      isFocused: controller.isRequestAmountFocused.value,
-                      isSuffixIconCompact: false,
-                      suffixIcon: Container(
-                        margin: const EdgeInsetsDirectional.only(
-                          end: AppSpacing.sm,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? AppColors.darkPrimary.withValues(alpha: 0.15)
-                              : AppColors.lightPrimary.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(
-                            AppSpacing.radiusSm,
-                          ),
-                        ),
-                        child: Text(
-                          controller.wallet.value?.code ?? '',
-                          style: TextStyle(
-                            letterSpacing: 0.5,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 13,
-                            color: isDark
-                                ? AppColors.darkPrimary
-                                : AppColors.lightPrimary,
-                          ),
-                        ),
-                      ),
-                      borderRadius: AppSpacing.radiusLg,
-                      backgroundColor: AppColors.transparent,
-                      hintText: "0.00",
-                      controller: controller.requestAmountController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [AmountInputFormatter(maxDecimals: 8)],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.sm),
-                Obx(() {
-                  final wallet = controller.wallet.value;
-                  final balance =
-                      double.tryParse(wallet?.balance ?? '0') ?? 0.0;
-                  return QuickAmountSelector(
-                    textController: controller.requestAmountController,
-                    availableBalance: balance > 0 ? balance : 1000.0,
-                    isCrypto: wallet?.isCrypto ?? false,
-                    currencyCode: wallet?.code,
-                    height: 32.0,
-                    chipSpacing: AppSpacing.sm,
-                  );
-                }),
-              ],
-            ),
+          // 2. Standardized FinTech Hero Amount Input Card (Zero-decimal Toman strictly enforced)
+          TransferAmountInputCard(
+            controller: controller.requestAmountController,
+            focusNode: controller.requestAmountFocusNode,
+            wallet: null,
+            customCurrencyCode: currentWallet?.code,
+            customCurrencySymbol: currentWallet?.symbol,
+            customBalanceText: currentWallet?.formattedBalance,
+            customTitle:
+                localization.requestMoneyAmountStepSectionRequestAmount,
+            decimals: decimals,
+            showFeePill: false,
+            onPercentageSelected: (fraction) {
+              controller.setPercentage(fraction);
+              setState(() {});
+            },
+            onClear: () {
+              controller.requestAmountController.clear();
+              setState(() {});
+            },
           ),
 
-          Obx(
-            () => Visibility(
-              visible:
-                  controller.requestMoneyWalletsList.isNotEmpty &&
-                  controller.wallet.value?.requestMoneyLimit != null,
-              child: Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  top: AppSpacing.xs,
-                  start: AppSpacing.xs,
-                ),
-                child: Text(
-                  "${localization.requestMoneyAmountStepSectionMin} ${controller.wallet.value?.requestMoneyLimit?.min ?? ''} ${controller.wallet.value?.code ?? ''} | ${localization.requestMoneyAmountStepSectionMax} ${controller.wallet.value?.requestMoneyLimit?.max ?? ''} ${controller.wallet.value?.code ?? ''}",
-                  style: TextStyle(
-                    letterSpacing: 0,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                    color: isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextSecondary,
-                  ),
+          // Limits text
+          if (controller.requestMoneyWalletsList.isNotEmpty &&
+              currentWallet?.requestMoneyLimit != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(
+                start: AppSpacing.xs,
+              ),
+              child: Text(
+                "${localization.requestMoneyAmountStepSectionMin} ${double.tryParse(currentWallet?.requestMoneyLimit?.min ?? '0')?.toStringAsFixed(decimals) ?? '0'} "
+                "${currentWallet?.code ?? ''} | ${localization.requestMoneyAmountStepSectionMax} "
+                "${double.tryParse(currentWallet?.requestMoneyLimit?.max ?? '0')?.toStringAsFixed(decimals) ?? '0'} "
+                "${currentWallet?.code ?? ''}",
+                style: TextStyle(
+                  letterSpacing: 0,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ),
-          ),
+          ],
+
           const SizedBox(height: AppSpacing.lg),
+
+          // 3. Optional Requester Note Field
           CommonRequiredLabelAndDynamicField(
             labelText: localization.requestMoneyAmountStepSectionNote,
             dynamicField: Obx(
@@ -244,7 +206,9 @@ class _RequestMoneyAmountStepSectionState
                 isFocused: controller.isNoteFocused.value,
                 focusNode: controller.noteFocusNode,
                 borderRadius: AppSpacing.radiusLg,
-                backgroundColor: AppColors.transparent,
+                backgroundColor: isDark
+                    ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.4)
+                    : colorScheme.surface,
                 hintText: "",
                 controller: controller.noteController,
                 keyboardType: TextInputType.text,
@@ -252,10 +216,14 @@ class _RequestMoneyAmountStepSectionState
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.xxxl),
+          const SizedBox(height: AppSpacing.xxl),
+
+          // 4. Action Button with Debounce and Explicit Loading State
           CommonButton(
             borderRadius: AppSpacing.radiusLg,
             width: double.infinity,
+            height: 52,
+            isLoading: controller.isRequestMoneyLoading.value,
             text: localization.requestMoneyAmountStepSectionRequestMoneyButton,
             onPressed: () {
               HapticFeedback.lightImpact();
@@ -264,7 +232,7 @@ class _RequestMoneyAmountStepSectionState
           ),
           const SizedBox(height: AppSpacing.huge),
         ],
-      ),
-    );
+      );
+    });
   }
 }

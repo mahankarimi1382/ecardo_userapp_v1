@@ -1,3 +1,4 @@
+import 'package:ecardo_user/src/common/services/app_update_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/kyc_level/controller/kyc_level_controller.dart';
 import 'package:get/get.dart';
 
@@ -820,3 +821,16 @@ class DynamicPasswordBinding implements Bindings {
     }
   }
 }
+
+class AppUpdateBinding implements Bindings {
+  @override
+  void dependencies() {
+    if (!Get.isRegistered<AppUpdateController>()) {
+      Get.lazyPut<AppUpdateController>(
+        () => AppUpdateController(config: AppUpdateConfig.user),
+        fenix: true,
+      );
+    }
+  }
+}
+

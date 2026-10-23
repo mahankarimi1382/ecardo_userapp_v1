@@ -18,6 +18,12 @@ class TransferAmountInputCard extends StatelessWidget {
   final int decimals;
   final ValueChanged<double> onPercentageSelected;
   final VoidCallback onClear;
+  final String? customCurrencyCode;
+  final String? customCurrencySymbol;
+  final String? customBalanceText;
+  final String? customTitle;
+  final bool showFeePill;
+  final bool showBalanceChip;
 
   const TransferAmountInputCard({
     super.key,
@@ -30,6 +36,12 @@ class TransferAmountInputCard extends StatelessWidget {
     this.decimals = 2,
     required this.onPercentageSelected,
     required this.onClear,
+    this.customCurrencyCode,
+    this.customCurrencySymbol,
+    this.customBalanceText,
+    this.customTitle,
+    this.showFeePill = true,
+    this.showBalanceChip = true,
   });
 
   @override
@@ -38,9 +50,9 @@ class TransferAmountInputCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
-    final currencyCode = wallet?.code ?? '';
-    final currencySymbol = wallet?.symbol ?? '';
-    final balanceText = wallet?.formattedBalance ?? '0.00';
+    final currencyCode = customCurrencyCode ?? wallet?.code ?? '';
+    final currencySymbol = customCurrencySymbol ?? wallet?.symbol ?? '';
+    final balanceText = customBalanceText ?? wallet?.formattedBalance ?? '0.00';
     final hasAmount = controller.text.trim().isNotEmpty;
 
     return Container(
@@ -76,70 +88,72 @@ class TransferAmountInputCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                l10nPick(
-                  context,
-                  en: 'Enter Amount',
-                  fa: 'مبلغ انتقال',
-                  ar: 'أدخل المبلغ',
-                  tr: 'Miktarı Girin',
-                  ru: 'Введите сумму',
-                ),
+                customTitle ??
+                    l10nPick(
+                      context,
+                      en: 'Enter Amount',
+                      fa: 'مبلغ انتقال',
+                      ar: 'أدخل المبلغ',
+                      tr: 'Miktarı Girin',
+                      ru: 'Введите сумму',
+                    ),
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  HapticFeedback.lightImpact();
-                  onPercentageSelected(1.0); // Use 100% max
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm,
-                    vertical: AppSpacing.xs,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? colorScheme.primary.withValues(alpha: 0.15)
-                        : colorScheme.surfaceContainerHighest.withValues(
-                            alpha: 0.7,
-                          ),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-                    border: Border.all(
-                      color: colorScheme.primary.withValues(alpha: 0.3),
-                      width: 1,
+              if (showBalanceChip)
+                GestureDetector(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    onPercentageSelected(1.0); // Use 100% max
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xs,
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.account_balance_wallet_outlined,
-                        size: 13,
-                        color: colorScheme.primary,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? colorScheme.primary.withValues(alpha: 0.15)
+                          : colorScheme.surfaceContainerHighest.withValues(
+                              alpha: 0.7,
+                            ),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+                      border: Border.all(
+                        color: colorScheme.primary.withValues(alpha: 0.3),
+                        width: 1,
                       ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Text(
-                        l10nPick(
-                          context,
-                          en: 'Bal: $balanceText $currencyCode',
-                          fa: 'موجودی: $balanceText $currencyCode',
-                          ar: 'الرصيد: $balanceText $currencyCode',
-                          tr: 'Bakiye: $balanceText $currencyCode',
-                          ru: 'Баланс: $balanceText $currencyCode',
-                        ),
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.account_balance_wallet_outlined,
+                          size: 13,
                           color: colorScheme.primary,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: AppSpacing.xs),
+                        Text(
+                          l10nPick(
+                            context,
+                            en: 'Bal: $balanceText $currencyCode',
+                            fa: 'موجودی: $balanceText $currencyCode',
+                            ar: 'الرصيد: $balanceText $currencyCode',
+                            tr: 'Bakiye: $balanceText $currencyCode',
+                            ru: 'Баланс: $balanceText $currencyCode',
+                          ),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
@@ -244,17 +258,18 @@ class TransferAmountInputCard extends StatelessWidget {
 
           // Quick Percentage Chips
           _QuickPercentageRow(onSelect: onPercentageSelected),
-          const SizedBox(height: AppSpacing.md),
-
-          // Live Fee Estimation Pill
-          _LiveFeeEstimationPill(
-            charge: charge,
-            totalAmount: totalAmount,
-            currencyCode: currencyCode,
-            decimals: decimals,
-            chargeLoadFailed: chargeLoadFailed,
-            wallet: wallet,
-          ),
+          if (showFeePill) ...[
+            const SizedBox(height: AppSpacing.md),
+            // Live Fee Estimation Pill
+            _LiveFeeEstimationPill(
+              charge: charge,
+              totalAmount: totalAmount,
+              currencyCode: currencyCode,
+              decimals: decimals,
+              chargeLoadFailed: chargeLoadFailed,
+              wallet: wallet,
+            ),
+          ],
         ],
       ),
     );

@@ -1,0 +1,25 @@
+candidate_id,domain_candidate,discovery_rule,in_actual_app,route_ids,scope_decision,evidence,owner
+MOD-01,auth,if discovered,YES,"ROUTE-001;ROUTE-002;ROUTE-004;ROUTE-005;ROUTE-006;ROUTE-008;ROUTE-011",IN_SCOPE,EVD-003,workstream-auth
+MOD-02,onboarding,if discovered,YES,"ROUTE-003;ROUTE-007;ROUTE-009;ROUTE-010",IN_SCOPE,EVD-003,workstream-auth
+MOD-03,home,if discovered,YES,"ROUTE-012;ROUTE-025",IN_SCOPE,EVD-002,workstream-ux
+MOD-04,accounts,if discovered,YES,"ROUTE-013;ROUTE-014",IN_SCOPE,EVD-002,workstream-financial
+MOD-05,wallets,if discovered,YES,"ROUTE-013;ROUTE-014",IN_SCOPE,EVD-002,workstream-financial
+MOD-06,activity,if discovered,YES,"ROUTE-024;ROUTE-048;ROUTE-049;ROUTE-050",IN_SCOPE,EVD-001,workstream-financial
+MOD-07,transfer,if discovered,YES,"ROUTE-017;ROUTE-020;ROUTE-021;ROUTE-022",IN_SCOPE,EVD-001,workstream-financial
+MOD-08,exchange,if discovered,YES,"ROUTE-023",IN_SCOPE,EVD-002,workstream-financial
+MOD-09,cards,if discovered,YES,"ROUTE-070;ROUTE-106",IN_SCOPE,EVD-005,workstream-cards
+MOD-10,qr,if discovered,YES,"ROUTE-015",IN_SCOPE,EVD-001,workstream-ux
+MOD-11,deposit,if discovered,YES,"ROUTE-016",IN_SCOPE,EVD-001,workstream-financial
+MOD-12,withdraw,if discovered,YES,"ROUTE-021;ROUTE-022",IN_SCOPE,EVD-001,workstream-financial
+MOD-13,bills,if discovered,YES,"ROUTE-059;ROUTE-060;ROUTE-061;ROUTE-062",IN_SCOPE,EVD-001,workstream-financial
+MOD-14,beneficiaries,if discovered,YES,"ROUTE-056;ROUTE-057",IN_SCOPE,EVD-001,workstream-settings
+MOD-15,verification,if discovered,YES,"ROUTE-037;ROUTE-041;ROUTE-084",IN_SCOPE,EVD-003,workstream-settings
+MOD-16,profile,if discovered,YES,"ROUTE-032",IN_SCOPE,EVD-003,workstream-settings
+MOD-17,security,if discovered,YES,"ROUTE-031;ROUTE-033;ROUTE-034",IN_SCOPE,EVD-003,workstream-security-i18n
+MOD-18,notifications,if discovered,YES,"ROUTE-035",IN_SCOPE,EVD-003,workstream-settings
+MOD-19,support,if discovered,YES,"ROUTE-036;ROUTE-038;ROUTE-039",IN_SCOPE,EVD-003,workstream-settings
+MOD-20,settings,if discovered,YES,"ROUTE-029;ROUTE-030",IN_SCOPE,EVD-003,workstream-settings
+MOD-21,loyalty,if discovered,YES,"ROUTE-026;ROUTE-027;ROUTE-028",IN_SCOPE,EVD-001,workstream-ux
+MOD-22,receipt,if discovered,YES,"ROUTE-017;ROUTE-020;ROUTE-023",IN_SCOPE,EVD-001,workstream-financial
+MOD-23,limits,if discovered,YES,"ROUTE-070;ROUTE-084",IN_SCOPE,EVD-005,workstream-cards
+MOD-24,travel,if discovered,YES,"ROUTE-047;ROUTE-108;ROUTE-112;ROUTE-114",IN_SCOPE,EVD-004,workstream-travel

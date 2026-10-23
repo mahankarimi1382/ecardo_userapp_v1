@@ -1,0 +1,9 @@
+{
+  "tasks": 98,
+  "modules": 30,
+  "contracts": 20,
+  "integration_tests": 40,
+  "agent_skills": 8,
+  "agent_prompts": 6,
+  "has_prior_uiux_pack": true
+}

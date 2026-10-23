@@ -1,0 +1,13 @@
+﻿screen_id,route_name,state_id,state_meaning,required_behavior,implementation_status,test_id,evidence_ref,notes
+,,initial,صفحه قبل از دریافت داده,ورودی و اقدام معتبر است یا placeholder مشخص دارد,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,loading,در حال دریافت یا پردازش,نشانگر مناسب؛ جلوگیری از submit ناخواسته,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,success,نتیجهٔ موفق معتبر,فقط از پاسخ authoritative؛ داده و status واقعی,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,empty,داده‌ای برای نمایش وجود ندارد,متن توضیحی و CTA واقعی در صورت امکان,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,validation_error,ورودی نامعتبر,خطا نزدیک field؛ semantics و focus مناسب,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,api_error,خطای سرویس,پیام قابل‌فهم و recovery معتبر,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,offline,عدم اتصال,حفظ draft امن و retry کنترل‌شده,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,pending,عملیات هنوز نهایی نیست,بدون ادعای موفقیت یا شکست زودهنگام,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,unknown_result,پاسخ نامعلوم پس از timeout,استعلام وضعیت؛ retry با idempotency policy,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,unauthorized,عدم مجوز/پایان session,مسیر امن re-auth; مخفی‌سازی داده حساس,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,disabled,اقدام غیرمجاز یا unavailable,علت غیرفعال‌بودن قابل‌درک,TODO,,,Apply only where semantically relevant; document N/A with reason.
+,,partial_failure,بخشی از عملیات fail شده,نتیجهٔ جزءبه‌جزء دقیق و recovery,TODO,,,Apply only where semantically relevant; document N/A with reason.

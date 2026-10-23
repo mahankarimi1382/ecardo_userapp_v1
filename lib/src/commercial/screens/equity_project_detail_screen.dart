@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/commercial_controller.dart';
@@ -90,23 +93,116 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
         centerTitle: true,
       ),
       body: Obx(() {
+        if (controller.isOffline.value) {
+          return Center(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
+              child: EcardoErrorView(
+                animatePulse: false,
+                iconData: Icons.cloud_off_rounded,
+                title: l10nPick(
+                  context,
+                  en: 'No Internet Connection',
+                  fa: 'عدم برقراری اتصال اینترنت',
+                  ar: 'لا يوجد اتصال بالإنترنت',
+                  zh: '无网络连接',
+                ),
+                message: l10nPick(
+                  context,
+                  en: 'Please check your connection and retry to view investment opportunity details.',
+                  fa: 'لطفاً اتصال اینترنت خود را بررسی کرده و برای مشاهده جزئیات طرح دوباره تلاش کنید.',
+                  ar: 'يرجى التحقق من الاتصال والمحاولة مرة أخرى.',
+                  zh: '请检查您的网络连接并重试以查看项目详情。',
+                ),
+                retryLabel: l10nPick(
+                  context,
+                  en: 'Retry',
+                  fa: 'تلاش مجدد',
+                  ar: 'إعادة المحاولة',
+                  zh: '重试',
+                ),
+                onRetry: () {
+                  HapticFeedback.lightImpact();
+                  controller.setOffline(false);
+                  controller.fetchProjectDetail(widget.projectId);
+                },
+              ),
+            ),
+          );
+        }
+
         if (controller.isLoadingDetail.value) {
           return Center(child: CircularProgressIndicator(color: primaryAccent));
+        }
+
+        if (controller.errorMessage.value.isNotEmpty) {
+          return Center(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
+              child: EcardoErrorView(
+                animatePulse: false,
+                iconData: Icons.error_outline_rounded,
+                title: l10nPick(
+                  context,
+                  en: 'Unable to Load Opportunity',
+                  fa: 'خطا در بارگذاری جزئیات طرح',
+                  ar: 'تعذر تحميل تفاصيل الفرصة',
+                  zh: '无法加载项目详情',
+                ),
+                message: controller.errorMessage.value,
+                retryLabel: l10nPick(
+                  context,
+                  en: 'Try Again',
+                  fa: 'تلاش مجدد',
+                  ar: 'حاول مجدداً',
+                  zh: '重试',
+                ),
+                onRetry: () {
+                  HapticFeedback.lightImpact();
+                  controller.clearError();
+                  controller.fetchProjectDetail(widget.projectId);
+                },
+              ),
+            ),
+          );
         }
 
         final detail = controller.selectedDetail.value;
         if (detail == null) {
           return Center(
-            child: Text(
-              l10nPick(
-                context,
-                fa: 'اطلاعات پروژه یافت نشد',
-                en: 'Project details not found',
-              ),
-              style: TextStyle(
-                color: isDark
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
+              child: EcardoEmptyState(
+                animateGlow: false,
+                iconData: Icons.business_center_outlined,
+                title: l10nPick(
+                  context,
+                  fa: 'اطلاعات پروژه یافت نشد',
+                  en: 'Project details not found',
+                  ar: 'لم يتم العثور على تفاصيل المشروع',
+                  zh: '未找到项目详情',
+                ),
+                description: l10nPick(
+                  context,
+                  fa: 'پروژه مورد نظر در سامانه موجود نیست یا پایان یافته است.',
+                  en: 'The requested commercial project is not available or has ended.',
+                  ar: 'المشروع المطلوب غير متاح حالياً.',
+                  zh: '所请求的商业项目不可用或已结束。',
+                ),
+                primaryActionLabel: l10nPick(
+                  context,
+                  en: 'Go Back',
+                  fa: 'بازگشت',
+                  ar: 'رجوع',
+                  zh: '返回',
+                ),
+                onPrimaryAction: () {
+                  HapticFeedback.lightImpact();
+                  Get.back();
+                },
               ),
             ),
           );
@@ -306,7 +402,7 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'تأمین‌شده: ${project.raisedAmount.toStringAsFixed(0)} ${project.currency}',
+                '${l10nPick(context, fa: 'تأمین‌شده', en: 'Raised', ar: 'تم جمع')}: ${DynamicDecimalsHelper.isZeroDecimal(project.currency) ? NumberFormat('#,###').format(project.raisedAmount.round()) : project.raisedAmount.toStringAsFixed(0)} ${project.currency}',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w700,
@@ -314,7 +410,7 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
                 ),
               ),
               Text(
-                'هدف: ${project.targetAmount.toStringAsFixed(0)} ${project.currency} (${project.progressPercent}%)',
+                '${l10nPick(context, fa: 'هدف', en: 'Target', ar: 'الهدف')}: ${DynamicDecimalsHelper.isZeroDecimal(project.currency) ? NumberFormat('#,###').format(project.targetAmount.round()) : project.targetAmount.toStringAsFixed(0)} ${project.currency} (${project.progressPercent}%)',
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: isDark
@@ -383,9 +479,15 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
           children: [
             Expanded(
               child: _buildMetricTile(
-                title: 'ارزش‌گذاری فعلی',
+                title: l10nPick(
+                  context,
+                  fa: 'ارزش‌گذاری فعلی',
+                  en: 'Current Valuation',
+                  ar: 'التقييم الحالي',
+                  zh: '当前估值',
+                ),
                 value:
-                    '${detail.valuationAmount.toStringAsFixed(0)} ${detail.base.currency}',
+                    '${DynamicDecimalsHelper.isZeroDecimal(detail.base.currency) ? NumberFormat('#,###').format(detail.valuationAmount.round()) : detail.valuationAmount.toStringAsFixed(0)} ${detail.base.currency}',
                 icon: Icons.assessment_outlined,
                 isDark: isDark,
               ),
@@ -393,7 +495,13 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
             SizedBox(width: AppSpacing.md.w),
             Expanded(
               child: _buildMetricTile(
-                title: 'سهم واگذارشده',
+                title: l10nPick(
+                  context,
+                  fa: 'سهم واگذارشده',
+                  en: 'Equity Offered',
+                  ar: 'الحصة المعروضة',
+                  zh: '出让股权',
+                ),
                 value: '${detail.equityOfferedPercent}%',
                 icon: Icons.pie_chart_outline,
                 isDark: isDark,
@@ -406,9 +514,15 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
           children: [
             Expanded(
               child: _buildMetricTile(
-                title: 'حداقل ورود',
+                title: l10nPick(
+                  context,
+                  fa: 'حداقل ورود',
+                  en: 'Min. Investment',
+                  ar: 'الحد الأدنى',
+                  zh: '起投金额',
+                ),
                 value:
-                    '${detail.base.minInvestment.toStringAsFixed(0)} ${detail.base.currency}',
+                    '${DynamicDecimalsHelper.isZeroDecimal(detail.base.currency) ? NumberFormat('#,###').format(detail.base.minInvestment.round()) : detail.base.minInvestment.toStringAsFixed(0)} ${detail.base.currency}',
                 icon: Icons.payments_outlined,
                 isDark: isDark,
               ),
@@ -416,8 +530,15 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
             SizedBox(width: AppSpacing.md.w),
             Expanded(
               child: _buildMetricTile(
-                title: 'سرمایه‌گذاران',
-                value: '${detail.totalInvestors} نفر',
+                title: l10nPick(
+                  context,
+                  fa: 'سرمایه‌گذاران',
+                  en: 'Total Investors',
+                  ar: 'المستثمرون',
+                  zh: '投资人数',
+                ),
+                value:
+                    '${detail.totalInvestors} ${l10nPick(context, fa: 'نفر', en: 'Investors', ar: 'مستثمر', zh: '人')}',
                 icon: Icons.people_outline,
                 isDark: isDark,
               ),
@@ -725,55 +846,75 @@ class _EquityProjectDetailScreenState extends State<EquityProjectDetailScreen>
       ),
       child: Row(
         children: [
-          // Calculate Sheet Action Button
-          OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
-              side: BorderSide(color: primaryAccent),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-              ),
-            ),
-            icon: Icon(
-              Icons.calculate_outlined,
-              size: 18.sp,
-              color: primaryAccent,
-            ),
-            label: Text(
-              'محاسبه سود',
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w700,
-                color: primaryAccent,
-              ),
-            ),
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              InvestmentCalculatorSheet.show(context, project: detail.base);
-            },
-          ),
-          SizedBox(width: AppSpacing.md.w),
-          // Invest Now CTA
-          Expanded(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryAccent,
-                padding: EdgeInsets.symmetric(vertical: 12.h),
+          // Calculate Sheet Action Button (min 48x48dp touch target)
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: 48.h, minWidth: 48.w),
+            child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                minimumSize: Size(48.w, 48.h),
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                side: BorderSide(color: primaryAccent),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
                 ),
-                elevation: 0,
+              ),
+              icon: Icon(
+                Icons.calculate_outlined,
+                size: 18.sp,
+                color: primaryAccent,
+              ),
+              label: Text(
+                l10nPick(
+                  context,
+                  fa: 'محاسبه سود',
+                  en: 'Calculate ROI',
+                  ar: 'حساب العائد',
+                  zh: '计算收益',
+                ),
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  color: primaryAccent,
+                ),
               ),
               onPressed: () {
-                HapticFeedback.mediumImpact();
-                Get.to(() => EquityInvestCheckoutScreen(project: detail.base));
+                HapticFeedback.lightImpact();
+                InvestmentCalculatorSheet.show(context, project: detail.base);
               },
-              child: Text(
-                'سرمایه‌گذاری در طرح',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.white,
+            ),
+          ),
+          SizedBox(width: AppSpacing.md.w),
+          // Invest Now CTA (min 48x48dp touch target)
+          Expanded(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: 48.h),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 48.h),
+                  backgroundColor: primaryAccent,
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                  ),
+                  elevation: 0,
+                ),
+                onPressed: () {
+                  HapticFeedback.mediumImpact();
+                  Get.to(() => EquityInvestCheckoutScreen(project: detail.base));
+                },
+                child: Text(
+                  l10nPick(
+                    context,
+                    fa: 'سرمایه‌گذاری در طرح',
+                    en: 'Invest in Project',
+                    ar: 'الاستثمار في المشروع',
+                    zh: '立即投资',
+                  ),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.white,
+                  ),
                 ),
               ),
             ),

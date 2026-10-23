@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
-import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/controller/exchange_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/view/sub_sections/exchange_amount_step_section.dart';
@@ -81,7 +81,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                       ),
                                       onPressed: _showHistoryMenu,
                                       icon: Icon(
-                                        Icons.more_vert,
+                                        Icons.more_vert_rounded,
                                         color: ExchangeDesignTokens.textPrimary(
                                           context,
                                         ),
@@ -154,39 +154,21 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
 
   void _showHistoryMenu() {
     final localizations = AppLocalizations.of(context)!;
-    final isDark = ExchangeDesignTokens.isDark(context);
 
     HapticFeedback.lightImpact();
 
     Get.bottomSheet(
-      AnimatedContainer(
-        width: double.infinity,
-        duration: AppSpacing.normal,
-        curve: Curves.easeOutQuart,
-        height: 160,
-        margin: const EdgeInsetsDirectional.symmetric(
+      Padding(
+        padding: const EdgeInsetsDirectional.symmetric(
           horizontal: AppSpacing.md,
         ),
-        decoration: BoxDecoration(
-          color: ExchangeDesignTokens.cardSurface(context),
-          borderRadius: const BorderRadiusDirectional.only(
-            topStart: Radius.circular(AppSpacing.radiusXl),
-            topEnd: Radius.circular(AppSpacing.radiusXl),
-          ),
-          border: Border.all(color: ExchangeDesignTokens.cardBorder(context)),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: 0.5)
-                  : AppColors.black.withValues(alpha: 0.08),
-              blurRadius: 40,
-              spreadRadius: 0,
-              offset: Offset.zero,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        child: EcardoGlassCard(
+          variant: EcardoGlassVariant.frosted,
+          interactive: false,
+          padding: EdgeInsets.zero,
+          height: 160,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: AppSpacing.md),
             Container(
@@ -251,6 +233,7 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

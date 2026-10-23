@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controllers/commercial_controller.dart';
@@ -250,6 +253,85 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
     ];
 
     return Obx(() {
+      // 1. Offline State Matrix
+      if (controller.isOffline.value) {
+        return Center(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
+            child: EcardoErrorView(
+              animatePulse: false,
+              iconData: Icons.cloud_off_rounded,
+              title: l10nPick(
+                context,
+                en: 'No Internet Connection',
+                fa: 'عدم برقراری اتصال اینترنت',
+                ar: 'لا يوجد اتصال بالإنترنت',
+                zh: '无网络连接',
+              ),
+              message: l10nPick(
+                context,
+                en: 'Please check your internet connection and try again to view commercial projects.',
+                fa: 'لطفاً اتصال اینترنت خود را بررسی کرده و برای مشاهده طرح‌های بازرگانی دوباره تلاش کنید.',
+                ar: 'يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.',
+                zh: '请检查您的网络连接并重试以查看商业项目。',
+              ),
+              retryLabel: l10nPick(
+                context,
+                en: 'Retry',
+                fa: 'تلاش مجدد',
+                ar: 'إعادة المحاولة',
+                zh: '重试',
+              ),
+              onRetry: () {
+                HapticFeedback.lightImpact();
+                controller.setOffline(false);
+                controller.loadProjects();
+              },
+            ),
+          ),
+        );
+      }
+
+      // 2. Loading State Matrix (Shimmer skeleton)
+      if (controller.isLoadingProjects.value) {
+        return const _CommercialProjectsShimmerLoader();
+      }
+
+      // 3. Error State Matrix
+      if (controller.errorMessage.value.isNotEmpty) {
+        return Center(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
+            child: EcardoErrorView(
+              animatePulse: false,
+              iconData: Icons.error_outline_rounded,
+              title: l10nPick(
+                context,
+                en: 'Unable to Load Projects',
+                fa: 'خطا در بارگذاری پروژه‌ها',
+                ar: 'تعذر تحميل المشاريع',
+                zh: '无法加载项目',
+              ),
+              message: controller.errorMessage.value,
+              retryLabel: l10nPick(
+                context,
+                en: 'Try Again',
+                fa: 'تلاش مجدد',
+                ar: 'حاول مجدداً',
+                zh: '重试',
+              ),
+              onRetry: () {
+                HapticFeedback.lightImpact();
+                controller.clearError();
+                controller.loadProjects();
+              },
+            ),
+          ),
+        );
+      }
+
       final projects = controller.filteredProjects;
       final selectedSector = controller.selectedSector.value;
 
@@ -312,72 +394,81 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: EdgeInsets.all(AppSpacing.xxl.r),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.business_center_outlined,
-                            size: 56.sp,
-                            color: isDark
-                                ? AppColors.darkTextSecondary
-                                : AppColors.lightTextSecondary,
-                          ),
-                          SizedBox(height: AppSpacing.md.h),
-                          Text(
-                            l10nPick(
-                              context,
-                              en: 'No Projects Available in this sector',
-                              fa: 'طرحی در این صنعت یافت نشد',
-                            ),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w700,
-                              color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                        ],
+                      child: EcardoEmptyState(
+                        animateGlow: false,
+                        iconData: Icons.business_center_outlined,
+                        title: l10nPick(
+                          context,
+                          en: 'No Projects Available in this sector',
+                          fa: 'طرحی در این صنعت یافت نشد',
+                          ar: 'لا توجد مشاريع متاحة في هذا القطاع',
+                          zh: '该行业暂无可用项目',
+                        ),
+                        description: l10nPick(
+                          context,
+                          en: 'No commercial equity projects match your filter. You can switch to all sectors.',
+                          fa: 'هیچ طرح سرمایه‌گذاری بازرگانی با این فیلتر همخوانی ندارد. می‌توانید به همه صنایع تغییر دهید.',
+                          ar: 'لا توجد مشاريع تطابق الفلتر المختار. يمكنك الانتقال إلى جميع القطاعات.',
+                          zh: '当前筛选下没有符合条件的项目，您可以切换至所有行业。',
+                        ),
+                        primaryActionLabel: l10nPick(
+                          context,
+                          en: 'View All Sectors',
+                          fa: 'مشاهده همه صنایع',
+                          ar: 'عرض جميع القطاعات',
+                          zh: '查看所有行业',
+                        ),
+                        onPrimaryAction: () {
+                          HapticFeedback.selectionClick();
+                          controller.applyFilter('ALL');
+                        },
                       ),
                     ),
                   )
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.fromLTRB(
-                      AppSpacing.lg.w,
-                      AppSpacing.sm.h,
-                      AppSpacing.lg.w,
-                      AppSpacing.xxl.h,
-                    ),
-                    itemCount: projects.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == 0) {
-                        return const _EquityNotAvailableNotice();
-                      }
-                      final project = projects[index - 1];
-                      return InkWell(
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          Get.to(
-                            () => EquityProjectDetailScreen(
-                              projectId: project.id,
-                            ),
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(
-                          AppSpacing.radius.r,
-                        ),
-                        child: EquityProjectCard(
-                          project: project,
-                          onInvestTap: () {
-                            InvestmentCalculatorSheet.show(
-                              context,
-                              project: project,
+                : RefreshIndicator(
+                    onRefresh: () async {
+                      HapticFeedback.lightImpact();
+                      controller.loadProjects();
+                    },
+                    color: primaryAccent,
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      padding: EdgeInsets.fromLTRB(
+                        AppSpacing.lg.w,
+                        AppSpacing.sm.h,
+                        AppSpacing.lg.w,
+                        AppSpacing.xxl.h,
+                      ),
+                      itemCount: projects.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return const _EquityNotAvailableNotice();
+                        }
+                        final project = projects[index - 1];
+                        return InkWell(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            Get.to(
+                              () => EquityProjectDetailScreen(
+                                projectId: project.id,
+                              ),
                             );
                           },
-                        ),
-                      );
-                    },
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radius.r,
+                          ),
+                          child: EquityProjectCard(
+                            project: project,
+                            onInvestTap: () {
+                              InvestmentCalculatorSheet.show(
+                                context,
+                                project: project,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
           ),
         ],
@@ -395,50 +486,38 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
 
       if (holdings.isEmpty) {
         return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.pie_chart_outline_rounded,
-                size: 56.sp,
-                color: isDark
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: AppSpacing.page),
+            child: EcardoEmptyState(
+              animateGlow: false,
+              iconData: Icons.pie_chart_outline_rounded,
+              title: l10nPick(
+                context,
+                fa: 'هنوز سرمایه‌گذاری فعالی ثبت نشده است',
+                en: 'No active investments yet',
+                ar: 'لا توجد استثمارات نشطة بعد',
+                zh: '暂无活跃投资',
               ),
-              SizedBox(height: AppSpacing.md.h),
-              Text(
-                l10nPick(
-                  context,
-                  fa: 'هنوز سرمایه‌گذاری فعالی ثبت نشده است',
-                  en: 'No active investments yet',
-                  ar: 'لا توجد استثمارات نشطة بعد',
-                  zh: '暂无活跃投资',
-                ),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
-                  color: isDark
-                      ? AppColors.darkTextPrimary
-                      : AppColors.lightTextPrimary,
-                ),
+              description: l10nPick(
+                context,
+                fa: 'طرح‌های تجاری مورد نظر خود را بررسی و سرمایه‌گذاری کنید',
+                en: 'Explore commercial projects and invest',
+                ar: 'استكشف المشاريع التجارية واستثمر',
+                zh: '探索商业项目并进行投资',
               ),
-              SizedBox(height: AppSpacing.sm.h),
-              Text(
-                l10nPick(
-                  context,
-                  fa: 'طرح‌های تجاری مورد نظر خود را بررسی و سرمایه‌گذاری کنید',
-                  en: 'Explore commercial projects and invest',
-                  ar: 'استكشف المشاريع التجارية واستثمر',
-                  zh: '探索商业项目并进行投资',
-                ),
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary,
-                ),
+              primaryActionLabel: l10nPick(
+                context,
+                en: 'Explore Projects',
+                fa: 'مشاهده طرح‌های سرمایه‌گذاری',
+                ar: 'استكشاف المشاريع',
+                zh: '浏览项目',
               ),
-            ],
+              onPrimaryAction: () {
+                HapticFeedback.selectionClick();
+                _tabController.animateTo(0);
+              },
+            ),
           ),
         );
       }
@@ -527,75 +606,191 @@ class _CommercialProjectsScreenState extends State<CommercialProjectsScreen>
           ),
           SizedBox(height: AppSpacing.lg.h),
           ...holdings.map(
-            (h) => Container(
-              margin: EdgeInsets.only(bottom: AppSpacing.md.h),
-              padding: EdgeInsets.all(AppSpacing.md.r),
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkCard : AppColors.white,
-                borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            (h) {
+              final isZeroDec = DynamicDecimalsHelper.isZeroDecimal(h.currency);
+              final formattedPrincipal = isZeroDec
+                  ? NumberFormat('#,###').format(h.amountInvested.round())
+                  : h.amountInvested.toStringAsFixed(0);
+              final formattedYield = h.expectedYieldPercent.toStringAsFixed(1);
+
+              return Container(
+                margin: EdgeInsets.only(bottom: AppSpacing.md.h),
+                padding: EdgeInsets.all(AppSpacing.md.r),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkCard : AppColors.white,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm.r),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        h.projectTitle,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w800,
-                          color: isDark
-                              ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 6.w,
-                          vertical: 2.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.success.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: Text(
-                          l10nPick(
-                            context,
-                            fa: 'فعال',
-                            en: 'Active',
-                            ar: 'نشط',
-                            zh: '活跃',
-                          ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          h.projectTitle,
                           style: TextStyle(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.success,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w800,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 6.h),
-                  Text(
-                    '${l10nPick(context, fa: 'سرمایه', en: 'Principal', ar: 'رأس المال', zh: '投资额')}: ${h.amountInvested.toStringAsFixed(0)} ${h.currency} • ${l10nPick(context, fa: 'سود سالانه', en: 'Annual Yield', ar: 'العائد السنوي', zh: '年化收益')}: ${h.expectedYieldPercent}%',
-                    style: TextStyle(
-                      fontSize: 11.sp,
-                      color: isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 2.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.success.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                          child: Text(
+                            l10nPick(
+                              context,
+                              fa: 'فعال',
+                              en: 'Active',
+                              ar: 'نشط',
+                              zh: '活跃',
+                            ),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.success,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      '${l10nPick(context, fa: 'سرمایه', en: 'Principal', ar: 'رأس المال', zh: '投资额')}: $formattedPrincipal ${h.currency} • ${l10nPick(context, fa: 'سود سالانه', en: 'Annual Yield', ar: 'العائد السنوي', zh: '年化收益')}: $formattedYield%',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       );
     });
+  }
+}
+
+class _CommercialProjectsShimmerLoader extends StatelessWidget {
+  const _CommercialProjectsShimmerLoader();
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final baseColor = isDark
+        ? AppColors.darkCard
+        : AppColors.lightSurfaceVariant.withValues(alpha: 0.5);
+    final highlightColor = isDark
+        ? AppColors.darkSurfaceVariant
+        : AppColors.white;
+
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(AppSpacing.lg.r),
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.only(bottom: AppSpacing.lg.h),
+          padding: EdgeInsets.all(AppSpacing.lg.r),
+          decoration: BoxDecoration(
+            color: baseColor,
+            borderRadius: BorderRadius.circular(AppSpacing.radius.r),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 100.w,
+                    height: 20.h,
+                    decoration: BoxDecoration(
+                      color: highlightColor,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 80.w,
+                    height: 20.h,
+                    decoration: BoxDecoration(
+                      color: highlightColor,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12.h),
+              Container(
+                width: 220.w,
+                height: 16.h,
+                decoration: BoxDecoration(
+                  color: highlightColor,
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+              ),
+              SizedBox(height: 16.h),
+              Container(
+                width: double.infinity,
+                height: 8.h,
+                decoration: BoxDecoration(
+                  color: highlightColor,
+                  borderRadius: BorderRadius.circular(4.r),
+                ),
+              ),
+              SizedBox(height: 14.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 90.w,
+                    height: 14.h,
+                    decoration: BoxDecoration(
+                      color: highlightColor,
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                  ),
+                  Container(
+                    width: 70.w,
+                    height: 32.h,
+                    decoration: BoxDecoration(
+                      color: highlightColor,
+                      borderRadius: BorderRadius.circular(
+                        AppSpacing.radiusSm.r,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

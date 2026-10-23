@@ -1,0 +1,69 @@
+﻿id,phase,domain,task,priority,dependencies,status,acceptance_criteria
+U001,P0,Audit,ثبت SHA/version/working tree baseline,P0,—,TODO,"Baseline file with exact SHA, version and CI evidence"
+U002,P0,Audit,استخراج فهرست routeهای واقعی از routes.dart,P0,U001,TODO,Every route mapped to file/controller/API/test/owner
+U003,P0,Audit,تولید visual baseline صفحات بحرانی,P0,U002,TODO,Before screenshots with locale/theme/device metadata
+U004,P0,Audit,Audit dead CTA/mock data/raw errors,P0,U002,TODO,All findings severity-tagged with evidence
+U005,P0,Design System,بازبینی current tokens/widgets,P0,U001,TODO,Component inventory and usage gaps
+U006,P0,Finance UX,تعریف transaction status/unknown/pending copy,P0,U005,TODO,No ambiguous state shown as success
+U007,P0,Finance UX,الگوی مشترک amount/currency/precision,P0,U005,TODO,Locale-aware precision tests pass
+U008,P0,Transfer,Transfer review layout/content,P0,"U006,U007",TODO,Source/destination/fee/total/recipient clear
+U009,P0,Exchange,Quote/rate/expiry/fee review,P0,"U006,U007",TODO,Expired quote requires new quote/confirmation
+U010,P0,Cards,Card creation/provider availability states,P0,U006,TODO,"Eligibility and fee from backend, no mock success"
+U011,P0,Crypto,Crypto asset/network/address safe UI,P0,U006,TODO,"No fallback, explicit network, policy validation"
+U012,P0,Receipt,Transaction detail and receipt states,P0,U006,TODO,Authoritative backend reference and status
+U013,P0,State Patterns,Global error and recovery standard,P0,U005,TODO,All errors have meaning and safe action
+U014,P1,Home,Home content hierarchy/quick actions,P1,"U003,U005",TODO,Comprehension/usability test and screen states
+U015,P1,Wallets,Wallet/account list/detail consistency,P1,"U007,U005",TODO,Balance/stale/loading/empty states consistent
+U016,P1,Navigation,Route discoverability/deep link audit,P1,U002,TODO,No unsafe deep-link bypass; no orphan routes
+U017,P1,Cards,Card detail/controls/freeze flows,P1,U010,TODO,All status actions server-confirmed
+U018,P1,Transfers,Withdraw/cashout/merchant/gift patterns,P1,U008,TODO,Review/status/recovery and regression tests
+U019,P1,Activity,History search/filter/pagination,P1,U012,TODO,Empty/error/stale/paging error tested
+U020,P1,Auth,Login/OTP/passcode states and copy,P1,U013,TODO,"Resend limits, wrong/missing/locked distinct"
+U021,P1,KYC,Document upload/status UX,P1,U020,TODO,"Retry safe, status clear, no sensitive logs"
+U022,P1,Settings,Language/theme/accessibility settings,P1,U005,TODO,Preferences persist and actual app changes
+U023,P1,Support,Support ticket/form/retry,P1,U013,TODO,No duplicate ticket on timeout
+U024,P1,Accessibility,Tap-target/contrast audit,P1,U005,TODO,Target size and contrast test report
+U025,P1,Localization,Audit ARB keys/placeholders 6 locales,P1,U002,TODO,No missing/mismatched keys; gen-l10n passes
+U026,P1,RTL,RTL layout & directional icon audit,P1,U025,TODO,fa/ar screenshots and manual review
+U027,P1,Typography,Dynamic text/keyboard/safe-area audit,P1,U005,TODO,No overflow on small device and large text
+U028,P1,Testing,Extend screenshot harness per pilot,P1,U003,TODO,Stable deterministic screenshot tests
+U029,P1,Testing,Golden matrix for critical routes,P1,U028,TODO,Reviewed snapshots for state/theme/locale
+U030,P1,Testing,Integration tests for money movement UX,P1,"U008,U009",TODO,Transfer/exchange pending/error flow tests
+U031,P1,Testing,Release APK emulator smoke checks,P1,U030,TODO,Evidence from exact release-like artifact
+U032,P1,Motion,Audit heavy blur/glow/continuous animation,P1,U003,TODO,Remove unnecessary work with before/after profile
+U033,P1,Performance,Profile Home/list/forms on low-end device,P1,U014,TODO,Baseline + bottleneck report
+U034,P1,Content,Financial content style guide/glossary,P1,U006,TODO,Terms consistent across 6 languages
+U035,P2,Bills,Bills/services list and payment review,P2,U018,TODO,Price freshness and retry states tested
+U036,P2,Travel,Commercial/travel service flow polish,P2,U035,TODO,Availability and price states clear
+U037,P2,Rewards,Rewards/status/expiry UX,P2,U005,TODO,Only backend authoritative points shown
+U038,P2,Notifications,Notification inbox/deep links,P2,U016,TODO,Duplicate/stale notifications handled
+U039,P2,Charts,Accessible financial charts and descriptions,P2,U005,TODO,Semantics/contrast/data labels verified
+U040,P2,Empty State,Audit all empty states/callbacks,P2,U013,TODO,No placeholder or dead CTA
+U041,P2,Dialog,Audit dialog/bottom sheet keyboard/safe area,P2,U005,TODO,Keyboard-safe and dismiss rules consistent
+U042,P2,Forms,Standardize validation timing and inline errors,P2,U007,TODO,No premature validation or lost input
+U043,P2,Navigation,Back/restore/scroll position audit,P2,U016,TODO,Behavior consistent in nested routes
+U044,P2,Dark Theme,Light/dark semantic contrast review,P2,U005,TODO,No status-only color ambiguities
+U045,P2,Analytics,Privacy-safe UX event taxonomy,P2,U013,TODO,No PII/card/credential events
+U046,P2,Usability,Task test baseline 5–8 key journeys,P2,"U014,U008",TODO,Task success/time/error observations recorded
+U047,P2,Usability,Post-change usability retest,P2,U046,TODO,Before/after comparison report
+U048,P2,Performance,Image/cache/rebuild optimization,P2,U033,TODO,Measured improvement with no visual regression
+U049,P2,Release,Align visual QA report with current SHA,P2,U031,TODO,CI/test/screenshot evidence matches exact SHA
+U050,P2,Documentation,Publish per-route UX spec templates,P2,U002,TODO,Template adopted by feature owners
+U051,P2,Components,Form component catalog/showcase,P2,U005,TODO,States and variants documented
+U052,P2,Components,Status badge/banner system,P2,U006,TODO,Semantics consistent across modules
+U053,P2,Components,Fee breakdown and quote summary shared pattern,P2,"U007,U009",TODO,Used by all relevant review screens
+U054,P2,Crypto,Deposit QR/copy/recovery usability tests,P2,U011,TODO,Invalid/missing policy hides actions
+U055,P2,Cards,Insufficient funds and fee changed states,P2,U010,TODO,Authoritative server validation shown
+U056,P2,Offline,Offline/stale status patterns,P2,U013,TODO,Financial operations not silently queued
+U057,P2,Privacy,Screenshot/log redaction policies,P2,U028,TODO,Test artifacts contain no PII/secrets
+U058,P2,License,Review XPay/third-party licenses/assets,P2,U003,TODO,Decision record for any copied/derived asset
+U059,P2,Navigation,Feature discovery analytics review,P2,U045,TODO,Events are privacy-safe and consented
+U060,P2,Release,UI/UX release gate checklist,P2,U049,TODO,Release cannot pass without screenshot/accessibility/tests
+U061,P3,Polish,Motion system/reduced motion refinement,P3,U032,TODO,Motion purposeful and optional
+U062,P3,Polish,Microcopy consistency review,P3,U034,TODO,No jargon or ambiguous status labels
+U063,P3,Polish,Iconography and visual rhythm audit,P3,U005,TODO,No inconsistent icon family without rationale
+U064,P3,Polish,Onboarding/first-session usability,P3,U046,TODO,User can reach core function quickly
+U065,P3,Polish,Improve chart empty/no-data states,P3,U039,TODO,No misleading zero/empty chart
+U066,P3,Polish,Review animation load in startup,P3,"U032,U033",TODO,No startup blocking decorative animation
+U067,P3,Governance,Design decision log process,P3,U050,TODO,Nontrivial UI changes have ADR
+U068,P3,Governance,Monthly UI quality dashboard,P3,"U045,U046",TODO,Measures trends in errors/completion

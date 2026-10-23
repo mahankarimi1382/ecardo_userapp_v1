@@ -1,0 +1,1 @@
+﻿route_id,screen_name,route_name_or_entry_point,screen_type,module_id,source_file,widget_class,controller_state_owner,service_repository,api_endpoint_ids,business_rules_ref,auth_kyc_gate,supported_locales,themes_tested,state_matrix_ref,page_spec_ref,screenshot_before,screenshot_after,test_ids,runtime_status,upgrade_status,finding_ids,owner,evidence_sha,notes

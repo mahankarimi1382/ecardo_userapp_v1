@@ -17,6 +17,7 @@ import 'package:ecardo_user/src/presentation/screens/request_money/controller/re
 import 'package:ecardo_user/src/presentation/screens/request_money/model/received_request_model.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/received_request/sub_sections/received_request_details.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/sub_sections/request_money_header_section.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/tx_history_shimmer_skeleton.dart';
 
 class ReceivedRequest extends StatefulWidget {
   const ReceivedRequest({super.key});
@@ -129,7 +130,7 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
                 const RequestMoneyHeaderSection(),
                 Expanded(
                   child: controller.isLoading.value
-                      ? const CommonLoading()
+                      ? const TxHistoryShimmerSkeleton()
                       : _hasLoadError.value
                       ? EcardoErrorView(
                           message: localization.allControllerLoadError,

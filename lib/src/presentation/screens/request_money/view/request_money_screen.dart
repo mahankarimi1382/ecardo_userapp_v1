@@ -6,10 +6,12 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/smart_back_helper.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/received_request/received_request.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/sub_sections/request_money_header_section.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/sub_sections/request_money_section.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/tx_flow_shimmer_skeleton.dart';
 
 class RequestMoneyScreen extends StatefulWidget {
   const RequestMoneyScreen({super.key});
@@ -69,7 +71,40 @@ class _RequestMoneyScreenState extends State<RequestMoneyScreen> {
                       ),
                 child: Obx(() {
                   if (controller.isLoading.value) {
-                    return const CommonLoading();
+                    return const TxFlowShimmerSkeleton();
+                  }
+
+                  if (controller.hasError.value) {
+                    return Center(
+                      child: EcardoErrorView(
+                        message: controller.errorMessage.value.isNotEmpty
+                            ? controller.errorMessage.value
+                            : localization.allControllerLoadError,
+                        onRetry: () {
+                          controller.fetchWallets();
+                          controller.fetchUser();
+                        },
+                        retryLabel:
+                            localization.noInternetConnectionRetryButton,
+                      ),
+                    );
+                  }
+
+                  if (controller.selectedScreen.value == 0 &&
+                      controller.requestMoneyWalletsList.isEmpty) {
+                    return Center(
+                      child: EcardoEmptyState(
+                        title: localization
+                            .requestMoneyWalletSectionWalletsNotFound,
+                        description: localization.allControllerLoadError,
+                        primaryActionLabel:
+                            localization.noInternetConnectionRetryButton,
+                        onPrimaryAction: () {
+                          controller.fetchWallets();
+                          controller.fetchUser();
+                        },
+                      ),
+                    );
                   }
 
                   if (controller.selectedScreen.value == 0) {

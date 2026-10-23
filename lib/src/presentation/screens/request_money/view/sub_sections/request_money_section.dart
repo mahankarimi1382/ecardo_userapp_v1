@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/sub_sections/request_money_amount_step_section.dart';
@@ -16,28 +17,27 @@ class RequestMoneySection extends StatelessWidget {
 
     return Obx(() {
       if (controller.isLoading.value) {
-        return CommonLoading();
+        return const CommonLoading();
       }
 
       return controller.currentStep.value == 0
-          ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 30),
-                    RequestMoneyWalletSection(),
-                    SizedBox(height: 30),
-                    RequestMoneyAmountStepSection(),
-                  ],
-                ),
+          ? SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              child: Column(
+                children: const [
+                  SizedBox(height: AppSpacing.md),
+                  RequestMoneyWalletSection(),
+                  SizedBox(height: AppSpacing.lg),
+                  RequestMoneyAmountStepSection(),
+                  SizedBox(height: AppSpacing.xxl),
+                ],
               ),
             )
           : controller.currentStep.value == 1
-          ? RequestMoneyReviewStepSection()
+          ? const RequestMoneyReviewStepSection()
           : controller.currentStep.value == 2
-          ? RequestMoneySuccessStepSection()
-          : SizedBox();
+          ? const RequestMoneySuccessStepSection()
+          : const SizedBox.shrink();
     });
   }
 }

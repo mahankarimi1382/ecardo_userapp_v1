@@ -1,0 +1,71 @@
+﻿domain,page_family,priority,actual_route_name,status,locales,acceptance_focus,notes
+Home,Home/dashboard overview,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","Balance authority, quick actions, pending notices, stale/offline state",Exact route/file must be resolved from routes.dart
+Home,Account summary/portfolio,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Currency aggregation and equivalent rate labeled,Exact route/file must be resolved from routes.dart
+Home,Quick action router,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Only eligible actions rendered; callbacks tested,Exact route/file must be resolved from routes.dart
+Wallets,Wallet/account list,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Loading/empty/partial/stale/error covered,Exact route/file must be resolved from routes.dart
+Wallets,Wallet/account detail,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","Available/held balance, currency, recent activity",Exact route/file must be resolved from routes.dart
+Wallets,Create wallet/account,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Custody/network/fee/policy explicit,Exact route/file must be resolved from routes.dart
+Wallets,Switch account/currency,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",No unsafe switch during pending financial action,Exact route/file must be resolved from routes.dart
+Wallets,Wallet address/details,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Identifier typed; no accountNo/address confusion,Exact route/file must be resolved from routes.dart
+Cards,Card list,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Provider/status/physical-virtual/currency clear,Exact route/file must be resolved from routes.dart
+Cards,Card detail,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Sensitive actions confirmation and server status,Exact route/file must be resolved from routes.dart
+Cards,Create virtual card,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Provider eligibility and fee from backend,Exact route/file must be resolved from routes.dart
+Cards,Card review/initial funding,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Fee + initial load + total and balance server-check,Exact route/file must be resolved from routes.dart
+Cards,Card funding/top-up,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Operation status/retry/reconciliation,Exact route/file must be resolved from routes.dart
+Cards,Freeze/unfreeze/limits,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","State server-confirmed, anti-double-tap",Exact route/file must be resolved from routes.dart
+Transfers,Transfer form,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","Source, recipient, amount, precision, limits",Exact route/file must be resolved from routes.dart
+Transfers,Transfer review,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","Fee breakdown, destination, final total",Exact route/file must be resolved from routes.dart
+Transfers,Transfer passcode/auth,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Error types split; no retry loop,Exact route/file must be resolved from routes.dart
+Transfers,Transfer result/status,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",pending/unknown not success,Exact route/file must be resolved from routes.dart
+Transfers,P2P pay/request,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",request and actual transfer distinct,Exact route/file must be resolved from routes.dart
+Transfers,Beneficiary/contact list,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",privacy and identity confirmation,Exact route/file must be resolved from routes.dart
+Exchange,Exchange form,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",Currency pair and precision valid,Exact route/file must be resolved from routes.dart
+Exchange,Exchange quote/review,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","rate timestamp, expiry, fees, receive amount",Exact route/file must be resolved from routes.dart
+Exchange,Exchange result/reconcile,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",unknown status resolved before retry,Exact route/file must be resolved from routes.dart
+Withdraw/Cash out,Withdraw form/review,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",bank/recipient/fee/ETA source clear,Exact route/file must be resolved from routes.dart
+Withdraw/Cash out,Cash-out agent flow,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",agent/cash-out eligibility and receipt,Exact route/file must be resolved from routes.dart
+Payments,Merchant payment/review,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","merchant, invoice, total, refund policy",Exact route/file must be resolved from routes.dart
+Payments,QR display/scan,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","camera permission, payload validation, expiry",Exact route/file must be resolved from routes.dart
+Payments,Request money,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",recipient and status clearly differentiated,Exact route/file must be resolved from routes.dart
+Crypto,Crypto wallet selector,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",asset/network pair explicit,Exact route/file must be resolved from routes.dart
+Crypto,Crypto deposit address/QR,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","server assignment only, no fallback, valid policy",Exact route/file must be resolved from routes.dart
+Crypto,Crypto withdraw review,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",destination/network/fee/total confirmed,Exact route/file must be resolved from routes.dart
+Crypto,Deposit history/status,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",detected/unconfirmed/credited state split,Exact route/file must be resolved from routes.dart
+Crypto,Network/asset unsupported,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","fail-closed, useful safe recovery",Exact route/file must be resolved from routes.dart
+Activity,Transaction list,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",search/filter/pagination/states,Exact route/file must be resolved from routes.dart
+Activity,Transaction detail,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",authoritative reference and status,Exact route/file must be resolved from routes.dart
+Activity,Receipt/share/download,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",PII masked and backend values authoritative,Exact route/file must be resolved from routes.dart
+Bills/Services,Bill catalog/list,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",enabled/maintenance states accurate,Exact route/file must be resolved from routes.dart
+Bills/Services,Bill payment review,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","service reference, fee, total, idempotency",Exact route/file must be resolved from routes.dart
+Travel/Commercial,Travel/service list,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",availability/price freshness clear,Exact route/file must be resolved from routes.dart
+Travel/Commercial,Order/booking detail,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",pending vs confirmed and cancellation,Exact route/file must be resolved from routes.dart
+Auth,Splash/bootstrap,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",startup failures recover; no black screen,Exact route/file must be resolved from routes.dart
+Auth,Onboarding/welcome,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","clear value, skip/resume",Exact route/file must be resolved from routes.dart
+Auth,Login,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","validation, password visibility, safe errors",Exact route/file must be resolved from routes.dart
+Auth,OTP/re-send,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","cooldown/rate limit, accessibility",Exact route/file must be resolved from routes.dart
+Auth,Forgot/recover account,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",safe and accessible recovery,Exact route/file must be resolved from routes.dart
+Auth,Passcode setup/reset,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",no sensitive logging/storage,Exact route/file must be resolved from routes.dart
+Auth,Biometric unlock,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",real capability and secure fallback,Exact route/file must be resolved from routes.dart
+Auth,Session expired/re-auth,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",safe return to interrupted flow,Exact route/file must be resolved from routes.dart
+KYC/Profile,Profile summary/edit,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",read-only vs editable fields,Exact route/file must be resolved from routes.dart
+KYC/Profile,KYC documents/status,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",upload/retry/status/explanation,Exact route/file must be resolved from routes.dart
+Security,Security settings dashboard,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",changes reflect backend state,Exact route/file must be resolved from routes.dart
+Security,Active sessions/device list,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","revoke safely, audit trace",Exact route/file must be resolved from routes.dart
+Notifications,Notification inbox,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",stale/duplicate/deep-link guarded,Exact route/file must be resolved from routes.dart
+Rewards,Rewards/points,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",real points/expiry/terms,Exact route/file must be resolved from routes.dart
+Settings,Language selector,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","6 locales, context preserved",Exact route/file must be resolved from routes.dart
+Settings,Theme/accessibility,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",system mode/text scaler/reduced motion,Exact route/file must be resolved from routes.dart
+Settings,Privacy/consent,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",clear data use and real action,Exact route/file must be resolved from routes.dart
+Support,Help/FAQ,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",search/empty/error,Exact route/file must be resolved from routes.dart
+Support,Support tickets/chat,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","submit retry safe, attachment recovery",Exact route/file must be resolved from routes.dart
+Legal,Privacy/terms/about,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",policy version/date and valid links,Exact route/file must be resolved from routes.dart
+Global State,Network/offline banner,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","cached data timestamp, retry rules",Exact route/file must be resolved from routes.dart
+Global State,Maintenance/feature unavailable,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","no dead CTA, ETA only if known",Exact route/file must be resolved from routes.dart
+Global State,Generic error/recovery,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",no raw exception; retry semantics,Exact route/file must be resolved from routes.dart
+Global State,Empty state component,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",only real callbacks/actions,Exact route/file must be resolved from routes.dart
+Global State,Skeleton/loading components,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",accessible and no indefinite shimmer,Exact route/file must be resolved from routes.dart
+Global State,Dialog/bottom sheet family,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru","safe areas, keyboard, dismiss rules",Exact route/file must be resolved from routes.dart
+Global State,Forms and amount input,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",currency precision and locale formatting,Exact route/file must be resolved from routes.dart
+Global State,Navigation/deep links,P1,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",authz and lifecycle correctness,Exact route/file must be resolved from routes.dart
+Global State,App lock/foreground resume,P0,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",policy-specific lock state,Exact route/file must be resolved from routes.dart
+Global State,Global search/filter patterns,P2,DISCOVER_FROM_ROUTES_DART,TODO,"fa,ar,en,zh,tr,ru",clear filters and state restore,Exact route/file must be resolved from routes.dart

@@ -1046,28 +1046,20 @@ class _TravelCheckoutScreenState extends State<TravelCheckoutScreen> {
               ),
             ],
             SizedBox(height: 24.h),
-            TravelSectionHeader(title: localization.travelPriceSummary),
-            SizedBox(height: 10.h),
-            TravelCard(
-              child: Column(
-                children: [
-                  _SummaryRow(
-                    label: localization.travelSubtotal,
-                    value: travelMoney(context, widget.total),
-                  ),
-                  const Divider(height: 26),
-                  _SummaryRow(
-                    label: localization.travelWalletPayment,
-                    value: travelMoney(context, widget.total),
-                  ),
-                  const Divider(height: 26),
-                  _SummaryRow(
-                    label: localization.travelTotal,
-                    value: travelMoney(context, widget.total),
-                    strong: true,
-                  ),
-                ],
-              ),
+            TravelFeeBreakdownCard(
+              type: widget.type,
+              total: widget.total,
+              adultCount: widget.bookingDetails.adultCount,
+              childCount: widget.bookingDetails.childCount,
+              infantCount: widget.bookingDetails.infantCount,
+              roomName: widget.bookingDetails.roomName,
+              roomCount: widget.bookingDetails.roomCount,
+              nights: widget.bookingDetails.checkInDate != null &&
+                      widget.bookingDetails.checkOutDate != null
+                  ? widget.bookingDetails.checkOutDate!
+                      .difference(widget.bookingDetails.checkInDate!)
+                      .inDays
+                  : null,
             ),
             SizedBox(height: 14.h),
             Text(

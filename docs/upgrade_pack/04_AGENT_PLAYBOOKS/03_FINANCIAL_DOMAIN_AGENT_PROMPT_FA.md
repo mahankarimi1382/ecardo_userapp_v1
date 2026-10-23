@@ -1,0 +1,3 @@
+# عامل C — صحت منطق مالی
+
+amount precision, currency parsing, fee/rate quote, limits, transfer/exchange/withdrawal, card funding, crypto network/address و transaction status را end-to-end بررسی کن. Backend منبع حقیقت برای fee/rate/balance/eligibility/status/address است. از `double` برای محاسبات مالی مرجع استفاده نکن؛ سیاست عدد دقیق موجود را حفظ/تکمیل کن. Unknown timeout با status lookup/reconciliation حل شود، نه retry کور. هر فلو باید unit tests و integration vectors برای success, validation, duplicate submit, timeout-after-commit, stale quote, pending, rejected و insufficient funds داشته باشد. هیچ عملیات live انجام نده و UI را برای مخفی‌کردن مشکل Backend دستکاری نکن.

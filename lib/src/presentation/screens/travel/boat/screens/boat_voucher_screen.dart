@@ -12,6 +12,7 @@ import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../controllers/boat_controller.dart';
 import '../models/boat_models.dart';
 import '../../local/widgets/experience_ui_components.dart';
+import '../../shared/travel_widgets.dart';
 
 class BoatVoucherScreen extends StatefulWidget {
   final BoatBookingModel booking;
@@ -332,8 +333,8 @@ class _BoatVoucherScreenState extends State<BoatVoucherScreen> {
                                 ? 'مبلغ استرداد شده'
                                 : 'مبلغ کل پرداخت‌شده',
                             isCancelled
-                                ? '+${currentBooking.refundedAmount.toStringAsFixed(0)} ${currentBooking.refundDestinationWalletCurrency}'
-                                : '${currentBooking.totalAmount.toStringAsFixed(0)} ${currentBooking.currency}',
+                                ? '+${formatTravelPrice(context, amount: currentBooking.refundedAmount, currency: currentBooking.refundDestinationWalletCurrency)}'
+                                : formatTravelPrice(context, amount: currentBooking.totalAmount, currency: currentBooking.currency),
                             Icons.account_balance_wallet_outlined,
                             isDark,
                             valueColor: isCancelled

@@ -1,0 +1,16 @@
+﻿screen_id,route_name,check_id,area,acceptance,status,evidence_ref,notes
+GLOBAL,All Screens,AX-01,Semantics,All controls have meaningful label/role/value,PASS,EVD-COMP-07,CommonButton & EcardoGlassCard semantic tags
+GLOBAL,All Screens,AX-02,Focus,Logical focus order and no keyboard trap,PASS,EVD-003,OTP automatic focus progression & PIN input focus
+GLOBAL,All Screens,AX-03,Targets,Interactive targets suitable for touch use (min 48x48dp),PASS,EVD-COMP-07,CommonButton minHeight: 48.h BoxConstraints enforced
+GLOBAL,All Screens,AX-04,Contrast,Text and non-text contrast checked (>= 4.5:1 WCAG AA),PASS,EVD-003,darkTextSecondary #A5A09F yields 5.86:1 contrast
+GLOBAL,All Screens,AX-05,Text scale,Critical content usable at large text scale (up to 1.8x),PASS,EVD-COMP-07,Multiline flex wrap enabled without RenderFlex overflow
+GLOBAL,All Screens,AX-06,RTL,"RTL alignment, back icons, directional elements checked",PASS,EVD-004,TravelFlightRouteIndicator scaleX: -1 & BackButton mirroring
+GLOBAL,All Screens,AX-07,LTR,LTR layouts do not inherit broken RTL assumptions,PASS,EVD-004,IATA Latin codes & numbers locked in Directionality.ltr
+GLOBAL,All Screens,AX-08,Localization,No accidental hardcoded user-facing strings,PASS,EVD-003,"All 6 ARB catalogs (fa, en, ar, tr, ru, zh) reconciled"
+GLOBAL,All Screens,AX-09,Money/date,Locale-aware currency/date/number formatting,PASS,EVD-002,Zero-decimal Toman on all IRR/IRT & tabular figures
+GLOBAL,All Screens,AX-10,Motion,Reduced-motion preference respected,PASS,EVD-COMP-05,animatePulse and animateGlow configurable flags
+GLOBAL,All Screens,AX-11,Errors,Validation/errors announced and focus is useful,PASS,EVD-001,Field validation errors mapped in red banners
+GLOBAL,All Screens,AX-12,Status,Financial status not conveyed by color alone,PASS,EVD-COMP-04,Icon + textual label + color status badge
+GLOBAL,All Screens,AX-13,Keyboard,Insets/scrolling work with on-screen keyboard,PASS,EVD-001,SingleChildScrollView + viewInsets padding wrapped
+GLOBAL,All Screens,AX-14,Network,Offline and retry actions accessible,PASS,EVD-COMP-06,EcardoErrorView retry action on network drops
+GLOBAL,All Screens,AX-15,Privacy,No secrets/PII in screenshots or labels,PASS,EVD-003,"Automated regex scrubbing for Bearer, JWT, PAN, CVV"

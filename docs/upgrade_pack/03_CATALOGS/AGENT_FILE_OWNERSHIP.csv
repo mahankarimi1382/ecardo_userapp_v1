@@ -1,0 +1,8 @@
+﻿workstream,primary_scope,shared_file_policy,allowed_parallel_work,handoff_required,integrator_gate
+INTEGRATOR,"cross-cutting architecture, baseline, final testing/report",sole owner for route architecture and cross-cutting decisions,review and coordinate all workstreams,yes; required for shared changes,serial final test and evidence merge
+A-DISCOVERY,"scanner, catalogs, source graph, route map",do not edit app features while discovery-only,"catalogs, scripts, docs",yes before changing production files,route/source reconciliation
+B-API-RESILIENCE,Dio/API adapters/error mapping/session behavior,follow existing network file owner rules,isolated API modules with explicit file lists,yes for shared client/interceptors,contract tests and analyzer
+C-FINANCIAL-DOMAIN,amount/fee/quote/transfer/exchange/withdraw semantics,do not alter backend/ledger truth by UI workaround,isolated feature modules and domain tests,yes for shared money models,financial invariant review
+D-UX-SCREENS,"page layouts, screen states, component adoption",tokens/themes/common design-system paths locked per project guide,owned screen files after map is stable,yes for shared component or token changes,before/after + widget/golden evidence
+E-QA-AUTOMATION,unit/widget/integration/golden tests and screenshots,agents must not run prohibited shared `flutter test` runs,test files per scenario/owner,yes for shared fixtures/goldens,only integrator serial final run
+F-SECURITY-I18N-PERF,"privacy, localization, access, performance audit",avoid global changes unless assigned,isolated locale/a11y/perf tests/docs,yes for auth/security/storage changes,report with evidence/risks

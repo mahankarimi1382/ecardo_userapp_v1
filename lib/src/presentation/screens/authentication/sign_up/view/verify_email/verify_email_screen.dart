@@ -404,15 +404,23 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                                 controller.countdown.value == 0,
                                             label:
                                                 localizations.verifyEmailResend,
-                                            child: Container(
-                                              constraints: BoxConstraints(
-                                                minHeight: 44.h,
-                                                minWidth: 44.w,
+                                            child: AnimatedOpacity(
+                                              duration: const Duration(
+                                                milliseconds: 200,
                                               ),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                localizations.verifyEmailResend,
-                                                style: TextStyle(
+                                              opacity:
+                                                  controller.countdown.value > 0
+                                                      ? 0.45
+                                                      : 1.0,
+                                              child: Container(
+                                                constraints: BoxConstraints(
+                                                  minHeight: 48.h,
+                                                  minWidth: 48.w,
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  localizations.verifyEmailResend,
+                                                  style: TextStyle(
                                                   fontWeight: FontWeight.w900,
                                                   fontSize: 14.sp,
                                                   color:
@@ -426,6 +434,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                                                                   .darkAccent
                                                             : AppColors
                                                                   .brandViolet),
+                                                  ),
                                                 ),
                                               ),
                                             ),

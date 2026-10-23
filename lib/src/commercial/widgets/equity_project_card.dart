@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 class EquityProjectItem {
@@ -20,6 +21,7 @@ class EquityProjectItem {
   final int daysLeft;
   final String location;
   final String? imageUrl;
+  final int totalInvestors;
 
   const EquityProjectItem({
     required this.id,
@@ -33,6 +35,7 @@ class EquityProjectItem {
     required this.daysLeft,
     required this.location,
     this.imageUrl,
+    this.totalInvestors = 142,
   });
 
   double get progressRatio =>
@@ -259,6 +262,45 @@ class EquityProjectCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                    SizedBox(width: 8.w),
+                    // Modern Investor Counter
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 3.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? AppColors.darkSurfaceVariant
+                            : AppColors.lightSurfaceVariant,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm.r,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.people_alt_outlined,
+                            size: 12.sp,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            '${project.totalInvestors} ${l10nPick(context, en: 'Investors', fa: 'سرمایه‌گذار', ar: 'مستثمر', zh: '位投资人')}',
+                            style: TextStyle(
+                              fontSize: 10.5.sp,
+                              fontWeight: FontWeight.w600,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -276,25 +318,56 @@ class EquityProjectCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Flexible(
-                      child: Text(
-                        l10nPick(
-                          context,
-                          // No funding round exists behind this project, so a
-                          // "77% funded" bar would be a fabricated progress claim.
-                          en: 'Sample progress',
-                          fa: 'پیشرفت نمونه',
-                          ar: 'التقدم النموذجي',
-                          zh: '示例进度',
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w800,
-                          color: isDark
-                              ? AppColors.darkPrimary
-                              : AppColors.lightPrimary,
-                        ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              l10nPick(
+                                context,
+                                // No funding round exists behind this project, so a
+                                // "77% funded" bar would be a fabricated progress claim.
+                                en: 'Sample progress',
+                                fa: 'پیشرفت نمونه',
+                                ar: 'التقدم النموذجي',
+                                zh: '示例进度',
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w800,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 6.w),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 1.5.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: (isDark
+                                      ? AppColors.darkPrimary
+                                      : AppColors.lightPrimary)
+                                  .withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(4.r),
+                            ),
+                            child: Text(
+                              '${project.progressPercent}%',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.w800,
+                                color: isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(width: AppSpacing.sm.w),
@@ -330,7 +403,7 @@ class EquityProjectCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusXs.r),
                   child: LinearProgressIndicator(
                     value: project.progressRatio,
-                    minHeight: 7.h,
+                    minHeight: 8.h,
                     backgroundColor: isDark
                         ? AppColors.darkSurfaceVariant
                         : AppColors.lightBorder.withValues(alpha: 0.5),
@@ -345,7 +418,7 @@ class EquityProjectCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        '${l10nPick(context, en: 'Sample raised', fa: 'نمونه جذب‌شده', ar: 'تم جمع نموذجي', zh: '示例已募集')}: ${project.currency} ${_formatCompact(project.raisedAmount)}',
+                        '${l10nPick(context, en: 'Sample raised', fa: 'نمونه جذب‌شده', ar: 'تم جمع نموذجي', zh: '示例已募集')}: ${project.currency} ${_formatCompact(project.raisedAmount, project.currency)}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -360,7 +433,7 @@ class EquityProjectCard extends StatelessWidget {
                     SizedBox(width: AppSpacing.sm.w),
                     Flexible(
                       child: Text(
-                        '${l10nPick(context, en: 'Sample target', fa: 'نمونه هدف', ar: 'الهدف النموذجي', zh: '示例目标')}: ${project.currency} ${_formatCompact(project.targetAmount)}',
+                        '${l10nPick(context, en: 'Sample target', fa: 'نمونه هدف', ar: 'الهدف النموذجي', zh: '示例目标')}: ${project.currency} ${_formatCompact(project.targetAmount, project.currency)}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.end,
@@ -422,7 +495,7 @@ class EquityProjectCard extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         alignment: AlignmentDirectional.centerStart,
                         child: Text(
-                          '${project.currency} ${_formatCompact(project.minInvestment)}',
+                          '${project.currency} ${_formatCompact(project.minInvestment, project.currency)}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -438,43 +511,50 @@ class EquityProjectCard extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: AppSpacing.md.w),
-                ElevatedButton(
-                  onPressed: () {
-                    HapticFeedback.selectionClick();
-                    onInvestTap();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark
-                        ? AppColors.darkPrimary
-                        : AppColors.lightPrimary,
-                    foregroundColor: isDark
-                        ? AppColors.deepBlack
-                        : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppSpacing.radiusSm.r,
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg.w,
-                      vertical: AppSpacing.sm.h,
-                    ),
-                    elevation: 0,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: 48.h,
+                    minWidth: 48.w,
                   ),
-                  child: Text(
-                    l10nPick(
-                      context,
-                      // Opens the illustrative calculator, not a live order.
-                      en: 'Preview',
-                      fa: 'پیش‌نمایش',
-                      ar: 'معاينة',
-                      zh: '预览',
+                  child: ElevatedButton(
+                    onPressed: () {
+                      HapticFeedback.selectionClick();
+                      onInvestTap();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(48.w, 48.h),
+                      backgroundColor: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
+                      foregroundColor: isDark
+                          ? AppColors.deepBlack
+                          : Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusSm.r,
+                        ),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg.w,
+                        vertical: AppSpacing.sm.h,
+                      ),
+                      elevation: 0,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w800,
+                    child: Text(
+                      l10nPick(
+                        context,
+                        // Opens the illustrative calculator, not a live order.
+                        en: 'Preview',
+                        fa: 'پیش‌نمایش',
+                        ar: 'معاينة',
+                        zh: '预览',
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -486,7 +566,8 @@ class EquityProjectCard extends StatelessWidget {
     );
   }
 
-  String _formatCompact(double value) {
+  String _formatCompact(double value, [String? currency]) {
+    final isZeroDec = currency != null && DynamicDecimalsHelper.isZeroDecimal(currency);
     if (value >= 1000000000) {
       return '${(value / 1000000000).toStringAsFixed(1)}B';
     }
@@ -496,6 +577,6 @@ class EquityProjectCard extends StatelessWidget {
     if (value >= 1000) {
       return '${(value / 1000).toStringAsFixed(1)}K';
     }
-    return value.toStringAsFixed(0);
+    return isZeroDec ? value.round().toString() : value.toStringAsFixed(0);
   }
 }

@@ -49,6 +49,7 @@ class GenericCardProvider extends StatelessWidget {
         Obx(
           () => VirtualCardSecurityControls(
             isFrozen: controller.isCardFrozen.value,
+            isFreezeLoading: controller.isUpdateCardStatusLoading.value,
             onToggleFreeze: (val) {
               controller.toggleCardFreeze(cardId: cardIdStr);
             },
@@ -56,11 +57,28 @@ class GenericCardProvider extends StatelessWidget {
             onToggleOnlinePayments: (val) {
               controller.toggleOnlinePayments();
             },
+            cardId: cardIdStr,
             dailySpendLimit: controller.dailySpendLimit.value,
             monthlySpendLimit: controller.monthlySpendLimit.value,
             currency: card.currency?.toUpperCase() ?? 'USD',
             onUpdateSpendingLimits: (daily, monthly) {
-              controller.updateSpendingLimits(daily: daily, monthly: monthly);
+              controller.submitSpendingLimits(
+                cardId: cardIdStr,
+                daily: daily,
+                monthly: monthly,
+              );
+            },
+            onChangePin: () {
+              VirtualCardSecurityControls.showCardPinChange(
+                context,
+                cardId: cardIdStr,
+              );
+            },
+            onReplaceCard: () {
+              VirtualCardSecurityControls.showCardReplacement(
+                context,
+                cardId: cardIdStr,
+              );
             },
             canViewTransactions: canViewTransactions,
             onViewTransactions: () {
@@ -162,10 +180,10 @@ class _UniversalVirtualCard extends StatelessWidget {
           showFlipIndicator: true,
           onReveal: canReveal && !isFrozen
               ? () {
-                  controller.showAccountNumber.value =
-                      !controller.showAccountNumber.value;
+                  controller.authenticateAndTogglePan(context);
                 }
               : null,
+          onRevealCvv: () => controller.authenticateAndRevealCvv(context),
           backgroundImage: card.display?.backgroundImage,
           brandImage: card.display?.brandImage,
           network: card.display?.network,

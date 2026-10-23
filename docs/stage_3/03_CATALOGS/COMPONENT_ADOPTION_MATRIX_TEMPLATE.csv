@@ -1,0 +1,13 @@
+﻿component_or_pattern,purpose,safety_or_quality_rule,current_usage_refs,adoption_decision,changes_needed,owner,evidence_ref
+EcardoGlassCard,Surface/container,Use only where hierarchy supports it; avoid over-glass effects,,PENDING_AUDIT,,,
+EcardoBalanceHero,Balance/summary,Provide only actions that work; do not leave no-op defaults,,PENDING_AUDIT,,,
+EcardoSwipeButton,High-intent confirm,Controlled state; reset on cancel/failure/re-entry,,PENDING_AUDIT,,,
+EcardoDigitalReceipt,Transaction receipt,Pass backend-authoritative status explicitly; no false success default,,PENDING_AUDIT,,,
+EcardoEmptyState,Empty data,CTA appears only if both label and callback exist,,PENDING_AUDIT,,,
+EcardoErrorView,Recoverable failures,Recovery callback meaningful; show safe next step,,PENDING_AUDIT,,,
+Existing app buttons,Primary/secondary actions,Use consistent loading/disabled/accessibility semantics,,PENDING_AUDIT,,,
+Existing form fields,Input and validation,"Validation, focus/error announcement, keyboard insets",,PENDING_AUDIT,,,
+Existing transaction rows,Lists/history,"Status, amount, date, currency, tap target semantics",,PENDING_AUDIT,,,
+Existing status chips,Status display,Text+icon/status semantics; never color only,,PENDING_AUDIT,,,
+Existing skeletons,Loading states,Match content shape and avoid fake data,,PENDING_AUDIT,,,
+Existing dialogs/sheets,Confirm/secondary tasks,Dismiss/back/submit lifecycle predictable,,PENDING_AUDIT,,,

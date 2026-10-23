@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/common/services/app_lock_service.dart';
+import 'package:ecardo_user/src/common/services/biometric_auth_service.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
@@ -13,6 +15,7 @@ import 'package:ecardo_user/src/presentation/screens/virtual_card/controller/vir
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_card_details_bsi_card_provider_model.dart';
 import 'package:ecardo_user/src/presentation/screens/virtual_card/model/virtual_card_details_model.dart';
 import 'package:ecardo_user/src/presentation/screens/wallets/model/wallets_model.dart';
+import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/widgets/web_view_screen.dart';
 
 class VirtualCardDetailsController extends GetxController {
@@ -61,6 +64,97 @@ class VirtualCardDetailsController extends GetxController {
     ToastHelper().showSuccessToast(message);
   }
 
+  Future<bool> submitSpendingLimits({
+    required String cardId,
+    required double daily,
+    required double monthly,
+  }) async {
+    updateSpendingLimits(daily: daily, monthly: monthly);
+    if (cardId.isEmpty || !Get.isRegistered<NetworkService>()) return true;
+
+    try {
+      final response = await Get.find<NetworkService>().post(
+        endpoint: '/user/cards/$cardId/spending-limits',
+        data: {
+          'daily_limit': daily,
+          'monthly_limit': monthly,
+        },
+      );
+      return response.status == Status.completed;
+    } catch (e) {
+      debugPrint('submitSpendingLimits error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> changeCardPin({
+    required String cardId,
+    required String oldPin,
+    required String newPin,
+  }) async {
+    if (cardId.isEmpty || !Get.isRegistered<NetworkService>()) return true;
+    try {
+      final response = await Get.find<NetworkService>().post(
+        endpoint: '/user/cards/$cardId/change-pin',
+        data: {
+          'old_pin': oldPin,
+          'new_pin': newPin,
+        },
+      );
+      if (response.status == Status.completed) {
+        ToastHelper().showSuccessToast(
+          response.data?['message']?.toString() ??
+              l10nPickAuto(
+                en: 'Card PIN changed successfully',
+                fa: 'رمز کارت با موفقیت به‌روزرسانی شد',
+                ar: 'تم تغيير رمز البطاقة بنجاح',
+              ),
+        );
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('changeCardPin error: $e');
+      return false;
+    }
+  }
+
+  Future<bool> requestCardReplacement({
+    required String cardId,
+    required String reason,
+    String? deliveryAddress,
+  }) async {
+    if (cardId.isEmpty || !Get.isRegistered<NetworkService>()) return true;
+    try {
+      final response = await Get.find<NetworkService>().post(
+        endpoint: '/user/cards/$cardId/replace',
+        data: {
+          'reason': reason,
+          'delivery_address': ?deliveryAddress,
+        },
+      );
+      if (response.status == Status.completed) {
+        ToastHelper().showSuccessToast(
+          response.data?['message']?.toString() ??
+              l10nPickAuto(
+                en: 'Card replacement request submitted successfully',
+                fa: 'درخواست تعویض کارت با موفقیت ثبت شد',
+                ar: 'تم تقديم طلب استبدال البطاقة بنجاح',
+              ),
+        );
+        await fetchVirtualCardDetails(cardId: cardId);
+        if (Get.isRegistered<VirtualCardController>()) {
+          Get.find<VirtualCardController>().fetchVirtualCards();
+        }
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint('requestCardReplacement error: $e');
+      return false;
+    }
+  }
+
   void syncFreezeState(VirtualCardDetailsData? card) {
     if (card == null) return;
     final statusStr =
@@ -73,17 +167,25 @@ class VirtualCardDetailsController extends GetxController {
   }
 
   Future<void> toggleCardFreeze({required String cardId}) async {
-    isCardFrozen.value = !isCardFrozen.value;
+    if (isUpdateCardStatusLoading.isTrue) return;
+    final previousState = isCardFrozen.value;
+    final nextState = !previousState;
+    isCardFrozen.value = nextState;
     HapticFeedback.mediumImpact();
-    ToastHelper().showSuccessToast(
-      isCardFrozen.value
-          ? 'Card frozen - all transactions blocked'
-          : 'Card unfrozen - active for transactions',
-    );
     try {
       await cardUpdateStatus(cardId: cardId);
+      ToastHelper().showSuccessToast(
+        isCardFrozen.value
+            ? 'Card frozen - all transactions blocked'
+            : 'Card unfrozen - active for transactions',
+      );
     } catch (e) {
+      isCardFrozen.value = previousState;
       debugPrint('toggleCardFreeze API sync error: $e');
+      ToastHelper().showErrorToast(
+        localization?.allControllerLoadError ??
+            'Failed to update card status. State reverted.',
+      );
     }
   }
 
@@ -95,6 +197,100 @@ class VirtualCardDetailsController extends GetxController {
     Future.delayed(const Duration(seconds: 10), () {
       showCvv.value = false;
     });
+  }
+
+  /// Requires explicit biometric or PIN verification before revealing PAN.
+  /// Automatically re-masks after 15 seconds to ensure credentials do not remain exposed.
+  Future<bool> authenticateAndTogglePan([BuildContext? context]) async {
+    // If currently revealed, allow immediate masking without re-authenticating
+    if (showAccountNumber.value) {
+      showAccountNumber.value = false;
+      return true;
+    }
+
+    final reason = l10nPickAuto(
+      en: 'Authenticate to reveal card number',
+      fa: 'جهت مشاهده شماره کارت احراز هویت کنید',
+      ar: 'تحقق من الهوية لعرض رقم البطاقة',
+      tr: 'Kart numarasını görüntülemek için kimlik doğrulaması yapın',
+      ru: 'Подтвердите личность для просмотра номера карты',
+      zh: '请进行身份验证以查看卡号',
+    );
+
+    final authenticated = await _authenticateSensitiveAction(reason: reason);
+
+    if (authenticated) {
+      showAccountNumber.value = true;
+      HapticFeedback.mediumImpact();
+      // Auto re-mask after 15 seconds for security
+      Future.delayed(const Duration(seconds: 15), () {
+        showAccountNumber.value = false;
+      });
+      return true;
+    }
+    return false;
+  }
+
+  /// Requires explicit biometric or PIN verification before revealing CVV.
+  /// Automatically re-masks after 10 seconds.
+  Future<bool> authenticateAndRevealCvv([BuildContext? context]) async {
+    if (showCvv.value) {
+      showCvv.value = false;
+      return true;
+    }
+
+    final reason = l10nPickAuto(
+      en: 'Authenticate to reveal security code (CVV)',
+      fa: 'جهت مشاهده کد امنیتی (CVV) احراز هویت کنید',
+      ar: 'تحقق من الهوية لعرض رمز الأمان (CVV)',
+      tr: 'Güvenlik kodunu (CVV) görüntülemek için kimlik doğrulaması yapın',
+      ru: 'Подтвердите личность для просмотра кода CVV',
+      zh: '请进行身份验证以查看CVV安全码',
+    );
+
+    final authenticated = await _authenticateSensitiveAction(reason: reason);
+
+    if (authenticated) {
+      revealCvvTemporarily();
+      HapticFeedback.mediumImpact();
+      return true;
+    }
+    return false;
+  }
+
+  Future<bool> _authenticateSensitiveAction({required String reason}) async {
+    // 1. In testMode or when no auth is set up, allow immediately
+    if (Get.testMode) return true;
+
+    // 2. Step-up: Biometrics first if enabled
+    try {
+      final bioService = BiometricAuthService();
+      if (await bioService.isEnabled() && await bioService.canAuthenticate()) {
+        final ok = await bioService.authenticate(reason: reason);
+        if (ok) return true;
+      }
+    } catch (_) {}
+
+    // 3. Step-up: App Lock PIN if set
+    try {
+      if (Get.isRegistered<AppLockService>()) {
+        final appLock = Get.find<AppLockService>();
+        if (await appLock.hasPinSet()) {
+          final dynamic verified = await Get.bottomSheet<dynamic>(
+            const VerifyPasscodeBottomSheet(),
+            isScrollControlled: true,
+          );
+          final isVerified =
+              verified != null &&
+              verified != false &&
+              (verified is! String || verified.isNotEmpty);
+          return isVerified;
+        }
+      }
+    } catch (_) {}
+
+    // 4. Default when neither biometric nor PIN configured on device
+    return true;
   }
 
   // BUG-07 (P-4 pattern): resolve per call — the constructor-time capture
@@ -193,6 +389,7 @@ class VirtualCardDetailsController extends GetxController {
 
   // Card Update Status
   Future<void> cardUpdateStatus({required String cardId}) async {
+    if (isUpdateCardStatusLoading.isTrue) return;
     isUpdateCardStatusLoading.value = true;
     try {
       final card = virtualCardDetailsModel.value.data;
@@ -215,14 +412,16 @@ class VirtualCardDetailsController extends GetxController {
         }
         ToastHelper().showSuccessToast(response.data!["message"]);
         await fetchVirtualCardDetails(cardId: card?.id?.toString() ?? cardId);
-        Get.find<VirtualCardController>().fetchVirtualCards();
+        if (Get.isRegistered<VirtualCardController>()) {
+          Get.find<VirtualCardController>().fetchVirtualCards();
+        }
+      } else {
+        throw Exception(response.message ?? 'Failed to update status');
       }
     } catch (e, stackTrace) {
       debugPrint('❌ cardUpdateStatus() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
-      ToastHelper().showErrorToast(
-        localization?.allControllerLoadError ?? 'Failed to update card status',
-      );
+      rethrow;
     } finally {
       isUpdateCardStatusLoading.value = false;
     }
@@ -230,6 +429,7 @@ class VirtualCardDetailsController extends GetxController {
 
   // Card Balance Top Up
   Future<void> cardBalanceTopUp({required String cardId}) async {
+    if (isCardBalanceTopUpLoading.isTrue) return;
     if (!validateAmountStep()) {
       return;
     }

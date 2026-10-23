@@ -213,12 +213,16 @@ class _ExchangeSuccessStepSectionState extends State<ExchangeSuccessStepSection>
         ? null
         : rawTnx;
 
-    // Calculate approximate exchange rate if available
+    // Calculate approximate exchange rate if available with dynamic precision
     String? exchangeRateText;
     if (payAmount > 0 && convertedAmount > 0) {
       final rate = convertedAmount / payAmount;
+      final int rateDecimals = ExchangeController.getDynamicRateDecimals(
+        rate,
+        targetCurrencyCode: receiveCurrencyCode,
+      );
       exchangeRateText =
-          '1 $payCurrencyCode ≈ ${rate.toStringAsFixed(4)} $receiveCurrencyCode';
+          '1 $payCurrencyCode ≈ ${rate.toStringAsFixed(rateDecimals)} $receiveCurrencyCode';
     }
 
     final receiptItems = <EcardoReceiptItem>[

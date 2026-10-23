@@ -21,7 +21,7 @@ class ForgotPasswordPinVerificationController extends GetxController {
   // Global Variable
   final RxBool isLoading = false.obs;
   final RxBool isPinEnabled = true.obs;
-  final RxInt countdown = 30.obs;
+  final RxInt countdown = 60.obs;
   Timer? _timer;
 
   // Pin Code
@@ -34,11 +34,10 @@ class ForgotPasswordPinVerificationController extends GetxController {
   }
 
   // Start Timer
-  // phase2-fix: the countdown now only gates the Resend action — the OTP
-  // field used to be wiped AND locked after 30 seconds, making the emailed
-  // code impossible to type on slow delivery.
+  // fintech-standard: 60s countdown timer gating the Resend action while keeping
+  // the OTP entry field active for incoming email delivery.
   void startTimer() {
-    countdown.value = 30;
+    countdown.value = 60;
     isPinEnabled.value = true;
 
     _timer?.cancel();

@@ -5,6 +5,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/money_display_text.dart';
@@ -465,19 +466,35 @@ class _ToCard extends StatelessWidget {
                     ? _CalculatingPlaceholder()
                     : AnimatedSwitcher(
                         duration: AppSpacing.normal,
-                        child: MoneyDisplayText(
-                          key: ValueKey(
-                            calculatedAmount.toStringAsFixed(
-                              (wallet?.isCrypto ?? false) ? 8 : 2,
-                            ),
-                          ),
-                          amount: calculatedAmount,
-                          decimals: (wallet?.isCrypto ?? false) ? 8 : 2,
-                          currencyCode: wallet?.code,
-                          integerColor: AppColors.success,
-                          decimalColor: AppColors.success.withValues(
-                            alpha: 0.55,
-                          ),
+                        child: Builder(
+                          builder: (context) {
+                            final isToZeroDecimal =
+                                DynamicDecimalsHelper.isZeroDecimal(
+                              wallet?.code ?? '',
+                            );
+                            final isToCrypto = wallet?.isCrypto == true;
+                            final int toDisplayDecimals = isToZeroDecimal
+                                ? 0
+                                : (isToCrypto
+                                    ? 8
+                                    : (calculatedAmount > 0 &&
+                                            calculatedAmount < 0.01
+                                        ? 6
+                                        : 2));
+
+                            return MoneyDisplayText(
+                              key: ValueKey(
+                                '${calculatedAmount.toStringAsFixed(toDisplayDecimals)}_${wallet?.code}',
+                              ),
+                              amount: calculatedAmount,
+                              decimals: toDisplayDecimals,
+                              currencyCode: wallet?.code,
+                              integerColor: AppColors.success,
+                              decimalColor: AppColors.success.withValues(
+                                alpha: 0.55,
+                              ),
+                            );
+                          },
                         ),
                       ),
               ),
@@ -743,6 +760,9 @@ class _HeroAmountField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isZeroDecimal =
+        DynamicDecimalsHelper.isZeroDecimal(currencyCode);
+
     return AnimatedContainer(
       duration: AppSpacing.fast,
       padding: const EdgeInsetsDirectional.symmetric(
@@ -768,10 +788,16 @@ class _HeroAmountField extends StatelessWidget {
             child: TextField(
               controller: controller,
               focusNode: focusNode,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
+              keyboardType: TextInputType.numberWithOptions(
+                decimal: !isZeroDecimal,
                 signed: false,
               ),
+              inputFormatters: [
+                if (isZeroDecimal)
+                  FilteringTextInputFormatter.digitsOnly
+                else
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+              ],
               style: const TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 28,

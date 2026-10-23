@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -10,6 +11,8 @@ import 'package:ecardo_user/src/presentation/screens/transactions/model/transact
 class TransferHistoryController extends GetxController {
   // Global Variable
   final RxBool isLoading = false.obs;
+  final RxBool hasError = false.obs;
+  final RxString errorMessage = ''.obs;
   final RxBool isPageLoading = false.obs;
   final RxBool isTransactionsLoading = false.obs;
   final RxBool isFilter = false.obs;
@@ -73,6 +76,8 @@ class TransferHistoryController extends GetxController {
   Future<void> fetchTransactions() async {
     try {
       isLoading.value = true;
+      hasError.value = false;
+      errorMessage.value = '';
       currentPage.value = 1;
       hasMorePages.value = true;
 
@@ -87,8 +92,16 @@ class TransferHistoryController extends GetxController {
             transactionsModel.value.data!.meta!.perPage!) {
           hasMorePages.value = false;
         }
+      } else {
+        hasError.value = true;
+        errorMessage.value =
+            response.message ??
+            AppLocalizations.of(Get.context!)!.allControllerLoadError;
       }
     } catch (e, stackTrace) {
+      hasError.value = true;
+      final info = NetworkErrorHelper.from(e);
+      errorMessage.value = info.message;
       debugPrint('❌ fetchTransactions() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(

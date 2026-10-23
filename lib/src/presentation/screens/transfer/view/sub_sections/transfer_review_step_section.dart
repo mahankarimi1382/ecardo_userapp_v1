@@ -69,10 +69,19 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
 
       final isFree =
           controller.charge.value <= 0.0 && !controller.chargeLoadFailed.value;
+      final zeroFormatted = (0.0).toStringAsFixed(calculateDecimals);
       final feeText = controller.chargeLoadFailed.value
           ? '—'
           : isFree
-          ? 'Free (0.00 $walletCode)'
+          ? l10nPick(
+              context,
+              en: 'Free ($zeroFormatted $walletCode)',
+              fa: 'رایگان ($zeroFormatted $walletCode)',
+              ar: 'مجاني ($zeroFormatted $walletCode)',
+              tr: 'Ücretsiz ($zeroFormatted $walletCode)',
+              ru: 'Бесплатно ($zeroFormatted $walletCode)',
+              zh: '免费 ($zeroFormatted $walletCode)',
+            )
           : "${controller.charge.value.toStringAsFixed(calculateDecimals)} $walletCode";
 
       final totalText = controller.chargeLoadFailed.value
@@ -329,6 +338,8 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     BuildContext context,
     TransferController controller,
   ) async {
+    if (controller.isTransferAmountLoading.value) return;
+
     final bool isPasscodeSettingEnabled =
         Get.find<SettingsService>().getSetting(
           "transfer_money_passcode_status",

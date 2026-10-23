@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 
@@ -47,10 +49,21 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
     _investAmount = widget.project.minInvestment * 2;
   }
 
-  double get _projectedAnnualReturn =>
-      _investAmount * (widget.project.annualYieldPercent / 100);
+  double get _projectedAnnualReturn {
+    final raw = _investAmount * (widget.project.annualYieldPercent / 100);
+    if (DynamicDecimalsHelper.isZeroDecimal(widget.project.currency)) {
+      return raw.roundToDouble();
+    }
+    return raw;
+  }
 
-  double get _projectedMonthlyReturn => _projectedAnnualReturn / 12;
+  double get _projectedMonthlyReturn {
+    final raw = _projectedAnnualReturn / 12;
+    if (DynamicDecimalsHelper.isZeroDecimal(widget.project.currency)) {
+      return raw.roundToDouble();
+    }
+    return raw;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +217,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             fit: BoxFit.scaleDown,
                             alignment: AlignmentDirectional.centerEnd,
                             child: Text(
-                              '$currency ${_formatNumber(_investAmount)}',
+                              '$currency ${_formatExactNumber(_investAmount)}',
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w900,
@@ -239,7 +252,10 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                         onChanged: (val) {
                           HapticFeedback.selectionClick();
                           setState(() {
-                            _investAmount = val;
+                            _investAmount =
+                                DynamicDecimalsHelper.isZeroDecimal(currency)
+                                    ? val.roundToDouble()
+                                    : val;
                           });
                         },
                       ),
@@ -314,7 +330,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             fit: BoxFit.scaleDown,
                             alignment: AlignmentDirectional.centerStart,
                             child: Text(
-                              '+$currency ${_formatNumber(_projectedMonthlyReturn)}',
+                              '+$currency ${_formatExactNumber(_projectedMonthlyReturn)}',
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w800,
@@ -360,7 +376,7 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
                             fit: BoxFit.scaleDown,
                             alignment: AlignmentDirectional.centerStart,
                             child: Text(
-                              '+$currency ${_formatNumber(_projectedAnnualReturn)}',
+                              '+$currency ${_formatExactNumber(_projectedAnnualReturn)}',
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w800,
@@ -420,37 +436,45 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
               ),
               SizedBox(height: AppSpacing.lg.h),
 
-              // Interest Button
-              CommonButton(
-                width: double.infinity,
-                backgroundColor: isDark
-                    ? AppColors.darkPrimary
-                    : AppColors.lightPrimary,
-                textColor: isDark ? AppColors.deepBlack : AppColors.white,
-                text: l10nPick(
-                  context,
-                  en: 'Register My Interest',
-                  fa: 'ثبت تمایل',
-                  ar: 'تسجيل اهتمامي',
-                  zh: '登记我的意向',
+              // Interest Button (min 48x48dp accessible touch target)
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: 48.h,
+                  minWidth: double.infinity,
                 ),
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  Navigator.pop(context);
-                  // Truthful message: this records interest in this device's
-                  // session only. It is NOT an investment and NOT submitted
-                  // to any server — there is no crowdfunding API to submit to.
-                  ToastHelper().showSuccessToast(
-                    l10nPick(
-                      context,
-                      en: 'Interest recorded on this device only — no investment was made',
-                      fa: 'تمایل شما فقط روی همین دستگاه ثبت شد — هیچ سرمایه‌گذاری انجام نشد',
-                      ar: 'تم تسجيل اهتمامك على هذا الجهاز فقط — لم يتم إجراء أي استثمار',
-                      zh: '意向仅记录在本机 — 未进行任何投资',
-                    ),
-                  );
-                  widget.onConfirmed?.call(_investAmount);
-                },
+                child: CommonButton(
+                  height: 48,
+                  borderRadius: 14,
+                  width: double.infinity,
+                  backgroundColor: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
+                  textColor: isDark ? AppColors.deepBlack : AppColors.white,
+                  text: l10nPick(
+                    context,
+                    en: 'Register My Interest',
+                    fa: 'ثبت تمایل',
+                    ar: 'تسجيل اهتمامي',
+                    zh: '登记我的意向',
+                  ),
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    Navigator.pop(context);
+                    // Truthful message: this records interest in this device's
+                    // session only. It is NOT an investment and NOT submitted
+                    // to any server — there is no crowdfunding API to submit to.
+                    ToastHelper().showSuccessToast(
+                      l10nPick(
+                        context,
+                        en: 'Interest recorded on this device only — no investment was made',
+                        fa: 'تمایل شما فقط روی همین دستگاه ثبت شد — هیچ سرمایه‌گذاری انجام نشد',
+                        ar: 'تم تسجيل اهتمامك على هذا الجهاز فقط — لم يتم إجراء أي استثمار',
+                        zh: '意向仅记录在本机 — 未进行任何投资',
+                      ),
+                    );
+                    widget.onConfirmed?.call(_investAmount);
+                  },
+                ),
               ),
             ],
           ),
@@ -459,7 +483,16 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
     );
   }
 
+  String _formatExactNumber(double amount) {
+    if (DynamicDecimalsHelper.isZeroDecimal(widget.project.currency)) {
+      return NumberFormat('#,###').format(amount.round());
+    }
+    return NumberFormat('#,##0.00').format(amount);
+  }
+
   String _formatNumber(double amount) {
+    final isZeroDec =
+        DynamicDecimalsHelper.isZeroDecimal(widget.project.currency);
     if (amount >= 1000000000) {
       final b = amount / 1000000000;
       return '${b % 1 == 0 ? b.toInt() : b.toStringAsFixed(1)}B';
@@ -472,6 +505,6 @@ class _InvestmentCalculatorSheetState extends State<InvestmentCalculatorSheet> {
       final k = amount / 1000;
       return '${k % 1 == 0 ? k.toInt() : k.toStringAsFixed(1)}K';
     }
-    return amount.toStringAsFixed(0);
+    return isZeroDec ? amount.round().toString() : amount.toStringAsFixed(0);
   }
 }

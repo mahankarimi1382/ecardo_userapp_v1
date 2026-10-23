@@ -1,0 +1,31 @@
+﻿module_id,module_domain,priority,discovery_targets,integrations,initial_status,evidence_required
+APP-SHELL,App Shell / navigation,P0,"route tree, tabs, nested routes, deep links, notification entry points",All modules,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+AUTH,Authentication / session,P0,"onboarding, sign in/up, OTP, passcode, biometric, expiry, recovery",All protected flows,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+KYC,Identity verification / eligibility,P0,"document upload, review status, retry, limits/eligibility","Transfers, cards, withdrawals, crypto",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+HOME,Home / dashboard,P1,"balance summary, quick actions, recent activity, state consistency","Wallet, Transactions, Cards",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+ACCOUNTS,Accounts / beneficiaries,P0,"account list/detail, beneficiaries, account metadata","Transfers, Home",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+WALLETS,Fiat wallets,P0,"wallet list/detail, currency balances, switch/create/close if supported","Transfers, exchange, cards",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+MONEY,Amount/currency primitives,P0,"parsing, precision, formatting, minor units/decimal policy",Every financial flow,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+PRICING,Rates / quotes / fees,P0,"quote lifecycle, fee breakdown, expiry, limits, rates","Transfer, exchange, withdraw",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+TRANSFER,Internal/external/P2P transfer,P0,"recipient validation, review, submit, pending/unknown/reconcile","Transactions, wallets, KYC",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+EXCHANGE,Currency exchange,P0,"pair, quote, spread/fee display, expiry, confirmation","Wallets, pricing, transactions",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+WITHDRAW,Withdrawal/cashout,P0,"destination, limits, fee, review, tracking/recovery","Wallets, KYC, transaction",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+PAYMENTS,Payments / merchant / gift,P1,"invoice/merchant, confirmations, failure/return if supported","Transactions, wallets",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+BILLS,Bills / utility payments,P1,"providers, bill lookup, verification, payment, receipt","Wallets, transaction history",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+QR,QR / receive / request money,P1,"QR creation/scanning, network/source validation, share lifecycle","Wallets, transfer",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+CARDS,Virtual/physical cards,P0,"issue, status, freeze/unfreeze, limits, funding, card activity","Wallets, KYC, notifications",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+CRYPTO,Crypto wallets/assets/networks,P0,"asset/network pairing, address, deposits, withdrawals, confirmation","Wallets, transaction, pricing",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+HISTORY,Transactions/activity,P0,"search, filters, pagination, consistent status, refresh",All operations,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+RECEIPT,Transaction detail/receipt,P0,"server-authoritative status, reference, amounts, fee, share/export","Transaction backend, support",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+NOTIFICATIONS,Push/in-app notifications,P1,"unread/read state, dedupe, deep links, auth/permission handling",All modules,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+STATEMENTS,Statements/export,P2,"date range, filters, files, privacy-safe sharing","Accounts, transaction",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+REWARDS,Rewards/loyalty,P2,"points/cashback, expiry, eligibility, claims","Cards, profile",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+PROFILE,Profile / account data,P1,"personal data, limits, linked methods, account status","Auth, KYC",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+SETTINGS,Settings/preferences,P1,"language/theme, notifications, biometrics/privacy preferences","App shell, auth",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+SUPPORT,Help / tickets / disputes,P1,"help center, case state, ticket create, transaction context","Transactions, auth, KYC",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+ONLINE-SERVICES,Online/travel/commercial services,P2,"catalog, quote, checkout, order, cancellation if present","Payments, wallet",Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+LOCALIZATION,Localization / calendars / formats,P0,"ARB key completeness, RTL, number/currency/date formats",All pages,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+ACCESSIBILITY,Accessibility / dynamic text,P1,"semantics, focus, contrast, font scale, reduced motion",All UI,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+ANALYTICS,Privacy-safe telemetry,P2,"events, metrics, redaction, consent/policy",All modules,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+APP-LIFECYCLE,Lifecycle / network / storage,P0,"background/resume, session refresh, connectivity, cache validity",All modules,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED
+BUILD-RELEASE,Build/test/release gates,P0,"CI, artifact provenance, version, smoke test, explicit approval",All modules,Discovery required,source paths + runtime evidence + tests or explicit BLOCKED

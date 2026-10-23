@@ -1,0 +1,41 @@
+﻿test_id,module,scenario,setup_action,expected_result,priority
+IT001,App shell,Cold start,Default startup / session decision,Home or auth landing consistent with session state,P1
+IT002,Navigation,Nested route,Open and back from every primary nested flow,Correct back stack/tab state; no accidental duplicate route,P1
+IT003,Deep link,Protected destination,Open notification/deep link while signed out,Auth guard then safe return; destination permission rechecked,P0
+IT004,Auth,OTP wrong,Submit invalid OTP,Safe localized error; no session created,P0
+IT005,Auth,OTP resend cooldown,Request repeated resend,Server limits honored; no UI-only bypass,P1
+IT006,Session,Expired before submit,Submit after session expires,Re-auth and reconcile if operation may have reached server,P0
+IT007,Money,Locale amount parsing,Input decimal/grouping in fa/en,Canonical amount identical and precision valid,P0
+IT008,Money,Excess precision,Enter more fractional digits than asset allows,Validation explicit; no silent harmful rounding,P0
+IT009,Transfer,Happy path sandbox,Review then submit transfer,Request values exactly match review; server status shown,P0
+IT010,Transfer,Double tap submit,Tap primary action rapidly twice,One logical operation/idempotency behavior; no duplicate transfer,P0
+IT011,Transfer,Timeout after request,Simulate timeout when server may have accepted,Unknown/reconciling + status lookup; no blind re-submit,P0
+IT012,Transfer,Insufficient funds,Backend insufficient-balance error,No success screen; correct message and recovery,P0
+IT013,Transfer,Fee changes before submit,Quote changes/expires,Fresh quote + new review before execution,P0
+IT014,Exchange,Expired quote,Try submit expired quote,"Blocked, reload quote, re-confirm",P0
+IT015,Exchange,Rate/fee consistency,Compare review and response,Source/target amounts and breakdown reconcile,P0
+IT016,Withdrawal,Provider pending,Accepted payout is pending,Pending status remains pending everywhere,P0
+IT017,Wallet,Stale balance,Load cached data then refresh fails,Stale indication; no false freshness claim,P1
+IT018,History,Pagination failure,Load next page while network fails,Existing rows preserved; retry does not duplicate rows,P1
+IT019,Receipt,Backend pending status,Open transaction details pending,Receipt does not show success styling/text,P0
+IT020,Receipt,Sensitive share data,Share/export receipt,PII masked according to policy; status authoritative,P1
+IT021,Cards,Freeze card,Backend success/failure/pending variants,UI action state follows confirmed server result,P0
+IT022,Cards,Issuer unavailable,Create card while provider down,No fake card; actionable outage/ retry state,P1
+IT023,Crypto,Network mismatch,Wrong network selected,Fail-closed before address/QR/submission,P0
+IT024,Crypto,No deposit address,Backend returns unsupported/unavailable,No fallback address; explain unavailable state,P0
+IT025,Crypto,Withdrawal fee unavailable,Fee quote endpoint unavailable,No invented fee and no submit,P0
+IT026,KYC,Action required,Backend requires further documents,CTA and field requirements match policy,P1
+IT027,Notifications,Duplicate push event,Same event delivered twice,No duplicate transaction/ticket side effect,P1
+IT028,Support,Ticket timeout,Create ticket request times out,Lookup/dedupe policy; duplicate case avoided,P1
+IT029,Offline,Reconnect after pending,Resume after offline period,"Refresh canonical operation status, not optimistic success",P0
+IT030,Localization,RTL / long strings,fa and ar on all critical screens,Layout direction and text fit correctly,P1
+IT031,Localization,Number/date/currency,Locale matrix on financial pages,"Correct separators, precision, calendar/date labels",P0
+IT032,Accessibility,Large text/screen reader,Critical flows with enlarged text and semantics,No clipped critical total; controls labeled and actionable,P1
+IT033,Theme,Light/dark,Critical route states in both themes,Contrast/readability and status clear in both,P1
+IT034,Lifecycle,Background/resume,App resumes after transaction submit,Status reconciliation and session checks executed,P0
+IT035,Performance,Long history list,Scroll large paginated history,No severe jank; memory/rebuilds profiled,P2
+IT036,API errors,Unknown code,Backend returns unrecognized business code,Safe fallback error; never fall through as success,P0
+IT037,KYC/upload,Upload interrupted,Break network while uploading,Safe retry/continue based on upload contract,P1
+IT038,Settings,Locale persistence,Change app language then restart,Preference persists; all app surfaces update,P1
+IT039,Build,Release-like smoke,Run critical flows against sandbox build,No debug-only dependencies/secret leakage,P1
+IT040,Audit,Route coverage gate,Compare route catalog to discovered/runtime lists,Unknown routes prevent 100% completion claim,P0

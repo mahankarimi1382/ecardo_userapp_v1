@@ -11,6 +11,7 @@ import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -19,7 +20,6 @@ import 'package:ecardo_user/src/presentation/screens/beneficiary/controller/crea
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_amount_input_card.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_recipient_card.dart';
-import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
 import 'package:ecardo_user/src/presentation/widgets/qr_scanner_screen.dart';
 
 class TransferAmountStepSection extends StatefulWidget {
@@ -390,6 +390,7 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
             borderRadius: AppSpacing.radiusLg,
             width: double.infinity,
             height: 52,
+            isLoading: controller.isTransferConfigLoading.value,
             text: localization.transferAmountStepSectionTransferMoneyButton,
             onPressed: () {
               HapticFeedback.lightImpact();
@@ -398,6 +399,7 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
           ),
           const SizedBox(height: AppSpacing.md),
           CommonButton(
+            isLoading: controller.isBeneficiaryLoading.value,
             backgroundColor: isDark
                 ? colorScheme.surfaceContainerHigh.withValues(alpha: 0.5)
                 : colorScheme.primary.withValues(alpha: 0.06),
@@ -512,7 +514,23 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                             ?.beneficiaries
                             ?.isEmpty ??
                         true)
-                    ? const NoDataFound()
+                    ? Center(
+                        child: EcardoEmptyState(
+                          title: localization
+                              .transferAmountStepSectionBeneficiariesTitle,
+                          description: localization.noDataFound,
+                          iconData: Icons.people_outline_rounded,
+                          primaryActionLabel: localization
+                              .transferAmountStepSectionAddBeneficiary,
+                          onPrimaryAction: () {
+                            Get.back();
+                            Get.toNamed(
+                              BaseRoute.createBeneficiary,
+                              arguments: {"account_user": "Beneficiary"},
+                            );
+                          },
+                        ),
+                      )
                     : controller.isBeneficiaryLoading.value
                     ? const CommonLoading()
                     : ListView.separated(

@@ -27,6 +27,15 @@ class DynamicDecimalsHelper {
     'CHF',
   };
 
+  static bool isZeroDecimal(String currencyCode) {
+    return _zeroDecimalCurrencies.contains(currencyCode.toUpperCase().trim());
+  }
+
+  static bool isRtlCurrency(String currencyCode) {
+    const rtlSet = {'IRR', 'IRT', 'TOMAN', 'TMN', 'RLS', 'RIAL'};
+    return rtlSet.contains(currencyCode.toUpperCase().trim());
+  }
+
   int getDynamicDecimals({
     required String currencyCode,
     required String siteCurrencyCode,

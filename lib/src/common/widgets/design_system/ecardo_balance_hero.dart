@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/ecardo_glass_card.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 
 /// Model representing a quick action button underneath the balance hero.
 class EcardoHeroAction {
@@ -108,8 +109,7 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
 
   int get _resolvedDecimals {
     if (widget.decimalDigits != null) return widget.decimalDigits!;
-    if (widget.currencyCode.toUpperCase() == 'IRT' ||
-        widget.currencyCode.toUpperCase() == 'IRR') {
+    if (DynamicDecimalsHelper.isZeroDecimal(widget.currencyCode)) {
       return 0;
     }
     return 2;
@@ -122,7 +122,8 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
       'EUR' => '€',
       'GBP' => '£',
       'USDT' => '₮',
-      'IRT' => 'تومان',
+      'IRT' || 'TOMAN' || 'TMN' => 'تومان',
+      'IRR' || 'RLS' || 'RIAL' => 'ریال',
       _ => widget.currencyCode,
     };
   }
@@ -275,7 +276,8 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
       'EUR' => '€',
       'GBP' => '£',
       'USDT' => '₮',
-      'IRT' => 'ت',
+      'IRT' || 'TOMAN' || 'TMN' => 'ت',
+      'IRR' || 'RLS' || 'RIAL' => '﷼',
       _ => code.isNotEmpty ? code[0] : '¤',
     };
   }
@@ -461,7 +463,8 @@ class _EcardoBalanceHeroState extends State<EcardoBalanceHero> {
         ? AppColors.darkTextPrimary
         : AppColors.lightTextPrimary;
 
-    final isRtlCurrency = widget.currencyCode.toUpperCase() == 'IRT';
+    final isRtlCurrency =
+        DynamicDecimalsHelper.isRtlCurrency(widget.currencyCode);
 
     return KeyedSubtree(
       key: const ValueKey('visible_balance'),

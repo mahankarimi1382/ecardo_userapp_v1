@@ -1,0 +1,5 @@
+﻿workflow_file,possible_events,review_status
+.github/workflows/flutter.yml,branches;pull_request;push;tags;workflow_dispatch,REVIEW_WORKFLOW_SIDE_EFFECTS
+.github/workflows/server-notify-test.yml,default;description;inputs;required;version;workflow_dispatch,REVIEW_WORKFLOW_SIDE_EFFECTS
+.github/workflows/server-tls-check.yml,workflow_dispatch,REVIEW_WORKFLOW_SIDE_EFFECTS
+.github/workflows/web.yml,branches;push;workflow_dispatch,REVIEW_WORKFLOW_SIDE_EFFECTS

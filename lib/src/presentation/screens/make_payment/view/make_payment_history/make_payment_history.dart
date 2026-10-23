@@ -14,6 +14,7 @@ import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_history_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/view/make_payment_history/sub_sections/make_payment_transaction_filter_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/tx_history_shimmer_skeleton.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_color.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_icon.dart';
 
@@ -131,7 +132,7 @@ class _MakePaymentHistoryState extends State<MakePaymentHistory>
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return const CommonLoading();
+                      return const TxHistoryShimmerSkeleton();
                     }
 
                     if (_hasLoadError.value) {

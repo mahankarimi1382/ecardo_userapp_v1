@@ -1,0 +1,1 @@
+route_id,module,route_name,route_pattern,target_widget,source_file,line,route_kind,entry_points,auth_guard,source_mapping_status,runtime_status,implementation_status,test_status,controller_ids,service_ids,api_ids,flow_ids,screenshot_ref,test_ref,evidence_ref,owner,notes

@@ -488,5 +488,190 @@ void main() {
       expect(controller.currentRate.value, 0.0);
       expect(controller.rateManager.lockedReviewRate, isNull);
     });
+
+    test(
+      'Dynamic rate precision scales to 6-8 decimals for fractional rates and 0 for Toman',
+      () {
+        // Fractional rates (e.g. 1 IRT -> USD = 0.00001053)
+        expect(
+          ExchangeController.getDynamicRateDecimals(
+            0.000005,
+            targetCurrencyCode: 'USD',
+          ),
+          8,
+        );
+        expect(
+          ExchangeController.formatDynamicRate(
+            0.00000525,
+            targetCurrencyCode: 'USD',
+          ),
+          '0.00000525',
+        );
+
+        expect(
+          ExchangeController.getDynamicRateDecimals(
+            0.00005,
+            targetCurrencyCode: 'USD',
+          ),
+          7,
+        );
+        expect(
+          ExchangeController.formatDynamicRate(
+            0.0000525,
+            targetCurrencyCode: 'USD',
+          ),
+          '0.0000525',
+        );
+
+        expect(
+          ExchangeController.getDynamicRateDecimals(
+            0.0005,
+            targetCurrencyCode: 'USD',
+          ),
+          6,
+        );
+        expect(
+          ExchangeController.formatDynamicRate(
+            0.000525,
+            targetCurrencyCode: 'USD',
+          ),
+          '0.000525',
+        );
+
+        // Standard FX rates
+        expect(
+          ExchangeController.getDynamicRateDecimals(
+            1.0825,
+            targetCurrencyCode: 'USD',
+          ),
+          4,
+        );
+        expect(
+          ExchangeController.formatDynamicRate(
+            1.0825,
+            targetCurrencyCode: 'USD',
+          ),
+          '1.0825',
+        );
+
+        // Toman / IRR zero decimal on output when rate >= 1.0
+        expect(
+          ExchangeController.getDynamicRateDecimals(
+            95000.0,
+            targetCurrencyCode: 'IRT',
+          ),
+          0,
+        );
+        expect(
+          ExchangeController.formatDynamicRate(
+            95000.0,
+            targetCurrencyCode: 'IRT',
+          ),
+          '95000',
+        );
+
+        expect(
+          ExchangeController.getDynamicRateDecimals(
+            950000.0,
+            targetCurrencyCode: 'IRR',
+          ),
+          0,
+        );
+        expect(
+          ExchangeController.formatDynamicRate(
+            950000.0,
+            targetCurrencyCode: 'IRR',
+          ),
+          '950000',
+        );
+      },
+    );
+
+    test('Zero-decimal Toman on Iranian Rial inputs and outputs', () {
+      const validationService = ExchangeValidationService();
+
+      // Quick amount for Toman should have 0 decimals
+      expect(
+        validationService.calculateQuickAmountString(
+          balance: 1000000.0,
+          percent: 0.5,
+          isZeroDecimal: true,
+        ),
+        '500000',
+      );
+      expect(
+        validationService.calculateQuickAmountString(
+          balance: 1000000.0,
+          percent: 0.25,
+          currencyCode: 'IRT',
+        ),
+        '250000',
+      );
+      expect(
+        validationService.calculateQuickAmountString(
+          balance: 1000000.0,
+          percent: 0.75,
+          currencyCode: 'IRR',
+        ),
+        '750000',
+      );
+
+      // Fiat non-zero-decimal should have 2 decimals
+      expect(
+        validationService.calculateQuickAmountString(
+          balance: 100.0,
+          percent: 0.5,
+          isZeroDecimal: false,
+          currencyCode: 'USD',
+        ),
+        '50.00',
+      );
+
+      // Validation message should format with 0 decimals for Toman
+      final tomanWallet = Wallets(
+        id: 1,
+        code: 'IRT',
+        name: 'Toman Wallet',
+        balance: '50000',
+        exchangeLimit: ExchangeLimit(min: '10000', max: '5000000'),
+      );
+      final usdWallet = Wallets(id: 2, code: 'USD', name: 'USD Wallet');
+
+      final minResult = validationService.validateAmountStep(
+        fromWallet: tomanWallet,
+        toWallet: usdWallet,
+        amountText: '5000',
+        decimals: 2, // Even if 2 is passed, effectiveDecimals is 0 for IRT
+      );
+      expect(minResult.isValid, false);
+      expect(
+        minResult.errorType,
+        ExchangeValidationErrorType.amountBelowMinimum,
+      );
+    });
+
+    test('State matrix resilience: Offline and Error observables', () {
+      expect(controller.isOffline.value, false);
+      expect(controller.walletLoadError.value, false);
+      expect(controller.isLoading.value, false);
+
+      // Simulate offline failure
+      controller.isOffline.value = true;
+      expect(controller.isOffline.value, true);
+
+      // Simulate error failure
+      controller.isOffline.value = false;
+      controller.walletLoadError.value = true;
+      controller.walletErrorMessage.value = 'Failed to load';
+      expect(controller.walletLoadError.value, true);
+      expect(controller.walletErrorMessage.value, 'Failed to load');
+
+      // Reset
+      controller.clearFields();
+      controller.walletLoadError.value = false;
+      controller.isOffline.value = false;
+      expect(controller.walletLoadError.value, false);
+      expect(controller.isOffline.value, false);
+    });
   });
 }

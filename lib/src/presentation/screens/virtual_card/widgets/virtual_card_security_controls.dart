@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
@@ -39,6 +40,7 @@ import 'package:ecardo_user/src/presentation/screens/home/controller/home_contro
 class CardFreezeOverlay extends StatelessWidget {
   final Widget child;
   final bool isFrozen;
+  final bool isFreezeLoading;
   final ValueChanged<bool>? onFreezeToggled;
   final ValueChanged<bool>? onToggleFreeze;
   final bool showToggle;
@@ -48,6 +50,7 @@ class CardFreezeOverlay extends StatelessWidget {
     super.key,
     required this.child,
     required this.isFrozen,
+    this.isFreezeLoading = false,
     this.onFreezeToggled,
     this.onToggleFreeze,
     this.showToggle = true,
@@ -55,6 +58,7 @@ class CardFreezeOverlay extends StatelessWidget {
   });
 
   void _handleToggle(bool value) {
+    if (isFreezeLoading) return;
     HapticFeedback.mediumImpact();
     onFreezeToggled?.call(value);
     onToggleFreeze?.call(value);
@@ -316,7 +320,7 @@ class CardFreezeOverlay extends StatelessWidget {
                       child: Switch.adaptive(
                         value: isFrozen,
                         activeTrackColor: AppColors.mutedBlue,
-                        onChanged: _handleToggle,
+                        onChanged: isFreezeLoading ? null : _handleToggle,
                       ),
                     ),
                   ),
@@ -337,6 +341,7 @@ class CardFreezeOverlay extends StatelessWidget {
 /// Modern fintech quick action security controls grid for virtual cards.
 class VirtualCardSecurityControls extends StatelessWidget {
   final bool isFrozen;
+  final bool isFreezeLoading;
   final ValueChanged<bool>? onToggleFreeze;
   final bool isOnlinePaymentsEnabled;
   final ValueChanged<bool>? onToggleOnlinePayments;
@@ -353,9 +358,16 @@ class VirtualCardSecurityControls extends StatelessWidget {
   final bool? isCvvRevealed;
   final ValueChanged<bool>? onToggleCvvReveal;
 
+  final String cardId;
+  final VoidCallback? onChangePin;
+  final VoidCallback? onReplaceCard;
+  final bool canChangePin;
+  final bool canReplaceCard;
+
   const VirtualCardSecurityControls({
     super.key,
     required this.isFrozen,
+    this.isFreezeLoading = false,
     this.onToggleFreeze,
     this.isOnlinePaymentsEnabled = true,
     this.onToggleOnlinePayments,
@@ -371,9 +383,33 @@ class VirtualCardSecurityControls extends StatelessWidget {
     this.onTogglePanReveal,
     this.isCvvRevealed,
     this.onToggleCvvReveal,
+    this.cardId = '',
+    this.onChangePin,
+    this.onReplaceCard,
+    this.canChangePin = true,
+    this.canReplaceCard = true,
   });
 
   void _showSpendingLimitsModal(BuildContext context) {
+    showCardSpendingLimits(
+      context,
+      dailySpendLimit: dailySpendLimit,
+      monthlySpendLimit: monthlySpendLimit,
+      currency: currency,
+      onSave: (daily, monthly) {
+        onUpdateSpendingLimits?.call(daily, monthly);
+      },
+    );
+  }
+
+  /// Public entry point to open spending limits modal.
+  static void showCardSpendingLimits(
+    BuildContext context, {
+    required double dailySpendLimit,
+    required double monthlySpendLimit,
+    required String currency,
+    required void Function(double daily, double monthly) onSave,
+  }) {
     HapticFeedback.lightImpact();
     showModalBottomSheet(
       context: context,
@@ -384,9 +420,7 @@ class VirtualCardSecurityControls extends StatelessWidget {
           initialDaily: dailySpendLimit,
           initialMonthly: monthlySpendLimit,
           currency: currency,
-          onSave: (daily, monthly) {
-            onUpdateSpendingLimits?.call(daily, monthly);
-          },
+          onSave: onSave,
         );
       },
     );
@@ -404,6 +438,42 @@ class VirtualCardSecurityControls extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => const _CardOtpBottomSheet(),
+    );
+  }
+
+  /// Public entry point to open the Card PIN change bottom sheet with accessible keypad.
+  static void showCardPinChange(
+    BuildContext context, {
+    required String cardId,
+    VoidCallback? onPinChanged,
+  }) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _CardPinChangeBottomSheet(
+        cardId: cardId,
+        onPinChanged: onPinChanged,
+      ),
+    );
+  }
+
+  /// Public entry point to open the Card Replacement flow bottom sheet.
+  static void showCardReplacement(
+    BuildContext context, {
+    required String cardId,
+    VoidCallback? onReplacementConfirmed,
+  }) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _CardReplacementBottomSheet(
+        cardId: cardId,
+        onReplacementConfirmed: onReplacementConfirmed,
+      ),
     );
   }
 
@@ -561,10 +631,12 @@ class VirtualCardSecurityControls extends StatelessWidget {
                   child: Switch.adaptive(
                     value: isFrozen,
                     activeTrackColor: AppColors.mainSoftBlue,
-                    onChanged: (val) {
-                      HapticFeedback.mediumImpact();
-                      onToggleFreeze?.call(val);
-                    },
+                    onChanged: isFreezeLoading
+                        ? null
+                        : (val) {
+                            HapticFeedback.mediumImpact();
+                            onToggleFreeze?.call(val);
+                          },
                   ),
                 ),
               ),
@@ -862,6 +934,144 @@ class VirtualCardSecurityControls extends StatelessWidget {
               ),
             ),
           ),
+
+          // 7. CHANGE CARD PIN TILE
+          if (canChangePin) ...[
+            SizedBox(height: 12.h),
+            _SecurityActionTile(
+              isDark: isDark,
+              icon: Icons.password_rounded,
+              iconColor: const Color(0xFF0284C7),
+              iconBgColor: const Color(0xFFE0F2FE),
+              title: l10nPick(
+                context,
+                en: 'Change Card PIN',
+                fa: 'تغییر رمز کارت',
+                ar: 'تغيير رمز البطاقة',
+                tr: 'Kart PIN Kodunu Değiştir',
+                ru: 'Сменить PIN-код карты',
+                zh: '修改卡片PIN码',
+              ),
+              subtitle: l10nPick(
+                context,
+                en: 'Update your 4-digit ATM or POS transaction PIN',
+                fa: 'تنظیم و تغییر رمز اول و رمز کارت‌خوان',
+                ar: 'تحديث رمز المعاملات المكون من 4 أرقام',
+                tr: '4 haneli ATM veya POS işlem PIN kodunuzu güncelleyin',
+                ru: 'Обновить 4-значный PIN-код для банкоматов и терминалов',
+                zh: '更新4位ATM或POS交易密码',
+              ),
+              onTap: onChangePin ??
+                  () => showCardPinChange(context, cardId: cardId),
+              trailing: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1E293B)
+                      : const Color(0xFFF0F9FF),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Change',
+                        fa: 'تغییر',
+                        ar: 'تغيير',
+                        tr: 'Değiştir',
+                        ru: 'Сменить',
+                        zh: '修改',
+                      ),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.mainSoftBlue
+                            : const Color(0xFF0284C7),
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: 16.sp,
+                      color: isDark
+                          ? AppColors.mainSoftBlue
+                          : const Color(0xFF0284C7),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+
+          // 8. CARD REPLACEMENT TILE
+          if (canReplaceCard) ...[
+            SizedBox(height: 12.h),
+            _SecurityActionTile(
+              isDark: isDark,
+              icon: Icons.credit_card_off_rounded,
+              iconColor: const Color(0xFFDC2626),
+              iconBgColor: const Color(0xFFFEE2E2),
+              title: l10nPick(
+                context,
+                en: 'Replace Card',
+                fa: 'تعویض یا صدور مجدد کارت',
+                ar: 'استبدال البطاقة',
+                tr: 'Kartı Yenile',
+                ru: 'Перевыпуск карты',
+                zh: '补卡/换卡',
+              ),
+              subtitle: l10nPick(
+                context,
+                en: 'Report lost, stolen or damaged card and order replacement',
+                fa: 'گزارش مفقودی، سرقت، آسیب‌دیدگی یا صدور مجدد',
+                ar: 'الإبلاغ عن بطاقة مفقودة أو مسروقة أو تالفة وطلب بديل',
+                tr: 'Kayıp, çalıntı veya hasarlı kart bildirimi yapın ve yenisini sipariş edin',
+                ru: 'Сообщить об утере, краже или повреждении и заказать новую',
+                zh: '报告遗失、被盗或损坏并补发新卡',
+              ),
+              onTap: onReplaceCard ??
+                  () => showCardReplacement(context, cardId: cardId),
+              trailing: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF2A1F1F)
+                      : const Color(0xFFFEF2F2),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Order',
+                        fa: 'ثبت',
+                        ar: 'طلب',
+                        tr: 'Sipariş',
+                        ru: 'Заказ',
+                        zh: '申请',
+                      ),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xFFDC2626),
+                      ),
+                    ),
+                    SizedBox(width: 4.w),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: 16.sp,
+                      color: const Color(0xFFDC2626),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -1027,169 +1237,173 @@ class _SpendingLimitsBottomSheetState
       ),
       padding: EdgeInsets.fromLTRB(
         20.w,
-        14.h,
+        12.h,
         20.w,
-        30.h + MediaQuery.viewInsetsOf(context).bottom,
+        20.h + MediaQuery.viewInsetsOf(context).bottom,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              width: 44.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF4A4A4A)
-                    : const Color(0xFFD0D0D0),
-                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-              ),
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          // Title Row
-          Row(
-            children: [
-              Container(
-                width: 36.r,
-                height: 36.r,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFF8E1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.speed_rounded,
-                  size: 20.sp,
-                  color: const Color(0xFFFFA000),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Drag handle
+            Center(
+              child: Container(
+                width: 44.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF4A4A4A)
+                      : const Color(0xFFD0D0D0),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10nPick(
-                        context,
-                        en: 'Card Spending Limits',
-                        fa: 'سقف تراکنش و مخارج کارت',
-                        ar: 'حدود الإنفاق للبطاقة',
-                        tr: 'Kart Harcama Limitleri',
-                        ru: 'Лимиты расходов по карте',
-                        zh: '卡支出限额',
-                      ),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w800,
-                        color: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightTextPrimary,
-                      ),
-                    ),
-                    Text(
-                      l10nPick(
-                        context,
-                        en: 'Set daily and monthly transaction caps',
-                        fa: 'سقف مجاز پرداخت روزانه و ماهانه را تعیین کنید',
-                        ar: 'حدد سقف المعاملات اليومية والشهرية',
-                        tr: 'Günlük ve aylık işlem sınırlarını belirleyin',
-                        ru: 'Установите лимиты операций на день и месяц',
-                        zh: '设置每日和每月交易限额',
-                      ),
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary,
-                      ),
-                    ),
-                  ],
+            ),
+            SizedBox(height: 14.h),
+
+            // Title Row
+            Row(
+              children: [
+                Container(
+                  width: 36.r,
+                  height: 36.r,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFFF8E1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.speed_rounded,
+                    size: 20.sp,
+                    color: const Color(0xFFFFA000),
+                  ),
                 ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 24.h),
-
-          // Daily Limit Section
-          _buildSliderSection(
-            isDark: isDark,
-            title: l10nPick(
-              context,
-              en: 'Daily Spend Limit',
-              fa: 'سقف تراکنش روزانه',
-              ar: 'الحد اليومي للإنفاق',
-              tr: 'Günlük Harcama Limiti',
-              ru: 'Дневной лимит расходов',
-              zh: '每日支出限额',
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Card Spending Limits',
+                          fa: 'سقف تراکنش و مخارج کارت',
+                          ar: 'حدود الإنفاق للبطاقة',
+                          tr: 'Kart Harcama Limitleri',
+                          ru: 'Лимиты расходов по карте',
+                          zh: '卡支出限额',
+                        ),
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w800,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                      Text(
+                        l10nPick(
+                          context,
+                          en: 'Set daily and monthly transaction caps',
+                          fa: 'سقف مجاز پرداخت روزانه و ماهانه را تعیین کنید',
+                          ar: 'حدد سقف المعاملات اليومية والشهرية',
+                          tr: 'Günlük ve aylık işlem sınırlarını belirleyin',
+                          ru: 'Установите лимиты операций на день и месяц',
+                          zh: '设置每日和每月交易限额',
+                        ),
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            currentValue: _daily,
-            min: 100,
-            max: 10000,
-            presets: _dailyPresets,
-            onChanged: (val) => setState(() => _daily = val),
-          ),
 
-          SizedBox(height: 20.h),
+            SizedBox(height: 16.h),
 
-          // Monthly Limit Section
-          _buildSliderSection(
-            isDark: isDark,
-            title: l10nPick(
-              context,
-              en: 'Monthly Spend Limit',
-              fa: 'سقف تراکنش ماهانه',
-              ar: 'الحد الشهري للإنفاق',
-              tr: 'Aylık Harcama Limiti',
-              ru: 'Месячный лимит расходов',
-              zh: '每月支出限额',
-            ),
-            currentValue: _monthly,
-            min: 500,
-            max: 50000,
-            presets: _monthlyPresets,
-            onChanged: (val) => setState(() => _monthly = val),
-          ),
-
-          SizedBox(height: 26.h),
-
-          // Save Button
-          ElevatedButton(
-            onPressed: () {
-              HapticFeedback.mediumImpact();
-              widget.onSave(_daily, _monthly);
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.brandViolet,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 14.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14.r),
-              ),
-              elevation: 4,
-            ),
-            child: Text(
-              l10nPick(
+            // Daily Limit Section
+            _buildSliderSection(
+              isDark: isDark,
+              title: l10nPick(
                 context,
-                en: 'Save Spending Limits',
-                fa: 'ذخیره سقف تراکنش‌ها',
-                ar: 'حفظ حدود الإنفاق',
-                tr: 'Harcama Limitlerini Kaydet',
-                ru: 'Сохранить лимиты',
-                zh: '保存支出限额',
+                en: 'Daily Spend Limit',
+                fa: 'سقف تراکنش روزانه',
+                ar: 'الحد اليومي للإنفاق',
+                tr: 'Günlük Harcama Limiti',
+                ru: 'Дневной лимит расходов',
+                zh: '每日支出限额',
               ),
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
+              currentValue: _daily,
+              min: 100,
+              max: 10000,
+              presets: _dailyPresets,
+              onChanged: (val) => setState(() => _daily = val),
+            ),
+
+            SizedBox(height: 14.h),
+
+            // Monthly Limit Section
+            _buildSliderSection(
+              isDark: isDark,
+              title: l10nPick(
+                context,
+                en: 'Monthly Spend Limit',
+                fa: 'سقف تراکنش ماهانه',
+                ar: 'الحد الشهري للإنفاق',
+                tr: 'Aylık Harcama Limiti',
+                ru: 'Месячный лимит расходов',
+                zh: '每月支出限额',
+              ),
+              currentValue: _monthly,
+              min: 500,
+              max: 50000,
+              presets: _monthlyPresets,
+              onChanged: (val) => setState(() => _monthly = val),
+            ),
+
+            SizedBox(height: 18.h),
+
+            // Save Button (min 48x48dp accessible touch target)
+            ElevatedButton(
+              onPressed: () {
+                HapticFeedback.mediumImpact();
+                widget.onSave(_daily, _monthly);
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: Size(double.infinity, 48.h),
+                backgroundColor: AppColors.brandViolet,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+                elevation: 4,
+              ),
+              child: Text(
+                l10nPick(
+                  context,
+                  en: 'Save Spending Limits',
+                  fa: 'ذخیره سقف تراکنش‌ها',
+                  ar: 'حفظ حدود الإنفاق',
+                  tr: 'Harcama Limitlerini Kaydet',
+                  ru: 'Сохранить лимиты',
+                  zh: '保存支出限额',
+                ),
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1203,8 +1417,10 @@ class _SpendingLimitsBottomSheetState
     required List<double> presets,
     required ValueChanged<double> onChanged,
   }) {
-    final formattedValue =
-        '${NumberFormat('#,###').format(currentValue.round())} ${widget.currency}';
+    final isZeroDec = DynamicDecimalsHelper.isZeroDecimal(widget.currency);
+    final formattedValue = isZeroDec
+        ? '${NumberFormat('#,###').format(currentValue.round())} ${widget.currency}'
+        : '${NumberFormat('#,##0.00').format(currentValue)} ${widget.currency}';
 
     return Container(
       padding: EdgeInsets.all(14.r),
@@ -1287,6 +1503,7 @@ class _SpendingLimitsBottomSheetState
             children: presets.map((preset) {
               final isSelected = (currentValue.round() == preset.round());
               return GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   HapticFeedback.lightImpact();
                   onChanged(preset);
@@ -1692,6 +1909,776 @@ class _CardOtpBottomSheetState extends State<_CardOtpBottomSheet> {
                 ),
               ),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// CARD PIN CHANGE BOTTOM SHEET (Neo-Fintech Accessible Keypad)
+// ============================================================================
+
+class _CardPinChangeBottomSheet extends StatefulWidget {
+  final String cardId;
+  final VoidCallback? onPinChanged;
+
+  const _CardPinChangeBottomSheet({
+    required this.cardId,
+    this.onPinChanged,
+  });
+
+  @override
+  State<_CardPinChangeBottomSheet> createState() =>
+      _CardPinChangeBottomSheetState();
+}
+
+class _CardPinChangeBottomSheetState extends State<_CardPinChangeBottomSheet> {
+  String _currentPin = '';
+  String _newPin = '';
+  String _confirmPin = '';
+  int _step = 1; // 1: current, 2: new, 3: confirm
+  bool _isSubmitting = false;
+  String? _error;
+
+  void _onKeyPress(String key) {
+    if (_isSubmitting) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _error = null;
+      if (_step == 1) {
+        if (_currentPin.length < 4) _currentPin += key;
+        if (_currentPin.length == 4) _step = 2;
+      } else if (_step == 2) {
+        if (_newPin.length < 4) _newPin += key;
+        if (_newPin.length == 4) _step = 3;
+      } else {
+        if (_confirmPin.length < 4) _confirmPin += key;
+        if (_confirmPin.length == 4) {
+          if (_newPin != _confirmPin) {
+            _error = l10nPickAuto(
+              en: 'New PIN and confirmation do not match',
+              fa: 'رمز جدید و تکرار آن یکسان نیستند',
+              ar: 'رمز PIN الجديد والتأكيد غير متطابقين',
+            );
+            _confirmPin = '';
+          } else {
+            _submitPinChange();
+          }
+        }
+      }
+    });
+  }
+
+  void _onBackspace() {
+    if (_isSubmitting) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _error = null;
+      if (_step == 1 && _currentPin.isNotEmpty) {
+        _currentPin = _currentPin.substring(0, _currentPin.length - 1);
+      } else if (_step == 2 && _newPin.isNotEmpty) {
+        _newPin = _newPin.substring(0, _newPin.length - 1);
+      } else if (_step == 3 && _confirmPin.isNotEmpty) {
+        _confirmPin = _confirmPin.substring(0, _confirmPin.length - 1);
+      }
+    });
+  }
+
+  void _onClear() {
+    if (_isSubmitting) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      _error = null;
+      if (_step == 1) _currentPin = '';
+      if (_step == 2) _newPin = '';
+      if (_step == 3) _confirmPin = '';
+    });
+  }
+
+  Future<void> _submitPinChange() async {
+    setState(() => _isSubmitting = true);
+    try {
+      if (widget.cardId.isNotEmpty && Get.isRegistered<NetworkService>()) {
+        final network = Get.find<NetworkService>();
+        final response = await network.post(
+          endpoint: '/user/cards/${widget.cardId}/change-pin',
+          data: {
+            'current_pin': _currentPin,
+            'new_pin': _newPin,
+          },
+        );
+        if (response.status != Status.completed) {
+          setState(() {
+            _error = response.message ?? 'Failed to update PIN';
+            _isSubmitting = false;
+            _step = 1;
+            _currentPin = '';
+            _newPin = '';
+            _confirmPin = '';
+          });
+          return;
+        }
+      }
+
+      HapticFeedback.heavyImpact();
+      ToastHelper().showSuccessToast(
+        l10nPickAuto(
+          en: 'Card PIN changed successfully',
+          fa: 'رمز کارت با موفقیت به‌روزرسانی شد',
+          ar: 'تم تغيير رمز البطاقة بنجاح',
+        ),
+      );
+      widget.onPinChanged?.call();
+      if (mounted) Navigator.of(context).pop();
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isSubmitting = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    String stepTitle;
+    String activePin;
+    if (_step == 1) {
+      stepTitle = l10nPick(
+        context,
+        en: 'Enter Current 4-Digit PIN',
+        fa: 'رمز فعلی کارت را وارد کنید',
+        ar: 'أدخل رمز PIN الحالي',
+        zh: '输入当前4位PIN码',
+      );
+      activePin = _currentPin;
+    } else if (_step == 2) {
+      stepTitle = l10nPick(
+        context,
+        en: 'Enter New 4-Digit PIN',
+        fa: 'رمز ۴ رقمی جدید را وارد کنید',
+        ar: 'أدخل رمز PIN الجديد',
+        zh: '输入新的4位PIN码',
+      );
+      activePin = _newPin;
+    } else {
+      stepTitle = l10nPick(
+        context,
+        en: 'Confirm New 4-Digit PIN',
+        fa: 'رمز جدید را مجدداً تکرار کنید',
+        ar: 'تأكيد رمز PIN الجديد',
+        zh: '再次确认新PIN码',
+      );
+      activePin = _confirmPin;
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkBackground : AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(
+        20.w,
+        14.h,
+        20.w,
+        24.h + MediaQuery.viewInsetsOf(context).bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(
+            child: Container(
+              width: 44.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF4A4A4A)
+                    : const Color(0xFFD0D0D0),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Container(
+                width: 40.r,
+                height: 40.r,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFE0F2FE),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.password_rounded,
+                  size: 20.sp,
+                  color: const Color(0xFF0284C7),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Change Card PIN',
+                        fa: 'تغییر رمز کارت',
+                        ar: 'تغيير رمز البطاقة',
+                        zh: '修改卡片PIN码',
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    Text(
+                      stepTitle,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          // Masked 4 PIN Dots
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(4, (index) {
+              final isFilled = index < activePin.length;
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                margin: EdgeInsets.symmetric(horizontal: 10.w),
+                width: 18.r,
+                height: 18.r,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isFilled
+                      ? (isDark ? AppColors.mainSoftBlue : AppColors.brandViolet)
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: isFilled
+                        ? (isDark
+                            ? AppColors.mainSoftBlue
+                            : AppColors.brandViolet)
+                        : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    width: 2,
+                  ),
+                ),
+              );
+            }),
+          ),
+          if (_error != null) ...[
+            SizedBox(height: 10.h),
+            Text(
+              _error!,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+          SizedBox(height: 20.h),
+          // Accessible Neo-Fintech Numeric Keypad (min 48x48dp per button)
+          _buildNumericKeypad(isDark),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNumericKeypad(bool isDark) {
+    final keys = [
+      ['1', '2', '3'],
+      ['4', '5', '6'],
+      ['7', '8', '9'],
+      ['clear', '0', 'back'],
+    ];
+
+    return Column(
+      children: keys.map((row) {
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 4.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: row.map((key) {
+              if (key == 'clear') {
+                return _buildKeypadButton(
+                  isDark: isDark,
+                  child: Text(
+                    'C',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.error,
+                    ),
+                  ),
+                  onTap: _onClear,
+                );
+              }
+              if (key == 'back') {
+                return _buildKeypadButton(
+                  isDark: isDark,
+                  child: Icon(
+                    Icons.backspace_outlined,
+                    size: 20.sp,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                  ),
+                  onTap: _onBackspace,
+                );
+              }
+              return _buildKeypadButton(
+                isDark: isDark,
+                child: Text(
+                  key,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                  ),
+                ),
+                onTap: () => _onKeyPress(key),
+              );
+            }).toList(),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildKeypadButton({
+    required bool isDark,
+    required Widget child,
+    required VoidCallback onTap,
+  }) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(minWidth: 72.w, minHeight: 48.h),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16.r),
+          child: Container(
+            width: 72.w,
+            height: 48.h,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isDark
+                  ? const Color(0xFF222224)
+                  : const Color(0xFFF3F4F6),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================================
+// CARD REPLACEMENT BOTTOM SHEET (Reason Selection & Security Flow)
+// ============================================================================
+
+class _CardReplacementBottomSheet extends StatefulWidget {
+  final String cardId;
+  final VoidCallback? onReplacementConfirmed;
+
+  const _CardReplacementBottomSheet({
+    required this.cardId,
+    this.onReplacementConfirmed,
+  });
+
+  @override
+  State<_CardReplacementBottomSheet> createState() =>
+      _CardReplacementBottomSheetState();
+}
+
+class _CardReplacementBottomSheetState
+    extends State<_CardReplacementBottomSheet> {
+  String _selectedReason = 'damaged';
+  bool _isSubmitting = false;
+  String? _error;
+
+  final List<Map<String, String>> _reasons = [
+    {
+      'key': 'damaged',
+      'title_en': 'Damaged or chip malfunction',
+      'title_fa': 'کارت مخدوش یا چیپ آسیب‌دیده است',
+      'desc_en': 'Physical wear, broken chip or unreadable stripe',
+      'desc_fa': 'ساییدگی فیزیکی، شکستگی یا عدم خواندن کارت‌خوان',
+    },
+    {
+      'key': 'lost',
+      'title_en': 'Lost card',
+      'title_fa': 'کارت مفقود شده است',
+      'desc_en': 'Card misplaced and cannot be located',
+      'desc_fa': 'کارت گم شده و در دسترس نیست',
+    },
+    {
+      'key': 'stolen',
+      'title_en': 'Stolen card',
+      'title_fa': 'کارت به سرقت رفته است',
+      'desc_en': 'Unauthorized possession by third-party',
+      'desc_fa': 'سرقت کارت جهت پیشگیری از سوءاستفاده',
+    },
+    {
+      'key': 'fraud',
+      'title_en': 'Suspicious transactions / fraud',
+      'title_fa': 'تراکنش‌های مشکوک یا افشای اطلاعات',
+      'desc_en': 'Potential credential compromise or unauthorized charges',
+      'desc_fa': 'احتمال کلاهبرداری یا افشای شماره و CVV',
+    },
+  ];
+
+  Future<void> _submitReplacement() async {
+    setState(() {
+      _isSubmitting = true;
+      _error = null;
+    });
+
+    try {
+      if (widget.cardId.isNotEmpty && Get.isRegistered<NetworkService>()) {
+        final network = Get.find<NetworkService>();
+        final response = await network.post(
+          endpoint: '/user/cards/${widget.cardId}/replace',
+          data: {
+            'reason': _selectedReason,
+          },
+        );
+        if (response.status != Status.completed) {
+          setState(() {
+            _error = response.message ?? 'Failed to request replacement';
+            _isSubmitting = false;
+          });
+          return;
+        }
+      }
+
+      HapticFeedback.heavyImpact();
+      ToastHelper().showSuccessToast(
+        l10nPickAuto(
+          en: 'Card replacement request submitted successfully',
+          fa: 'درخواست تعویض کارت با موفقیت ثبت شد',
+          ar: 'تم تقديم طلب استبدال البطاقة بنجاح',
+        ),
+      );
+      widget.onReplacementConfirmed?.call();
+      if (mounted) Navigator.of(context).pop();
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isSubmitting = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkBackground : AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      padding: EdgeInsets.fromLTRB(
+        20.w,
+        14.h,
+        20.w,
+        24.h + MediaQuery.viewInsetsOf(context).bottom,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(
+            child: Container(
+              width: 44.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF4A4A4A)
+                    : const Color(0xFFD0D0D0),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+              ),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Container(
+                width: 40.r,
+                height: 40.r,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFFEE2E2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.credit_card_off_rounded,
+                  size: 20.sp,
+                  color: const Color(0xFFDC2626),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Replace Card',
+                        fa: 'تعویض یا صدور مجدد کارت',
+                        ar: 'استبدال البطاقة',
+                        zh: '补卡/换卡',
+                      ),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    Text(
+                      l10nPick(
+                        context,
+                        en: 'Select the reason for card replacement',
+                        fa: 'علت درخواست تعویض یا صدور مجدد را انتخاب کنید',
+                        ar: 'اختر سبب طلب استبدال البطاقة',
+                        zh: '选择申请补发卡片的原因',
+                      ),
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 16.h),
+          // Security Notice
+          Container(
+            padding: EdgeInsets.all(12.r),
+            decoration: BoxDecoration(
+              color: const Color(0xFFDC2626).withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(14.r),
+              border: Border.all(
+                color: const Color(0xFFDC2626).withValues(alpha: 0.3),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.warning_amber_rounded,
+                  color: const Color(0xFFDC2626),
+                  size: 20.sp,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    l10nPick(
+                      context,
+                      en: 'Confirming this request will permanently deactivate your current card immediately.',
+                      fa: 'تایید این درخواست بلافاصله کارت فعلی شما را برای همیشه مسدود و غیرفعال خواهد کرد.',
+                      ar: 'تأكيد هذا الطلب سيعطل بطاقتك الحالية بشكل دائم وفوري.',
+                      zh: '确认此申请将立即永久注销您当前的卡片。',
+                    ),
+                    style: TextStyle(
+                      fontSize: 11.5.sp,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                      height: 1.3,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 16.h),
+          // Reason Options (min 48x48dp accessible touch targets)
+          ..._reasons.map((r) {
+            final isSelected = _selectedReason == r['key'];
+            return Padding(
+              padding: EdgeInsets.only(bottom: 8.h),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: 48.h),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      setState(() => _selectedReason = r['key']!);
+                    },
+                    borderRadius: BorderRadius.circular(14.r),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 10.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? (isDark
+                                ? AppColors.mainSoftBlue.withValues(alpha: 0.15)
+                                : const Color(0xFFF0FDF4))
+                            : (isDark
+                                ? const Color(0xFF1E1E20)
+                                : const Color(0xFFF9FAFB)),
+                        borderRadius: BorderRadius.circular(14.r),
+                        border: Border.all(
+                          color: isSelected
+                              ? (isDark
+                                  ? AppColors.mainSoftBlue
+                                  : AppColors.success)
+                              : (isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
+                          width: isSelected ? 1.5 : 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isSelected
+                                ? Icons.radio_button_checked
+                                : Icons.radio_button_off,
+                            color: isSelected
+                                ? (isDark
+                                    ? AppColors.mainSoftBlue
+                                    : AppColors.success)
+                                : AppColors.softGray,
+                            size: 20.sp,
+                          ),
+                          SizedBox(width: 10.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  l10nPick(
+                                    context,
+                                    en: r['title_en']!,
+                                    fa: r['title_fa']!,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark
+                                        ? AppColors.darkTextPrimary
+                                        : AppColors.lightTextPrimary,
+                                  ),
+                                ),
+                                SizedBox(height: 2.h),
+                                Text(
+                                  l10nPick(
+                                    context,
+                                    en: r['desc_en']!,
+                                    fa: r['desc_fa']!,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    color: isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+          if (_error != null) ...[
+            SizedBox(height: 8.h),
+            Text(
+              _error!,
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+          SizedBox(height: 16.h),
+          // Confirm Button (min 48x48dp accessible touch target)
+          ElevatedButton(
+            onPressed: _isSubmitting ? null : _submitReplacement,
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(double.infinity, 48.h),
+              backgroundColor: const Color(0xFFDC2626),
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(vertical: 14.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14.r),
+              ),
+              elevation: 2,
+            ),
+            child: _isSubmitting
+                ? SizedBox(
+                    width: 20.r,
+                    height: 20.r,
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text(
+                    l10nPick(
+                      context,
+                      en: 'Confirm & Order Replacement',
+                      fa: 'تایید و ثبت سفارش کارت جایگزین',
+                      ar: 'تأكيد وطلب استبدال البطاقة',
+                      zh: '确认并申请补发新卡',
+                    ),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+          ),
         ],
       ),
     );

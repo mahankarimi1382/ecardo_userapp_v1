@@ -1,0 +1,8 @@
+﻿relative_path,filename,pattern_flags
+android/app/src/debug/AndroidManifest.xml,AndroidManifest.xml,permissions
+android/app/src/main/AndroidManifest.xml,AndroidManifest.xml,deep_link;notification;camera_qr;permissions
+android/app/src/profile/AndroidManifest.xml,AndroidManifest.xml,permissions
+firebase.json,firebase.json,NO_KNOWN_PATTERN_MATCH_REVIEW_REQUIRED
+ios/Runner/Info.plist,Info.plist,notification;camera_qr;permissions
+l10n.yaml,l10n.yaml,NO_KNOWN_PATTERN_MATCH_REVIEW_REQUIRED
+pubspec.yaml,pubspec.yaml,deep_link;notification;camera_qr

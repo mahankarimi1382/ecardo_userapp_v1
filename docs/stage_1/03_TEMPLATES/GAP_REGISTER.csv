@@ -1,0 +1,1 @@
+gap_id,severity,category,summary,affected_route_ids,affected_files,evidence_ref,observed_behavior,expected_behavior,business_impact,security_or_financial_risk,dependency,proposed_fix,acceptance_criteria,status,owner,blocked_reason,regression_test_ref

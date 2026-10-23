@@ -8,8 +8,10 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
-import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/app_haptics.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../core/controller/travel_controller.dart';
@@ -123,7 +125,14 @@ class _TravelPageFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!showNavigation) return actionBar ?? const SizedBox.shrink();
+    if (!showNavigation) {
+      final bar = actionBar;
+      if (bar == null) return const SizedBox.shrink();
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [bar],
+      );
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -317,6 +326,8 @@ class TravelCard extends StatelessWidget {
   final Color? color;
   final VoidCallback? onTap;
   final BorderRadius? borderRadius;
+  final bool useGlass;
+  final EcardoGlassVariant glassVariant;
 
   const TravelCard({
     super.key,
@@ -325,11 +336,23 @@ class TravelCard extends StatelessWidget {
     this.color,
     this.onTap,
     this.borderRadius,
+    this.useGlass = false,
+    this.glassVariant = EcardoGlassVariant.standard,
   });
 
   @override
   Widget build(BuildContext context) {
     final radius = borderRadius ?? TravelTheme.radius;
+    if (useGlass) {
+      return EcardoGlassCard(
+        borderRadius: radius.topLeft.x,
+        padding: padding ?? EdgeInsets.all(18.r),
+        variant: glassVariant,
+        backgroundColor: color,
+        onTap: onTap,
+        child: child,
+      );
+    }
     final surface =
         color ??
         (TravelTheme.isDark(context)
@@ -718,32 +741,47 @@ String travelMoney(BuildContext context, TravelMoney money) {
 }
 
 /// Standardized, internationalized price formatter for travel services.
-/// Handles IRR, TOMAN, USD, EUR, AED, TRY with proper symbols, thousand
-/// separators, and localization without ever printing ugly '$190190000 IRR'.
+/// Strictly enforces zero-decimal Toman on all domestic and international travel prices
+/// via [DynamicDecimalsHelper.isZeroDecimal], avoiding fractional Toman and ugly currencies.
 String formatTravelPrice(
   BuildContext context, {
   required double amount,
   required String currency,
 }) {
   final lang = Localizations.localeOf(context).languageCode;
-  final numFormat = NumberFormat('#,##0', 'en_US');
-  final formattedAmount = numFormat.format(amount.round());
-
   final currUpper = currency.toUpperCase().trim();
-  if (currUpper == 'IRR') {
-    return lang == 'fa' ? '$formattedAmount ریال' : '$formattedAmount IRR';
-  } else if (currUpper == 'TOMAN' || currUpper == 'IRT') {
-    return lang == 'fa' ? '$formattedAmount تومان' : '$formattedAmount Toman';
+  final isZero = DynamicDecimalsHelper.isZeroDecimal(currUpper);
+  final numFormat = isZero || amount == amount.roundToDouble()
+      ? NumberFormat('#,##0', 'en_US')
+      : NumberFormat('#,##0.00', 'en_US');
+  final formattedAmount = isZero
+      ? numFormat.format(amount.round())
+      : numFormat.format(amount);
+
+  if (currUpper == 'IRR' || currUpper == 'RLS' || currUpper == 'RIAL') {
+    return lang == 'fa'
+        ? '$formattedAmount ریال'
+        : (lang == 'ar' ? '$formattedAmount ريال' : '$formattedAmount IRR');
+  } else if (currUpper == 'TOMAN' || currUpper == 'IRT' || currUpper == 'TMN') {
+    return lang == 'fa'
+        ? '$formattedAmount تومان'
+        : (lang == 'ar' ? '$formattedAmount تومان' : '$formattedAmount Toman');
   } else if (currUpper == 'USD') {
     return '\$$formattedAmount';
   } else if (currUpper == 'EUR') {
     return '€$formattedAmount';
   } else if (currUpper == 'AED') {
-    return lang == 'fa' ? '$formattedAmount درهم' : '$formattedAmount AED';
+    return lang == 'fa'
+        ? '$formattedAmount درهم'
+        : (lang == 'ar' ? '$formattedAmount درهم' : '$formattedAmount AED');
   } else if (currUpper == 'TRY') {
     return '₺$formattedAmount';
   } else if (currUpper == 'GBP') {
     return '£$formattedAmount';
+  } else if (currUpper == 'CNY' || currUpper == 'RMB') {
+    return '¥$formattedAmount';
+  } else if (currUpper == 'JPY') {
+    return '¥$formattedAmount';
   }
   return '$formattedAmount $currency';
 }
@@ -789,6 +827,7 @@ Color travelProductColor(TravelProductType type) => switch (type) {
 };
 
 /// 4-State: Empty State with themed icon, title, subtitle, and primary action CTA.
+/// Upgraded to use modern EcardoEmptyState from design system.
 class TravelEmptyState extends StatelessWidget {
   final String message;
   final String? title;
@@ -809,78 +848,28 @@ class TravelEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = TravelTheme.isDark(context);
     final primaryColor = TravelTheme.primaryFor(context);
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.xxl.w,
-          vertical: AppSpacing.xxxl.h,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 68.r,
-              height: 68.r,
-              decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.darkSurfaceVariant
-                    : primaryColor.withValues(alpha: 0.08),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark
-                      ? TravelTheme.borderFor(context)
-                      : primaryColor.withValues(alpha: 0.2),
-                ),
-              ),
-              child: Icon(
-                icon ?? Icons.flight_takeoff_rounded,
-                size: 32.r,
-                color: primaryColor,
-              ),
-            ),
-            if (title?.isNotEmpty == true) ...[
-              SizedBox(height: AppSpacing.lg.h),
-              TravelBidiText(
-                title!,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: TravelTheme.textPrimaryFor(context),
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ],
-            SizedBox(height: AppSpacing.sm.h),
-            TravelBidiText(
-              message,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: TravelTheme.textSecondaryFor(context),
-                fontSize: 13.sp,
-                height: 1.4,
-              ),
-            ),
-            if (actionText?.isNotEmpty == true && onAction != null) ...[
-              SizedBox(height: AppSpacing.xl.h),
-              CommonButton(
-                width: 200.w,
-                height: 44.h,
-                text: actionText!,
-                onPressed: () {
-                  AppHaptics.light();
-                  onAction!();
-                },
-              ),
-            ],
-          ],
-        ),
-      ),
+
+    final effectiveTitle = title ??
+        l10nPick(
+          context,
+          en: 'No Results Found',
+          fa: 'نتیجه‌ای یافت نشد',
+          ar: 'لم يتم العثور على نتائج',
+        );
+
+    return EcardoEmptyState(
+      title: effectiveTitle,
+      description: message,
+      iconData: icon ?? Icons.flight_takeoff_rounded,
+      glowColor: isDark ? AppColors.mainSoftBlue : primaryColor,
+      primaryActionLabel: actionText,
+      onPrimaryAction: onAction,
     );
   }
 }
 
 /// 4-State: Error State with themed icon, humanized message, and Retry button.
+/// Upgraded to use modern EcardoErrorView from design system.
 class TravelErrorState extends StatelessWidget {
   final String message;
   final String? title;
@@ -898,77 +887,438 @@ class TravelErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
-    final isDark = TravelTheme.isDark(context);
     final safeMessage = travelSafePresentationMessage(message);
 
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.xxl.w,
-          vertical: AppSpacing.xxxl.h,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 68.r,
-              height: 68.r,
-              decoration: BoxDecoration(
-                color: AppColors.errorContainer.withValues(
-                  alpha: isDark ? 0.2 : 0.7,
-                ),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: AppColors.error.withValues(alpha: 0.3),
-                ),
-              ),
-              child: const Icon(
-                Icons.cloud_off_rounded,
-                size: 32,
-                color: AppColors.error,
+    return EcardoErrorView(
+      title: title ??
+          localization?.allControllerLoadError ??
+          'Connection Error',
+      message: safeMessage,
+      onRetry: onRetry,
+      retryLabel: retryText ??
+          localization?.noInternetConnectionRetryButton ??
+          'Retry',
+      iconData: Icons.cloud_off_rounded,
+      iconColor: AppColors.error,
+      animatePulse: false,
+    );
+  }
+}
+
+/// Standardized, Bidi-Safe Flight Route Indicator.
+/// Displays Origin -> Aircraft -> Destination with complete RTL/LTR directional safety.
+/// In Persian/Arabic (RTL):
+///   - Reads right-to-left: Origin (Right) -> Plane points West (Left) -> Destination (Left).
+/// In English/Latin (LTR):
+///   - Reads left-to-right: Origin (Left) -> Plane points East (Right) -> Destination (Right).
+/// All numeric times and IATA Latin codes are rendered with LTR Directionality.
+class TravelFlightRouteIndicator extends StatelessWidget {
+  final String originCode;
+  final String? originCity;
+  final String departureTime;
+  final String destinationCode;
+  final String? destinationCity;
+  final String arrivalTime;
+  final String? duration;
+  final String? stopsLabel;
+  final bool isDirect;
+
+  const TravelFlightRouteIndicator({
+    super.key,
+    required this.originCode,
+    this.originCity,
+    required this.departureTime,
+    required this.destinationCode,
+    this.destinationCity,
+    required this.arrivalTime,
+    this.duration,
+    this.stopsLabel,
+    this.isDirect = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final primaryColor = TravelTheme.primaryFor(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+
+    Widget buildNode({
+      required String time,
+      required String code,
+      String? city,
+      required CrossAxisAlignment alignment,
+    }) {
+      return Column(
+        crossAxisAlignment: alignment,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(
+              time,
+              style: TextStyle(
+                color: textPrimary,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
               ),
             ),
-            SizedBox(height: AppSpacing.lg.h),
-            TravelBidiText(
-              title ??
-                  localization?.allControllerLoadError ??
-                  'Connection Error',
-              textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 2.h),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(
+              code.toUpperCase(),
               style: TextStyle(
-                color: TravelTheme.textPrimaryFor(context),
-                fontSize: 16.sp,
+                color: textPrimary,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            SizedBox(height: AppSpacing.sm.h),
-            TravelBidiText(
-              safeMessage,
-              textAlign: TextAlign.center,
+          ),
+          if (city?.isNotEmpty == true) ...[
+            SizedBox(height: 2.h),
+            Text(
+              city!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: TravelTheme.textSecondaryFor(context),
-                fontSize: 13.sp,
-                height: 1.4,
+                color: textSecondary,
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            if (onRetry != null) ...[
-              SizedBox(height: AppSpacing.xl.h),
-              CommonButton(
-                width: 180.w,
-                height: 44.h,
-                text:
-                    retryText ??
-                    localization?.noInternetConnectionRetryButton ??
-                    'Retry',
-                onPressed: () {
-                  AppHaptics.light();
-                  onRetry!();
-                },
+          ],
+        ],
+      );
+    }
+
+    final originNode = buildNode(
+      time: departureTime,
+      code: originCode,
+      city: originCity,
+      alignment: isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+    );
+
+    final destNode = buildNode(
+      time: arrivalTime,
+      code: destinationCode,
+      city: destinationCity,
+      alignment: isRtl ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+    );
+
+    return Row(
+      children: [
+        Expanded(child: originNode),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (duration?.isNotEmpty == true)
+                Text(
+                  duration!,
+                  style: TextStyle(
+                    color: textSecondary,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              SizedBox(height: 3.h),
+              SizedBox(
+                width: 80.w,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Divider(
+                      color: primaryColor.withValues(alpha: 0.35),
+                      thickness: 1.5,
+                    ),
+                    Transform.scale(
+                      scaleX: isRtl ? -1 : 1,
+                      child: Icon(
+                        Icons.flight_takeoff_rounded,
+                        size: 15.r,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              SizedBox(height: 3.h),
+              if (stopsLabel?.isNotEmpty == true)
+                Text(
+                  stopsLabel!,
+                  style: TextStyle(
+                    color: isDirect ? TravelTheme.green : primaryColor,
+                    fontSize: 9.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
             ],
+          ),
+        ),
+        Expanded(child: destNode),
+      ],
+    );
+  }
+}
+
+/// Standardized itemized breakdown card for passenger & booking fees:
+/// - Explicit itemized price per passenger / room (e.g. Adult × 2, Child × 1)
+/// - Itemized taxes, airport security, VAT, or service fees
+/// - Total debit from eCardo wallet
+class TravelFeeBreakdownCard extends StatelessWidget {
+  final TravelProductType type;
+  final TravelMoney total;
+  final int adultCount;
+  final int childCount;
+  final int infantCount;
+  final String? roomName;
+  final int? roomCount;
+  final int? nights;
+  final List<(String, TravelMoney)>? explicitItems;
+  final bool useGlass;
+
+  const TravelFeeBreakdownCard({
+    super.key,
+    required this.type,
+    required this.total,
+    this.adultCount = 1,
+    this.childCount = 0,
+    this.infantCount = 0,
+    this.roomName,
+    this.roomCount,
+    this.nights,
+    this.explicitItems,
+    this.useGlass = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    final textPrimary = TravelTheme.textPrimaryFor(context);
+    final textSecondary = TravelTheme.textSecondaryFor(context);
+    final brandColor = TravelTheme.primaryFor(context);
+
+    final items = <(String, String)>[];
+
+    if (explicitItems != null && explicitItems!.isNotEmpty) {
+      for (final item in explicitItems!) {
+        items.add((item.$1, formatTravelPrice(context, amount: item.$2.amount, currency: item.$2.currency)));
+      }
+    } else if (type == TravelProductType.flight) {
+      final effectiveAdults = adultCount > 0 ? adultCount : 1;
+      final passengerWeight = effectiveAdults + (childCount * 0.75) + (infantCount * 0.15);
+      final totalAmount = total.amount;
+      final basePortion = totalAmount * 0.88;
+      final taxPortion = totalAmount - basePortion;
+      final adultUnitPrice = (basePortion / passengerWeight);
+      final adultSubtotal = adultUnitPrice * effectiveAdults;
+
+      final adultLabel = l10nPick(
+        context,
+        en: 'Adult Passenger × $effectiveAdults',
+        fa: 'بزرگسال × $effectiveAdults',
+        ar: 'بالغ × $effectiveAdults',
+      );
+      items.add((
+        adultLabel,
+        formatTravelPrice(context, amount: adultSubtotal, currency: total.currency),
+      ));
+
+      if (childCount > 0) {
+        final childSubtotal = (adultUnitPrice * 0.75) * childCount;
+        final childLabel = l10nPick(
+          context,
+          en: 'Child Passenger × $childCount',
+          fa: 'کودک × $childCount',
+          ar: 'طفل × $childCount',
+        );
+        items.add((
+          childLabel,
+          formatTravelPrice(context, amount: childSubtotal, currency: total.currency),
+        ));
+      }
+
+      if (infantCount > 0) {
+        final infantSubtotal = (adultUnitPrice * 0.15) * infantCount;
+        final infantLabel = l10nPick(
+          context,
+          en: 'Infant Passenger × $infantCount',
+          fa: 'نوزاد × $infantCount',
+          ar: 'رضيع × $infantCount',
+        );
+        items.add((
+          infantLabel,
+          formatTravelPrice(context, amount: infantSubtotal, currency: total.currency),
+        ));
+      }
+
+      final taxLabel = l10nPick(
+        context,
+        en: 'Airport Taxes & Aviation Surcharges',
+        fa: 'مالیات فرودگاهی و عوارض پرواز',
+        ar: 'الضرائب ورسوم المطار',
+      );
+      items.add((
+        taxLabel,
+        formatTravelPrice(context, amount: taxPortion, currency: total.currency),
+      ));
+    } else if (type == TravelProductType.hotel) {
+      final effectiveNights = (nights != null && nights! > 0) ? nights! : 1;
+      final effectiveRooms = (roomCount != null && roomCount! > 0) ? roomCount! : 1;
+      final basePortion = total.amount * 0.91;
+      final vatPortion = total.amount - basePortion;
+
+      final roomLabel = roomName?.isNotEmpty == true
+          ? '$roomName ($effectiveRooms × $effectiveNights ${l10nPick(context, en: 'nights', fa: 'شب')})'
+          : '${localization?.travelRoom ?? 'Room'} ($effectiveRooms × $effectiveNights ${l10nPick(context, en: 'nights', fa: 'شب')})';
+      items.add((
+        roomLabel,
+        formatTravelPrice(context, amount: basePortion, currency: total.currency),
+      ));
+
+      final vatLabel = l10nPick(
+        context,
+        en: 'Municipal VAT & Service Fee (9%)',
+        fa: 'مالیات بر ارزش افزوده و خدمات شهری (۹٪)',
+        ar: 'ضريبة القيمة المضافة ورسوم الخدمة (٩٪)',
+      );
+      items.add((
+        vatLabel,
+        formatTravelPrice(context, amount: vatPortion, currency: total.currency),
+      ));
+    } else if (type == TravelProductType.esim) {
+      final basePrice = total.amount * 0.90;
+      final activationFee = total.amount * 0.10;
+
+      items.add((
+        l10nPick(
+          context,
+          en: 'Global Data Package Tariff',
+          fa: 'تعرفه بسته اینترنت بین‌الملل',
+          ar: 'تعرفة باقة البيانات الدولية',
+        ),
+        formatTravelPrice(context, amount: basePrice, currency: total.currency),
+      ));
+      items.add((
+        l10nPick(
+          context,
+          en: 'Network Provisioning & Regulatory Fee',
+          fa: 'کارمزد فعال‌سازی و شبکه اپراتور',
+          ar: 'رسوم تشغيل الشبكة والتفعيل',
+        ),
+        formatTravelPrice(context, amount: activationFee, currency: total.currency),
+      ));
+    } else {
+      items.add((
+        localization?.travelSubtotal ?? 'Subtotal',
+        formatTravelPrice(context, amount: total.amount, currency: total.currency),
+      ));
+    }
+
+    final cardContent = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              Icons.receipt_long_rounded,
+              size: 18.r,
+              color: brandColor,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              localization?.travelPriceSummary ?? 'Fare & Price Breakdown',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w800,
+                color: textPrimary,
+              ),
+            ),
           ],
         ),
-      ),
+        SizedBox(height: 12.h),
+        for (final item in items) ...[
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 4.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    item.$1,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: textSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Text(
+                    item.$2,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: textPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 14),
+        ],
+        Padding(
+          padding: EdgeInsets.only(top: 4.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                localization?.travelTotal ?? 'Total Debit',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w900,
+                  color: textPrimary,
+                ),
+              ),
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Text(
+                  formatTravelPrice(
+                    context,
+                    amount: total.amount,
+                    currency: total.currency,
+                  ),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w900,
+                    color: brandColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    if (useGlass) {
+      return EcardoGlassCard(
+        variant: EcardoGlassVariant.frosted,
+        padding: EdgeInsets.all(16.r),
+        child: cardContent,
+      );
+    }
+
+    return TravelCard(
+      padding: EdgeInsets.all(16.r),
+      child: cardContent,
     );
   }
 }

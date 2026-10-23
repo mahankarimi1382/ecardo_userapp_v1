@@ -11,11 +11,13 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_error_view.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/controller/make_payment_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/view/sub_sections/make_payment_review_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/make_payment/view/sub_sections/make_payment_success_step_section.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/tx_flow_shimmer_skeleton.dart';
 
 class MakePaymentScreen extends StatefulWidget {
   const MakePaymentScreen({super.key});
@@ -135,7 +137,20 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return const CommonLoading();
+                      return const TxFlowShimmerSkeleton();
+                    }
+
+                    if (controller.hasError.value) {
+                      return Center(
+                        child: EcardoErrorView(
+                          message: controller.errorMessage.value.isNotEmpty
+                              ? controller.errorMessage.value
+                              : localization.allControllerLoadError,
+                          onRetry: loadData,
+                          retryLabel:
+                              localization.noInternetConnectionRetryButton,
+                        ),
+                      );
                     }
 
                     if (controller.paymentWalletsList.isEmpty ||

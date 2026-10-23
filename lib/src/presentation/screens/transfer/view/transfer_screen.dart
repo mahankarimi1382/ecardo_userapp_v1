@@ -8,6 +8,7 @@ import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/presentation/screens/beneficiary/controller/create_beneficiary_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/controller/transfer_controller.dart';
@@ -16,6 +17,7 @@ import 'package:ecardo_user/src/presentation/screens/transfer/view/sub_sections/
 import 'package:ecardo_user/src/presentation/screens/transfer/view/sub_sections/transfer_success_step_section.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/sub_sections/transfer_wallet_section.dart';
 import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/transfer_step_indicator.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/tx_flow_shimmer_skeleton.dart';
 
 class TransferScreen extends StatefulWidget {
   const TransferScreen({super.key});
@@ -158,7 +160,44 @@ class _TransferScreenState extends State<TransferScreen> {
                 Expanded(
                   child: Obx(() {
                     if (controller.isLoading.value) {
-                      return const CommonLoading();
+                      return const TxFlowShimmerSkeleton();
+                    }
+
+                    if (controller.hasError.value) {
+                      return Center(
+                        child: EcardoErrorView(
+                          message: controller.errorMessage.value.isNotEmpty
+                              ? controller.errorMessage.value
+                              : localization.allControllerLoadError,
+                          onRetry: () {
+                            controller.fetchTransferWallets();
+                            controller.fetchUser();
+                            controller.fetchTransferConfig();
+                            controller.fetchBeneficiary();
+                          },
+                          retryLabel:
+                              localization.noInternetConnectionRetryButton,
+                        ),
+                      );
+                    }
+
+                    if (controller.currentStep.value == 0 &&
+                        controller.transferWalletsList.isEmpty) {
+                      return Center(
+                        child: EcardoEmptyState(
+                          title:
+                              localization.transferWalletSectionWalletsNotFound,
+                          description: localization.allControllerLoadError,
+                          primaryActionLabel:
+                              localization.noInternetConnectionRetryButton,
+                          onPrimaryAction: () {
+                            controller.fetchTransferWallets();
+                            controller.fetchUser();
+                            controller.fetchTransferConfig();
+                            controller.fetchBeneficiary();
+                          },
+                        ),
+                      );
                     }
 
                     if (controller.currentStep.value == 0) {

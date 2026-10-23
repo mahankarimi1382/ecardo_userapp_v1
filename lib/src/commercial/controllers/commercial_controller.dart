@@ -17,6 +17,7 @@ class CommercialController extends GetxController {
   final RxBool isLoadingProjects = false.obs;
   final RxBool isLoadingDetail = false.obs;
   final RxBool isSubmittingInvestment = false.obs;
+  final RxBool isOffline = false.obs;
   final RxString errorMessage = ''.obs;
 
   @override
@@ -28,6 +29,7 @@ class CommercialController extends GetxController {
 
   void loadProjects() {
     isLoadingProjects.value = true;
+    errorMessage.value = '';
     try {
       // Seed illustrative baseline projects
       final initial = [
@@ -42,6 +44,7 @@ class CommercialController extends GetxController {
           minInvestment: 500.0,
           daysLeft: 18,
           location: 'Dubai Internet City, UAE 🇦🇪',
+          totalInvestors: 142,
         ),
         const EquityProjectItem(
           id: 'eq-002',
@@ -54,6 +57,7 @@ class CommercialController extends GetxController {
           minInvestment: 1000.0,
           daysLeft: 34,
           location: 'Antalya Solar Park, Turkey 🇹🇷',
+          totalInvestors: 89,
         ),
         const EquityProjectItem(
           id: 'eq-003',
@@ -66,6 +70,7 @@ class CommercialController extends GetxController {
           minInvestment: 50000000.0,
           daysLeft: 12,
           location: 'Shiraz Agro-Industrial Zone, Iran 🇮🇷',
+          totalInvestors: 315,
         ),
       ];
 
@@ -76,6 +81,18 @@ class CommercialController extends GetxController {
     } finally {
       isLoadingProjects.value = false;
     }
+  }
+
+  void setOffline(bool offline) {
+    isOffline.value = offline;
+  }
+
+  void setError(String error) {
+    errorMessage.value = error;
+  }
+
+  void clearError() {
+    errorMessage.value = '';
   }
 
   void applyFilter(String sector) {
@@ -255,6 +272,7 @@ class CommercialController extends GetxController {
           daysLeft: current.daysLeft,
           location: current.location,
           imageUrl: current.imageUrl,
+          totalInvestors: current.totalInvestors + 1,
         );
         applyFilter(selectedSector.value);
       }

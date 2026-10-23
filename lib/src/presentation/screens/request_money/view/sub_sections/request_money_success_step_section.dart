@@ -48,10 +48,9 @@ class _RequestMoneySuccessStepSectionState
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
       currencyCode: walletCode,
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      )!,
+      siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
       isCrypto: currentWallet?.isCrypto ?? false,
     );
 
@@ -114,6 +113,9 @@ class _RequestMoneySuccessStepSectionState
                       transactionReference:
                           _nonEmpty(requestData?["tnx"]?.toString()) ??
                           _nonEmpty(requestData?["id"]?.toString()),
+                      primaryAmount: reqAmount,
+                      primaryCurrency: walletCode,
+                      primaryDecimals: calculateDecimals,
                       status: EcardoReceiptStatus.success,
                       items: [
                         EcardoReceiptItem(

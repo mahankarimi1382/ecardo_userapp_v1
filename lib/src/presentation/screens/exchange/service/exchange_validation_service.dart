@@ -1,4 +1,5 @@
 import 'package:ecardo_user/l10n/app_localizations.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/helper/money_math_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/exchange/model/exchange_wallet_model.dart';
 
@@ -126,6 +127,8 @@ class ExchangeValidationService {
     }
 
     final currency = fromWallet.code ?? '';
+    final effectiveDecimals =
+        DynamicDecimalsHelper.isZeroDecimal(currency) ? 0 : decimals;
     final double min =
         double.tryParse(fromWallet.exchangeLimit?.min ?? '') ?? 0.0;
     final double maxRaw =
@@ -133,7 +136,7 @@ class ExchangeValidationService {
     final double max = maxRaw <= 0 ? double.infinity : maxRaw;
 
     if (min > 0 && enteredAmount < min) {
-      final formattedMin = min.toStringAsFixed(decimals);
+      final formattedMin = min.toStringAsFixed(effectiveDecimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.amountBelowMinimum,
         errorMessage:
@@ -148,7 +151,7 @@ class ExchangeValidationService {
     }
 
     if (max.isFinite && enteredAmount > max) {
-      final formattedMax = max.toStringAsFixed(decimals);
+      final formattedMax = max.toStringAsFixed(effectiveDecimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.amountAboveMaximum,
         errorMessage:
@@ -165,7 +168,7 @@ class ExchangeValidationService {
     final double availableBalance =
         double.tryParse(fromWallet.balance ?? '') ?? 0.0;
     if ((enteredAmount + charge) > availableBalance) {
-      final formattedBalance = availableBalance.toStringAsFixed(decimals);
+      final formattedBalance = availableBalance.toStringAsFixed(effectiveDecimals);
       return ExchangeValidationResult.invalid(
         errorType: ExchangeValidationErrorType.insufficientBalance,
         errorMessage:
@@ -272,13 +275,22 @@ class ExchangeValidationService {
   }
 
   /// Formats percentage of balance for quick-select chips (e.g. 25%, 50%, 75%, 100%).
+  /// For zero-decimal currencies (IRT, IRR, etc.), formats as an integer without decimal point.
   String calculateQuickAmountString({
     required double balance,
     required double percent,
     bool isCrypto = false,
+    bool isZeroDecimal = false,
+    String? currencyCode,
   }) {
     if (balance <= 0) return '0';
     final fraction = balance * percent;
+    final bool zeroDec = isZeroDecimal ||
+        (currencyCode != null &&
+            DynamicDecimalsHelper.isZeroDecimal(currencyCode));
+    if (zeroDec) {
+      return fraction.round().toString();
+    }
     final decimals = isCrypto ? 8 : 2;
     return fraction.toStringAsFixed(decimals);
   }

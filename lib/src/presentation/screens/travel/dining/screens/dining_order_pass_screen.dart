@@ -5,13 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import '../controllers/dining_controller.dart';
 import '../models/dining_models.dart';
 import '../../local/widgets/experience_ui_components.dart';
+import '../../shared/travel_widgets.dart';
 
 class DiningOrderPassScreen extends StatefulWidget {
   final DiningOrderModel order;
@@ -386,14 +387,21 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Text(
-                              '${it.subtotal.toStringAsFixed(0)} ${currentOrder.currency}',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w700,
-                                color: isDark
-                                    ? AppColors.darkTextSecondary
-                                    : AppColors.lightTextSecondary,
+                            Directionality(
+                              textDirection: TextDirection.ltr,
+                              child: Text(
+                                formatTravelPrice(
+                                  context,
+                                  amount: it.subtotal,
+                                  currency: currentOrder.currency,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
+                                ),
                               ),
                             ),
                           ],
@@ -415,14 +423,21 @@ class _DiningOrderPassScreenState extends State<DiningOrderPassScreen> {
                                 : AppColors.lightTextPrimary,
                           ),
                         ),
-                        Text(
-                          '${currentOrder.totalAmount.toStringAsFixed(0)} ${currentOrder.currency}',
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w900,
-                            color: isCancelled
-                                ? AppColors.error
-                                : AppColors.success,
+                        Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Text(
+                            formatTravelPrice(
+                              context,
+                              amount: currentOrder.totalAmount,
+                              currency: currentOrder.currency,
+                            ),
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w900,
+                              color: isCancelled
+                                  ? AppColors.error
+                                  : AppColors.success,
+                            ),
                           ),
                         ),
                       ],

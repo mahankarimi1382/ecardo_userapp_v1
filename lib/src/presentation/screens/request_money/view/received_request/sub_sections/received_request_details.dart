@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/model/received_request_model.dart';
@@ -17,26 +17,25 @@ class ReceivedRequestDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final SettingsService settingsService = Get.find();
     final localization = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
-    // M-8 — `charge` / `finalAmount` are backend-provided strings;
-    // `double.tryParse(x!)!` crashed the details sheet whenever either was
-    // null or non-numeric. Safe-parse with a 0.0 fallback instead — valid
-    // values render exactly as before.
     final double chargeValue = double.tryParse(request.charge ?? '') ?? 0.0;
     final double finalAmountValue =
         double.tryParse(request.finalAmount ?? '') ?? 0.0;
+    final currencyCode = request.currency ?? 'USD';
 
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: request.currency!,
-      siteCurrencyCode: settingsService.getSetting("site_currency")!,
-      siteCurrencyDecimals: settingsService.getSetting(
-        "site_currency_decimals",
-      )!,
-      isCrypto: request.isCrypto!,
+      currencyCode: currencyCode,
+      siteCurrencyCode: settingsService.getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          settingsService.getSetting("site_currency_decimals") ?? '2',
+      isCrypto: request.isCrypto ?? false,
     );
 
     Color getStatusColor(String? status) {
-      switch (status) {
+      switch (status?.toLowerCase()) {
         case "success":
           return AppColors.success;
         case "pending":
@@ -48,69 +47,84 @@ class ReceivedRequestDetails extends StatelessWidget {
 
     return AnimatedContainer(
       width: double.infinity,
-      duration: const Duration(milliseconds: 300),
-      height: 430,
+      duration: AppDurations.normal,
+      height: 440,
       curve: Curves.easeOutQuart,
-      margin: const EdgeInsetsDirectional.symmetric(horizontal: 12),
+      margin: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.sm),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? colorScheme.surfaceContainerHigh : colorScheme.surface,
         borderRadius: const BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withValues(alpha: 0.06),
+            color: (isDark ? Colors.black : AppColors.lightShadow).withValues(
+              alpha: isDark ? 0.4 : 0.08,
+            ),
             blurRadius: 40,
-            spreadRadius: 0,
             offset: Offset.zero,
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsetsDirectional.symmetric(horizontal: 24),
+        padding: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.page,
+        ),
         child: Column(
           children: [
-            _buildHeader(),
+            _buildHeader(colorScheme),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     _buildDetailRow(
+                      context,
                       label: localization.receivedRequestDetailsRequestEmail,
-                      content: request.requester!.email!,
-                      contentColor: AppColors.lightPrimary,
+                      content: request.requester?.email ?? '',
+                      contentColor: colorScheme.primary,
                     ),
                     _buildDetailRow(
+                      context,
                       label: localization.receivedRequestDetailsCurrency,
-                      content: request.currency!,
-                      contentColor: AppColors.lightTextPrimary,
+                      content: currencyCode,
+                      contentColor: colorScheme.onSurface,
                     ),
-
                     _buildDetailRow(
+                      context,
                       label: localization.receivedRequestDetailsCharge,
                       content:
-                          "${chargeValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${chargeValue.toStringAsFixed(calculateDecimals)} $currencyCode",
                       contentColor: AppColors.error,
                     ),
-
                     _buildDetailRow(
+                      context,
                       label: localization.receivedRequestDetailsFinalAmount,
                       content:
-                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} ${request.currency}",
+                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} $currencyCode",
                       contentColor: AppColors.success,
                     ),
-
                     _buildDetailRow(
+                      context,
                       label: localization.receivedRequestDetailsRequestAt,
-                      content: DateFormat(
-                        "dd MMM yyyy",
-                      ).format(DateTime.parse(request.createdAt!)),
-                      contentColor: AppColors.lightTextPrimary,
+                      content: request.createdAt != null &&
+                              request.createdAt!.isNotEmpty
+                          ? () {
+                              try {
+                                return DateFormat("dd MMM yyyy").format(
+                                  DateTime.parse(request.createdAt!),
+                                );
+                              } catch (_) {
+                                return request.createdAt!.split(",").first;
+                              }
+                            }()
+                          : '',
+                      contentColor: colorScheme.onSurface,
                     ),
-
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(top: 10),
+                      padding: const EdgeInsetsDirectional.only(
+                        top: AppSpacing.sm,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,35 +132,39 @@ class ReceivedRequestDetails extends StatelessWidget {
                           Text(
                             localization.receivedRequestDetailsStatus,
                             style: TextStyle(
+                              fontFamily: 'Plus Jakarta Sans',
                               letterSpacing: 0,
-                              fontSize: 16,
-                              color: AppColors.lightTextTertiary,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              color: colorScheme.onSurface.withValues(
+                                alpha: 0.65,
+                              ),
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 4,
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.xs,
                             ),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: getStatusColor(
-                                request.status!.toLowerCase(),
+                              borderRadius: BorderRadius.circular(
+                                AppSpacing.radiusFull,
                               ),
+                              color: getStatusColor(request.status),
                             ),
                             child: Text(
                               () {
-                                final status = (request.status);
-                                return status!.isNotEmpty
+                                final status = request.status ?? '';
+                                return status.isNotEmpty
                                     ? status[0].toUpperCase() +
-                                          status.substring(1)
+                                        status.substring(1)
                                     : "";
                               }(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
+                              style: const TextStyle(
+                                fontFamily: 'Plus Jakarta Sans',
+                                fontWeight: FontWeight.w800,
                                 letterSpacing: 0,
-                                fontSize: 13,
+                                fontSize: 12,
                                 color: AppColors.white,
                               ),
                             ),
@@ -154,7 +172,7 @@ class ReceivedRequestDetails extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSpacing.xxl),
                   ],
                 ),
               ),
@@ -165,94 +183,95 @@ class ReceivedRequestDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(ColorScheme colorScheme) {
     return Column(
       children: [
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         Container(
           width: 40,
-          height: 5,
+          height: 4,
           decoration: BoxDecoration(
-            color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-            borderRadius: BorderRadius.circular(30),
+            color: colorScheme.onSurface.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: AppSpacing.lg),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              request.requester!.name ?? "",
+              request.requester?.name ?? "",
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
+                fontFamily: 'Plus Jakarta Sans',
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
                 letterSpacing: 0,
-                color: AppColors.lightTextPrimary,
+                color: colorScheme.onSurface,
               ),
             ),
             GestureDetector(
               onTap: () => Get.back(),
-              child: Image.asset(
-                PngAssets.closeCommonIcon,
-                width: 28,
-                color: AppColors.lightTextPrimary,
+              child: Container(
+                width: 32,
+                height: 32,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.5,
+                  ),
+                ),
+                child: Icon(
+                  Icons.close_rounded,
+                  size: 18,
+                  color: colorScheme.onSurface,
+                ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        _buildDivider(),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.md),
       ],
     );
   }
 
-  Widget _buildDivider() {
-    return Container(
-      width: double.infinity,
-      height: 1.1,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.white,
-            AppColors.lightTextPrimary.withValues(alpha: 0.1),
-            AppColors.white,
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow({
+  Widget _buildDetailRow(
+    BuildContext context, {
     required String label,
     required String content,
-    Color? contentColor,
+    required Color contentColor,
   }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
-      padding: const EdgeInsetsDirectional.symmetric(vertical: 15),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             label,
             style: TextStyle(
+              fontFamily: 'Plus Jakarta Sans',
               letterSpacing: 0,
-              fontSize: 15,
-              color: AppColors.lightTextTertiary,
-              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              color: colorScheme.onSurface.withValues(alpha: 0.65),
+              fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(width: 10),
-          Expanded(
-            flex: 2,
+          Flexible(
             child: Text(
               content,
               textAlign: TextAlign.end,
               style: TextStyle(
+                fontFamily: 'Plus Jakarta Sans',
                 letterSpacing: 0,
                 fontSize: 15,
-                color: contentColor ?? AppColors.lightTextPrimary,
-                fontWeight: FontWeight.w900,
+                color: contentColor,
+                fontWeight: FontWeight.w700,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

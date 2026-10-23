@@ -149,10 +149,7 @@ class BsicardsVirtualCard extends StatelessWidget {
                     SizedBox(width: 8.w),
                     Obx(
                       () => GestureDetector(
-                        onTap: () {
-                          controller.showAccountNumber.value =
-                              !controller.showAccountNumber.value;
-                        },
+                        onTap: () => controller.authenticateAndTogglePan(context),
                         child: SvgPicture.asset(
                           controller.showAccountNumber.value
                               ? SvgAssets.hideEyeIcon
@@ -212,9 +209,9 @@ class BsicardsVirtualCard extends StatelessWidget {
                             ),
                             SizedBox(height: 4.h),
                             GestureDetector(
-                              // phase1-fix (P0-10): CVV masked by default,
-                              // tap to reveal for 10s only.
-                              onTap: controller.revealCvvTemporarily,
+                              // Step-up authentication: biometric / PIN verification
+                              // required before revealing CVV; auto re-masks after 10s.
+                              onTap: () => controller.authenticateAndRevealCvv(context),
                               child: Obx(
                                 () => Text(
                                   controller.showCvv.value

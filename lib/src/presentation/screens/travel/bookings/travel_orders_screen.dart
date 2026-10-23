@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../core/models/travel_models.dart';
@@ -402,6 +402,8 @@ class _TravelOrderCard extends StatelessWidget {
     final prodColor = travelProductColor(order.type);
 
     return TravelCard(
+      useGlass: true,
+      glassVariant: EcardoGlassVariant.subtle,
       child: Column(
         children: [
           Semantics(
@@ -507,10 +509,13 @@ class _TravelOrderCard extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 6.h),
-                        Icon(
-                          Icons.chevron_right_rounded,
-                          color: textSecondary,
-                          size: 18.r,
+                        Transform.scale(
+                          scaleX: Directionality.of(context) == TextDirection.rtl ? -1 : 1,
+                          child: Icon(
+                            Icons.chevron_right_rounded,
+                            color: textSecondary,
+                            size: 18.r,
+                          ),
                         ),
                       ],
                     ),

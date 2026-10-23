@@ -1,0 +1,10 @@
+﻿status,meaning,required_evidence,allowed_to_claim_complete
+DISCOVERED,candidate found in source or runtime,file path or route/entry evidence,No
+SOURCE_MAPPED,"screen symbol, owner, dependency edges understood",route -> widget -> controller -> service -> API -> model mapping,No
+RUNTIME_VERIFIED,screen/flow reached in test environment,"scenario, device/emulator, locale/theme, screenshot/log evidence",No
+UPGRADED,approved code changes delivered locally,"diff/SHA, page spec, changed files, design review",No
+REGRESSION_TESTED,owned test suite passes against target SHA,"commands, exit codes, reports and test ids",Only for named scope
+BLOCKED,cannot verify due to access/tool/provider/infrastructure limitation,"explicit blocker, attempted path, required resolver/owner",No; list blocker
+DEFERRED,intentionally postponed with approver and date,"reason, risk, owner, accepted deadline",No; report exception
+DEPRECATED,confirmed obsolete/out-of-scope code path,"evidence it is unused, safe-removal decision and regression proof",No unless removal itself is accepted
+COMPLETE,all required scope gates pass,"catalog reconciliation, runtime/test evidence, no unresolved P0/P1","Yes, only for stated scope"

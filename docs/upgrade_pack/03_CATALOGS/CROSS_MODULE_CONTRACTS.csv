@@ -1,0 +1,21 @@
+﻿contract_id,source_domain,consumers,contract_payload,authoritative_owner,acceptance_rule
+C001,Auth/session,All protected modules,Session state & refresh policy,Auth backend/session layer,Re-auth before continuing; never bypass guard on deep link
+C002,KYC/eligibility,"Transfer, Cards, Withdraw, Crypto",Eligibility + restrictions + status freshness,KYC/compliance backend,UI visibility is not authorization; backend rechecks
+C003,Wallet/account,"Home, Transfer, Exchange, Cards, History",Available/pending balance + currency + freshness,Wallet/account service + ledger,Never compute canonical balance from partial client history
+C004,Money primitives,All financial screens,Amount value + currency precision + locale formatting,Shared domain money utility,No floating point as canonical amount
+C005,Pricing quote,"Transfer, Exchange, Withdraw, Crypto","quoteId, rate, fee breakdown, expiry, limits",Pricing/quote backend,Expired quote requires fresh quote/review
+C006,Transfer,"History, Receipt, Wallet, Notifications, Support",canonical transaction reference/status,Transaction/ledger backend,"Timeout -> unknown/reconcile, not blind retry"
+C007,Exchange,"History, Receipt, Wallet, Notifications",quote and transaction references; source/target amount,Exchange/transaction backend,Source & target wallet update only from authoritative result
+C008,Withdrawal,"Wallet, History, Receipt, Support","destination, fee, payout status",Withdrawal/payment backend,Never infer payout success from accepted request
+C009,Cards,"Wallet, History, Notifications, KYC","card state, provider eligibility, limits, funding status",Issuer/card service,Card lifecycle follows server state
+C010,Crypto,Deposit/withdraw/QR/history,asset+network+address+memo+fee+confirmation policy,Wallet/network provider,No address or fee fallback
+C011,Transactions,"Receipt, notifications, support, statements",canonical status and timestamps,Transaction service,One status mapping across screens
+C012,Notifications/deep link,App shell + auth + all modules,"event ID, destination route, entity reference",Notification backend and route resolver,Deduplicate; re-authorize destination
+C013,Support case,"Transaction, KYC, auth recovery","safe entity reference, issue context, case ID/status",Support/ticket API,Prevent duplicate case after timeout
+C014,Preferences,All screens,locale/theme/text preference,Local preferences + app config,Apply at startup and maintain per-app consistency
+C015,Connectivity/stale data,All read surfaces,connection status and data freshness,Connectivity + request policy,Make stale status visible; no fake success
+C016,Analytics,All feature modules,allowlisted event schema,Privacy-reviewed analytics layer,"No PII, credentials, raw financial payload by default"
+C017,Session expiry during operation,Financial submit,operation ref and status lookup endpoint,Auth + transaction service,Resolve whether request was processed before retry
+C018,Receipt/export,Transaction service + OS share,"server status, masked data, reference",Receipt formatter,Status explicit; redact sensitive data
+C019,File/KYC upload,KYC + support attachments if present,"upload ID, checksum, status, retry policy",Upload service,Avoid duplicate upload and local sensitive-file leakage
+C020,Localization,"Money, errors, status, date/time",locale-specific presentation of canonical model,Localization layer,Do not localize machine IDs or change amount semantics

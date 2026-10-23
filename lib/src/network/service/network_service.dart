@@ -90,7 +90,75 @@ class NetworkService extends getx.GetxService {
     '/user/rentals/book',
     '/user/tours/book',
     '/user/licenses/order',
+    // Comprehensive financial and state mutation additions:
+    '/user/cards/balance/topup',
+    '/user/cards/update-status',
+    '/user/cards/spending-limits',
+    '/user/cards/change-pin',
+    '/user/cards/replace',
+    '/user/cards/physical-order',
+    '/user/commercial/invest',
+    '/user/equity/invest',
+    '/user/gift-cards/product/order',
+    '/user/payment-links/create',
+    '/user/withdraw-accounts',
+    '/user/ticket',
+    '/epay/cards',
+    '/epay/cards/issue',
+    '/epay/cards/topup',
+    '/user/p2p/ads',
   ];
+
+  /// Verifies whether an endpoint path represents a financial transaction or
+  /// mutating account/card state operation that must be protected by idempotency
+  /// keys and safe unknown/reconciling timeout policies.
+  static bool isMutatingFinancialOrStateEndpoint(String path) {
+    if (_idempotentEndpointSuffixes.any(
+      (suffix) => path.endsWith(suffix) || path.contains('$suffix/'),
+    )) {
+      return true;
+    }
+    // Dynamic card endpoints (e.g. /user/cards/{id}/irr-topup or /user/cards/update-status/{id})
+    if (path.contains('/user/cards') &&
+        (path.contains('/irr-topup') ||
+            path.contains('/balance/topup') ||
+            path.contains('/update-status') ||
+            path.contains('/spending-limits') ||
+            path.contains('/limits') ||
+            path.contains('/change-pin') ||
+            path.contains('/pin') ||
+            path.contains('/replace') ||
+            path.contains('/replacement') ||
+            path.contains('/physical'))) {
+      return true;
+    }
+    // Dynamic request-money actions (e.g. /user/request-money/{id}/action)
+    if (path.contains('/user/request-money/') && path.contains('/action')) {
+      return true;
+    }
+    // Dynamic P2P order mutating actions
+    if (path.contains('/user/p2p/orders/') &&
+        (path.endsWith('/cancel') ||
+            path.endsWith('/mark-paid') ||
+            path.endsWith('/dispute') ||
+            path.endsWith('/release') ||
+            path.endsWith('/payment-method'))) {
+      return true;
+    }
+    // Dynamic P2P ad status updates
+    if (path.contains('/user/p2p/ads/') && path.endsWith('/status-update')) {
+      return true;
+    }
+    // Dynamic remittance upload
+    if (path.contains('/user/remittance/') && path.endsWith('/upload')) {
+      return true;
+    }
+    // ePay card endpoints
+    if (path.contains('/epay/cards')) {
+      return true;
+    }
+    return false;
+  }
 
   AppLocalizations? get localization {
     final ctx = getx.Get.context;
@@ -230,12 +298,15 @@ class NetworkService extends getx.GetxService {
           }
           options.headers['X-Client'] = 'ecardo_user_flutter';
 
-          // v1.0.24 (S-023 client side) / Workstream B: money and idempotent POSTs
+          // v1.0.24 (S-023 client side) / Workstream B: money and idempotent POST/PUT/PATCH
           // carry Idempotency-Key.
           // The key is reused across an in-flight logical call and retained on
           // transport timeouts (up to 5 min TTL) so a retry maps to the same
           // idempotency key server-side.
-          if (options.method.toUpperCase() == 'POST') {
+          final method = options.method.toUpperCase();
+          final isMutating =
+              method == 'POST' || method == 'PUT' || method == 'PATCH';
+          if (isMutating) {
             final existingIdem =
                 options.headers['Idempotency-Key'] ??
                 options.headers['X-Idempotency-Key'];
@@ -258,9 +329,7 @@ class NetworkService extends getx.GetxService {
                   (rawOpId is String && rawOpId.trim().isNotEmpty)
                   ? rawOpId.trim()
                   : null;
-              final isMoney = _idempotentEndpointSuffixes.any(
-                (suffix) => path.endsWith(suffix),
-              );
+              final isMoney = isMutatingFinancialOrStateEndpoint(path);
               if (isMoney || explicitOpId != null) {
                 _evictExpiredIdempotencyEntries();
                 final mapKey = _getIdempotencyMapKey(options);
@@ -1244,6 +1313,8 @@ class NetworkService extends getx.GetxService {
   Future<ApiResponse<Map<String, dynamic>>> put({
     required String endpoint,
     Map<String, dynamic>? data,
+    String? idempotencyKey,
+    String? operationId,
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
@@ -1269,10 +1340,25 @@ class NetworkService extends getx.GetxService {
     }
 
     try {
+      final headers = <String, dynamic>{};
+      if (idempotencyKey != null && idempotencyKey.isNotEmpty) {
+        headers['Idempotency-Key'] = idempotencyKey;
+        headers['X-Idempotency-Key'] = idempotencyKey;
+      }
+      if (operationId != null && operationId.isNotEmpty) {
+        headers['X-Operation-ID'] = operationId;
+      }
       final response = await _dio.put(
         endpoint,
         data: data != null ? jsonEncode(data) : null,
-        options: Options(extra: {'isForeground': isForeground}),
+        options: Options(
+          headers: headers.isEmpty ? null : headers,
+          extra: {
+            'isForeground': isForeground,
+            if (operationId != null && operationId.isNotEmpty)
+              'operationId': operationId,
+          },
+        ),
       );
 
       return _handleResponse(response, "PUT");
@@ -1327,6 +1413,8 @@ class NetworkService extends getx.GetxService {
   Future<ApiResponse<Map<String, dynamic>>> patch({
     required String endpoint,
     Map<String, dynamic>? data,
+    String? idempotencyKey,
+    String? operationId,
     bool isForeground = true,
   }) async {
     // Demo Mode Smart Response
@@ -1351,10 +1439,25 @@ class NetworkService extends getx.GetxService {
     }
 
     try {
+      final headers = <String, dynamic>{};
+      if (idempotencyKey != null && idempotencyKey.isNotEmpty) {
+        headers['Idempotency-Key'] = idempotencyKey;
+        headers['X-Idempotency-Key'] = idempotencyKey;
+      }
+      if (operationId != null && operationId.isNotEmpty) {
+        headers['X-Operation-ID'] = operationId;
+      }
       final response = await _dio.patch(
         endpoint,
         data: data != null ? jsonEncode(data) : null,
-        options: Options(extra: {'isForeground': isForeground}),
+        options: Options(
+          headers: headers.isEmpty ? null : headers,
+          extra: {
+            'isForeground': isForeground,
+            if (operationId != null && operationId.isNotEmpty)
+              'operationId': operationId,
+          },
+        ),
       );
 
       return _handleResponse(response, "PATCH");
@@ -1590,16 +1693,52 @@ class NetworkService extends getx.GetxService {
       return ApiResponse.error('No internet connection');
     }
 
-    // Detect Timeout Manually
-    if (e.type == DioExceptionType.connectionTimeout ||
-        e.type == DioExceptionType.receiveTimeout) {
-      _log('$requestType TimeoutException: Request timed out', icon: '⏳');
-      ToastHelper().showErrorToast(
-        // P-4: null-safe localization with English fallback (was `localization!`).
-        localization?.networkErrorTimeout ??
-            'Request timed out. Please try again.',
+    // Detect Timeout (Connection, Receive, Send, or underlying TimeoutException)
+    final isTimeout = e.type == DioExceptionType.connectionTimeout ||
+        e.type == DioExceptionType.receiveTimeout ||
+        e.type == DioExceptionType.sendTimeout ||
+        (e.error is TimeoutException) ||
+        (e.error != null &&
+            e.error.toString().toLowerCase().contains('timeoutexception'));
+
+    if (isTimeout) {
+      final path = e.requestOptions.uri.path;
+      final isMutating = e.requestOptions.method.toUpperCase() != 'GET';
+      final isFinancialOrMutating =
+          isMutating && isMutatingFinancialOrStateEndpoint(path);
+
+      _log(
+        '$requestType TimeoutException: Request timed out (financial/mutating=$isFinancialOrMutating)',
+        icon: '⏳',
       );
-      return ApiResponse.error('Request timed out');
+
+      if (isFinancialOrMutating) {
+        // Contract 04: Never advise immediate retry on mutating financial timeout.
+        // Surface the safe reconciling / unknown state warning.
+        final reconcilingMsg = l10nPickAuto(
+          en: 'Transaction status unknown due to timeout. Please check your transaction history before attempting again to prevent duplicate charges.',
+          fa: 'وضعیت تراکنش به دلیل اتمام زمان نامشخص است. لطفاً پیش از تلاش مجدد، تاریخچه تراکنش‌ها را بررسی کنید تا از کسر تکراری جلوگیری شود.',
+          ar: 'حالة المعاملة غير معروفة بسبب انتهاء المهلة. يرجى التحقق من سجل المعاملات قبل المحاولة مرة أخرى لتجنب تكرار الخصم.',
+          zh: '由于超时，交易状态未知。请在重试前检查交易历史，以防止重复扣款。',
+        );
+        ToastHelper().showWarningToast(reconcilingMsg);
+        return ApiResponse.error(
+          reconcilingMsg,
+          isTimeout: true,
+          isReconciling: true,
+        );
+      } else {
+        ToastHelper().showErrorToast(
+          // P-4: null-safe localization with English fallback (was `localization!`).
+          localization?.networkErrorTimeout ??
+              'Request timed out. Please try again.',
+        );
+        return ApiResponse.error(
+          'Request timed out',
+          isTimeout: true,
+          isReconciling: false,
+        );
+      }
     }
 
     // Detect SSL / Bad Certificate validation failure
@@ -1732,20 +1871,35 @@ class NetworkService extends getx.GetxService {
         return ApiResponse.error(errorMessages);
 
       case 500:
-        final jsonResponse500 = response.data is Map<String, dynamic>
-            ? response.data as Map<String, dynamic>
+      case 501:
+        final jsonResponse500 = response.data is Map
+            ? Map<String, dynamic>.from(response.data as Map)
             : <String, dynamic>{};
         final errorMessages = _errorMessage(jsonResponse500);
-        _log('$requestType Error [status 500]: $errorMessages', icon: '❌');
-        ToastHelper().showErrorToast(errorMessages);
-        return ApiResponse.error(errorMessages);
+        final safeMsg = _sanitizeServer500Message(errorMessages);
+        _log(
+          '$requestType Error [status ${response.statusCode}]: $safeMsg',
+          icon: '❌',
+        );
+        ToastHelper().showErrorToast(safeMsg);
+        return ApiResponse.error(safeMsg);
+
+      case 502:
+        final safeMsg = l10nPickAuto(
+          en: 'Service temporarily unavailable. Please try again later.',
+          fa: 'سرویس موقتاً در دسترس نیست. لطفاً کمی بعد دوباره تلاش کنید.',
+          ar: 'الخدمة غير متوفرة مؤقتاً. يرجى المحاولة مرة أخرى لاحقاً.',
+          zh: '服务暂时不可用，请稍后重试。',
+        );
+        _log('$requestType Error [status 502]: $safeMsg', icon: '❌');
+        ToastHelper().showErrorToast(safeMsg);
+        return ApiResponse.error(safeMsg);
 
       case 503:
-        final jsonResponse503 = response.data is Map<String, dynamic>
-            ? response.data as Map<String, dynamic>
+        final jsonResponse503 = response.data is Map
+            ? Map<String, dynamic>.from(response.data as Map)
             : <String, dynamic>{};
         final errorMessages503 = _errorMessage(jsonResponse503);
-        _log('$requestType Error [status 503]: $errorMessages503', icon: '❌');
         // v1.1 (KYC-ERR): KYC_CHECK_UNAVAILABLE is a transient verification
         // infrastructure outage — show a retry message, never logout, never
         // clear the token and never take over with the maintenance screen.
@@ -1759,16 +1913,61 @@ class NetworkService extends getx.GetxService {
           ToastHelper().showErrorToast(retryMessage);
           return ApiResponse.error(retryMessage);
         }
-        ToastHelper().showErrorToast(errorMessages503);
+        final safeMsg = _sanitizeServer500Message(errorMessages503);
+        _log('$requestType Error [status 503]: $safeMsg', icon: '❌');
+        ToastHelper().showErrorToast(safeMsg);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (getx.Get.currentRoute != BaseRoute.maintenanceMode) {
             getx.Get.offAllNamed(BaseRoute.maintenanceMode);
           }
         });
-        return ApiResponse.error(errorMessages503);
+        return ApiResponse.error(safeMsg);
+
+      case 504:
+        final isMutating = response.requestOptions.method.toUpperCase() != 'GET';
+        final isFinancial = isMutating &&
+            isMutatingFinancialOrStateEndpoint(response.requestOptions.uri.path);
+        if (isFinancial) {
+          final safeMsg = l10nPickAuto(
+            en: 'Gateway timeout. Transaction status unknown. Please check your transaction history before attempting again.',
+            fa: 'پایان زمان درگاه. وضعیت تراکنش نامشخص است. لطفاً پیش از تلاش مجدد، تاریخچه تراکنش‌ها را بررسی کنید.',
+            ar: 'انتهت مهلة البوابة. حالة المعاملة غير معروفة. يرجى التحقق من سجل المعاملات قبل المحاولة مرة أخرى.',
+            zh: '网关超时。交易状态未知。请在重试前检查交易历史。',
+          );
+          _log(
+            '$requestType Error [status 504]: $safeMsg (financial mutating)',
+            icon: '⏳',
+          );
+          ToastHelper().showWarningToast(safeMsg);
+          return ApiResponse.error(
+            safeMsg,
+            isTimeout: true,
+            isReconciling: true,
+          );
+        } else {
+          final safeMsg = l10nPickAuto(
+            en: 'Gateway timeout. Please try again later.',
+            fa: 'پایان زمان درگاه. لطفاً کمی بعد دوباره تلاش کنید.',
+            ar: 'انتهت مهلة البوابة. يرجى المحاولة مرة أخرى لاحقاً.',
+            zh: '网关超时，请稍后重试。',
+          );
+          _log('$requestType Error [status 504]: $safeMsg', icon: '❌');
+          ToastHelper().showErrorToast(safeMsg);
+          return ApiResponse.error(safeMsg, isTimeout: true);
+        }
 
       default:
         _log('Unknown Error [status ${response.statusCode}]', icon: '❓');
+        if (response.statusCode != null &&
+            response.statusCode! >= 500 &&
+            response.statusCode! <= 599) {
+          final rawMsg = response.data is Map
+              ? _errorMessage(Map<String, dynamic>.from(response.data as Map))
+              : 'Error occurred: ${response.statusCode}';
+          final safeMsg = _sanitizeServer500Message(rawMsg);
+          ToastHelper().showErrorToast(safeMsg);
+          return ApiResponse.error(safeMsg);
+        }
         ToastHelper().showErrorToast(
           // P-4: null-safe localization with English fallback (was `localization!`).
           localization?.networkErrorOccurred ??
@@ -1781,27 +1980,123 @@ class NetworkService extends getx.GetxService {
   // ---------------------- UTILS ----------------------
 
   String _errorMessage(Map<String, dynamic> response) {
-    for (final key in ['message', 'error', 'detail']) {
-      final value = response[key]?.toString().trim() ?? '';
-      if (value.isNotEmpty) return _friendlyServerMessage(value);
-    }
+    final rawMessage = (response['message'] ??
+            response['error'] ??
+            response['detail'])
+        ?.toString()
+        .trim() ??
+        '';
 
     final errors = response['errors'];
-    if (errors is Map) {
-      for (final value in errors.values) {
-        if (value is List && value.isNotEmpty) {
-          final message = value.first?.toString().trim() ?? '';
-          if (message.isNotEmpty) return _friendlyServerMessage(message);
-        }
-        final message = value?.toString().trim() ?? '';
-        if (message.isNotEmpty) return _friendlyServerMessage(message);
-      }
-    } else if (errors is List && errors.isNotEmpty) {
-      final message = errors.first?.toString().trim() ?? '';
-      if (message.isNotEmpty) return _friendlyServerMessage(message);
+    final specificError = _extractFirstError(errors);
+
+    // If message is Laravel's generic envelope or empty, prefer the specific validation error
+    final isGenericValidationEnvelope = rawMessage.toLowerCase() ==
+            'the given data was invalid.' ||
+        rawMessage.toLowerCase() == 'the given data was invalid';
+
+    if (isGenericValidationEnvelope &&
+        specificError != null &&
+        specificError.isNotEmpty) {
+      return _friendlyServerMessage(specificError);
+    }
+
+    if (rawMessage.isNotEmpty) {
+      return _friendlyServerMessage(rawMessage);
+    }
+
+    if (specificError != null && specificError.isNotEmpty) {
+      return _friendlyServerMessage(specificError);
     }
 
     return localization?.networkErrorOccurred ?? 'An error occurred.';
+  }
+
+  static String? _extractFirstError(dynamic errs) {
+    if (errs == null) return null;
+    if (errs is String && errs.isNotEmpty) return errs;
+    if (errs is List && errs.isNotEmpty) {
+      for (final item in errs) {
+        final extracted = _extractFirstError(item);
+        if (extracted != null && extracted.isNotEmpty) return extracted;
+      }
+    }
+    if (errs is Map && errs.isNotEmpty) {
+      for (final val in errs.values) {
+        final extracted = _extractFirstError(val);
+        if (extracted != null && extracted.isNotEmpty) return extracted;
+      }
+    }
+    return null;
+  }
+
+  static bool _isTechnicalOrSensitiveServerMessage(String raw) {
+    final lower = raw.toLowerCase();
+    // 1. SQL errors & database drivers
+    if (lower.contains('sqlstate') ||
+        lower.contains('queryexception') ||
+        lower.contains('pdoexception') ||
+        lower.contains('integrity constraint') ||
+        lower.contains('syntax error') ||
+        lower.contains('duplicate entry') ||
+        lower.contains('foreign key') ||
+        lower.contains('select * from') ||
+        lower.contains('insert into') ||
+        (lower.contains('update ') && lower.contains('set ')) ||
+        lower.contains("table '") ||
+        lower.contains("column '") ||
+        lower.contains("doesn't exist")) {
+      return true;
+    }
+    // 2. Framework internals / exceptions / stack traces
+    if (lower.contains('stack trace') ||
+        lower.contains('traceback') ||
+        lower.contains('uncaught exception') ||
+        lower.contains('fatal error') ||
+        lower.contains('call to undefined') ||
+        lower.contains(r'illuminate\') ||
+        lower.contains('illuminate/') ||
+        lower.contains(r'symfony\') ||
+        lower.contains('symfony/') ||
+        lower.contains('laravel') ||
+        lower.contains('vendor/') ||
+        lower.contains('node_modules') ||
+        lower.contains('.php on line') ||
+        lower.contains('.php:') ||
+        lower.contains('.py, line')) {
+      return true;
+    }
+    // 3. System runtime crashes / file paths
+    if (lower.contains('nullpointerexception') ||
+        lower.contains('referenceerror') ||
+        lower.contains('typeerror:') ||
+        lower.contains('cannot read property') ||
+        lower.contains('cannot read properties') ||
+        lower.contains('/var/www') ||
+        lower.contains(r'c:\inetpub') ||
+        lower.contains(r'c:\users')) {
+      return true;
+    }
+    // 4. Sensitive credentials accidentally echoed
+    if (lower.contains('bearer ') ||
+        lower.contains('private_key') ||
+        lower.contains('access_token') ||
+        lower.contains('refresh_token')) {
+      return true;
+    }
+    return false;
+  }
+
+  String _sanitizeServer500Message(String raw) {
+    if (_isTechnicalOrSensitiveServerMessage(raw)) {
+      return l10nPickAuto(
+        en: 'A server error occurred. Please try again later.',
+        fa: 'خطای سرور رخ داده است. لطفاً کمی بعد دوباره تلاش کنید.',
+        ar: 'حدث خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقاً.',
+        zh: '发生服务器错误，请稍后重试。',
+      );
+    }
+    return _friendlyServerMessage(raw);
   }
 
   String _friendlyServerMessage(String raw) {
@@ -1930,6 +2225,14 @@ class NetworkService extends getx.GetxService {
 
   @visibleForTesting
   static String normalizePath(Uri uri) => _normalizePath(uri);
+
+  @visibleForTesting
+  static bool isTechnicalOrSensitiveServerMessage(String raw) =>
+      _isTechnicalOrSensitiveServerMessage(raw);
+
+  @visibleForTesting
+  static bool isMutatingEndpoint(String path) =>
+      isMutatingFinancialOrStateEndpoint(path);
 }
 
 /// Workstream B: Idempotency entry tracking the minted key and creation timestamp.

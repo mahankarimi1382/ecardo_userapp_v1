@@ -17,6 +17,7 @@ import 'package:ecardo_user/src/presentation/screens/beneficiary/widgets/monogra
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_history_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/model/request_money_history_model.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/view/request_money_history/sub_sections/request_money_history_details.dart';
+import 'package:ecardo_user/src/presentation/screens/transfer/view/widgets/tx_history_shimmer_skeleton.dart';
 
 class RequestMoneyHistory extends StatefulWidget {
   const RequestMoneyHistory({super.key});
@@ -138,7 +139,7 @@ class _RequestMoneyHistoryState extends State<RequestMoneyHistory>
                       [];
 
                   if (controller.isLoading.value) {
-                    return const CommonLoading();
+                    return const TxHistoryShimmerSkeleton();
                   }
 
                   if (_hasLoadError.value) {

@@ -45,8 +45,8 @@ class RequestMoneyWalletSection extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
             gradient: LinearGradient(
               colors: isDark
-                  ? [const Color(0xFF1E2836), const Color(0xFF151C26)]
-                  : [AppColors.deepBlack, const Color(0xFF2A2A28)],
+                  ? [AppColors.darkSurfaceVariant, AppColors.deepBlack]
+                  : [AppColors.deepBlack, AppColors.darkGray],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

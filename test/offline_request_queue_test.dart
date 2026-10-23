@@ -45,6 +45,8 @@ class _MockNetworkService extends GetxService implements NetworkService {
   Future<ApiResponse<Map<String, dynamic>>> put({
     required String endpoint,
     Map<String, dynamic>? data,
+    String? idempotencyKey,
+    String? operationId,
     bool isForeground = true,
   }) async {
     putCallCount++;

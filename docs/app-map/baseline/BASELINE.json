@@ -1,0 +1,113 @@
+{
+  "captured_at_utc": "2026-10-23T18:13:53.556419+00:00",
+  "root": "C:\\Users\\Lenovo\\Desktop\\Ecardo\\ecardo_userapp_v1",
+  "output": "C:\\Users\\Lenovo\\Desktop\\Ecardo\\ecardo_userapp_v1\\docs\\app-map\\baseline",
+  "safety": "READ_ONLY; no network, checkout, test, build, release, or deploy commands run",
+  "pubspec_version": "1.0.181+181",
+  "file_counts": {
+    "all_files_excluding_build_caches": 4775,
+    "dart_files": 921,
+    "test_dart_files": 109
+  },
+  "git": {
+    "inside_work_tree": {
+      "command": "git rev-parse --is-inside-work-tree",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "true",
+      "stderr": ""
+    },
+    "branch": {
+      "command": "git branch --show-current",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "main",
+      "stderr": ""
+    },
+    "head_sha": {
+      "command": "git rev-parse HEAD",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "dd11e5302e604f56fbafaba3da7faeeb23aa70a4",
+      "stderr": ""
+    },
+    "head_short": {
+      "command": "git rev-parse --short=12 HEAD",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "dd11e5302e60",
+      "stderr": ""
+    },
+    "last_commit": {
+      "command": "git log -1 --format=%H%n%cI%n%s",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "dd11e5302e604f56fbafaba3da7faeeb23aa70a4\n2026-10-22T12:20:40+03:30\nfix(ci): resolve widget test timeouts, layout overflows, and button unbounded constraints",
+      "stderr": ""
+    },
+    "status_short": {
+      "command": "git status --short",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "M lib/src/app/bindings/app_bindings.dart\n M lib/src/app/constants/app_colors.dart\n M lib/src/app/routes/routes_handler.dart\n M lib/src/commercial/controllers/commercial_controller.dart\n M lib/src/commercial/screens/commercial_projects_screen.dart\n M lib/src/commercial/screens/equity_project_detail_screen.dart\n M lib/src/commercial/widgets/equity_project_card.dart\n M lib/src/commercial/widgets/investment_calculator_sheet.dart\n M lib/src/common/services/client_error_reporter.dart\n M lib/src/common/widgets/button/common_button.dart\n M lib/src/common/widgets/design_system/ecardo_balance_hero.dart\n M lib/src/helper/dynamic_decimals_helper.dart\n M lib/src/network/response/api_response.dart\n M lib/src/network/response/api_response_handler.dart\n M lib/src/network/response/status.dart\n M lib/src/network/service/network_service.dart\n M lib/src/presentation/screens/authentication/forgot_password/controller/forgot_password_pin_verification_controller.dart\n M lib/src/presentation/screens/authentication/forgot_password/view/sub_sections/forgot_password_pin_verification.dart\n M lib/src/presentation/screens/authentication/sign_in/controller/email_otp_login_controller.dart\n M lib/src/presentation/screens/authentication/sign_in/view/sub_sections/email_otp_login_screen.dart\n M lib/src/presentation/screens/authentication/sign_in/view/sub_sections/two_factor_auth.dart\n M lib/src/presentation/screens/authentication/sign_up/controller/verify_email_controller.dart\n M lib/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart\n M lib/src/presentation/screens/authentication/sign_up/view/verify_email/verify_email_screen.dart\n M lib/src/presentation/screens/exchange/controller/exchange_controller.dart\n M lib/src/presentation/screens/exchange/service/exchange_validation_service.dart\n M lib/src/presentation/screens/exchange/view/exchange_screen.dart\n M lib/src/presentation/screens/exchange/view/sub_sections/exchange_amount_step_section.dart\n M lib/src/presentation/screens/exchange/view/sub_sections/exchange_review_step_section.dart\n M lib/src/presentation/screens/exchange/view/sub_sections/exchange_success_step_section.dart\n M lib/src/presentation/screens/exchange/widgets/exchange_swap_card.dart\n M lib/src/presentation/screens/gift_code/view/sub_sections/gift_redeem_section.dart\n M lib/src/presentation/screens/kyc_level/view/widgets/kyc_tier_upgrade_card.dart\n M lib/src/presentation/screens/make_payment/controller/make_payment_controller.dart\n M lib/src/presentation/screens/make_payment/view/make_payment_history/make_payment_history.dart\n M lib/src/presentation/screens/make_payment/view/make_payment_screen.dart\n M lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart\n M lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_review_step_section.dart\n M lib/src/presentation/screens/request_money/controller/request_money_controller.dart\n M lib/src/presentation/screens/request_money/view/received_request/received_request.dart\n M lib/src/presentation/screens/request_money/view/received_request/sub_sections/accept_request_dropdown.dart\n M lib/src/presentation/screens/request_money/view/received_request/sub_sections/received_request_details.dart\n M lib/src/presentation/screens/request_money/view/request_money_history/request_money_history.dart\n M lib/src/presentation/screens/request_money/view/request_money_history/sub_sections/request_money_history_details.dart\n M lib/src/presentation/screens/request_money/view/request_money_screen.dart\n M lib/src/presentation/screens/request_money/view/sub_sections/request_money_amount_step_section.dart\n M lib/src/presentation/screens/request_money/view/sub_sections/request_money_review_step_section.dart\n M lib/src/presentation/screens/request_money/view/sub_sections/request_money_section.dart\n M lib/src/presentation/screens/request_money/view/sub_sections/request_money_success_step_section.dart\n M lib/src/presentation/screens/request_money/view/sub_sections/request_money_wallet_section.dart\n M lib/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/change_passcode_bottom_sheet.dart\n M lib/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_passcode_bottom_sheet.dart\n M lib/src/presentation/screens/transfer/controller/transfer_controller.dart\n M lib/src/presentation/screens/transfer/controller/transfer_history_controller.dart\n M lib/src/presentation/screens/transfer/controller/transfer_received_history_controller.dart\n M lib/src/presentation/screens/transfer/view/sub_sections/transfer_amount_step_section.dart\n M lib/src/presentation/screens/transfer/view/sub_sections/transfer_review_step_section.dart\n M lib/src/presentation/screens/transfer/view/transfer_history/transfer_history.dart\n M lib/src/presentation/screens/transfer/view/transfer_received_history/transfer_received_history.dart\n M lib/src/presentation/screens/transfer/view/transfer_screen.dart\n M lib/src/presentation/screens/transfer/view/widgets/transfer_amount_input_card.dart\n M lib/src/presentation/screens/transfer/view/widgets/transfer_path_card.dart\n M lib/src/presentation/screens/travel/boat/screens/boat_voucher_screen.dart\n M lib/src/presentation/screens/travel/bookings/travel_checkout_screen.dart\n M lib/src/presentation/screens/travel/bookings/travel_confirmation_screen.dart\n M lib/src/presentation/screens/travel/bookings/travel_orders_screen.dart\n M lib/src/presentation/screens/travel/dining/screens/dining_order_pass_screen.dart\n M lib/src/presentation/screens/travel/flights/flight_screens.dart\n M lib/src/presentation/screens/travel/hotels/hotel_voucher_screen.dart\n M lib/src/presentation/screens/travel/local/screens/local_voucher_screen.dart\n M lib/src/presentation/screens/travel/shared/travel_widgets.dart\n M lib/src/presentation/screens/virtual_card/controller/virtual_card_details_controller.dart\n M lib/src/presentation/screens/virtual_card/view/create_virtual_card/sub_sections/irr_card_order_section.dart\n M lib/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/bsicards/bsicards_virtual_card.dart\n M lib/src/presentation/screens/virtual_card/view/virtual_card_details/sub_sections/provider/generic/generic_card_provider.dart\n M lib/src/presentation/screens/virtual_card/view/widgets/common_virtual_card_view.dart\n M lib/src/presentation/screens/virtual_card/widgets/virtual_card_security_controls.dart\n M lib/src/presentation/widgets/verify_passcode_bottom_sheet.dart\n M pubspec.lock\n M test/exchange_modular_services_test.dart\n M test/kyc_tier_upgrade_card_test.dart\n M test/offline_request_queue_test.dart\n M test/test_output/screens/cash_out_review__dark.png\n M test/test_output/screens/cash_out_review__light.png\n M test/test_output/screens/make_payment_review__dark.png\n M test/test_output/screens/make_payment_review__light.png\n M test/travel/taxi_service_test.dart\n?? .agents/skills/app-discovery-and-route-mapping/\n?? .agents/skills/cross-module-integration/\n?? .agents/skills/financial-integration-testing/\n?? .agents/skills/fintech-domain-integrity/\n?? .agents/skills/flutter-getx-dio-safe-evolution/\n?? .agents/skills/full-surface-uiux/\n?? .agents/skills/localization-accessibility-performance/\n?? .agents/skills/security-privacy-resilience/\n?? docs/app-map/\n?? docs/stage_1/\n?? docs/stage_2/\n?? docs/stage_3/\n?? docs/upgrade_pack/\n?? lib/src/commercial/screens/commercial_project_details_screen.dart\n?? lib/src/presentation/screens/transfer/view/widgets/tx_flow_shimmer_skeleton.dart\n?? lib/src/presentation/screens/transfer/view/widgets/tx_history_shimmer_skeleton.dart\n?? test/commercial_and_card_completion_test.dart\n?? test/exchange_flow_resilience_test.dart\n?? test/financial_domain_integrity_test.dart\n?? test/transfer_flow_upgrade_test.dart\n?? test/travel/travel_ui_ux_flow_upgrade_test.dart\n?? test/workstream_b_api_resilience_test.dart\n?? test/workstream_f_security_i18n_perf_test.dart\n?? tools/app_map_scanner.py\n?? tools/domain_status.py\n?? tools/format_unified_catalog.py\n?? tools/generate_screenshot_index.py",
+      "stderr": ""
+    },
+    "diff_stat": {
+      "command": "git diff --stat",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "lib/src/app/bindings/app_bindings.dart             |   14 +\n lib/src/app/constants/app_colors.dart              |    5 +-\n lib/src/app/routes/routes_handler.dart             |    6 +-\n .../controllers/commercial_controller.dart         |   18 +\n .../screens/commercial_projects_screen.dart        |  513 +++++---\n .../screens/equity_project_detail_screen.dart      |  261 +++-\n .../commercial/widgets/equity_project_card.dart    |  201 ++-\n .../widgets/investment_calculator_sheet.dart       |  109 +-\n lib/src/common/services/client_error_reporter.dart |   40 +-\n lib/src/common/widgets/button/common_button.dart   |    4 +-\n .../widgets/design_system/ecardo_balance_hero.dart |   13 +-\n lib/src/helper/dynamic_decimals_helper.dart        |    9 +\n lib/src/network/response/api_response.dart         |   43 +-\n lib/src/network/response/api_response_handler.dart |  117 +-\n lib/src/network/response/status.dart               |    3 +-\n lib/src/network/service/network_service.dart       |  387 +++++-\n ...orgot_password_pin_verification_controller.dart |    9 +-\n .../forgot_password_pin_verification.dart          |  541 +++++---\n .../controller/email_otp_login_controller.dart     |    2 +-\n .../view/sub_sections/email_otp_login_screen.dart  |   63 +-\n .../sign_in/view/sub_sections/two_factor_auth.dart |  446 ++++---\n .../controller/verify_email_controller.dart        |    9 +-\n .../view/set_passcode/set_passcode_screen.dart     |  482 +++++---\n .../view/verify_email/verify_email_screen.dart     |   25 +-\n .../exchange/controller/exchange_controller.dart   |   73 +-\n .../service/exchange_validation_service.dart       |   18 +-\n .../screens/exchange/view/exchange_screen.dart     |   45 +-\n .../sub_sections/exchange_amount_step_section.dart |  206 ++--\n .../sub_sections/exchange_review_step_section.dart |   44 +-\n .../exchange_success_step_section.dart             |    8 +-\n .../exchange/widgets/exchange_swap_card.dart       |   56 +-\n .../view/sub_sections/gift_redeem_section.dart     |   31 +-\n .../view/widgets/kyc_tier_upgrade_card.dart        |  847 ++++++++++---\n .../controller/make_payment_controller.dart        |  128 +-\n .../make_payment_history/make_payment_history.dart |    3 +-\n .../make_payment/view/make_payment_screen.dart     |   17 +-\n .../make_payment_amount_step_section.dart          |  496 ++++----\n .../make_payment_review_step_section.dart          |  539 +++++---\n .../controller/request_money_controller.dart       |  102 +-\n .../view/received_request/received_request.dart    |    3 +-\n .../sub_sections/accept_request_dropdown.dart      |  181 +--\n .../sub_sections/received_request_details.dart     |  211 ++--\n .../request_money_history.dart                     |    3 +-\n .../request_money_history_details.dart             |  214 ++--\n .../request_money/view/request_money_screen.dart   |   37 +-\n .../request_money_amount_step_section.dart         |  250 ++--\n .../request_money_review_step_section.dart         |  395 ++++--\n .../view/sub_sections/request_money_section.dart   |   30 +-\n .../request_money_success_step_section.dart        |   10 +-\n .../sub_sections/request_money_wallet_section.dart |    4 +-\n .../sub_sections/change_passcode_bottom_sheet.dart |  221 +++-\n .../generate_passcode_bottom_sheet.dart            |  190 ++-\n .../transfer/controller/transfer_controller.dart   |   56 +-\n .../controller/transfer_history_controller.dart    |   13 +\n .../transfer_received_history_controller.dart      |   13 +\n .../sub_sections/transfer_amount_step_section.dart |   22 +-\n .../sub_sections/transfer_review_step_section.dart |   13 +-\n .../view/transfer_history/transfer_history.dart    |  381 +++---\n .../transfer_received_history.dart                 |  381 +++---\n .../screens/transfer/view/transfer_screen.dart     |   41 +-\n .../view/widgets/transfer_amount_input_card.dart   |  147 ++-\n .../transfer/view/widgets/transfer_path_card.dart  |   75 +-\n .../travel/boat/screens/boat_voucher_screen.dart   |    5 +-\n .../travel/bookings/travel_checkout_screen.dart    |   36 +-\n .../bookings/travel_confirmation_screen.dart       |    5 +\n .../travel/bookings/travel_orders_screen.dart      |   15 +-\n .../dining/screens/dining_order_pass_screen.dart   |   49 +-\n .../screens/travel/flights/flight_screens.dart     |   56 +-\n .../travel/hotels/hotel_voucher_screen.dart        |   11 +-\n .../travel/local/screens/local_voucher_screen.dart |    9 +-\n .../screens/travel/shared/travel_widgets.dart      |  620 ++++++++--\n .../virtual_card_details_controller.dart           |  222 +++-\n .../sub_sections/irr_card_order_section.dart       |  165 ++-\n .../provider/bsicards/bsicards_virtual_card.dart   |   11 +-\n .../provider/generic/generic_card_provider.dart    |   24 +-\n .../view/widgets/common_virtual_card_view.dart     |   25 +-\n .../widgets/virtual_card_security_controls.dart    | 1293 +++++++++++++++++---\n .../widgets/verify_passcode_bottom_sheet.dart      |   48 +-\n pubspec.lock                                       |  480 ++++----\n test/exchange_modular_services_test.dart           |  185 +++\n test/kyc_tier_upgrade_card_test.dart               |  112 ++\n test/offline_request_queue_test.dart               |    2 +\n test/test_output/screens/cash_out_review__dark.png |  Bin 68121 -> 68597 bytes\n .../test_output/screens/cash_out_review__light.png |  Bin 76277 -> 76121 bytes\n .../screens/make_payment_review__dark.png          |  Bin 58868 -> 69517 bytes\n .../screens/make_payment_review__light.png         |  Bin 55767 -> 81779 bytes\n test/travel/taxi_service_test.dart                 |   10 +-\n 87 files changed, 8559 insertions(+), 3648 deletions(-)",
+      "stderr": "warning: in the working copy of 'lib/src/presentation/screens/authentication/forgot_password/view/sub_sections/forgot_password_pin_verification.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/authentication/sign_in/view/sub_sections/two_factor_auth.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/authentication/sign_up/view/set_passcode/set_passcode_screen.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/kyc_level/view/widgets/kyc_tier_upgrade_card.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_amount_step_section.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/make_payment/view/sub_sections/make_payment_review_step_section.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/request_money/view/received_request/sub_sections/accept_request_dropdown.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/request_money/view/received_request/sub_sections/received_request_details.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/request_money/view/request_money_history/sub_sections/request_money_history_details.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/request_money/view/sub_sections/request_money_amount_step_section.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/request_money/view/sub_sections/request_money_review_step_section.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/change_passcode_bottom_sheet.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/settings/view/two_factor_authentication/sub_sections/generate_passcode_bottom_sheet.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/transfer/view/transfer_history/transfer_history.dart', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'lib/src/presentation/screens/transfer/view/transfer_received_history/transfer_received_history.dart', LF will be replaced by CRLF the next time Git touches it"
+    },
+    "staged_diff_stat": {
+      "command": "git diff --cached --stat",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "nearest_tag": {
+      "command": "git describe --tags --always --dirty",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "v1.0.181-dirty",
+      "stderr": ""
+    },
+    "local_tags_recent": {
+      "command": "git tag --sort=-creatordate",
+      "available": true,
+      "exit_code": 0,
+      "stdout": "v1.0.181\nv1.0.180\nv1.0.178\nv1.0.177\nv1.0.175\nv1.0.174\nv1.0.173\nv1.0.172\nv1.0.171\nv1.0.170\nv1.0.169\nv1.0.166\nv1.0.161\nv1.0.160\nv1.0.159\nv1.0.158\nv1.0.157\nv1.0.156\nv1.0.155\nv1.0.154\nv1.0.153\nv1.0.152\nv1.0.151\nv1.0.150\nv1.0.149\nv1.0.148\nv1.0.147\nv1.0.146\nv1.0.145\nv1.0.144\nv1.0.143\nv1.0.142\nv1.0.141\nv1.0.140\nv1.0.139\nv1.0.126\nv1.0.137\nv1.0.136\nv1.0.135\nv1.0.134\nv1.0.133\nv1.0.132\nv1.0.130\nv1.0.129\nv1.0.128\nv1.0.127\nv1.0.125\nv1.0.124\nv1.0.123\nv1.0.122\nv1.0.121\nv1.0.120\nv1.0.119\nv1.0.118\nv1.0.117\nv1.0.116\nv1.0.115\nv1.0.114\nv1.0.113\nv1.0.112\nv1.0.111\nv1.0.110\nv1.0.109\nv1.0.108\nv1.0.101\nv1.0.100\nv1.0.99\nv1.0.98\nv1.0.97\nv1.0.96\nv1.0.95\nv1.0.94\nv1.0.93\nv1.0.92\nv1.0.91\nv1.0.90\nv1.0.89\nv1.0.88\nv1.0.87\nv1.0.86\nv1.0.83\nv1.0.82\nv1.0.81\nv1.0.80\nv1.0.79\nv1.0.78\nv1.0.77\nv1.0.76\nv1.0.75\nv1.0.74\nv1.0.73\nv1.0.72\nv1.0.71\nv1.0.70\nv1.0.69\nv1.0.68\nv1.0.67\nv1.0.66\nv1.0.65\nv1.0.64\nv1.0.63\nv1.0.62\nv1.0.61\nv1.0.60\nv1.0.59\nv1.0.58\nv1.0.57\nv1.0.56\nv1.0.55\nv1.0.54\nv1.0.53\nv1.0.52\nv1.0.51\nv1.0.50\nv1.0.49\nv1.0.48\nv1.0.46\nv1.0.45\nv1.0.44\nv1.0.43\nv1.0.42\nv1.0.41\nv1.0.40\nv1.0.39\nv1.0.38\nv1.0.37\nv1.0.36\nv1.0.35\nv1.0.34\nv1.0.33\nv1.0.32\nv1.0.31\nv1.0.30\nv1.0.29\nv1.0.28\nv1.0.27\nv1.0.26\nv1.0.25\nv1.0.24\nv1.0.23\nv1.0.22\nv1.0.20\nv1.0.14\nv1.0.13\nv1.0.10",
+      "stderr": ""
+    }
+  },
+  "tool_versions": {
+    "flutter": {
+      "command": "flutter --version",
+      "available": true,
+      "exit_code": null,
+      "stdout": "",
+      "stderr": "[WinError 2] The system cannot find the file specified"
+    },
+    "dart": {
+      "command": "dart --version",
+      "available": true,
+      "exit_code": null,
+      "stdout": "",
+      "stderr": "[WinError 2] The system cannot find the file specified"
+    },
+    "python": {
+      "command": "python3 --version",
+      "available": true,
+      "exit_code": 9009,
+      "stdout": "",
+      "stderr": "Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases."
+    }
+  },
+  "notes": [
+    "This is a metadata baseline, not a source audit and not proof that tests pass.",
+    "Git status and diffs may list pre-existing changes; preserve them and do not reset/stash/checkout.",
+    "Remote state is deliberately not fetched; compare public remote/release evidence separately.",
+    "No environment variables or secrets are read or emitted."
+  ]
+}

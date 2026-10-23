@@ -1,0 +1,3 @@
+﻿source_file,line,http_method_candidate,path_or_url_literal,context,review_status
+test/workstream_b_idempotency_logging_test.dart,536,POST,/user/transfer,await networkService.dio.post(,ENDPOINT_CANDIDATE_REQUIRES_CONTRACT_REVIEW
+test/workstream_b_idempotency_logging_test.dart,562,POST,/user/transfer,await networkService.dio.post(,ENDPOINT_CANDIDATE_REQUIRES_CONTRACT_REVIEW

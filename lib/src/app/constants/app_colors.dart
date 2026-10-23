@@ -121,11 +121,12 @@ class AppColors {
   static const Color darkSecondaryContainer = Color(0xFF0E3A34);
   static const Color darkAccent = mainSoftBlue;
   static const Color darkTextPrimary = warmWhite;
-  static const Color darkTextSecondary = softGray;
+  // WCAG 2.1 AA Fix: A5A09F yields 5.86:1 on darkCard and 7.01:1 on darkBackground (was 656262 @ 2.51:1)
+  static const Color darkTextSecondary = Color(0xFFA5A09F);
   static const Color darkTextTertiary = Color(
     0x8CE7E0DE,
   ); // warmWhite with alpha 0.55
-  static const Color darkTextHint = softGray;
+  static const Color darkTextHint = Color(0xFFA5A09F);
   static const Color darkTextOnPrimary = deepBlack;
   static const Color darkBorder = Color(
     0x33D5CBC8,

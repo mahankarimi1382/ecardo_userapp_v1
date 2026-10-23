@@ -1,0 +1,68 @@
+graph TD
+    %% eCardo Master Navigation Graph
+    Root([App Launch / Splash]) --> AuthGate{Token Valid?}
+    AuthGate -- No --> Intro[Intro / Walkthrough]
+    Intro --> Login[Login Screen]
+    Login --> OTP[OTP Verification Screen]
+    OTP --> PIN[PIN / Biometric Screen]
+    AuthGate -- Yes --> NavShell[NavigationShell / Main Container]
+    PIN --> NavShell
+
+    subgraph ShellTabs [Main Shell Tabs & Primary Surfaces]
+        NavShell --> TabHome[Home Screen / 8-Tile Grid]
+        NavShell --> TabWallets[Wallets Screen]
+        NavShell --> TabCards[Cards Screen]
+        NavShell --> TabTransfers[Transfers Screen]
+        NavShell --> TabTravel[Travel & eTrip Hub]
+        NavShell --> TabHistory[Transaction History]
+        NavShell --> TabSettings[Settings & Profile]
+    end
+
+    subgraph HomeActions [Dashboard Quick Actions]
+        TabHome --> Services[All Services Catalog]
+        TabHome --> QRPay[Scan & Pay QR]
+        TabHome --> LiveRates[Live Exchange Rates]
+        TabHome --> NotifCenter[Notification Center]
+    end
+
+    subgraph WalletFlows [Wallets & Accounts]
+        TabWallets --> WalletDetail[Wallet Details & Ledger]
+        TabWallets --> CreateWallet[Create New Currency Wallet]
+        TabWallets --> TopUp[Deposit / Top-up]
+        TabWallets --> Withdraw[Withdraw Funds]
+    end
+
+    subgraph CardFlows [Cards Module]
+        TabCards --> CardDetail[Card Details & Security Actions]
+        CardDetail --> FreezeCard[Freeze / Unfreeze Modal]
+        CardDetail --> ChangePIN[Change Card PIN]
+        CardDetail --> CardLimits[Spending Limits Sheet]
+        TabCards --> RequestNewCard[Order / Issue Physical Card]
+    end
+
+    subgraph TransferFlows [Transfers & Payments]
+        TabTransfers --> InternalTransfer[eCardo Wallet-to-Wallet]
+        TabTransfers --> CardToCard[Card-to-Card Transfer]
+        TabTransfers --> IBANTransfer[Paya / Satna Banking Transfer]
+        TabTransfers --> RequestMoney[Request Payment Link / QR]
+        InternalTransfer --> TransferConfirm[Transfer Confirmation & Fee Dialog]
+        TransferConfirm --> TransferReceipt[Transaction Receipt Screen]
+    end
+
+    subgraph TravelFlows [Travel & Lifestyle Hub]
+        TabTravel --> FlightSearch[Flight Search & Booking]
+        TabTravel --> HotelSearch[Hotel Search & Reservation]
+        TabTravel --> ESIMScreen[eSIM Packages & Activation]
+        TabTravel --> BoatScreen[Boat Tours & Yacht Booking]
+        TabTravel --> DiningScreen[Dining Vouchers & Passes]
+        FlightSearch --> TravelCheckout[Travel Checkout Screen]
+        TravelCheckout --> TravelVoucher[Voucher & Boarding Pass]
+    end
+
+    subgraph SettingsFlows [Settings, Support & KYC]
+        TabSettings --> KYCVerification[Identity Verification / KYC Tier]
+        TabSettings --> SecuritySettings[Password, PIN, Biometrics]
+        TabSettings --> SupportTickets[Support Tickets & Live Chat]
+        TabSettings --> LanguageSelect[Language & Localization Picker]
+        TabSettings --> AppUpdateDialog[Force / Flexible App Update]
+    end

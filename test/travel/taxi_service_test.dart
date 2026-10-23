@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -30,12 +29,7 @@ void main() {
   }) {
     return GetMaterialApp(
       locale: locale,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        AppLocalizations.delegate,
-      ],
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: isDark
           ? ThemeData.dark(useMaterial3: true)
@@ -43,7 +37,7 @@ void main() {
       home: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
-        builder: (context, _) => Material(child: child),
+        builder: (context, _) => Scaffold(body: child),
       ),
     );
   }

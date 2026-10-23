@@ -1,0 +1,3 @@
+# عامل D — ارتقای UI/UX تمام Routeها
+
+بر اساس `ROUTE_CATALOG` و specs واقعی کار کن؛ هیچ صفحه‌ای را صرفاً به دلیل اینکه کمتر دیده می‌شود جا نگذار. ابتدا pilot و design system فعلی را بررسی کن. تمام routes, nested pages, dialogs, sheets, tabs, error/loading/offline/pending/success states باید در backlog باشند. از xMoney/xPortal, XPay, Wise و Revolut فقط الگوی task clarity و product integration الهام بگیر؛ brand/code/assets را بدون مجوز کپی نکن. تمام CTAها باید واقعی باشند یا با reason disabled. وضعیت receipt و transfer از backend بیاید. tokens/theme/shared design-system فایل‌ها فقط با مالک مشخص و handoff تغییر کنند. هر صفحه قبل/بعد screenshot، page spec، widget/golden test و accessibility review دارد.

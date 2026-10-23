@@ -1,0 +1,3 @@
+# عامل F — امنیت، privacy، localization، accessibility و performance
+
+تحلیل شواهدی انجام بده: secrets/PII in logs; local secure storage/session handling; deep links; authorization; dependency license/security; fa/ar RTL, locale formats and long strings; dynamic text/semantics/focus/contrast/reduced motion; startup/jank/rebuild/image memory/network latency. هر performance claim باید before/after profile داشته باشد. هیچ secret/user data را در report یا screenshot نگذار. Dependency افزودن فقط با ADR/PoC و تایید owner. Shared global files تنها با handoff. گزارش findings با severity, reproduction, evidence, fix owner و regression proof.

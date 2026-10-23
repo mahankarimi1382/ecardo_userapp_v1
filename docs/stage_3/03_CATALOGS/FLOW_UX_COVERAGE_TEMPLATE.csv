@@ -1,0 +1,11 @@
+﻿flow_id,flow_candidate,discovery_rule,mandatory_checkpoints,discovered,screen_ids,states_covered,tests,evidence,status,notes
+FL-01,Sign-in/session lifecycle,Only if discovered,"Login, reauth, expiry, recovery",UNVERIFIED,,,,,TODO,
+FL-02,View account balance,Only if discovered,"Freshness, currency, empty/error",UNVERIFIED,,,,,TODO,
+FL-03,Transfer,Only if discovered,"Entry, review, authorize, pending, result",UNVERIFIED,,,,,TODO,
+FL-04,Currency exchange,Only if discovered,"Rate, quote expiry, fee, precision, review",UNVERIFIED,,,,,TODO,
+FL-05,Card management,Only if discovered,"Status, limits, action permission",UNVERIFIED,,,,,TODO,
+FL-06,Transaction receipt/history,Only if discovered,"Authoritative status, details, refresh",UNVERIFIED,,,,,TODO,
+FL-07,KYC/security,Only if discovered,"Permission, state, rejection/retry",UNVERIFIED,,,,,TODO,
+FL-08,Bill/QR payment,Only if discovered,"Permission, confirmation, pending/final",UNVERIFIED,,,,,TODO,
+FL-09,Support request,Only if discovered,"Create, validation, status, recovery",UNVERIFIED,,,,,TODO,
+FL-10,Locale/theme settings,Only if discovered,Persist selection and propagate globally,UNVERIFIED,,,,,TODO,

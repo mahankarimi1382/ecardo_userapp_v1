@@ -5,6 +5,7 @@ import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/app_event_bus.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
 import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
+import 'package:ecardo_user/src/helper/network_error_helper.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/network/api/api_path.dart';
 import 'package:ecardo_user/src/network/response/status.dart';
@@ -14,13 +15,22 @@ import 'package:ecardo_user/src/presentation/screens/request_money/model/request
 class RequestMoneyController extends GetxController {
   // Global Variables
   final RxBool isLoading = false.obs;
+  final RxBool hasError = false.obs;
+  final RxString errorMessage = ''.obs;
   final RxBool isRequestMoneyLoading = false.obs;
   final RxInt selectedScreen = 0.obs;
   final RxInt currentStep = 0.obs;
   final Rxn<Map<String, dynamic>> successPaymentData =
       Rxn<Map<String, dynamic>>();
   final Rx<UserModel> userModel = UserModel().obs;
-  final localization = AppLocalizations.of(Get.context!)!;
+  AppLocalizations get localization {
+    final ctx = Get.context;
+    if (ctx != null) {
+      final loc = AppLocalizations.of(ctx);
+      if (loc != null) return loc;
+    }
+    return lookupAppLocalizations(const Locale('en'));
+  }
 
   // Wallet
   final Rxn<Wallets> wallet = Rxn<Wallets>();
@@ -43,6 +53,7 @@ class RequestMoneyController extends GetxController {
 
   // Steps
   final List<String> steps = ['Amount', 'Review', 'Success'];
+  bool _isAdvancingStep = false;
 
   @override
   void onInit() {
@@ -97,6 +108,8 @@ class RequestMoneyController extends GetxController {
   // Fetch Wallets
   Future<void> fetchWallets() async {
     isLoading.value = true;
+    hasError.value = false;
+    errorMessage.value = '';
     try {
       final response = await Get.find<NetworkService>().get(
         endpoint: "${ApiPath.walletsEndpoint}?request_money",
@@ -115,8 +128,15 @@ class RequestMoneyController extends GetxController {
         } else {
           wallet.value = null;
         }
+      } else {
+        hasError.value = true;
+        errorMessage.value =
+            response.message ?? localization.allControllerLoadError;
       }
     } catch (e, stackTrace) {
+      hasError.value = true;
+      final info = NetworkErrorHelper.from(e);
+      errorMessage.value = info.message;
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(localization.allControllerLoadError);
@@ -131,10 +151,11 @@ class RequestMoneyController extends GetxController {
     if (isRequestMoneyLoading.isTrue) return;
     isRequestMoneyLoading.value = true;
 
+    final currentWallet = wallet.value;
     final Map<String, dynamic> requestBody = {
-      'wallet_id': wallet.value!.isDefault!
+      'wallet_id': currentWallet?.isDefault == true
           ? "default"
-          : wallet.value!.id.toString(),
+          : (currentWallet?.id?.toString() ?? "default"),
       'request_to': recipientUidController.text.trim(),
       'amount': requestAmountController.text.trim(),
       'note': noteController.text,
@@ -162,24 +183,55 @@ class RequestMoneyController extends GetxController {
     }
   }
 
+  void setPercentage(double fraction) {
+    final currentWallet = wallet.value;
+    if (currentWallet == null) return;
+    final balanceStr = currentWallet.balance ?? '0';
+    final balance = double.tryParse(balanceStr) ?? 0.0;
+    if (balance <= 0) return;
+
+    final siteCurrency =
+        Get.find<SettingsService>().getSetting("site_currency") ?? 'USD';
+    final siteDecimals =
+        Get.find<SettingsService>().getSetting("site_currency_decimals") ?? '2';
+    final decimals = DynamicDecimalsHelper().getDynamicDecimals(
+      currencyCode: currentWallet.code ?? 'USD',
+      siteCurrencyCode: siteCurrency,
+      siteCurrencyDecimals: siteDecimals,
+      isCrypto: currentWallet.isCrypto ?? false,
+    );
+
+    final targetAmount = balance * fraction;
+    requestAmountController.text = decimals == 0
+        ? targetAmount.round().toString()
+        : targetAmount.toStringAsFixed(decimals);
+  }
+
   // Next Step Function
   Future<void> nextStepWithValidation() async {
-    if (currentStep.value == 0) {
-      if (!validateAmountStep()) {
-        return;
+    if (_isAdvancingStep || isRequestMoneyLoading.isTrue) return;
+    _isAdvancingStep = true;
+    try {
+      if (currentStep.value == 0) {
+        if (!validateAmountStep()) {
+          return;
+        }
       }
-    }
 
-    if (currentStep.value < steps.length - 1) {
-      currentStep.value++;
-    } else {
-      currentStep.value = 0;
+      if (currentStep.value < steps.length - 1) {
+        currentStep.value++;
+      } else {
+        currentStep.value = 0;
+      }
+    } finally {
+      _isAdvancingStep = false;
     }
   }
 
   // Validate Amount Step
   bool validateAmountStep() {
-    if (wallet.value!.name!.isEmpty) {
+    final currentWallet = wallet.value;
+    if (currentWallet == null || (currentWallet.name ?? '').isEmpty) {
       ToastHelper().showErrorToast(
         localization.requestMoneyValidationSelectWallet,
       );
@@ -200,30 +252,30 @@ class RequestMoneyController extends GetxController {
       return false;
     }
 
+    final walletCode = currentWallet.code ?? '';
     final calculateDecimals = DynamicDecimalsHelper().getDynamicDecimals(
-      currencyCode: wallet.value!.code!,
-      siteCurrencyCode: Get.find<SettingsService>().getSetting(
-        "site_currency",
-      )!,
-      siteCurrencyDecimals: Get.find<SettingsService>().getSetting(
-        "site_currency_decimals",
-      )!,
-      isCrypto: wallet.value!.isCrypto!,
+      currencyCode: walletCode,
+      siteCurrencyCode:
+          Get.find<SettingsService>().getSetting("site_currency") ?? 'USD',
+      siteCurrencyDecimals:
+          Get.find<SettingsService>().getSetting("site_currency_decimals") ??
+          '2',
+      isCrypto: currentWallet.isCrypto ?? false,
     );
 
     final double enteredAmount =
         double.tryParse(requestAmountController.text.trim()) ?? 0.0;
     final double min =
-        double.tryParse(wallet.value!.requestMoneyLimit!.min!) ?? 0.0;
+        double.tryParse(currentWallet.requestMoneyLimit?.min ?? '') ?? 0.0;
     final double max =
-        double.tryParse(wallet.value!.requestMoneyLimit!.max!) ??
+        double.tryParse(currentWallet.requestMoneyLimit?.max ?? '') ??
         double.infinity;
 
     if (enteredAmount < min) {
       ToastHelper().showErrorToast(
         localization.requestMoneyValidationAmountMinimum(
           min.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;
@@ -233,7 +285,7 @@ class RequestMoneyController extends GetxController {
       ToastHelper().showErrorToast(
         localization.requestMoneyValidationAmountMaximum(
           max.toStringAsFixed(calculateDecimals),
-          wallet.value!.code!,
+          walletCode,
         ),
       );
       return false;
@@ -247,5 +299,7 @@ class RequestMoneyController extends GetxController {
     recipientUidController.clear();
     requestAmountController.clear();
     noteController.clear();
+    hasError.value = false;
+    errorMessage.value = '';
   }
 }
