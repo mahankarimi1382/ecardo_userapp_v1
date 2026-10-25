@@ -77,88 +77,306 @@ class WalletsController extends GetxController {
     return double.tryParse(cleaned) ?? 0.0;
   }
 
-  double get totalNetWorth {
-    if (walletsList.isEmpty) return 0.0;
-    double sum = 0.0;
-    for (final w in walletsList) {
-      final rawBalance = _parseBalance(w.balance ?? w.formattedBalance);
-      final code = (w.code ?? '').toUpperCase().trim();
-      double rate = 1.0;
+  /// Primary/Default wallet or first available wallet
+  Wallets? get primaryWallet {
+    if (walletsList.isEmpty) return null;
+    return walletsList.firstWhereOrNull((w) => w.isDefault == true) ??
+        walletsList.first;
+  }
 
-      if (code == 'BTC') {
-        double? dynamicBtcRate;
-        // 1. Dynamic rate lookup from WalletLiveRateService (IRR cross-rate against USD)
-        if (Get.isRegistered<WalletLiveRateService>()) {
-          final liveRates = Get.find<WalletLiveRateService>();
-          final btcIrr = liveRates.ratesIrr['BTC'];
-          final usdIrr =
-              liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
-          if (btcIrr != null && btcIrr > 0 && usdIrr != null && usdIrr > 0) {
-            dynamicBtcRate = btcIrr / usdIrr;
-          }
-        }
-        // 2. Dynamic rate lookup from ExchangeRateService
-        if (dynamicBtcRate == null && Get.isRegistered<ExchangeRateService>()) {
-          final exchangeRates = Get.find<ExchangeRateService>();
-          final btcLive = exchangeRates.rates['BTC'];
-          final usdLive =
-              exchangeRates.rates['USD'] ?? exchangeRates.rates['USDT'];
-          if (btcLive != null && btcLive > 0) {
-            dynamicBtcRate = (usdLive != null && usdLive > 0)
-                ? (btcLive / usdLive)
-                : btcLive;
-          }
-        }
-        // 3. Conversion rate from wallet if available and valid (> 1.0 to guard against 1.0 placeholder)
-        if (dynamicBtcRate == null &&
-            w.conversionRate != null &&
-            w.conversionRate!.isNotEmpty) {
-          final parsed = double.tryParse(w.conversionRate!.replaceAll(',', ''));
-          if (parsed != null && parsed > 1.0) {
-            dynamicBtcRate = parsed;
-          }
-        }
-        // Graceful fallback if neither live rates nor wallet conversion rate is available
-        rate = dynamicBtcRate ?? 68450.0;
-      } else if (w.conversionRate != null && w.conversionRate!.isNotEmpty) {
-        rate = double.tryParse(w.conversionRate!.replaceAll(',', '')) ?? 1.0;
-      } else {
-        if (code == 'ETH') {
-          rate = 3520.0;
-        } else if (code == 'USDT' || code == 'USD') {
-          rate = 1.0;
-        } else if (code == 'EUR') {
-          rate = 1.08;
-        } else if (code == 'AED') {
-          rate = 0.272;
-        } else if (code == 'TRY') {
-          rate = 0.029;
-        } else if (code == 'IRR') {
-          rate = 0.000015;
+  /// Primary currency code for display (e.g. 'IRT', 'USD', 'EUR')
+  String get primaryCurrencyCode {
+    return (primaryWallet?.code ?? 'USD').toUpperCase().trim();
+  }
+
+  /// Helper to convert a single wallet's balance to USD
+  double walletBalanceInUsd(Wallets wallet) {
+    final rawBalance = _parseBalance(wallet.balance ?? wallet.formattedBalance);
+    if (rawBalance <= 0) return 0.0;
+
+    final code = (wallet.code ?? '').toUpperCase().trim();
+
+    // 1. Stablecoins and USD
+    if (code == 'USD' || code == 'USDT' || code == 'USDC') {
+      return rawBalance;
+    }
+
+    // 2. Cryptocurrencies
+    if (isWalletCrypto(wallet)) {
+      double? dynamicRate;
+
+      // Dynamic rate lookup from ExchangeRateService
+      if (Get.isRegistered<ExchangeRateService>()) {
+        final exchangeRates = Get.find<ExchangeRateService>();
+        final cryptoRate = exchangeRates.rates[code];
+        final usdRate =
+            exchangeRates.rates['USD'] ?? exchangeRates.rates['USDT'];
+        if (cryptoRate != null && cryptoRate > 0) {
+          dynamicRate = (usdRate != null && usdRate > 0)
+              ? (cryptoRate / usdRate)
+              : cryptoRate;
         }
       }
-      sum += (rawBalance * rate);
+
+      // Dynamic rate lookup from WalletLiveRateService (IRR cross-rate against USD)
+      if (dynamicRate == null && Get.isRegistered<WalletLiveRateService>()) {
+        final liveRates = Get.find<WalletLiveRateService>();
+        final cryptoIrr = liveRates.ratesIrr[code];
+        final usdIrr = liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
+        if (cryptoIrr != null &&
+            cryptoIrr > 0 &&
+            usdIrr != null &&
+            usdIrr > 0) {
+          dynamicRate = cryptoIrr / usdIrr;
+        }
+      }
+
+      // Conversion rate from wallet model if available and valid
+      if (dynamicRate == null &&
+          wallet.conversionRate != null &&
+          wallet.conversionRate!.isNotEmpty) {
+        final parsed = double.tryParse(
+          wallet.conversionRate!.replaceAll(',', ''),
+        );
+        if (parsed != null && parsed > 0) {
+          dynamicRate = parsed < 0.001 ? (1.0 / parsed) : parsed;
+        }
+      }
+
+      // Hardcoded fallback for major cryptos
+      if (dynamicRate == null) {
+        switch (code) {
+          case 'BTC':
+            dynamicRate = 68450.0;
+          case 'ETH':
+            dynamicRate = 3520.0;
+          case 'BNB':
+            dynamicRate = 600.0;
+          case 'SOL':
+            dynamicRate = 180.0;
+          case 'TRX':
+            dynamicRate = 0.16;
+          case 'XRP':
+            dynamicRate = 0.55;
+          case 'LTC':
+            dynamicRate = 75.0;
+          default:
+            dynamicRate = 1.0;
+        }
+      }
+
+      return rawBalance * dynamicRate;
     }
-    return sum;
+
+    // 3. Fiat Currencies
+    double? usdToIrr;
+    if (Get.isRegistered<WalletLiveRateService>()) {
+      final liveRates = Get.find<WalletLiveRateService>();
+      usdToIrr = liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
+    }
+
+    if (code == 'IRT' || code == 'TOMAN') {
+      double usdToIrt =
+          (usdToIrr != null && usdToIrr > 0) ? (usdToIrr / 10.0) : 0.0;
+      if (usdToIrt <= 0 &&
+          wallet.conversionRate != null &&
+          wallet.conversionRate!.isNotEmpty) {
+        final parsed = double.tryParse(
+          wallet.conversionRate!.replaceAll(',', ''),
+        );
+        if (parsed != null && parsed > 1000) {
+          usdToIrt = parsed;
+        } else if (parsed != null && parsed < 0.001) {
+          usdToIrt = 1.0 / parsed;
+        }
+      }
+      if (usdToIrt <= 0) usdToIrt = 95000.0;
+      return rawBalance / usdToIrt;
+    }
+
+    if (code == 'IRR') {
+      double rate = usdToIrr ?? 0.0;
+      if (rate <= 0 &&
+          wallet.conversionRate != null &&
+          wallet.conversionRate!.isNotEmpty) {
+        final parsed = double.tryParse(
+          wallet.conversionRate!.replaceAll(',', ''),
+        );
+        if (parsed != null && parsed > 10000) {
+          rate = parsed;
+        } else if (parsed != null && parsed < 0.0001) {
+          rate = 1.0 / parsed;
+        }
+      }
+      if (rate <= 0) rate = 950000.0;
+      return rawBalance / rate;
+    }
+
+    switch (code) {
+      case 'EUR':
+        return rawBalance * 1.08;
+      case 'GBP':
+        return rawBalance * 1.30;
+      case 'AED':
+        return rawBalance / 3.6725;
+      case 'TRY':
+        return rawBalance / 34.0;
+      case 'CNY':
+      case 'RMB':
+        return rawBalance / 7.24;
+      default:
+        if (wallet.conversionRate != null &&
+            wallet.conversionRate!.isNotEmpty) {
+          final parsed = double.tryParse(
+            wallet.conversionRate!.replaceAll(',', ''),
+          );
+          if (parsed != null && parsed > 0) {
+            return parsed > 10 ? (rawBalance / parsed) : (rawBalance * parsed);
+          }
+        }
+        return rawBalance;
+    }
+  }
+
+  /// Total Net Worth calculated in the user's primary/default wallet currency
+  double get totalNetWorth {
+    if (walletsList.isEmpty) return 0.0;
+
+    double totalUsd = 0.0;
+    for (final w in walletsList) {
+      totalUsd += walletBalanceInUsd(w);
+    }
+
+    final targetCode = primaryCurrencyCode;
+
+    if (targetCode == 'USD' || targetCode == 'USDT' || targetCode == 'USDC') {
+      return totalUsd;
+    }
+
+    if (targetCode == 'IRT' || targetCode == 'TOMAN') {
+      double usdToIrt = 0.0;
+      if (Get.isRegistered<WalletLiveRateService>()) {
+        final liveRates = Get.find<WalletLiveRateService>();
+        final usdIrr = liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
+        if (usdIrr != null && usdIrr > 0) {
+          usdToIrt = usdIrr / 10.0;
+        }
+      }
+      if (usdToIrt <= 0) {
+        final pw = primaryWallet;
+        if (pw?.conversionRate != null && pw!.conversionRate!.isNotEmpty) {
+          final parsed = double.tryParse(
+            pw.conversionRate!.replaceAll(',', ''),
+          );
+          if (parsed != null && parsed > 1000) usdToIrt = parsed;
+        }
+      }
+      if (usdToIrt <= 0) usdToIrt = 95000.0;
+      return totalUsd * usdToIrt;
+    }
+
+    if (targetCode == 'IRR') {
+      double usdToIrr = 0.0;
+      if (Get.isRegistered<WalletLiveRateService>()) {
+        final liveRates = Get.find<WalletLiveRateService>();
+        usdToIrr =
+            liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'] ?? 0.0;
+      }
+      if (usdToIrr <= 0) {
+        final pw = primaryWallet;
+        if (pw?.conversionRate != null && pw!.conversionRate!.isNotEmpty) {
+          final parsed = double.tryParse(
+            pw.conversionRate!.replaceAll(',', ''),
+          );
+          if (parsed != null && parsed > 10000) usdToIrr = parsed;
+        }
+      }
+      if (usdToIrr <= 0) usdToIrr = 950000.0;
+      return totalUsd * usdToIrr;
+    }
+
+    if (targetCode == 'EUR') return totalUsd / 1.08;
+    if (targetCode == 'GBP') return totalUsd / 1.30;
+    if (targetCode == 'AED') return totalUsd * 3.6725;
+    if (targetCode == 'TRY') return totalUsd * 34.0;
+
+    return totalUsd;
+  }
+
+  /// Total portfolio value in USD (used for secondary equivalent in banner)
+  double get totalPortfolioUsd {
+    if (walletsList.isEmpty) return 0.0;
+    double totalUsd = 0.0;
+    for (final w in walletsList) {
+      totalUsd += walletBalanceInUsd(w);
+    }
+    return totalUsd;
   }
 
   String get primaryCurrencySymbol {
-    for (final w in walletsList) {
-      if (w.isDefault == true && w.symbol != null && w.symbol!.isNotEmpty) {
-        return w.symbol!;
-      }
+    final pw = primaryWallet;
+    if (pw != null && pw.symbol != null && pw.symbol!.isNotEmpty) {
+      return pw.symbol!;
     }
     return '\$';
   }
 
   String get formattedNetWorth {
+    final code = primaryCurrencyCode;
     final symbol = primaryCurrencySymbol;
-    final parts = totalNetWorth.toStringAsFixed(2).split('.');
-    final intPart = parts[0];
-    final decPart = parts[1];
+    final isIrt = code == 'IRT' || code == 'TOMAN';
+    final isIrr = code == 'IRR';
+    final total = totalNetWorth;
+
     final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    final formattedInt = intPart.replaceAllMapped(reg, (Match m) => '${m[1]},');
-    return '$symbol$formattedInt.$decPart';
+
+    if (isIrt || isIrr) {
+      final intTotal = total.round();
+      final formattedInt = intTotal.toString().replaceAllMapped(
+        reg,
+        (Match m) => '${m[1]},',
+      );
+      final label = isIrt ? 'تومان' : 'ریال';
+      return '$formattedInt $label';
+    } else {
+      final parts = total.toStringAsFixed(2).split('.');
+      final intPart = parts[0];
+      final decPart = parts[1];
+      final formattedInt = intPart.replaceAllMapped(
+        reg,
+        (Match m) => '${m[1]},',
+      );
+      return '$symbol$formattedInt.$decPart';
+    }
+  }
+
+  /// Secondary equivalent string for the Net Worth Banner (e.g. "≈ $150.00 USD" or "≈ 14,250,000 تومان")
+  String get secondaryEquivalentNetWorth {
+    final code = primaryCurrencyCode;
+    final reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+
+    if (code == 'IRT' || code == 'TOMAN' || code == 'IRR') {
+      final usdVal = totalPortfolioUsd;
+      final parts = usdVal.toStringAsFixed(2).split('.');
+      final formattedInt = parts[0].replaceAllMapped(
+        reg,
+        (Match m) => '${m[1]},',
+      );
+      return '≈ \$$formattedInt.${parts[1]} USD';
+    } else {
+      double usdToIrt = 95000.0;
+      if (Get.isRegistered<WalletLiveRateService>()) {
+        final liveRates = Get.find<WalletLiveRateService>();
+        final usdIrr = liveRates.ratesIrr['USD'] ?? liveRates.ratesIrr['USDT'];
+        if (usdIrr != null && usdIrr > 0) usdToIrt = usdIrr / 10.0;
+      }
+      final tomanVal = (totalPortfolioUsd * usdToIrt).round();
+      final formattedToman = tomanVal.toString().replaceAllMapped(
+        reg,
+        (Match m) => '${m[1]},',
+      );
+      return '≈ $formattedToman تومان';
+    }
   }
 
   /// Helper to safely resolve localizations
@@ -248,7 +466,8 @@ class WalletsController extends GetxController {
       debugPrint('❌ deleteWallet() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localizationOrNull?.allControllerLoadError ??
+            'Failed to delete wallet. Please try again.',
       );
     } finally {
       isLoading.value = false;

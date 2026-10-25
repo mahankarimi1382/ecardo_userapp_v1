@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
@@ -35,6 +36,13 @@ class AcceptRequestDropdown extends StatelessWidget {
       siteCurrencyDecimals:
           settingsService.getSetting("site_currency_decimals") ?? '2',
       isCrypto: request.isCrypto ?? false,
+    );
+
+    // en_US grouping, no symbol — aligned with the design-system money widgets.
+    final amountFormatter = NumberFormat.currency(
+      locale: 'en_US',
+      symbol: '',
+      decimalDigits: calculateDecimals,
     );
 
     return AnimatedContainer(
@@ -83,7 +91,6 @@ class AcceptRequestDropdown extends StatelessWidget {
                     Text(
                       localization.acceptRequestDropdownTitle,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         letterSpacing: 0,
                         fontWeight: FontWeight.w800,
                         fontSize: 22,
@@ -95,7 +102,6 @@ class AcceptRequestDropdown extends StatelessWidget {
                       localization.acceptRequestDropdownMessage,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         letterSpacing: 0,
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
@@ -114,7 +120,7 @@ class AcceptRequestDropdown extends StatelessWidget {
                       context,
                       title: localization.acceptRequestDropdownPayableAmount,
                       content:
-                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} $currencyCode",
+                          "${amountFormatter.format(finalAmountValue).trim()} $currencyCode",
                       contentColor: AppColors.success,
                     ),
                     const SizedBox(height: AppSpacing.md),
@@ -146,7 +152,6 @@ class AcceptRequestDropdown extends StatelessWidget {
                           Text(
                             localization.acceptRequestDropdownRequesterNote,
                             style: TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
                               letterSpacing: 0,
                               fontSize: 14,
                               color: colorScheme.onSurface.withValues(
@@ -161,7 +166,6 @@ class AcceptRequestDropdown extends StatelessWidget {
                                 localization.acceptRequestDropdownNoteNotFound,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
                               letterSpacing: 0,
                               fontSize: 14,
                               color: colorScheme.onSurface.withValues(
@@ -239,7 +243,6 @@ class AcceptRequestDropdown extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
             letterSpacing: 0,
             fontWeight: FontWeight.w600,
             fontSize: 14,
@@ -249,7 +252,6 @@ class AcceptRequestDropdown extends StatelessWidget {
         Text(
           content,
           style: TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
             letterSpacing: 0,
             fontWeight: FontWeight.w800,
             fontSize: 15,

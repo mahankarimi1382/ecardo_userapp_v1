@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/bindings/app_bindings.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
@@ -631,7 +631,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesDynamicPassword,
-          iconData: Icons.pin_rounded,
+          iconData: FluentIcons.password_24_regular,
           route: BaseRoute.dynamicPassword,
         ),
       ),
@@ -662,7 +662,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesTransfer,
-          icon: PngAssets.transferService,
+          iconData: FluentIcons.arrow_swap_24_regular,
           route: BaseRoute.transfer,
           feature: 'transfer',
         ),
@@ -686,7 +686,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesAddMoney,
-          icon: PngAssets.addMoneyService,
+          iconData: FluentIcons.wallet_credit_card_24_regular,
           route: BaseRoute.addMoney,
           available: true,
         ),
@@ -705,7 +705,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesWithdraw,
-          icon: PngAssets.withdrawService,
+          iconData: FluentIcons.money_hand_24_regular,
           route: BaseRoute.withdraw,
           feature: 'withdraw',
         ),
@@ -737,7 +737,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesExchange,
-          icon: PngAssets.exchangeService,
+          iconData: FluentIcons.arrow_sync_24_regular,
           route: BaseRoute.exchange,
           feature: 'exchange',
         ),
@@ -759,7 +759,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesWallets,
-          icon: PngAssets.walletsService,
+          iconData: FluentIcons.wallet_24_regular,
           route: BaseRoute.wallets,
         ),
       ),
@@ -781,7 +781,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesTransactions,
-          icon: PngAssets.transactionService,
+          iconData: FluentIcons.receipt_sparkles_24_regular,
           route: BaseRoute.transactions,
         ),
       ),
@@ -801,7 +801,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesQrCode,
-          icon: PngAssets.qrCodeService,
+          iconData: FluentIcons.qr_code_24_regular,
           route: BaseRoute.qrCode,
         ),
       ),
@@ -834,7 +834,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesVirtualCard,
-          icon: PngAssets.virtualCardService,
+          iconData: FluentIcons.payment_24_regular,
           route: BaseRoute.virtualCard,
           feature: 'paycardo',
           available: true,
@@ -857,7 +857,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesBillPayment,
-          icon: PngAssets.billPaymentService,
+          iconData: FluentIcons.receipt_24_regular,
           route: BaseRoute.billPayment,
           feature: 'pay-bill',
         ),
@@ -875,7 +875,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesRequestMoney,
-          icon: PngAssets.requestMoneyService,
+          iconData: FluentIcons.handshake_24_regular,
           route: BaseRoute.requestMoney,
           feature: 'request-money',
         ),
@@ -894,7 +894,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesPaymentLinks,
-          icon: PngAssets.paymentLinksService,
+          iconData: FluentIcons.link_square_24_regular,
           route: BaseRoute.paymentLinks,
           feature: 'payment-links',
         ),
@@ -916,7 +916,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesMakePayment,
-          icon: PngAssets.makePaymentService,
+          iconData: FluentIcons.building_bank_link_24_regular,
           route: BaseRoute.makePayment,
           available: true,
         ),
@@ -928,7 +928,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         searchKeywords: const ['نقد کردن', 'دریافت وجه', 'cash out', 'نقد'],
         tile: ServiceTile(
           title: localization.otherServicesCashOut,
-          icon: PngAssets.cashOutService,
+          iconData: FluentIcons.money_24_regular,
           route: BaseRoute.cashOut,
           feature: 'cashout',
           available: true,
@@ -951,7 +951,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesGift,
-          icon: PngAssets.giftService,
+          iconData: FluentIcons.gift_card_24_regular,
           route: BaseRoute.giftCode,
           feature: 'gift_send',
           available: true,
@@ -973,7 +973,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesGiftCards,
-          icon: PngAssets.giftCardsService,
+          iconData: FluentIcons.gift_24_regular,
           route: BaseRoute.giftCard,
           feature: 'gift_redeem',
           available: true,
@@ -1004,7 +1004,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.otherServicesInvite,
-          icon: PngAssets.inviteService,
+          iconData: FluentIcons.person_add_24_regular,
           route: BaseRoute.referral,
         ),
       ),
@@ -1028,7 +1028,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelFlights,
-          iconData: Icons.flight_rounded,
+          iconData: FluentIcons.airplane_take_off_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1050,7 +1050,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelHotels,
-          iconData: Icons.hotel_rounded,
+          iconData: FluentIcons.bed_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1081,7 +1081,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelEsim,
-          iconData: Icons.sim_card_rounded,
+          iconData: FluentIcons.sim_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1103,7 +1103,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceTaxi,
-          iconData: Icons.local_taxi_rounded,
+          iconData: FluentIcons.vehicle_cab_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1127,7 +1127,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceTrain,
-          iconData: Icons.train_rounded,
+          iconData: FluentIcons.vehicle_subway_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1148,7 +1148,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceCarRental,
-          iconData: Icons.directions_car_rounded,
+          iconData: FluentIcons.vehicle_car_profile_24_regular,
           route: BaseRoute.rentalHome,
           available: true,
         ),
@@ -1167,7 +1167,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceVisa,
-          iconData: Icons.approval_rounded,
+          iconData: FluentIcons.certificate_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1188,7 +1188,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceTour,
-          iconData: Icons.tour_rounded,
+          iconData: FluentIcons.backpack_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1211,7 +1211,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceBoat,
-          iconData: Icons.directions_boat_rounded,
+          iconData: FluentIcons.vehicle_ship_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1251,7 +1251,7 @@ class _ServicesScreenState extends State<ServicesScreen>
             ar: 'صالة تشريفات المطار',
             zh: '机场贵宾厅',
           ),
-          iconData: Icons.airline_seat_recline_extra_rounded,
+          iconData: FluentIcons.conference_room_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1275,7 +1275,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceLocal,
-          iconData: Icons.place_rounded,
+          iconData: FluentIcons.location_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1297,7 +1297,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceFood,
-          iconData: Icons.delivery_dining_rounded,
+          iconData: FluentIcons.food_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1317,7 +1317,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceSupermarket,
-          iconData: Icons.storefront_rounded,
+          iconData: FluentIcons.cart_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1339,7 +1339,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceRestaurant,
-          iconData: Icons.restaurant_rounded,
+          iconData: FluentIcons.food_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1356,7 +1356,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         searchKeywords: const ['فروشگاه', 'خرید کالا', 'store', 'shop', 'متجر'],
         tile: ServiceTile(
           title: localization.travelServiceStore,
-          iconData: Icons.shopping_bag_rounded,
+          iconData: FluentIcons.building_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1381,7 +1381,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceTranslator,
-          iconData: Icons.translate_rounded,
+          iconData: FluentIcons.translate_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1403,7 +1403,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceEmergency,
-          iconData: Icons.support_agent_rounded,
+          iconData: FluentIcons.alert_urgent_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1427,7 +1427,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         searchKeywords: const ['علی پی', 'چین', 'یوان', 'alipay', 'china'],
         tile: ServiceTile(
           title: localization.travelServiceAliPay,
-          iconData: Icons.account_balance_wallet_rounded,
+          iconData: FluentIcons.payment_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1466,7 +1466,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceMirPay,
-          iconData: Icons.credit_card_rounded,
+          iconData: FluentIcons.payment_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1496,7 +1496,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceSimTopUp,
-          iconData: Icons.phone_android_rounded,
+          iconData: FluentIcons.sim_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1518,7 +1518,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.travelServiceInsurance,
-          iconData: Icons.health_and_safety_rounded,
+          iconData: FluentIcons.shield_task_24_regular,
           route: '',
           available: travelOn,
           beforeNavigate: _ensureTravelController,
@@ -1547,7 +1547,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.drawerRemittance,
-          icon: PngAssets.billPaymentService,
+          iconData: FluentIcons.arrow_swap_24_regular,
           route: BaseRoute.remittance,
           feature: 'remittance',
         ),
@@ -1563,7 +1563,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.businessServiceMoneyTransfer,
-          icon: PngAssets.transferService,
+          iconData: FluentIcons.arrow_swap_24_regular,
           route: BaseRoute.transfer,
           feature: 'transfer',
         ),
@@ -1595,7 +1595,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.drawerP2pTrading,
-          icon: PngAssets.p2pTradingService,
+          iconData: FluentIcons.people_swap_24_regular,
           route: BaseRoute.p2pTrading,
           available: true,
         ),
@@ -1624,7 +1624,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.businessServiceP2pEscrow,
-          iconData: Icons.gavel_rounded,
+          iconData: FluentIcons.shield_checkmark_24_regular,
           route: BaseRoute.escrowHome,
           available: true,
         ),
@@ -1642,7 +1642,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.businessServiceGuarantee,
-          iconData: Icons.verified_user_rounded,
+          iconData: FluentIcons.shield_keyhole_24_regular,
           route: BaseRoute.guaranteeHome,
           available: true,
         ),
@@ -1663,7 +1663,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.businessServiceBankLoan,
-          iconData: Icons.account_balance_rounded,
+          iconData: FluentIcons.building_bank_24_regular,
           route: BaseRoute.loanHome,
           available: true,
         ),
@@ -1683,7 +1683,7 @@ class _ServicesScreenState extends State<ServicesScreen>
         ],
         tile: ServiceTile(
           title: localization.businessServiceStocks,
-          iconData: Icons.trending_up_rounded,
+          iconData: FluentIcons.data_trending_24_regular,
           route: BaseRoute.stockHome,
           available: true,
         ),
@@ -1713,7 +1713,7 @@ class _ServicesScreenState extends State<ServicesScreen>
             ru: 'Инвест-проекты',
             tr: 'Yatırım Projeleri',
           ),
-          iconData: Icons.corporate_fare_rounded,
+          iconData: FluentIcons.briefcase_24_regular,
           route: BaseRoute.commercialProjects,
           available: true,
         ),
@@ -1738,9 +1738,9 @@ class _ServicesScreenState extends State<ServicesScreen>
             ar: 'متجر التراخيص',
             zh: '许可证商店',
             tr: 'Lisans Mağazası',
-            ru: 'Магазин лицензий',
+            ru: 'Магазиن лицензий',
           ),
-          iconData: Icons.vpn_key_rounded,
+          iconData: FluentIcons.key_24_regular,
           route: BaseRoute.licenseStore,
           available: true,
         ),

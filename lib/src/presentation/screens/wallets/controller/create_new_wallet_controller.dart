@@ -23,6 +23,9 @@ class CreateNewWalletController extends GetxController {
   final Rxn<CurrenciesData> currency = Rxn<CurrenciesData>();
   final RxList<CurrenciesData> currenciesList = <CurrenciesData>[].obs;
 
+  AppLocalizations? get localization =>
+      Get.context == null ? null : AppLocalizations.of(Get.context!);
+
   @override
   void onInit() {
     super.onInit();
@@ -59,16 +62,16 @@ class CreateNewWalletController extends GetxController {
         endpoint: ApiPath.walletsEndpoint,
       );
 
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         final walletsModel = WalletsModel.fromJson(response.data!);
         walletsList.clear();
-        walletsList.value = walletsModel.data!.wallets ?? [];
+        walletsList.value = walletsModel.data?.wallets ?? [];
       }
     } catch (e, stackTrace) {
       debugPrint('❌ fetchWallets() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localization?.allControllerLoadError ?? 'Error loading wallets',
       );
     } finally {}
   }
@@ -79,14 +82,15 @@ class CreateNewWalletController extends GetxController {
       final response = await Get.find<NetworkService>().globalGet(
         endpoint: ApiPath.currenciesEndpoint,
       );
-      if (response.status == Status.completed) {
+      if (response.status == Status.completed && response.data != null) {
         final currenciesModel = CurrenciesModel.fromJson(response.data!);
 
         currenciesList.clear();
 
-        final existingCurrencies = walletsList.map((w) => w.code);
+        final existingCurrencies = walletsList.map((w) => w.code).toSet();
+        final rawData = currenciesModel.data ?? [];
         currenciesList.assignAll(
-          currenciesModel.data!.where(
+          rawData.where(
             (currency) => !existingCurrencies.contains(currency.code),
           ),
         );
@@ -95,17 +99,23 @@ class CreateNewWalletController extends GetxController {
       debugPrint('❌ fetchCurrencies() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localization?.allControllerLoadError ?? 'Error loading currencies',
       );
     } finally {}
   }
 
   // Create a new wallet
   Future<void> createWallet() async {
+    final selectedCurrency = currency.value;
+    if (selectedCurrency == null || selectedCurrency.id == null) {
+      ToastHelper().showErrorToast('Please select a currency');
+      return;
+    }
+
     isCreateWalletLoading.value = true;
     try {
       final Map<String, String> requestBody = {
-        "currency_id": currency.value!.id.toString(),
+        "currency_id": selectedCurrency.id.toString(),
       };
       final response = await Get.find<NetworkService>().post(
         endpoint: ApiPath.walletsEndpoint,
@@ -118,13 +128,14 @@ class CreateNewWalletController extends GetxController {
           Get.find<WalletsController>().fetchWallets();
         }
         AppEventBus.emit(WalletListChangedEvent(action: 'create'));
-        ToastHelper().showSuccessToast(response.data!["message"]);
+        final msg = response.data?["message"]?.toString() ?? 'Wallet created';
+        ToastHelper().showSuccessToast(msg);
       }
     } catch (e, stackTrace) {
       debugPrint('❌ createWallet() error: $e');
       debugPrint('📍 StackTrace: $stackTrace');
       ToastHelper().showErrorToast(
-        AppLocalizations.of(Get.context!)!.allControllerLoadError,
+        localization?.allControllerLoadError ?? 'Error creating wallet',
       );
     } finally {
       isCreateWalletLoading.value = false;

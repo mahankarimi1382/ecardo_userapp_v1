@@ -159,7 +159,6 @@ class _TransferSuccessCelebrationState extends State<TransferSuccessCelebration>
                 widget.title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: colorScheme.onSurface,
@@ -176,7 +175,6 @@ class _TransferSuccessCelebrationState extends State<TransferSuccessCelebration>
                   widget.subtitle!,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: colorScheme.onSurface.withValues(alpha: 0.65),
@@ -220,7 +218,6 @@ class _TransferSuccessCelebrationState extends State<TransferSuccessCelebration>
                       Text(
                         widget.dateTime!,
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: colorScheme.onSurface.withValues(alpha: 0.7),

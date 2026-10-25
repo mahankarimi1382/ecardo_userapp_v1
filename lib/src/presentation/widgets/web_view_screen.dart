@@ -43,10 +43,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
   bool _isLoading = true;
   bool _redirectProcessed = false;
 
-  /// Transaction id extracted from the gateway URL (pro-pay/{tnx}).
-  String? get _tnx {
-    final match = RegExp(r'pro-pay/([^/?#]+)').firstMatch(widget.paymentUrl);
-    return match?.group(1);
+  /// Transaction id extracted from the gateway URL or query parameters.
+  String? get _tnx => _extractTnx(widget.paymentUrl);
+
+  static String? _extractTnx(String? url) {
+    if (url == null || url.isEmpty) return null;
+    final proPayMatch = RegExp(r'pro-pay/(?:result/)?([^/?#]+)').firstMatch(url);
+    if (proPayMatch != null && proPayMatch.group(1) != 'process') {
+      return proPayMatch.group(1);
+    }
+    final uri = Uri.tryParse(url);
+    final queryTnx = uri?.queryParameters['tnx'];
+    if (queryTnx != null && queryTnx.isNotEmpty) return queryTnx;
+    final paramMatch = RegExp(r'[?&]tnx=([^&#]+)').firstMatch(url);
+    return paramMatch?.group(1);
   }
 
   @override
@@ -113,7 +123,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _redirectProcessed = true;
 
     // 1) Ask the server first when we can identify the transaction.
-    final tnx = _tnx;
+    final tnx = _tnx ?? _extractTnx(url);
     if (tnx != null && tnx.isNotEmpty) {
       final serverState = await _queryServerStatus(tnx);
       if (serverState != null) {
@@ -186,16 +196,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
     return null;
   }
 
-  /// Best-effort scrape of the legacy JSON body — never throws.
+  /// Best-effort scrape of the page JSON or injected payment result — never throws.
   Future<Map<String, dynamic>?> _scrapePageJson() async {
     try {
-      String jsonResponse =
-          await _controller.runJavaScriptReturningResult(
-                "document.body.innerText",
-              )
-              as String;
+      final jsResult = await _controller.runJavaScriptReturningResult(
+        "(function() { if (window.__PAYMENT_RESULT__) { return JSON.stringify(window.__PAYMENT_RESULT__); } var el = document.getElementById('txn-data'); if (el) { return JSON.stringify({status: el.getAttribute('data-status') || 'success', tnx: el.getAttribute('data-tnx')}); } return document.body.innerText; })()",
+      );
 
-      jsonResponse = jsonResponse.trim();
+      String jsonResponse = jsResult.toString().trim();
       if (jsonResponse.startsWith('"') && jsonResponse.endsWith('"')) {
         jsonResponse = jsonResponse.substring(1, jsonResponse.length - 1);
       }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
@@ -63,7 +64,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       // Core travel services row — Flight, Hotel, eSIM, Taxi
       ServiceTile(
         title: localization.travelFlights,
-        iconData: Icons.flight_rounded,
+        iconData: FluentIcons.airplane_take_off_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -71,7 +72,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelHotels,
-        iconData: Icons.hotel_rounded,
+        iconData: FluentIcons.bed_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -79,7 +80,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelEsim,
-        iconData: Icons.sim_card_rounded,
+        iconData: FluentIcons.sim_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -87,7 +88,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceTaxi,
-        iconData: Icons.local_taxi_rounded,
+        iconData: FluentIcons.vehicle_cab_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -96,7 +97,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       // Secondary travel services row — Train, Car Rental, Visa, Tour
       ServiceTile(
         title: localization.travelServiceTrain,
-        iconData: Icons.train_rounded,
+        iconData: FluentIcons.vehicle_subway_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -104,13 +105,13 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceCarRental,
-        iconData: Icons.directions_car_rounded,
+        iconData: FluentIcons.vehicle_car_profile_24_regular,
         route: BaseRoute.rentalHome,
         available: true,
       ),
       ServiceTile(
         title: localization.travelServiceVisa,
-        iconData: Icons.approval_rounded,
+        iconData: FluentIcons.certificate_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -118,7 +119,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceTour,
-        iconData: Icons.tour_rounded,
+        iconData: FluentIcons.backpack_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -126,7 +127,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceBoat,
-        iconData: Icons.directions_boat_rounded,
+        iconData: FluentIcons.vehicle_ship_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -140,7 +141,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
           ar: 'صالة تشريفات المطار',
           zh: '机场贵宾厅',
         ),
-        iconData: Icons.airline_seat_recline_extra_rounded,
+        iconData: FluentIcons.conference_room_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -148,7 +149,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceLocal,
-        iconData: Icons.place_rounded,
+        iconData: FluentIcons.location_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -156,7 +157,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceFood,
-        iconData: Icons.delivery_dining_rounded,
+        iconData: FluentIcons.food_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -164,7 +165,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceSupermarket,
-        iconData: Icons.storefront_rounded,
+        iconData: FluentIcons.cart_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -173,7 +174,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceRestaurant,
-        iconData: Icons.restaurant_rounded,
+        iconData: FluentIcons.food_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -181,7 +182,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceStore,
-        iconData: Icons.shopping_bag_rounded,
+        iconData: FluentIcons.building_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -190,7 +191,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceTranslator,
-        iconData: Icons.translate_rounded,
+        iconData: FluentIcons.translate_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -199,7 +200,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceEmergency,
-        iconData: Icons.support_agent_rounded,
+        iconData: FluentIcons.alert_urgent_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -207,7 +208,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceAliPay,
-        iconData: Icons.account_balance_wallet_rounded,
+        iconData: FluentIcons.payment_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -220,7 +221,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceMirPay,
-        iconData: Icons.credit_card_rounded,
+        iconData: FluentIcons.payment_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -233,7 +234,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceSimTopUp,
-        iconData: Icons.phone_android_rounded,
+        iconData: FluentIcons.sim_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,
@@ -241,7 +242,7 @@ class _TravelServicesSectionState extends State<TravelServicesSection> {
       ),
       ServiceTile(
         title: localization.travelServiceInsurance,
-        iconData: Icons.health_and_safety_rounded,
+        iconData: FluentIcons.shield_task_24_regular,
         route: '',
         available: travelOn,
         beforeNavigate: _ensureTravelController,

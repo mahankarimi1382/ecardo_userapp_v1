@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
@@ -187,7 +188,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Equity Projects'), findsOneWidget);
-        expect(find.byIcon(Icons.corporate_fare_rounded), findsOneWidget);
+        expect(find.byIcon(FluentIcons.briefcase_24_regular), findsOneWidget);
 
         // Verify touch targets of service tiles in the grid >= 44x44
         final serviceTiles = find.byType(ServiceTileView);
@@ -223,7 +224,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('سرمایه‌گذاری تجاری'), findsOneWidget);
-        expect(find.byIcon(Icons.corporate_fare_rounded), findsOneWidget);
+        expect(find.byIcon(FluentIcons.briefcase_24_regular), findsOneWidget);
         expect(tester.takeException(), isNull);
       },
     );
@@ -257,10 +258,10 @@ void main() {
       expect(find.text('eSIM'), findsOneWidget);
       expect(find.text('Taxi'), findsOneWidget);
 
-      expect(find.byIcon(Icons.flight_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.hotel_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.sim_card_rounded), findsOneWidget);
-      expect(find.byIcon(Icons.local_taxi_rounded), findsOneWidget);
+      expect(find.byIcon(FluentIcons.airplane_take_off_24_regular), findsOneWidget);
+      expect(find.byIcon(FluentIcons.bed_24_regular), findsOneWidget);
+      expect(find.byIcon(FluentIcons.sim_24_regular), findsOneWidget);
+      expect(find.byIcon(FluentIcons.vehicle_cab_24_regular), findsOneWidget);
 
       expect(tester.takeException(), isNull);
     });

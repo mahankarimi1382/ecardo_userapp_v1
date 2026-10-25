@@ -1,0 +1,21 @@
+{
+  "repo": "ecardo_userapp_v1",
+  "sha": "e01aed24190160d8a07352a2680de854be9a534e",
+  "branch": "main",
+  "version": "1.0.182+182",
+  "dirty_files": 29,
+  "flutter_available": true,
+  "flutter_version": "3.44.6",
+  "dart_version": "3.12.2",
+  "toolchain_path": "D:/ecardo-toolchain/flutter",
+  "php_available": false,
+  "backend": {
+    "repo": "ecardo-backend",
+    "branch": "feat/uiux-v180-backend",
+    "sha": "7a1ae8a0ae0a5551da18d53f6ebb4af320a4d160",
+    "baseline_note": "re-pinned 2026-10-24 from 04a7ec8601 (6 same-day commits on agent-financial-ui-rtl; audit-cited files unchanged; see BASELINE.md §2.1)"
+  },
+  "packs": ["p1_stage1", "p2_integration", "p3_uiux_backend"],
+  "graphify_query_status": "exit=0؛ Graph: graphify-out/graph.json (199963 nodes) | Traversal: BFS depth=2 | Start: ['ecardo-backend/tests/Feature/Api/HighRiskRoutesTest.php', 'repositories', 'dependencies', 'Routes', 'Tests', 'Map', '_",
+  "date": "2026-10-24"
+}

@@ -219,7 +219,6 @@ class _ExchangeScreenState extends State<ExchangeScreen> {
                                 ),
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
-                                fontFamily: 'Plus Jakarta Sans',
                               ),
                             ),
                           ],

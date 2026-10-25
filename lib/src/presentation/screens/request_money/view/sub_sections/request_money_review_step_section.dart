@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
@@ -166,7 +167,7 @@ class _RequestMoneyReviewStepSectionState
 
     final amountNum =
         double.tryParse(controller.requestAmountController.text) ?? 0.0;
-    final formattedAmount = amountNum.toStringAsFixed(calculateDecimals);
+    final formattedAmount = _formatAmount(amountNum, calculateDecimals);
     final recipientUid = controller.recipientUidController.text.trim();
     final noteText = controller.noteController.text.trim();
 
@@ -181,7 +182,6 @@ class _RequestMoneyReviewStepSectionState
             Text(
               localization.requestMoneyReviewStepSectionTitle,
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 letterSpacing: -0.2,
                 fontWeight: FontWeight.w800,
                 fontSize: 22,
@@ -232,6 +232,7 @@ class _RequestMoneyReviewStepSectionState
                         ? AppColors.mainSoftBlue
                         : AppColors.deepBlack,
                     isBold: true,
+                    isNumeric: true,
                   ),
                   _buildDivider(colorScheme),
                   _buildSummaryRow(
@@ -246,6 +247,7 @@ class _RequestMoneyReviewStepSectionState
                     title: localization.requestMoneyReviewStepSectionRecipientUid,
                     content: recipientUid,
                     contentColor: colorScheme.onSurface,
+                    isNumeric: true,
                   ),
                   if (noteText.isNotEmpty) ...[
                     _buildDivider(colorScheme),
@@ -296,6 +298,7 @@ class _RequestMoneyReviewStepSectionState
                     content: "$formattedAmount $walletCode",
                     contentColor: colorScheme.primary,
                     isHero: true,
+                    isNumeric: true,
                   ),
                 ],
               ),
@@ -340,7 +343,6 @@ class _RequestMoneyReviewStepSectionState
                         zh: '受 eCardo 安全密码保护',
                       ),
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: colorScheme.onSurface.withValues(alpha: 0.65),
@@ -412,6 +414,16 @@ class _RequestMoneyReviewStepSectionState
     );
   }
 
+  /// Display formatting aligned with the design-system money widgets
+  /// (EcardoDigitalReceipt / EcardoBalanceHero): en_US grouping, no symbol.
+  static String _formatAmount(double value, int decimals) {
+    return NumberFormat.currency(
+      locale: 'en_US',
+      symbol: '',
+      decimalDigits: decimals,
+    ).format(value).trim();
+  }
+
   Widget _buildDivider(ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
@@ -429,6 +441,7 @@ class _RequestMoneyReviewStepSectionState
     required Color contentColor,
     bool isBold = false,
     bool isHero = false,
+    bool isNumeric = false,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -440,7 +453,6 @@ class _RequestMoneyReviewStepSectionState
         Text(
           title,
           style: TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
             letterSpacing: 0,
             fontWeight: isHero ? FontWeight.w800 : FontWeight.w600,
             fontSize: isHero ? 16 : 14,
@@ -451,8 +463,9 @@ class _RequestMoneyReviewStepSectionState
           child: Text(
             content,
             textAlign: TextAlign.end,
+            // Amounts / UIDs stay LTR-isolated inside the RTL layout.
+            textDirection: isNumeric ? TextDirection.ltr : null,
             style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
               letterSpacing: 0,
               fontWeight: isHero
                   ? FontWeight.w900

@@ -24,10 +24,16 @@ class CreateGiftWalletSection extends StatelessWidget {
               bottomSheetHeight: 450,
               currentlySelectedValue: controller.wallet.value!.name,
               onItemSelected: (value) async {
-                final selectedWallet = controller.giftWalletsList.firstWhere(
-                  (w) => w.name == value,
-                );
-                controller.wallet.value = selectedWallet;
+                final selectedWallet = controller.giftWalletsList
+                        .firstWhereOrNull(
+                          (w) => w.name == value || w.id.toString() == value,
+                        ) ??
+                    (controller.giftWalletsList.isNotEmpty
+                        ? controller.giftWalletsList.first
+                        : null);
+                if (selectedWallet != null) {
+                  controller.wallet.value = selectedWallet;
+                }
               },
             ),
           );

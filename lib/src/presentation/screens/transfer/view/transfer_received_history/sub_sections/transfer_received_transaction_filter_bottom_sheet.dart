@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
+import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
@@ -28,12 +29,12 @@ class _TransferReceivedTransactionFilterBottomSheetState
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutQuart,
       height: 400,
-      margin: EdgeInsets.symmetric(horizontal: 18),
+      margin: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadiusDirectional.only(
-          topStart: Radius.circular(20),
-          topEnd: Radius.circular(20),
+          topStart: Radius.circular(AppSpacing.radiusXl),
+          topEnd: Radius.circular(AppSpacing.radiusXl),
         ),
         boxShadow: [
           BoxShadow(
@@ -45,20 +46,20 @@ class _TransferReceivedTransactionFilterBottomSheetState
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 18),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               Container(
                 width: 40,
-                height: 5,
+                height: AppSpacing.xs,
                 decoration: BoxDecoration(
                   color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSpacing.xl),
               CommonRequiredLabelAndDynamicField(
                 labelText: localization.transferReceivedFilterTransactionId,
                 isLabelRequired: false,
@@ -72,7 +73,7 @@ class _TransferReceivedTransactionFilterBottomSheetState
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              SizedBox(height: AppSpacing.lg),
               CommonRequiredLabelAndDynamicField(
                 labelText: localization.transferReceivedFilterStatus,
                 isLabelRequired: false,
@@ -112,7 +113,9 @@ class _TransferReceivedTransactionFilterBottomSheetState
                                   final statusColor = getStatusColor(status);
 
                                   return InkWell(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSpacing.radiusMd,
+                                    ),
                                     onTap: () {
                                       if (controller
                                               .selectedStatusIndex
@@ -131,10 +134,12 @@ class _TransferReceivedTransactionFilterBottomSheetState
                                       ),
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.symmetric(
-                                        horizontal: 18,
+                                        horizontal: AppSpacing.lg,
                                       ),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(
+                                          AppSpacing.radiusMd,
+                                        ),
                                         color: isSelected
                                             ? statusColor
                                             : AppColors.lightBackground,
@@ -171,7 +176,7 @@ class _TransferReceivedTransactionFilterBottomSheetState
                   ),
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(height: AppSpacing.xxl),
               CommonButton(
                 onPressed: () {
                   controller.updateStatusFilter();
@@ -182,7 +187,7 @@ class _TransferReceivedTransactionFilterBottomSheetState
 
                 text: localization.transferReceivedFilterApplyButton,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.md),
               CommonButton(
                 backgroundColor: AppColors.error,
                 onPressed: () {
@@ -193,7 +198,7 @@ class _TransferReceivedTransactionFilterBottomSheetState
 
                 text: localization.transferReceivedFilterResetButton,
               ),
-              SizedBox(height: 40),
+              SizedBox(height: AppSpacing.xxl),
             ],
           ),
         ),

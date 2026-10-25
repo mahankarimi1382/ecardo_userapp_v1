@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/helper/amount_input_formatter.dart';
@@ -169,7 +170,6 @@ class TransferAmountInputCard extends StatelessWidget {
                   child: Text(
                     currencySymbol,
                     style: TextStyle(
-                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
                       color: colorScheme.onSurface.withValues(alpha: 0.5),
@@ -189,7 +189,6 @@ class TransferAmountInputCard extends StatelessWidget {
                     ],
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: 'Plus Jakarta Sans',
                       fontSize: 36,
                       fontWeight: FontWeight.w800,
                       color: colorScheme.onSurface,
@@ -198,7 +197,6 @@ class TransferAmountInputCard extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: decimals == 0 ? '0' : '0.00',
                       hintStyle: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 36,
                         fontWeight: FontWeight.w800,
                         color: colorScheme.onSurface.withValues(alpha: 0.25),
@@ -244,7 +242,6 @@ class TransferAmountInputCard extends StatelessWidget {
                     child: Text(
                       currencyCode,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -274,6 +271,16 @@ class TransferAmountInputCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Display formatting aligned with the design-system money widgets
+/// (EcardoDigitalReceipt / EcardoBalanceHero): en_US grouping, no symbol.
+String _formatAmount(double value, int decimals) {
+  return NumberFormat.currency(
+    locale: 'en_US',
+    symbol: '',
+    decimalDigits: decimals,
+  ).format(value).trim();
 }
 
 class _QuickPercentageRow extends StatelessWidget {
@@ -346,7 +353,6 @@ class _QuickPercentageRow extends StatelessWidget {
                     child: Text(
                       label,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 12,
                         fontWeight: isMax ? FontWeight.w800 : FontWeight.w600,
                         color: isMax
@@ -400,7 +406,7 @@ class _LiveFeeEstimationPill extends StatelessWidget {
             tr: 'Ücretsiz',
             ru: 'Бесплатно',
           )
-        : '${charge.toStringAsFixed(decimals)} $currencyCode';
+        : '${_formatAmount(charge, decimals)} $currencyCode';
 
     return Container(
       padding: const EdgeInsets.symmetric(

@@ -94,7 +94,6 @@ class TransferPathCard extends StatelessWidget {
                         child: Text(
                           sSymbol,
                           style: const TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                             color: Colors.white,
@@ -106,7 +105,6 @@ class TransferPathCard extends StatelessWidget {
                     Text(
                       fromText,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         color: colorScheme.onSurface.withValues(alpha: 0.5),
@@ -116,7 +114,6 @@ class TransferPathCard extends StatelessWidget {
                     Text(
                       sName,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: colorScheme.onSurface,
@@ -129,7 +126,6 @@ class TransferPathCard extends StatelessWidget {
                       Text(
                         sCode,
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: colorScheme.primary,
@@ -163,8 +159,8 @@ class TransferPathCard extends StatelessWidget {
                       ),
                       child: Text(
                         '$formattedAmount $currencyCode',
+                        textDirection: TextDirection.ltr,
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
                           color: colorScheme.primary,
@@ -238,7 +234,6 @@ class TransferPathCard extends StatelessWidget {
                     Text(
                       toText,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         color: colorScheme.onSurface.withValues(alpha: 0.5),
@@ -248,7 +243,6 @@ class TransferPathCard extends StatelessWidget {
                     Text(
                       recipientName.isNotEmpty ? recipientName : 'Recipient',
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: colorScheme.onSurface,
@@ -260,8 +254,8 @@ class TransferPathCard extends StatelessWidget {
                     if (recipientUid.isNotEmpty)
                       Text(
                         '$idLabel: $recipientUid',
+                        textDirection: TextDirection.ltr,
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: colorScheme.onSurface.withValues(alpha: 0.6),

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_ads/controller/my_ads_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/my_ads/widgets/my_ads_card.dart';
-import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 
 class MyAdsScreen extends StatefulWidget {
   const MyAdsScreen({super.key});
@@ -57,7 +58,14 @@ class _MyAdsScreenState extends State<MyAdsScreen> {
               child: controller.adsList.isEmpty
                   ? ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [SizedBox(height: 120), NoDataFound()],
+                      children: [
+                        SizedBox(height: 120.h),
+                        EcardoEmptyState(
+                          title: AppLocalizations.of(context)!.p2pMyAds,
+                          description: AppLocalizations.of(context)!.noDataFound,
+                          iconData: Icons.campaign_rounded,
+                        ),
+                      ],
                     )
                   : ListView.separated(
                       controller: _scrollController,

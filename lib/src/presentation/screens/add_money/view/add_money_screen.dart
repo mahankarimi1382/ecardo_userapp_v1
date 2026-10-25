@@ -185,7 +185,8 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
 
   Widget _buildWallet(bool isDark) {
     final localization = AppLocalizations.of(context)!;
-    final currentWallet = controller.wallet.value!;
+    final currentWallet = controller.wallet.value;
+    if (currentWallet == null) return const SizedBox.shrink();
 
     return InkWell(
       borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -198,15 +199,20 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             bottomSheetHeight: 450,
             currentlySelectedValue: currentWallet.name,
             onItemSelected: (value) async {
-              final selectedWallet = controller.walletsList.firstWhere(
-                (w) => w.name == value,
-              );
-              controller.wallet.value = selectedWallet;
-              controller.gatewayMethod.value = GatewayMethodsData();
-              controller.gatewayController.clear();
-              controller.dynamicFieldControllers.clear();
-              controller.selectedImages.clear();
-              await controller.fetchGatewayMethods(isSetUpLoading: true);
+              final selectedWallet = controller.walletsList.firstWhereOrNull(
+                    (w) => w.name == value || w.id.toString() == value,
+                  ) ??
+                  (controller.walletsList.isNotEmpty
+                      ? controller.walletsList.first
+                      : null);
+              if (selectedWallet != null) {
+                controller.wallet.value = selectedWallet;
+                controller.gatewayMethod.value = GatewayMethodsData();
+                controller.gatewayController.clear();
+                controller.dynamicFieldControllers.clear();
+                controller.selectedImages.clear();
+                await controller.fetchGatewayMethods(isSetUpLoading: true);
+              }
             },
           ),
         );

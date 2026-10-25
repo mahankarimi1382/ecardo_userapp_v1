@@ -142,7 +142,6 @@ class _StepDot extends StatelessWidget {
             fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600,
             color: labelColor,
             letterSpacing: 0.4,
-            fontFamily: 'Plus Jakarta Sans',
           ),
           child: Text(
             label.toUpperCase(),

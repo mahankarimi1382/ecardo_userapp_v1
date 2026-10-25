@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
@@ -56,7 +57,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
 
       final amountNum =
           double.tryParse(controller.amountController.text) ?? 0.0;
-      final formattedAmount = amountNum.toStringAsFixed(calculateDecimals);
+      final formattedAmount = _formatAmount(amountNum, calculateDecimals);
 
       final recipientUid = controller.recipientUidController.text.trim();
       final matchedBeneficiary = controller.findBeneficiaryByAccount(
@@ -69,7 +70,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
 
       final isFree =
           controller.charge.value <= 0.0 && !controller.chargeLoadFailed.value;
-      final zeroFormatted = (0.0).toStringAsFixed(calculateDecimals);
+      final zeroFormatted = _formatAmount(0.0, calculateDecimals);
       final feeText = controller.chargeLoadFailed.value
           ? '—'
           : isFree
@@ -82,11 +83,11 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
               ru: 'Бесплатно ($zeroFormatted $walletCode)',
               zh: '免费 ($zeroFormatted $walletCode)',
             )
-          : "${controller.charge.value.toStringAsFixed(calculateDecimals)} $walletCode";
+          : "${_formatAmount(controller.charge.value, calculateDecimals)} $walletCode";
 
       final totalText = controller.chargeLoadFailed.value
           ? '—'
-          : "${controller.totalAmount.value.toStringAsFixed(calculateDecimals)} $walletCode";
+          : "${_formatAmount(controller.totalAmount.value, calculateDecimals)} $walletCode";
 
       return SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -99,7 +100,6 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
               Text(
                 localization.transferReviewStepSectionTitle,
                 style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
                   letterSpacing: -0.2,
                   fontWeight: FontWeight.w800,
                   fontSize: 22,
@@ -136,6 +136,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                           ? AppColors.mainSoftBlue
                           : AppColors.deepBlack,
                       isBold: true,
+                      isNumeric: true,
                     ),
                     _buildDivider(colorScheme),
                     _buildSummaryRow(
@@ -151,6 +152,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                           .transferReviewStepSectionRecipientAccount,
                       content: recipientUid,
                       contentColor: colorScheme.onSurface,
+                      isNumeric: true,
                     ),
                     _buildDivider(colorScheme),
                     _buildSummaryRow(
@@ -161,6 +163,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                           ? AppColors.success
                           : AppColors.error,
                       isTag: isFree,
+                      isNumeric: true,
                     ),
                     if (currentWallet?.conversionRate != null &&
                         currentWallet!.conversionRate!.isNotEmpty) ...[
@@ -181,6 +184,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                         contentColor: colorScheme.onSurface.withValues(
                           alpha: 0.7,
                         ),
+                        isNumeric: true,
                       ),
                     ],
                     _buildDivider(colorScheme),
@@ -213,6 +217,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                       content: totalText,
                       contentColor: colorScheme.primary,
                       isHero: true,
+                      isNumeric: true,
                     ),
                   ],
                 ),
@@ -259,7 +264,6 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
                           zh: '受 eCardo 安全密码保护',
                         ),
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: colorScheme.onSurface.withValues(alpha: 0.65),
@@ -414,6 +418,16 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     await controller.transferAmount(passcode: verified.toString());
   }
 
+  /// Display formatting aligned with the design-system money widgets
+  /// (EcardoDigitalReceipt / EcardoBalanceHero): en_US grouping, no symbol.
+  static String _formatAmount(double value, int decimals) {
+    return NumberFormat.currency(
+      locale: 'en_US',
+      symbol: '',
+      decimalDigits: decimals,
+    ).format(value).trim();
+  }
+
   Widget _buildDivider(ColorScheme colorScheme) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
@@ -432,6 +446,7 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
     bool isBold = false,
     bool isHero = false,
     bool isTag = false,
+    bool isNumeric = false,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -443,7 +458,6 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
         Text(
           title,
           style: TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
             letterSpacing: 0,
             fontWeight: isHero ? FontWeight.w800 : FontWeight.w600,
             fontSize: isHero ? 16 : 14,
@@ -460,7 +474,6 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
             child: Text(
               content,
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 color: contentColor,
@@ -472,8 +485,9 @@ class _TransferReviewStepSectionState extends State<TransferReviewStepSection> {
             child: Text(
               content,
               textAlign: TextAlign.end,
+              // Amounts / UIDs stay LTR-isolated inside the RTL layout.
+              textDirection: isNumeric ? TextDirection.ltr : null,
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 letterSpacing: 0,
                 fontWeight: isHero
                     ? FontWeight.w900

@@ -10,6 +10,7 @@ import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/design_system/design_system.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 import 'package:ecardo_user/src/helper/passcode_helper.dart';
+import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/widgets/verify_passcode_bottom_sheet.dart';
@@ -98,10 +99,13 @@ class _AddMoneyReviewStepSectionState extends State<AddMoneyReviewStepSection> {
 
   void _executeDeposit(AddMoneyController controller) {
     if (controller.currentStep.value == 1) {
-      if (controller.gatewayMethod.value!.type == "auto") {
+      final gateway = controller.gatewayMethod.value;
+      if (gateway != null && gateway.type == "auto") {
         controller.submitAddMoneyAuto();
-      } else {
+      } else if (gateway != null) {
         controller.submitAddMoneyManual();
+      } else {
+        ToastHelper().showErrorToast('Please select a payment gateway');
       }
     } else {
       controller.nextStepWithValidation();

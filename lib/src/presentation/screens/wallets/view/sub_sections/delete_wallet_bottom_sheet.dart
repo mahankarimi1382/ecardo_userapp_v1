@@ -93,10 +93,11 @@ class DeleteWalletBottomSheet extends StatelessWidget {
             SizedBox(height: 20),
             CommonButton(
               width: 120,
-
               text: localization.deleteWalletBottomSheetCancelButton,
               backgroundColor: AppColors.transparent,
-              textColor: AppColors.lightTextTertiary,
+              textColor: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextTertiary,
               onPressed: () => Get.back(),
             ),
             SizedBox(height: 30),

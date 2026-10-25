@@ -1,0 +1,16 @@
+{
+  "catalog_row_count": 740,
+  "unique_normalized_route_path_count": 138,
+  "unique_route_name_count": 739,
+  "unique_screen_id_or_name_count": 740,
+  "entity_type_column": "navigation_type",
+  "entity_type_row_counts": {
+    "GET_PAGE": 137,
+    "TAB_CHILD": 475,
+    "BOTTOM_SHEET": 52,
+    "GET_TO": 74,
+    "DIALOG": 2
+  },
+  "important_limitation": "Route name count and route path count are separate indicators; do not add them or claim one is canonical without a reviewed route-alias mapping.",
+  "proof_limitation": "Counts do not prove reachability, UI quality, backend implementation, runtime verification, or tests passing."
+}

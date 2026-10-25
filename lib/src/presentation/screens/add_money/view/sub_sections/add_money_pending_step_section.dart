@@ -7,7 +7,6 @@ import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/route_return.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
-import 'package:ecardo_user/src/common/widgets/common_loading.dart';
 import 'package:ecardo_user/src/helper/toast_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/add_money/controller/add_money_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
@@ -48,14 +47,42 @@ class _AddMoneyPendingStepSectionState
     return Obx(() {
       final data = controller.pendingPaymentData.value;
 
-      if (data == null || data["transaction"] == null) {
-        return const CommonLoading();
-      }
+      final Map<String, dynamic> transaction =
+          (data != null && data["transaction"] is Map)
+              ? Map<String, dynamic>.from(data["transaction"])
+              : (data ?? <String, dynamic>{});
 
-      final transaction = data["transaction"];
-      final payCurrency = transaction["pay_currency"];
+      final String payCurrency = (transaction["pay_currency"] ??
+              controller.gatewayMethod.value?.currency ??
+              controller.wallet.value?.code ??
+              "USD")
+          .toString();
 
-      if (!isCalculated) {
+      final int decimals =
+          controller.gatewayMethod.value?.currencyDecimals ?? 2;
+      final bool isCrypto =
+          controller.gatewayMethod.value?.currencyType == "crypto" ||
+          (controller.wallet.value?.isCrypto ?? false);
+
+      final double amount = parseToDouble(
+        transaction["amount"] ?? controller.baseAmount.value,
+      );
+      final double charge = parseToDouble(
+        transaction["charge"] ?? controller.calculatedCharge.value,
+      );
+      final double finalAmount =
+          totalAmount > 0 ? totalAmount : (amount + charge);
+      final String tnxId =
+          (transaction["tnx"] ?? transaction["id"] ?? "").toString();
+      final String walletName = controller.wallet.value?.name ??
+          controller.wallet.value?.code ??
+          "Wallet";
+      final String paymentMethod =
+          controller.gatewayMethod.value?.formattedName ?? payCurrency;
+      final String depositType =
+          (transaction["type"] ?? "Deposit").toString();
+
+      if (!isCalculated && transaction.isNotEmpty) {
         totalCalculate(transaction);
       }
 
@@ -129,7 +156,7 @@ class _AddMoneyPendingStepSectionState
                       isDark: isDark,
                       title: localization.addMoneyPendingAmount,
                       content:
-                          "${double.tryParse(controller.amountController.text)?.toStringAsFixed(controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
+                          "${amount.toStringAsFixed(isCrypto ? decimals : 2)} $payCurrency",
                       contentColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
@@ -138,17 +165,17 @@ class _AddMoneyPendingStepSectionState
                     _buildDynamicRow(
                       isDark: isDark,
                       title: localization.addMoneyPendingTransactionId,
-                      content: transaction["tnx"] ?? "",
+                      content: tnxId,
                       contentColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
-                      isCopyable: true,
+                      isCopyable: tnxId.isNotEmpty,
                     ),
                     _buildDivider(isDark),
                     _buildDynamicRow(
                       isDark: isDark,
                       title: localization.addMoneyPendingWalletName,
-                      content: controller.wallet.value!.name!,
+                      content: walletName,
                       contentColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
@@ -157,7 +184,7 @@ class _AddMoneyPendingStepSectionState
                     _buildDynamicRow(
                       isDark: isDark,
                       title: localization.addMoneyPendingPaymentMethod,
-                      content: "$payCurrency",
+                      content: paymentMethod,
                       contentColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
@@ -167,14 +194,14 @@ class _AddMoneyPendingStepSectionState
                       isDark: isDark,
                       title: localization.addMoneyPendingCharge,
                       content:
-                          "${parseToDouble(transaction["charge"]).toStringAsFixed(controller.gatewayMethod.value!.currencyType! != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
+                          "${charge.toStringAsFixed(isCrypto ? decimals : 2)} $payCurrency",
                       contentColor: AppColors.error,
                     ),
                     _buildDivider(isDark),
                     _buildDynamicRow(
                       isDark: isDark,
                       title: localization.addMoneyPendingType,
-                      content: transaction["type"] ?? "",
+                      content: depositType,
                       contentColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
@@ -184,7 +211,7 @@ class _AddMoneyPendingStepSectionState
                       isDark: isDark,
                       title: localization.addMoneyPendingFinalAmount,
                       content:
-                          "${totalAmount.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals!)} $payCurrency",
+                          "${finalAmount.toStringAsFixed(isCrypto ? decimals : 2)} $payCurrency",
                       contentColor: AppColors.success,
                       isTotal: true,
                     ),

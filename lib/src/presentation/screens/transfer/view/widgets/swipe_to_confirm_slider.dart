@@ -133,7 +133,6 @@ class _SwipeToConfirmSliderState extends State<SwipeToConfirmSlider>
                       Text(
                         widget.text,
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: colorScheme.onSurface.withValues(alpha: 0.8),

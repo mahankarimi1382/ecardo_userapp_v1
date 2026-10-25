@@ -139,25 +139,32 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                   ),
                 ),
               ),
-              Obx(
-                () => Visibility(
-                  visible:
-                      controller.gatewayMethod.value?.formattedName != null &&
-                      controller.gatewayMethod.value!.formattedName!.isNotEmpty,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.xs),
-                    child: Text(
-                      "${localization.addMoneyCharge} ${double.tryParse(controller.gatewayMethod.value!.charge ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyType != "crypto" ? 2 : controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.chargeType == "percentage" ? "%" : controller.wallet.value?.code ?? ''}",
-                      style: const TextStyle(
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                        color: AppColors.warning,
-                      ),
+              Obx(() {
+                final gw = controller.gatewayMethod.value;
+                if (gw == null || (gw.formattedName ?? '').isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                final isCrypto = gw.currencyType == "crypto";
+                final decimals = isCrypto ? (gw.currencyDecimals ?? 2) : 2;
+                final chargeVal = double.tryParse(gw.charge ?? '0') ?? 0.0;
+                final chargeStr = chargeVal.toStringAsFixed(decimals);
+                final chargeUnit = gw.chargeType == "percentage"
+                    ? "%"
+                    : (controller.wallet.value?.code ?? '');
+
+                return Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.xs),
+                  child: Text(
+                    "${localization.addMoneyCharge} $chargeStr $chargeUnit",
+                    style: const TextStyle(
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: AppColors.warning,
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
               const SizedBox(height: AppSpacing.lg),
 
               // Amount Hero Card with Currency Badge and Quick Amount Chips
@@ -250,30 +257,36 @@ class _AddMoneyAmountStepSectionState extends State<AddMoneyAmountStepSection> {
                 ),
               ),
 
-              Obx(
-                () => Visibility(
-                  visible:
-                      controller.gatewayMethod.value?.formattedName != null &&
-                      controller.gatewayMethod.value!.formattedName!.isNotEmpty,
-                  child: Padding(
-                    padding: const EdgeInsetsDirectional.only(
-                      top: AppSpacing.xs,
-                      start: AppSpacing.xs,
-                    ),
-                    child: Text(
-                      "${localization.addMoneyMin} ${double.tryParse(controller.gatewayMethod.value!.minimumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency} | ${localization.addMoneyMax} ${double.tryParse(controller.gatewayMethod.value!.maximumDeposit ?? '0')?.toStringAsFixed(controller.gatewayMethod.value!.currencyDecimals ?? 2) ?? '0.00'} ${controller.gatewayMethod.value!.currency}",
-                      style: TextStyle(
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary,
-                      ),
+              Obx(() {
+                final gw = controller.gatewayMethod.value;
+                if (gw == null || (gw.formattedName ?? '').isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                final decimals = gw.currencyDecimals ?? 2;
+                final curr = gw.currency ?? (controller.wallet.value?.code ?? '');
+                final minStr = (double.tryParse(gw.minimumDeposit ?? '0') ?? 0.0)
+                    .toStringAsFixed(decimals);
+                final maxStr = (double.tryParse(gw.maximumDeposit ?? '0') ?? 0.0)
+                    .toStringAsFixed(decimals);
+
+                return Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    top: AppSpacing.xs,
+                    start: AppSpacing.xs,
+                  ),
+                  child: Text(
+                    "${localization.addMoneyMin} $minStr $curr | ${localization.addMoneyMax} $maxStr $curr",
+                    style: TextStyle(
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
-                ),
-              ),
+                );
+              }),
 
               // Instant KYC / Gateway limit error alert in red
               Obx(() {

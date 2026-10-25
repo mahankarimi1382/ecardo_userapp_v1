@@ -158,7 +158,7 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(15),
+                    padding: const EdgeInsets.all(AppSpacing.md),
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
@@ -216,7 +216,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                         ar: 'جارٍ الاستعلام عن الحساب...',
                       ),
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: colorScheme.onSurface.withValues(alpha: 0.7),
@@ -287,7 +286,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                         child: Text(
                           labelText,
                           style: const TextStyle(
-                            fontFamily: 'Plus Jakarta Sans',
                             fontSize: 12.5,
                             fontWeight: FontWeight.w700,
                             color: AppColors.success,
@@ -328,7 +326,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                         ar: 'لم يتم العثور على مستخدم بهذا المعرف',
                       ),
                       style: const TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.error,
@@ -475,7 +472,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                 Text(
                   localization.transferAmountStepSectionBeneficiariesTitle,
                   style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     letterSpacing: 0,
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
@@ -493,7 +489,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                   child: Text(
                     localization.transferAmountStepSectionAddBeneficiary,
                     style: TextStyle(
-                      fontFamily: 'Plus Jakarta Sans',
                       letterSpacing: 0,
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -594,7 +589,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                                         Text(
                                           displayName,
                                           style: TextStyle(
-                                            fontFamily: 'Plus Jakarta Sans',
                                             letterSpacing: 0,
                                             fontWeight: FontWeight.w700,
                                             fontSize: 15,
@@ -607,7 +601,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                                         Text(
                                           "${localization.transferAmountStepSectionUidLabel} ${item.accountNumber}",
                                           style: TextStyle(
-                                            fontFamily: 'Plus Jakarta Sans',
                                             letterSpacing: 0,
                                             fontSize: 12,
                                             color: colorScheme.onSurface
@@ -733,7 +726,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
               localization.transferAmountStepSectionDeleteConfirmationTitle,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 fontSize: 20,
                 color: colorScheme.onSurface,
                 letterSpacing: -0.2,
@@ -747,7 +739,6 @@ class _TransferAmountStepSectionState extends State<TransferAmountStepSection> {
                 localization.transferAmountStepSectionDeleteConfirmationMessage,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
                   fontSize: 13,
                   color: colorScheme.onSurface.withValues(alpha: 0.6),
                   fontWeight: FontWeight.w500,

@@ -345,7 +345,6 @@ class _MakePaymentAmountStepSectionState
                 Text(
                   localization.makePaymentAmountStepSectionMerchantsTitle,
                   style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     letterSpacing: 0,
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
@@ -370,7 +369,6 @@ class _MakePaymentAmountStepSectionState
                     child: Text(
                       localization.makePaymentAmountStepSectionAddMerchant,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         letterSpacing: 0,
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -461,7 +459,6 @@ class _MakePaymentAmountStepSectionState
                                   Text(
                                     item.nickname ?? item.receiver?.name ?? "",
                                     style: TextStyle(
-                                      fontFamily: 'Plus Jakarta Sans',
                                       letterSpacing: 0,
                                       fontWeight: FontWeight.w700,
                                       fontSize: 15,
@@ -472,7 +469,6 @@ class _MakePaymentAmountStepSectionState
                                   Text(
                                     "${localization.makePaymentAmountStepSectionMidLabel} ${item.accountNumber}",
                                     style: TextStyle(
-                                      fontFamily: 'Plus Jakarta Sans',
                                       letterSpacing: 0,
                                       fontSize: 12,
                                       color: colorScheme.onSurface.withValues(

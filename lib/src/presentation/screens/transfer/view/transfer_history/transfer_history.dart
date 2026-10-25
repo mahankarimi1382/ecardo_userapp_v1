@@ -291,6 +291,7 @@ class _TransferHistoryState extends State<TransferHistory>
 
                     Row(
                       mainAxisSize: MainAxisSize.min,
+                      textDirection: TextDirection.ltr,
                       children: [
                         Text(
                           transaction.isPlus == true ? "+ " : "- ",

@@ -15,9 +15,11 @@ Per eCardo Execution Contract:
 |---|---|---|---|
 | **Discovery & Source Mapping** | Screens cataloged with source, controllers & services | 740 / 740 | **100.0%** |
 | **State Matrix Mapping** | Normal, Loading, Empty, Error mapped | 740 / 740 | **100.0%** |
-| **Modernization & Upgrade (v1.0.181)** | Screens aligned with M3 design tokens & zero-decimal Toman | 48 / 740 | **35.0%** |
-| **Runtime Verification** | Screens verified on emulator / Patrol automation | 0 / 740 | **0.0%** (Requires safe sandbox backend) |
-| **Automated Test Coverage** | Widget & unit test verification | 34 / 740 | **24.8%** |
+| **Modernization & Upgrade (v1.0.181)** | Screens aligned with M3 design tokens & zero-decimal Toman | 48 / 137 routes | **35.0%** |
+| **Runtime Verification** | Screens verified on emulator / Patrol automation | 0 / 137 routes | **0.0%** (Requires safe sandbox backend) |
+| **Automated Test Coverage** | Widget & unit test verification | 34 / 137 routes | **24.8%** |
+
+Note: the 740 cataloged surfaces decompose as 137 SCREENs with a registered GetPage route + 475 TAB_PAGE surfaces + 74 route-less SCREENs + 52 BOTTOM_SHEETs + 2 DIALOGs (740 = 137 + 475 + 74 + 52 + 2), so the route-based rows above (Modernization, Runtime Verification, Test Coverage) are measured against the 137-route denominator.
 
 ## 3. Prioritized Gap Analysis & Action Plan
 1. **Runtime Verification:** Deploy Patrol integration test suite (`tools/patrol`) to execute safe UI sweeps across all 137 routes.

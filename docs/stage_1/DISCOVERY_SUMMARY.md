@@ -62,8 +62,8 @@
 
 ## ۵. آرتیفکت‌ها و مستندات مرحلهٔ ۱
 
-- مستند خط مبنای محلی: `docs/app-map/baseline/LOCAL_BASELINE.json`
-- گزارش اسکن سطوح و پسوندها: `docs/app-map/surfaces/SURFACES_INVENTORY.json`
+- مستند خط مبنای محلی: `docs/app-map/baseline/BASELINE.json`
+- گزارش اسکن سطوح و پسوندها: `docs/app-map/surfaces/PROJECT_SURFACE_REPORT.json`
 - کاتالوگ جامع روت‌ها: `docs/app-map/ROUTE_CATALOG.csv`
 - ماتریس صفحه و سرویس: `docs/app-map/SCREEN_SERVICE_MATRIX.csv`
 - گراف ناوبری اپلیکیشن: `docs/app-map/NAVIGATION_GRAPH.mmd`

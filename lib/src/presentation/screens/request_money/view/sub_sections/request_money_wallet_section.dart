@@ -5,6 +5,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_wallet_bottom_sheet.dart';
+import 'package:ecardo_user/src/helper/dynamic_decimals_helper.dart';
 import 'package:ecardo_user/src/presentation/screens/request_money/controller/request_money_controller.dart';
 
 class RequestMoneyWalletSection extends StatelessWidget {
@@ -33,8 +34,15 @@ class RequestMoneyWalletSection extends StatelessWidget {
               currentlySelectedValue: currentWallet.name,
               onItemSelected: (value) async {
                 final selectedWallet = controller.requestMoneyWalletsList
-                    .firstWhere((w) => w.name == value);
-                controller.wallet.value = selectedWallet;
+                        .firstWhereOrNull(
+                          (w) => w.name == value || w.id.toString() == value,
+                        ) ??
+                    (controller.requestMoneyWalletsList.isNotEmpty
+                        ? controller.requestMoneyWalletsList.first
+                        : null);
+                if (selectedWallet != null) {
+                  controller.wallet.value = selectedWallet;
+                }
               },
             ),
           );
@@ -176,6 +184,14 @@ class RequestMoneyWalletSection extends StatelessWidget {
                 "${currentWallet.formattedBalance} ${currentWallet.code}",
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
+                // Same directionality contract as EcardoBalanceHero: numeric
+                // balances stay LTR-isolated except for RTL currency codes.
+                textDirection:
+                    DynamicDecimalsHelper.isRtlCurrency(
+                      currentWallet.code ?? '',
+                    )
+                    ? TextDirection.rtl
+                    : TextDirection.ltr,
                 style: const TextStyle(
                   letterSpacing: -0.5,
                   fontWeight: FontWeight.w900,

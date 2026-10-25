@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/app_bar/common_app_bar.dart';
+import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
 
 import '../controller/p2p_order_details_controller.dart';
@@ -499,27 +500,21 @@ class _P2pAppealOrderScreenState extends State<P2pAppealOrderScreen> {
         child: SafeArea(
           child: SizedBox(
             height: 48.h,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ECardoTokens.danger(context),
-                foregroundColor: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(ECardoTokens.radiusLg.r),
-                ),
-              ),
-              onPressed: _submitAppeal,
-              child: Text(
-                l10nPick(
-                  context,
-                  fa: 'ثبت و ارسال اعتراض',
-                  en: 'Submit appeal',
-                  ar: 'إرسال الاعتراض',
-                  zh: '提交申诉',
-                ),
-                style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800),
-              ),
+          child: CommonButton(
+            text: l10nPick(
+              context,
+              fa: 'ثبت و ارسال اعتراض',
+              en: 'Submit appeal',
+              ar: 'إرسال الاعتراض',
+              zh: '提交申诉',
             ),
+            onPressed: _submitAppeal,
+            backgroundColor: ECardoTokens.danger(context),
+            textColor: Colors.white,
+            borderRadius: ECardoTokens.radiusLg.r,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w800,
+          ),
           ),
         ),
       ),

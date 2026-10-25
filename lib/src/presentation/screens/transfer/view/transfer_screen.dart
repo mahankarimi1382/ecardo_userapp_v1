@@ -358,7 +358,6 @@ class _HistoryMenuItem extends StatelessWidget {
               Text(
                 title,
                 style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                   fontSize: 16,

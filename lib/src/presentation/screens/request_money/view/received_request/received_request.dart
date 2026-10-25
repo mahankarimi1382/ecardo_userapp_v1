@@ -89,7 +89,13 @@ class _ReceivedRequestState extends State<ReceivedRequest> {
     );
 
     final amount = double.tryParse(request.amount ?? '0') ?? 0;
-    return "${request.currencySymbol ?? ''}${amount.toStringAsFixed(calculateDecimals)}";
+    // en_US grouping, no symbol — aligned with the design-system money widgets.
+    final formatter = NumberFormat.currency(
+      locale: 'en_US',
+      symbol: '',
+      decimalDigits: calculateDecimals,
+    );
+    return "${request.currencySymbol ?? ''}${formatter.format(amount).trim()}";
   }
 
   String _getStatus(Requests request) {

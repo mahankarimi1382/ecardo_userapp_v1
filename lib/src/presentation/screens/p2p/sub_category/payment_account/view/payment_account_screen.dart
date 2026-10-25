@@ -10,7 +10,7 @@ import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_ac
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/edit_payment_account.dart';
 import 'package:ecardo_user/src/presentation/screens/p2p/sub_category/payment_account/widgets/payment_account_details_bottom_sheet.dart';
 
-import '../../../../../widgets/no_data_found.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import '../controller/payment_account_controller.dart';
 
 class PaymentAccountScreen extends GetView<PaymentAccountController> {
@@ -62,9 +62,14 @@ class PaymentAccountScreen extends GetView<PaymentAccountController> {
                                 return ListView(
                                   physics:
                                       const AlwaysScrollableScrollPhysics(),
-                                  children: const [
-                                    SizedBox(height: 120),
-                                    NoDataFound(),
+                                  children: [
+                                    SizedBox(height: 120.h),
+                                    EcardoEmptyState(
+                                      title: localization.p2pAllAccount,
+                                      description:
+                                          localization.noDataFound,
+                                      iconData: Icons.account_balance_rounded,
+                                    ),
                                   ],
                                 );
                               }

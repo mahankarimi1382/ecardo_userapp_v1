@@ -267,10 +267,16 @@ class _MakePaymentScreenState extends State<MakePaymentScreen> {
               bottomSheetHeight: 450,
               currentlySelectedValue: currentWallet.name,
               onItemSelected: (value) async {
-                final selectedWallet = controller.paymentWalletsList.firstWhere(
-                  (w) => w.name == value,
-                );
-                controller.wallet.value = selectedWallet;
+                final selectedWallet = controller.paymentWalletsList
+                        .firstWhereOrNull(
+                          (w) => w.name == value || w.id.toString() == value,
+                        ) ??
+                    (controller.paymentWalletsList.isNotEmpty
+                        ? controller.paymentWalletsList.first
+                        : null);
+                if (selectedWallet != null) {
+                  controller.wallet.value = selectedWallet;
+                }
               },
             ),
           );

@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -178,7 +179,7 @@ class _MyAdsSubSectionState extends State<MyAdsSubSection> {
                     vertical: AppSpacing.xxl.h,
                   ),
                   child: EcardoEmptyState(
-                    iconData: Icons.campaign_outlined,
+                    iconData: FluentIcons.megaphone_24_regular,
                     iconColor: isDark
                         ? AppColors.mainSoftBlue
                         : AppColors.brandViolet,

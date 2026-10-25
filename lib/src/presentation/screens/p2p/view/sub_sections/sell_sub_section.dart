@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -66,7 +67,7 @@ class SellSubSection extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 EcardoEmptyState(
-                  iconData: Icons.sell_outlined,
+                  iconData: FluentIcons.tag_24_regular,
                   iconColor: AppColors.error,
                   glowColor: AppColors.error,
                   title: l10nPick(

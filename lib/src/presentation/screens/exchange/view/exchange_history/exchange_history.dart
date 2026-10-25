@@ -13,7 +13,7 @@ import 'package:ecardo_user/src/presentation/screens/exchange/view/exchange_hist
 import 'package:ecardo_user/src/presentation/screens/exchange/widgets/exchange_design_tokens.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/drop_down/recent_transaction_details.dart';
 import 'package:ecardo_user/src/presentation/screens/transactions/model/transactions_model.dart';
-import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_color.dart';
 import 'package:ecardo_user/src/presentation/widgets/transaction_dynamic_icon.dart';
 
@@ -167,7 +167,18 @@ class _ExchangeHistoryState extends State<ExchangeHistory>
         controller.transactionsModel.value.data?.transactions ?? [];
 
     if (transactions.isEmpty) {
-      return const Expanded(child: NoDataFound());
+      final localizations = AppLocalizations.of(context)!;
+      return Expanded(
+        child: Center(
+          child: EcardoEmptyState(
+            title: localizations.exchangeHistoryTitle,
+            description: localizations.noDataFound,
+            iconData: Icons.swap_horiz_rounded,
+            primaryActionLabel: localizations.refresh,
+            onPrimaryAction: refreshData,
+          ),
+        ),
+      );
     }
 
     return Expanded(

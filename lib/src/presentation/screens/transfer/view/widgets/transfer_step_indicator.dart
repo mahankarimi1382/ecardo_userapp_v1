@@ -179,7 +179,6 @@ class _StepNode extends StatelessWidget {
           AnimatedDefaultTextStyle(
             duration: AppDurations.normal,
             style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
               fontSize: 11,
               fontWeight: isActive
                   ? FontWeight.w700

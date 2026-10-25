@@ -294,6 +294,7 @@ class _TransferReceivedHistoryState extends State<TransferReceivedHistory>
 
                     Row(
                       mainAxisSize: MainAxisSize.min,
+                      textDirection: TextDirection.ltr,
                       children: [
                         Text(
                           transaction.isPlus == true ? "+ " : "- ",

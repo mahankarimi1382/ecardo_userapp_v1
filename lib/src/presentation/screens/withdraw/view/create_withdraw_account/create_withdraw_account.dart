@@ -209,22 +209,31 @@ class _CreateWithdrawAccountState extends State<CreateWithdrawAccount> {
                                           controller.walletController.text,
                                       onItemSelected: (value) async {
                                         final selectedWallet = controller
-                                            .walletsList
-                                            .firstWhere((w) => w.name == value);
-                                        controller.walletController.text =
-                                            selectedWallet.name ?? "";
-                                        controller.wallet.value =
-                                            selectedWallet;
-                                        await controller.fetchWithdrawMethods();
-                                        controller.withdrawMethod.value =
-                                            WithdrawMethodData();
-                                        controller.withdrawMethodController
-                                            .clear();
-                                        controller.methodNameController.clear();
-                                        controller.methodName.value = "";
-                                        controller.dynamicFieldControllers
-                                            .clear();
-                                        controller.selectedImages.clear();
+                                                .walletsList
+                                                .firstWhereOrNull(
+                                                  (w) =>
+                                                      w.name == value ||
+                                                      w.id.toString() == value,
+                                                ) ??
+                                            (controller.walletsList.isNotEmpty
+                                                ? controller.walletsList.first
+                                                : null);
+                                        if (selectedWallet != null) {
+                                          controller.walletController.text =
+                                              selectedWallet.name ?? "";
+                                          controller.wallet.value =
+                                              selectedWallet;
+                                          await controller.fetchWithdrawMethods();
+                                          controller.withdrawMethod.value =
+                                              WithdrawMethodData();
+                                          controller.withdrawMethodController
+                                              .clear();
+                                          controller.methodNameController.clear();
+                                          controller.methodName.value = "";
+                                          controller.dynamicFieldControllers
+                                              .clear();
+                                          controller.selectedImages.clear();
+                                        }
                                       },
                                     ),
                                   );

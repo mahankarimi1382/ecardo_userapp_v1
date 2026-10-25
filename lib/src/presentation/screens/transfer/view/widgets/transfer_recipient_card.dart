@@ -153,7 +153,6 @@ class RecipientMonogramAvatar extends StatelessWidget {
       child: Text(
         initials,
         style: TextStyle(
-          fontFamily: 'Plus Jakarta Sans',
           color: AppColors.white,
           fontSize: size * 0.38,
           fontWeight: FontWeight.w800,
@@ -216,7 +215,6 @@ class TransferRecipientCard extends StatelessWidget {
                       child: Text(
                         displayName,
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: colorScheme.onSurface,
@@ -274,8 +272,8 @@ class TransferRecipientCard extends StatelessWidget {
                   children: [
                     Text(
                       'UID: $displayUid',
+                      textDirection: TextDirection.ltr,
                       style: TextStyle(
-                        fontFamily: 'Plus Jakarta Sans',
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: colorScheme.onSurface.withValues(alpha: 0.6),

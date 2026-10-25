@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -82,7 +83,7 @@ class P2pScreen extends StatelessWidget {
                 HapticFeedback.lightImpact();
                 p2pController.onTopTabSelected(4);
               },
-              icon: Icon(Icons.add_circle_outline_rounded, size: 20.r),
+              icon: Icon(FluentIcons.add_circle_24_regular, size: 20.r),
               label: Text(
                 localization.p2pCreateAd,
                 style: TextStyle(
@@ -619,11 +620,11 @@ class P2pScreen extends StatelessWidget {
     final filters = [
       {
         'label': l10nPick(context, en: 'All Offers', fa: 'همه پیشنهادها'),
-        'icon': Icons.tune_rounded,
+        'icon': FluentIcons.options_24_regular,
       },
       {
         'label': l10nPick(context, en: 'Verified PRO', fa: 'فروشندگان معتبر'),
-        'icon': Icons.verified_user_rounded,
+        'icon': FluentIcons.shield_checkmark_24_regular,
       },
       {
         'label': l10nPick(
@@ -631,7 +632,7 @@ class P2pScreen extends StatelessWidget {
           en: 'Completion >95%',
           fa: 'تکمیل بالای ۹۵٪',
         ),
-        'icon': Icons.thumb_up_alt_rounded,
+        'icon': FluentIcons.thumb_like_24_regular,
       },
       {
         'label': l10nPick(
@@ -639,7 +640,7 @@ class P2pScreen extends StatelessWidget {
           en: 'Fast Payout (≤15m)',
           fa: 'آزادسازی فوری',
         ),
-        'icon': Icons.bolt_rounded,
+        'icon': FluentIcons.flash_24_regular,
       },
     ];
 
@@ -739,7 +740,7 @@ class P2pScreen extends StatelessWidget {
       // Empty State fallback adopting EcardoEmptyState
       return Center(
         child: EcardoEmptyState(
-          iconData: Icons.swap_horizontal_circle_outlined,
+          iconData: FluentIcons.people_swap_24_regular,
           iconColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
           glowColor: isDark ? AppColors.mainSoftBlue : AppColors.brandViolet,
           title: l10nPick(
@@ -1156,7 +1157,7 @@ class P2pScreen extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(AppSpacing.xl.r),
                         child: EcardoEmptyState(
-                          iconData: Icons.payment_outlined,
+                          iconData: FluentIcons.payment_24_regular,
                           iconColor: isDark
                               ? AppColors.mainSoftBlue
                               : AppColors.brandViolet,

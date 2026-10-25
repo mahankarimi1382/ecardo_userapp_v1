@@ -13,7 +13,7 @@ import 'package:ecardo_user/src/common/widgets/app_bar/common_default_app_bar.da
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/dropdown_bottom_sheet/common_dropdown_bottom_sheet.dart';
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
-import 'package:ecardo_user/src/presentation/widgets/no_data_found.dart';
+import 'package:ecardo_user/src/common/widgets/design_system/ecardo_empty_state.dart';
 
 import '../controller/p2p_controller.dart';
 import '../sub_category/apply_verification/view/apply_verification_screen.dart';
@@ -575,39 +575,15 @@ class P2pViewScreen extends GetView<P2pController> {
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.all(AppSpacing.xxl.r),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      NoDataFound(),
-                      SizedBox(height: AppSpacing.md.h),
-                      ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark
-                              ? AppColors.darkPrimary
-                              : AppColors.lightPrimary,
-                          foregroundColor: isDark
-                              ? AppColors.deepBlack
-                              : AppColors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppSpacing.radiusMd.r,
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          HapticFeedback.lightImpact();
-                          controller.fetchMarketplaceAds(isRefresh: true);
-                        },
-                        icon: const Icon(Icons.refresh_rounded, size: 18),
-                        label: Text(
-                          l10nPick(
-                            context,
-                            en: 'Refresh Offers',
-                            fa: 'تازه‌سازی آگهی‌ها',
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: EcardoEmptyState(
+                    title: localization.otherServicesP2pTrading,
+                    description: localization.noDataFound,
+                    iconData: Icons.swap_horiz_rounded,
+                    primaryActionLabel: localization.refresh,
+                    onPrimaryAction: () {
+                      HapticFeedback.lightImpact();
+                      controller.fetchMarketplaceAds(isRefresh: true);
+                    },
                   ),
                 ),
               ),

@@ -38,9 +38,16 @@ class TransferWalletSection extends StatelessWidget {
                 currentlySelectedValue: currentWallet.name,
                 onItemSelected: (value) async {
                   final selectedWallet = controller.transferWalletsList
-                      .firstWhere((w) => w.name == value);
-                  controller.wallet.value = selectedWallet;
-                  controller.calculateLiveCharge();
+                          .firstWhereOrNull(
+                            (w) => w.name == value || w.id.toString() == value,
+                          ) ??
+                      (controller.transferWalletsList.isNotEmpty
+                          ? controller.transferWalletsList.first
+                          : null);
+                  if (selectedWallet != null) {
+                    controller.wallet.value = selectedWallet;
+                    controller.calculateLiveCharge();
+                  }
                 },
               ),
             );
@@ -86,7 +93,6 @@ class TransferWalletSection extends StatelessWidget {
                             child: Text(
                               currentWallet.symbol ?? '\$',
                               style: const TextStyle(
-                                fontFamily: 'Plus Jakarta Sans',
                                 letterSpacing: 0,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 16,
@@ -116,7 +122,6 @@ class TransferWalletSection extends StatelessWidget {
                       child: Text(
                         currentWallet.name ?? '',
                         style: const TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           letterSpacing: 0,
                           fontWeight: FontWeight.w900,
                           fontSize: 18,
@@ -145,7 +150,6 @@ class TransferWalletSection extends StatelessWidget {
                 Text(
                   localization.transferWalletSectionBalance,
                   style: TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     letterSpacing: 0,
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
@@ -156,7 +160,6 @@ class TransferWalletSection extends StatelessWidget {
                 Text(
                   "${currentWallet.formattedBalance ?? '0.00'} ${currentWallet.code ?? ''}",
                   style: const TextStyle(
-                    fontFamily: 'Plus Jakarta Sans',
                     letterSpacing: -0.5,
                     fontWeight: FontWeight.w900,
                     fontSize: 28,

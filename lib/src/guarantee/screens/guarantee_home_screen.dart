@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -117,7 +118,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
               ),
               children: [
                 EcardoEmptyState(
-                  iconData: Icons.shield_outlined,
+                  iconData: FluentIcons.shield_keyhole_24_regular,
                   title: l10nPick(
                     context,
                     fa: 'هیچ پرونده ضمانت‌نامه فعالی ندارید',
@@ -337,7 +338,7 @@ class _GuaranteeHomeScreenState extends State<GuaranteeHomeScreen> {
                     vertical: ECardoTokens.space4.h,
                   ),
                   child: EcardoEmptyState(
-                    iconData: Icons.shield_outlined,
+                    iconData: FluentIcons.shield_keyhole_24_regular,
                     title: l10nPick(
                       context,
                       fa: _selectedFilterIndex == 1

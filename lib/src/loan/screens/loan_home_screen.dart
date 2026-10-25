@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -283,7 +284,7 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
                   borderRadius: BorderRadius.circular(AppSpacing.radiusLg.r),
                 ),
               ),
-              icon: Icon(Icons.add_circle_outline_rounded, size: 18.sp),
+              icon: Icon(FluentIcons.add_circle_24_regular, size: 18.sp),
               onPressed: () {
                 HapticFeedback.lightImpact();
                 Get.to(() => const LoanApplicationScreen());
@@ -331,10 +332,10 @@ class _LoanHomeScreenState extends State<LoanHomeScreen> {
         : (isBusiness ? const Color(0xFF2563EB) : primaryAccent);
 
     final iconData = isCrypto
-        ? Icons.currency_bitcoin_rounded
+        ? FluentIcons.money_hand_24_regular
         : (isBusiness
-              ? Icons.business_center_rounded
-              : Icons.person_outline_rounded);
+              ? FluentIcons.building_bank_24_regular
+              : FluentIcons.person_24_regular);
 
     return InkWell(
       borderRadius: BorderRadius.circular(AppSpacing.radiusXl.r),

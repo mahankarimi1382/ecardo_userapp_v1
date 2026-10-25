@@ -183,24 +183,44 @@ class NetWorthBanner extends StatelessWidget {
                             : AppColors.lightTextPrimary,
                       ),
                     )
-                  : FittedBox(
+                  : Column(
                       key: const ValueKey('privacy_visible'),
-                      fit: BoxFit.scaleDown,
-                      alignment: AlignmentDirectional.centerStart.resolve(
-                        Directionality.of(context),
-                      ),
-                      child: Text(
-                        formattedTotal,
-                        textDirection: TextDirection.ltr,
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.6,
-                          color: isDark
-                              ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: AlignmentDirectional.centerStart.resolve(
+                            Directionality.of(context),
+                          ),
+                          child: Text(
+                            formattedTotal,
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.6,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                          ),
                         ),
-                      ),
+                        if (controller.walletsList.isNotEmpty) ...[
+                          const SizedBox(height: 3),
+                          Text(
+                            controller.secondaryEquivalentNetWorth,
+                            textDirection: TextDirection.ltr,
+                            style: TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.1,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
             ),
             const SizedBox(height: 16),

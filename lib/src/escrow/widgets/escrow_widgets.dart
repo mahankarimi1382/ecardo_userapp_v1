@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
@@ -29,7 +30,7 @@ class EscrowStatusBadge extends StatelessWidget {
         text = isDark
             ? AppColors.darkTextSecondary
             : AppColors.lightTextSecondary;
-        icon = Icons.edit_note_rounded;
+        icon = FluentIcons.document_edit_24_regular;
         display = l10nPick(context, fa: 'پیش‌نویس', en: 'Draft');
         break;
       case 'AWAITING_AGREEMENT':
@@ -39,8 +40,8 @@ class EscrowStatusBadge extends StatelessWidget {
             : AppColors.warningContainer;
         text = isDark ? AppColors.warning : AppColors.warning;
         icon = status == 'AWAITING_AGREEMENT'
-            ? Icons.handshake_outlined
-            : Icons.payment_rounded;
+            ? FluentIcons.handshake_24_regular
+            : FluentIcons.payment_24_regular;
         display = status == 'AWAITING_AGREEMENT'
             ? l10nPick(context, fa: 'در انتظار تأیید', en: 'Awaiting Agreement')
             : l10nPick(context, fa: 'در انتظار پرداخت', en: 'Awaiting Payment');
@@ -50,7 +51,7 @@ class EscrowStatusBadge extends StatelessWidget {
             ? AppColors.info.withValues(alpha: 0.18)
             : AppColors.infoContainer;
         text = isDark ? AppColors.info : AppColors.info;
-        icon = Icons.lock_clock_rounded;
+        icon = FluentIcons.shield_checkmark_24_regular;
         display = l10nPick(
           context,
           fa: 'امان نزد پلتفرم',
@@ -62,7 +63,7 @@ class EscrowStatusBadge extends StatelessWidget {
             ? AppColors.brandViolet.withValues(alpha: 0.18)
             : AppColors.brandVioletContainer;
         text = isDark ? AppColors.mainSoftBlue : AppColors.brandViolet;
-        icon = Icons.local_shipping_outlined;
+        icon = FluentIcons.vehicle_truck_profile_24_regular;
         display = l10nPick(context, fa: 'در حال ارسال', en: 'In Delivery');
         break;
       case 'DELIVERED':
@@ -70,7 +71,7 @@ class EscrowStatusBadge extends StatelessWidget {
             ? AppColors.mutedBlue.withValues(alpha: 0.18)
             : AppColors.lightSecondaryContainer;
         text = isDark ? AppColors.mutedBlue : AppColors.mutedBlue;
-        icon = Icons.inventory_2_outlined;
+        icon = FluentIcons.box_checkmark_24_regular;
         display = l10nPick(context, fa: 'دوره بازرسی', en: 'Inspection Period');
         break;
       case 'RELEASED':
@@ -79,7 +80,7 @@ class EscrowStatusBadge extends StatelessWidget {
             ? AppColors.success.withValues(alpha: 0.18)
             : AppColors.successContainer;
         text = isDark ? AppColors.success : AppColors.success;
-        icon = Icons.check_circle_rounded;
+        icon = FluentIcons.checkmark_circle_24_regular;
         display = l10nPick(context, fa: 'تکمیل و تسویه', en: 'Completed');
         break;
       case 'DISPUTED':
@@ -87,7 +88,7 @@ class EscrowStatusBadge extends StatelessWidget {
             ? AppColors.error.withValues(alpha: 0.18)
             : AppColors.errorContainer;
         text = isDark ? AppColors.error : AppColors.error;
-        icon = Icons.gavel_rounded;
+        icon = FluentIcons.warning_24_regular;
         display = l10nPick(context, fa: 'پرونده اختلاف', en: 'Disputed');
         break;
       case 'REFUNDED':
@@ -95,7 +96,7 @@ class EscrowStatusBadge extends StatelessWidget {
             ? AppColors.error.withValues(alpha: 0.18)
             : AppColors.errorContainer;
         text = isDark ? AppColors.error : AppColors.error;
-        icon = Icons.replay_rounded;
+        icon = FluentIcons.arrow_sync_24_regular;
         display = l10nPick(context, fa: 'عودت وجه', en: 'Refunded');
         break;
       case 'CANCELLED':
@@ -106,7 +107,7 @@ class EscrowStatusBadge extends StatelessWidget {
         text = isDark
             ? AppColors.darkTextTertiary
             : AppColors.lightTextTertiary;
-        icon = Icons.cancel_outlined;
+        icon = FluentIcons.dismiss_circle_24_regular;
         display = status == 'EXPIRED'
             ? l10nPick(context, fa: 'منقضی شده', en: 'Expired')
             : l10nPick(context, fa: 'لغو شده', en: 'Cancelled');
@@ -118,7 +119,7 @@ class EscrowStatusBadge extends StatelessWidget {
         text = isDark
             ? AppColors.darkTextSecondary
             : AppColors.lightTextSecondary;
-        icon = Icons.info_outline_rounded;
+        icon = FluentIcons.info_24_regular;
     }
 
     return Container(
@@ -187,27 +188,27 @@ class EscrowMilestoneStepper extends StatelessWidget {
     final steps = [
       {
         'title': l10nPick(context, fa: 'پیش‌نویس', en: 'Draft'),
-        'icon': Icons.description_outlined,
+        'icon': FluentIcons.document_24_regular,
       },
       {
         'title': l10nPick(context, fa: 'توافق طرفین', en: 'Agreement'),
-        'icon': Icons.handshake_outlined,
+        'icon': FluentIcons.handshake_24_regular,
       },
       {
         'title': l10nPick(context, fa: 'قفل امانی وجه', en: 'Funded'),
-        'icon': Icons.lock_clock_outlined,
+        'icon': FluentIcons.shield_checkmark_24_regular,
       },
       {
         'title': l10nPick(context, fa: 'ارسال کالا', en: 'Shipped'),
-        'icon': Icons.local_shipping_outlined,
+        'icon': FluentIcons.vehicle_truck_profile_24_regular,
       },
       {
         'title': l10nPick(context, fa: 'بازرسی کالا', en: 'Inspection'),
-        'icon': Icons.fact_check_outlined,
+        'icon': FluentIcons.box_checkmark_24_regular,
       },
       {
         'title': l10nPick(context, fa: 'تسویه نهایی', en: 'Settled'),
-        'icon': Icons.verified_rounded,
+        'icon': FluentIcons.checkmark_circle_24_regular,
       },
     ];
 

@@ -31,10 +31,16 @@ class CashOutWalletsSection extends StatelessWidget {
               bottomSheetHeight: 450,
               currentlySelectedValue: currentWallet.name,
               onItemSelected: (value) async {
-                final selectedWallet = controller.cashOutWalletsList.firstWhere(
-                  (w) => w.name == value,
-                );
-                controller.wallet.value = selectedWallet;
+                final selectedWallet = controller.cashOutWalletsList
+                        .firstWhereOrNull(
+                          (w) => w.name == value || w.id.toString() == value,
+                        ) ??
+                    (controller.cashOutWalletsList.isNotEmpty
+                        ? controller.cashOutWalletsList.first
+                        : null);
+                if (selectedWallet != null) {
+                  controller.wallet.value = selectedWallet;
+                }
               },
             ),
           );

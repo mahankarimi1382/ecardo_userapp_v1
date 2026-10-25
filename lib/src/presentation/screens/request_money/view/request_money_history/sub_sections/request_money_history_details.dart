@@ -34,6 +34,13 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
       isCrypto: request.isCrypto ?? false,
     );
 
+    // en_US grouping, no symbol — aligned with the design-system money widgets.
+    final amountFormatter = NumberFormat.currency(
+      locale: 'en_US',
+      symbol: '',
+      decimalDigits: calculateDecimals,
+    );
+
     Color getStatusColor(String? status) {
       switch (status?.toLowerCase()) {
         case "success":
@@ -94,14 +101,14 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
                       context,
                       label: localization.requestMoneyHistoryDetailsCharge,
                       content:
-                          "${chargeValue.toStringAsFixed(calculateDecimals)} $currencyCode",
+                          "${amountFormatter.format(chargeValue).trim()} $currencyCode",
                       contentColor: AppColors.error,
                     ),
                     _buildDetailRow(
                       context,
                       label: localization.requestMoneyHistoryDetailsFinalAmount,
                       content:
-                          "${finalAmountValue.toStringAsFixed(calculateDecimals)} $currencyCode",
+                          "${amountFormatter.format(finalAmountValue).trim()} $currencyCode",
                       contentColor: AppColors.success,
                     ),
                     _buildDetailRow(
@@ -132,7 +139,6 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
                           Text(
                             localization.requestMoneyHistoryDetailsStatus,
                             style: TextStyle(
-                              fontFamily: 'Plus Jakarta Sans',
                               letterSpacing: 0,
                               fontSize: 15,
                               color: colorScheme.onSurface.withValues(
@@ -161,7 +167,6 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
                                     : "";
                               }(),
                               style: const TextStyle(
-                                fontFamily: 'Plus Jakarta Sans',
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: 0,
                                 fontSize: 12,
@@ -202,7 +207,6 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
             Text(
               request.recipient?.name ?? "",
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
                 letterSpacing: 0,
@@ -252,7 +256,6 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontFamily: 'Plus Jakarta Sans',
               letterSpacing: 0,
               fontSize: 14,
               color: colorScheme.onSurface.withValues(alpha: 0.65),
@@ -264,7 +267,6 @@ class RequestMoneyHistoryDetails extends StatelessWidget {
               content,
               textAlign: TextAlign.end,
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 letterSpacing: 0,
                 fontSize: 15,
                 color: contentColor,

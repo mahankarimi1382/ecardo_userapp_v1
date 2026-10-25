@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -86,7 +87,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'التقييم',
             zh: '信用评估',
           ),
-          'icon': Icons.verified_user_outlined,
+          'icon': FluentIcons.shield_checkmark_24_regular,
         },
         {
           'title': l10nPick(
@@ -103,7 +104,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'تحديد الضمان',
             zh: '确定额度',
           ),
-          'icon': Icons.account_balance_wallet_outlined,
+          'icon': FluentIcons.wallet_24_regular,
         },
         {
           'title': l10nPick(
@@ -120,7 +121,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'العقد الإلكتروني',
             zh: '电子签署',
           ),
-          'icon': Icons.draw_outlined,
+          'icon': FluentIcons.signature_24_regular,
         },
         {
           'title': l10nPick(
@@ -137,7 +138,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'تحويل الأموال',
             zh: '资金到账',
           ),
-          'icon': Icons.payments_outlined,
+          'icon': FluentIcons.money_hand_24_regular,
         },
       ];
     } else {
@@ -158,7 +159,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'تعبئة النموذج',
             zh: '填写资料',
           ),
-          'icon': Icons.post_add_rounded,
+          'icon': FluentIcons.document_edit_24_regular,
         },
         {
           'title': l10nPick(
@@ -175,7 +176,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'التقييم',
             zh: '额度测算',
           ),
-          'icon': Icons.fact_check_outlined,
+          'icon': FluentIcons.data_trending_24_regular,
         },
         {
           'title': l10nPick(
@@ -192,7 +193,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'تحديد الضمان',
             zh: '确认抵押',
           ),
-          'icon': Icons.lock_clock_outlined,
+          'icon': FluentIcons.shield_keyhole_24_regular,
         },
         {
           'title': l10nPick(
@@ -209,7 +210,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'التوقيع الإلكتروني',
             zh: '电子签约',
           ),
-          'icon': Icons.draw_outlined,
+          'icon': FluentIcons.signature_24_regular,
         },
         {
           'title': l10nPick(
@@ -226,7 +227,7 @@ class LoanStatusStepper extends StatelessWidget {
             ar: 'تحويل الأموال',
             zh: '到账还款',
           ),
-          'icon': Icons.payments_outlined,
+          'icon': FluentIcons.money_hand_24_regular,
         },
       ];
     }

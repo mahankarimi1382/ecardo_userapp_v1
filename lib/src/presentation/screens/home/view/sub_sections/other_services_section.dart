@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/common/model/user_model.dart';
 import 'package:ecardo_user/src/common/services/settings_service.dart';
@@ -33,105 +33,105 @@ class _OtherServicesSectionState extends State<OtherServicesSection> {
       // --- Page 1: Core Financial Movements ---
       ServiceTile(
         title: localization.otherServicesDynamicPassword,
-        iconData: Icons.pin_rounded,
+        iconData: FluentIcons.password_24_regular,
         route: BaseRoute.dynamicPassword,
       ),
       ServiceTile(
         title: localization.otherServicesTransfer,
-        icon: PngAssets.transferService,
+        iconData: FluentIcons.arrow_swap_24_regular,
         route: BaseRoute.transfer,
         feature: 'transfer',
       ),
       ServiceTile(
         title: localization.otherServicesAddMoney,
-        icon: PngAssets.addMoneyService,
+        iconData: FluentIcons.wallet_credit_card_24_regular,
         route: BaseRoute.addMoney,
         available: true,
       ),
       ServiceTile(
         title: localization.otherServicesWithdraw,
-        icon: PngAssets.withdrawService,
+        iconData: FluentIcons.money_hand_24_regular,
         route: BaseRoute.withdraw,
         feature: 'withdraw',
       ),
       ServiceTile(
         title: localization.otherServicesExchange,
-        icon: PngAssets.exchangeService,
+        iconData: FluentIcons.arrow_sync_24_regular,
         route: BaseRoute.exchange,
         feature: 'exchange',
       ),
       ServiceTile(
         title: localization.otherServicesWallets,
-        icon: PngAssets.walletsService,
+        iconData: FluentIcons.wallet_24_regular,
         route: BaseRoute.wallets,
       ),
       ServiceTile(
         title: localization.otherServicesTransactions,
-        icon: PngAssets.transactionService,
+        iconData: FluentIcons.receipt_sparkles_24_regular,
         route: BaseRoute.transactions,
       ),
       ServiceTile(
         title: localization.otherServicesQrCode,
-        icon: PngAssets.qrCodeService,
+        iconData: FluentIcons.qr_code_24_regular,
         route: BaseRoute.qrCode,
       ),
 
       // --- Page 2: Merchant, Cards, Utility & Sharing ---
       ServiceTile(
         title: localization.otherServicesVirtualCard,
-        icon: PngAssets.virtualCardService,
+        iconData: FluentIcons.payment_24_regular,
         route: BaseRoute.virtualCard,
         feature: 'paycardo',
         available: true,
       ),
       ServiceTile(
         title: localization.otherServicesBillPayment,
-        icon: PngAssets.billPaymentService,
+        iconData: FluentIcons.receipt_24_regular,
         route: BaseRoute.billPayment,
         feature: 'pay-bill',
       ),
       ServiceTile(
         title: localization.otherServicesRequestMoney,
-        icon: PngAssets.requestMoneyService,
+        iconData: FluentIcons.handshake_24_regular,
         route: BaseRoute.requestMoney,
         feature: 'request-money',
       ),
       ServiceTile(
         title: localization.otherServicesPaymentLinks,
-        icon: PngAssets.paymentLinksService,
+        iconData: FluentIcons.link_square_24_regular,
         route: BaseRoute.paymentLinks,
         feature: 'payment-links',
       ),
       ServiceTile(
         title: localization.otherServicesMakePayment,
-        icon: PngAssets.makePaymentService,
+        iconData: FluentIcons.building_bank_link_24_regular,
         route: BaseRoute.makePayment,
         available: true,
       ),
       ServiceTile(
         title: localization.otherServicesCashOut,
-        icon: PngAssets.cashOutService,
+        iconData: FluentIcons.money_24_regular,
         route: BaseRoute.cashOut,
         feature: 'cashout',
         available: true,
       ),
       ServiceTile(
         title: localization.otherServicesGift,
-        icon: PngAssets.giftService,
+        iconData: FluentIcons.gift_card_24_regular,
         route: BaseRoute.giftCode,
         feature: 'gift_send',
         available: true,
       ),
       ServiceTile(
         title: localization.otherServicesGiftCards,
-        icon: PngAssets.giftCardsService,
+        iconData: FluentIcons.gift_24_regular,
         route: BaseRoute.giftCard,
         feature: 'gift_redeem',
         available: true,
       ),
       ServiceTile(
         title: localization.otherServicesInvite,
-        icon: PngAssets.inviteService,
+        iconData: FluentIcons.person_add_24_regular,
         route: BaseRoute.referral,
       ),
     ];

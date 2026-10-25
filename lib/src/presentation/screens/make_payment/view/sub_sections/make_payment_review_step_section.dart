@@ -231,7 +231,6 @@ class _MakePaymentReviewStepSectionState
               Text(
                 localization.makePaymentReviewStepSectionTitle,
                 style: TextStyle(
-                  fontFamily: 'Plus Jakarta Sans',
                   letterSpacing: -0.2,
                   fontWeight: FontWeight.w800,
                   fontSize: 22,
@@ -385,7 +384,6 @@ class _MakePaymentReviewStepSectionState
                           zh: '受 eCardo 安全密码保护',
                         ),
                         style: TextStyle(
-                          fontFamily: 'Plus Jakarta Sans',
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color: colorScheme.onSurface.withValues(alpha: 0.65),
@@ -485,7 +483,6 @@ class _MakePaymentReviewStepSectionState
         Text(
           title,
           style: TextStyle(
-            fontFamily: 'Plus Jakarta Sans',
             letterSpacing: 0,
             fontWeight: isHero ? FontWeight.w800 : FontWeight.w600,
             fontSize: isHero ? 16 : 14,
@@ -502,7 +499,6 @@ class _MakePaymentReviewStepSectionState
             child: Text(
               content,
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 color: contentColor,
@@ -515,7 +511,6 @@ class _MakePaymentReviewStepSectionState
               content,
               textAlign: TextAlign.end,
               style: TextStyle(
-                fontFamily: 'Plus Jakarta Sans',
                 letterSpacing: 0,
                 fontWeight: isHero
                     ? FontWeight.w900

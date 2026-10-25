@@ -1,9 +1,9 @@
 import 'package:ecardo_user/src/helper/l10n_pick.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
-import 'package:ecardo_user/src/app/constants/assets_path/png/png_assets.dart';
 import 'package:ecardo_user/src/app/routes/routes.dart';
 import 'package:ecardo_user/src/presentation/screens/home/controller/home_controller.dart';
 import 'package:ecardo_user/src/presentation/screens/home/view/sub_sections/section_header.dart';
@@ -34,27 +34,27 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
     return [
       ServiceTile(
         title: localization.drawerRemittance,
-        icon: PngAssets.billPaymentService,
+        iconData: FluentIcons.arrow_swap_24_regular,
         route: BaseRoute.remittance,
         feature: 'remittance',
       ),
       ServiceTile(
         title: localization.businessServiceMoneyTransfer,
-        icon: PngAssets.transferService,
+        iconData: FluentIcons.arrow_swap_24_regular,
         route: BaseRoute.transfer,
         feature: 'transfer',
       ),
       // P2P trading (live module) — label must be P2P, not "Escrow".
       ServiceTile(
         title: localization.drawerP2pTrading,
-        icon: PngAssets.p2pTradingService,
+        iconData: FluentIcons.people_swap_24_regular,
         route: BaseRoute.p2pTrading,
         available: true,
       ),
       // Escrow services — live module
       ServiceTile(
         title: localization.businessServiceP2pEscrow,
-        iconData: Icons.gavel_rounded,
+        iconData: FluentIcons.shield_checkmark_24_regular,
         route: BaseRoute.escrowHome,
         available: true,
       ),
@@ -62,19 +62,19 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
       // availability + the KYC level requirement.
       ServiceTile(
         title: localization.businessServiceGuarantee,
-        iconData: Icons.verified_user_rounded,
+        iconData: FluentIcons.shield_keyhole_24_regular,
         route: BaseRoute.guaranteeHome,
         available: true,
       ),
       ServiceTile(
         title: localization.businessServiceBankLoan,
-        iconData: Icons.account_balance_rounded,
+        iconData: FluentIcons.building_bank_24_regular,
         route: BaseRoute.loanHome,
         available: true,
       ),
       ServiceTile(
         title: localization.businessServiceStocks,
-        iconData: Icons.trending_up_rounded,
+        iconData: FluentIcons.data_trending_24_regular,
         route: BaseRoute.stockHome,
         available: true,
       ),
@@ -88,7 +88,7 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
           ru: 'Инвест-проекты',
           tr: 'Yatırım Projeleri',
         ),
-        iconData: Icons.corporate_fare_rounded,
+        iconData: FluentIcons.briefcase_24_regular,
         route: BaseRoute.commercialProjects,
         available: true,
       ),
@@ -102,7 +102,7 @@ class _BusinessServicesSectionState extends State<BusinessServicesSection> {
           tr: 'Lisans Mağazası',
           ru: 'Магазин лицензий',
         ),
-        iconData: Icons.vpn_key_rounded,
+        iconData: FluentIcons.key_24_regular,
         route: BaseRoute.licenseStore,
         available: true,
       ),
