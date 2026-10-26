@@ -4,6 +4,7 @@ import 'package:ecardo_user/l10n/app_localizations.dart';
 import 'package:ecardo_user/src/helper/status_label_helper.dart';
 import 'package:ecardo_user/src/app/constants/app_colors.dart';
 import 'package:ecardo_user/src/app/constants/app_spacing.dart';
+import 'package:ecardo_user/src/common/theme/ecardo_tokens.dart';
 import 'package:ecardo_user/src/common/widgets/button/common_button.dart';
 import 'package:ecardo_user/src/common/widgets/common_required_label_and_dynamic_field.dart';
 import 'package:ecardo_user/src/common/widgets/input_field/common_text_input_filed.dart';
@@ -31,7 +32,7 @@ class _TransferReceivedTransactionFilterBottomSheetState
       height: 400,
       margin: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: ECardoTokens.surfaceCard(context),
         borderRadius: BorderRadiusDirectional.only(
           topStart: Radius.circular(AppSpacing.radiusXl),
           topEnd: Radius.circular(AppSpacing.radiusXl),
@@ -55,7 +56,7 @@ class _TransferReceivedTransactionFilterBottomSheetState
                 width: 40,
                 height: AppSpacing.xs,
                 decoration: BoxDecoration(
-                  color: AppColors.lightTextPrimary.withValues(alpha: 0.2),
+                  color: ECardoTokens.ink(context).withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
               ),
@@ -142,12 +143,11 @@ class _TransferReceivedTransactionFilterBottomSheetState
                                         ),
                                         color: isSelected
                                             ? statusColor
-                                            : AppColors.lightBackground,
+                                            : ECardoTokens.surfaceSunken(context),
                                         border: Border.all(
                                           color: isSelected
                                               ? statusColor
-                                              : AppColors.lightTextPrimary
-                                                    .withValues(alpha: 0.06),
+                                              : ECardoTokens.border(context),
                                         ),
                                       ),
                                       child: Text(
@@ -160,7 +160,7 @@ class _TransferReceivedTransactionFilterBottomSheetState
                                           fontSize: 14,
                                           color: isSelected
                                               ? AppColors.white
-                                              : AppColors.lightTextTertiary,
+                                              : ECardoTokens.inkMuted(context),
                                           fontWeight: FontWeight.w700,
                                         ),
                                       ),
