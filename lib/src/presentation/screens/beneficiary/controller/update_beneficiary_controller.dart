@@ -61,4 +61,10 @@ class UpdateBeneficiaryController extends GetxController {
       isBeneficiaryUpdateLoading.value = false;
     }
   }
+
+  @override
+  void onClose() {
+    nickNameController.dispose();
+    super.onClose();
+  }
 }

@@ -74,4 +74,11 @@ class CreateBeneficiaryController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  @override
+  void onClose() {
+    accountNumberController.dispose();
+    nickNameController.dispose();
+    super.onClose();
+  }
 }

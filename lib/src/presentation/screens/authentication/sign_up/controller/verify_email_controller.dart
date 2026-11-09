@@ -112,4 +112,11 @@ class VerifyEmailController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  @override
+  void onClose() {
+    _timer?.cancel();
+    pinCodeController.dispose();
+    super.onClose();
+  }
 }

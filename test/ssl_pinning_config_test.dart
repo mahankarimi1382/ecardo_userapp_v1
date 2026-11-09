@@ -100,11 +100,23 @@ void main() {
 
       expect(
         ecardoPins,
+        contains('HUG/9QnuBrNL2VZmT1T3/UtCszNZKNDErh1g6Wuhzhs='),
+      );
+      expect(
+        ecardoPins,
+        contains('IvY8xIUcpJTKOpB1rc5W92rMIZfGmcLxKqgyyJdBW6c='),
+      );
+      expect(
+        ecardoPins,
         contains('nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc='),
       );
       expect(
         ecardoPins,
         contains('YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM='),
+      );
+      expect(
+        tripPins,
+        contains('IvY8xIUcpJTKOpB1rc5W92rMIZfGmcLxKqgyyJdBW6c='),
       );
       expect(
         tripPins,
@@ -115,6 +127,10 @@ void main() {
       expect(
         ecardoPins,
         isNot(contains('5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ=')),
+      );
+      expect(
+        tripPins,
+        isNot(contains('HUG/9QnuBrNL2VZmT1T3/UtCszNZKNDErh1g6Wuhzhs=')),
       );
       expect(
         tripPins,

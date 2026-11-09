@@ -151,4 +151,10 @@ class TwoFactorAuthController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  @override
+  void onClose() {
+    pinCodeController.dispose();
+    super.onClose();
+  }
 }

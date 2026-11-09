@@ -223,4 +223,10 @@ class ReplyTicketController extends GetxController {
     messageController.clear();
     controller.clearImages();
   }
+
+  @override
+  void onClose() {
+    messageController.dispose();
+    super.onClose();
+  }
 }

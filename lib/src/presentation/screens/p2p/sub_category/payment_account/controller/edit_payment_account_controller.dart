@@ -162,4 +162,16 @@ class EditPaymentAccountController extends GetxController {
     if (lower.endsWith('.webp')) return dio.DioMediaType('image', 'webp');
     return dio.DioMediaType('application', 'octet-stream');
   }
+
+  @override
+  void onClose() {
+    for (final field in dynamicFieldControllers.values) {
+      final ctrl = field['controller'];
+      if (ctrl is TextEditingController) {
+        ctrl.dispose();
+      }
+    }
+    dynamicFieldControllers.clear();
+    super.onClose();
+  }
 }

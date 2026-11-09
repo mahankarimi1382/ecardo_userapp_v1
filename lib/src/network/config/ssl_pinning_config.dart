@@ -32,7 +32,17 @@ class SslPinningConfig {
   /// Allowed hostnames for certificate pinning.
   static const List<String> pinnedHosts = [tripApexHost, ecardoApexHost];
 
-  /// Verified live fallback certificate pin for ecardo.ir leaf certificate.
+  /// Verified live fallback certificate pin for ecardo.ir origin leaf certificate (Let's Encrypt).
+  /// Issued 2026-11-08 by Let's Encrypt (valid until 2027-02-06).
+  static const String liveEcardoOriginCertPin =
+      'HUG/9QnuBrNL2VZmT1T3/UtCszNZKNDErh1g6Wuhzhs=';
+
+  /// Verified live fallback certificate pin for Cloudflare edge leaf certificate (Google Trust Services).
+  /// Rotated 2026-11-07 by Google Trust Services / Cloudflare (valid until 2027-02-05).
+  static const String liveCloudflareCertPin =
+      'IvY8xIUcpJTKOpB1rc5W92rMIZfGmcLxKqgyyJdBW6c=';
+
+  /// Previous fallback certificate pin for ecardo.ir leaf certificate.
   /// Rotated 2026-10-09 by Google Trust Services / Cloudflare.
   static const String defaultEcardoCertPin =
       'nzdZNbln73WWnd9FKxL6orllludWCB0fM9U5kUCD3Jc=';
@@ -42,7 +52,10 @@ class SslPinningConfig {
       'YdCRBrWlE5rxC4hBFv886CFS+VdYT0YIy7C1EUEs7ZM=';
 
   /// Verified live fallback certificate pin for trip.ecardo.ir leaf certificate.
-  static const String defaultTripCertPin =
+  static const String defaultTripCertPin = liveCloudflareCertPin;
+
+  /// Previous fallback certificate pin for trip.ecardo.ir leaf certificate.
+  static const String previousTripCertPin =
       '5/wJzsdyaqKOIqppmnFDDO5dHYIXxzUB1lNSWGmGiyQ=';
 
   /// SHA-256 certificate pins, base64, separated per host.
@@ -50,12 +63,13 @@ class SslPinningConfig {
   /// For ecardo.ir:
   ///   Build-time defines: ECARDO_CERT_PIN and ECARDO_CERT_PIN_BACKUP.
   ///   If ECARDO_CERT_PIN is provided via --dart-define, it is used (along with
-  ///   any backup pin). If omitted, falls back to [defaultEcardoCertPin] and [previousEcardoCertPin].
+  ///   any backup pin). If omitted, falls back to [liveEcardoOriginCertPin],
+  ///   [liveCloudflareCertPin], [defaultEcardoCertPin] and [previousEcardoCertPin].
   ///
   /// For trip.ecardo.ir:
   ///   Build-time defines: TRIP_CERT_PIN and TRIP_CERT_PIN_BACKUP.
   ///   If TRIP_CERT_PIN is provided via --dart-define, it is used (along with
-  ///   any backup pin). If omitted, falls back to [defaultTripCertPin].
+  ///   any backup pin). If omitted, falls back to [defaultTripCertPin] and [previousTripCertPin].
   static Map<String, List<String>> get expectedCertificateHashes {
     const ecardoCurrent = String.fromEnvironment('ECARDO_CERT_PIN');
     const ecardoBackup = String.fromEnvironment('ECARDO_CERT_PIN_BACKUP');
@@ -63,6 +77,8 @@ class SslPinningConfig {
       if (ecardoCurrent.trim().isNotEmpty)
         ecardoCurrent.trim()
       else ...[
+        liveEcardoOriginCertPin,
+        liveCloudflareCertPin,
         defaultEcardoCertPin,
         previousEcardoCertPin,
       ],
@@ -74,8 +90,10 @@ class SslPinningConfig {
     final tripPins = <String>[
       if (tripCurrent.trim().isNotEmpty)
         tripCurrent.trim()
-      else
+      else ...[
         defaultTripCertPin,
+        previousTripCertPin,
+      ],
       if (tripBackup.trim().isNotEmpty) tripBackup.trim(),
     ];
 
